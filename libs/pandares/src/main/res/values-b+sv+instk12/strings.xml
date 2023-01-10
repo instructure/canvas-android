@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Elevens vy</string>
 
 
+    <string name="rateOnThePlayStore">Pris på Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Vald rubrik: %s</string>
     <string name="content_description_chosen_body">Vald brödtext: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Utkast tillgängligt</string>
     <string name="errorLoadingSubmission">Ett fel inträffade vid inläsning av inlämningen</string>
     <string name="loadFullContent">Tryck för att se hela innehållet</string>
+    <string name="openLtiInExternalApp">Tryck för att öppna i extern app</string>
     <string name="dashboardTabImportantDates">Viktiga datum</string>
     <string name="importantDatesEmptyTitle">Inga viktiga datum</string>
     <string name="important_dates">Viktiga datum</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s oläst meddelande</item>
         <item quantity="other">%s olästa meddelanden</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s oläst avisering</item>
+        <item quantity="other">%s olästa aviseringar</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Inga noteringar har valts</string>
     <string name="emailNotifications">E-postaviseringar</string>
     <string name="emailNotificationsImmediately">Omedelbart</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Veckovis</string>
     <string name="emailNotificationsNever">Aldrig</string>
     <string name="selectFrequency">Välj frekvens</string>
+    <string name="a11y_closeProgress">Stäng förloppsdialog</string>
+    <string name="fileUploadProgress">%1$s av %2$s</string>
+    <string name="fileUploadProgressSubtitle">Laddar upp till Filer</string>
+    <string name="submissionProgressSubtitle">Laddar upp inlämning till \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Laddar upp inlämning</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Laddar upp filer</string>
+    <string name="cancelSubmissionDialogTitle">Avbryt inlämningen</string>
+    <string name="cancelSubmissionDialogMessage">Detta avbryter och tar bort din inlämning.</string>
+    <string name="fileUploadError">Filuppladdningen misslyckades</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Ladda upp till Canvas %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Ladda upp till Mina filer</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lämna in uppgift</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Välj en kurs</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Välj en uppgift</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Vill du avbryta uppladdningen?</string>
+    <string name="cancelFileUploadMessage">Detta avbryter din uppladdning.</string>
+    <string name="menuTitleFilterAssignments">Filtrera uppgifter</string>
+    <string name="filterAssignmentDialogTitle">Filtrera uppgifter</string>
+    <string name="filterAssignmentsDialogCancel">Avbryt</string>
+    <string name="filterAssignmentAll">Alla</string>
+    <string name="filterAssignmentLate">Sen</string>
+    <string name="filterAssignmentMissing">Saknad</string>
+    <string name="filterAssignmentGraded">Har bedömts</string>
+    <string name="filterAssignmentUpcoming">Kommande</string>
+    <string name="createdByStudentView">Skapad av Elevens Vy</string>
+    <string name="discussionErrorToast">Ett fel uppstod. Det här ämnet är kanske inte längre tillgängligt.</string>
+    <string name="cameraPermissionPermanentlyDenied">Kameraåtkomsten nekades permanent. Gå till appinställningarna för att tillåta den.</string>
 </resources>

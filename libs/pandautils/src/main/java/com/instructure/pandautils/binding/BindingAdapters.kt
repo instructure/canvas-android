@@ -46,6 +46,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
 
@@ -143,14 +144,14 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
 }
 
 @BindingAdapter(value = ["htmlContent", "htmlTitle", "onLtiButtonPressed"], requireAll = false)
-fun bindHtmlContent(webView: CanvasWebView, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
-    webView.loadHtml(html.orEmpty(), title.orEmpty())
+fun bindHtmlContent(webViewWrapper: CanvasWebViewWrapper, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
+    webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty())
     if (onLtiButtonPressed != null) {
-        webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
     }
 
     if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-        webView.addJavascriptInterface(JsGoogleDocsInterface(webView.context), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "accessor")
     }
 }
 

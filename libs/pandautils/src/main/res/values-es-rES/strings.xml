@@ -486,4 +486,5 @@
 
     <string name="a11y_markAsDoneWithName">%s Marcar como hecho</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcado como no hecho</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

@@ -27,6 +27,8 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
 
+import '../features_utils.dart';
+
 class MasqueradeUI extends StatefulWidget {
   final Widget child;
   final GlobalKey<NavigatorState> navKey;
@@ -63,6 +65,7 @@ class MasqueradeUI extends StatefulWidget {
                 if (logout) {
                   await ParentTheme.of(context).setSelectedStudent(null);
                   await ApiPrefs.performLogout();
+                  await FeaturesUtils.performLogout();
                   MasqueradeUI.of(context).refresh();
                   locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
                 } else {

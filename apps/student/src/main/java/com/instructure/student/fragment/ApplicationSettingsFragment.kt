@@ -17,13 +17,19 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
@@ -31,7 +37,15 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.AppThemeSelector
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.showThemed
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -130,6 +144,7 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         setUpAppThemeSelector()
+        setUpSubscribeToCalendarFeed()
 
         if (BuildConfig.DEBUG) {
             featureFlags.setVisible()
@@ -155,5 +170,31 @@ class ApplicationSettingsFragment : ParentFragment() {
         appThemeContainer.onClick {
             AppThemeSelector.showAppThemeSelectorDialog(requireContext(), appThemeStatus)
         }
+    }
+
+    private fun setUpSubscribeToCalendarFeed() {
+        val calendarFeed = ApiPrefs.user?.calendar?.ics
+        if (!calendarFeed.isNullOrEmpty()) {
+            subscribeToCalendar.setVisible()
+            subscribeToCalendar.onClick {
+
+                AlertDialog.Builder(requireContext())
+                    .setMessage(R.string.subscribeToCalendarMessage)
+                    .setPositiveButton(R.string.subscribeButton, { dialog, _ ->
+                        dialog.dismiss()
+                        openCalendarLink(calendarFeed)
+                    })
+                    .setNegativeButton(R.string.cancel, {dialog, _ -> dialog.dismiss()})
+                    .showThemed()
+            }
+        }
+    }
+
+    private fun openCalendarLink(calendarLink: String) {
+        val webcalLink = calendarLink.replace("https://", "webcal://")
+        val googleCalendarLink = "https://calendar.google.com/calendar/r?cid=$webcalLink"
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setData(Uri.parse(googleCalendarLink))
+        startActivity(intent)
     }
 }

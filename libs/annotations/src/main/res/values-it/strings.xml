@@ -16,6 +16,7 @@
   -->
 
 <resources>
+
     <string name="inputText">Inserisci testo</string>
     <string name="cancel">Annulla</string>
     <string name="comment">Commento</string>
@@ -36,6 +37,6 @@
     <string name="sendingSimple">Invio in corso</string>
     <string name="pspdf__annotation_type_stamp">Colore nota</string>
     <string name="removedComment">Rimosso il %1$s da %2$s</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

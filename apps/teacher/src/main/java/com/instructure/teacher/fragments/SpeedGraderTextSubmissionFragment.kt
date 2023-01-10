@@ -45,25 +45,25 @@ class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
         return inflater.inflate(R.layout.fragment_speed_grader_text_submission, container, false)
     }
 
-    override fun canGoBack() = textSubmissionWebView.canGoBack()
-    override fun goBack() = textSubmissionWebView.goBack()
+    override fun canGoBack() = textSubmissionWebViewWrapper.webView.canGoBack()
+    override fun goBack() = textSubmissionWebViewWrapper.webView.goBack()
 
     override fun onStart() {
         super.onStart()
-        textSubmissionWebView.webChromeClient = object : WebChromeClient() {
+        textSubmissionWebViewWrapper.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (!isAdded) return
                 if (newProgress >= 100) {
                     progressBar?.setGone()
-                    textSubmissionWebView?.setVisible()
+                    textSubmissionWebViewWrapper?.setVisible()
                 } else {
                     progressBar.announceForAccessibility(getString(R.string.loading))
                 }
             }
         }
 
-        textSubmissionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        textSubmissionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
             override fun onPageStartedCallback(webView: WebView, url: String) = Unit
             override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
@@ -73,17 +73,17 @@ class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
             }
         }
 
-        textSubmissionWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        textSubmissionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        textSubmissionWebView.loadHtml(mSubmissionText, getString(R.string.a11y_submissionText))
+        textSubmissionWebViewWrapper.loadHtml(mSubmissionText, getString(R.string.a11y_submissionText))
     }
 
     override fun onStop() {
         super.onStop()
-        textSubmissionWebView.stopLoading()
+        textSubmissionWebViewWrapper.webView.stopLoading()
     }
 
     companion object {

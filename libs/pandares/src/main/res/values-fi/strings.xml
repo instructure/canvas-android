@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Opiskelijanäkymä</string>
 
 
+    <string name="rateOnThePlayStore">Arvostele Play Storessa</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valittu pää: %s</string>
     <string name="content_description_chosen_body">Valittu keho: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Luonnos saatavissa</string>
     <string name="errorLoadingSubmission">Palautuksen lataamisen yhteydessä tapahtui virhe</string>
     <string name="loadFullContent">Napauta nähdäksesi koko sisältö</string>
+    <string name="openLtiInExternalApp">Napauta avataksesi ulkoisessa sovelluksessa</string>
     <string name="dashboardTabImportantDates">Tärkeitä päivämääriä</string>
     <string name="importantDatesEmptyTitle">Ei tärkeitä päivämääriä</string>
     <string name="important_dates">Tärkeitä päivämääriä</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s lukematon viesti</item>
         <item quantity="other">%s lukematonta viestiä</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s lukematon huomautus</item>
+        <item quantity="other">%s lukemattomat huomautukset</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Merkintää ei valittu</string>
     <string name="emailNotifications">Sähköposti-ilmoitukset</string>
     <string name="emailNotificationsImmediately">Välittömästi</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Viikoittainen</string>
     <string name="emailNotificationsNever">Ei koskaan</string>
     <string name="selectFrequency">Valitse taajuus</string>
+    <string name="a11y_closeProgress">Sulje edistymisruutu</string>
+    <string name="fileUploadProgress">%1$s/%2$s</string>
+    <string name="fileUploadProgressSubtitle">Ladataan tiedostoihin</string>
+    <string name="submissionProgressSubtitle">Ladataan lähetystä kohteeseen \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Ladataan tehtäväpalautusta</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Ladataan tiedostoja</string>
+    <string name="cancelSubmissionDialogTitle">Peruuta lähetys</string>
+    <string name="cancelSubmissionDialogMessage">Tämä peruuttaa ja poistaa lähetyksesi.</string>
+    <string name="fileUploadError">Tiedoston lataus epäonnistui</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Lataa Canvas-sovellukseen kohteelle %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Lataa omiin tiedostoihin</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lähetä tehtävä</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Valitse kurssi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Valitse tehtävä</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Peruutetaanko lataus?</string>
+    <string name="cancelFileUploadMessage">Tämä peruuttaa latauksesi.</string>
+    <string name="menuTitleFilterAssignments">Suodata tehtäviä</string>
+    <string name="filterAssignmentDialogTitle">Suodata tehtäviä</string>
+    <string name="filterAssignmentsDialogCancel">Peruuta</string>
+    <string name="filterAssignmentAll">Kaikki</string>
+    <string name="filterAssignmentLate">Myöhään</string>
+    <string name="filterAssignmentMissing">Puuttuu</string>
+    <string name="filterAssignmentGraded">Arvioitu</string>
+    <string name="filterAssignmentUpcoming">Tulossa</string>
+    <string name="createdByStudentView">Opiskelijanäkymän luoma</string>
+    <string name="discussionErrorToast">Ilmeni virhe. Aihe ei ehkä enää ole saatavilla.</string>
+    <string name="cameraPermissionPermanentlyDenied">Kameran käyttöoikeus kiellettiin pysyvästi. Voit sallia käyttöoikeuden sovellusasetuksista.</string>
 </resources>

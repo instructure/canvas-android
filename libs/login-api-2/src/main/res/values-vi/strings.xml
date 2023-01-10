@@ -64,7 +64,6 @@
     <string name="logout_no">Không</string>
 
     <!--Smart Login-->
-
     <string name="loginNearYou">Gần Bạn</string>
     <string name="loginCanvasNetwork">Mạng Lưới Canvas</string>
     <string name="loginRightBehindYou">Ngay sau bạn</string>
@@ -93,7 +92,6 @@
     <string name="oneMile">1 dặm (1,6 km)</string>
     <string name="miles">dặm</string>
     <string name="kilometers">km</string>
-F
     <!-- String for submitting tickets -->
     <string name="device">Thiết Bị</string>
     <string name="osVersion">Phiên Bản HĐH</string>
@@ -123,10 +121,11 @@ F
     <string name="masqueradeErrorUserId">Bạn phải nhập id người dùng.</string>
     <string name="masqueradeErrorDomain">Bạn phải nhập tên miền hợp lệ.</string>
     <string name="masqueradeError">Lỗi thử đóng vai trò người dùng.</string>
-    <string name="masqueradeInfo">\\"Đóng vai trò\\" về cơ bản là đăng nhập dưới danh nghĩa người dùng này mà không sử dụng mật khẩu. Bạn sẽ có thể thực hiện mọi thao tác như thể bạn chính là người dùng này và từ góc nhìn của người dùng khác, mọi thứ sẽ như thể chính là người dùng này thực hiện các thao tác đó. Tuy nhiên, nhật ký đánh giá sẽ ghi nhận lại rằng bạn chính là người đã thực hiện thao tác thay mặt cho người dùng này.</string>
+    <string name="masqueradeInfo">\"Đóng vai trò\" về cơ bản là đăng nhập dưới danh nghĩa người dùng này mà không sử dụng mật khẩu. Bạn sẽ có thể thực hiện mọi thao tác như thể bạn chính là người dùng này và từ góc nhìn của người dùng khác, mọi thứ sẽ như thể chính là người dùng này thực hiện các thao tác đó. Tuy nhiên, nhật ký đánh giá sẽ ghi nhận lại rằng bạn chính là người đã thực hiện thao tác thay mặt cho người dùng này.</string>
     <string name="masqueradingAs">Bạn đang đóng vai trò %s</string>
     <string name="stopActingAsTitle">Dừng đóng vai trò&#8230;</string>
     <string name="stopActingAsMessage">Bạn sẽ dừng đóng vai trò %s và trở về tài khoản của bạn.</string>
     <string name="weMadeChanges">Chúng tôi đã thực hiện một số thay đổi.</string>
     <string name="whatsNewText">Xem nội dung mới</string>
+    <string name="findAnotherSchool">Tìm trường khác</string>
 </resources>

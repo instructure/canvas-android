@@ -27,7 +27,7 @@ import org.hamcrest.Matchers
 class SyllabusRenderPage : SyllabusPage() {
 
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
-    private val webView by WaitForViewWithId(R.id.syllabusWebView)
+    private val webView by WaitForViewWithId(R.id.contentWebView)
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecyclerView)
     private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)

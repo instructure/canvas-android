@@ -73,6 +73,8 @@ class CourseBrowserFragment : BaseSyncFragment<
         fun newInstance(context: CanvasContext) = CourseBrowserFragment().apply {
             mCanvasContext = context
         }
+
+        fun makeRoute(canvasContext: CanvasContext?) = Route(CourseBrowserFragment::class.java, canvasContext)
     }
 
     private lateinit var mRecyclerView: RecyclerView
@@ -239,7 +241,7 @@ class CourseBrowserFragment : BaseSyncFragment<
                 )
                 Tab.MODULES_ID -> {
                     val bundle = ModuleListFragment.makeBundle(presenter.canvasContext)
-                    RouteMatcher.route(requireContext(), Route(ModuleListFragment::class.java, null, bundle))
+                    RouteMatcher.route(requireContext(), Route(ModuleListFragment::class.java, presenter.canvasContext, bundle))
                 }
                 Tab.STUDENT_VIEW -> {
                     Analytics.logEvent(AnalyticsEventConstants.STUDENT_VIEW_TAPPED)

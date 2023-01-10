@@ -499,4 +499,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s oznaczono jako niegotowe</string>
     <string name="a11y_markAsDoneWithName">%s Oznacz jako gotowe</string>
     <string name="a11y_markAsNotDoneWithName">%s Oznacz jako niegotowe</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

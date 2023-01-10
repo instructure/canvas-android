@@ -41,6 +41,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
@@ -66,14 +67,14 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     private fun initRoutes() {
-        routes.add(Route("/", CoursesFragment::class.java))
+        routes.add(Route("/", DashboardFragment::class.java))
 
         routes.add(Route("/login.*", RouteContext.DO_NOT_ROUTE))//FIXME: we know about this
 
         routes.add(Route("/conversations", InboxFragment::class.java))
         routes.add(Route("/conversations/:conversation_id", MessageThreadFragment::class.java))
 
-        routes.add(Route(courseOrGroup("/"), CoursesFragment::class.java))
+        routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java))
@@ -113,8 +114,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private fun initClassMap() {
         // Fullscreen Fragments
-        fullscreenFragments.add(CoursesFragment::class.java)
-        fullscreenFragments.add(AllCoursesFragment::class.java)
+        fullscreenFragments.add(DashboardFragment::class.java)
         fullscreenFragments.add(ProfileFragment::class.java)
         fullscreenFragments.add(ViewImageFragment::class.java)
         fullscreenFragments.add(FullscreenInternalWebViewFragment::class.java)
@@ -124,7 +124,6 @@ object RouteMatcher : BaseRouteMatcher() {
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)
         bottomSheetFragments.add(AssigneeListFragment::class.java)
-        bottomSheetFragments.add(EditFavoritesFragment::class.java)
         bottomSheetFragments.add(CourseSettingsFragment::class.java)
         bottomSheetFragments.add(EditQuizDetailsFragment::class.java)
         bottomSheetFragments.add(QuizPreviewWebviewFragment::class.java)
@@ -324,7 +323,7 @@ object RouteMatcher : BaseRouteMatcher() {
             ProfileFragment::class.java.isAssignableFrom(cls) -> fragment = ProfileFragment()
             CourseBrowserFragment::class.java.isAssignableFrom(cls) -> fragment = CourseBrowserFragment.newInstance((canvasContext as Course?)!!)
             CourseBrowserEmptyFragment::class.java.isAssignableFrom(cls) -> fragment = CourseBrowserEmptyFragment.newInstance((canvasContext as Course?)!!)
-            CoursesFragment::class.java.isAssignableFrom(cls) -> fragment = CoursesFragment.getInstance()
+            DashboardFragment::class.java.isAssignableFrom(cls) -> fragment = DashboardFragment.getInstance()
             AssignmentListFragment::class.java.isAssignableFrom(cls) -> fragment = AssignmentListFragment.getInstance(canvasContext!!, route.arguments)
             AssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getAssignmentDetailsFragment(canvasContext, route)
             DueDatesFragment::class.java.isAssignableFrom(cls) -> fragment = DueDatesFragment.getInstance((canvasContext as Course?)!!, route.arguments)
@@ -332,7 +331,6 @@ object RouteMatcher : BaseRouteMatcher() {
             PostPolicyFragment::class.java.isAssignableFrom(cls) -> fragment = PostPolicyFragment.newInstance(route.argsWithContext)
             EditAssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditAssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
             AssigneeListFragment::class.java.isAssignableFrom(cls) -> fragment = AssigneeListFragment.newInstance(route.arguments)
-            EditFavoritesFragment::class.java.isAssignableFrom(cls) -> fragment = EditFavoritesFragment.newInstance(route.arguments)
             CourseSettingsFragment::class.java.isAssignableFrom(cls) -> fragment = CourseSettingsFragment.newInstance((canvasContext as Course?)!!)
             QuizListFragment::class.java.isAssignableFrom(cls) -> fragment = QuizListFragment.newInstance(canvasContext!!)
             QuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getQuizDetailsFragment(canvasContext, route)
@@ -372,6 +370,7 @@ object RouteMatcher : BaseRouteMatcher() {
             CreateOrEditPageDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = CreateOrEditPageDetailsFragment.newInstance(route.arguments)
             FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = FullscreenInternalWebViewFragment.newInstance(route.arguments)
             InternalWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = InternalWebViewFragment.newInstance(route.arguments)
+            HtmlContentFragment::class.java.isAssignableFrom(cls) -> fragment = HtmlContentFragment.newInstance(route.arguments)
         } //NOTE: These should remain at or near the bottom to give fragments that extend InternalWebViewFragment the chance first
 
         return fragment as Type?

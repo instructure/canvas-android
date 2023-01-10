@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -66,6 +67,9 @@ object UserAPI {
 
         @PUT("users/self")
         fun updateUserShortName(@Query("user[short_name]") shortName: String, @Body body: String): Call<User>
+
+        @PUT("users/self")
+        fun updateUserTermsOfUse(@Query("user[terms_of_use]") terms: Int = 1): Call<User>
 
         @GET("users/{userId}/profile")
         fun getUser(@Path("userId") userId: Long?): Call<User>
@@ -170,6 +174,10 @@ object UserAPI {
 
     fun updateUserShortName(adapter: RestBuilder, params: RestParams, shortName: String, callback: StatusCallback<User>) {
         callback.addCall(adapter.build(UsersInterface::class.java, params).updateUserShortName(shortName, "")).enqueue(callback)
+    }
+
+    fun updateUserTerms(adapter: RestBuilder, params: RestParams, callback: StatusCallback<User>) {
+        callback.addCall(adapter.build(UsersInterface::class.java, params).updateUserTermsOfUse()).enqueue(callback)
     }
 
     fun getPeopleList(adapter: RestBuilder, params: RestParams, contextId: Long, callback: StatusCallback<List<User>>) {

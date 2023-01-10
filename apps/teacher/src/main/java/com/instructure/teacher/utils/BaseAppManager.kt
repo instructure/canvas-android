@@ -20,9 +20,12 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.work.Configuration
+import androidx.work.WorkerFactory
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
+import com.heapanalytics.android.config.Options
 import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.AppTheme
@@ -36,7 +39,7 @@ import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 
-open class BaseAppManager : com.instructure.canvasapi2.AppManager() {
+abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configuration.Provider {
 
     override fun onCreate() {
         if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
@@ -84,12 +87,21 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager() {
         filter.addAction(Const.ACTION_MEDIA_UPLOAD_FAIL)
         LocalBroadcastManager.getInstance(this).registerReceiver(mediaUploadReceiver, filter)
 
-        Heap.init(this, BuildConfig.HEAP_APP_ID)
+        val options = Options()
+        options.disableTracking()
+        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
 
     override fun performLogoutOnAuthError() {
         TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
+
+    override fun getWorkManagerConfiguration(): Configuration =
+        Configuration.Builder()
+            .setWorkerFactory(getWorkManagerFactory())
+            .build()
+
+    abstract fun getWorkManagerFactory(): WorkerFactory
 
     companion object {
         val PREF_FILE_NAME = "teacherSP"

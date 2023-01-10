@@ -20,9 +20,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequestBuilder
@@ -35,9 +35,10 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
+import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -64,14 +65,35 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.adapter_submission_comment.*
 import kotlinx.android.synthetic.main.fragment_speedgrader_comments.*
 import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.util.*
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
 @AndroidEntryPoint
 class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, SpeedGraderCommentsPresenter, SpeedGraderCommentsView, SpeedGraderCommentHolder, SpeedGraderCommentsAdapter>(), SpeedGraderCommentsView, FileUploadDialogParent {
+
+    @Inject
+    lateinit var fileUploadInputDao: FileUploadInputDao
+
+    @Inject
+    lateinit var submissionCommentDao: SubmissionCommentDao
+
+    @Inject
+    lateinit var attachmentDao: AttachmentDao
+
+    @Inject
+    lateinit var authorDao: AuthorDao
+
+    @Inject
+    lateinit var mediaCommentDao: MediaCommentDao
+
+    @Inject
+    lateinit var pendingSubmissionCommentDao: PendingSubmissionCommentDao
+
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
     var mSubmissionId by LongArg()
     var mSubmissionHistory by ParcelableArrayListArg<Submission>()
@@ -92,7 +114,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
-    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage)
+    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage, submissionCommentDao, attachmentDao, authorDao, mediaCommentDao, pendingSubmissionCommentDao, fileUploadInputDao)
     override fun onCreateView(view: View) {
         commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
             if (commentEditText.text.toString() != it.comment) {
@@ -209,10 +231,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     @Suppress("unused")
     @Subscribe
     fun onUploadMediaComment(event: UploadMediaCommentEvent) {
-        if (mAssignee.id == event.assigneeId) {
-            presenter.createPendingMediaComment(event.file.absolutePath)
-            uploadSGMediaComment(event.file, event.assignmentId, event.courseId)
-            addMediaAttachment.isEnabled = true
+        lifecycleScope.launch {
+            if (mAssignee.id == event.assigneeId) {
+                val id = presenter.createPendingMediaComment(event.file.absolutePath)
+                uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id)
+                addMediaAttachment.isEnabled = true
+            }
         }
     }
 
@@ -245,20 +269,25 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     }
 
     override fun restartWorker(fileUploadWorkerData: FileUploadWorkerData) {
-        val data = FileUploadBundleCreator().getTeacherSubmissionCommentBundle(
-            fileUploadWorkerData.filePaths.map { it.toUri() },
-            fileUploadWorkerData.courseId,
-            fileUploadWorkerData.assignmentId,
-            fileUploadWorkerData.userId
-        ).build()
+        lifecycleScope.launch {
+            val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
+                .build()
 
-        val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-            .setInputData(data)
-            .build()
+            val inputData = FileUploadInputEntity(
+                workerId = worker.id.toString(),
+                filePaths = fileUploadWorkerData.filePaths,
+                courseId = fileUploadWorkerData.courseId,
+                assignmentId = fileUploadWorkerData.assignmentId,
+                userId = fileUploadWorkerData.userId,
+                action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT
+            )
 
-        WorkManager.getInstance(requireContext()).apply {
-            workInfoLiveDataCallback(null, getWorkInfoByIdLiveData(worker.id))
-            enqueue(worker)
+            fileUploadInputDao.insert(inputData)
+
+            WorkManager.getInstance(requireContext()).apply {
+                workInfoLiveDataCallback(null, getWorkInfoByIdLiveData(worker.id))
+                enqueue(worker)
+            }
         }
     }
 
@@ -300,7 +329,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
      *
      * @param mediaFile File pointing to the media to upload
      */
-    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long) {
+    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long, dbId: Long) {
         val mediaUri = Uri.fromFile(mediaFile)
 
         val serviceIntent = Intent(requireActivity(), NotoriousUploadService::class.java)
@@ -312,6 +341,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             putExtra(Const.STUDENT_ID, mAssignee.id)
             putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
             putExtra(Const.PAGE_ID, presenter.mPageId)
+            putExtra(Const.ID, dbId)
         }
 
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)

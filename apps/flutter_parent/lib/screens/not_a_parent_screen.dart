@@ -20,6 +20,7 @@ import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
@@ -39,6 +40,7 @@ class NotAParentScreen extends StatelessWidget {
               buttonText: L10n(context).returnToLogin,
               onButtonTap: () async {
                 await ApiPrefs.performLogout(app: ParentApp.of(context));
+                await FeaturesUtils.performLogout();
                 locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
               },
             ),

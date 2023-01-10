@@ -149,18 +149,18 @@
     <string name="creating_announcement">Creating Announcement&#8230;</string>
 
     <string name="copy_email">Copy email address</string>
-    <string name="all_grading_periods">All Grading Periods</string>
+    <string name="all_grading_periods">All Marking Periods</string>
     <string name="no_submissions">No submissions</string>
-    <string name="all_submissions_graded">All submissions graded</string>
+    <string name="all_submissions_graded">All submissions marked</string>
     <string name="icon">icon</string>
     <plurals name="grading_status_assignment">
-        <item quantity="one">%d submission needs grading</item>
-        <item quantity="other">%d submissions need grading</item>
+        <item quantity="one">%d submission needs marking</item>
+        <item quantity="other">%d submissions need marking</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
-        <item quantity="one">There is %d assignee without a grade.</item>
-        <item quantity="other">There are %d assignees without grades.</item>
+        <item quantity="one">There is %d assignee without a mark.</item>
+        <item quantity="other">There are %d assignees without marks.</item>
     </plurals>
 
     <string name="inbox_empty_title">No messages</string>
@@ -212,8 +212,8 @@
         <item quantity="other">+ %d Messages</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="one">%d submission needs grading</item>
-        <item quantity="other">%d submissions need grading</item>
+        <item quantity="one">%d submission needs marking</item>
+        <item quantity="other">%d submissions need marking</item>
     </plurals>
 
     <string name="delete_assignment_message">Are you sure you want to delete this assignment?</string>
@@ -228,9 +228,9 @@
     <string name="submission_status_excused">Excused</string>
     <string name="last_login_format">Last login: %s</string>
 
-    <string name="turnOnAnonymousGrading">Turn on Anonymous Grading</string>
-    <string name="turnOffAnonymousGrading">Turn off Anonymous Grading</string>
-    <string name="anonymousGradingLabel">Anonymous Grading</string>
+    <string name="turnOnAnonymousGrading">Turn on Anonymous Marking</string>
+    <string name="turnOffAnonymousGrading">Turn off Anonymous Marking</string>
+    <string name="anonymousGradingLabel">Anonymous Marking</string>
     <string name="anonymousStudentLabel">Student</string>
 
     <!-- TODO -->
@@ -240,14 +240,14 @@
         <item>All Submissions</item>
         <item>Late Submissions</item>
         <item>Missing Submissions</item>
-        <item>Grade High</item>
-        <item>Grade Low</item>
+        <item>Mark High</item>
+        <item>Mark Low</item>
     </string-array>
 
     <string-array name="people_filters">
         <item>By Name</item>
-        <item>Grade High to Low</item>
-        <item>Grade Low to High</item>
+        <item>Mark High to Low</item>
+        <item>Mark Low to High</item>
     </string-array>
 
     <string name="content_description_course_tab">Course Tab</string>
@@ -342,12 +342,12 @@
     <string name="edit_quiz">Edit Quiz</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
-    <string name="grade_total">Grade Total</string>
-    <string name="grade">Grade</string>
-    <string name="enter_grade">Enter Grade</string>
+    <string name="grade_total">Mark Total</string>
+    <string name="grade">Mark</string>
+    <string name="enter_grade">Enter Mark</string>
     <string name="override">Override</string>
     <string name="calculated_by_rubric">Calculated by rubric</string>
-    <string name="customize_grade">Customise Grade</string>
+    <string name="customize_grade">Customise Mark</string>
     <string name="out_of_points">Out of %1$s</string>
     <string name="gpa">GPA</string>
     <string name="letter_grade">Letter Grade</string>
@@ -355,7 +355,7 @@
     <string name="excuseGroup">Excuse group</string>
     <string name="complete_grade">Complete</string>
     <string name="incomplete_grade">Incomplete</string>
-    <string name="not_graded">Not Graded</string>
+    <string name="not_graded">Not Marked</string>
     <string name="excused">Excused</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
     <string name="grade_value_format_talk_back">%1$s out of %2$s</string>
@@ -383,13 +383,13 @@
     <string name="add_due_date">Add Due Date</string>
     <string name="full_submission_details">Full submission details</string>
     <string name="graded">Marked</string>
-    <string name="needsGrading">Needs Grading</string>
+    <string name="needsGrading">Needs Marking</string>
     <string name="not_submitted">Not Submitted</string>
     <string name="a11y_viewSubmissionAction">view submission details</string>
-    <string name="content_description_submission_donut_graded" formatted="false">Graded, %s of %s</string>
-    <string name="content_description_submission_donut_needs_grading" formatted="false">Needs Grading, %s of %s</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Marked, %s of %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Needs Marking, %s of %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Not submitted, %s of %s</string>
-    <string name="display_grade_as">Display Grade as&#8230;</string>
+    <string name="display_grade_as">Display Mark as&#8230;</string>
     <string name="percentage">Percentage</string>
     <string name="complete_incomplete">Complete/Incomplete</string>
     <string name="points">Points</string>
@@ -414,7 +414,7 @@
 
   <string name="not_a_teacher">Not a teacher?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">One of our other apps might be a better fit. Tap one to visit the Play Store.</string>
-    <string name="sg_tab_grade">Grade</string>
+    <string name="sg_tab_grade">Mark</string>
     <string name="sg_tab_comments">Comments</string>
     <string name="sg_tab_files">Files</string>
     <string name="sg_tab_files_w_counter">Files (%d)</string>
@@ -422,7 +422,7 @@
     <string name="all_submissions">All Submissions</string>
     <string name="submitted_late">Submitted Late</string>
     <string name="havent_submitted_yet">Haven\'t Submitted Yet</string>
-    <string name="havent_been_graded">Haven\'t Been Graded</string>
+    <string name="havent_been_graded">Haven\'t Been Marked</string>
     <string name="scored_less_than">Scored Less Than&#8230;</string>
     <string name="scored_more_than">Scored More Than&#8230;</string>
     <string name="scored_less_than_value">Scored Less Than %s</string>
@@ -466,19 +466,19 @@
     <string name="empty_course_list_message">Add a few of your favourite courses to make this place your home.</string>
     <string name="add_courses">Add Courses</string>
     <string name="unable_to_add_course_to_favorites">This course cannot be added to the courses menu at this time.</string>
-    <string name="grading_periods_filter">Grading Periods Filter</string>
+    <string name="grading_periods_filter">Marking Periods Filter</string>
     <string name="assignments">Assignments</string>
     <string name="clear_filter">Clear filter</string>
     <string name="due">Due %1$s</string>
     <string name="updated">Updated %1$s</string>
 
     <plurals name="needsGradingCount">
-        <item quantity="one">%s needs grading</item>
-        <item quantity="other">%s need grading</item>
+        <item quantity="one">%s needs marking</item>
+        <item quantity="other">%s need marking</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
-        <item quantity="one">Needs Grading</item>
-        <item quantity="other">Need Grading</item>
+        <item quantity="one">Needs Marking</item>
+        <item quantity="other">Need Marking</item>
     </plurals>
     <string name="at">at</string>
     <plurals name="quantityPointsAbbreviated">
@@ -681,7 +681,7 @@
     <string name="tutorialRubricMessage">Tap and hold number to see description.</string>
 
     <string name="viewQuizSubmission">View Submission</string>
-    <string name="gradeQuizSubmission">Grade Submission</string>
+    <string name="gradeQuizSubmission">Mark Submission</string>
     <string name="comment">Comment</string>
     <string name="messageStudentsWho">Message Students Who&#8230;</string>
 
@@ -715,6 +715,7 @@
     <string name="changeUser">Change User</string>
     <string name="general">General</string>
     <string name="sendFeedback">Send Feedback</string>
+    <string name="rateOnTheAppStore">Rate on the App Store</string>
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Terms of Use</string>
@@ -851,7 +852,7 @@
     <string name="errorUpdatingFolder">An error occurred updating this folder</string>
 
     <string name="toDoEmpty">Nothing more to do!\n Enjoy your day.</string>
-    <string name="toDoNoSubmissions">There are no submissions to grade for this assignment.</string>
+    <string name="toDoNoSubmissions">There are no submissions to mark for this assignment.</string>
     <string name="errorToDoRouteFailed">An error occurred trying to view this To Do item.</string>
     <string name="errorIsDesigner">Designer enrolment cannot view this.</string>
 
@@ -861,8 +862,8 @@
     <string name="filterBySection">Filter by section</string>
     <string name="filterSubmissionsLowercase">Filter submissions</string>
     <string name="latePenalty">Late penalty</string>
-    <string name="finalGrade">Final Grade</string>
-    <string name="moderatedGradingUnsupported">Moderated grading is not currently supported in mobile SpeedGrader.</string>
+    <string name="finalGrade">Final Mark</string>
+    <string name="moderatedGradingUnsupported">Moderated marking is not currently supported in mobile SpeedGrader.</string>
     <plurals name="latePolicyPenalty">
         <item quantity="one">-%s pt</item>
         <item quantity="other">-%s pts</item>
@@ -893,7 +894,7 @@
     <string name="editSyllabusShowCourseSummary">Show course summary</string>
     <string name="editSyllabusContentAccessibilityLabel">Syllabus content</string>
 
-    <string name="no_grade">No grade</string>
+    <string name="no_grade">No mark</string>
     <string name="excuse">Excuse</string>
-    <string name="speed_grader_overgraded_by">Overgraded by %s</string>
+    <string name="speed_grader_overgraded_by">Overmarked by %s</string>
 </resources>

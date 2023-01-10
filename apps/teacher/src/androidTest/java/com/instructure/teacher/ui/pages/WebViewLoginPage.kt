@@ -18,7 +18,9 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.*
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.page.BasePage
@@ -48,7 +50,7 @@ class WebViewLoginPage : BasePage() {
 
     //region Assertion Helpers
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         emailField()
         passwordField()
         loginButton()

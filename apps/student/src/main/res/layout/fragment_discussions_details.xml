@@ -313,15 +313,17 @@
                             android:padding="14dp"
                             android:scaleType="centerInside"
                             android:visibility="gone"
+                            app:tint="@color/textDarkest"
                             app:srcCompat="@drawable/ic_attachment" />
 
                     </LinearLayout>
 
-                    <com.instructure.pandautils.views.CanvasWebView
-                        android:id="@+id/discussionTopicHeaderWebView"
+                    <com.instructure.pandautils.views.CanvasWebViewWrapper
+                        android:id="@+id/discussionTopicHeaderWebViewWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:background="@color/backgroundLightest"
                         android:minHeight="48dp" />
 
                     <TextView
@@ -399,8 +401,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <com.instructure.pandautils.views.CanvasWebView
-                            android:id="@+id/discussionRepliesWebView"
+                        <com.instructure.pandautils.views.CanvasWebViewWrapper
+                            android:id="@+id/discussionRepliesWebViewWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp" />

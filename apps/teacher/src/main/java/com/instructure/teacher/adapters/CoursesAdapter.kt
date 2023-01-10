@@ -19,16 +19,16 @@ package com.instructure.teacher.adapters
 import android.content.Context
 import android.view.View
 import com.instructure.canvasapi2.models.Course
-import com.instructure.teacher.fragments.AllCoursesFragment
+import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.holders.CoursesViewHolder
-import com.instructure.teacher.presenters.CoursesPresenter
+import com.instructure.teacher.presenters.DashboardPresenter
 import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class CoursesAdapter(
-        context: Context,
-        presenter: CoursesPresenter,
-        private val mCourseCallback: AllCoursesFragment.CourseBrowserCallback?)
+    context: Context,
+    presenter: DashboardPresenter,
+    private val mCourseCallback: DashboardFragment.CourseBrowserCallback?)
     : SyncRecyclerAdapter<Course, CoursesViewHolder, CoursesView>(context, presenter) {
 
     override fun bindHolder(model: Course, holder: CoursesViewHolder, position: Int) {

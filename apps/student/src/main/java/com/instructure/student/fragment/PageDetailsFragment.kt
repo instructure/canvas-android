@@ -19,6 +19,7 @@ package com.instructure.student.fragment
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.PageManager
@@ -47,6 +48,7 @@ import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
 import kotlinx.android.synthetic.main.fragment_webview.*
+import kotlinx.android.synthetic.main.fragment_webview.view.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.Subscribe
 import retrofit2.Response
@@ -92,14 +94,14 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onPause() {
         super.onPause()
-        canvasWebView?.onPause()
+        canvasWebViewWrapper?.webView?.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         fetchDataJob?.cancel()
         loadHtmlJob?.cancel()
-        canvasWebView?.destroy()
+        canvasWebViewWrapper?.webView?.destroy()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,6 +125,12 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                     RouteMatcher.openMedia(activity, url)
                 }
             }
+        }
+
+        val layoutParams = getCanvasWebView()?.layoutParams
+        layoutParams?.let {
+            it.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            getCanvasWebView()?.layoutParams = it
         }
     }
 
@@ -194,7 +202,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
         if (page.body != null && page.body != "null" && page.body != "") {
             // Add RTL support
-            if (canvasWebView.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+            if (canvasWebViewWrapper.webView.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
                 page.body = "<body dir=\"rtl\">${page.body}</body>"
             }
 
@@ -202,8 +210,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             val body = """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + page.body.orEmpty()
 
             // Load the html with the helper function to handle iframe cases
-            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), body, {
-                canvasWebView.loadHtml(it, page.title, baseUrl = page.htmlUrl)
+            loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
+                canvasWebViewWrapper?.loadHtml(it, page.title, baseUrl = page.htmlUrl)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
             }

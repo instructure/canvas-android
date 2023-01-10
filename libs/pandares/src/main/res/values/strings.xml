@@ -1311,7 +1311,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Upload to My Files</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Submit assignment</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choose a course</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choose a course, selected course is: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choose an assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choose an assignment, selected assignment is: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Cancel Upload?</string>
     <string name="cancelFileUploadMessage">This will cancel your upload.</string>
@@ -1326,6 +1328,19 @@
     <string name="createdByStudentView">Created by Student View</string>
     <string name="discussionErrorToast">Error occurred. The topic may no longer be available.</string>
     <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
+    <string name="unpublish_assignment_error">Can’t unpublish assignment if there are student submissions.</string>
+    <string name="subscribeToCalendar">Subscribe to Calendar Feed</string>
+    <string name="subscribeToCalendarMessage">You can sync your Canvas calendar to your Google Calendar account by clicking the Subscribe button in this dialog. Then, you’ll need to go to the Google Calendar app on your device and enable sync in the settings for the new calendar.</string>
+    <string name="subscribeButton">Subscribe</string>
+    <string name="switchToLightMode">Switch to Light Mode</string>
+    <string name="switchToDarkMode">Switch to Dark Mode</string>
+    <string name="acceptableUsePolicyDescription">Either you\'re a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.</string>
+    <string name="acceptableUsePolicyTitle">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyButton">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
+    <string name="acceptableUsePolicySubmit">Submit</string>
+    <string name="acceptFail">Failed to submit terms acceptance.</string>
+
     <string name="deleteSelected">Delete</string>
     <string name="archiveSelected">Archive</string>
     <string name="markAsReadSelected">Mark as read</string>

@@ -13,9 +13,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import com.instructure.android.buildtools.transform.ProjectTransformer
-import com.instructure.android.buildtools.transform.MasqueradeUITransformer
+
 import com.instructure.android.buildtools.transform.LocaleTransformer
+import com.instructure.android.buildtools.transform.MasqueradeUITransformer
+import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.ScreenViewTransformer
 
 apply plugin: 'com.android.application'
@@ -40,8 +41,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 53
-        versionName = '1.20.0'
+        versionCode = 54
+        versionName = '1.21.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -197,6 +198,10 @@ android {
     buildFeatures {
         dataBinding true
     }
+
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 androidExtensions {
@@ -285,6 +290,8 @@ dependencies {
     kapt Libs.HILT_COMPILER
     androidTestImplementation Libs.HILT_TESTING
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    kapt Libs.HILT_ANDROIDX_COMPILER
 
     androidTestImplementation Libs.UI_AUTOMATOR
 
@@ -293,6 +300,12 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP
+
+    /* ROOM */
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+    implementation Libs.ROOM_COROUTINES
+    testImplementation Libs.ROOM_TEST
 }
 
 apply plugin: 'com.google.gms.google-services'

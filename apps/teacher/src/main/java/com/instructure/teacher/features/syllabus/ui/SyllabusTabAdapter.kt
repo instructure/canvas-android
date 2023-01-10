@@ -47,7 +47,7 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
         container.addView(view)
 
         if (isSyllabusPosition(position)) {
-            setupWebView(view.syllabusWebView)
+            setupWebView(view.syllabusWebViewWrapper.webView)
         } else {
             setupLayoutManager(view, container.context)
         }

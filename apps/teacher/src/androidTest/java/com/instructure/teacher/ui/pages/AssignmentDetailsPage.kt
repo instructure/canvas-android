@@ -45,7 +45,7 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     private val dueDatesLayout by OnViewWithId(R.id.dueLayout)
     private val submissionsLayout by OnViewWithId(R.id.submissionsLayout)
     private val viewAllSubmissions by OnViewWithId(R.id.viewAllSubmissions)
-    private val descriptionWebView by WaitForViewWithId(R.id.descriptionWebView, autoAssert = false)
+    private val descriptionWebView by WaitForViewWithId(R.id.contentWebView, autoAssert = false)
     private val noDescriptionTextView by WaitForViewWithId(R.id.noDescriptionTextView, autoAssert = false)
     private val availabilityTextView by OnViewWithId(R.id.availabilityTextView, autoAssert = false)
     private val availabilityLayout by OnViewWithId(R.id.availabilityLayout, autoAssert = false)
@@ -56,7 +56,7 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     private val notSubmittedDonutWrapper by OnViewWithId(R.id.notSubmittedWrapper, autoAssert = false)
 
     fun assertDisplaysInstructions() {
-        scrollTo(R.id.descriptionWebView)
+        scrollTo(R.id.contentWebView)
         descriptionWebView.assertVisible()
     }
 

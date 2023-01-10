@@ -103,7 +103,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         tokenLogin(teacher)
 
         Log.d(STEP_TAG,"Open ${course.name} course and navigate to Assignments Page.")
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
 
         Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert that that there is one 'Needs Grading' submission (for ${noSubStudent.name} student) and one 'Not Submitted' submission (for ${student.name} student. ")

@@ -230,8 +230,8 @@ class AppLocalizations {
         desc: 'Message displayed when calendar events could not be loaded for the current student',
       );
 
-  String get calendarTapToFavoriteDesc => Intl.message('Tap to favorite the courses you want to see on the Calendar.',
-      desc: 'Description text on calendar filter screen.');
+  String get calendarSelectFavoriteCalendars => Intl.message('Select elements to display on the calendar.',
+      desc: 'Select calendars description');
 
   String get gotoTodayButtonLabel =>
       Intl.message('Go to today', desc: 'Accessibility label used for the today button in the planner');

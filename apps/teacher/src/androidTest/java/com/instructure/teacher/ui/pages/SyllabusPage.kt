@@ -34,7 +34,7 @@ import org.hamcrest.Matchers.comparesEqualTo
 open class SyllabusPage : BasePage(R.id.syllabusPage) {
 
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
-    private val webView by WaitForViewWithId(R.id.syllabusWebView)
+    private val webView by WaitForViewWithId(R.id.contentWebView)
 
     fun assertItemDisplayed(itemText: String) {
         scrollRecyclerView(R.id.syllabusEventsRecyclerView, itemText)

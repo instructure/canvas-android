@@ -213,4 +213,10 @@
         <item name="colorControlActivated">@color/backgroundInfo</item>
     </style>
 
+    <style name="SearchTheme">
+        <item name="android:colorControlActivated">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
 </resources>

@@ -37,9 +37,7 @@ class SettingsE2ETest : TeacherTest() {
 
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -54,44 +52,64 @@ class SettingsE2ETest : TeacherTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to User Settings Page.")
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
         dashboardPage.openUserSettingsPage()
         settingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Open Profile Settings Page.")
+        Log.d(STEP_TAG, "Open Profile Settings Page.")
         settingsPage.openProfileSettingsPage()
         profileSettingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Click on Edit Pencil Icon on the toolbar.")
+        Log.d(STEP_TAG, "Click on Edit Pencil Icon on the toolbar.")
         profileSettingsPage.clickEditPencilIcon()
 
         val newUserName = "John Doe"
-        Log.d(STEP_TAG,"Edit username to: $newUserName. Click on 'Save' button.")
+        Log.d(STEP_TAG, "Edit username to: $newUserName. Click on 'Save' button.")
         editProfileSettingsPage.editUserName(newUserName)
         editProfileSettingsPage.clickOnSave()
 
-        Log.d(STEP_TAG,"Assert that the username has been changed to $newUserName on the Profile Settings Page.")
+        Log.d(
+            STEP_TAG,
+            "Assert that the username has been changed to $newUserName on the Profile Settings Page."
+        )
         try {
-          Log.d(STEP_TAG,"Check if the user has landed on Settings Page. If yes, navigate back to Profile Settings Page.")
-          //Sometimes in Bitrise it's working different than locally, because in Bitrise sometimes the user has been navigated to Settings Page after saving a new name,
-          settingsPage.assertPageObjects()
-          settingsPage.openProfileSettingsPage()
-        } catch(e: NoMatchingViewException) {
-          Log.d(STEP_TAG,"Did not throw the user back to the Settings Page, so the scenario can be continued.")
-      }
+            Log.d(
+                STEP_TAG,
+                "Check if the user has landed on Settings Page. If yes, navigate back to Profile Settings Page."
+            )
+            //Sometimes in Bitrise it's working different than locally, because in Bitrise sometimes the user has been navigated to Settings Page after saving a new name,
+            settingsPage.assertPageObjects()
+            settingsPage.openProfileSettingsPage()
+        } catch (e: NoMatchingViewException) {
+            Log.d(
+                STEP_TAG,
+                "Did not throw the user back to the Settings Page, so the scenario can be continued."
+            )
+        }
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.assertUserNameIs(newUserName)
 
-        Log.d(STEP_TAG,"Click on Edit Pencil Icon on the toolbar.")
+        Log.d(STEP_TAG, "Click on Edit Pencil Icon on the toolbar.")
         profileSettingsPage.clickEditPencilIcon()
 
-        Log.d(STEP_TAG,"Edit username to 'Unsaved userName' but DO NOT CLICK ON SAVE. Navigate back to Profile Settings Page without saving.")
+        Log.d(STEP_TAG, "Edit username to 'Unsaved userName' but DO NOT CLICK ON SAVE.")
         editProfileSettingsPage.editUserName("Unsaved userName")
-        Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Assert that the username value remained $newUserName.")
-        profileSettingsPage.assertUserNameIs(newUserName)
+        //this is a workaround for that sometimes on FTL we need to click twice on the back button to navigate back to the Profile Settings page.
+        //Probably because of sometimes the soft keyboard does not show up.
+        try {
+            Log.d(STEP_TAG, "Press back button (without saving). The goal is to navigate back to the Profile Settings Page.")
+            Espresso.pressBack()
 
+            Log.d(STEP_TAG, "Assert that the username value remained $newUserName.")
+            profileSettingsPage.assertUserNameIs(newUserName)
+        } catch (e: NoMatchingViewException) {
+            Log.d(STEP_TAG, "Press back button (without saving). The goal is to navigate back to the Profile Settings Page.")
+            Espresso.pressBack()
+
+            Log.d(STEP_TAG, "Assert that the username value remained $newUserName.")
+            profileSettingsPage.assertUserNameIs(newUserName)
+        }
     }
 
     @E2E

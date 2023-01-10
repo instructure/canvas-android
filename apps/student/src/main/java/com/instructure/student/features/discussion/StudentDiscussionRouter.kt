@@ -13,7 +13,8 @@ class StudentDiscussionRouter(private val fragmentActivity: FragmentActivity) : 
     override fun routeToDiscussion(
         canvasContext: CanvasContext,
         isRedesign: Boolean,
-        discussionTopicHeader: DiscussionTopicHeader
+        discussionTopicHeader: DiscussionTopicHeader,
+        isAnnouncement: Boolean
     ) {
         val route = when {
             isRedesign -> DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeader)

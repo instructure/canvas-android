@@ -1,6 +1,8 @@
 package com.instructure.pandautils.features.discussion.router
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +32,7 @@ class DiscussionRouterFragment : Fragment() {
         default = 0L,
         key = DISCUSSION_TOPIC_HEADER_ID
     )
+    private var isAnnouncement by BooleanArg(key = DISCUSSION_ANNOUNCEMENT, default = false)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +46,7 @@ class DiscussionRouterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.route(canvasContext, discussionTopicHeader, discussionTopicHeaderId)
+        viewModel.route(canvasContext, discussionTopicHeader, discussionTopicHeaderId, isAnnouncement)
 
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
@@ -58,7 +61,8 @@ class DiscussionRouterFragment : Fragment() {
                 discussionRouter.routeToDiscussion(
                     action.canvasContext,
                     action.isRedesignEnabled,
-                    action.discussionTopicHeader
+                    action.discussionTopicHeader,
+                    action.isAnnouncement
                 )
             }
             is DiscussionRouterAction.RouteToGroupDiscussion -> {
@@ -66,7 +70,7 @@ class DiscussionRouterFragment : Fragment() {
             }
             is DiscussionRouterAction.ShowToast -> {
                 toast(action.toast, Toast.LENGTH_SHORT)
-                requireActivity().onBackPressed()
+                Handler(Looper.getMainLooper()).post { requireActivity().onBackPressed() }
             }
         }
     }
@@ -76,18 +80,21 @@ class DiscussionRouterFragment : Fragment() {
         const val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
         const val DISCUSSION_TOPIC_HEADER_ID = "discussion_topic_header_id"
         const val DISCUSSION_TOPIC = "discussion_topic"
+        const val DISCUSSION_ANNOUNCEMENT = "isAnnouncement"
 
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader, isAnnouncement: Boolean = false): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
+                putBoolean(DISCUSSION_ANNOUNCEMENT, isAnnouncement)
             }
 
             return Route(null, DiscussionRouterFragment::class.java, canvasContext, bundle)
         }
 
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long): Route {
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, isAnnouncement: Boolean = false): Route {
             val bundle = Bundle().apply {
                 putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
+                putBoolean(DISCUSSION_ANNOUNCEMENT, isAnnouncement)
             }
 
             return Route(null, DiscussionRouterFragment::class.java, canvasContext, bundle)

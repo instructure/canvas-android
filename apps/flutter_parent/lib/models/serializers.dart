@@ -90,6 +90,7 @@ import 'dataseeding/pairing_code.dart';
 import 'dataseeding/seed_context.dart';
 import 'dataseeding/seeded_user.dart';
 import 'dataseeding/user_name_data.dart';
+import 'feature_flags.dart';
 import 'file_upload_config.dart';
 
 part 'serializers.g.dart';
@@ -128,6 +129,7 @@ part 'serializers.g.dart';
   CreateSubmissionWrapper,
   CreateUserInfo,
   Enrollment,
+  FeatureFlags,
   FileUploadConfig,
   Grade,
   GradeSubmissionInfo,

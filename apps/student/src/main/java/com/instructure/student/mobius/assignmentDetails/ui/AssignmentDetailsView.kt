@@ -133,7 +133,7 @@ class AssignmentDetailsView(
     }
 
     private fun setupDescriptionView() {
-        descriptionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        descriptionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(context as FragmentActivity, url)
             }
@@ -148,7 +148,7 @@ class AssignmentDetailsView(
             }
         }
 
-        descriptionWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        descriptionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
                 InternalWebviewFragment.loadInternalWebView(
                     context,
@@ -158,6 +158,9 @@ class AssignmentDetailsView(
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
+
+        descriptionWebViewWrapper.webView.focusable = View.NOT_FOCUSABLE
+        descriptionWebViewWrapper.webView.isFocusableInTouchMode = false
     }
 
     override fun render(state: AssignmentDetailsViewState) {
@@ -175,7 +178,7 @@ class AssignmentDetailsView(
             submissionRubricButton.setVisible(visibilities.submissionAndRubricButton)
             lockImageContainer.setVisible(visibilities.lockedImage)
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
-            descriptionWebView.setVisible(visibilities.description)
+            descriptionWebViewWrapper.setVisible(visibilities.description)
             allowedAttemptsContainer.setVisible(visibilities.allowedAttempts)
             submitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.submitButton
             if (visibilities.submitButtonEnabled) {
@@ -219,7 +222,7 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, state.description, {
+            loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(context, state.description, {
                 loadDescriptionHtml(it, state.assignmentName, state.htmlUrl)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(context, canvasContext, it)
@@ -233,7 +236,7 @@ class AssignmentDetailsView(
     }
 
     private fun loadDescriptionHtml(html: String, contentDescription: String?, baseUrl: String?) {
-        descriptionWebView.loadHtml(html, contentDescription, baseUrl = baseUrl)
+        descriptionWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = baseUrl)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
@@ -259,7 +262,7 @@ class AssignmentDetailsView(
 
     override fun onDispose() {
         loadHtmlJob?.cancel()
-        descriptionWebView.stopLoading()
+        descriptionWebViewWrapper.webView.stopLoading()
     }
 
     fun showSubmitDialogView(assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities, ltiToolUrl: String? = null, ltiToolName: String? = null) {

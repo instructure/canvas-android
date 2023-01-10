@@ -16,11 +16,7 @@
 
 package com.instructure.dataseeding.api
 
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.model.DiscussionApiModel
-import com.instructure.dataseeding.model.EnrollmentApiModel
-import com.instructure.dataseeding.model.FavoriteApiModel
+import com.instructure.dataseeding.model.*
 
 // Data-seeding API
 object SeedApi {
@@ -29,6 +25,7 @@ object SeedApi {
     data class SeedDataRequest (
         val teachers: Int = 0,
         val students: Int = 0,
+        val parents: Int = 0,
         val courses: Int = 0,
         val pastCourses: Int = 0,
         val favoriteCourses: Int = 0,
@@ -49,6 +46,7 @@ object SeedApi {
         val teachersList = mutableListOf<CanvasUserApiModel>()
         val taList = mutableListOf<CanvasUserApiModel>()
         val studentsList = mutableListOf<CanvasUserApiModel>()
+        val parentsList = mutableListOf<CanvasUserApiModel>()
         val coursesList = mutableListOf<CourseApiModel>()
         val enrollmentsList = mutableListOf<EnrollmentApiModel>()
         val favoriteCoursesList = mutableListOf<FavoriteApiModel>()
@@ -64,6 +62,9 @@ object SeedApi {
         }
         fun addStudents(student: CanvasUserApiModel) {
             studentsList.add(student)
+        }
+        fun addParents(parent: CanvasUserApiModel) {
+            parentsList.add(parent)
         }
         fun addCourses(course: CourseApiModel) {
             coursesList.add(course)
@@ -184,6 +185,13 @@ object SeedApi {
                     addEnrollments(EnrollmentsApi.enrollUserAsStudent(coursesList[c].id, studentsList[s].id))
                 }
 
+                for (p in 0 until request.parents) {
+                    addParents(UserApi.createCanvasUser())
+                    studentsList.forEach { student ->
+                        addEnrollments(EnrollmentsApi.enrollUserAsObserver(coursesList[c].id, parentsList[p].id, student.id))
+                    }
+                }
+
                 for (ta in 0 until request.TAs) {
                     addTAs(UserApi.createCanvasUser())
                     addEnrollments(EnrollmentsApi.enrollUserAsTA(coursesList[c].id, taList[ta].id))
@@ -214,7 +222,7 @@ object SeedApi {
             if(request.locked) {
                 addAllAnnouncements(
                     (0 until request.announcements).map {
-                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token)
+                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token, locked = true)
                     }
                 )
             }

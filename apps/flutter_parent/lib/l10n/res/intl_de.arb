@@ -21,35 +21,35 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "No Students": "Keine Studenten",
+  "No Students": "Keine Studierende",
   "@No Students": {
     "description": "Text for when an observer has no students they are observing",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to show student selector": "Zum Anzeigen des Studentenwählers antippen",
+  "Tap to show student selector": "Zum Anzeigen des Studierendenwählers antippen",
   "@Tap to show student selector": {
     "description": "Semantics label for the area that will show the student selector when tapped",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to pair with a new student": "Zum Koppeln mit einem neuen Studenten antippen",
+  "Tap to pair with a new student": "Zum Koppeln mit einer/einem neuen Studierenden antippen",
   "@Tap to pair with a new student": {
     "description": "Semantics label for the add student button in the student selector",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to select this student": "Zum Auswählen dieses Studenten antippen",
+  "Tap to select this student": "Zum Auswählen dieser/dieses Studierenden antippen",
   "@Tap to select this student": {
     "description": "Semantics label on individual students in the student switcher",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Manage Students": "Teilnehmer verwalten",
+  "Manage Students": "Studierende verwalten",
   "@Manage Students": {
     "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
     "type": "text",
@@ -70,7 +70,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Switch Users": "Benutzer wechseln",
+  "Switch Users": "Benutzer*innen wechseln",
   "@Switch Users": {
     "description": "Label text for the Switch Users nav drawer button",
     "type": "text",
@@ -196,7 +196,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's calendar": "Fehler beim Laden Ihres Studentenkalenders",
+  "There was an error loading your student's calendar": "Fehler beim Laden Ihres Studierendenkalenders",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
@@ -255,6 +255,13 @@
   "findSchool": "Schule suchen",
   "@findSchool": {
     "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findAnotherSchool": "Eine andere Schule finden",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -571,7 +578,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Unknown User": "Unbekannter Benutzer",
+  "Unknown User": "Unbekannte/r Benutzer*in",
   "@Unknown User": {
     "description": "Label used where the user name is not known",
     "type": "text",
@@ -693,7 +700,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student’s courses.": "Fehler beim Laden der Kurse Ihres Studenten.",
+  "There was an error loading your student’s courses.": "Fehler beim Laden der Kurse Ihres Studierenden.",
   "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
@@ -1090,14 +1097,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "We couldn't find any students associated with this account": "Es wurden keine mit diesem Konto verknüpfte Studenten gefunden",
+  "We couldn't find any students associated with this account": "Es wurden keine mit dieser/diesem Konto verknüpfte Studierenden gefunden",
   "@We couldn't find any students associated with this account": {
     "description": "Subtitle for the screen that shows when the user is not observing any students",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Are you a student or teacher?": "Sie sind Student oder Lehrer?",
+  "Are you a student or teacher?": "Sind Sie Studierende*r oder Lehrende*r?",
   "@Are you a student or teacher?": {
     "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
     "type": "text",
@@ -1118,28 +1125,28 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "STUDENT": "STUDENT",
+  "STUDENT": "STUDIERENDE*R",
   "@STUDENT": {
     "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "TEACHER": "LEHRER",
+  "TEACHER": "LEHRENDE*R",
   "@TEACHER": {
     "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Canvas Student": "Canvas-Student",
+  "Canvas Student": "Canvas-Studierende*r",
   "@Canvas Student": {
     "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Canvas Teacher": "Canvas-Lehrer",
+  "Canvas Teacher": "Canvas-Lehrende*r",
   "@Canvas Teacher": {
     "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
     "type": "text",
@@ -1433,7 +1440,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's alerts.": "Fehler beim Laden der Studentenalarme.",
+  "There was an error loading your student's alerts.": "Fehler beim Laden der Studierendenalarme.",
   "@There was an error loading your student's alerts.": {
     "type": "text",
     "placeholders_order": [],
@@ -1471,7 +1478,7 @@
       }
     }
   },
-  "Select Student Color": "Studentenfarbe auswählen",
+  "Select Student Color": "Studierendenfarbe auswählen",
   "@Select Student Color": {
     "description": "Title for screen that allows users to assign a color to a specific student",
     "type": "text",
@@ -1537,28 +1544,28 @@
       "studentName": {}
     }
   },
-  "Teacher": "Lehrer",
+  "Teacher": "Lehrende*r",
   "@Teacher": {
     "description": "Label for the Teacher enrollment type",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Student": "Student",
+  "Student": "Studierende*r",
   "@Student": {
     "description": "Label for the Student enrollment type",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "TA": "Lehrassistent",
+  "TA": "Lehrassistent*in",
   "@TA": {
     "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Observer": "Beobachter",
+  "Observer": "Beobachter*in",
   "@Observer": {
     "description": "Label for the Observer enrollment type",
     "type": "text",
@@ -1593,25 +1600,25 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add student with…": "Teilnehmer hinzufügen mit ...",
+  "Add student with…": "Studierende*n hinzufügen mit ...",
   "@Add student with…": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add Student": "Teilnehmer hinzufügen",
+  "Add Student": "Studierende*n hinzufügen",
   "@Add Student": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You are not observing any students.": "Sie beobachten keine Studenten.",
+  "You are not observing any students.": "Sie beobachten keine Studierende*n.",
   "@You are not observing any students.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your students.": "Fehler beim Laden Ihrer Studenten.",
+  "There was an error loading your students.": "Fehler beim Laden Ihrer Studierende*n.",
   "@There was an error loading your students.": {
     "type": "text",
     "placeholders_order": [],
@@ -1623,13 +1630,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can obtain a pairing code through the Canvas website": "Studenten können einen Pairing-Code über die Canvas-Website erhalten",
+  "Students can obtain a pairing code through the Canvas website": "Studierende können einen Pairing-Code über die Canvas-Website erhalten",
   "@Students can obtain a pairing code through the Canvas website": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Geben Sie den Studenten-Pairing-Code ein, den Sie erhalten haben. Falls der Pairing-Code nicht funktioniert, ist er möglicherweise abgelaufen",
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Geben Sie den Studierenden-Pairing-Code ein, den Sie erhalten haben. Falls der Pairing-Code nicht funktioniert, ist er möglicherweise abgelaufen",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
     "placeholders_order": [],
@@ -1653,13 +1660,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can create a QR code using the Canvas Student app on their mobile device": "Studenten können einen QR-Code mit der Canvas Studenten-App auf ihrem Mobilgerät erstellen",
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Studierende können einen QR-Code mit der Canvas Studierenden-App auf ihrem Mobilgerät erstellen",
   "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add new student": "Neuen Studenten hinzufügen",
+  "Add new student": "Neue/n Studierende*n hinzufügen",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
     "type": "text",
@@ -2116,7 +2123,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Login flow: Site Admin": "Anmeldung Flow: Website-Administrator",
+  "Login flow: Site Admin": "Anmeldung Flow: Website-Administrator*in",
   "@Login flow: Site Admin": {
     "description": "Description for the Site Admin login flow",
     "type": "text",
@@ -2130,14 +2137,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Act As User": "Handeln als Benutzer",
+  "Act As User": "Handeln als Benutzer*in",
   "@Act As User": {
     "description": "Label for the button that allows the user to act (masquerade) as another user",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Stop Acting as User": "Nicht mehr handeln als Benutzer",
+  "Stop Acting as User": "Nicht mehr handeln als Benutzer*in",
   "@Stop Acting as User": {
     "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
     "type": "text",
@@ -2155,7 +2162,7 @@
       "userName": {}
     }
   },
-  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "„Handeln als“ heißt im Grunde sich als dieser Benutzer ohne Kennwort die anzumelden. Sie können beliebige Maßnahmen ergreifen, als wären Sie dieser Benutzer, und aus der Sicht anderer Benutzer wird es sein, als ob sie dieser Benutzer ausführt. Die Audit-Protokolle zeichnen auf, dass Sie die Aktionen im Namen des Benutzers durchgeführt haben.",
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "„Handeln als“ heißt im Grunde sich als diese/r Benutzer*in ohne Kennwort die anzumelden. Sie können beliebige Maßnahmen ergreifen, als wären Sie dieser Benutzer, und aus der Sicht andere/r Benutzer*in wird es sein, als ob sie diese/r Benutzer*in ausführt. Die Audit-Protokolle zeichnen auf, dass Sie die Aktionen im Namen des Benutzers durchgeführt haben.",
   "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
     "type": "text",
     "placeholders_order": [],
@@ -2175,7 +2182,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "User ID": "Benutzer-ID",
+  "User ID": "Benutzer*in-ID",
   "@User ID": {
     "description": "Text field hint for user ID input",
     "type": "text",
@@ -2189,7 +2196,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Beim Handeln als dieser Benutzer ist ein Fehler aufgetreten. Bitte überprüfen Sie die Domäne und die Benutzer-ID, und versuchen Sie es erneut.",
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Beim Handeln als diese/r Benutzer*in ist ein Fehler aufgetreten. Bitte überprüfen Sie die Domäne und die Benutzer-ID, und versuchen Sie es erneut.",
   "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
     "type": "text",
     "placeholders_order": [],
@@ -2269,28 +2276,28 @@
       }
     }
   },
-  "Student Pairing": "Studenten-Pairing",
+  "Student Pairing": "Studierenden-Pairing",
   "@Student Pairing": {
     "description": "Title for the screen where users can pair to students using a QR code",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Open Canvas Student": "Canvas Student öffnen",
+  "Open Canvas Student": "Canvas Studierenden öffnen",
   "@Open Canvas Student": {
     "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Um fortzufahren, müssen Sie die Canvas Studenten-App Ihres Studenten öffnen. Gehen Sie zu Hauptmenü > Einstellungen > Pairing mit Beobachter und scannen Sie den QR-Code, den Sie dort sehen.",
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Um fortzufahren, müssen Sie die Canvas Studierenden-App Ihrer/Ihres Studierenden öffnen. Gehen Sie zu Hauptmenü > Einstellungen > Pairing mit Beobachter*in und scannen Sie den QR-Code, den Sie dort sehen.",
   "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
     "description": "Message explaining how QR code pairing works",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Screenshot des Ortes der Erzeugung des Pairing-QR-Codes in der Canvas Studenten-App",
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Screenshot des Ortes der Erzeugung des Pairing-QR-Codes in der Canvas Studierenden-App",
   "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
     "description": "Content Description for qr pairing tutorial screenshot",
     "type": "text",
@@ -2304,13 +2311,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Der von Ihnen gescannte QR-Code ist möglicherweise abgelaufen. Aktualisieren Sie den Code auf dem Gerät des Studenten und versuchen Sie es erneut.",
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Der von Ihnen gescannte QR-Code ist möglicherweise abgelaufen. Aktualisieren Sie den Code auf dem Gerät der/des Studierenden und versuchen Sie es erneut.",
   "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "A network error occurred when adding this student. Check your connection and try again.": "Beim Hinzufügen dieses Studenten ist ein Netzwerkfehler aufgetreten. Überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
+  "A network error occurred when adding this student. Check your connection and try again.": "Beim Hinzufügen dier/dieses Studierenden ist ein Netzwerkfehler aufgetreten. Überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
   "@A network error occurred when adding this student. Check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],
@@ -2330,7 +2337,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "Der Student, den Sie hinzufügen möchten, gehört zu einer anderen Schule. Melden Sie sich an oder erstellen Sie ein Konto bei dieser Einrichtung, um diesen Code zu scannen.",
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "Die/der Studierende*r, die/den Sie hinzufügen möchten, gehört zu einer anderen Schule. Melden Sie sich an oder erstellen Sie ein Konto bei dieser Einrichtung, um diesen Code zu scannen.",
   "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
     "type": "text",
     "placeholders_order": [],
@@ -2343,14 +2350,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "This will unpair and remove all enrollments for this student from your account.": "Dadurch werden alle Pairings für Einschreibungen für diesen Studenten aufgehoben und die Einschreibungen werden von Ihrem Konto entfernt.",
+  "This will unpair and remove all enrollments for this student from your account.": "Dadurch werden alle Pairings für Einschreibungen für diese/n Studierende*n aufgehoben und die Einschreibungen werden von Ihrem Konto entfernt.",
   "@This will unpair and remove all enrollments for this student from your account.": {
     "description": "Confirmation message shown when the user tries to delete a student from their account",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was a problem removing this student from your account. Please check your connection and try again.": "Beim Entfernen des Studenten aus Ihrem Konto ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Beim Entfernen der/des Studierenden aus Ihrem Konto ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
   "@There was a problem removing this student from your account. Please check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],

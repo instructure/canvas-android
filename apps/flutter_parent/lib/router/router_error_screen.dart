@@ -22,6 +22,7 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
@@ -90,6 +91,7 @@ class RouterErrorScreen extends StatelessWidget {
   _switchUsers(BuildContext context) async {
     await ParentTheme.of(context).setSelectedStudent(null); // TODO - Test this, do we need it here?
     await ApiPrefs.performLogout(switchingLogins: true, app: ParentApp.of(context));
+    await FeaturesUtils.performLogout();
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 }

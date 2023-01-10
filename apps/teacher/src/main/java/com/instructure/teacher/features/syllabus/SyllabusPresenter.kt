@@ -48,7 +48,7 @@ class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
         val course = model.course?.dataOrNull
         val events = mapEventsResultToViewState(course?.textAndIconColor ?: 0, model.events, context)
         val body = model.syllabus?.description?.takeIf { it.isValid() }
-        val canEdit = model.permissions?.dataOrNull?.canManageContent == true
+        val canEdit = model.permissions?.dataOrNull?.canManageContent == true || model.permissions?.dataOrNull?.canEditCourseContent == true
 
         return SyllabusViewState.Loaded(
             syllabus = body,

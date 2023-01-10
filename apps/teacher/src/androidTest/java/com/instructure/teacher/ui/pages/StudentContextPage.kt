@@ -18,23 +18,13 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
+import com.instructure.espresso.*
 import com.instructure.espresso.page.*
-import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
-class StudentContextPage : BasePage(R.id.studentContextPage) {
+class StudentContextPage : PersonContextPage() {
 
-    private val toolbar by WaitForViewWithId(R.id.toolbar)
     private val messageButton by WaitForViewWithId(R.id.messageButton)
-    private val studentName by WaitForViewWithId(R.id.studentNameView)
-    private val studentEmail by WaitForViewWithId(R.id.studentEmailView)
-    private val courseName by WaitForViewWithId(R.id.courseNameView)
-    private val sectionName by WaitForViewWithId(R.id.sectionNameView)
-    private val lastActivity by WaitForViewWithId(R.id.lastActivityView)
 
     fun assertDisplaysStudentInfo(student: CanvasUserApiModel) {
         waitForView(withParent(R.id.toolbar) + withText(student.shortName)).assertDisplayed()
@@ -43,15 +33,23 @@ class StudentContextPage : BasePage(R.id.studentContextPage) {
         onView(withId(R.id.gradeItems)).scrollTo().assertDisplayed()
     }
 
-    fun assertDisplaysCourseInfo(course: CourseApiModel) {
-        courseName.assertHasText(course.name)
-    }
-
     fun assertStudentGrade(grade: String) {
         onView(withId(R.id.gradeBeforePosting)).assertHasText(grade)
     }
 
     fun assertStudentSubmission(submittedCount: String) {
         onView(withId(R.id.submittedCount)).assertHasText(submittedCount)
+    }
+
+    fun assertAssignmentListed(assignmentTitle: String) {
+        onView(withId(R.id.assignmentTitle) + withText(assignmentTitle)).scrollTo().assertDisplayed()
+    }
+
+    fun assertAssignmentSubmitted() {
+        onView(withId(R.id.submissionStatus) + withText(R.string.submitted)).assertDisplayed()
+    }
+
+    fun clickOnNewMessageButton() {
+        messageButton.click()
     }
 }

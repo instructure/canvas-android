@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.elementary.resources
 
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -99,9 +98,9 @@ class ResourcesFragment : Fragment() {
 
     private fun setupWebViews() {
         importantLinksContainer.children.forEach {
-            val webView = it.importantLinksWebView
+            val webView = it.importantLinksWebViewWrapper
             if (webView != null) {
-                setupWebView(webView)
+                setupWebView(webView.webView)
             }
         }
     }
