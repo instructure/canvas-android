@@ -126,12 +126,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 }
             }
         }
-
-        val layoutParams = getCanvasWebView()?.layoutParams
-        layoutParams?.let {
-            it.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            getCanvasWebView()?.layoutParams = it
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
