@@ -26,7 +26,6 @@
     <color name="backgroundGrouped">#111213</color>
     <color name="backgroundGroupedCell">#242526</color>
     <color name="backgroundInfo">#127CB9</color>
-    <color name="backgroundInfoDim">#80127CB9</color>
     <color name="backgroundLight">#1D1E1F</color>
     <color name="backgroundLightest">#111213</color>
     <color name="backgroundLightestElevated">#242526</color>

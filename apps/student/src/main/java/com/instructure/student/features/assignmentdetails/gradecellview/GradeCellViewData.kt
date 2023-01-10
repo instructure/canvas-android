@@ -1,20 +1,17 @@
 package com.instructure.student.features.assignmentdetails.gradecellview
 
 import android.content.res.Resources
-import android.graphics.Color
-import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 
 data class GradeCellViewData(
+    val courseColor: ThemedColor,
     val state: State,
-    @ColorInt val tintColor: Int = Color.GRAY,
     val chartPercent: Float = 0f,
     val showCompleteIcon: Boolean = false,
     val showIncompleteIcon: Boolean = false,
@@ -40,34 +37,34 @@ data class GradeCellViewData(
         @Suppress("DEPRECATION")
         fun fromSubmission(
             resources: Resources,
+            courseColor: ThemedColor,
             assignment: Assignment?,
             submission: Submission?,
             uploading: Boolean = false,
             failed: Boolean = false
         ): GradeCellViewData {
             return if (uploading) {
-                GradeCellViewData(State.UPLOADING)
+                GradeCellViewData(courseColor, State.UPLOADING)
             } else if (failed) {
-                GradeCellViewData(State.FAILED)
+                GradeCellViewData(courseColor, State.FAILED)
             } else if (
                 assignment == null
                 || submission == null
                 || (submission.submittedAt == null && !submission.isGraded)
                 || assignment.gradingType == Assignment.NOT_GRADED_TYPE
             ) {
-                GradeCellViewData(State.EMPTY)
+                GradeCellViewData(courseColor, State.EMPTY)
             } else if (submission.submittedAt != null && !submission.isGraded && !submission.excused) {
-                GradeCellViewData(State.SUBMITTED)
+                GradeCellViewData(courseColor, State.SUBMITTED)
             } else {
-                val tintColor = CanvasContext.emptyCourseContext(assignment.courseId).textAndIconColor
                 val pointsPossibleText = NumberHelper.formatDecimal(assignment.pointsPossible, 2, true)
                 val outOfText = resources.getString(R.string.outOfPointsAbbreviatedFormatted, pointsPossibleText)
                 val outOfContentDescriptionText = resources.getString(R.string.outOfPointsFormatted, pointsPossibleText)
 
                 if (submission.excused) {
                     GradeCellViewData(
+                        courseColor,
                         state = State.GRADED,
-                        tintColor = tintColor,
                         chartPercent = 1f,
                         showCompleteIcon = true,
                         grade = resources.getString(R.string.excused),
@@ -77,8 +74,8 @@ data class GradeCellViewData(
                 } else if (assignment.gradingType == Assignment.PASS_FAIL_TYPE) {
                     val isComplete = (submission.grade == "complete")
                     GradeCellViewData(
+                        courseColor,
                         state = State.GRADED,
-                        tintColor = if (isComplete) tintColor else resources.getColor(R.color.textDark),
                         chartPercent = 1f,
                         showCompleteIcon = isComplete,
                         showIncompleteIcon = !isComplete,
@@ -122,8 +119,8 @@ data class GradeCellViewData(
                     }
 
                     GradeCellViewData(
+                        courseColor,
                         state = State.GRADED,
-                        tintColor = tintColor,
                         chartPercent = chartPercent,
                         showPointsLabel = true,
                         score = score,

@@ -57,7 +57,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.assignmentName}"
                         android:textColor="@color/textDarkest"
                         android:textSize="22sp"
@@ -69,10 +68,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.points}"
                         android:textColor="@color/textDark"
                         android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
                         tools:text="100 pts" />
@@ -84,12 +83,11 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="4dp"
                         android:importantForAccessibility="no"
-                        android:tint="@{viewModel.data.submissionStatusTint}"
                         android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.GONE}"
                         app:imageRes="@{viewModel.data.submissionStatusIcon}"
-                        app:layout_constraintBottom_toBottomOf="@id/points"
                         app:layout_constraintStart_toEndOf="@id/points"
                         app:layout_constraintTop_toBottomOf="@id/title"
+                        app:tint="@{viewModel.data.submissionStatusTint}"
                         tools:src="@drawable/ic_complete_solid"
                         tools:tint="@color/textSuccess" />
 
@@ -98,10 +96,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.submissionStatusText}"
                         android:textSize="16sp"
                         android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
                         app:layout_constraintStart_toEndOf="@id/submissionStatusIcon"
                         app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
                         tools:text="Submitted" />
@@ -121,7 +119,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/locked"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
@@ -134,7 +131,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="2dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.lockedMessage}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
@@ -167,7 +163,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
                         android:drawablePadding="6dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:gravity="center_horizontal"
                         android:onClick="@{()->viewModel.onDraftClicked()}"
                         android:text="@string/submissionDraftAvailableTitle"
@@ -246,7 +241,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/dueLabel"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
@@ -259,7 +253,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="2dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.dueDate}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
@@ -272,7 +265,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/submission_types"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
@@ -285,7 +277,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="2dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.submissionTypes}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
@@ -298,7 +289,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/allowedFileTypes"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
@@ -311,7 +301,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="2dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.allowedFileTypes}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
@@ -324,7 +313,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/settings"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
@@ -332,40 +320,23 @@
                         app:layout_constraintTop_toBottomOf="@id/allowedFileTypesTextView" />
 
                     <TextView
-                        android:id="@+id/quizQuestionCountLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="2dp"
-                        android:fontFamily="@font/lato_font_family"
-                        android:text="@string/quizQuestionLabel"
-                        android:textColor="@color/textDarkest"
-                        android:textSize="16sp"
-                        android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/quizDataLabel" />
-
-                    <TextView
                         android:id="@+id/quizQuestionCountTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/lato_font_family"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
                         android:text="@{viewModel.data.quizDetails.questionCount}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toEndOf="@id/quizQuestionCountLabel"
-                        app:layout_constraintTop_toTopOf="@id/quizQuestionCountLabel" />
+                        app:layout_constraintTop_toBottomOf="@id/quizDataLabel" />
 
                     <TextView
-                        android:id="@+id/quizTimeLimitLabel"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/quizTimeLimitTextView"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:fontFamily="@font/lato_font_family"
-                        android:text="@string/timeLimitLabel"
+                        android:layout_marginHorizontal="16dp"
+                        android:text="@{viewModel.data.quizDetails.timeLimit}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
@@ -373,45 +344,15 @@
                         app:layout_constraintTop_toBottomOf="@id/quizQuestionCountTextView" />
 
                     <TextView
-                        android:id="@+id/quizTimeLimitTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/lato_font_family"
-                        android:text="@{viewModel.data.quizDetails.timeLimit}"
-                        android:textColor="@color/textDarkest"
-                        android:textSize="16sp"
-                        android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toEndOf="@id/quizTimeLimitLabel"
-                        app:layout_constraintTop_toTopOf="@id/quizTimeLimitLabel" />
-
-                    <TextView
-                        android:id="@+id/quizAllowedAttemptsLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:fontFamily="@font/lato_font_family"
-                        android:text="@string/allowedAttemptsLabel"
-                        android:textColor="@color/textDarkest"
-                        android:textSize="16sp"
-                        android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/quizTimeLimitTextView" />
-
-                    <TextView
                         android:id="@+id/quizAllowedAttemptsTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/lato_font_family"
+                        android:layout_marginHorizontal="16dp"
                         android:text="@{viewModel.data.quizDetails.allowedAttempts}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toEndOf="@id/quizAllowedAttemptsLabel"
-                        app:layout_constraintTop_toTopOf="@id/quizAllowedAttemptsLabel" />
+                        app:layout_constraintTop_toBottomOf="@id/quizTimeLimitTextView" />
 
                     <TextView
                         android:id="@+id/attemptsDataLabel"
@@ -419,7 +360,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/attempts"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
@@ -427,59 +367,27 @@
                         app:layout_constraintTop_toBottomOf="@id/quizAllowedAttemptsTextView" />
 
                     <TextView
-                        android:id="@+id/allowedAttemptsLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="2dp"
-                        android:fontFamily="@font/lato_font_family"
-                        android:text="@string/allowedAttempts"
-                        android:textColor="@color/textDarkest"
-                        android:textSize="16sp"
-                        android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/attemptsDataLabel" />
-
-                    <TextView
                         android:id="@+id/allowedAttemptsLabelTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/lato_font_family"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
                         android:text="@{viewModel.data.attemptsViewData.allowedAttempts}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toEndOf="@id/allowedAttemptsLabel"
-                        app:layout_constraintTop_toTopOf="@id/allowedAttemptsLabel" />
-
-                    <TextView
-                        android:id="@+id/attemptsUsedLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:fontFamily="@font/lato_font_family"
-                        android:text="@string/usedAttempts"
-                        android:textColor="@color/textDarkest"
-                        android:textSize="16sp"
-                        android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/allowedAttemptsLabelTextView" />
+                        app:layout_constraintTop_toBottomOf="@id/attemptsDataLabel" />
 
                     <TextView
                         android:id="@+id/attemptsUsedTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/lato_font_family"
+                        android:layout_marginHorizontal="16dp"
                         android:text="@{viewModel.data.attemptsViewData.usedAttempts}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintStart_toEndOf="@id/attemptsUsedLabel"
-                        app:layout_constraintTop_toTopOf="@id/attemptsUsedLabel" />
+                        app:layout_constraintTop_toBottomOf="@id/allowedAttemptsLabelTextView" />
 
                     <View
                         android:id="@+id/descriptionDivider"
@@ -496,7 +404,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/description"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
@@ -509,7 +416,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="2dp"
-                        android:fontFamily="@font/lato_font_family"
                         android:text="@string/noAssignmentDescriptionStudent"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
@@ -539,16 +445,18 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/backgroundInfo"
+            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.5f}"
+            android:background="@color/backgroundInfo"
+            android:backgroundTint="@{viewModel.data.courseColor.backgroundColor()}"
             android:enabled="@{viewModel.data.submitEnabled}"
             android:foreground="?attr/selectableItemBackground"
+            android:minHeight="48dp"
             android:onClick="@{()->viewModel.onSubmitButtonClicked()}"
             android:text="@{viewModel.data.submitButtonText}"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:visibility="@{viewModel.data.submitVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout"
             tools:text="Resubmit Assignment" />
 
         <com.instructure.pandautils.views.FloatingRecordingView

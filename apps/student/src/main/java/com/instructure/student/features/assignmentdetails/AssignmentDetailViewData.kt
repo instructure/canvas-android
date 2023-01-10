@@ -4,9 +4,11 @@ import androidx.annotation.ColorRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 
 data class AssignmentDetailViewData(
+    val courseColor: ThemedColor,
     val assignmentName: String,
     val points: String,
     val submissionStatusText: String,
@@ -19,7 +21,7 @@ data class AssignmentDetailViewData(
     val submitEnabled: Boolean = false,
     val submitVisible: Boolean = false,
     @Bindable var attempts: List<AssignmentDetailAttemptItemViewModel> = emptyList(),
-    @Bindable var selectedGradeCellViewData: GradeCellViewData? = GradeCellViewData(GradeCellViewData.State.EMPTY),
+    @Bindable var selectedGradeCellViewData: GradeCellViewData? = GradeCellViewData(courseColor, GradeCellViewData.State.EMPTY),
     val dueDate: String = "",
     val submissionTypes: String = "",
     val allowedFileTypes: String = "",

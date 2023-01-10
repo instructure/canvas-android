@@ -97,7 +97,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
 
     private val mediaPickerContract = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         val assignment = viewModel.assignment
-        if (assignment != null) {
+        if (assignment != null && it != null) {
             RouteMatcher.route(requireContext(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, it))
         } else {
             toast(R.string.unexpectedErrorOpeningFile)
@@ -318,21 +318,30 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
                 activity?.launchAudio({ toast(R.string.permissionDenied) }, ::showAudioRecordingView)
             }
             setupDialogRow(dialog, dialog.submissionEntryVideo, true) {
-                activity?.needsPermissions({
-                    captureVideoUri = requireActivity().getVideoUri()
-                    captureVideoContract.launch(captureVideoUri)
-                }, {
-                    toast(R.string.permissionDenied)
-                },
-                    PermissionUtils.CAMERA,
-                    PermissionUtils.RECORD_AUDIO
-                )
+                startVideoCapture()
             }
             setupDialogRow(dialog, dialog.submissionEntryMediaFile, true) {
                 mediaPickerContract.launch(arrayOf("video/*", "audio/*"))
             }
         }
         dialog.show()
+    }
+
+    private fun startVideoCapture() {
+        if (activity?.needsPermissions({
+                startVideoCapture()
+            }, {
+                toast(R.string.permissionDenied)
+            },
+                PermissionUtils.CAMERA,
+                PermissionUtils.RECORD_AUDIO
+            ).orDefault()
+        ) {
+            return
+        }
+
+        captureVideoUri = requireActivity().getVideoUri()
+        captureVideoContract.launch(captureVideoUri)
     }
 
     private fun showAudioRecordingView() {

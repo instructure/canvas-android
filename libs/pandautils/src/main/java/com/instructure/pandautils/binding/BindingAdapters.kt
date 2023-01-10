@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.binding
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -27,11 +28,14 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -232,4 +236,18 @@ fun bindSpinner(spinner: Spinner, itemViewModels: List<ItemViewModel>?, @LayoutR
 @BindingAdapter("ovalColor")
 fun bindOvalColorBackground(imageView: ImageView, @ColorInt ovalColor: Int) {
     imageView.background = ShapeDrawable(OvalShape()).apply { paint.color = ovalColor }
+}
+
+@BindingAdapter("tint")
+fun ImageView.setTint(@ColorRes colorRes: Int?) {
+    if (colorRes != null && colorRes > 0) {
+        imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
+    }
+}
+
+@BindingAdapter("drawableTint")
+fun TextView.setDrawableTint(@ColorInt colorInt: Int?) {
+    colorInt?.let {
+        TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(colorInt))
+    }
 }

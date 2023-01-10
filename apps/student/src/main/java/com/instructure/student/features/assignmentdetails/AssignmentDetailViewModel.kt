@@ -32,9 +32,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.AssignmentUtils2
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
@@ -45,7 +43,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import com.instructure.student.Submission as DatabaseSubmission
@@ -58,6 +55,8 @@ class AssignmentDetailViewModel @Inject constructor(
     private val quizManager: QuizManager,
     private val submissionManager: SubmissionManager,
     private val resources: Resources,
+    private val htmlContentFormatter: HtmlContentFormatter,
+    private val colorKeeper: ColorKeeper,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
 
@@ -107,7 +106,7 @@ class AssignmentDetailViewModel @Inject constructor(
                 _data.value?.hasDraft = isDraft
                 _data.value?.notifyPropertyChanged(BR.hasDraft)
 
-                val dateString = getFormattedDate(dbSubmission.lastActivityDate?.toInstant()?.toEpochMilli()?.let { Date(it) } ?: Date())
+                val dateString = getFormattedAttemptDate(dbSubmission.lastActivityDate?.toInstant()?.toEpochMilli()?.let { Date(it) } ?: Date())
                 if (!isDraft && !isUploading) {
                     isUploading = true
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
@@ -152,10 +151,18 @@ class AssignmentDetailViewModel @Inject constructor(
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
                 val assignmentResult = if (isObserver) {
-                    assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), forceNetwork)
+                    assignmentManager.getAssignmentIncludeObserveesAsync(
+                        assignmentId,
+                        course?.id.orDefault(),
+                        forceNetwork
+                    ).await().dataOrThrow.toAssignmentForObservee()
                 } else {
-                    assignmentManager.getAssignmentAsync(assignmentId, course?.id.orDefault(), forceNetwork)
-                }.await().dataOrThrow as Assignment
+                    assignmentManager.getAssignmentAsync(
+                        assignmentId,
+                        course?.id.orDefault(),
+                        forceNetwork
+                    ).await().dataOrThrow
+                } as Assignment
 
                 quizResult = if (assignmentResult.turnInType == Assignment.TurnInType.QUIZ && assignmentResult.quizId != 0L) {
                     quizManager.getQuizAsync(course?.id.orDefault(), assignmentResult.quizId, forceNetwork).await().dataOrThrow
@@ -211,7 +218,7 @@ class AssignmentDetailViewModel @Inject constructor(
     private fun getAttemptsByHistory(assignment: Assignment): List<AssignmentDetailAttemptItemViewModel> {
         val submissionHistory = assignment.submission?.submissionHistory
         return submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
-            submission?.submittedAt?.let { getFormattedDate(it) }?.let {
+            submission?.submittedAt?.let { getFormattedAttemptDate(it) }?.let {
                 AssignmentDetailAttemptItemViewModel(
                     AssignmentDetailAttemptViewData(
                         resources.getString(R.string.attempt, submissionHistory.size - index),
@@ -224,7 +231,7 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     @Suppress("DEPRECATION")
-    private fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailViewData {
+    private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailViewData {
         val points = resources.getQuantityString(
             R.plurals.quantityPointsAbbreviated,
             assignment.pointsPossible.toInt(),
@@ -250,15 +257,13 @@ class AssignmentDetailViewModel @Inject constructor(
             }
         )
 
-        val submissionStatusTint = resources.getColor(
-            if (assignment.isSubmitted) {
-                R.color.backgroundSuccess
-            } else if (isMissing) {
-                R.color.backgroundDanger
-            } else {
-                R.color.backgroundDark
-            }
-        )
+        val submissionStatusTint = if (assignment.isSubmitted) {
+            R.color.backgroundSuccess
+        } else if (isMissing) {
+            R.color.backgroundDanger
+        } else {
+            R.color.backgroundDark
+        }
 
         val submittedStatusIcon = if (assignment.isSubmitted) R.drawable.ic_complete_solid else R.drawable.ic_no
 
@@ -279,6 +284,7 @@ class AssignmentDetailViewModel @Inject constructor(
             }.orEmpty()
 
             return AssignmentDetailViewData(
+                courseColor = colorKeeper.getOrGenerateColor(course),
                 assignmentName = assignment.name.orEmpty(),
                 points = points,
                 submissionStatusText = submittedLabelText,
@@ -302,7 +308,9 @@ class AssignmentDetailViewModel @Inject constructor(
             assignment.getSubmissionTypes().contains(SubmissionType.ONLINE_UPLOAD)
         }.orEmpty()
 
-        val due = assignment.dueDate?.let { getFormattedDate(it) } ?: resources.getString(R.string.toDoNoDueDate)
+        val due = assignment.dueDate?.let {
+            DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault()).format(it)
+        } ?: resources.getString(R.string.toDoNoDueDate)
 
         val submitEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let {
             it < assignment.allowedAttempts
@@ -335,26 +343,30 @@ class AssignmentDetailViewModel @Inject constructor(
         )
 
         val quizViewViewData = if (quizResult != null) QuizViewViewData(
-            questionCount = NumberHelper.formatInt(quizResult?.questionCount),
-            timeLimit = if (quizResult?.timeLimit != 0) {
-                resources.getString(R.string.timeLimit)
-                NumberHelper.formatInt(quizResult?.timeLimit)
-            } else {
-                resources.getString(R.string.quizNoTimeLimit)
-            },
-            allowedAttempts = if (quizResult?.allowedAttempts.orDefault() < 0) {
-                resources.getString(R.string.unlimited)
-            } else {
-                NumberHelper.formatInt(quizResult?.allowedAttempts)
-            }
+            questionCount = resources.getString(R.string.quizQuestions, quizResult?.questionCount.orDefault()),
+            timeLimit = resources.getString(
+                R.string.quizTimeLimit, if (quizResult?.timeLimit != 0) {
+                    NumberHelper.formatInt(quizResult?.timeLimit)
+                } else {
+                    resources.getString(R.string.quizNoTimeLimit)
+                }
+            ),
+            allowedAttempts = resources.getString(
+                R.string.allowedAttempts, if (quizResult?.allowedAttempts.orDefault() < 0) {
+                    resources.getString(R.string.unlimited)
+                } else {
+                    NumberHelper.formatInt(quizResult?.allowedAttempts)
+                }
+            )
         ) else null
 
         val attemptsViewData = if (assignment.allowedAttempts > 0) AttemptsViewData(
-            assignment.allowedAttempts.toString(),
-            assignment.submission?.attempt.orDefault().toString()
+            resources.getString(R.string.allowedAttempts, assignment.allowedAttempts.toString()),
+            resources.getString(R.string.usedAttempts, assignment.submission?.attempt.orDefault())
         ) else null
 
         return AssignmentDetailViewData(
+            courseColor = colorKeeper.getOrGenerateColor(course),
             assignmentName = assignment.name.orEmpty(),
             points = points,
             submissionStatusText = submittedLabelText,
@@ -366,11 +378,16 @@ class AssignmentDetailViewModel @Inject constructor(
             submitEnabled = submitEnabled,
             submitVisible = submitVisible,
             attempts = attempts,
-            selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, assignment.submission),
+            selectedGradeCellViewData = GradeCellViewData.fromSubmission(
+                resources,
+                colorKeeper.getOrGenerateColor(course),
+                assignment,
+                assignment.submission
+            ),
             dueDate = due,
             submissionTypes = submissionTypes,
             allowedFileTypes = allowedFileTypes,
-            description = assignment.description.orEmpty(),
+            description = htmlContentFormatter.formatHtmlWithIframes(assignment.description.orEmpty()),
             descriptionLabelText = descriptionLabel,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
@@ -378,7 +395,11 @@ class AssignmentDetailViewModel @Inject constructor(
         )
     }
 
-    private fun getFormattedDate(date: Date) = SimpleDateFormat("yyyy. MMM. dd. HH:mm", Locale.getDefault()).format(date)
+    private fun getFormattedAttemptDate(date: Date) = DateFormat.getDateTimeInstance(
+        DateFormat.MEDIUM,
+        DateFormat.SHORT,
+        Locale.getDefault()
+    ).format(date)
 
     private fun postAction(action: AssignmentDetailAction) {
         _events.postValue(Event(action))
@@ -392,7 +413,14 @@ class AssignmentDetailViewModel @Inject constructor(
         val assignment = assignment
         val attempt = _data.value?.attempts?.getOrNull(position)?.data
         val selectedSubmission = attempt?.submission
-        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, selectedSubmission, attempt?.isUploading.orDefault(), attempt?.isFailed.orDefault())
+        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(course),
+            assignment,
+            selectedSubmission,
+            attempt?.isUploading.orDefault(),
+            attempt?.isFailed.orDefault()
+        )
         _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
     }
 
