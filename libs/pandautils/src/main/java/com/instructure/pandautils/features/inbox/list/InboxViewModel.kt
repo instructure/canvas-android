@@ -25,7 +25,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult

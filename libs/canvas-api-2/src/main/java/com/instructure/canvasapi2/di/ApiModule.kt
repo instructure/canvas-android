@@ -138,9 +138,4 @@ class ApiModule {
     fun provideDiscussionManager(): DiscussionManager {
         return DiscussionManager
     }
-
-    @Provides
-    fun provideInboxManager(): InboxManager {
-        return InboxManager
-    }
 }

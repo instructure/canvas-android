@@ -21,9 +21,6 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.weave.apiAsync
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import java.io.IOException
 
 object InboxManager {
