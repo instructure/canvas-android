@@ -240,7 +240,7 @@ fun bindOvalColorBackground(imageView: ImageView, @ColorInt ovalColor: Int) {
 
 @BindingAdapter("tint")
 fun ImageView.setTint(@ColorRes colorRes: Int?) {
-    if (colorRes != null && colorRes > 0) {
+    if (colorRes != null && colorRes != 0) {
         imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
     }
 }
