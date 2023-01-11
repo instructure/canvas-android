@@ -1,5 +1,6 @@
 package com.instructure.student.features.assignmentdetails
 
+import android.text.Spanned
 import androidx.annotation.ColorRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -27,6 +28,7 @@ data class AssignmentDetailViewData(
     val allowedFileTypes: String = "",
     val description: String = "",
     val descriptionLabelText: String = "",
+    val discussionHeaderViewData: DiscussionHeaderViewData? = null,
     val quizDetails: QuizViewViewData? = null,
     val attemptsViewData: AttemptsViewData? = null,
     @Bindable var hasDraft: Boolean = false
@@ -46,6 +48,15 @@ data class AssignmentDetailAttemptViewData(
 data class QuizViewViewData(val questionCount: String, val timeLimit: String, val allowedAttempts: String)
 
 data class AttemptsViewData(val allowedAttempts: String, val usedAttempts: String)
+
+data class DiscussionHeaderViewData(
+    val authorAvatarUrl: String,
+    val authorName: String,
+    val authorNameWithPronouns: Spanned,
+    val authoredDate: String,
+    val attachmentIconVisible: Boolean,
+    val onAttachmentClicked: () -> Unit
+)
 
 sealed class AssignmentDetailAction {
     data class ShowToast(val message: String) : AssignmentDetailAction()
@@ -72,4 +83,5 @@ sealed class AssignmentDetailAction {
     data class ShowMediaDialog(val assignment: Assignment) : AssignmentDetailAction()
     data class ShowSubmitDialog(val assignment: Assignment, val studioLTITool: LTITool?) : AssignmentDetailAction()
     data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()
+    data class OnDiscussionHeaderAttachmentClicked(val attachments: List<RemoteFile>) : AssignmentDetailAction()
 }

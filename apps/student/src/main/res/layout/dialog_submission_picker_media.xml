@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2019 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -14,71 +13,75 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+<layout>
 
-    <LinearLayout
-        android:id="@+id/submissionEntryAudio"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
-            android:paddingStart="2dp"
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_audio"/>
+        <LinearLayout
+            android:id="@+id/submissionEntryAudio"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
 
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/recordAudio"
-            android:textSize="16sp"/>
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:paddingStart="2dp"
+                android:src="@drawable/ic_audio" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recordAudio"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/submissionEntryVideo"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_video" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recordVideo"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/submissionEntryMediaFile"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_media_black" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/chooseMediaFile"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/submissionEntryVideo"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
-
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_video"/>
-
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/recordVideo"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/submissionEntryMediaFile"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
-
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_media_black"/>
-
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/chooseMediaFile"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</layout>

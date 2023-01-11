@@ -29,14 +29,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.LTITool
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.Navigation
@@ -52,7 +47,10 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
+import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.databinding.DialogSubmissionPickerBinding
+import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
 import com.instructure.student.databinding.FragmentAssignmentDetailBinding
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.getVideoUri
@@ -68,10 +66,6 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.course_module_progression.*
-import kotlinx.android.synthetic.main.dialog_submission_picker.*
-import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
-import kotlinx.android.synthetic.main.fragment_assignment_details.*
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
@@ -211,6 +205,9 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
             is AssignmentDetailAction.NavigateToUploadStatusScreen -> {
                 RouteMatcher.route(requireContext(), UploadStatusSubmissionFragment.makeRoute(action.submissionId))
             }
+            is AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked -> {
+                showDiscussionAttachments(action.attachments)
+            }
         }
     }
 
@@ -278,30 +275,31 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
 
     private fun showSubmitDialogView(assignment: Assignment, studioLTITool: LTITool?) {
         val builder = AlertDialog.Builder(requireContext())
-        val dialog = builder.setView(R.layout.dialog_submission_picker).create()
+        val dialogBinding = DialogSubmissionPickerBinding.inflate(layoutInflater)
+        val dialog = builder.setView(dialogBinding.root).create()
         val submissionTypes = assignment.getSubmissionTypes()
 
         dialog.setOnShowListener {
-            setupDialogRow(dialog, dialog.submissionEntryText, submissionTypes.contains(SubmissionType.ONLINE_TEXT_ENTRY)) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryText, submissionTypes.contains(SubmissionType.ONLINE_TEXT_ENTRY)) {
                 navigateToTextEntryScreen(assignment.name)
             }
-            setupDialogRow(dialog, dialog.submissionEntryWebsite, submissionTypes.contains(SubmissionType.ONLINE_URL)) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryWebsite, submissionTypes.contains(SubmissionType.ONLINE_URL)) {
                 navigateToUrlSubmissionScreen(assignment.name)
             }
-            setupDialogRow(dialog, dialog.submissionEntryFile, submissionTypes.contains(SubmissionType.ONLINE_UPLOAD)) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryFile, submissionTypes.contains(SubmissionType.ONLINE_UPLOAD)) {
                 navigateToUploadScreen(assignment)
             }
-            setupDialogRow(dialog, dialog.submissionEntryMedia, submissionTypes.contains(SubmissionType.MEDIA_RECORDING)) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryMedia, submissionTypes.contains(SubmissionType.MEDIA_RECORDING)) {
                 showMediaDialog()
             }
             setupDialogRow(
                 dialog,
-                dialog.submissionEntryStudio,
+                dialogBinding.submissionEntryStudio,
                 (submissionTypes.contains(SubmissionType.ONLINE_UPLOAD) && assignment.isStudioEnabled)
             ) {
                 navigateToStudioScreen(assignment, studioLTITool)
             }
-            setupDialogRow(dialog, dialog.submissionEntryStudentAnnotation, submissionTypes.contains(SubmissionType.STUDENT_ANNOTATION)) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryStudentAnnotation, submissionTypes.contains(SubmissionType.STUDENT_ANNOTATION)) {
                 navigateToAnnotationSubmissionScreen(assignment)
             }
         }
@@ -311,16 +309,17 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
     private fun showMediaDialog() {
         Analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED)
         val builder = AlertDialog.Builder(requireContext())
-        val dialog = builder.setView(R.layout.dialog_submission_picker_media).create()
+        val dialogBinding = DialogSubmissionPickerMediaBinding.inflate(layoutInflater)
+        val dialog = builder.setView(dialogBinding.root).create()
 
         dialog.setOnShowListener {
-            setupDialogRow(dialog, dialog.submissionEntryAudio, true) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryAudio, true) {
                 activity?.launchAudio({ toast(R.string.permissionDenied) }, ::showAudioRecordingView)
             }
-            setupDialogRow(dialog, dialog.submissionEntryVideo, true) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryVideo, true) {
                 startVideoCapture()
             }
-            setupDialogRow(dialog, dialog.submissionEntryMediaFile, true) {
+            setupDialogRow(dialog, dialogBinding.submissionEntryMediaFile, true) {
                 mediaPickerContract.launch(arrayOf("video/*", "audio/*"))
             }
         }
@@ -385,6 +384,16 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
+    }
+
+    private fun showDiscussionAttachments(attachments: List<RemoteFile>) {
+        val discussionAttachment = attachments.firstOrNull() ?: return
+        (requireActivity() as BaseRouterActivity).openMedia(
+            canvasContext,
+            discussionAttachment.contentType.orEmpty(),
+            discussionAttachment.url.orEmpty(),
+            discussionAttachment.fileName.orEmpty()
+        )
     }
 
     companion object {

@@ -251,3 +251,8 @@ fun TextView.setDrawableTint(@ColorInt colorInt: Int?) {
         TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(colorInt))
     }
 }
+
+@BindingAdapter("avatarA11y")
+fun View.setAvatarContentDescription(userName: String?) {
+    setupAvatarA11y(userName)
+}

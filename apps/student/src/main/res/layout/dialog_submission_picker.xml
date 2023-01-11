@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2019 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -14,131 +13,135 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<layout>
 
-    <LinearLayout
-        android:id="@+id/submissionEntryText"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:padding="2dp"
-            android:src="@drawable/ic_text_submission"/>
+        <LinearLayout
+            android:id="@+id/submissionEntryText"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
 
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/canvasAPI_onlineTextEntry"
-            android:textSize="16sp"/>
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:padding="2dp"
+                android:src="@drawable/ic_text_submission" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/canvasAPI_onlineTextEntry"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/submissionEntryWebsite"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_website_address" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/canvasAPI_onlineURL"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/submissionEntryFile"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_attachment" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/canvasAPI_onlineUpload"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/submissionEntryMedia"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_media_recordings" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/canvasAPI_mediaRecording"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/submissionEntryStudio"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_navigation_studio" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/studio"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/submissionEntryStudentAnnotation"
+            style="@style/SubmissionPickerDialogItem"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                style="@style/SubmissionPickerDialogIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_student_annotation" />
+
+            <TextView
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/submissionTypeStudentAnnotation"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/submissionEntryWebsite"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
-
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_website_address"/>
-
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/canvasAPI_onlineURL"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/submissionEntryFile"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
-
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_attachment"/>
-
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/canvasAPI_onlineUpload"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/submissionEntryMedia"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
-
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_media_recordings"/>
-
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/canvasAPI_mediaRecording"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/submissionEntryStudio"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
-
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_navigation_studio"/>
-
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/studio"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/submissionEntryStudentAnnotation"
-        style="@style/SubmissionPickerDialogItem"
-        tools:ignore="UseCompoundDrawables"
-        tools:visibility="visible">
-
-        <ImageView
-            style="@style/SubmissionPickerDialogIcon"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_student_annotation"/>
-
-        <TextView
-            style="@style/TextFont.Regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/submissionTypeStudentAnnotation"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</layout>

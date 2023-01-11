@@ -410,6 +410,70 @@
                         android:visibility="@{viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/descriptionDivider" />
 
+                    <ImageView
+                        android:id="@+id/authorAvatar"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="16dp"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData == null ? View.GONE : View.VISIBLE}"
+                        app:avatarA11y="@{viewModel.data.discussionHeaderViewData.authorName}"
+                        app:layout_constraintBottom_toBottomOf="@id/authoredDate"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/authorName"
+                        app:userAvatar="@{viewModel.data.discussionHeaderViewData.authorAvatarUrl}"
+                        app:userName="@{viewModel.data.discussionHeaderViewData.authorName}"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/authorName"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="12dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@{viewModel.data.discussionHeaderViewData.authorNameWithPronouns}"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintEnd_toStartOf="@id/attachmentIcon"
+                        app:layout_constraintStart_toEndOf="@id/authorAvatar"
+                        app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
+
+                    <TextView
+                        android:id="@+id/authoredDate"
+                        style="@style/TextFont.Regular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@{viewModel.data.discussionHeaderViewData.authoredDate}"
+                        android:textColor="@color/textDark"
+                        android:textSize="12sp"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintEnd_toStartOf="@id/attachmentIcon"
+                        app:layout_constraintStart_toEndOf="@id/authorAvatar"
+                        app:layout_constraintTop_toBottomOf="@id/authorName" />
+
+                    <ImageView
+                        android:id="@+id/attachmentIcon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="16dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:contentDescription="@string/attachment"
+                        android:onClick="@{()->viewModel.data.discussionHeaderViewData.onAttachmentClicked.invoke()}"
+                        android:padding="14dp"
+                        android:scaleType="centerInside"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData.attachmentIconVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@id/authorAvatar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/authorAvatar"
+                        app:srcCompat="@drawable/ic_attachment"
+                        app:tint="@color/textDark" />
+
                     <TextView
                         android:id="@+id/noDescriptionTextView"
                         android:layout_width="match_parent"
@@ -420,7 +484,7 @@
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:visibility="@{viewModel.data.noDescriptionVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
+                        app:layout_constraintTop_toBottomOf="@id/authoredDate" />
 
                     <com.instructure.pandautils.views.CanvasWebViewWrapper
                         android:id="@+id/descriptionWebViewWrapper"
@@ -432,7 +496,7 @@
                         android:visibility="@{viewModel.data.description.empty || viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
                         app:htmlContent="@{viewModel.data.description}"
                         app:htmlTitle="@{viewModel.data.assignmentName}"
-                        app:layout_constraintTop_toBottomOf="@id/descriptionLabel"
+                        app:layout_constraintTop_toBottomOf="@id/authoredDate"
                         app:onLtiButtonPressed="@{(url) -> viewModel.onLtiButtonPressed(url)}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -445,7 +509,7 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.5f}"
+            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.2f}"
             android:background="@color/backgroundInfo"
             android:backgroundTint="@{viewModel.data.courseColor.backgroundColor()}"
             android:enabled="@{viewModel.data.submitEnabled}"

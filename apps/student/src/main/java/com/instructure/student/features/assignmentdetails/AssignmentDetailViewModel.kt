@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.assignmentdetails
 
+import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.*
@@ -57,6 +58,7 @@ class AssignmentDetailViewModel @Inject constructor(
     private val resources: Resources,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
+    private val application: Application,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
 
@@ -365,6 +367,43 @@ class AssignmentDetailViewModel @Inject constructor(
             resources.getString(R.string.usedAttempts, assignment.submission?.attempt.orDefault())
         ) else null
 
+        val discussionText = assignment.discussionTopicHeader?.message ?: assignment.discussionTopicHeader?.title
+        val description = if (assignment.turnInType == Assignment.TurnInType.DISCUSSION && discussionText?.isNotBlank().orDefault()) {
+            discussionText
+        } else {
+            assignment.description
+        }
+        val formattedDescription = description?.let {
+            htmlContentFormatter.formatHtmlWithIframes(
+                if (Locale.getDefault().isRtl) {
+                    "<body dir=\"rtl\">${it}</body>"
+                } else {
+                    it
+                }
+            )
+        }.orEmpty()
+
+        val discussionTopicHeader = assignment.discussionTopicHeader
+        val discussionHeaderViewData = DiscussionHeaderViewData(
+            authorAvatarUrl = discussionTopicHeader?.author?.avatarImageUrl.orEmpty(),
+            authorName = discussionTopicHeader?.author?.displayName ?: resources.getString(R.string.discussions_unknown_author),
+            authorNameWithPronouns = Pronouns.span(
+                discussionTopicHeader?.author?.displayName ?: resources.getString(R.string.discussions_unknown_author),
+                discussionTopicHeader?.author?.pronouns.orEmpty(),
+            ),
+            authoredDate = DateHelper.getMonthDayAtTime(
+                application.applicationContext,
+                discussionTopicHeader?.postedDate,
+                resources.getString(R.string.at)
+            ) ?: resources.getString(R.string.discussions_unknown_date),
+            attachmentIconVisible = !discussionTopicHeader?.attachments.isNullOrEmpty(),
+            onAttachmentClicked = {
+                postAction(AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked(discussionTopicHeader?.attachments.orEmpty()))
+            }
+        ).takeIf {
+            !discussionTopicHeader?.author.isDiscussionAuthorNull().orDefault(true)
+        }
+
         return AssignmentDetailViewData(
             courseColor = colorKeeper.getOrGenerateColor(course),
             assignmentName = assignment.name.orEmpty(),
@@ -387,8 +426,9 @@ class AssignmentDetailViewModel @Inject constructor(
             dueDate = due,
             submissionTypes = submissionTypes,
             allowedFileTypes = allowedFileTypes,
-            description = htmlContentFormatter.formatHtmlWithIframes(assignment.description.orEmpty()),
+            description = formattedDescription,
             descriptionLabelText = descriptionLabel,
+            discussionHeaderViewData = discussionHeaderViewData,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
             hasDraft = hasDraft
