@@ -59,6 +59,7 @@ class AssignmentDetailViewModel @Inject constructor(
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
     private val application: Application,
+    private val apiPrefs: ApiPrefs,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
 
@@ -91,7 +92,7 @@ class AssignmentDetailViewModel @Inject constructor(
     var assignment: Assignment? = null
         private set
 
-    private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id.orDefault())
+    private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
 
     init {
         submissionQuery.addListener(this)
@@ -522,8 +523,8 @@ class AssignmentDetailViewModel @Inject constructor(
                 }
                 SubmissionType.DISCUSSION_TOPIC -> {
                     val url = DiscussionTopic.getDiscussionURL(
-                        ApiPrefs.protocol,
-                        ApiPrefs.domain,
+                        apiPrefs.protocol,
+                        apiPrefs.domain,
                         assignment.courseId,
                         assignment.discussionTopicHeader?.id.orDefault()
                     )
