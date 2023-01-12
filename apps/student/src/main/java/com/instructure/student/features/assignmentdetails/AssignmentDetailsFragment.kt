@@ -51,7 +51,7 @@ import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.DialogSubmissionPickerBinding
 import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
-import com.instructure.student.databinding.FragmentAssignmentDetailBinding
+import com.instructure.student.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.getVideoUri
 import com.instructure.student.mobius.assignmentDetails.launchAudio
@@ -70,14 +70,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 @AndroidEntryPoint
-class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
+class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
 
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
-    private var binding: FragmentAssignmentDetailBinding? = null
-    private val viewModel: AssignmentDetailViewModel by viewModels()
+    private var binding: FragmentAssignmentDetailsBinding? = null
+    private val viewModel: AssignmentDetailsViewModel by viewModels()
 
     private var captureVideoUri: Uri? = null
     private val captureVideoContract = registerForActivityResult(ActivityResultContracts.CaptureVideo()) {
@@ -123,7 +123,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
     override fun title() = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAssignmentDetailBinding.inflate(inflater, container, false)
+        binding = FragmentAssignmentDetailsBinding.inflate(inflater, container, false)
         binding?.lifecycleOwner = this
         binding?.viewModel = viewModel
         return binding?.root
@@ -399,14 +399,14 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
     companion object {
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
             val bundle = course.makeBundle { putLong(Const.ASSIGNMENT_ID, assignmentId) }
-            return Route(null, AssignmentDetailFragment::class.java, course, bundle)
+            return Route(null, AssignmentDetailsFragment::class.java, course, bundle)
         }
 
         fun validRoute(route: Route): Boolean {
             return route.canvasContext is Course && (route.arguments.containsKey(Const.ASSIGNMENT_ID) || route.paramsHash.containsKey(RouterParams.ASSIGNMENT_ID))
         }
 
-        fun newInstance(route: Route): AssignmentDetailFragment? {
+        fun newInstance(route: Route): AssignmentDetailsFragment? {
             if (!validRoute(route)) return null
 
             // If routed from a URL, set the bundle's assignment ID from the url value
@@ -423,7 +423,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
                 route.arguments.putString(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID])
             }
 
-            return AssignmentDetailFragment().withArgs(route.arguments)
+            return AssignmentDetailsFragment().withArgs(route.arguments)
         }
     }
 }

@@ -49,7 +49,7 @@ import javax.inject.Inject
 import com.instructure.student.Submission as DatabaseSubmission
 
 @HiltViewModel
-class AssignmentDetailViewModel @Inject constructor(
+class AssignmentDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val courseManager: CourseManager,
     private val assignmentManager: AssignmentManager,
@@ -113,7 +113,7 @@ class AssignmentDetailViewModel @Inject constructor(
                 if (!isDraft && !isUploading) {
                     isUploading = true
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
-                        add(0, AssignmentDetailAttemptItemViewModel(
+                        add(0, AssignmentDetailsAttemptItemViewModel(
                             AssignmentDetailAttemptViewData(
                                 resources.getString(R.string.attempt, attempts.size + 1),
                                 dateString,
@@ -126,7 +126,7 @@ class AssignmentDetailViewModel @Inject constructor(
                 if (isUploading && submission.errorFlag) {
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         removeFirst()
-                        add(0, AssignmentDetailAttemptItemViewModel(
+                        add(0, AssignmentDetailsAttemptItemViewModel(
                             AssignmentDetailAttemptViewData(
                                 resources.getString(R.string.attempt, attempts.size),
                                 dateString,
@@ -193,7 +193,7 @@ class AssignmentDetailViewModel @Inject constructor(
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
                 val dbSubmission = submissionQuery.executeAsList().lastOrNull()
-                this@AssignmentDetailViewModel.dbSubmission = dbSubmission
+                this@AssignmentDetailsViewModel.dbSubmission = dbSubmission
                 val hasDraft = dbSubmission?.isDraft.orDefault()
 
                 assignment = assignmentResult
@@ -218,11 +218,11 @@ class AssignmentDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getAttemptsByHistory(assignment: Assignment): List<AssignmentDetailAttemptItemViewModel> {
+    private fun getAttemptsByHistory(assignment: Assignment): List<AssignmentDetailsAttemptItemViewModel> {
         val submissionHistory = assignment.submission?.submissionHistory
         return submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
             submission?.submittedAt?.let { getFormattedAttemptDate(it) }?.let {
-                AssignmentDetailAttemptItemViewModel(
+                AssignmentDetailsAttemptItemViewModel(
                     AssignmentDetailAttemptViewData(
                         resources.getString(R.string.attempt, submissionHistory.size - index),
                         it,

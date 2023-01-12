@@ -50,7 +50,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore

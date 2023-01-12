@@ -19,7 +19,7 @@ package com.instructure.student.features.assignmentdetails
 
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class AssignmentDetailAttemptItemViewModel(
+class AssignmentDetailsAttemptItemViewModel(
     val data: AssignmentDetailAttemptViewData
 ) : ItemViewModel {
     //Don't care

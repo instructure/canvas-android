@@ -25,14 +25,13 @@ import com.instructure.canvasapi2.utils.APIHelper.expandTildeId
 import com.instructure.canvasapi2.utils.findWithPrevious
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathLockedFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment.Companion.makeRoute
 import com.instructure.student.fragment.PageDetailsFragment.Companion.makeRoute
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment.Companion.makeRoute
 import java.util.*
 
 object ModuleUtility {

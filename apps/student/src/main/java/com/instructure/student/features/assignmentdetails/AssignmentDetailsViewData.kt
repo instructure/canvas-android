@@ -21,7 +21,7 @@ data class AssignmentDetailViewData(
     val submitButtonText: String = "",
     val submitEnabled: Boolean = false,
     val submitVisible: Boolean = false,
-    @Bindable var attempts: List<AssignmentDetailAttemptItemViewModel> = emptyList(),
+    @Bindable var attempts: List<AssignmentDetailsAttemptItemViewModel> = emptyList(),
     @Bindable var selectedGradeCellViewData: GradeCellViewData? = GradeCellViewData(courseColor, GradeCellViewData.State.EMPTY),
     val dueDate: String = "",
     val submissionTypes: String = "",
