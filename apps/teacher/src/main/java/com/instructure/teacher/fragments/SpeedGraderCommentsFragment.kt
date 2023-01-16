@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
@@ -39,6 +38,7 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -91,6 +91,9 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     @Inject
     lateinit var mediaCommentDao: MediaCommentDao
 
+    @Inject
+    lateinit var pendingSubmissionCommentDao: PendingSubmissionCommentDao
+
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
     var mSubmissionId by LongArg()
     var mSubmissionHistory by ParcelableArrayListArg<Submission>()
@@ -111,7 +114,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
-    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage, submissionCommentDao, attachmentDao, authorDao, mediaCommentDao)
+    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage, submissionCommentDao, attachmentDao, authorDao, mediaCommentDao, pendingSubmissionCommentDao, fileUploadInputDao)
     override fun onCreateView(view: View) {
         commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
             if (commentEditText.text.toString() != it.comment) {
@@ -228,10 +231,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     @Suppress("unused")
     @Subscribe
     fun onUploadMediaComment(event: UploadMediaCommentEvent) {
-        if (mAssignee.id == event.assigneeId) {
-            presenter.createPendingMediaComment(event.file.absolutePath)
-            uploadSGMediaComment(event.file, event.assignmentId, event.courseId)
-            addMediaAttachment.isEnabled = true
+        lifecycleScope.launch {
+            if (mAssignee.id == event.assigneeId) {
+                val id = presenter.createPendingMediaComment(event.file.absolutePath)
+                uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id)
+                addMediaAttachment.isEnabled = true
+            }
         }
     }
 
@@ -324,7 +329,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
      *
      * @param mediaFile File pointing to the media to upload
      */
-    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long) {
+    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long, dbId: Long) {
         val mediaUri = Uri.fromFile(mediaFile)
 
         val serviceIntent = Intent(requireActivity(), NotoriousUploadService::class.java)
@@ -336,6 +341,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             putExtra(Const.STUDENT_ID, mAssignee.id)
             putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
             putExtra(Const.PAGE_ID, presenter.mPageId)
+            putExtra(Const.ID, dbId)
         }
 
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)

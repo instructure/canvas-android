@@ -12,6 +12,9 @@ interface FileUploadInputDao {
     @Delete
     suspend fun delete(fileUploadInput: FileUploadInputEntity)
 
+    @Delete
+    suspend fun deleteAll(fileUploadInputs: List<FileUploadInputEntity>)
+
     @Update
     suspend fun update(fileUploadInput: FileUploadInputEntity)
 

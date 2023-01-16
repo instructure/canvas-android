@@ -19,6 +19,7 @@ package com.instructure.student.fragment
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.PageManager
@@ -204,7 +205,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
-                canvasWebViewWrapper.loadHtml(it, page.title, baseUrl = page.htmlUrl)
+                canvasWebViewWrapper?.loadHtml(it, page.title, baseUrl = page.htmlUrl)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
             }

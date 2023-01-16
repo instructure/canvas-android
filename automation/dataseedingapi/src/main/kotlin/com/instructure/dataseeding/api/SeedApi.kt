@@ -222,7 +222,7 @@ object SeedApi {
             if(request.locked) {
                 addAllAnnouncements(
                     (0 until request.announcements).map {
-                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token)
+                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token, locked = true)
                     }
                 )
             }
