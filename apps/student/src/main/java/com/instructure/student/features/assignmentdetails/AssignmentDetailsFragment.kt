@@ -384,6 +384,11 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
+
+        binding?.descriptionWebViewWrapper?.webView?.apply {
+            focusable = View.NOT_FOCUSABLE
+            isFocusableInTouchMode = false
+        }
     }
 
     private fun showDiscussionAttachments(attachments: List<RemoteFile>) {

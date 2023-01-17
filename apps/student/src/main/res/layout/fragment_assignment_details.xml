@@ -78,12 +78,12 @@
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/submissionStatusIcon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="4dp"
                         android:importantForAccessibility="no"
-                        android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.INVISIBLE}"
                         app:imageRes="@{viewModel.data.submissionStatusIcon}"
                         app:layout_constraintStart_toEndOf="@id/points"
                         app:layout_constraintTop_toBottomOf="@id/title"
@@ -98,7 +98,7 @@
                         android:layout_marginStart="6dp"
                         android:text="@{viewModel.data.submissionStatusText}"
                         android:textSize="16sp"
-                        android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.INVISIBLE}"
                         app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
                         app:layout_constraintStart_toEndOf="@id/submissionStatusIcon"
                         app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
@@ -212,6 +212,7 @@
                         layout="@layout/item_assignment_detail_attempt_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:visibility="@{viewModel.data.attempts.size() == 1 ? View.VISIBLE : View.GONE}"
                         app:itemViewModel="@{viewModel.data.firstAttemptOrNull}"
                         app:layout_constraintTop_toBottomOf="@id/attemptSpinner" />

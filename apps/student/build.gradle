@@ -248,7 +248,6 @@ android {
 
 dependencies {
     implementation project(path: ':panda_annotations')
-    testImplementation project(path: ':student')
     kaptAndroidTestQa project(path: ':panda_processor')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])

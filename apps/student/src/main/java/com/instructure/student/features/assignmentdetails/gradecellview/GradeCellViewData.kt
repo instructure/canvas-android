@@ -1,6 +1,7 @@
 package com.instructure.student.features.assignmentdetails.gradecellview
 
 import android.content.res.Resources
+import androidx.core.graphics.ColorUtils
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -25,6 +26,8 @@ data class GradeCellViewData(
     val latePenalty: String = "",
     val finalGrade: String = ""
 ) {
+    val backgroundColorWithAlpha = ColorUtils.setAlphaComponent(courseColor.backgroundColor(), (.25 * 255).toInt())
+
     enum class State {
         EMPTY,
         SUBMITTED,

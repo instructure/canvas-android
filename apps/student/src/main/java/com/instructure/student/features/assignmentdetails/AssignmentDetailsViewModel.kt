@@ -95,6 +95,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
 
     init {
+        markSubmissionAsRead()
         submissionQuery.addListener(this)
         loadData()
     }
@@ -142,6 +143,12 @@ class AssignmentDetailsViewModel @Inject constructor(
                     refreshAttempts()
                 }
             }
+        }
+    }
+
+    private fun markSubmissionAsRead() {
+        viewModelScope.launch {
+            SubmissionManager.markSubmissionAsReadAsync(course?.id.orDefault(), assignmentId).await()
         }
     }
 

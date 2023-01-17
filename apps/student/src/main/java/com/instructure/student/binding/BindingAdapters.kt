@@ -33,8 +33,9 @@ fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
     }
 }
 
-@BindingAdapter("progress", "color")
-fun DonutChartView.setProgress(progress: Float, @ColorInt color: Int) {
+@BindingAdapter("progress", "color", "trackColor")
+fun DonutChartView.setProgress(progress: Float, @ColorInt color: Int, @ColorInt trackColor: Int) {
     setColor(color)
+    setTrackColor(trackColor)
     setPercentage(progress, true)
 }
