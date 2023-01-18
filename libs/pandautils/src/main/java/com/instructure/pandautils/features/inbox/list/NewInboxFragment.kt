@@ -38,6 +38,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
 import com.instructure.pandautils.utils.isVisible
+import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -68,7 +69,6 @@ class NewInboxFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.setMenu(R.menu.menu_inbox) {}
         binding.editToolbar.setupAsBackButton(this)
         binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
             when (it.itemId) {
@@ -166,7 +166,6 @@ class NewInboxFragment : Fragment() {
     private fun animateAvatar(view: View, selected: Boolean) {
         val avatar: ImageView = view.findViewById(R.id.avatar)
         val avatarSelected: ImageView = view.findViewById(R.id.avatarSelected)
-        avatarSelected.setColorFilter(ThemePrefs.buttonColor)
 
         var outView: View
         var inView: View
@@ -180,19 +179,19 @@ class NewInboxFragment : Fragment() {
 
         val outAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.flip_out_anim)
         outAnimation.duration = 150
-        outAnimation.addListener(onEnd = { outView.setVisible(false) })
+        outAnimation.addListener(onEnd = { outView.setHidden(true) })
 
         val inAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.flip_in_anim)
         inAnimation.duration = 150
         inAnimation.startOffset = 150
-        inAnimation.addListener(onStart = { inView.setVisible(true) })
+        inAnimation.addListener(onStart = { inView.setHidden(false) })
 
         outView.startAnimation(outAnimation)
         inView.startAnimation(inAnimation)
     }
 
     private fun openScopeSelector() {
-        val popup = PopupMenu(requireContext(), binding.popupViewPosition)
+        val popup = PopupMenu(requireContext(), binding.scopeFilter)
         popup.menuInflater.inflate(R.menu.menu_conversation_scope, popup.menu)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
