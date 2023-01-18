@@ -73,9 +73,9 @@ class NewInboxFragment : Fragment() {
         binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
             when (it.itemId) {
                 R.id.inboxStarSelected -> viewModel.starSelected()
-                R.id.inboxUnstarSelected -> viewModel.unstarSelected()
+//                R.id.inboxUnstarSelected -> viewModel.unstarSelected()
                 R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
-                R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
+//                R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
                 R.id.inboxDeleteSelected -> deleteSelected()
                 R.id.inboxArchiveSelected -> viewModel.archiveSelected()
             }
