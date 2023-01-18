@@ -49,55 +49,48 @@ class LoginLandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultParentTheme(
-      builder: (context) => Scaffold(
-        key: _scaffoldKey,
-        endDrawer: !DebugFlags.isDebug
-            ? null // Don't show snickers in release mode
-            : Drawer(
-                child: SafeArea(
-                  child: Center(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: SNICKERS.length,
-                      itemBuilder: (context, index) {
-                        var snicker = SNICKERS[index];
-                        return ListTile(
-                          title: Text(snicker.title),
-                          subtitle: Text(snicker.subtitle),
-                          onTap: () {
-                            // TODO: needs test
-                            locator<QuickNav>().push(
-                              context,
-                              WebLoginScreen(snicker.domain, user: snicker.username, pass: snicker.password),
+        builder: (context) => Scaffold(
+            key: _scaffoldKey,
+            endDrawer: !DebugFlags.isDebug
+                ? null // Don't show snickers in release mode
+                : Drawer(
+                    child: SafeArea(
+                      child: Center(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: SNICKERS.length,
+                          itemBuilder: (context, index) {
+                            var snicker = SNICKERS[index];
+                            return ListTile(
+                              title: Text(snicker.title),
+                              subtitle: Text(snicker.subtitle),
+                              onTap: () {
+                                // TODO: needs test
+                                locator<QuickNav>().push(
+                                  context,
+                                  WebLoginScreen(snicker.domain,
+                                      user: snicker.username,
+                                      pass: snicker.password),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-        body: TwoFingerDoubleTapGestureDetector(
-          onDoubleTap: () => _changeLoginFlow(context),
-          child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: FullScreenScrollContainer(
-                    horizontalPadding: 0,
-                    children: <Widget>[
-                      // _helpRequestButton(context), // add back after we make mobile login better
-                      Expanded(child: _body(context)),
-                      SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
-                    ],
+            body: TwoFingerDoubleTapGestureDetector(
+                onDoubleTap: () => _changeLoginFlow(context),
+                child: SafeArea(
+                  child: OrientationBuilder(
+                    builder: (context, orientation) =>
+                        orientation == Orientation.portrait
+                            ? _body(context)
+                            : _bodyLandscape(context),
                   ),
-                ),
-                _previousLogins(context),
-              ],
-            ),
-          ),
-        ),
-      ),
+                )
+            )
+        )
     );
   }
 
@@ -107,11 +100,12 @@ class LoginLandingScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Spacer(),
           SvgPicture.asset(
             'assets/svg/canvas-parent-login-logo.svg',
             semanticsLabel: L10n(context).canvasLogoLabel,
           ),
-          SizedBox(height: 64),
+          Spacer(),
           if (lastLoginAccount == null)
             _filledButton(context, L10n(context).findSchool, () {
               onFindSchoolPressed(context);
@@ -119,7 +113,8 @@ class LoginLandingScreen extends StatelessWidget {
           if (lastLoginAccount != null)
             _filledButton(
                 context,
-                lastLoginAccount.item1.name == null || lastLoginAccount.item1.name.isEmpty
+                lastLoginAccount.item1.name == null ||
+                        lastLoginAccount.item1.name.isEmpty
                     ? lastLoginAccount.item1.domain
                     : lastLoginAccount.item1.name, () {
               onSavedSchoolPressed(context, lastLoginAccount);
@@ -131,8 +126,64 @@ class LoginLandingScreen extends StatelessWidget {
             }),
           SizedBox(height: 8),
           if (_hasCameras()) _qrLogin(context),
+          _previousLogins(context),
+          SizedBox(height: 32)
         ],
       ),
+    );
+  }
+
+  Widget _bodyLandscape(BuildContext context) {
+    final lastLoginAccount = ApiPrefs.getLastAccount();
+    return Row(
+      children: [
+        Spacer(),
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              SvgPicture.asset(
+                'assets/svg/canvas-parent-login-logo.svg',
+                semanticsLabel: L10n(context).canvasLogoLabel,
+              ),
+              Spacer()
+            ],
+          ),
+        ),
+        Spacer(),
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              if (lastLoginAccount == null)
+                _filledButton(context, L10n(context).findSchool, () {
+                  onFindSchoolPressed(context);
+                }),
+              if (lastLoginAccount != null)
+                _filledButton(
+                    context,
+                    lastLoginAccount.item1.name == null ||
+                            lastLoginAccount.item1.name.isEmpty
+                        ? lastLoginAccount.item1.domain
+                        : lastLoginAccount.item1.name, () {
+                  onSavedSchoolPressed(context, lastLoginAccount);
+                }),
+              SizedBox(height: 16),
+              if (lastLoginAccount != null)
+                _outlineButton(context, L10n(context).findAnotherSchool, () {
+                  onFindSchoolPressed(context);
+                }),
+              SizedBox(height: 8),
+              if (_hasCameras()) _qrLogin(context),
+              _previousLogins(context),
+              Spacer()
+            ],
+          ),
+        ),
+        Spacer()
+      ],
     );
   }
 
@@ -140,7 +191,7 @@ class LoginLandingScreen extends StatelessWidget {
       BuildContext context, String title, VoidCallback onPressed) {
     return ButtonTheme(
       minWidth: 260,
-      child: RaisedButton(
+      child: FlatButton(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
@@ -220,7 +271,8 @@ class LoginLandingScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(L10n(context).previousLogins, style: Theme.of(context).textTheme.caption),
+              child: Text(L10n(context).previousLogins,
+                  style: Theme.of(context).textTheme.caption),
             ),
             SizedBox(height: 6),
             Padding(
@@ -239,7 +291,8 @@ class LoginLandingScreen extends StatelessWidget {
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
+                      locator<QuickNav>().pushRouteAndClearStack(
+                          context, PandaRouter.rootSplash());
                     },
                     leading: Stack(
                       overflow: Overflow.visible,
@@ -254,8 +307,12 @@ class LoginLandingScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: ParentColors.masquerade,
-                                  border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2)),
-                              child: Icon(CanvasIconsSolid.masquerade, color: Colors.white, size: 10),
+                                  border: Border.all(
+                                      color: Theme.of(context)
+                                          .scaffoldBackgroundColor,
+                                      width: 2)),
+                              child: Icon(CanvasIconsSolid.masquerade,
+                                  color: Colors.white, size: 10),
                             ),
                           ),
                       ],
@@ -286,12 +343,12 @@ class LoginLandingScreen extends StatelessWidget {
         .pushRoute(context, PandaRouter.domainSearch(loginFlow: flow));
   }
 
-  onSavedSchoolPressed(BuildContext context, Tuple2<SchoolDomain, LoginFlow> lastAccount) {
+  onSavedSchoolPressed(
+      BuildContext context, Tuple2<SchoolDomain, LoginFlow> lastAccount) {
     locator<QuickNav>().pushRoute(
         context,
         PandaRouter.loginWeb(lastAccount.item1.domain,
-            accountName: lastAccount.item1.name,
-        loginFlow: lastAccount.item2));
+            accountName: lastAccount.item1.name, loginFlow: lastAccount.item2));
   }
 
   void _changeLoginFlow(BuildContext context) {
@@ -314,6 +371,7 @@ class LoginLandingScreen extends StatelessWidget {
     }
 
     _scaffoldKey.currentState.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(flowDescription)));
+    _scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(flowDescription)));
   }
 }
