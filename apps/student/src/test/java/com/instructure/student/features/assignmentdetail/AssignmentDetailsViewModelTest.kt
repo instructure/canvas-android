@@ -19,6 +19,7 @@ package com.instructure.student.features.assignmentdetail
 
 import android.app.Application
 import android.content.res.Resources
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -30,6 +31,7 @@ import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
@@ -78,6 +80,12 @@ class AssignmentDetailsViewModelTest {
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+
+        ContextKeeper.appContext = mockk(relaxed = true)
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
@@ -379,7 +387,6 @@ class AssignmentDetailsViewModelTest {
         Assert.assertEquals(true, viewModel.data.value?.submissionStatusVisible)
     }
 
-
     @Test
     fun `Submitted submission`() {
         val expectedLabelText = "Submitted"
@@ -407,5 +414,41 @@ class AssignmentDetailsViewModelTest {
         Assert.assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
         Assert.assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
         Assert.assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+    }
+
+    @Test
+    fun `Select submission attempt`() {
+        val firstSubmission = Submission(submittedAt = Date(), grade = "A", postedAt = Date())
+        val assignment = Assignment(
+            submission = Submission(
+                submissionHistory = listOf(
+                    firstSubmission,
+                    Submission(submittedAt = Date(), grade = "B", postedAt = Date()),
+                    Submission(submittedAt = Date(), grade = "C", postedAt = Date()),
+                    Submission(grade = "D"),
+                )
+            )
+        )
+
+        val expectedGradeCellViewData = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            assignment,
+            firstSubmission
+        )
+
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(assignment)
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onAttemptSelected(2)
+
+        Assert.assertEquals(3, viewModel.data.value?.attempts?.size)
+        Assert.assertEquals(expectedGradeCellViewData, viewModel.data.value?.selectedGradeCellViewData)
     }
 }
