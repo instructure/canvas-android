@@ -148,7 +148,7 @@ class InboxViewModel @Inject constructor(
         val selectionModeActive = selectedItems > 0
         items.forEach { it.selectionModeActive = selectionModeActive }
 
-        _data.value = _data.value?.copy(selectedItems = selectedItems.toString(), selectionMode = selectionModeActive)
+        _data.value = _data.value?.copy(selectedItemsCount = selectedItems.toString(), selectionMode = selectionModeActive)
     }
 
     private fun createAvatarData(conversation: Conversation): AvatarViewData {
@@ -297,7 +297,7 @@ class InboxViewModel @Inject constructor(
                 it.selectionModeActive = false
                 it.notifyChange()
             }
-            _data.value = _data.value?.copy(selectedItems = "", selectionMode = false)
+            _data.value = _data.value?.copy(selectedItemsCount = "", selectionMode = false)
             return true
         } else {
             return false

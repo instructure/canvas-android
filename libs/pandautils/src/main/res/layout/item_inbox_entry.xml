@@ -25,6 +25,8 @@
         <variable
             name="itemViewModel"
             type="com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel" />
+
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,6 +62,7 @@
             android:layout_height="@dimen/avatar_size"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:visibility="@{itemViewModel.selected ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:avatar="@{itemViewModel.data.avatar}" />
@@ -69,7 +72,7 @@
             android:layout_width="@dimen/avatar_size"
             android:layout_height="@dimen/avatar_size"
             android:src="@drawable/ic_selected"
-            android:visibility="invisible"
+            android:visibility="@{itemViewModel.selected ? View.VISIBLE : View.INVISIBLE}"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="parent"

@@ -27,6 +27,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
++import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentInboxNewBinding
+import com.instructure.pandautils.databinding.ItemInboxEntryBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
@@ -48,6 +50,8 @@ import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
+
+private const val ANIM_DURATION = 150L
 
 @AndroidEntryPoint
 class NewInboxFragment : Fragment() {
@@ -119,7 +123,6 @@ class NewInboxFragment : Fragment() {
             .showThemed()
     }
 
-    // TODO Move to data binding?
     private fun animateToolbars(selectionMode: Boolean) {
         if (selectionMode && binding.editToolbar.isVisible) return
         if (!selectionMode && binding.toolbar.isVisible) return
@@ -135,12 +138,12 @@ class NewInboxFragment : Fragment() {
         }
 
         val fadeOut = AlphaAnimation(1f, 0f)
-        fadeOut.duration = 150
+        fadeOut.duration = ANIM_DURATION
         fadeOut.addListener(onEnd = { currentToolbar.setVisible(false) })
 
         val fadeIn = AlphaAnimation(0f, 1f)
-        fadeIn.duration = 150
-        fadeIn.startOffset = 150
+        fadeIn.duration = ANIM_DURATION
+        fadeIn.startOffset = ANIM_DURATION
         fadeIn.addListener(onStart = { newToolbar.setVisible(true) })
 
         currentToolbar.startAnimation(fadeOut)
@@ -167,10 +170,12 @@ class NewInboxFragment : Fragment() {
         }
     }
 
-    // TODO Move to data binding?
     private fun animateAvatar(view: View, selected: Boolean) {
-        val avatar: ImageView = view.findViewById(R.id.avatar)
-        val avatarSelected: ImageView = view.findViewById(R.id.avatarSelected)
+        val itemBinding = DataBindingUtil.findBinding<ItemInboxEntryBinding>(view)
+        if (itemBinding == null) return
+
+        val avatar: ImageView = itemBinding.avatar
+        val avatarSelected: ImageView = itemBinding.avatarSelected
 
         var outView: View
         var inView: View
@@ -183,12 +188,12 @@ class NewInboxFragment : Fragment() {
         }
 
         val outAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.flip_out_anim)
-        outAnimation.duration = 150
+        outAnimation.duration = ANIM_DURATION
         outAnimation.addListener(onEnd = { outView.setHidden(true) })
 
         val inAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.flip_in_anim)
-        inAnimation.duration = 150
-        inAnimation.startOffset = 150
+        inAnimation.duration = ANIM_DURATION
+        inAnimation.startOffset = ANIM_DURATION
         inAnimation.addListener(onStart = { inView.setHidden(false) })
 
         outView.startAnimation(outAnimation)

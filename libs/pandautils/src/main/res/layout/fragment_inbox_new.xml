@@ -61,7 +61,7 @@
                 android:visibility="gone"
                 app:popupTheme="@style/ToolBarPopupStyle"
                 app:theme="@style/ToolBarStyle"
-                app:title="@{viewModel.data.selectedItems}"
+                app:title="@{viewModel.data.selectedItemsCount}"
                 tools:targetApi="lollipop" />
 
         </FrameLayout>

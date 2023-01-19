@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.Conversation
 
 data class InboxViewData(
     val scope: String,
-    val selectedItems: String = "",
+    val selectedItemsCount: String = "",
     val selectionMode: Boolean = false
 )
 
