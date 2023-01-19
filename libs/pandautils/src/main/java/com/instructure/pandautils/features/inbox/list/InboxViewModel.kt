@@ -107,6 +107,7 @@ class InboxViewModel @Inject constructor(
                 _state.postValue(ViewState.Success)
                 _data.postValue(InboxViewData(getTextForScope(scope)))
                 _itemViewModels.postValue(itemViewModels)
+                if (forceNetwork) _events.postValue(Event(InboxAction.UpdateUnreadCount))
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
@@ -234,6 +235,7 @@ class InboxViewModel @Inject constructor(
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
                 it.notifyChange()
                 _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size))))
+                _events.postValue(Event(InboxAction.UpdateUnreadCount))
             }
         })
     }
@@ -244,6 +246,7 @@ class InboxViewModel @Inject constructor(
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
                 it.notifyChange()
                 _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size))))
+                _events.postValue(Event(InboxAction.UpdateUnreadCount))
             }
         })
     }
@@ -254,6 +257,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value = newMessages
             handleSelectionMode()
             _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxDeletedConfirmation, ids.size))))
+            _events.postValue(Event(InboxAction.UpdateUnreadCount))
         })
     }
 
@@ -263,6 +267,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value = newMessages
             handleSelectionMode()
             _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, ids.size))))
+            _events.postValue(Event(InboxAction.UpdateUnreadCount))
         })
     }
 

@@ -16,6 +16,7 @@
  */
 package com.instructure.student.di
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.student.features.inbox.list.StudentInboxRouter
@@ -29,7 +30,7 @@ import dagger.hilt.android.components.FragmentComponent
 class InboxModule {
 
     @Provides
-    fun providesInboxRouter(activity: FragmentActivity): InboxRouter {
-        return StudentInboxRouter(activity)
+    fun providesInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
+        return StudentInboxRouter(activity, fragment)
     }
 }

@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.list
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,7 @@ import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -56,6 +58,8 @@ class NewInboxFragment : Fragment() {
     lateinit var inboxRouter: InboxRouter
 
     private lateinit var binding: FragmentInboxNewBinding
+
+    private var onUnreadCountInvalidated: OnUnreadCountInvalidated? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -159,6 +163,7 @@ class NewInboxFragment : Fragment() {
             is InboxAction.ShowConfirmationSnackbar -> Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG).show()
             InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage()
             InboxAction.FailedToLoadNextPage -> Snackbar.make(requireView(), R.string.failedToLoadNextPage, Snackbar.LENGTH_LONG).show()
+            InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
         }
     }
 
@@ -208,8 +213,32 @@ class NewInboxFragment : Fragment() {
         popup.show()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(requireContext())
+        try {
+            onUnreadCountInvalidated = context as OnUnreadCountInvalidated?
+        } catch (e: ClassCastException) {
+            throw ClassCastException(context.toString() + " must implement OnUnreadCountInvalidated")
+        }
+    }
+
     fun handleBackPress(): Boolean {
         return viewModel.handleBackPressed()
+    }
+
+    fun conversationUpdated() {
+        viewModel.refresh()
+        onUnreadCountInvalidated?.invalidateUnreadCount()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(inboxRouter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(inboxRouter)
     }
 
     companion object {
@@ -219,4 +248,8 @@ class NewInboxFragment : Fragment() {
 
         private fun validateRoute(route: Route) = route.primaryClass == NewInboxFragment::class.java
     }
+}
+
+interface OnUnreadCountInvalidated {
+    fun invalidateUnreadCount()
 }

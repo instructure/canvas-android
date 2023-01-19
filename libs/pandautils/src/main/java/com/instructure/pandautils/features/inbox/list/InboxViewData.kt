@@ -51,4 +51,5 @@ sealed class InboxAction {
     data class ShowConfirmationSnackbar(val text: String) : InboxAction()
     object CreateNewMessage : InboxAction()
     object FailedToLoadNextPage : InboxAction()
+    object UpdateUnreadCount : InboxAction()
 }

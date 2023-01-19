@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxAdapter
@@ -57,10 +58,6 @@ class InboxFragment : ParentFragment() {
    data class ScopeParams(val titleText: Int,
                           val messageText: Int,
                           val image: Int)
-
-    interface OnUnreadCountInvalidated {
-        fun invalidateUnreadCount()
-    }
 
     private var adapterToFragmentCallback = object : AdapterToFragmentCallback<Conversation> {
         override fun onRowClicked(conversation: Conversation, position: Int, isOpenDetail: Boolean) {

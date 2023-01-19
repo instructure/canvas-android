@@ -17,16 +17,20 @@
 package com.instructure.student.features.inbox.list
 
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.features.inbox.list.NewInboxFragment
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.router.RouteMatcher
+import org.greenrobot.eventbus.Subscribe
 
-class StudentInboxRouter(private val activity: FragmentActivity) : InboxRouter {
+class StudentInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
         val route = InboxConversationFragment.makeRoute(conversation, InboxApi.conversationScopeToString(scope))
@@ -42,5 +46,16 @@ class StudentInboxRouter(private val activity: FragmentActivity) : InboxRouter {
     override fun routeToNewMessage() {
         val route = InboxComposeMessageFragment.makeRoute()
         RouteMatcher.route(activity, route)
+    }
+
+    // We need to keep this update mechanism until the other Inbox components will be rewritten
+    @Suppress("unused")
+    @Subscribe(sticky = true)
+    fun onUpdateConversation(event: ConversationUpdatedEvent) {
+        event.get {
+            if (fragment is NewInboxFragment) {
+                fragment.conversationUpdated()
+            }
+        }
     }
 }
