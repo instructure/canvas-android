@@ -280,6 +280,7 @@ class InboxViewModel @Inject constructor(
 
                 val dataResult = inboxRepository.batchUpdateConversations(ids, operation)
                 if (dataResult.isSuccess) {
+                    inboxRepository.invalidateCachedResponses()
                     onSuccess(ids.toSet())
                 } else {
                     _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxOperationFailed))))
@@ -302,6 +303,10 @@ class InboxViewModel @Inject constructor(
         } else {
             return false
         }
+    }
+
+    fun invalidateCache() {
+        inboxRepository.invalidateCachedResponses()
     }
 
     fun createNewMessage() {

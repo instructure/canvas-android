@@ -27,7 +27,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
-+import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -232,6 +232,7 @@ class NewInboxFragment : Fragment() {
     }
 
     fun conversationUpdated() {
+        viewModel.invalidateCache()
         viewModel.refresh()
         onUnreadCountInvalidated?.invalidateUnreadCount()
     }

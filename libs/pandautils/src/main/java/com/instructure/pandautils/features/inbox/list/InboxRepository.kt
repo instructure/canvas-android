@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.list
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
@@ -36,5 +37,9 @@ class InboxRepository(private val inboxApi: InboxApi.InboxInterface) {
 
     suspend fun batchUpdateConversations(conversationIds: List<Long>, conversationEvent: String): DataResult<Progress> {
         return inboxApi.batchUpdateConversations(conversationIds, conversationEvent)
+    }
+
+    fun invalidateCachedResponses() {
+        CanvasRestAdapter.clearCacheUrls("conversations")
     }
 }
