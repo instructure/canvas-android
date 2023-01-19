@@ -140,8 +140,8 @@ class InboxViewModel @Inject constructor(
             conversation.hasAttachments() || conversation.hasMedia()
         )
 
-        return InboxEntryItemViewModel(viewData, {
-            _events.postValue(Event(InboxAction.OpenConversation(conversation, scope)))
+        return InboxEntryItemViewModel(viewData, { starred ->
+            _events.postValue(Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope)))
         }, { view, selected ->
             _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
             handleSelectionMode()

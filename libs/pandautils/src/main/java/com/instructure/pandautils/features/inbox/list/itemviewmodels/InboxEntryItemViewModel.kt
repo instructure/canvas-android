@@ -27,7 +27,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 class InboxEntryItemViewModel(
     @get:Bindable
     var data: InboxEntryViewData,
-    val openConversationCallback: () -> Unit,
+    val openConversationCallback: (Boolean) -> Unit,
     val selectionModeCallback: (View, Boolean) -> Unit,
     var selectionModeActive: Boolean = false,
     @get:Bindable
@@ -40,7 +40,7 @@ class InboxEntryItemViewModel(
         if (selectionModeActive) {
             changeSelection(view)
         } else {
-            openConversationCallback()
+            openConversationCallback(data.starred)
         }
     }
 
