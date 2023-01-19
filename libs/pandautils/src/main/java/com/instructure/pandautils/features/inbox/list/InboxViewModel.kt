@@ -103,10 +103,16 @@ class InboxViewModel @Inject constructor(
                 if (dataResult is DataResult.Success) {
                     nextPageLink = dataResult.linkHeaders.nextUrl
                 }
-                val itemViewModels = createInboxEntriesFromResponse(conversations)
-                _state.postValue(ViewState.Success)
+
                 _data.postValue(InboxViewData(getTextForScope(scope)))
+                val itemViewModels = createInboxEntriesFromResponse(conversations)
                 _itemViewModels.postValue(itemViewModels)
+                if (itemViewModels.isEmpty()) {
+                    postEmptyState()
+                } else {
+                    _state.postValue(ViewState.Success)
+                }
+
                 if (forceNetwork) _events.postValue(Event(InboxAction.UpdateUnreadCount))
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -188,6 +194,18 @@ class InboxViewModel @Inject constructor(
             InboxApi.Scope.ARCHIVED -> resources.getString(R.string.inbox_archived)
             else -> resources.getString(R.string.inboxAllMessages)
         }
+    }
+
+    private fun postEmptyState() {
+        val emptyState = when (scope) {
+            InboxApi.Scope.ALL -> ViewState.Empty(R.string.nothingUnread, R.string.nothingUnreadSubtext, R.drawable.ic_panda_inboxzero)
+            InboxApi.Scope.UNREAD -> ViewState.Empty(R.string.nothingUnread, R.string.nothingUnreadSubtext, R.drawable.ic_panda_inboxzero)
+            InboxApi.Scope.ARCHIVED -> ViewState.Empty(R.string.nothingArchived, R.string.nothingArchivedSubtext, R.drawable.ic_panda_inboxarchived)
+            InboxApi.Scope.STARRED -> ViewState.Empty(R.string.nothingStarred, R.string.nothingStarredSubtext, R.drawable.ic_panda_inboxstarred)
+            InboxApi.Scope.SENT -> ViewState.Empty(R.string.nothingSent, R.string.nothingSentSubtext, R.drawable.ic_panda_inboxsent)
+        }
+
+        _state.postValue(emptyState)
     }
 
     fun refresh() {
