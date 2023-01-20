@@ -58,8 +58,8 @@
 
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_size"
-            android:layout_height="@dimen/avatar_size"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:visibility="@{itemViewModel.selected ? View.INVISIBLE : View.VISIBLE}"
@@ -69,8 +69,8 @@
 
         <ImageView
             android:id="@+id/avatarSelected"
-            android:layout_width="@dimen/avatar_size"
-            android:layout_height="@dimen/avatar_size"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_selected"
             android:visibility="@{itemViewModel.selected ? View.VISIBLE : View.INVISIBLE}"
             android:layout_marginStart="8dp"
@@ -125,8 +125,8 @@
 
         <ImageView
             android:id="@+id/star"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="4dp"
             android:contentDescription="@string/inbox_starred"
@@ -138,8 +138,8 @@
 
         <ImageView
             android:id="@+id/attachment"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="4dp"
