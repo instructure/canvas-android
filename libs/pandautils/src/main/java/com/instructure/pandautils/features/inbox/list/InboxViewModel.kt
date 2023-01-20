@@ -150,11 +150,37 @@ class InboxViewModel @Inject constructor(
 
     private fun handleSelectionMode() {
         val items = _itemViewModels.value ?: emptyList()
-        val selectedItems = items.count { it.selected }
-        val selectionModeActive = selectedItems > 0
+        val selectedItems = items.filter { it.selected }
+        val selectedItemsCount = selectedItems.size
+        val selectionModeActive = selectedItemsCount > 0
         items.forEach { it.selectionModeActive = selectionModeActive }
 
-        _data.value = _data.value?.copy(selectedItemsCount = selectedItems.toString(), selectionMode = selectionModeActive)
+        val menuItems = createMenuItems(selectedItems, scope)
+
+        _data.value = _data.value?.copy(selectedItemsCount = selectedItemsCount.toString(), selectionMode = selectionModeActive, editMenuItems = menuItems)
+    }
+
+    private fun createMenuItems(selectedItems: List<InboxEntryItemViewModel>, scope: InboxApi.Scope): Set<InboxMenuItem> {
+        val menuItems = mutableSetOf<InboxMenuItem>(InboxMenuItem.DELETE)
+        if (scope == InboxApi.Scope.ARCHIVED) {
+            menuItems.add(InboxMenuItem.UNARCHIVE)
+        } else {
+            menuItems.add(InboxMenuItem.ARCHIVE)
+        }
+
+        if (selectedItems.any { it.data.unread }) {
+            menuItems.add(InboxMenuItem.MARK_AS_READ)
+        } else {
+            menuItems.add(InboxMenuItem.MARK_AS_UNREAD)
+        }
+
+        if (selectedItems.any { !it.data.starred }) {
+            menuItems.add(InboxMenuItem.STAR)
+        } else {
+            menuItems.add(InboxMenuItem.UNSTAR)
+        }
+
+        return menuItems
     }
 
     private fun createAvatarData(conversation: Conversation): AvatarViewData {
@@ -232,7 +258,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
                 it.notifyChange()
-                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size))))
+                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size)))
             }
         })
     }
@@ -242,7 +268,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
                 it.notifyChange()
-                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size))))
+                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
             }
         })
     }
@@ -252,8 +278,8 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
                 it.notifyChange()
-                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size))))
-                _events.postValue(Event(InboxAction.UpdateUnreadCount))
+                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
+                _events.value = Event(InboxAction.UpdateUnreadCount)
             }
         })
     }
@@ -263,8 +289,8 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
                 it.notifyChange()
-                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size))))
-                _events.postValue(Event(InboxAction.UpdateUnreadCount))
+                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
+                _events.value = Event(InboxAction.UpdateUnreadCount)
             }
         })
     }
@@ -273,9 +299,8 @@ class InboxViewModel @Inject constructor(
         performBatchOperation("destroy", { ids ->
             val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
             _itemViewModels.value = newMessages
-            handleSelectionMode()
-            _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxDeletedConfirmation, ids.size))))
-            _events.postValue(Event(InboxAction.UpdateUnreadCount))
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxDeletedConfirmation, ids.size)))
+            _events.value = Event(InboxAction.UpdateUnreadCount)
         })
     }
 
@@ -283,9 +308,16 @@ class InboxViewModel @Inject constructor(
         performBatchOperation("archive", { ids ->
             val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
             _itemViewModels.value = newMessages
-            handleSelectionMode()
-            _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, ids.size))))
-            _events.postValue(Event(InboxAction.UpdateUnreadCount))
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, ids.size)))
+            _events.value = Event(InboxAction.UpdateUnreadCount)
+        })
+    }
+
+    fun unarchiveSelected() {
+        performBatchOperation("mark_as_read", { ids ->
+            val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
+            _itemViewModels.value = newMessages
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnarchivedConfirmation, ids.size)))
         })
     }
 
@@ -300,6 +332,7 @@ class InboxViewModel @Inject constructor(
                 if (dataResult.isSuccess) {
                     inboxRepository.invalidateCachedResponses()
                     onSuccess(ids.toSet())
+                    handleSelectionMode()
                 } else {
                     _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxOperationFailed))))
                 }

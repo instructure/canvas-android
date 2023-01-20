@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
 import com.instructure.pandautils.utils.isVisible
+import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
@@ -81,11 +82,12 @@ class NewInboxFragment : Fragment() {
         binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
             when (it.itemId) {
                 R.id.inboxStarSelected -> viewModel.starSelected()
-//                R.id.inboxUnstarSelected -> viewModel.unstarSelected()
+                R.id.inboxUnstarSelected -> viewModel.unstarSelected() // TODO Icon for this item is just a placeholder
                 R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
-//                R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
+                R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
                 R.id.inboxDeleteSelected -> deleteSelected()
                 R.id.inboxArchiveSelected -> viewModel.archiveSelected()
+                R.id.inboxUnarchiveSelected -> viewModel.unarchiveSelected()
             }
         }
         applyTheme()
@@ -98,7 +100,14 @@ class NewInboxFragment : Fragment() {
         }
 
         viewModel.data.observe(viewLifecycleOwner) { data ->
+            setMenuItems(data.editMenuItems)
             animateToolbars(data.selectionMode)
+        }
+    }
+
+    private fun setMenuItems(editMenuItems: Set<InboxMenuItem>) {
+        binding.editToolbar.menu.items.forEach {
+            it.isVisible = editMenuItems.map { it.id }.contains(it.itemId)
         }
     }
 

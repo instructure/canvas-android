@@ -1343,6 +1343,7 @@
 
     <string name="deleteSelected">Delete</string>
     <string name="archiveSelected">Archive</string>
+    <string name="unarchiveSelected">Unarchive</string>
     <string name="markAsReadSelected">Mark as read</string>
     <string name="markAsUnreadSelected">Mark as unread</string>
     <string name="starSelected">Star</string>
@@ -1351,6 +1352,7 @@
     <string name="inboxOperationFailed">Failed to perform operation</string>
     <string name="inboxDeletedConfirmation">%1$s deleted</string>
     <string name="inboxArchivedConfirmation">%1$s archived</string>
+    <string name="inboxUnarchivedConfirmation">%1$s unarchived</string>
     <string name="inboxMarkAsReadConfirmation">%1$s marked as read</string>
     <string name="inboxMarkAsUnreadConfirmation">%1$s marked as unread</string>
     <string name="inboxStarredConfirmation">%1$s starred</string>

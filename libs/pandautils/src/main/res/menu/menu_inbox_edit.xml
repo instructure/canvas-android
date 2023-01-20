@@ -24,15 +24,33 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/inboxUnarchiveSelected"
+        android:title="@string/archiveSelected"
+        android:icon="@drawable/ic_unarchive"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/inboxMarkAsReadSelected"
         android:title="@string/markAsReadSelected"
         android:icon="@drawable/ic_mark_as_read"
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/inboxMarkAsUnreadSelected"
+        android:title="@string/markAsUnreadSelected"
+        android:icon="@drawable/ic_mark_as_unread"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/inboxStarSelected"
         android:title="@string/starSelected"
         android:icon="@drawable/ic_star_inbox"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/inboxUnstarSelected"
+        android:title="@string/unstarSelected"
+        android:icon="@drawable/ic_unstar"
         app:showAsAction="always"/>
 
     <item
