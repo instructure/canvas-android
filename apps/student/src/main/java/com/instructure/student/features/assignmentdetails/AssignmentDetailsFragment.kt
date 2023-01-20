@@ -18,7 +18,6 @@
 package com.instructure.student.features.assignmentdetails
 
 import android.app.Dialog
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -48,7 +47,6 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.BaseRouterActivity
-import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.DialogSubmissionPickerBinding
 import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
 import com.instructure.student.databinding.FragmentAssignmentDetailsBinding
@@ -166,12 +164,6 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             }
             is AssignmentDetailAction.NavigateToDiscussionScreen -> {
                 RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(canvasContext, action.discussionTopicHeaderId))
-            }
-            is AssignmentDetailAction.NavigateByUrl -> {
-                if (!RouteMatcher.canRouteInternally(requireContext(), action.url, ApiPrefs.domain, true)) {
-                    val intent = Intent(requireContext(), InternalWebViewActivity::class.java) //TODO WHAT IS THIS
-                    requireContext().startActivity(intent)
-                }
             }
             is AssignmentDetailAction.NavigateToUploadScreen -> navigateToUploadScreen(action.assignment)
             is AssignmentDetailAction.NavigateToTextEntryScreen -> navigateToTextEntryScreen(
@@ -407,7 +399,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             return Route(null, AssignmentDetailsFragment::class.java, course, bundle)
         }
 
-        fun validRoute(route: Route): Boolean {
+        private fun validRoute(route: Route): Boolean {
             return route.canvasContext is Course && (route.arguments.containsKey(Const.ASSIGNMENT_ID) || route.paramsHash.containsKey(RouterParams.ASSIGNMENT_ID))
         }
 

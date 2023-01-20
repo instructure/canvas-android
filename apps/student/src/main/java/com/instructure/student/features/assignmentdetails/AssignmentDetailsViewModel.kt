@@ -59,7 +59,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
     private val application: Application,
-    private val apiPrefs: ApiPrefs,
+    apiPrefs: ApiPrefs,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
 
@@ -524,19 +524,6 @@ class AssignmentDetailsViewModel @Inject constructor(
             postAction(AssignmentDetailAction.NavigateToDiscussionScreen(assignment.discussionTopicHeader?.id.orDefault(), course))
         } else if (hasSingleSubmissionType) {
             when (submissionTypes.first()) {
-                SubmissionType.ONLINE_QUIZ -> {
-                    val url = APIHelper.getQuizURL(course.id, assignment.quizId)
-                    postAction(AssignmentDetailAction.NavigateByUrl(url))
-                }
-                SubmissionType.DISCUSSION_TOPIC -> {
-                    val url = DiscussionTopic.getDiscussionURL(
-                        apiPrefs.protocol,
-                        apiPrefs.domain,
-                        assignment.courseId,
-                        assignment.discussionTopicHeader?.id.orDefault()
-                    )
-                    postAction(AssignmentDetailAction.NavigateByUrl(url))
-                }
                 SubmissionType.ONLINE_UPLOAD -> postAction(AssignmentDetailAction.NavigateToUploadScreen(assignment))
                 SubmissionType.ONLINE_TEXT_ENTRY -> postAction(AssignmentDetailAction.NavigateToTextEntryScreen(assignment.name))
                 SubmissionType.ONLINE_URL -> postAction(AssignmentDetailAction.NavigateToUrlSubmissionScreen(assignment.name))

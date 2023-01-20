@@ -40,6 +40,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.student.db.StudentDb
+import com.instructure.student.features.assignmentdetails.AssignmentDetailAction
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsViewModel
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 import io.mockk.*
@@ -109,6 +110,24 @@ class AssignmentDetailsViewModelTest {
         application,
         apiPrefs,
         database
+    )
+
+    private fun getDbSubmission() = com.instructure.student.Submission(
+        id = 0,
+        submissionEntry = "",
+        lastActivityDate = null,
+        assignmentName = null,
+        assignmentId = 0,
+        canvasContext = CanvasContext.emptyCourseContext(0),
+        submissionType = "",
+        errorFlag = false,
+        assignmentGroupCategoryId = null,
+        userId = 0,
+        currentFile = 0,
+        fileCount = 0,
+        progress = null,
+        annotatableAttachmentId = null,
+        isDraft = false
     )
 
     @Test
@@ -228,25 +247,7 @@ class AssignmentDetailsViewModelTest {
 
         every {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(
-            com.instructure.student.Submission(
-                id = 0,
-                submissionEntry = "",
-                lastActivityDate = null,
-                assignmentName = null,
-                assignmentId = 0,
-                canvasContext = CanvasContext.emptyCourseContext(0),
-                submissionType = "",
-                errorFlag = false,
-                assignmentGroupCategoryId = null,
-                userId = 0,
-                currentFile = 0,
-                fileCount = 0,
-                progress = null,
-                annotatableAttachmentId = null,
-                isDraft = true
-            )
-        )
+        } returns listOf(getDbSubmission().copy(isDraft = true))
 
         val viewModel = getViewModel()
 
@@ -450,5 +451,242 @@ class AssignmentDetailsViewModelTest {
 
         Assert.assertEquals(3, viewModel.data.value?.attempts?.size)
         Assert.assertEquals(expectedGradeCellViewData, viewModel.data.value?.selectedGradeCellViewData)
+    }
+
+    @Test
+    fun `LTI button click`() {
+        val expected = "test"
+
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment())
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onLtiButtonPressed(expected)
+
+        Assert.assertEquals(expected, (viewModel.events.value?.peekContent() as AssignmentDetailAction.NavigateToLtiScreen).url)
+    }
+
+    @Test
+    fun `Grade cell click`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment())
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onGradeCellClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `Grade cell click while uploading text`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment())
+        }
+
+        every {
+            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
+        } returns listOf(getDbSubmission().copy(submissionType = "online_text_entry"))
+
+        val viewModel = getViewModel()
+        viewModel.queryResultsChanged()
+        viewModel.onGradeCellClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
+    }
+
+    @Test
+    fun `Grade cell click while uploading file`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment())
+        }
+
+        every {
+            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
+        } returns listOf(getDbSubmission().copy(submissionType = "online_upload"))
+
+        val viewModel = getViewModel()
+        viewModel.queryResultsChanged()
+        viewModel.onGradeCellClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUploadStatusScreen)
+    }
+
+    @Test
+    fun `Grade cell click while uploading url`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment())
+        }
+
+        every {
+            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
+        } returns listOf(getDbSubmission().copy(submissionType = "online_url"))
+
+        val viewModel = getViewModel()
+        viewModel.queryResultsChanged()
+        viewModel.onGradeCellClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
+    }
+
+    @Test
+    fun `Submit button click - quiz`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_quiz"), quizId = 1))
+        }
+
+        every { quizManager.getQuizAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Quiz())
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToQuizScreen)
+    }
+
+    @Test
+    fun `Submit button click - discussion`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("discussion_topic")))
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToDiscussionScreen)
+    }
+
+    @Test
+    fun `Submit button click - multiple submission types`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(
+                Assignment(
+                    submissionTypesRaw = listOf(
+                        "online_text_entry",
+                        "online_url",
+                        "media_recording"
+                    )
+                )
+            )
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowSubmitDialog)
+    }
+
+    @Test
+    fun `Submit button click - text`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_text_entry")))
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
+    }
+
+    @Test
+    fun `Submit button click - url`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_url")))
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
+    }
+
+    @Test
+    fun `Submit button click - annotation`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("student_annotation")))
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToAnnotationSubmissionScreen)
+    }
+
+    @Test
+    fun `Submit button click - media recoding`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("media_recording")))
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowMediaDialog)
+    }
+
+    @Test
+    fun `Submit button click - external tool`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("external_tool")))
+        }
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToLtiLaunchScreen)
     }
 }

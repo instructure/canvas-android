@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.findWithPrevious
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.*
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute

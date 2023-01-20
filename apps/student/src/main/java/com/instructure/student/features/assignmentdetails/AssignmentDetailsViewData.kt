@@ -64,7 +64,6 @@ sealed class AssignmentDetailAction {
     data class NavigateToSubmissionScreen(val isObserver: Boolean) : AssignmentDetailAction()
     data class NavigateToQuizScreen(val quiz: Quiz) : AssignmentDetailAction()
     data class NavigateToDiscussionScreen(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailAction()
-    data class NavigateByUrl(val url: String) : AssignmentDetailAction()
     data class NavigateToUploadScreen(val assignment: Assignment) : AssignmentDetailAction()
     data class NavigateToTextEntryScreen(
         val assignmentName: String?,
