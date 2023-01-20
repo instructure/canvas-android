@@ -128,4 +128,5 @@
     <string name="stopActingAsMessage">Du kommer att sluta att agera som %s, och gå tillbaka till ditt konto.</string>
     <string name="weMadeChanges">Vi har gjort några ändringar.</string>
     <string name="whatsNewText">Se vad som är nytt</string>
+    <string name="findAnotherSchool">Hitta en annan skola</string>
 </resources>

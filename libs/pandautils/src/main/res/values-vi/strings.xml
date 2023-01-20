@@ -486,4 +486,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s không được đánh dấu là đã xong</string>
     <string name="a11y_markAsDoneWithName">%s Đánh dấu là đã xong</string>
     <string name="a11y_markAsNotDoneWithName">%s Đánh dấu là chưa xong</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

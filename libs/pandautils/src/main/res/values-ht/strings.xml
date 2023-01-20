@@ -485,4 +485,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s make ke li poko fini</string>
     <string name="a11y_markAsDoneWithName">%s Make kòm fini</string>
     <string name="a11y_markAsNotDoneWithName">%s Make kòm poko fini</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

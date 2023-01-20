@@ -37,6 +37,6 @@
     <string name="sendingSimple">Enviando</string>
     <string name="pspdf__annotation_type_stamp">Color de la nota</string>
     <string name="removedComment">Eliminado %1$s por %2$s</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

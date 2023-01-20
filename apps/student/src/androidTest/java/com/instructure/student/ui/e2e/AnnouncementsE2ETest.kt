@@ -21,6 +21,7 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -46,11 +47,13 @@ class AnnouncementsE2ETest : StudentTest() {
     fun testAnnouncementsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 2, locked = true)
+        val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 1)
         val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val announcement = data.announcementsList[0]
-        val secondAnnouncement = data.announcementsList[1]
+
+        val lockedAnnouncement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token, locked = true)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -63,6 +66,17 @@ class AnnouncementsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Assert that ${announcement.title} announcement is displayed.")
         discussionListPage.assertTopicDisplayed(announcement.title)
+
+        Log.d(STEP_TAG, "Assert that ${lockedAnnouncement.title} announcement is really locked so that the 'locked' icon is displayed.")
+        discussionListPage.assertAnnouncementLocked(lockedAnnouncement.title)
+
+        Log.d(STEP_TAG, "Select ${lockedAnnouncement.title} announcement and assert if we are landing on the Discussion Details Page.")
+        discussionListPage.selectTopic(lockedAnnouncement.title)
+        discussionDetailsPage.assertTitleText(lockedAnnouncement.title)
+
+        Log.d(STEP_TAG, "Assert that the 'Reply' button is not available on a locked announcement. Navigate back to Announcement List Page.")
+        discussionDetailsPage.assertReplyButtonNotDisplayed()
+        Espresso.pressBack()
 
         Log.d(STEP_TAG,"Select ${announcement.title} announcement and assert if we are landing on the Discussion Details Page.")
         discussionListPage.selectTopic(announcement.title)
@@ -86,11 +100,11 @@ class AnnouncementsE2ETest : StudentTest() {
         Log.d(STEP_TAG,"Assert that only the matching announcement is displayed on the Discussion List Page.")
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(announcement.title)
-        discussionListPage.assertTopicNotDisplayed(secondAnnouncement.title)
+        discussionListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
         Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Discussion List Page.")
         discussionListPage.clickOnClearSearchButton()
-        discussionListPage.waitForDiscussionTopicToDisplay(secondAnnouncement.title)
+        discussionListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
         discussionListPage.assertTopicDisplayed(announcement.title)
 
         Log.d(STEP_TAG,"Type a search value to the search input field which does not much with any of the existing announcements.")
@@ -100,16 +114,16 @@ class AnnouncementsE2ETest : StudentTest() {
         Log.d(STEP_TAG,"Assert that the empty view is displayed and none of the announcements are appearing on the page.")
         discussionListPage.assertEmpty()
         discussionListPage.assertTopicNotDisplayed(announcement.title)
-        discussionListPage.assertTopicNotDisplayed(secondAnnouncement.title)
+        discussionListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
         Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Discussion List Page.")
         discussionListPage.clickOnClearSearchButton()
-        discussionListPage.waitForDiscussionTopicToDisplay(secondAnnouncement.title)
+        discussionListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
         discussionListPage.assertTopicDisplayed(announcement.title)
 
         Log.d(STEP_TAG,"Refresh the page and assert that after refresh, still all the announcements are displayed.")
         refresh()
         discussionListPage.assertTopicDisplayed(announcement.title)
-        discussionListPage.assertTopicDisplayed(secondAnnouncement.title)
+        discussionListPage.assertTopicDisplayed(lockedAnnouncement.title)
       }
 }

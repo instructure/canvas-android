@@ -56,6 +56,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 androidExtensions {
@@ -143,6 +147,11 @@ dependencies {
 
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+
+    implementation Libs.HEAP
 }
 
 // Define our pact-publish object

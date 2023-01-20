@@ -127,4 +127,5 @@
     <string name="stopActingAsMessage">คุณจะหยุดดำเนินการในฐานะ %s และกลับไปที่บัญชีของคุณ</string>
     <string name="weMadeChanges">เราทำการเปลี่ยนแปลงไว้เล็กน้อย</string>
     <string name="whatsNewText">ดูรายการใหม่</string>
+    <string name="findAnotherSchool">ค้นหาสถานศึกษาอื่น</string>
 </resources>

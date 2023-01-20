@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2022-01-28T12:37:53.041723",
+  "@@last_modified": "2022-10-28T11:03:17.232435",
   "coursesLabel": "Corsi",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
@@ -122,9 +122,9 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Tocca per mettere nei preferiti i corsi che vuoi vedere sul calendario.",
-  "@Tap to favorite the courses you want to see on the Calendar.": {
-    "description": "Description text on calendar filter screen.",
+  "Select elements to display on the calendar.": "Selezionare gli elementi da visualizzare sul calendario.",
+  "@Select elements to display on the calendar.": {
+    "description": "Select calendars description",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

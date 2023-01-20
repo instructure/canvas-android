@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Visualização do aluno</string>
 
 
+    <string name="rateOnThePlayStore">Avaliar na Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Cabeça escolhida: %s</string>
     <string name="content_description_chosen_body">Corpo escolhido: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Rascunho disponível</string>
     <string name="errorLoadingSubmission">Ocorreu um erro ao carregar o envio</string>
     <string name="loadFullContent">Toque para ver o conteúdo completo</string>
+    <string name="openLtiInExternalApp">Toque para abrir em um aplicativo externo</string>
     <string name="dashboardTabImportantDates">Datas importantes</string>
     <string name="importantDatesEmptyTitle">Sem datas importantes</string>
     <string name="important_dates">Datas importantes</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s mensagem não lida</item>
         <item quantity="other">%s mensagens não lidas</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notificação não lida</item>
+        <item quantity="other">%s notificações não lidas</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Nenhuma anotação selecionada</string>
     <string name="emailNotifications">Notificações de e-mail</string>
     <string name="emailNotificationsImmediately">Imediatamente</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Semanalmente</string>
     <string name="emailNotificationsNever">Nunca</string>
     <string name="selectFrequency">Selecionar frequência</string>
+    <string name="a11y_closeProgress">Fechar caixa de diálogo de progresso</string>
+    <string name="fileUploadProgress">%1$s de %2$s</string>
+    <string name="fileUploadProgressSubtitle">Fazendo upload para arquivos</string>
+    <string name="submissionProgressSubtitle">Carregando envio para \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Realizando upload</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Carregamento de arquivos</string>
+    <string name="cancelSubmissionDialogTitle">Cancelar envio</string>
+    <string name="cancelSubmissionDialogMessage">Isso cancelará e excluirá seu envio.</string>
+    <string name="fileUploadError">Falha no envio do arquivo</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Carregar no Canvas para %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Carregar em Meus Arquivos</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Enviar tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Escolha um curso</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Escolha uma tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Cancelar upload?</string>
+    <string name="cancelFileUploadMessage">Isso cancelará seu upload.</string>
+    <string name="menuTitleFilterAssignments">Filtrar tarefas</string>
+    <string name="filterAssignmentDialogTitle">Filtrar tarefas</string>
+    <string name="filterAssignmentsDialogCancel">Cancelar</string>
+    <string name="filterAssignmentAll">Todos</string>
+    <string name="filterAssignmentLate">Atrasado</string>
+    <string name="filterAssignmentMissing">Faltante</string>
+    <string name="filterAssignmentGraded">Avaliado</string>
+    <string name="filterAssignmentUpcoming">Iminente</string>
+    <string name="createdByStudentView">Criado pela visualização do aluno</string>
+    <string name="discussionErrorToast">Ocorreu um erro. O tópico pode não estar mais disponível.</string>
+    <string name="cameraPermissionPermanentlyDenied">A permissão da câmera foi negada permanentemente. Vá para as configurações do aplicativo para permitir.</string>
 </resources>

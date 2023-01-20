@@ -313,6 +313,7 @@
                             android:padding="14dp"
                             android:scaleType="centerInside"
                             android:visibility="gone"
+                            app:tint="@color/textDarkest"
                             app:srcCompat="@drawable/ic_attachment" />
 
                     </LinearLayout>

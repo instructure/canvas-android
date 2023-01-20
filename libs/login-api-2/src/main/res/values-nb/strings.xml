@@ -64,7 +64,6 @@
     <string name="logout_no">Nei</string>
 
     <!--Smart Login-->
-
     <string name="loginNearYou">Nær deg</string>
     <string name="loginCanvasNetwork">Canvas Nettverk</string>
     <string name="loginRightBehindYou">Rett bak deg</string>
@@ -129,4 +128,5 @@
     <string name="stopActingAsMessage">Du vil slutte å opptre som %s og gå tilbake til din egen konto.</string>
     <string name="weMadeChanges">Vi har gjort noen endringer.</string>
     <string name="whatsNewText">Se hva som er nytt</string>
+    <string name="findAnotherSchool">Finn en annen skole</string>
 </resources>

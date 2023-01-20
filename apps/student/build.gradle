@@ -55,8 +55,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 243
-        versionName = '6.20.0'
+        versionCode = 247
+        versionName = '6.21.3'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -241,6 +241,7 @@ android {
 
     hilt {
         enableTransformForLocalTests = true
+        enableAggregatingTask = false
     }
 }
 
@@ -336,6 +337,8 @@ dependencies {
     kapt Libs.HILT_COMPILER
     androidTestImplementation Libs.HILT_TESTING
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    kapt Libs.HILT_ANDROIDX_COMPILER
 
     androidTestImplementation Libs.UI_AUTOMATOR
 
@@ -344,6 +347,12 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP
+
+    /* ROOM */
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+    implementation Libs.ROOM_COROUTINES
+    testImplementation Libs.ROOM_TEST
 }
 
 // Comment out this line if the reporting logic starts going wonky.

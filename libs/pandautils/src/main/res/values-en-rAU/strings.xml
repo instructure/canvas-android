@@ -209,7 +209,7 @@
     <string name="deleted">Deleted</string>
     <string name="deleted_by">[Deleted by %1$s]</string>
     <string name="lockedDiscussionDesc">This discussion is part of the module %s and has not been unlocked yet.</string>
-    <string name="gradedDiscussion">Graded Discussion</string>
+    <string name="gradedDiscussion">Marked Discussion</string>
     <string name="pointsPossible">Points Possible</string>
     <string name="sideCommentEntry">In this type of discussion, you cannot comment on any entry on this level.</string>
 
@@ -231,7 +231,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_speedgrader">Speedgrader</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->
     <string name="utils_howAreWeDoing">How are we doing?</string>
@@ -485,4 +485,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s marked as not done</string>
     <string name="a11y_markAsDoneWithName">%s Mark as done</string>
     <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

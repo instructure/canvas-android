@@ -20,10 +20,12 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FlakyE2E
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -36,7 +38,8 @@ import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
-import java.util.*
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 @HiltAndroidTest
 class HomeroomE2ETest : StudentTest() {
@@ -65,13 +68,6 @@ class HomeroomE2ETest : StudentTest() {
         val homeroomAnnouncement = data.announcementsList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 55)
-        calendar.set(Calendar.SECOND, 59)
-
-        val missingCalendar = Calendar.getInstance()
-
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${nonHomeroomCourses[2].name} course.")
         val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
@@ -80,7 +76,7 @@ class HomeroomE2ETest : StudentTest() {
                 gradingType = GradingType.LETTER_GRADE,
                 teacherToken = teacher.token,
                 pointsPossible = 100.0,
-                dueAt = calendar.time.toApiString()
+                dueAt = OffsetDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_DATE_TIME)
             )
         )
 
@@ -92,7 +88,7 @@ class HomeroomE2ETest : StudentTest() {
                 gradingType = GradingType.PERCENT,
                 teacherToken = teacher.token,
                 pointsPossible = 100.0,
-                dueAt = missingCalendar.time.toApiString()
+                dueAt = 3.days.ago.iso8601
             ))
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")

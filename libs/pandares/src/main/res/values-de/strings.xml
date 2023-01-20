@@ -161,8 +161,8 @@
     <string name="discussionPostEditing">Ändern</string>
 
     <!--Multiple User Sign in -->
-    <string name="removeUser">Diesen Benutzer entfernen?</string>
-    <string name="removedForever">Sie müssen sich bei diesem Benutzer erneut anmelden, um auf seine Inhalte zugreifen zu können.</string>
+    <string name="removeUser">Diese/n Benutzer*in entfernen?</string>
+    <string name="removedForever">Sie müssen sich bei diesem/dieser Benutzer*in erneut anmelden, um auf seine Inhalte zugreifen zu können.</string>
 
     <string name="bookmarksTitle">Lesezeichen</string>
     <string name="addBookmark">Lesezeichen hinzufügen</string>
@@ -217,7 +217,7 @@
     <string name="cancel">Abbrechen</string>
 
     <!-- Discussions -->
-    <string name="forbidden">Die Antworten sind nur für Benutzer sichtbar, die mindestens eine Antwort gepostet haben.</string>
+    <string name="forbidden">Die Antworten sind nur für Benutzer*innen sichtbar, die mindestens eine Antwort gepostet haben.</string>
     <string name="fileCurrentlyLocked">Diese Datei ist derzeit gesperrt</string>
     <string name="a11y_discussionReplyEditor">Diskussionsantworten-Editor</string>
 
@@ -303,7 +303,7 @@
     <string name="archive">Archivieren</string>
     <string name="moveToInbox">In Posteingang verschieben</string>
     <string name="markAsUnread">Als ungelesen markieren</string>
-    <string name="selectPeopleInbox">Teilnehmer auswählen</string>
+    <string name="selectPeopleInbox">Teilnehmer*innen auswählen</string>
     <string name="delete">Löschen</string>
     <string name="deleteEvent">Ereignis löschen</string>
     <string name="selected">Ausgewählt</string>
@@ -326,7 +326,7 @@
     <string name="emptyMessage">Die Nachricht darf nicht leer sein!</string>
     <string name="noRecipients">Keine Empfänger</string>
     <string name="send">Senden</string>
-    <string name="users">Benutzer</string>
+    <string name="users">Benutzer*innen</string>
     <string name="individually">Einzeln</string>
     <string name="versionNum">Version:</string>
     <string name="version" formatted="false">v. %s</string>
@@ -400,9 +400,9 @@
     <string name="syllabus">Kursplan</string>
     <string name="summary">Übersicht</string>
     <string name="coursePeople">Personen</string>
-    <string name="teachersTas">Dozenten &amp; TAs</string>
-    <string name="students">Studenten</string>
-    <string name="observers">Beobachter</string>
+    <string name="teachersTas">Lehrenden &amp; TAs</string>
+    <string name="students">Studierende</string>
+    <string name="observers">Beobachter*in</string>
     <string name="syllabusMissing">Ein Kursplan wurde nicht hinzugefügt.</string>
     <string name="syllabusEventsError">Beim Laden Ihrer Module ist ein Fehler aufgetreten.</string>
 
@@ -427,7 +427,7 @@
     <string name="gradesAreHidden">Für diesen Kurs sind die Noten nicht sichtbar.</string>
 
     <string name="entireGroupSelected">Diese gesamte Gruppe wurde bereits ausgewählt.</string>
-    <string name="noUsersInGroup">In dieser Gruppe sind keine Benutzer</string>
+    <string name="noUsersInGroup">In dieser Gruppe sind keine Benutzer*innen</string>
 
     <!-- Notifications -->
     <string name="deleted">Gelöscht</string>
@@ -444,10 +444,10 @@
     <string name="modified">Zuletzt verändert:</string>
     <string name="lastModified">Zuletzt verändert: %1$s</string>
 
-    <string name="startMasquerading">Handeln als Benutzer beginnen</string>
-    <string name="stopMasquerading">Handeln als Benutzer beenden</string>
-    <string name="userId">Benutzer-ID</string>
-    <string name="masqueradeFail">Fehler beim Versuch, als Benutzer zu handeln</string>
+    <string name="startMasquerading">Handeln als Benutzer*in beginnen</string>
+    <string name="stopMasquerading">Handeln als Benutzer*in beenden</string>
+    <string name="userId">Benutzer*in-ID</string>
+    <string name="masqueradeFail">Fehler beim Versuch, als Benutzer*in zu handeln</string>
 
     <string name="emptyId">Die ID darf nicht leer sein</string>
 
@@ -473,7 +473,7 @@
     <string name="errorPostingAnnouncement">Beim Posten der Ankündigung ist ein Fehler aufgetreten.</string>
     <string name="errorPostingDiscussion">Beim Posten der Diskussion ist ein Fehler aufgetreten.</string>
     <string name="allowThreading">Antworten-Threads erlauben</string>
-    <string name="usersMustPost">Benutzer müssen gepostet haben, bevor sie Antworten sehen können.</string>
+    <string name="usersMustPost">Benutzer*innen müssen gepostet haben, bevor sie Antworten sehen können.</string>
     <string name="allowUserComments">Benutzern Kommentare erlauben</string>
     <string name="message">Nachricht</string>
     <string name="title">Titel</string>
@@ -514,7 +514,7 @@
     <string name="errorLoadingModules">Beim Laden Ihrer Module ist ein Fehler aufgetreten.</string>
 
     <string name="help">Hilfe</string>
-    <string name="instructor_question">Frage des Dozenten</string>
+    <string name="instructor_question">Lehrendenfrage</string>
     <string name="link">Link</string>
 
     <!-- LockInfoHTMLHelper Strings -->
@@ -570,7 +570,7 @@
     <string name="collaborations">Collaborations</string>
     <string name="conferences">Konferenzen</string>
     <string name="chat">Chat</string>
-    <string name="outcomes">Lernziele</string>
+    <string name="outcomes">Lernergebnisse</string>
 
     <!-- Submission View Strings -->
     <string name="visitPage">Besuchen Sie Seite:</string>
@@ -621,8 +621,8 @@
     <string name="dark">Dunkel</string>
 
     <!-- Help dialog strings -->
-    <string name="askInstructor">Stellen Sie Ihrem Dozenten eine Frage.</string>
-    <string name="askInstructorDetails">Fragen werden an Ihren Dozenten weitergeleitet</string>
+    <string name="askInstructor">Stellen Sie Ihrem/Ihrer Lehrenden eine Frage.</string>
+    <string name="askInstructorDetails">Fragen werden an Ihre/n Lehrende*n weitergeleitet</string>
     <string name="searchGuides">Die Canvas-Anleitungen durchsuchen</string>
     <string name="canvasGuides">Canvas-Leitfäden</string>
     <string name="searchGuidesDetails">Antworten auf häufige Fragen suchen</string>
@@ -639,7 +639,7 @@
 
     <!-- Ask Instructor -->
     <string name="whichCourse">Auf welchen Kurs bezieht sich diese Frage?</string>
-    <string name="allTeachers">Diese Nachricht wird an alle Dozenten und TAs im Kurs geschickt</string>
+    <string name="allTeachers">Diese Nachricht wird an alle Lehrenden und TAs im Kurs geschickt</string>
     <string name="sending">&#8230; wird gesendet</string>
     <string name="error">Fehler</string>
 
@@ -652,11 +652,11 @@
     <string name="profileSettings">Profileinstellungen</string>
     <string name="accountPreferences">Kontovoreinstellungen</string>
     <string name="pinAndFingerprint">PIN und Fingerabdruck</string>
-    <string name="pairWithObserver">Pairing mit Beobachter</string>
+    <string name="pairWithObserver">Pairing mit Beobachter*in</string>
     <string name="pairWithObserverDetails">Lassen Sie ein Elternteil diesen QR-Code der Canvas Parent-App scannen, um ein Pairing mit Ihnen herzustellen. Dieser Code verfällt nach 7 Tagen oder nach der erstmaligen Verwendung.</string>
     <string name="pairingCodeLabel">Pairing-Code: \u0020</string>
     <string name="pairingCodeErrorTitle">Fehler im Pairing-Code</string>
-    <string name="pairingCodeErrorDescription">Pairing-Code konnte nicht abgerufen werden. Diese Funktion wird nur für Studenten unterstützt.</string>
+    <string name="pairingCodeErrorDescription">Pairing-Code konnte nicht abgerufen werden. Diese Funktion wird nur für Studierenden unterstützt.</string>
 
     <string name="launchSpeedgrader">Speedgrader öffnen</string>
 
@@ -736,7 +736,7 @@
     <string name="accountNotifications">Ankündigungen</string>
     <string name="addAccount">Konto hinzufügen</string>
 
-    <string name="changeUser">Benutzer wechseln</string>
+    <string name="changeUser">Benutzer*in wechseln</string>
 
     <string name="no_data_connection">Bitte überprüfen Sie Ihre Datenverbindung, und versuchen Sie es erneut.</string>
 
@@ -772,7 +772,7 @@
     <string name="notification_pref_conversation_message">Konversationsnachricht</string>
     <string name="notification_pref_conversations_created_by_you">Von Ihnen erzeugte Konversationen</string>
 
-    <string name="notification_pref_student_appointment_signups">Terminanmeldungen von Studenten</string>
+    <string name="notification_pref_student_appointment_signups">Terminanmeldungen von Studierenden</string>
     <string name="notification_pref_appointment_signups">Terminanmeldungen</string>
     <string name="notification_pref_appointment_cancelations">Terminstornierungen</string>
     <string name="notification_pref_appointment_availability">Terminverfügbarkeit</string>
@@ -812,7 +812,7 @@
     <string name="notification_desc_appointment_availability">Benachrichtigung erhalten, wenn ein Termin frei wird.</string>
     <string name="notification_desc_calendar">Benachrichtigung erhalten über neue und aktualisierte Kalendereinträge.</string>
     <string name="notification_desc_membership_update">Nur für Administratoren, anhängige Anmeldung aktiviert. Benachrichtigung erhalten, wenn eine Gruppenanmeldung akzeptiert oder abgelehnt wird.</string>
-    <string name="notification_desc_admin">Nur für Kursleiter und Administratoren. Benachrichtigung erhalten über Kursanmeldungen, generierte Berichte, exportierte Inhalte, Migrationsberichte, neue Kontobenutzer und neue studentische Gruppen.</string>
+    <string name="notification_desc_admin">Nur für Kursleiter und Administratoren. Benachrichtigung erhalten über Kursanmeldungen, generierte Berichte, exportierte Inhalte, Migrationsberichte, neue Kontobenutzer*innen und neue Studierendengruppen.</string>
     <string name="notification_desc_recording_ready">Benachrichtigung erhalten, wenn eine Konferenzaufzeichnung fertig ist.</string>
 
     <string name="unlimited">Unbegrenzt</string>
@@ -1003,8 +1003,8 @@
     <string name="unsupportedFeature">Nicht unterstützte Funktion</string>
 
     <!-- Parent Strings -->
-    <string name="addChildTitle">Teilnehmer hinzufügen</string>
-    <string name="addChildSubTitle">Geben Sie den Studenten-Pairing-Code ein, den Sie erhalten haben.</string>
+    <string name="addChildTitle">Studierende*n hinzufügen</string>
+    <string name="addChildSubTitle">Geben Sie den Studierenden-Pairing-Code ein, den Sie erhalten haben.</string>
     <string name="addChildHint">Pairing-Code &#8230;</string>
     <string name="addChildErrorMessage">Pairing fehlgeschlagen. Stellen Sie sicher, dass ihr Pairing-Code korrekt und noch gültig ist.</string>
     <string name="gradeComplete">Fertigstellen</string>
@@ -1025,9 +1025,9 @@
     <string name="postPolicyPostTo">Veröffentlichen auf ...</string>
     <string name="postPolicySections">Bestimmte Abschnitte</string>
     <string name="postToEveryoneTitle">Jeder</string>
-    <string name="postToEveryoneMessage">Noten werden für alle Studenten sichtbar gemacht</string>
+    <string name="postToEveryoneMessage">Noten werden für alle Studierende sichtbar gemacht</string>
     <string name="postToGradedTitle">Benotet</string>
-    <string name="postToGradedMessage">Noten werden nur für Studenten mit benotete Abgaben sichtbar gemacht</string>
+    <string name="postToGradedMessage">Noten werden nur für Studierende mit benotete Abgaben sichtbar gemacht</string>
     <string name="postPolicyAllHiddenTitle">Alle Ausgeblendeten</string>
     <string name="postPolicyAllHiddenMessage">Alle Noten sind derzeit ausgeblendet.</string>
     <string name="postPolicyAllPostedTitle">Alle Geposteten</string>
@@ -1040,10 +1040,11 @@
     <string name="gradeAfterPosting">Note nach Posting</string>
     <string name="gradeOverride">Note außer Kraft setzen</string>
     <string name="currentGrade">Aktuelle Note</string>
-    <string name="opensInCanvasStudent">Öffnet in Canvas Student</string>
-    <string name="tab_student_view">Studierendenansicht</string>
+    <string name="opensInCanvasStudent">Öffnet in Canvas Studierenden</string>
+    <string name="tab_student_view">Studierendendenansicht</string>
 
 
+    <string name="rateOnThePlayStore">Im Play Store bewerten</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Gewählte Kopfzeile: %s</string>
     <string name="content_description_chosen_body">Gewählter Text: %s</string>
@@ -1081,7 +1082,7 @@
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
-    <string name="recordingTimerContentDescription">%1$D Stunden, %2$d Minuten und %3$d Sekunden</string>
+    <string name="recordingTimerContentDescription">%1$d Stunden, %2$d Minuten und %3$d Sekunden</string>
     <string name="recordingTimerSpeechDivider">%1$s von %2$s</string>
     <string name="replay">Wiedergabe</string>
     <string name="stop">Stopp</string>
@@ -1137,7 +1138,7 @@
     <string name="recordings">Aufzeichnungen</string>
     <string name="conferenceInProgress">Aktive Konferenz</string>
 
-    <string name="a11y_criterion_content_description">Criterion-Rating %s</string>
+    <string name="a11y_criterion_content_description">Bewertung dieses Kriteriums %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">weitere Informationen</string>
     <string name="a11y_create_file_folder_visible">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ sichtbar</string>
@@ -1196,12 +1197,12 @@
 
     <string name="settingsHomeroomView">Organisationsstundenansicht</string>
     <string name="importantLinksTitle">Wichtige Links</string>
-    <string name="studentApplications">Anwendungen für Studenten</string>
+    <string name="studentApplications">Anwendungen für Studierende</string>
     <string name="staffContactInfo">Mitarbeiterkontakt-Info</string>
     <string name="chooseACourse">Einen Kurs auswählen</string>
     <string name="webViewImportantLinksTitle">Wichtige Links</string>
-    <string name="staffRoleTeacher">Lehrer</string>
-    <string name="staffRoleTeacherAssistant">Lehrassistent</string>
+    <string name="staffRoleTeacher">Lehrende*r</string>
+    <string name="staffRoleTeacherAssistant">Lehrassistent*in</string>
     <string name="resourcesEmptyMessage">Ihre Ressourcen werden hier angezeigt.</string>
     <string name="failedToLoadResources">Ressourcen konnten nicht geladen werden</string>
     <string name="failedToRefreshResources">Ressourcen konnten nicht aktualisiert werden</string>
@@ -1211,7 +1212,7 @@
     <string name="a11y_content_description_inbox_subject">Betreff</string>
     <string name="a11y_content_description_inbox_course_spinner">Einen Kurs auswählen, %s</string>
 
-    <string name="speedGraderAnonymousSubmissionMessage">Die Antworten dieses Studenten sind ausgeblendet, weil diese Aufgabe anonym ist.</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Die Antworten dieser/dieses Studierenden sind ausgeblendet, weil diese Aufgabe anonym ist.</string>
 
     <string name="schedule_marked_as_done">Sie haben es es als erledigt markiert.</string>
     <string name="error_saving_assignment_closed_grading_period">Das Fälligkeitsdatum kann nicht geändert werden, wenn es in einem geschlossenen Benotungszeitraums liegt.</string>
@@ -1221,8 +1222,8 @@
     <string name="somethingWentWrong">Etwas ging schief.</string>
     <string name="failedToLoadQuiz">Quiz konnte nicht geladen werden.</string>
     <string name="failedToLoadSubmission">Die Abgabe konnte nicht geladen werden.</string>
-    <string name="studentAnnotationToolbarTitle">Studentenanmerkung</string>
-    <string name="submissionTypeStudentAnnotation">Studentenanmerkung</string>
+    <string name="studentAnnotationToolbarTitle">Studierendenanmerkung</string>
+    <string name="submissionTypeStudentAnnotation">Studierendenanmerkung</string>
     <string name="gradesNoDueDate">Kein Abgabetermin</string>
     <string name="importantDatesNoDueDate">Kein Abgabetermin</string>
     <string name="missingAssignment">Fehlt</string>
@@ -1232,7 +1233,8 @@
     <string name="submissionDraftAvailableSubtitle">Tippen Sie hier, um fortzufahren.</string>
     <string name="submissionDraftAvailableTitle">Entwurf verfügbar</string>
     <string name="errorLoadingSubmission">Fehler bei, Laden der Abgabe</string>
-    <string name="loadFullContent">Tippen Sie hier, um den vollständigen Inhalt anzuzeigen</string>
+    <string name="loadFullContent">Tippen Sie hier, um den vollständigen Content anzuzeigen</string>
+    <string name="openLtiInExternalApp">Tippen, um in externer App zu öffnen</string>
     <string name="dashboardTabImportantDates">Wichtige Termine</string>
     <string name="importantDatesEmptyTitle">Keine wichtigen Termine</string>
     <string name="important_dates">Wichtige Termine</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s ungelesene Nachricht</item>
         <item quantity="other">%s ungelesene Nachrichten</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s ungelesene Benachrichtigung</item>
+        <item quantity="other">%s ungelesene Benachrichtigungen</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Keine Anmerkung ausgewählt</string>
     <string name="emailNotifications">E-Mail-Benachrichtigungen</string>
     <string name="emailNotificationsImmediately">Sofort</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Wöchentlich</string>
     <string name="emailNotificationsNever">Nie</string>
     <string name="selectFrequency">Frequenz auswählen</string>
+    <string name="a11y_closeProgress">Fortschrittsdialog schließen</string>
+    <string name="fileUploadProgress">%1$s von %2$s</string>
+    <string name="fileUploadProgressSubtitle">Wird nach „Dateien“ hochgeladen</string>
+    <string name="submissionProgressSubtitle">Abgabe wird zu \"%s\" hochgeladen</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Abgabe wird hochgeladen</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Dateien hochladen</string>
+    <string name="cancelSubmissionDialogTitle">Abgabe abbrechen</string>
+    <string name="cancelSubmissionDialogMessage">Dadurch wird Ihre Abgabe storniert und gelöscht.</string>
+    <string name="fileUploadError">Hochladen der Datei fehlgeschlagen</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">In Canvas hochladen für %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Nach „Meine Dateien“ hochladen</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Aufgabe abgeben</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Einen Kurs auswählen</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Aufgabe auswählen</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Hochladen abbrechen?</string>
+    <string name="cancelFileUploadMessage">Dies bricht das Hochladen ab.</string>
+    <string name="menuTitleFilterAssignments">Aufgabenliste filtern</string>
+    <string name="filterAssignmentDialogTitle">Aufgabenliste filtern</string>
+    <string name="filterAssignmentsDialogCancel">Abbrechen</string>
+    <string name="filterAssignmentAll">Alle</string>
+    <string name="filterAssignmentLate">Verspätet</string>
+    <string name="filterAssignmentMissing">Fehlt</string>
+    <string name="filterAssignmentGraded">Benotet</string>
+    <string name="filterAssignmentUpcoming">Demnächst</string>
+    <string name="createdByStudentView">Erstellt von Studierendenansicht</string>
+    <string name="discussionErrorToast">Fehler aufgetreten. Das Thema ist möglicherweise nicht mehr verfügber.</string>
+    <string name="cameraPermissionPermanentlyDenied">Die Kameraberechtigung wurde dauerhaft verweigert. Gehen Sie zu den App-Einstellungen, um die Berechtigung zu erteilen.</string>
 </resources>

@@ -18,3 +18,8 @@
 const String DATA_SEEDING_ADMIN_TOKEN = "";
 const String DATA_SEEDING_CLIENT_ID = "";
 const String DATA_SEEDING_CLIENT_SECRET = "";
+
+const String ENCRYPT_KEY = "YUaS9p2ttdOaChLLvDBS95XGozVqloZU";
+const String ENCRYPT_IV = "WamenhBkE1EAdDFJ";
+const String HEAP_PRODUCTION_ID = "";
+const String HEAP_STAGING_ID = "";

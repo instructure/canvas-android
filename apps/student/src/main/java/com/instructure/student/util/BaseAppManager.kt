@@ -20,6 +20,9 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.work.Configuration
+import androidx.work.WorkManager
+import androidx.work.WorkerFactory
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
@@ -44,7 +47,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
 
-open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
+abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling, Configuration.Provider {
 
     override fun onCreate() {
         if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
@@ -151,6 +154,13 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
     }
 
     override fun performLogoutOnAuthError() = Unit
+
+    override fun getWorkManagerConfiguration(): Configuration =
+        Configuration.Builder()
+            .setWorkerFactory(getWorkManagerFactory())
+            .build()
+
+    abstract fun getWorkManagerFactory(): WorkerFactory
 
     companion object {
         private const val FLUTTER_ENGINE_ID = "flutter_engine_embed"

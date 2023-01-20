@@ -26,9 +26,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.common.util.concurrent.Futures
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.AccountNotificationManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -66,13 +64,15 @@ class DashboardNotificationsViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val resources: Resources = mockk(relaxed = true)
+    private val courseManager: CourseManager = mockk(relaxed = true)
+    private val groupManager: GroupManager = mockk(relaxed = true)
     private val enrollmentManager: EnrollmentManager = mockk(relaxed = true)
+    private val conferenceManager: ConferenceManager = mockk(relaxed = true)
     private val accountNotificationManager: AccountNotificationManager = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
-    private val dashboardNotificationRepository: DashboardNotificationRepository = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardNotificationsViewModel
 
@@ -89,15 +89,25 @@ class DashboardNotificationsViewModelTest {
 
         every { conferenceDashboardBlacklist.conferenceDashboardBlacklist } returns emptySet()
 
-        coEvery { dashboardNotificationRepository.getInvitations(any()) } returns emptyList()
+        every { enrollmentManager.getSelfEnrollmentsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
 
-        coEvery { dashboardNotificationRepository.getConferences(any()) } returns emptyList()
+        every { conferenceManager.getLiveConferencesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
 
-        coEvery { dashboardNotificationRepository.getAccountNotifications(any()) } returns emptyList()
+        every { accountNotificationManager.getAllAccountNotificationsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
 
-        coEvery { dashboardNotificationRepository.getCourses(any()) } returns emptyList()
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
 
-        coEvery { dashboardNotificationRepository.getGroups(any()) } returns emptyList()
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
 
         mockkObject(FileUploadPreferences)
         every { FileUploadPreferences.getRunningWorkerIds() } returns emptyList()
@@ -105,8 +115,10 @@ class DashboardNotificationsViewModelTest {
 
         viewModel = DashboardNotificationsViewModel(
             resources,
+            courseManager,
+            groupManager,
             enrollmentManager,
-            dashboardNotificationRepository,
+            conferenceManager,
             accountNotificationManager,
             oauthManager,
             conferenceDashboardBlacklist,
@@ -125,8 +137,6 @@ class DashboardNotificationsViewModelTest {
     }
 
     private fun setupResources() {
-        every { resources.getColor(R.color.backgroundDanger) } returns Color.parseColor("#EE0612")
-        every { resources.getColor(R.color.backgroundWarning) } returns Color.parseColor("#FC5E13")
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"
         every { resources.getString(R.string.errorOccurred) } returns "An unexpected error occurred."
     }
@@ -146,33 +156,35 @@ class DashboardNotificationsViewModelTest {
                 1,
                 "AC1",
                 "AC1",
-                color = 0,
+                color = R.color.backgroundDanger,
                 icon = R.drawable.ic_warning
             ),
             AnnouncementViewData(
                 2,
                 "AC2",
                 "AC2",
-                color = 0,
+                color = R.color.backgroundInfo,
                 icon = R.drawable.ic_calendar
             ),
             AnnouncementViewData(
                 3,
                 "AC3",
                 "AC3",
-                color = 0,
+                color = R.color.backgroundInfo,
                 icon = R.drawable.ic_question_mark
             ),
             AnnouncementViewData(
                 4,
                 "AC4",
                 "AC4",
-                color = 0,
+                color = R.color.backgroundWarning,
                 icon = R.drawable.ic_warning
             ),
         )
 
-        coEvery { dashboardNotificationRepository.getAccountNotifications(any()) } returns accountNotifications
+        every { accountNotificationManager.getAllAccountNotificationsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(accountNotifications)
+        }
 
         viewModel.loadData(true)
 
@@ -193,7 +205,9 @@ class DashboardNotificationsViewModelTest {
 
         val expectedData = DashboardNotificationsActions.OpenAnnouncement("AC1 subject", "AC1 message")
 
-        coEvery { dashboardNotificationRepository.getAccountNotifications(any()) } returns accountNotifications
+        every { accountNotificationManager.getAllAccountNotificationsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(accountNotifications)
+        }
 
         viewModel.loadData(true)
 
@@ -236,9 +250,13 @@ class DashboardNotificationsViewModelTest {
             )
         )
 
-        coEvery { dashboardNotificationRepository.getCourses(any()) } returns courses
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
 
-        coEvery { dashboardNotificationRepository.getInvitations(any()) } returns enrolments
+        every { enrollmentManager.getSelfEnrollmentsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(enrolments)
+        }
 
         viewModel.loadData(true)
 
@@ -254,9 +272,13 @@ class DashboardNotificationsViewModelTest {
 
         val enrolment = Enrollment(id = 1, courseId = 1, enrollmentState = EnrollmentAPI.STATE_INVITED)
 
-        coEvery { dashboardNotificationRepository.getCourses(any()) } returns listOf(course)
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
 
-        coEvery { dashboardNotificationRepository.getInvitations(any()) } returns listOf(enrolment)
+        every { enrollmentManager.getSelfEnrollmentsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(enrolment))
+        }
 
         every { enrollmentManager.handleInviteAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Unit)
@@ -280,9 +302,13 @@ class DashboardNotificationsViewModelTest {
 
         val enrolment = Enrollment(id = 1, courseId = 1, enrollmentState = EnrollmentAPI.STATE_INVITED)
 
-        coEvery { dashboardNotificationRepository.getCourses(any()) } returns listOf(course)
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
 
-        coEvery { dashboardNotificationRepository.getInvitations(any()) } returns listOf(enrolment)
+        every { enrollmentManager.getSelfEnrollmentsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(enrolment))
+        }
 
         every { enrollmentManager.handleInviteAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Unit)
@@ -306,9 +332,13 @@ class DashboardNotificationsViewModelTest {
 
         val enrolment = Enrollment(id = 1, courseId = 1, enrollmentState = EnrollmentAPI.STATE_INVITED)
 
-        coEvery { dashboardNotificationRepository.getCourses(any()) } returns listOf(course)
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
 
-        coEvery { dashboardNotificationRepository.getInvitations(any()) } returns listOf(enrolment)
+        every { enrollmentManager.getSelfEnrollmentsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(enrolment))
+        }
 
         every { enrollmentManager.handleInviteAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
@@ -332,7 +362,9 @@ class DashboardNotificationsViewModelTest {
     fun `Dismissed conference is not visible`() {
         val conference = Conference(id = 1, title = "Conference")
 
-        coEvery { dashboardNotificationRepository.getConferences(any()) } returns listOf(conference)
+        every { conferenceManager.getLiveConferencesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(conference))
+        }
 
         every { conferenceDashboardBlacklist.conferenceDashboardBlacklist } returns setOf("1")
 
@@ -345,7 +377,9 @@ class DashboardNotificationsViewModelTest {
     fun `Open conference`() {
         val conference = Conference(id = 1, title = "Conference", joinUrl = "https://notAuthenticatedSession.com")
 
-        coEvery { dashboardNotificationRepository.getConferences(any()) } returns listOf(conference)
+        every { conferenceManager.getLiveConferencesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(conference))
+        }
 
         every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(AuthenticatedSession("https://authenticatedSession.com"))
@@ -386,8 +420,13 @@ class DashboardNotificationsViewModelTest {
             ConferenceViewData(subtitle = "Invited course", conference = conferences[0]),
         )
 
-        coEvery { dashboardNotificationRepository.getConferences(any()) } returns conferences
-        coEvery { dashboardNotificationRepository.getCourses(any()) } returns courses
+        every { conferenceManager.getLiveConferencesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(conferences)
+        }
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
 
         viewModel.loadData(true)
 
@@ -419,11 +458,7 @@ class DashboardNotificationsViewModelTest {
         )
 
         val expectedData = listOf(
-            UploadViewData(
-                title,
-                subTitle,
-                0
-            )
+            UploadViewData(title, subTitle)
         )
 
         viewModel.loadData()
@@ -440,16 +475,14 @@ class DashboardNotificationsViewModelTest {
 
         every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
         every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(listOf(workerId))
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
-            WorkInfo(
-                workerId,
-                WorkInfo.State.RUNNING,
-                Data.EMPTY,
-                emptyList(),
-                Data.EMPTY,
-                1
-            )
-        )
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(WorkInfo(
+            workerId,
+            WorkInfo.State.RUNNING,
+            Data.EMPTY,
+            emptyList(),
+            Data.EMPTY,
+            1
+        ))
 
         viewModel.loadData()
         assertEquals(false, viewModel.data.value?.uploadItems?.isEmpty())

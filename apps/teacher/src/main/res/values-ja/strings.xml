@@ -703,6 +703,7 @@
     <string name="changeUser">ユーザーを変更する</string>
     <string name="general">一般</string>
     <string name="sendFeedback">フィードバックを送る</string>
+    <string name="rateOnTheAppStore">App Storeでレート</string>
     <string name="privacyPolicy">プライバシーポリシー</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">利用規約</string>

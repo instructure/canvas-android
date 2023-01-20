@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
 
+import android.content.Context
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -27,21 +28,18 @@ class CourseCardItemViewModel(
     val data: CourseCardViewData,
     val onCardClick: () -> Unit,
     val onDueTextClick: () -> Unit,
-    val onAnnouncementClick: () -> Unit,
-    private val missingTextColor: Int
+    val onAnnouncementClick: () -> Unit
 ) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_course_card
 
-    val assignmentsInfo: SpannableString = createAssignmentsInfo()
-
-    private fun createAssignmentsInfo(): SpannableString {
+    fun getAssignmentsInfo(context: Context): SpannableString {
         if (data.assignmentsMissingText.isEmpty()) {
             return SpannableString(data.assignmentsDueText)
         } else {
             val separator = " | "
             val completeString = SpannableString(data.assignmentsDueText + separator + data.assignmentsMissingText)
-            val spanColor = missingTextColor
+            val spanColor = context.getColor(R.color.textDanger)
             completeString.setSpan(ForegroundColorSpan(spanColor), data.assignmentsDueText.length + separator.length, completeString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             return completeString
         }
