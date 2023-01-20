@@ -265,73 +265,76 @@ class LoginLandingScreen extends StatelessWidget {
       builder: (context, setState) {
         var logins = ApiPrefs.getLogins();
         if (logins.isEmpty) return Container();
-        return Column(
-          key: Key('previous-logins'),
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(L10n(context).previousLogins,
-                  style: Theme.of(context).textTheme.caption),
-            ),
-            SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(height: 1),
-            ),
-            AnimatedContainer(
-              curve: Curves.easeInOutBack,
-              duration: Duration(milliseconds: 400),
-              height: min(itemHeight * 2, itemHeight * logins.length),
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: 0),
-                itemCount: logins.length,
-                itemBuilder: (context, index) {
-                  Login login = logins[index];
-                  return ListTile(
-                    onTap: () {
-                      ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().pushRouteAndClearStack(
-                          context, PandaRouter.rootSplash());
-                    },
-                    leading: Stack(
-                      overflow: Overflow.visible,
-                      children: <Widget>[
-                        Avatar.fromUser(login.currentUser),
-                        if (login.isMasquerading)
-                          Positioned(
-                            right: -6,
-                            top: -6,
-                            child: Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ParentColors.masquerade,
-                                  border: Border.all(
-                                      color: Theme.of(context)
-                                          .scaffoldBackgroundColor,
-                                      width: 2)),
-                              child: Icon(CanvasIconsSolid.masquerade,
-                                  color: Colors.white, size: 10),
-                            ),
-                          ),
-                      ],
-                    ),
-                    title: UserName.fromUser(login.currentUser),
-                    subtitle: Text(login.currentDomain),
-                    trailing: IconButton(
-                      tooltip: L10n(context).delete,
-                      onPressed: () async {
-                        await ApiPrefs.removeLogin(login);
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.clear),
-                    ),
-                  );
-                },
+        return Container(
+          width: 400,
+          child: Column(
+            key: Key('previous-logins'),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(L10n(context).previousLogins,
+                    style: Theme.of(context).textTheme.caption),
               ),
-            ),
-          ],
+              SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Divider(height: 1),
+              ),
+              AnimatedContainer(
+                curve: Curves.easeInOutBack,
+                duration: Duration(milliseconds: 400),
+                height: min(itemHeight * 2, itemHeight * logins.length),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  itemCount: logins.length,
+                  itemBuilder: (context, index) {
+                    Login login = logins[index];
+                    return ListTile(
+                      onTap: () {
+                        ApiPrefs.switchLogins(login);
+                        locator<QuickNav>().pushRouteAndClearStack(
+                            context, PandaRouter.rootSplash());
+                      },
+                      leading: Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          Avatar.fromUser(login.currentUser),
+                          if (login.isMasquerading)
+                            Positioned(
+                              right: -6,
+                              top: -6,
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: ParentColors.masquerade,
+                                    border: Border.all(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        width: 2)),
+                                child: Icon(CanvasIconsSolid.masquerade,
+                                    color: Colors.white, size: 10),
+                              ),
+                            ),
+                        ],
+                      ),
+                      title: UserName.fromUser(login.currentUser),
+                      subtitle: Text(login.currentDomain),
+                      trailing: IconButton(
+                        tooltip: L10n(context).delete,
+                        onPressed: () async {
+                          await ApiPrefs.removeLogin(login);
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.clear),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
