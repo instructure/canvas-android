@@ -92,6 +92,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     var assignment: Assignment? = null
         private set
 
+    private var selectedSubmission: Submission? = null
+
     private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
 
     init {
@@ -461,6 +463,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         val assignment = assignment
         val attempt = _data.value?.attempts?.getOrNull(position)?.data
         val selectedSubmission = attempt?.submission
+        this.selectedSubmission = selectedSubmission
         _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(course),
@@ -493,7 +496,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             }
         } else {
             Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
-            postAction(AssignmentDetailAction.NavigateToSubmissionScreen(isObserver))
+            postAction(AssignmentDetailAction.NavigateToSubmissionScreen(isObserver, selectedSubmission?.attempt))
         }
     }
 

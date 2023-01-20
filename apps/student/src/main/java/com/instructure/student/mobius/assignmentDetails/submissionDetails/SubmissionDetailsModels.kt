@@ -62,7 +62,8 @@ data class SubmissionDetailsModel(
     val quizResult: DataResult<Quiz>? = null,
     val studioLTIToolResult: DataResult<LTITool>? = null,
     val isObserver: Boolean = false,
-    val ltiTool: DataResult<LTITool>? = null
+    val ltiTool: DataResult<LTITool>? = null,
+    val initialSelectedSubmissionAttempt: Long? = null
 )
 
 sealed class SubmissionDetailsContentType {

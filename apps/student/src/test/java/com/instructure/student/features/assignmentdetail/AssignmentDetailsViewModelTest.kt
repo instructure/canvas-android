@@ -689,4 +689,66 @@ class AssignmentDetailsViewModelTest {
 
         Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToLtiLaunchScreen)
     }
+
+    @Test
+    fun `Upload fail`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment())
+        }
+
+        every {
+            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
+        } returns listOf(getDbSubmission())
+
+        val viewModel = getViewModel()
+        viewModel.queryResultsChanged()
+
+        Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
+
+        every {
+            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
+        } returns listOf(getDbSubmission().copy(errorFlag = true))
+
+        viewModel.queryResultsChanged()
+
+        Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isFailed!!)
+    }
+
+    @Test
+    fun `Upload success`() {
+        val expected = Submission(submittedAt = Date())
+
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment())
+        }
+
+        every {
+            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
+        } returns listOf(getDbSubmission())
+
+        val viewModel = getViewModel()
+        viewModel.queryResultsChanged()
+
+        Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
+
+        every {
+            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
+        } returns listOf()
+
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submission = Submission(submissionHistory = listOf(expected))))
+        }
+
+        viewModel.queryResultsChanged()
+
+        Assert.assertEquals(expected, viewModel.data.value?.attempts?.last()?.data?.submission)
+    }
 }

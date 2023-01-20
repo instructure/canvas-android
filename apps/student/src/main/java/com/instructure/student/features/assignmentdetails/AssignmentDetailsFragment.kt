@@ -156,7 +156,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             is AssignmentDetailAction.NavigateToSubmissionScreen -> {
                 RouteMatcher.route(
                     requireContext(),
-                    SubmissionDetailsFragment.makeRoute(canvasContext, assignmentId, action.isObserver)
+                    SubmissionDetailsFragment.makeRoute(canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
                 )
             }
             is AssignmentDetailAction.NavigateToQuizScreen -> {
