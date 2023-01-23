@@ -57,7 +57,7 @@ data class GradeCellViewData(
                 || assignment.gradingType == Assignment.NOT_GRADED_TYPE
             ) {
                 GradeCellViewData(courseColor, State.EMPTY)
-            } else if (submission.submittedAt != null && !submission.isGraded && !submission.excused) {
+            } else if (submission.isSubmitted) {
                 GradeCellViewData(courseColor, State.SUBMITTED)
             } else {
                 val pointsPossibleText = NumberHelper.formatDecimal(assignment.pointsPossible, 2, true)
@@ -138,5 +138,8 @@ data class GradeCellViewData(
                 }
             }
         }
+
+        private val Submission.isSubmitted
+            get() = workflowState == "submitted"
     }
 }
