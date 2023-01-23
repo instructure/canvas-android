@@ -56,6 +56,7 @@ import com.instructure.pandarecycler.PaginatedRecyclerAdapter
 import com.instructure.pandarecycler.PandaRecyclerView
 import com.instructure.pandarecycler.interfaces.EmptyViewInterface
 import com.instructure.pandarecycler.util.Types
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -71,7 +72,7 @@ import com.instructure.pandautils.views.EmptyView
 import java.io.File
 import java.io.FileOutputStream
 
-abstract class ParentFragment : DialogFragment(), FragmentInteractions {
+abstract class ParentFragment : DialogFragment(), FragmentInteractions, NavigationCallbacks {
 
     private var openMediaBundle: Bundle? = null
     private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? = null
@@ -226,6 +227,8 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
     }
 
     open fun handleBackPressed(): Boolean = false
+
+    override fun onHandleBackPressed(): Boolean = handleBackPressed()
 
     //region Toolbar & Menus
 

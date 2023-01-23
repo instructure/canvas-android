@@ -65,6 +65,7 @@ import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.NewInboxFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -591,7 +592,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(CalendarFragment::class.java)
                 R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(ToDoListFragment::class.java)
                 R.id.bottomNavigationNotifications -> abortReselect = currentFragmentClass.isAssignableFrom(NotificationListFragment::class.java)
-                R.id.bottomNavigationInbox -> abortReselect = currentFragmentClass.isAssignableFrom(InboxFragment::class.java)
+                R.id.bottomNavigationInbox -> abortReselect = currentFragmentClass.isAssignableFrom(NewInboxFragment::class.java)
             }
         }
 
@@ -658,7 +659,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 else R.id.bottomNavigationNotifications)
             }
             //Inbox
-            is InboxFragment,
+            is NewInboxFragment,
             is InboxConversationFragment,
             is InboxComposeMessageFragment,
             is InboxRecipientsFragment -> setBottomBarItemSelected(R.id.bottomNavigationInbox)
@@ -852,32 +853,16 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         val topFragment = topFragment
-        if (topFragment is ParentFragment) {
-            if (!topFragment.handleBackPressed()) {
+        if (topFragment is NavigationCallbacks) {
+            if (!topFragment.onHandleBackPressed()) {
                 if (isBottomNavFragment(topFragment)) {
-                    if (!isBackPressHandledByInbox(topFragment)) {
-                        handleBottomNavBackStack()
-                    }
+                    handleBottomNavBackStack()
                 } else {
                     super.onBackPressed()
                 }
             }
         } else {
-            if (isBottomNavFragment(topFragment)) {
-                if (!isBackPressHandledByInbox(topFragment!!)) {
-                    handleBottomNavBackStack()
-                }
-            } else {
-                super.onBackPressed()
-            }
-        }
-    }
-
-    private fun isBackPressHandledByInbox(topFragment: Fragment): Boolean {
-        if (topFragment is NewInboxFragment) {
-            return topFragment.handleBackPress()
-        } else {
-            return false
+            super.onBackPressed()
         }
     }
 

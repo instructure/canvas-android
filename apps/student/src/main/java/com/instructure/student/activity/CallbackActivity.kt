@@ -40,7 +40,6 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.fragment.InboxFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs

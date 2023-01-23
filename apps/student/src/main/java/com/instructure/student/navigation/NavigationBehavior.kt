@@ -24,7 +24,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.NewInboxFragment
 import com.instructure.pandautils.utils.FontFamily
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.fragment.InboxFragment
 import com.instructure.student.fragment.ParentFragment
 
 interface NavigationBehavior {

@@ -33,10 +33,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentInboxNewBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
@@ -54,8 +58,10 @@ import javax.inject.Inject
 
 private const val ANIM_DURATION = 150L
 
+@ScreenView(SCREEN_VIEW_INBOX)
+@PageView(url = "conversations")
 @AndroidEntryPoint
-class NewInboxFragment : Fragment() {
+class NewInboxFragment : Fragment(), NavigationCallbacks {
 
     private val viewModel: InboxViewModel by viewModels()
 
@@ -236,7 +242,7 @@ class NewInboxFragment : Fragment() {
         }
     }
 
-    fun handleBackPress(): Boolean {
+    override fun onHandleBackPressed(): Boolean {
         return viewModel.handleBackPressed()
     }
 
