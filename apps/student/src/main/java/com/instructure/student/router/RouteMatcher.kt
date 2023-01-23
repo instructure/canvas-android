@@ -37,9 +37,8 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
-import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.features.inbox.list.NewInboxFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -74,7 +73,7 @@ object RouteMatcher : BaseRouteMatcher() {
     private fun initRoutes() {
         routes.add(Route("/", DashboardFragment::class.java))
         // region Conversations
-        routes.add(Route("/conversations", NewInboxFragment::class.java))
+        routes.add(Route("/conversations", InboxFragment::class.java))
         routes.add(Route("/conversations/:${RouterParams.CONVERSATION_ID}", InboxConversationFragment::class.java))
         routes.add(Route("/login.*", RouteContext.DO_NOT_ROUTE))//FIXME: we know about this
         // endregion
@@ -246,7 +245,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Prevent routing to unsupported features while in student view
         if (ApiPrefs.isStudentView &&
-            (route?.primaryClass == NewInboxFragment::class.java ||
+            (route?.primaryClass == InboxFragment::class.java ||
                     route?.tabId == Tab.CONFERENCES_ID || route?.tabId == Tab.COLLABORATIONS_ID)) {
             route.primaryClass = NothingToSeeHereFragment::class.java
         }

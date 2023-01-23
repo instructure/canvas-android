@@ -22,7 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
-import com.instructure.pandautils.features.inbox.list.NewInboxFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.fragment.InboxComposeMessageFragment
@@ -53,7 +53,7 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
     @Subscribe(sticky = true)
     fun onUpdateConversation(event: ConversationUpdatedEvent) {
         event.get {
-            if (fragment is NewInboxFragment) {
+            if (fragment is InboxFragment) {
                 fragment.conversationUpdated()
             }
         }

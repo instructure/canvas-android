@@ -40,7 +40,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.databinding.FragmentInboxNewBinding
+import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
@@ -63,14 +63,14 @@ private const val ANIM_DURATION = 150L
 @ScreenView(SCREEN_VIEW_INBOX)
 @PageView(url = "conversations")
 @AndroidEntryPoint
-class NewInboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: InboxViewModel by viewModels()
 
     @Inject
     lateinit var inboxRouter: InboxRouter
 
-    private lateinit var binding: FragmentInboxNewBinding
+    private lateinit var binding: FragmentInboxBinding
 
     private var onUnreadCountInvalidated: OnUnreadCountInvalidated? = null
 
@@ -78,7 +78,7 @@ class NewInboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentInboxNewBinding.inflate(inflater, container, false)
+        binding = FragmentInboxBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
         return binding.root
@@ -272,11 +272,11 @@ class NewInboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     }
 
     companion object {
-        fun makeRoute() = Route(NewInboxFragment::class.java, null)
+        fun makeRoute() = Route(InboxFragment::class.java, null)
 
-        fun newInstance(route: Route) = if (validateRoute(route)) NewInboxFragment().withArgs(route.arguments) else null
+        fun newInstance(route: Route) = if (validateRoute(route)) InboxFragment().withArgs(route.arguments) else null
 
-        private fun validateRoute(route: Route) = route.primaryClass == NewInboxFragment::class.java
+        private fun validateRoute(route: Route) = route.primaryClass == InboxFragment::class.java
     }
 }
 
