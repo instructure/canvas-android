@@ -24,13 +24,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
@@ -39,9 +40,7 @@ import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
@@ -52,23 +51,21 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.pandarecycler.BaseRecyclerAdapter
-import com.instructure.pandarecycler.PaginatedRecyclerAdapter
 import com.instructure.pandarecycler.PandaRecyclerView
 import com.instructure.pandarecycler.interfaces.EmptyViewInterface
-import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.hasPermissions
+import com.instructure.pandautils.views.EmptyView
 import com.instructure.student.R
 import com.instructure.student.activity.VideoViewActivity
-import com.instructure.student.adapter.ExpandableRecyclerAdapter
-import com.instructure.student.decorations.ExpandableGridSpacingDecorator
-import com.instructure.student.decorations.GridSpacingDecorator
 import com.instructure.student.util.FileUtils
 import com.instructure.student.util.LoggingUtility
-import com.instructure.student.util.StudentPrefs
 import com.instructure.student.util.onMainThread
-import com.instructure.pandautils.views.EmptyView
 import java.io.File
 import java.io.FileOutputStream
 
@@ -80,7 +77,6 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
 
     private var loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia? = null
-    private var spacingDecoration: RecyclerView.ItemDecoration? = null
 
     override val navigation: Navigation?
         get() = if (activity is Navigation) {
@@ -146,7 +142,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
 
     var snackbarClickListener: View.OnClickListener = View.OnClickListener {
         try {
-            downloadFileToDownloadDir(requireContext(), loadedMedia?.intent?.data?.path!!)
+            downloadFileToDownloadDir(loadedMedia?.intent?.data?.path!!)
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireActivity(), R.string.errorOccurred, Toast.LENGTH_LONG).show()
@@ -307,63 +303,6 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         }
         super.startActivityForResult(intent, requestCode)
     }
-
-    /**
-     * Will try to save data if some exits
-     * Intended to be used with @dataLossResume()
-     * @param editText
-     * @param preferenceConstant the constant the fragment is using to store data
-     */
-    fun dataLossPause(editText: EditText?, preferenceConstant: String) {
-        editText?.let {
-            if (!TextUtils.isEmpty(it.text)) {
-                // Data exists in message editText so we want to save it.
-                StudentPrefs.putString(preferenceConstant, it.text.toString())
-            }
-        }
-    }
-
-    /**
-     * Restores data that may have been lost by navigating
-     * @param editText
-     * @param preferenceConstant the constant the fragment is using to store data
-     * @return if the data was restored
-     */
-    fun dataLossResume(editText: EditText?, preferenceConstant: String): Boolean {
-        //If we have no text in our editText
-        if (editText != null && TextUtils.isEmpty(editText.text)) {
-            //and we have text stored, we can restore that text
-            val messageText = StudentPrefs.getString(preferenceConstant, "")
-            if (!TextUtils.isEmpty(messageText)) {
-                editText.setText(messageText)
-                return true
-            }
-        }
-        return false
-    }
-
-    /**
-     * Will remove any data for a given constant
-     * @param preferenceConstant
-     */
-    fun dataLossDeleteStoredData(preferenceConstant: String) = StudentPrefs.remove(preferenceConstant)
-
-    /**
-     * A text watcher that will remove any data stored when the user has removed all text
-     * @param editText
-     * @param preferenceConstant the constant the fragment is using to store data
-     */
-    fun dataLossAddTextWatcher(editText: EditText?, preferenceConstant: String) {
-        editText?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                if (s.toString().isEmpty()) {
-                    dataLossDeleteStoredData(preferenceConstant)
-                }
-            }
-        })
-    }
     // region RecyclerView Methods
 
     // The paramName is used to specify which param should be selected when the list loads for the first time
@@ -400,7 +339,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         return configureRecyclerView(rootView, context, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, resources.getString(emptyViewStringResId))
     }
 
-    fun configureRecyclerView(
+    private fun configureRecyclerView(
             rootView: View,
             context: Context,
             baseRecyclerAdapter: BaseRecyclerAdapter<*>,
@@ -432,78 +371,10 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         return recyclerView
     }
 
-    fun configureRecyclerViewAsGrid(
-            rootView: View,
-            baseRecyclerAdapter: BaseRecyclerAdapter<*>,
-            swipeRefreshLayoutResId: Int,
-            emptyViewResId: Int,
-            recyclerViewResId: Int,
-            emptyViewStringResId: Int,
-            span: Int
-    ) {
-        val cardPadding = resources.getDimensionPixelOffset(R.dimen.card_outer_margin)
-        val emptyViewInterface = rootView.findViewById<View>(emptyViewResId) as EmptyViewInterface
-        val recyclerView = rootView.findViewById<PandaRecyclerView>(recyclerViewResId)
-        emptyViewInterface.emptyViewText(emptyViewStringResId)
-        emptyViewInterface.setNoConnectionText(getString(R.string.noConnection))
-
-        val layoutManager = GridLayoutManager(
-            context,
-            span,
-            RecyclerView.VERTICAL,
-            false
-        )
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val adapter = recyclerView.adapter ?: return 1
-                if (position < adapter.itemCount) {
-                    val viewType = adapter.getItemViewType(position)
-                    if (Types.TYPE_HEADER == viewType || PaginatedRecyclerAdapter.LOADING_FOOTER_TYPE == viewType) {
-                        return span
-                    }
-                } else {
-                    // If something goes wrong it will take up the entire space, but at least it won't crash
-                    return span
-                }
-                return 1
-            }
-        }
-
-        spacingDecoration?.let { recyclerView.removeItemDecoration(it) }
-
-        spacingDecoration = if (baseRecyclerAdapter is ExpandableRecyclerAdapter<*, *, *>) {
-            ExpandableGridSpacingDecorator(cardPadding)
-        } else {
-            GridSpacingDecorator(cardPadding)
-        }
-        spacingDecoration?.let { recyclerView.addItemDecoration(it) }
-
-        recyclerView.layoutManager = layoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.setEmptyView(emptyViewInterface)
-        recyclerView.adapter = baseRecyclerAdapter
-        swipeRefreshLayout = rootView.findViewById(swipeRefreshLayoutResId)
-        swipeRefreshLayout!!.setOnRefreshListener {
-            if (!com.instructure.pandautils.utils.Utils.isNetworkAvailable(context)) {
-                swipeRefreshLayout!!.isRefreshing = false
-            } else {
-                baseRecyclerAdapter.refresh()
-            }
-        }
-    }
-
     fun openMedia(mime: String?, url: String?, filename: String?, canvasContext: CanvasContext) {
         val owner = activity ?: return
         onMainThread {
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename)
-            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
-        }
-    }
-
-    fun openMedia(isSubmission: Boolean, mime: String?, url: String?, filename: String?, canvasContext: CanvasContext) {
-        val owner = activity ?: return
-        onMainThread {
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, isSubmission, mime, url, filename)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
         }
     }
@@ -524,7 +395,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         }
     }
 
-    private fun downloadFileToDownloadDir(context: Context, url: String): File? {
+    private fun downloadFileToDownloadDir(url: String): File? {
         // We should have the file cached locally at this point; We'll just move it to the user's Downloads folder
 
         if (!requireContext().hasPermissions(PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
@@ -565,32 +436,6 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
     fun showToast(stringResId: Int) {
         if (isAdded) {
             Toast.makeText(requireActivity(), stringResId, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun showToast(message: String) {
-        if (TextUtils.isEmpty(message)) {
-            return
-        }
-
-        if (isAdded) {
-            Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun showToast(stringResId: Int, length: Int) {
-        if (isAdded) {
-            Toast.makeText(requireActivity(), stringResId, length).show()
-        }
-    }
-
-    fun showToast(message: String, length: Int) {
-        if (TextUtils.isEmpty(message)) {
-            return
-        }
-
-        if (isAdded) {
-            Toast.makeText(requireActivity(), message, length).show()
         }
     }
 
