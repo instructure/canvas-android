@@ -30,13 +30,10 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
@@ -53,7 +50,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
     private val selectFavorites by WaitForViewWithId(R.id.editDashboardTextView)
-    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
+   // private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
     // in the UI stack.  We want to choose the one that is displayed.
@@ -115,7 +112,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
-    fun logOut() {
+ /*   fun logOut() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
         onViewWithText(android.R.string.yes).click()
@@ -124,12 +121,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(matches(isDisplayed()))
 
     }
-
+*/
     fun assertCourseLabelTextColor(expectedTextColor: String) {
         onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
     }
 
-    fun pressChangeUser() {
+/*    fun pressChangeUser() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
     }
@@ -166,6 +163,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithText(userName).assertDisplayed()
         Espresso.pressBack()
     }
+
+ */
 
     fun assertUnreadEmails(count: Int) {
         onView(withId(R.id.bottomBar)).check(NotificationBadgeAssertion(R.id.bottomNavigationInbox, count))
@@ -209,11 +208,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         selectFavorites.click()
     }
 
-    fun setShowGrades(showGrades: Boolean) {
+  /*  fun setShowGrades(showGrades: Boolean) {
         hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerShowGradesSwitch).perform(SetSwitchCompat(showGrades))
         Espresso.pressBack()
-    }
+    }*/
 
     // Assumes one course, which is favorited
     fun assertShowsGrades() {
@@ -235,7 +234,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(groupNameMatcher).scrollTo().click()
     }
 
-    fun launchSettingsPage() {
+  /*  fun launchSettingsPage() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerSettings).click()
     }
@@ -248,7 +247,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun toggleShowGrades() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerShowGradesSwitch).scrollTo().click()
-    }
+    }*/
 
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)

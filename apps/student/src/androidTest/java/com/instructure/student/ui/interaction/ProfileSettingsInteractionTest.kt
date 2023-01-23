@@ -49,7 +49,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
         Espresso.pressBack() // to settings page
         Espresso.pressBack() // to dashboard
 
-        dashboardPage.assertUserLoggedIn(newUserName)
+        leftSideNavigationDrawerPage.assertUserLoggedIn(newUserName)
     }
 
     @Test

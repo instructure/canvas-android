@@ -71,7 +71,7 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Assert that the username has been changed to $newUserName.")
         ViewUtils.pressBackButton(2)
-        dashboardPage.assertUserLoggedIn(newUserName)
+        leftSideNavigationDrawerPage.assertUserLoggedIn(newUserName)
 
         val originalSavedPandaAvatarCount = getSavedPandaAvatarCount()
 
