@@ -22,6 +22,7 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
@@ -287,4 +288,9 @@ fun bindBooleanToVisibility(view: View, visible: Boolean) {
 @BindingAdapter("imageTint")
 fun bindImageColor(imageView: ImageView, @ColorInt color: Int) {
     imageView.setColorFilter(color)
+}
+
+@BindingAdapter("onClickWithNetworkCheck")
+fun bindOnClickWithNetworkCheck(view: View, clickListener: OnClickListener) {
+    view.onClickWithRequireNetwork(clickListener)
 }

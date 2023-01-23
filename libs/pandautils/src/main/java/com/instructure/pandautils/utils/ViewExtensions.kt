@@ -34,6 +34,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.*
+import android.view.View.OnClickListener
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AlphaAnimation
@@ -366,10 +367,10 @@ fun View.requestAccessibilityFocus(delay: Long = 500) {
  * OnClickListener for checking internet connection first. If connection exits allow click,
  * otherwise show no internet dialog.
  */
-fun View.onClickWithRequireNetwork(clickListener: (v: View) -> Unit) = onClick {
+fun View.onClickWithRequireNetwork(clickListener: OnClickListener) = onClick {
     if (APIHelper.hasNetworkConnection()) {
         //Allow click
-        clickListener(this)
+        clickListener.onClick(this)
     } else {
         //show dialog
         AlertDialog.Builder(context)

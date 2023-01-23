@@ -34,6 +34,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.interactions.FragmentInteractions
+import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
@@ -61,7 +63,7 @@ private const val ANIM_DURATION = 150L
 @ScreenView(SCREEN_VIEW_INBOX)
 @PageView(url = "conversations")
 @AndroidEntryPoint
-class NewInboxFragment : Fragment(), NavigationCallbacks {
+class NewInboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: InboxViewModel by viewModels()
 
@@ -165,13 +167,20 @@ class NewInboxFragment : Fragment(), NavigationCallbacks {
         newToolbar.startAnimation(fadeIn)
     }
 
-    private fun applyTheme() {
+    override val navigation: Navigation?
+        get() = if (activity is Navigation) activity as Navigation else null
+
+    override fun title(): String = getString(R.string.inbox)
+
+    override fun applyTheme() {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
         binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
         inboxRouter.attachNavigationIcon(binding.toolbar)
     }
+
+    override fun getFragment(): Fragment? = this
 
     private fun handleAction(action: InboxAction) {
         when (action) {

@@ -173,7 +173,7 @@
             android:minHeight="48dp"
             android:layout_margin="16dp"
             android:contentDescription="@string/addMessage"
-            android:onClick="@{() -> viewModel.createNewMessage()}"
+            app:onClickWithNetworkCheck="@{() -> viewModel.createNewMessage()}"
             app:elevation="4dp"
             android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
