@@ -51,7 +51,7 @@ class GradeCellViewDataTest {
             resources,
             colorKeeper.getOrGenerateColor(Course()),
             Assignment(),
-            Submission(submittedAt = Date())
+            Submission(submittedAt = Date(), workflowState = "submitted")
         )
 
         Assert.assertEquals(GradeCellViewData.State.SUBMITTED, gradeCell.state)
