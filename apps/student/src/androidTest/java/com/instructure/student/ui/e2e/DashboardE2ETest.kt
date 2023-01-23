@@ -163,7 +163,6 @@ class DashboardE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
         leftSideNavigationDrawerPage.setShowGrades(true)
-        Espresso.pressBack()
 
         Log.d(STEP_TAG, "Assert that the grades are displayed on both of the courses' cards.")
         dashboardPage.assertCourseGrade(course1.name, "N/A")
