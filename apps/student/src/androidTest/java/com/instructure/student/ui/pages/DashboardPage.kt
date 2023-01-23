@@ -208,12 +208,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         selectFavorites.click()
     }
 
-  /*  fun setShowGrades(showGrades: Boolean) {
+   /* fun setShowGrades(showGrades: Boolean) {
         hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerShowGradesSwitch).perform(SetSwitchCompat(showGrades))
         Espresso.pressBack()
-    }*/
-
+    }
+*/
     // Assumes one course, which is favorited
     fun assertShowsGrades() {
         onView(withId(R.id.gradeTextView)).assertDisplayed()
@@ -234,7 +234,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(groupNameMatcher).scrollTo().click()
     }
 
-  /*  fun launchSettingsPage() {
+    /*fun launchSettingsPage() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerSettings).click()
     }
@@ -247,8 +247,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun toggleShowGrades() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerShowGradesSwitch).scrollTo().click()
-    }*/
-
+    }
+*/
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()

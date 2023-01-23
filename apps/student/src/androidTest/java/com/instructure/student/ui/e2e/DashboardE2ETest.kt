@@ -155,7 +155,7 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertDisplaysCourse(course1.name)
 
         Log.d(STEP_TAG, "Toggle OFF 'Show Grades' and navigate back to Dashboard Page.")
-        dashboardPage.toggleShowGrades()
+        leftSideNavigationDrawerPage.setShowGrades(false)
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Assert that the grades does not displayed on both of the courses' cards.")
@@ -163,7 +163,7 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertCourseGradeNotDisplayed(course2.name, "N/A")
 
         Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
-        dashboardPage.toggleShowGrades()
+        leftSideNavigationDrawerPage.setShowGrades(true)
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Assert that the grades are displayed on both of the courses' cards.")
@@ -185,7 +185,7 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open Help Menu.")
-        dashboardPage.openHelpMenu()
+        leftSideNavigationDrawerPage.clickHelpMenu()
 
         Log.d(STEP_TAG, "Assert Help Menu Dialog is displayed.")
         helpPage.assertHelpMenuDisplayed()
