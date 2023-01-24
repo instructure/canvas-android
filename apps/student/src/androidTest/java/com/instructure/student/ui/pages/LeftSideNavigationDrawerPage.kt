@@ -127,6 +127,5 @@ class LeftSideNavigationDrawerPage: BasePage() {
                 switch.isChecked = position
             }
         }
-
     }
 }
