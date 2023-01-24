@@ -50,7 +50,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
     private val selectFavorites by WaitForViewWithId(R.id.editDashboardTextView)
-   // private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
     // in the UI stack.  We want to choose the one that is displayed.
@@ -112,59 +111,9 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
- /*   fun logOut() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
-        onViewWithText(android.R.string.yes).click()
-        // It can potentially take a long time for the sign-out to take effect, especially on
-        // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
-        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(matches(isDisplayed()))
-
-    }
-*/
     fun assertCourseLabelTextColor(expectedTextColor: String) {
         onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
     }
-
-/*    fun pressChangeUser() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
-    }
-
-    fun goToHelp() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
-    }
-
-    fun gotoGlobalFiles() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_files).click()
-    }
-
-    fun gotoBookmarks() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_bookmarks).click()
-    }
-
-    fun assertUserLoggedIn(user: CanvasUserApiModel) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(user: User) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName!!).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(userName: String) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(userName).assertDisplayed()
-        Espresso.pressBack()
-    }
-
- */
 
     fun assertUnreadEmails(count: Int) {
         onView(withId(R.id.bottomBar)).check(NotificationBadgeAssertion(R.id.bottomNavigationInbox, count))
@@ -208,12 +157,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         selectFavorites.click()
     }
 
-   /* fun setShowGrades(showGrades: Boolean) {
-        hamburgerButton.click()
-        onViewWithId(R.id.navigationDrawerShowGradesSwitch).perform(SetSwitchCompat(showGrades))
-        Espresso.pressBack()
-    }
-*/
     // Assumes one course, which is favorited
     fun assertShowsGrades() {
         onView(withId(R.id.gradeTextView)).assertDisplayed()
@@ -234,21 +177,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(groupNameMatcher).scrollTo().click()
     }
 
-    /*fun launchSettingsPage() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerSettings).click()
-    }
-
-    fun openHelpMenu() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
-    }
-
-    fun toggleShowGrades() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerShowGradesSwitch).scrollTo().click()
-    }
-*/
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
