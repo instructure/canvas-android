@@ -45,7 +45,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val createMessageButton by OnViewWithId(R.id.addMessage)
-    private val scopeButton by OnViewWithId(R.id.filterButton)
+    private val scopeButton by OnViewWithId(R.id.scopeFilter)
     private val filterButton by OnViewWithId(R.id.inboxFilter)
     private val inboxRecyclerView by WaitForViewWithId(R.id.inboxRecyclerView)
 
@@ -93,7 +93,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun selectInboxScope(scope: InboxApi.Scope) {
-        waitForView(withId(R.id.filterText))
+        waitForView(withId(R.id.scopeFilterText))
         scopeButton.click()
         when (scope) {
             InboxApi.Scope.INBOX -> onViewWithText("All").scrollTo().click()
@@ -123,9 +123,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
             withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
             hasSibling(withId(R.id.userName)),
             hasSibling(withId(R.id.date)),
-            ViewMatchers.withParent(ViewMatchers.withParent(withChild(
-                allOf(withId(R.id.subjectView), withText(subject))))
-            ))
+            hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).assertDisplayed()
@@ -136,9 +134,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
         val matcher = allOf(
                 withId(R.id.unreadMark),
                 withEffectiveVisibility(visibility),
-                ViewMatchers.withParent(hasSibling(withChild(
-                        allOf(withId(R.id.message), withText(conversation.lastMessage))
-                ))))
+                hasSibling(allOf(withId(R.id.message), withText(conversation.lastMessage))))
 
         if(visibility == ViewMatchers.Visibility.VISIBLE) {
             waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
