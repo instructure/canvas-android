@@ -67,9 +67,9 @@ class AssignmentDetailsViewModel @Inject constructor(
         get() = _state
     private val _state = MutableLiveData<ViewState>()
 
-    val data: LiveData<AssignmentDetailViewData>
+    val data: LiveData<AssignmentDetailsViewData>
         get() = _data
-    private val _data = MutableLiveData<AssignmentDetailViewData>()
+    private val _data = MutableLiveData<AssignmentDetailsViewData>()
 
     val events: LiveData<Event<AssignmentDetailAction>>
         get() = _events
@@ -243,7 +243,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     @Suppress("DEPRECATION")
-    private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailViewData {
+    private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailsViewData {
         val points = resources.getQuantityString(
             R.plurals.quantityPointsAbbreviated,
             assignment.pointsPossible.toInt(),
@@ -295,7 +295,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 }
             }.orEmpty()
 
-            return AssignmentDetailViewData(
+            return AssignmentDetailsViewData(
                 courseColor = colorKeeper.getOrGenerateColor(course),
                 assignmentName = assignment.name.orEmpty(),
                 points = points,
@@ -414,7 +414,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             !discussionTopicHeader?.author.isDiscussionAuthorNull().orDefault(true)
         }
 
-        return AssignmentDetailViewData(
+        return AssignmentDetailsViewData(
             courseColor = colorKeeper.getOrGenerateColor(course),
             assignmentName = assignment.name.orEmpty(),
             points = points,

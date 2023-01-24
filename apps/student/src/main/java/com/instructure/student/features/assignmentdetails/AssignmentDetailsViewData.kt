@@ -8,7 +8,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 
-data class AssignmentDetailViewData(
+data class AssignmentDetailsViewData(
     val courseColor: ThemedColor,
     val assignmentName: String,
     val points: String,

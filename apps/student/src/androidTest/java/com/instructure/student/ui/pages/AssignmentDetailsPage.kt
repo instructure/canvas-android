@@ -24,27 +24,15 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.clearText
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
-import com.instructure.espresso.typeText
-import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -66,7 +54,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun verifyAssignmentGraded(score: String) {
-        onView(withId(R.id.gradeContainer)).scrollTo().assertDisplayed()
+        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
     }
