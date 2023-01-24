@@ -108,7 +108,7 @@ data class GradeCellViewData(
                             grade
                         )
                         else -> resources.getString(R.string.a11y_gradeCellContentDescription, score, outOfContentDescriptionText)
-                    }
+                    } + System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHint)
 
                     var latePenalty = ""
                     var finalGrade = ""
