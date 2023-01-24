@@ -229,7 +229,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         popup.menuInflater.inflate(R.menu.menu_conversation_scope, popup.menu)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.inbox_all -> viewModel.scopeChanged(InboxApi.Scope.ALL)
+                R.id.inbox_all -> viewModel.scopeChanged(InboxApi.Scope.INBOX)
                 R.id.inbox_unread -> viewModel.scopeChanged(InboxApi.Scope.UNREAD)
                 R.id.inbox_starred -> viewModel.scopeChanged(InboxApi.Scope.STARRED)
                 R.id.inbox_sent -> viewModel.scopeChanged(InboxApi.Scope.SENT)

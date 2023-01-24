@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.di
 
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
@@ -32,6 +34,8 @@ class InboxModule {
     @Provides
     fun provideInboxRepository(): InboxRepository {
         val inboxApi = RestBuilder().build(InboxApi.InboxInterface::class.java, RestParams())
-        return InboxRepository(inboxApi)
+        val coursesApi = RestBuilder().build(CourseAPI.CoursesInterface::class.java, RestParams())
+        val groupsApi = RestBuilder().build(GroupAPI.GroupInterface::class.java, RestParams())
+        return InboxRepository(inboxApi, coursesApi, groupsApi)
     }
 }

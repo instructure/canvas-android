@@ -16,20 +16,16 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -41,7 +37,6 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
@@ -101,7 +96,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
         waitForView(withId(R.id.filterText))
         scopeButton.click()
         when (scope) {
-            InboxApi.Scope.ALL -> onViewWithText("All").scrollTo().click()
+            InboxApi.Scope.INBOX -> onViewWithText("All").scrollTo().click()
             InboxApi.Scope.UNREAD -> onViewWithText("Unread").scrollTo().click()
             InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").scrollTo().click()
             InboxApi.Scope.STARRED -> onViewWithText("Starred").scrollTo().click()

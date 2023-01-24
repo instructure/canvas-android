@@ -35,7 +35,7 @@ object InboxApi {
     const val CONVERSATION_MARK_UNREAD = "mark_as_unread"
 
     enum class Scope {
-        ALL, UNREAD, ARCHIVED, STARRED, SENT
+        INBOX, UNREAD, ARCHIVED, STARRED, SENT
     }
 
     fun conversationScopeToString(scope: Scope): String = when (scope) {
@@ -56,6 +56,9 @@ object InboxApi {
 
         @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
         fun getConversationsFiltered(@Query("scope") scope: String, @Query("filter") canvasContextFilter: String): Call<List<Conversation>>
+
+        @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
+        suspend fun getConversationsFiltered(@Query("scope") scope: String, @Query("filter") canvasContextFilter: String, @Tag params: RestParams): DataResult<List<Conversation>>
 
         @GET
         fun getNextPage(@Url nextURL: String): Call<List<Conversation>>

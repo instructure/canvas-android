@@ -70,8 +70,13 @@
             android:id="@+id/courseFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{() -> viewModel.coursesFilterClicked()}"
             app:layout_constraintTop_toBottomOf="@id/toolbarWrapper"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -81,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@string/allCourses"
+                android:text="@{viewModel.data.filterText}"
                 android:textColor="@color/textDarkest"
                 android:textSize="22sp"
                 android:layout_marginEnd="6dp"
@@ -91,7 +96,6 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_arrow_down"
-                android:layout_gravity="center_vertical"
                 app:tint="@color/textDarkest"/>
 
         </LinearLayout>

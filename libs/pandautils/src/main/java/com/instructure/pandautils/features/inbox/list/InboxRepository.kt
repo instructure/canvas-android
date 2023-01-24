@@ -17,22 +17,65 @@
 package com.instructure.pandautils.features.inbox.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.canvasapi2.utils.hasActiveEnrollment
+import com.instructure.canvasapi2.utils.isValidTerm
 
-class InboxRepository(private val inboxApi: InboxApi.InboxInterface) {
+class InboxRepository(
+    private val inboxApi: InboxApi.InboxInterface,
+    private val coursesApi: CourseAPI.CoursesInterface,
+    private val groupsApi: GroupAPI.GroupInterface
+) {
 
-    suspend fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, nextPageLink: String? = null): DataResult<List<Conversation>> {
+    suspend fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, filter: CanvasContext?, nextPageLink: String? = null): DataResult<List<Conversation>> {
         // TODO Change perPageCount to default at the end, this is only for testing purposes.
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork, perPageCount = 15)
         return if (nextPageLink == null) {
-            inboxApi.getConversations(InboxApi.conversationScopeToString(scope), params)
+            if (filter == null) {
+                getConversationsAllCourses(scope, params)
+            } else {
+                getConversationsFiltered(scope, filter.contextId, params)
+            }
         } else {
             inboxApi.getNextPage(nextPageLink, params)
         }
+    }
+
+    private suspend fun getConversationsAllCourses(scope: InboxApi.Scope, params: RestParams): DataResult<List<Conversation>> {
+        return inboxApi.getConversations(InboxApi.conversationScopeToString(scope), params)
+    }
+
+    private suspend fun getConversationsFiltered(scope: InboxApi.Scope, contextId: String, params: RestParams): DataResult<List<Conversation>> {
+        return inboxApi.getConversationsFiltered(InboxApi.conversationScopeToString(scope), contextId, params)
+    }
+
+    suspend fun getCanvasContexts(forceNetwork: Boolean): DataResult<List<CanvasContext>> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val coursesResult = coursesApi.getFirstPageCourses(params)
+            .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
+
+        if (coursesResult.isFail) return coursesResult
+
+        val groupsResult = groupsApi.getFirstPageFavoriteGroups(params)
+            .depaginate { nextUrl -> groupsApi.getNextPageGroups(nextUrl, params) }
+
+        val courses = (coursesResult as DataResult.Success).data
+        val groups = groupsResult.dataOrNull ?: emptyList()
+
+        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
+        val courseMap = validCourses.associateBy { it.id }
+        val validGroups = groups.filter { it.courseId == 0L || courseMap[it.courseId] != null }
+
+        return DataResult.Success(validCourses + validGroups)
     }
 
     suspend fun batchUpdateConversations(conversationIds: List<Long>, conversationEvent: String): DataResult<Progress> {

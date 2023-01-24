@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -54,7 +55,7 @@ class InboxViewModel @Inject constructor(
 
     val data: LiveData<InboxViewData>
         get() = _data
-    private val _data = MutableLiveData<InboxViewData>(InboxViewData(getTextForScope(InboxApi.Scope.ALL)))
+    private val _data = MutableLiveData<InboxViewData>(InboxViewData(getTextForScope(InboxApi.Scope.INBOX), filterText = resources.getString(R.string.allCourses)))
 
     val itemViewModels: LiveData<List<InboxEntryItemViewModel>>
         get() = _itemViewModels
@@ -64,9 +65,13 @@ class InboxViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<InboxAction>>()
 
-    private var scope = InboxApi.Scope.ALL
+    private var scope = InboxApi.Scope.INBOX
+
+    private var contextFilter: CanvasContext? = null
 
     private var nextPageLink: String? = null
+
+    private var canvasContexts: List<CanvasContext> = emptyList()
 
     val bottomReachedCallback: () -> Unit = {
         viewModelScope.launch {
@@ -78,7 +83,7 @@ class InboxViewModel @Inject constructor(
 
     private suspend fun loadNextPage() {
         _state.postValue(ViewState.LoadingNextPage)
-        val dataResult = inboxRepository.getConversations(scope, true, nextPageLink)
+        val dataResult = inboxRepository.getConversations(scope, true, contextFilter, nextPageLink)
         if (dataResult is DataResult.Success) {
             nextPageLink = dataResult.linkHeaders.nextUrl
             val conversations = dataResult.data
@@ -98,19 +103,22 @@ class InboxViewModel @Inject constructor(
     private fun fetchData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
             try {
-                val dataResult = inboxRepository.getConversations(scope, forceNetwork)
+                val dataResult = inboxRepository.getConversations(scope, forceNetwork, contextFilter)
                 val conversations = dataResult.dataOrThrow
                 if (dataResult is DataResult.Success) {
                     nextPageLink = dataResult.linkHeaders.nextUrl
                 }
 
-                _data.postValue(InboxViewData(getTextForScope(scope)))
                 val itemViewModels = createInboxEntriesFromResponse(conversations)
                 _itemViewModels.postValue(itemViewModels)
                 if (itemViewModels.isEmpty()) {
                     postEmptyState()
                 } else {
                     _state.postValue(ViewState.Success)
+                }
+
+                inboxRepository.getCanvasContexts(forceNetwork).dataOrNull?.let {
+                    canvasContexts = it
                 }
 
                 if (forceNetwork) _events.postValue(Event(InboxAction.UpdateUnreadCount))
@@ -213,7 +221,7 @@ class InboxViewModel @Inject constructor(
 
     private fun getTextForScope(scope: InboxApi.Scope): String {
         return when (scope) {
-            InboxApi.Scope.ALL -> resources.getString(R.string.inboxAllMessages)
+            InboxApi.Scope.INBOX -> resources.getString(R.string.inboxScopeInbox)
             InboxApi.Scope.UNREAD -> resources.getString(R.string.inbox_unread)
             InboxApi.Scope.STARRED -> resources.getString(R.string.inbox_starred)
             InboxApi.Scope.SENT -> resources.getString(R.string.inbox_sent)
@@ -224,7 +232,7 @@ class InboxViewModel @Inject constructor(
 
     private fun postEmptyState() {
         val emptyState = when (scope) {
-            InboxApi.Scope.ALL -> ViewState.Empty(R.string.nothingUnread, R.string.nothingUnreadSubtext, R.drawable.ic_panda_inboxzero)
+            InboxApi.Scope.INBOX -> ViewState.Empty(R.string.nothingUnread, R.string.nothingUnreadSubtext, R.drawable.ic_panda_inboxzero)
             InboxApi.Scope.UNREAD -> ViewState.Empty(R.string.nothingUnread, R.string.nothingUnreadSubtext, R.drawable.ic_panda_inboxzero)
             InboxApi.Scope.ARCHIVED -> ViewState.Empty(R.string.nothingArchived, R.string.nothingArchivedSubtext, R.drawable.ic_panda_inboxarchived)
             InboxApi.Scope.STARRED -> ViewState.Empty(R.string.nothingStarred, R.string.nothingStarredSubtext, R.drawable.ic_panda_inboxstarred)
@@ -247,7 +255,7 @@ class InboxViewModel @Inject constructor(
         if (newScope != scope) {
             scope = newScope
             _state.postValue(ViewState.Loading)
-            _data.postValue(InboxViewData(getTextForScope(scope)))
+            _data.postValue(_data.value?.copy(scope = getTextForScope(scope)))
             _itemViewModels.postValue(emptyList())
             fetchData()
         }
@@ -362,5 +370,38 @@ class InboxViewModel @Inject constructor(
 
     fun createNewMessage() {
         _events.postValue(Event(InboxAction.CreateNewMessage))
+    }
+
+    // TODO Temporary until design is ready
+    var courseFilterIndex = -1
+
+    fun coursesFilterClicked() {
+        courseFilterIndex++
+
+        if (courseFilterIndex >= canvasContexts.size) {
+            courseFilterIndex = -1
+        }
+
+        if (courseFilterIndex == -1) {
+            allCoursesSelected()
+        } else {
+            canvasContextFilterSelected(canvasContexts[courseFilterIndex])
+        }
+    }
+
+    fun canvasContextFilterSelected(canvasContext: CanvasContext) {
+        contextFilter = canvasContext
+        _data.value = _data.value?.copy(filterText = canvasContext.name ?: "")
+        _state.postValue(ViewState.Loading)
+        _itemViewModels.postValue(emptyList())
+        fetchData()
+    }
+
+    fun allCoursesSelected() {
+        contextFilter = null
+        _data.value = _data.value?.copy(filterText = resources.getString(R.string.allCourses))
+        _state.postValue(ViewState.Loading)
+        _itemViewModels.postValue(emptyList())
+        fetchData()
     }
 }
