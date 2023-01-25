@@ -77,7 +77,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun goToSubmissionDetails() {
-        onView(withId(R.id.submissionAndRubricLabel)).scrollTo().click()
+        onView(withId(R.id.gradeCell)).click()
     }
 
     fun assertSubmittedStatus() {

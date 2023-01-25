@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/title"
+                        android:id="@+id/assignmentName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
@@ -87,7 +87,7 @@
                         android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.INVISIBLE}"
                         app:imageRes="@{viewModel.data.submissionStatusIcon}"
                         app:layout_constraintStart_toEndOf="@id/points"
-                        app:layout_constraintTop_toBottomOf="@id/title"
+                        app:layout_constraintTop_toBottomOf="@id/assignmentName"
                         app:tint="@{viewModel.data.submissionStatusTint}"
                         tools:src="@drawable/ic_complete_solid"
                         tools:tint="@color/textSuccess" />

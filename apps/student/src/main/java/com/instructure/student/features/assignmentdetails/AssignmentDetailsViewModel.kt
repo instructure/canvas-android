@@ -142,7 +142,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             } ?: run {
                 if (isUploading) {
                     isUploading = false
-                    refreshAttempts()
+                    refreshAssignment()
                 }
             }
         }
@@ -214,7 +214,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun refreshAttempts() {
+    private fun refreshAssignment() {
         viewModelScope.launch {
             val assignmentResult = if (isObserver) {
                 assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), true)
@@ -222,24 +222,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 assignmentManager.getAssignmentAsync(assignmentId, course?.id.orDefault(), true)
             }.await().dataOrThrow as Assignment
 
-            _data.value?.attempts = getAttemptsByHistory(assignmentResult)
-            _data.value?.notifyPropertyChanged(BR.attempts)
+            _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))
         }
-    }
-
-    private fun getAttemptsByHistory(assignment: Assignment): List<AssignmentDetailsAttemptItemViewModel> {
-        val submissionHistory = assignment.submission?.submissionHistory
-        return submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
-            submission?.submittedAt?.let { getFormattedAttemptDate(it) }?.let {
-                AssignmentDetailsAttemptItemViewModel(
-                    AssignmentDetailAttemptViewData(
-                        resources.getString(R.string.attempt, submissionHistory.size - index),
-                        it,
-                        submission
-                    )
-                )
-            }
-        }.orEmpty()
     }
 
     @Suppress("DEPRECATION")
@@ -284,11 +268,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                 || (assignment.turnInType != Assignment.TurnInType.ON_PAPER && assignment.turnInType != Assignment.TurnInType.NONE)
 
         if (assignment.isLocked) {
-            val lockedMessage = assignment.unlockDate?.let {
-                if (assignment.lockInfo?.contextModule != null) {
-                    val name = assignment.lockInfo?.lockedModuleName
-                    resources.getString(R.string.lockedModule, name)
-                } else {
+            val lockedMessage = if (assignment.lockInfo?.contextModule != null) {
+                val name = assignment.lockInfo?.lockedModuleName
+                resources.getString(R.string.lockedModule, name)
+            } else {
+                assignment.unlockDate?.let {
                     val dateString = DateFormat.getDateInstance().format(it)
                     val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(it)
                     resources.getString(R.string.lockedSubtext, dateString, timeString)
@@ -310,7 +294,18 @@ class AssignmentDetailsViewModel @Inject constructor(
 
         val partialLockedMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()).orDefault() }.orEmpty()
 
-        val attempts = getAttemptsByHistory(assignment)
+        val submissionHistory = assignment.submission?.submissionHistory
+        val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
+            submission?.submittedAt?.let { getFormattedAttemptDate(it) }?.let {
+                AssignmentDetailsAttemptItemViewModel(
+                    AssignmentDetailAttemptViewData(
+                        resources.getString(R.string.attempt, submissionHistory.size - index),
+                        it,
+                        submission
+                    )
+                )
+            }
+        }.orEmpty()
 
         val submissionTypes = assignment.getSubmissionTypes()
             .map { Assignment.submissionTypeToPrettyPrintString(it, resources) }

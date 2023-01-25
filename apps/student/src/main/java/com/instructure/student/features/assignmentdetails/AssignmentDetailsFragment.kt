@@ -151,19 +151,19 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
                 toast(action.message)
             }
             is AssignmentDetailAction.NavigateToLtiScreen -> {
-                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), viewModel.course, action.url)
+                LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), viewModel.course, action.url)
             }
             is AssignmentDetailAction.NavigateToSubmissionScreen -> {
                 RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     SubmissionDetailsFragment.makeRoute(canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
                 )
             }
             is AssignmentDetailAction.NavigateToQuizScreen -> {
-                RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(canvasContext, action.quiz, action.quiz.url.orEmpty()))
+                RouteMatcher.route(requireActivity(), BasicQuizViewFragment.makeRoute(canvasContext, action.quiz, action.quiz.url.orEmpty()))
             }
             is AssignmentDetailAction.NavigateToDiscussionScreen -> {
-                RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(canvasContext, action.discussionTopicHeaderId))
+                RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(canvasContext, action.discussionTopicHeaderId))
             }
             is AssignmentDetailAction.NavigateToUploadScreen -> navigateToUploadScreen(action.assignment)
             is AssignmentDetailAction.NavigateToTextEntryScreen -> navigateToTextEntryScreen(
@@ -179,7 +179,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             is AssignmentDetailAction.NavigateToAnnotationSubmissionScreen -> navigateToAnnotationSubmissionScreen(action.assignment)
             is AssignmentDetailAction.NavigateToLtiLaunchScreen -> {
                 RouteMatcher.route(
-                    requireContext(), LtiLaunchFragment.makeRoute(
+                    requireActivity(), LtiLaunchFragment.makeRoute(
                         canvasContext,
                         action.ltiTool?.url.orEmpty(),
                         action.title,
@@ -195,7 +195,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
                 showSubmitDialogView(action.assignment, action.studioLTITool)
             }
             is AssignmentDetailAction.NavigateToUploadStatusScreen -> {
-                RouteMatcher.route(requireContext(), UploadStatusSubmissionFragment.makeRoute(action.submissionId))
+                RouteMatcher.route(requireActivity(), UploadStatusSubmissionFragment.makeRoute(action.submissionId))
             }
             is AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked -> {
                 showDiscussionAttachments(action.attachments)
@@ -206,7 +206,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     private fun navigateToTextEntryScreen(assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
         Analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED)
         RouteMatcher.route(
-            requireContext(),
+            requireActivity(),
             TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure)
         )
     }
@@ -214,7 +214,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     private fun navigateToUrlSubmissionScreen(assignmentName: String?, submittedUrl: String? = null, isFailure: Boolean = false) {
         Analytics.logEvent(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
         RouteMatcher.route(
-            requireContext(),
+            requireActivity(),
             UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl, isFailure)
         )
     }
@@ -222,7 +222,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     private fun navigateToUploadScreen(assignment: Assignment) {
         Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED)
         RouteMatcher.route(
-            requireContext(),
+            requireActivity(),
             PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission)
         )
     }
@@ -231,7 +231,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
         assignment.submission?.id?.let {
             Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
             RouteMatcher.route(
-                requireContext(),
+                requireActivity(),
                 AnnotationSubmissionUploadFragment.makeRoute(
                     canvasContext,
                     assignment.annotatableAttachmentId,
@@ -246,7 +246,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     private fun navigateToStudioScreen(assignment: Assignment, studioLTITool: LTITool?) {
         Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
         RouteMatcher.route(
-            requireContext(),
+            requireActivity(),
             StudioWebViewFragment.makeRoute(
                 canvasContext,
                 studioLTITool?.getResourceSelectorUrl(canvasContext, assignment).orEmpty(),
@@ -355,13 +355,13 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             override fun onPageFinishedCallback(webView: WebView, url: String) {}
             override fun onPageStartedCallback(webView: WebView, url: String) {}
             override fun canRouteInternallyDelegate(url: String): Boolean {
-                return RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+                return RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
             }
 
             override fun routeInternallyCallback(url: String) {
                 viewModel.assignment?.let {
                     val extras = Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(canvasContext, it)) }
-                    RouteMatcher.routeUrl(requireContext(), url, ApiPrefs.domain, extras)
+                    RouteMatcher.routeUrl(requireActivity(), url, ApiPrefs.domain, extras)
                 }
             }
         }
