@@ -151,9 +151,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
             withId(R.id.unreadMark),
             withEffectiveVisibility(visibility),
             hasSibling(allOf(withId(R.id.avatar))),
-            ViewMatchers.withParent(hasSibling(withChild(
-                allOf(withId(R.id.subjectView), withText(subject))))
-            )
+            hasSibling(allOf(withId(R.id.subjectView), withText(subject)))
         )
         if(visibility == ViewMatchers.Visibility.VISIBLE) {
             waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
