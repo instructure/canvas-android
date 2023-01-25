@@ -166,7 +166,6 @@ class ShareExtensionE2ETest: StudentTest() {
         fileUploadPage.assertFileDisplayed(pdfTestFileName)
 
         Log.d(STEP_TAG,"Remove '$pdfTestFileName' file and assert that it's not displayed any more on the list but the other file is displayed.")
-        Thread.sleep(3000) //Sometimes the remove button is not clickable and we have to wait for it.
         fileUploadPage.removeFile(pdfTestFileName)
         fileUploadPage.assertFileNotDisplayed(pdfTestFileName)
         fileUploadPage.assertFileDisplayed("$pdfTestFileName.jpg")
