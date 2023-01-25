@@ -25,6 +25,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,10 +56,10 @@
             android:layout_height="wrap_content"
             android:drawablePadding="7dp"
             android:text="@string/submissionAndRubric"
-            android:textColor="@{viewData.courseColor.backgroundColor()}"
+            android:textColor="@{ThemePrefs.INSTANCE.textButtonColor}"
             android:textSize="16sp"
             app:drawableEndCompat="@drawable/arrow_right"
-            app:drawableTint="@{viewData.courseColor.backgroundColor()}"
+            app:drawableTint="@{ThemePrefs.INSTANCE.textButtonColor}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -8,6 +8,8 @@
 
         <import type="com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData.State" />
 
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
+
         <variable
             name="viewModel"
             type="com.instructure.student.features.assignmentdetails.AssignmentDetailsViewModel" />
@@ -513,7 +515,7 @@
             android:layout_height="wrap_content"
             android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.2f}"
             android:background="@color/backgroundInfo"
-            android:backgroundTint="@{viewModel.data.courseColor.backgroundColor()}"
+            android:backgroundTint="@{ThemePrefs.INSTANCE.buttonColor}"
             android:enabled="@{viewModel.data.submitEnabled}"
             android:foreground="?attr/selectableItemBackground"
             android:minHeight="48dp"
