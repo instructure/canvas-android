@@ -31,6 +31,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -82,10 +83,8 @@ class BookmarksE2ETest : StudentTest() {
         assignmentDetailsPage.addBookmark(bookmarkName)
 
         Log.d(STEP_TAG,"Navigate back to Bookmarks page and assert if the newly created bookmark has displayed.")
-        Espresso.pressBack()
-        Espresso.pressBack()
-        Espresso.pressBack()
-        dashboardPage.gotoBookmarks()
+        ViewUtils.pressBackButton(3)
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
         Log.d(STEP_TAG,"Click on $bookmarkName bookmark and assert if it's navigating to the assignment details page.")
@@ -94,7 +93,7 @@ class BookmarksE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Navigate back to bookmark page.")
         Espresso.pressBack()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
         val newName = "Assignment Details BM Modified"
@@ -111,7 +110,7 @@ class BookmarksE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Navigate back to the bookmark page.")
         Espresso.pressBack()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
 
         Log.d(STEP_TAG, "Delete bookmark: $newName.")
         bookmarkPage.deleteBookmark(newName)

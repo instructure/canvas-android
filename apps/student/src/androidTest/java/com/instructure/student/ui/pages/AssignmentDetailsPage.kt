@@ -32,19 +32,10 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.clearText
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
-import com.instructure.espresso.typeText
-import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -106,7 +97,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun scrollToAssignmentDescription() {
         Thread.sleep(3000)
-        waitForMatcherWithSleeps(withId(R.id.contentWebView), waitMs = 30000, sleepMs = 1000).scrollTo()
+        waitForMatcherWithSleeps(withId(R.id.contentWebView), timeout = 30000, pollInterval = 1000).scrollTo()
     }
 
     fun addBookmark(bookmarkName: String) {

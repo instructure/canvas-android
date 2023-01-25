@@ -36,14 +36,19 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.util.HumanReadables
 import androidx.viewpager.widget.ViewPager
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.swipeUp
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.not
 
 //
 // This is a repo for generally useful Espresso actions
@@ -278,24 +283,23 @@ fun refresh() {
  *    Waits for [target] to become visible for up to [waitMs] milliseconds,
  *    sleeping [sleepMs] milliseconds after every attempt.
  */
-fun waitForMatcherWithSleeps(target: Matcher<View>, waitMs: Long = 10000, sleepMs: Long = 30) : ViewInteraction {
-    val endTime = System.currentTimeMillis() + waitMs
+fun waitForMatcherWithSleeps(target: Matcher<View>, timeout: Long = 10000, pollInterval: Long = 100) : ViewInteraction {
+    val endTime = System.currentTimeMillis() + timeout
     do {
         try {
-            val result = onView(target).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-            return result
-        }
-        catch(ignored: Exception) {
-        }
-        catch(ignored: Error) {
+            return onView(target).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        } catch (ignored: Exception) {
+            println("There is an exception occurred. Stacktrace: " + ignored.stackTrace)
+        } catch (ignored: Error) {
+            println("There is an error occurred. Stacktrace: " + ignored.stackTrace)
         }
 
-        sleep(sleepMs) // re-check every 100 ms
+        sleep(pollInterval) // re-check every 100 ms
     } while(System.currentTimeMillis() < endTime)
 
     // If we aren't successful by now, make one more unprotected attempt to throw
     // the correct error.
-    return onView(target).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    return onView(target).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 }
 
 class SetViewPagerCurrentItemAction(private val pageNumber: Int) : ViewAction {
