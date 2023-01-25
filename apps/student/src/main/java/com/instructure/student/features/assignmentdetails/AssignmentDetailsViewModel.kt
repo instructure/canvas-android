@@ -169,7 +169,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                         forceNetwork
                     ).await().dataOrThrow.toAssignmentForObservee()
                 } else {
-                    assignmentManager.getAssignmentAsync(
+                    assignmentManager.getAssignmentWithHistoryAsync(
                         assignmentId,
                         course?.id.orDefault(),
                         forceNetwork
@@ -219,7 +219,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             val assignmentResult = if (isObserver) {
                 assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), true)
             } else {
-                assignmentManager.getAssignmentAsync(assignmentId, course?.id.orDefault(), true)
+                assignmentManager.getAssignmentWithHistoryAsync(assignmentId, course?.id.orDefault(), true)
             }.await().dataOrThrow as Assignment
 
             _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))

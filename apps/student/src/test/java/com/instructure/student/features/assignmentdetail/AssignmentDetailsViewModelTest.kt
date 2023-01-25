@@ -152,7 +152,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(
                 Assignment(
                     lockInfo = LockInfo(
@@ -178,7 +178,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(
                 Assignment(
                     lockExplanation = lockedExplanation,
@@ -202,7 +202,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(name = expected))
         }
 
@@ -241,7 +241,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -261,7 +261,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(
                 Assignment(
                     submission = Submission(
@@ -293,7 +293,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submission = Submission()))
         }
 
@@ -315,7 +315,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(
                 Assignment(
                     submission = Submission(missing = true),
@@ -344,7 +344,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("media_recording")))
         }
 
@@ -368,7 +368,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(
                 Assignment(
                     submission = Submission(
@@ -400,7 +400,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(
                 Assignment(
                     submissionTypesRaw = listOf("media_recording"),
@@ -442,7 +442,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(assignment)
         }
 
@@ -461,7 +461,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -477,7 +477,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -493,7 +493,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -514,7 +514,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -535,7 +535,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -556,7 +556,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_quiz"), quizId = 1))
         }
 
@@ -576,7 +576,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("discussion_topic")))
         }
 
@@ -592,7 +592,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(
                 Assignment(
                     submissionTypesRaw = listOf(
@@ -616,7 +616,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_text_entry")))
         }
 
@@ -632,7 +632,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_url")))
         }
 
@@ -648,7 +648,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("student_annotation")))
         }
 
@@ -664,7 +664,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("media_recording")))
         }
 
@@ -680,7 +680,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("external_tool")))
         }
 
@@ -696,7 +696,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -726,7 +726,7 @@ class AssignmentDetailsViewModelTest {
             coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
         }
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment())
         }
 
@@ -743,7 +743,7 @@ class AssignmentDetailsViewModelTest {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
         } returns listOf()
 
-        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Assignment(submission = Submission(submissionHistory = listOf(expected))))
         }
 
