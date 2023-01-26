@@ -117,7 +117,7 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the assignment ${pointsTextAssignment.name} has been graded with 13 points.")
         assignmentDetailsPage.refresh()
-        assignmentDetailsPage.verifyAssignmentGraded("13")
+        assignmentDetailsPage.assertAssignmentGraded("13")
 
         Log.d(STEP_TAG,"Navigate back to Assignments Page and assert that the assignment ${pointsTextAssignment.name} can be seen there with the corresponding grade.")
         Espresso.pressBack()
@@ -250,7 +250,7 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the ${percentageFileAssignment.name} assignment has been graded with 22 percentage.")
         assignmentDetailsPage.refresh()
-        assignmentDetailsPage.verifyAssignmentGraded("22")
+        assignmentDetailsPage.assertAssignmentGraded("22")
 
         Log.d(STEP_TAG,"Navigate to submission details Comments Tab.")
         assignmentDetailsPage.goToSubmissionDetails()

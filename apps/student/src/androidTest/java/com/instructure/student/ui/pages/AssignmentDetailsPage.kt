@@ -24,7 +24,10 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
@@ -38,13 +41,13 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
-    fun verifyAssignmentDetails(assignment: Assignment) {
+    fun assertAssignmentDetails(assignment: Assignment) {
         onView(withId(R.id.assignmentName)).assertHasText(assignment.name!!)
         onView(allOf(withId(R.id.points), isDisplayed()))
                 .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
     }
 
-    fun verifyAssignmentTitle(assignmentName: String) {
+    fun assertAssignmentTitle(assignmentName: String) {
         onView(withId(R.id.assignmentName)).assertHasText(assignmentName)
     }
 
@@ -53,13 +56,13 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
     }
 
-    fun verifyAssignmentGraded(score: String) {
+    fun assertAssignmentGraded(score: String) {
         onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
     }
 
-    fun verifyAssignmentLocked() {
+    fun assertAssignmentLocked() {
         onView(withId(R.id.lockMessageTextView)).assertDisplayed()
         onView(withId(R.id.lockMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
     }
@@ -80,8 +83,16 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.gradeCell)).click()
     }
 
-    fun assertSubmittedStatus() {
-        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(R.string.submitted)))
+    private fun assertStatus(statusResourceId: Int) {
+        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(statusResourceId)))
+    }
+
+    fun assertStatusSubmitted() {
+        assertStatus(R.string.submitted)
+    }
+
+    fun assertStatusNotSubmitted() {
+        assertStatus(R.string.notSubmitted)
     }
 
     fun viewQuiz() {

@@ -59,7 +59,7 @@ class ModuleInteractionTest : StudentTest() {
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module, assignment!!.name!!)
         modulesPage.clickModuleItem(module, assignment!!.name!!)
-        assignmentDetailsPage.verifyAssignmentDetails(assignment!!)
+        assignmentDetailsPage.assertAssignmentDetails(assignment!!)
 
     }
 
@@ -306,7 +306,7 @@ class ModuleInteractionTest : StudentTest() {
         modulesPage.refresh()
         modulesPage.clickModule(module)
         modulesPage.clickModuleItem(module2, unavailableAssignment.name!!)
-        assignmentDetailsPage.verifyAssignmentLocked()
+        assignmentDetailsPage.assertAssignmentLocked()
     }
 
     // Module can't be accessed until the availability date has passed

@@ -90,7 +90,7 @@ class BookmarksE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Click on $bookmarkName bookmark and assert if it's navigating to the assignment details page.")
         bookmarkPage.clickBookmark(bookmarkName)
-        assignmentDetailsPage.verifyAssignmentTitle(assignment.name)
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
         Log.d(STEP_TAG,"Navigate back to bookmark page.")
         Espresso.pressBack()
@@ -107,7 +107,7 @@ class BookmarksE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Click on the previously renamed bookmark and assert if it's still navigating to the corresponding assignment's details page.")
         bookmarkPage.clickBookmark(newName)
-        assignmentDetailsPage.verifyAssignmentTitle(assignment.name)
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
         Log.d(STEP_TAG,"Navigate back to the bookmark page.")
         Espresso.pressBack()

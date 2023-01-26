@@ -28,7 +28,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {
-    override fun displaysPageObjects() = Unit // Not used for interaction tests
+    override fun displaysPageObjects() = Unit
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ONLINE_URL)
@@ -55,24 +55,35 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
-        assignmentDetailsPage.assertSubmittedStatus()
+        assignmentDetailsPage.assertStatusSubmitted()
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testSubmissionStatus_NotSubmitted() {
+        // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
+        val testAssignment = goToAssignmentFromList(false)
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertAssignmentDetails(testAssignment)
+        assignmentDetailsPage.assertStatusNotSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testNavigating_viewAssignmentDetails() {
+        // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
+        val testAssignment = goToAssignmentFromList()
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertAssignmentDetails(testAssignment)
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testNavigating_viewSubmissionDetails() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         goToAssignmentFromList()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.assertPageObjects()
-    }
-
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
-    fun testNavigating_viewAssignmentDetails() {
-        // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
-        goToAssignmentFromList()
-        assignmentDetailsPage.assertPageObjects()
     }
 
     @Stub
@@ -107,7 +118,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         */
     }
 
-    private fun goToAssignmentFromList() {
+    private fun goToAssignmentFromList(withSubmission: Boolean = true): Assignment {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         val data = MockCanvas.init(
             studentCount = 1,
@@ -123,8 +134,17 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         // Let's find and click an assignment with a submission, so that we get meaningful
         // data in the submission details.
-        val assignmentWithSubmission = assignmentGroups.flatMap { it.assignments }.find { it.submission != null }
+        val assignmentWithSubmission = assignmentGroups.flatMap { it.assignments }.find {it.submission != null}
+        val assignmentWithoutSubmission = assignmentGroups.flatMap { it.assignments }.find {it.submission == null}
         assertNotNull("Expected at least one assignment with a submission", assignmentWithSubmission)
-        assignmentListPage.clickAssignment(assignmentWithSubmission!!)
+        assertNotNull("Expected at least one assignment without a submission", assignmentWithoutSubmission)
+
+        return if(withSubmission) {
+            assignmentListPage.clickAssignment(assignmentWithSubmission!!)
+            assignmentWithSubmission
+        } else {
+            assignmentListPage.clickAssignment(assignmentWithoutSubmission!!)
+            assignmentWithoutSubmission
+        }
     }
 }
