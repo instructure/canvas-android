@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C)  - present Instructure, Inc.
+  ~ Copyright (C) 2023 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -44,13 +44,13 @@
     <item
         android:id="@+id/inboxStarSelected"
         android:title="@string/starSelected"
-        android:icon="@drawable/ic_star_inbox"
+        android:icon="@drawable/ic_star_filled"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/inboxUnstarSelected"
         android:title="@string/unstarSelected"
-        android:icon="@drawable/ic_unstar"
+        android:icon="@drawable/ic_star_outline"
         app:showAsAction="always"/>
 
     <item
