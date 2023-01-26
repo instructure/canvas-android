@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">อัพโหลดไป ไฟล์ของฉัน (My Files)</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">จัดส่งภารกิจ</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">เลือกบทเรียน</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">เลือกบทเรียน บทเรียนที่เลือกคือ: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">เลือกภารกิจ</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">เลือกภารกิจ ภารกิจที่เลือกคือ: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">ยกเลิกการอัพโหลดหรือไม่</string>
     <string name="cancelFileUploadMessage">นี่จะเป็นการยกเลิกการอัพโหลดของคุณ</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">จัดทำผ่านมุมมองผู้เรียน (Student View)</string>
     <string name="discussionErrorToast">เกิดข้อผิดพลาดขึ้น หัวข้อนี้อาจไม่พร้อมใช้งานอีกต่อไป</string>
     <string name="cameraPermissionPermanentlyDenied">สิทธิ์อนุญาตกล้องถูกปฏิเสธเป็นการถาวร ไปที่การตั้งค่าแอพเพื่อให้อนุญาต</string>
+    <string name="unpublish_assignment_error">ไม่สามารถยกเลิกการเผยแพร่ภารกิจหากมีผลงานจัดส่งของผู้เรียน</string>
+    <string name="subscribeToCalendar">สมัครฟีดจากปฏิทิน</string>
+    <string name="subscribeToCalendarMessage">คุณสามารถซิงค์ปฏิทิน Canvas ของคุณกับบัญชี Google Calendar โดยคลิกที่ปุ่ม สมัครบริการ ที่กล่องโต้ตอบนี้ จากนั้นคุณจะต้องไปที่แอพ Google Calendar จากอุปกรณ์ของคุณและเปิดใช้การซิงค์ในค่าปรับตั้งของปฏิทินใหม่</string>
+    <string name="subscribeButton">สมัครบริการ</string>
+    <string name="switchToLightMode">สลับไปที่โหมดสว่าง</string>
+    <string name="switchToDarkMode">สลับไปที่โหมดแสงน้อย</string>
+    <string name="acceptableUsePolicyDescription">คุณเป็นผู้ใช้ใหม่หรือนโยบายการใช้งานที่ยอมรับได้ที่คุณตอบรับไว้ล่าสุดมีการเปลี่ยนแปลง กรุณาตอบรับนโยบายการใช้งานที่ยอมรับได้ก่อนดำเนินการต่อ</string>
+    <string name="acceptableUsePolicyTitle">นโยบายการใช้งานที่ยอมรับได้</string>
+    <string name="acceptableUsePolicyButton">นโยบายการใช้งานที่ยอมรับได้</string>
+    <string name="acceptableUsePolicyAgree">ฉันยอมรับนโยบายการใช้งานที่ยอมรับได้</string>
+    <string name="acceptableUsePolicySubmit">ส่ง</string>
+    <string name="acceptFail">ไม่สามารถส่งการตอบรับเงื่อนไข</string>
 </resources>

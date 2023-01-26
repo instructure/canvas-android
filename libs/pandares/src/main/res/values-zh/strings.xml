@@ -1286,7 +1286,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">上传到“我的文件”</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">提交作业</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">选择课程</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">选择课程，所选课程为：%s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">选择作业</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">选择作业，所选作业为：%s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s，%2$s</string>
     <string name="cancelFileUploadTitle">是否取消上传？</string>
     <string name="cancelFileUploadMessage">您的上传将取消。</string>
@@ -1301,4 +1303,16 @@
     <string name="createdByStudentView">由学生视图创建</string>
     <string name="discussionErrorToast">发生错误。该主题不再可用。</string>
     <string name="cameraPermissionPermanentlyDenied">相机权限被永久拒绝。请转到应用设置以授予权限。</string>
+    <string name="unpublish_assignment_error">如果有学生提交，则无法取消发布作业。</string>
+    <string name="subscribeToCalendar">订阅日历馈送</string>
+    <string name="subscribeToCalendarMessage">通过单击此对话框中的“订阅”按钮，您可以将 Canvas 日历同步到 Google 日历帐户。然后前往设备上的 Google 日历应用程序，并在新日历的设置中启用同步。</string>
+    <string name="subscribeButton">订阅</string>
+    <string name="switchToLightMode">切换到浅色模式</string>
+    <string name="switchToDarkMode">切换到深色模式</string>
+    <string name="acceptableUsePolicyDescription">您是新用户，或者“可接受的使用政策”自您上次接受后发生了更改。请同意“可接受的使用政策”后再继续。</string>
+    <string name="acceptableUsePolicyTitle">可接受的使用政策</string>
+    <string name="acceptableUsePolicyButton">可接受的使用政策</string>
+    <string name="acceptableUsePolicyAgree">我同意“可接受的使用政策”。</string>
+    <string name="acceptableUsePolicySubmit">提交</string>
+    <string name="acceptFail">无法提交同意条款。</string>
 </resources>

@@ -486,4 +486,5 @@
     <string name="a11y_markAsDoneWithName">%s Tanda sebagai siap</string>
     <string name="a11y_markAsNotDoneWithName">%s Tanda sebagai tidak siap</string>
 
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>
