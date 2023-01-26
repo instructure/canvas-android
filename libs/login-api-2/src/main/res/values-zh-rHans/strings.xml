@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">你好，世界！</string>
+    <string name="action_settings">设置</string>
+    <string name="mobileVerifyGeneral">此应用程序没有得到授权使用</string>
+    <string name="mobileVerifyDomainUnauthorized">您输入的服务器没有授权此应用程序。</string>
+    <string name="mobileVerifyUserAgentUnauthorized">此应用程序的用户代理没有得到授权。</string>
+    <string name="mobileVerifyUnknownError">我们无法验证此应用程序使用的服务器。</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">发生意外错误。</string>
+    <string name="pageNotFound">页面未找到。</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="help">帮助</string>
+    <string name="enterURL">输入您的 Canvas URL:</string>
+    <string name="signIntoCanvasNetwork">试图登录到Canvas的网络？</string>
+    <string name="remove">移除</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">用户ID</string>
+    <string name="domain">域</string>
+
+    <string name="actAsUser">临时代理用户</string>
+    <string name="stopActAsUser">停止临时代理用户</string>
+    <!--Multiple User Sign in -->
+    <string name="removeUser">要删除此用户吗？</string>
+    <string name="removedForever">您必须再次登录此用户以访问他们的内容。</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas 标志</string>
+
+    <string name="canvasLoginOn">Canvas_Login：启用</string>
+    <string name="canvasLoginOff">Canvas_Login：关闭</string>
+    <string name="siteAdminLogin">站点管理员登录：启用</string>
+
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="authenticationRequired">需要进行身份验证</string>
+    <string name="invalidEmailPassword">无效的电子邮件或密码</string>
+    <string name="login">登录</string>
+    <string name="logout">退出</string>
+
+    <string name="matchingSchools">匹配的学校</string>
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">确定要注销吗？</string>
+    <string name="logout_yes">是</string>
+    <string name="logout_no">否</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">在您附近</string>
+    <string name="loginCanvasNetwork">Canvas 网络</string>
+    <string name="loginRightBehindYou">在您身后</string>
+    <string name="loginCanvasHelp">找不到您的学校？输入学校的网址或点击这里寻求帮助。</string>
+    <string name="loginCanvasHelpWithUser">输入学校的网址或点击这里寻求帮助。</string>
+    <string name="loginHint">查找您的学校或地区</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">报告一个问题</string>
+    <string name="errorReportSubject">主题</string>
+    <string name="errorReportDescription">说明</string>
+    <string name="errorReportSend">发送</string>
+    <string name="errorReportThankyou">感谢您向我们的支持团队报告您的问题。您将通过电子邮件收到确认和更新。</string>
+    <string name="errorReportSeverityText">这对您有什么影响？</string>
+    <string name="errorSeverityCasualQuestion">只是一个偶然问题、意见、想法、建议...</string>
+    <string name="errorSeverityNeedHelp">我需要一些帮助，但不紧急。</string>
+    <string name="errorSeveritySomethingsBroken">出了一些问题，但我无法解决问题并完成我的任务。</string>
+    <string name="errorSeverityCantGetThingsDone">如果我得不到您的回复，我就无法完成任务。</string>
+    <string name="errorSeverityExtremelyCritical">非常紧急！</string>
+    <string name="errorReportEmailAddress">电子邮件地址</string>
+    <string name="errorReportUnknown">未知</string>
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 英里（1.6 公里）</string>
+    <string name="oneMile">1 英里 (1.6 公里)</string>
+    <string name="miles">英里</string>
+    <string name="kilometers">公里</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">设备</string>
+    <string name="osVersion">操作系统版本</string>
+
+    <string name="previousLoginTitle">历史登录记录</string>
+    <string name="findMySchool">查找我的学校</string>
+    <string name="loginWithQRCode">二维码</string>
+    <string name="locateQRCode">查找二维码</string>
+    <string name="qrCodeExplanation">您可在帐户个人资料的网页上找到二维码。点击列表中的“用于移动设备登录的二维码”。</string>
+    <string name="qrCodeScanningPrompt">从 Canvas 扫描二维码进行登录</string>
+    <string name="loginWithQRCodeError">登录时发生错误。请生成新的二维码并重试。</string>
+    <string name="invalidQRCodeError">请扫描 Canvas 生成的二维码</string>
+    <string name="qrCodeScreenshotContentDescription">在浏览器中显示二维码生成位置的截图</string>
+    <string name="whatsYourSchoolName">您的学校名称是什么？</string>
+    <string name="next">下一步</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">删除上一个用户</string>
+    <string name="accountDomainFooter">找不到您的学校？尝试键入完整的学校 URL。</string>
+    <string name="accountDomainFooterLink">轻击此处获取帮助。</string>
+
+    <string name="login_noInternetConnectionTitle">无互联网连接</string>
+    <string name="login_noInternetConnectionMessage">此操作需要互联网连接。</string>
+    <string name="empty_feedback">须填写主题和描述后才能提交反馈。</string>
+    <string name="versionNum">版本号</string>
+    <string name="scrollInstructions">滚动以查看所有详情</string>
+
+    <string name="masqueradeErrorUserId">您必须输入用户ID。</string>
+    <string name="masqueradeErrorDomain">您必须输入有效的域。</string>
+    <string name="masqueradeError">尝试以用户的身份执行操作时出现错误。</string>
+    <string name="masqueradeInfo">\"临时代理\"的本质是作为该用户不使用密码进行登录。您将能够像该用户一样执行该用户可以执行的任何操作，并且从其他用户看来，如同是由该用户在执行这些操作。但是，审计日志记录您是代表该用户执行操作的人。</string>
+    <string name="masqueradingAs">您正在临时代理%s</string>
+    <string name="stopActingAsTitle">停止以...的身份执行操作</string>
+    <string name="stopActingAsMessage">你将停止担当%s并返回至帐号。</string>
+
+    <string name="weMadeChanges">我们进行了一些更改。</string>
+    <string name="whatsNewText">查看新增内容</string>
+    <string name="findAnotherSchool">查找其他学校</string>
+</resources>

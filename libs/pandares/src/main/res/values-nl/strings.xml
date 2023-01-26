@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Uploaden naar Mijn bestanden</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Opdracht inleveren</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Kies een cursus</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Kies een cursus, de geselecteerde cursus is: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Kies een opdracht</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Kies een opdracht, de geselecteerde opdracht is: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Upload annuleren?</string>
     <string name="cancelFileUploadMessage">Hiermee wordt je upload geannuleerd.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Gemaakt door Weergave voor cursisten</string>
     <string name="discussionErrorToast">Er is een fout opgetreden. Het onderwerp is misschien niet meer beschikbaar.</string>
     <string name="cameraPermissionPermanentlyDenied">Camerarechten zijn permanent geweigerd. Ga naar de app-instellingen om de rechten geldig te maken.</string>
+    <string name="unpublish_assignment_error">Kan publicatie van de opdracht niet ongedaan maken als er inleveringen van cursisten zijn.</string>
+    <string name="subscribeToCalendar">Abonneren op kalenderfeed</string>
+    <string name="subscribeToCalendarMessage">Je kunt de Canvas-kalender synchroniseren met je Google Agenda door op de knop Aanmelden in dit dialoogvenster te klikken. Open de app Google Agenda op je apparaat en schakel synchroniseren in de instellingen voor de nieuwe kalender in.</string>
+    <string name="subscribeButton">Aanmelden</string>
+    <string name="switchToLightMode">Naar Lichte modus</string>
+    <string name="switchToDarkMode">Naar Donkere modus</string>
+    <string name="acceptableUsePolicyDescription">Je bent een nieuwe gebruiker of het Beleid voor acceptabel gebruik is gewijzigd sinds je er de laatste keer mee akkoord bent gegaan. Ga akkoord met het Beleid voor acceptabel gebruik voordat je verdergaat.</string>
+    <string name="acceptableUsePolicyTitle">Beleid voor acceptabel gebruik</string>
+    <string name="acceptableUsePolicyButton">Beleid voor acceptabel gebruik</string>
+    <string name="acceptableUsePolicyAgree">Ik ga akkoord met het Beleid voor acceptabel gebruik.</string>
+    <string name="acceptableUsePolicySubmit">Indienen</string>
+    <string name="acceptFail">Indienen van het accepteren van de voorwaarden is mislukt.</string>
 </resources>

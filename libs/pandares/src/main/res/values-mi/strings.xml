@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Tukuake ki aku Kōnae</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Tuku taumahi</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Kōwhirihia he akoranga</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Kōwhirihia he akoranga, ko te akoranga kua tohua ko: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Kōwhiria he taumahi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Kōwhiria he taumahi, ko te taumahi kua tohua ko: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Whakakore Tukuake?</string>
     <string name="cancelFileUploadMessage">Ma tenei ka whakakore i to tukunga ake.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">I hangaia e te Tirohanga Tauira</string>
     <string name="discussionErrorToast">I puta he hapa. Kare pea te kaupapa i te waatea.</string>
     <string name="cameraPermissionPermanentlyDenied">I whakahēngia te whakaaetanga kāmera. Haere ki nga tautuhinga taupānga kia whakaaetia.</string>
+    <string name="unpublish_assignment_error">Kaore e taea te whakaputa i te taumahi mena he tukunga a nga akonga.</string>
+    <string name="subscribeToCalendar">Ohauru ki te Maramataka Kai</string>
+    <string name="subscribeToCalendarMessage">Ka taea e koe te tukutahi i to maramataka Canvas ki to putea Maramataka Google ma te panui i te paatene Ohauru i tenei korero. Na, me haere koe ki te taupānga Maramataka Google i runga i to taputapu ka taea te tukutahi i nga tautuhinga mo te maramataka hou.</string>
+    <string name="subscribeButton">Ohauru</string>
+    <string name="switchToLightMode">Huri ki te Aratau Maama</string>
+    <string name="switchToDarkMode">Huri ki te Aratau pouri</string>
+    <string name="acceptableUsePolicyDescription">Kua rereke te Kaupapa Whakamahi Whakaaetanga mai i to whakaaetanga whakamutunga, he kaiwhakamahi hou ranei koe. I mua i te haere whakaae mai ki te Kaupapa Whakamahi Whakaae.</string>
+    <string name="acceptableUsePolicyTitle">Kaupapa Whakamahi e Whakāetia ana</string>
+    <string name="acceptableUsePolicyButton">Kaupapa Whakamahi e Whakāetia ana</string>
+    <string name="acceptableUsePolicyAgree">Ko te Kaupapa Whakamahi Whakaae he pai ki ahau.</string>
+    <string name="acceptableUsePolicySubmit">Tuku</string>
+    <string name="acceptFail">I rahua te tuku kupu whakaaetanga.</string>
 </resources>

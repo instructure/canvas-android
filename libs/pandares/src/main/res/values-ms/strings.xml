@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Pandangan Pelajar</string>
 
 
+    <string name="rateOnThePlayStore">Nilaikan di Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Kepala Dipilih: %s</string>
     <string name="content_description_chosen_body">Badan Dipilih: %s</string>
@@ -1234,6 +1235,7 @@
     <string name="submissionDraftAvailableTitle">Draf Tersedia</string>
     <string name="errorLoadingSubmission">Ralat berlaku semasa memuatkan serahan</string>
     <string name="loadFullContent">Ketik untuk melihat kandungan penuh</string>
+    <string name="openLtiInExternalApp">Ketik untuk membuka dalam apl luar</string>
     <string name="dashboardTabImportantDates">Tarikh Penting</string>
     <string name="importantDatesEmptyTitle">Tiada tarikh penting</string>
     <string name="important_dates">Tarikh Penting</string>
@@ -1276,10 +1278,63 @@
 
     <string name="grabAnnotationTool">Cekau</string>
 
+    <string name="fileUpload">Muat Naik Fail</string>
     <plurals name="a11y_inboxUnreadCount">
         <item quantity="one">%s mesej belum dibaca</item>
         <item quantity="other">%s mesej belum dibaca</item>
     </plurals>
 
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s pemberitahuan belum dibaca</item>
+        <item quantity="other">%s pemberitahuan belum dibaca</item>
+    </plurals>
     <string name="noAnnotationSelected">Tiada anotasi dipilih</string>
+    <string name="emailNotifications">Pemberitahuan E-mel</string>
+    <string name="emailNotificationsImmediately">Dengan Segera</string>
+    <string name="emailNotificationsDaily">Harian</string>
+    <string name="emailNotificationsWeekly">Mingguan</string>
+    <string name="emailNotificationsNever">Tidak Pernah</string>
+    <string name="selectFrequency">Pilih kekerapan</string>
+    <string name="a11y_closeProgress">Tutup dialog kemajuan</string>
+    <string name="fileUploadProgress">%1$s daripada %2$s</string>
+    <string name="fileUploadProgressSubtitle">Memuat Naik ke Fail</string>
+    <string name="submissionProgressSubtitle">Memuat naik serahan ke \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Memuat Naik Serahan</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Memuat Naik Fail</string>
+    <string name="cancelSubmissionDialogTitle">Batal Serahan</string>
+    <string name="cancelSubmissionDialogMessage">Ini akan membatalkan dan memadamkan serahan anda.</string>
+    <string name="fileUploadError">Muat Naik Fail Gagal</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Muat Naik ke Canvas untuk %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Muat Naik ke Fail Saya</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Serahkan tugasan</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Pilih kursus</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Pilih kursus, kursus yang dipilih ialah: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Pilih tugasan</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Pilih tugasan, tugasan yang dipilih ialah: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Batalkan Muat Naik?</string>
+    <string name="cancelFileUploadMessage">Ini akan membatalkan muat naik anda.</string>
+    <string name="menuTitleFilterAssignments">Tapis tugasan</string>
+    <string name="filterAssignmentDialogTitle">Tapis Tugasan</string>
+    <string name="filterAssignmentsDialogCancel">Batal</string>
+    <string name="filterAssignmentAll">Semua</string>
+    <string name="filterAssignmentLate">Lewat</string>
+    <string name="filterAssignmentMissing">Tiada</string>
+    <string name="filterAssignmentGraded">Digredkan</string>
+    <string name="filterAssignmentUpcoming">Akan datang</string>
+    <string name="createdByStudentView">Dicipta dengan Pandangan Pelajar</string>
+    <string name="discussionErrorToast">Ralat berlaku. Topik ini mungkin tidak tersedia lagi.</string>
+    <string name="cameraPermissionPermanentlyDenied">Keizinan kamera telah dinafikan secara kekal. Pergi ke tetapan apl untuk membenarkannya.</string>
+    <string name="unpublish_assignment_error">Tidak boleh menyahterbit tugasan jika terdapat serahan pelajar.</string>
+    <string name="subscribeToCalendar">Langgan Suapan Kalendar</string>
+    <string name="subscribeToCalendarMessage">Anda boleh menyegerakkan kalendar Canvas anda ke akaun Kalendar Google anda dengan mengklik butang Langgan dalam dialog ini. Kemudian anda perlu pergi ke apl Kalendar Google pada peranti anda dan mendayakan penyegerakan dalam tetapan untuk kalendar baharu.</string>
+    <string name="subscribeButton">Langgan</string>
+    <string name="switchToLightMode">Tukar ke Mod Terang</string>
+    <string name="switchToDarkMode">Tukar ke Mod Gelap</string>
+    <string name="acceptableUsePolicyDescription">Sama ada anda pengguna baharu atau Dasar Penggunaan Boleh Diterima telah berubah sejak anda menyetujuinya pada kali terakhir. Sila nyatakan persetujuan anda dengan Dasar Penggunaan Boleh Diterima sebelum anda meneruskan.</string>
+    <string name="acceptableUsePolicyTitle">Dasar Penggunaan Boleh Diterima</string>
+    <string name="acceptableUsePolicyButton">Dasar Penggunaan Boleh Diterima</string>
+    <string name="acceptableUsePolicyAgree">Anda mesti memberikan persetujuan untuk Dasar Penggunaan Boleh Diterima.</string>
+    <string name="acceptableUsePolicySubmit">Serahkan</string>
+    <string name="acceptFail">Gagal menyerahkan penerimaan terma.</string>
 </resources>

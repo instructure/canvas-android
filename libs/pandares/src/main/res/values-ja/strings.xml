@@ -1286,7 +1286,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">私のファイルにアップロードする</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">課題を提出</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">コースを選択する</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">コースを選択、選択したコース：%s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">課題を洗濯</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">課題を選択、選択した課題：%s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s、%2$s</string>
     <string name="cancelFileUploadTitle">アップロードをキャンセルしますか？</string>
     <string name="cancelFileUploadMessage">これにより、アップロードがキャンセルされます。</string>
@@ -1301,4 +1303,16 @@
     <string name="createdByStudentView">受講者ビューで作成</string>
     <string name="discussionErrorToast">エラーが発生しました。トピックが使用できなくなった可能性があります。</string>
     <string name="cameraPermissionPermanentlyDenied">カメラの権限が永久的に拒否されました。アプリの設定から許可してください。</string>
+    <string name="unpublish_assignment_error">受講者の提出がある場合は課題を取り消すことはできません。</string>
+    <string name="subscribeToCalendar">カレンダーフィードを購読する</string>
+    <string name="subscribeToCalendarMessage">このダイアログで「定期購読」ボタンをクリックすると、CanvasカレンダーをGoogleカレンダーアカウントに同期させることができます。その後、デバイスのGoogleカレンダーアプリで、新しいカレンダーの設定で同期を有効にする必要があります。</string>
+    <string name="subscribeButton">定期購読</string>
+    <string name="switchToLightMode">ライトモードに切り替える</string>
+    <string name="switchToDarkMode">ダークモードに切り替える</string>
+    <string name="acceptableUsePolicyDescription">あなたは新しいユーザーであるか、最後に同意して以降、許可される使用ポリシーが変更されています。続行する前に許可される使用ポリシーに同意してください。</string>
+    <string name="acceptableUsePolicyTitle">AUP (Acceptable Use Policy)</string>
+    <string name="acceptableUsePolicyButton">AUP (Acceptable Use Policy)</string>
+    <string name="acceptableUsePolicyAgree">許可される使用ポリシーに合意します</string>
+    <string name="acceptableUsePolicySubmit">提出</string>
+    <string name="acceptFail">許可される使用ポリシーの提出に失敗しました。</string>
 </resources>

@@ -56,7 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
     <string name="submissionUploadByteProgress">%1$s sur %2$s</string>
@@ -72,7 +72,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Saisissez un URL ici pour votre envoi</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer le son</string>
     <string name="recordVideo">Enregistrer la vidéo</string>
     <string name="a11y_textSubmissionEditor">Éditeur d’envoi de texte</string>
@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Cette tâche n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1093,8 +1093,8 @@
     <string name="closeRecordingView">Fermer la vue d’enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur s\'est produite lors de la tentative de lecture.</string>
-    <string name="errorSubmittingMediaComment">Une erreur s\'est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
+    <string name="errorShowingVideoReplay">Une erreur s&apos;est produite lors de la tentative de lecture.</string>
+    <string name="errorSubmittingMediaComment">Une erreur s&apos;est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
     <string name="addAudioComment">Ajouter un commentaire audio</string>
@@ -1114,8 +1114,8 @@
     <string name="discussions_unknown_date">Date inconnue</string>
     <string name="a11y_gradeLetterMinusContentDescription">%s. moins</string>
     <string name="a11y_letterGrade">%s.</string>
-    <string name="a11y_gradeCellContentDescription">%1$s %2$s</string>
-    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%1$s %2$s, %3$s</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1139,7 +1139,7 @@
     <string name="conferenceInProgress">Conférences en cours</string>
 
     <string name="a11y_criterion_content_description">Notes du critère %s</string>
-    <string name="a11y_criterion_description_content_description">%1$s, %2$s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">plus d\'informations</string>
     <string name="a11y_create_file_folder_visible">Les boutons « Créer un fichier » et « Créer un dossier » sont visibles</string>
     <string name="a11y_create_file_folder_gone">Les boutons « Créer un fichier » et « Créer un dossier » sont invisibles</string>
@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Téléversement vers Mes Fichiers</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Envoyer la tâche</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choisir un cours</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choisissez un cours, le cours sélectionné est : %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choisir une tâche</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choisissez une tâche, la tâche sélectionnée est : %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Annuler le téléversement?</string>
     <string name="cancelFileUploadMessage">Cela annulera votre téléversement.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Créé par Student View</string>
     <string name="discussionErrorToast">Une erreur est survenue. Le sujet n’est peut-être plus disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">L’autorisation de la caméra a été définitivement refusée. Accédez aux paramètres de l’application pour l’autoriser.</string>
+    <string name="unpublish_assignment_error">On ne peut pas annuler la publication d’une tâche s\'il y a des envois d\'étudiants.</string>
+    <string name="subscribeToCalendar">Souscrire au flux du calendrier</string>
+    <string name="subscribeToCalendarMessage">Vous pouvez synchroniser votre calendrier Canvas avec votre compte Google Calendar en cliquant sur le bouton S\'abonner dans cette boîte de dialogue. Ensuite, vous devrez accéder à l\'application Google Agenda sur votre appareil et activer la synchronisation dans les paramètres du nouvel agenda.</string>
+    <string name="subscribeButton">S’inscrire</string>
+    <string name="switchToLightMode">Passer en mode lumière</string>
+    <string name="switchToDarkMode">Passer en mode sombre</string>
+    <string name="acceptableUsePolicyDescription">Soit vous êtes un nouvel utilisateur, soit la politique d’utilisation acceptable a changé depuis que vous l’avez acceptée pour la dernière fois. Veuillez accepter la Politique d’utilisation acceptable avant de continuer.</string>
+    <string name="acceptableUsePolicyTitle">Politique d’utilisation acceptable</string>
+    <string name="acceptableUsePolicyButton">Politique d’utilisation acceptable</string>
+    <string name="acceptableUsePolicyAgree">J’accepte la Politique d\'utilisation acceptable.</string>
+    <string name="acceptableUsePolicySubmit">Envoyer</string>
+    <string name="acceptFail">Échec de l’envoi de l’acceptation des conditions.</string>
 </resources>
