@@ -20,19 +20,26 @@ import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
+import kotlinx.coroutines.delay
+
+private const val POLLING_TIMEOUT = 5000L
+private const val POLLING_INTERVAL = 500L
 
 class InboxRepository(
     private val inboxApi: InboxApi.InboxInterface,
     private val coursesApi: CourseAPI.CoursesInterface,
-    private val groupsApi: GroupAPI.GroupInterface
+    private val groupsApi: GroupAPI.GroupInterface,
+    private val progressApi: ProgressAPI.ProgressInterface
 ) {
 
     suspend fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, filter: CanvasContext?, nextPageLink: String? = null): DataResult<List<Conversation>> {
@@ -84,5 +91,28 @@ class InboxRepository(
 
     fun invalidateCachedResponses() {
         CanvasRestAdapter.clearCacheUrls("conversations")
+    }
+
+    suspend fun pollProgress(progress: Progress): DataResult<Progress> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        var currentProgress = progress
+        var pollingTime = 0L
+
+        while (!currentProgress.hasRun && pollingTime < POLLING_TIMEOUT) {
+            delay(POLLING_INTERVAL)
+            pollingTime += POLLING_INTERVAL
+
+            val newProgress = progressApi.getProgress(progress.id.toString(), params)
+            if (newProgress.isSuccess) {
+                currentProgress = (newProgress as DataResult.Success).data
+            } else {
+                return newProgress
+            }
+        }
+        return if (pollingTime < POLLING_TIMEOUT) {
+            DataResult.Success(currentProgress)
+        } else {
+            DataResult.Fail(Failure.Network("Progress timed out"))
+        }
     }
 }

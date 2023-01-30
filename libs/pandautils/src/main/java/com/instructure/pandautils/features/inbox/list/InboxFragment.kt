@@ -90,7 +90,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
             when (it.itemId) {
                 R.id.inboxStarSelected -> viewModel.starSelected()
-                R.id.inboxUnstarSelected -> viewModel.unstarSelected() // TODO Icon for this item is just a placeholder
+                R.id.inboxUnstarSelected -> viewModel.unstarSelected()
                 R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
                 R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
                 R.id.inboxDeleteSelected -> deleteSelected()

@@ -21,7 +21,7 @@
     <item
         android:id="@+id/inbox_all"
         app:showAsAction="always"
-        android:title="@string/inboxAllMessages"/>
+        android:title="@string/inboxScopeInbox"/>
 
     <item
         android:id="@+id/inbox_unread"

@@ -27,6 +27,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
@@ -38,6 +39,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -73,6 +75,9 @@ class InboxViewModel @Inject constructor(
 
     private var canvasContexts: List<CanvasContext> = emptyList()
 
+    private var lastRequestedPageLink: String? = null
+    private var silentRefreshJob: Job? = null
+
     val bottomReachedCallback: () -> Unit = {
         viewModelScope.launch {
             if (_state.value != ViewState.Loading && _state.value != ViewState.LoadingNextPage && nextPageLink != null) {
@@ -85,6 +90,7 @@ class InboxViewModel @Inject constructor(
         _state.postValue(ViewState.LoadingNextPage)
         val dataResult = inboxRepository.getConversations(scope, true, contextFilter, nextPageLink)
         if (dataResult is DataResult.Success) {
+            lastRequestedPageLink = nextPageLink
             nextPageLink = dataResult.linkHeaders.nextUrl
             val conversations = dataResult.data
             val itemViewModels = createInboxEntriesFromResponse(conversations)
@@ -103,6 +109,8 @@ class InboxViewModel @Inject constructor(
     private fun fetchData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
             try {
+                silentRefreshJob?.cancel()
+                lastRequestedPageLink = null
                 val dataResult = inboxRepository.getConversations(scope, forceNetwork, contextFilter)
                 val conversations = dataResult.dataOrThrow
                 if (dataResult is DataResult.Success) {
@@ -170,10 +178,9 @@ class InboxViewModel @Inject constructor(
 
     private fun createMenuItems(selectedItems: List<InboxEntryItemViewModel>, scope: InboxApi.Scope): Set<InboxMenuItem> {
         val menuItems = mutableSetOf<InboxMenuItem>(InboxMenuItem.DELETE)
-        if (scope == InboxApi.Scope.ARCHIVED) {
-            menuItems.add(InboxMenuItem.UNARCHIVE)
-        } else {
-            menuItems.add(InboxMenuItem.ARCHIVE)
+        when {
+            scope == InboxApi.Scope.ARCHIVED -> menuItems.add(InboxMenuItem.UNARCHIVE)
+            scope != InboxApi.Scope.SENT -> menuItems.add(InboxMenuItem.ARCHIVE)
         }
 
         if (selectedItems.any { it.data.unread }) {
@@ -226,7 +233,7 @@ class InboxViewModel @Inject constructor(
             InboxApi.Scope.STARRED -> resources.getString(R.string.inbox_starred)
             InboxApi.Scope.SENT -> resources.getString(R.string.inbox_sent)
             InboxApi.Scope.ARCHIVED -> resources.getString(R.string.inbox_archived)
-            else -> resources.getString(R.string.inboxAllMessages)
+            else -> resources.getString(R.string.inboxScopeInbox)
         }
     }
 
@@ -262,7 +269,7 @@ class InboxViewModel @Inject constructor(
     }
 
     fun starSelected() {
-        performBatchOperation("star", { ids ->
+        performBatchOperation("star", { ids, progress ->
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
                 it.notifyChange()
@@ -272,28 +279,36 @@ class InboxViewModel @Inject constructor(
     }
 
     fun unstarSelected() {
-        performBatchOperation("unstar", { ids ->
-            _itemViewModels.value?.forEach {
-                if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
-                it.notifyChange()
-                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
+        performBatchOperation("unstar", { ids, progress ->
+            if (scope == InboxApi.Scope.STARRED) {
+                removeItemsAndSilentUpdate(ids, progress)
+            } else {
+                _itemViewModels.value?.forEach {
+                    if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
+                    it.notifyChange()
+                    _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
+                }
             }
         })
     }
 
     fun markAsReadSelected() {
-        performBatchOperation("mark_as_read", { ids ->
-            _itemViewModels.value?.forEach {
-                if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
-                it.notifyChange()
-                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
-                _events.value = Event(InboxAction.UpdateUnreadCount)
+        performBatchOperation("mark_as_read", { ids, progress ->
+            if (scope == InboxApi.Scope.UNREAD) {
+                removeItemsAndSilentUpdate(ids, progress)
+            } else {
+                _itemViewModels.value?.forEach {
+                    if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
+                    it.notifyChange()
+                    _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
+                    _events.value = Event(InboxAction.UpdateUnreadCount)
+                }
             }
         })
     }
 
     fun markAsUnreadSelected() {
-        performBatchOperation("mark_as_unread", { ids ->
+        performBatchOperation("mark_as_unread", { ids, progress ->
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
                 it.notifyChange()
@@ -304,32 +319,31 @@ class InboxViewModel @Inject constructor(
     }
 
     fun deleteSelected() {
-        performBatchOperation("destroy", { ids ->
-            val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
-            _itemViewModels.value = newMessages
+        performBatchOperation("destroy", { ids, progress ->
+            removeItemsAndSilentUpdate(ids, progress)
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxDeletedConfirmation, ids.size)))
             _events.value = Event(InboxAction.UpdateUnreadCount)
         })
     }
 
     fun archiveSelected() {
-        performBatchOperation("archive", { ids ->
-            val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
-            _itemViewModels.value = newMessages
+        performBatchOperation("archive", { ids, progress ->
+            if (scope != InboxApi.Scope.STARRED) {
+                removeItemsAndSilentUpdate(ids, progress)
+            }
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, ids.size)))
             _events.value = Event(InboxAction.UpdateUnreadCount)
         })
     }
 
     fun unarchiveSelected() {
-        performBatchOperation("mark_as_read", { ids ->
-            val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
-            _itemViewModels.value = newMessages
+        performBatchOperation("mark_as_read", { ids, progress ->
+            removeItemsAndSilentUpdate(ids, progress)
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnarchivedConfirmation, ids.size)))
         })
     }
 
-    private fun performBatchOperation(operation: String, onSuccess: (Set<Long>) -> Unit) {
+    private fun performBatchOperation(operation: String, onSuccess: (Set<Long>, Progress) -> Unit) {
         viewModelScope.launch {
             try {
                 val ids = _itemViewModels.value
@@ -339,7 +353,7 @@ class InboxViewModel @Inject constructor(
                 val dataResult = inboxRepository.batchUpdateConversations(ids, operation)
                 if (dataResult.isSuccess) {
                     inboxRepository.invalidateCachedResponses()
-                    onSuccess(ids.toSet())
+                    onSuccess(ids.toSet(), dataResult.dataOrThrow)
                     handleSelectionMode()
                 } else {
                     _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxOperationFailed))))
@@ -348,6 +362,12 @@ class InboxViewModel @Inject constructor(
                 _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxOperationFailed))))
             }
         }
+    }
+
+    private fun removeItemsAndSilentUpdate(ids: Set<Long>, progress: Progress) {
+        val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
+        _itemViewModels.value = newMessages
+        pollProgress(progress)
     }
 
     fun handleBackPressed(): Boolean {
@@ -403,5 +423,38 @@ class InboxViewModel @Inject constructor(
         _state.postValue(ViewState.Loading)
         _itemViewModels.postValue(emptyList())
         fetchData()
+    }
+
+    private fun pollProgress(progress: Progress) {
+        silentRefreshJob = viewModelScope.launch {
+            val progressResult = inboxRepository.pollProgress(progress)
+            if (progressResult.isSuccess && (progressResult as DataResult.Success).data.isCompleted) {
+                silentRefresh()
+            } else {
+                // The data we are showing is not valid so we should refresh as a fallback
+                refresh()
+            }
+        }
+    }
+
+    private suspend fun silentRefresh() {
+        _state.postValue(ViewState.LoadingNextPage)
+        val dataResult = inboxRepository.getConversations(scope, true, contextFilter, lastRequestedPageLink)
+
+        if (dataResult is DataResult.Success) {
+            nextPageLink = dataResult.linkHeaders.nextUrl
+            val alreadyFetchedIds = _itemViewModels.value?.map { it.data.id } ?: emptyList()
+            val newConversations = dataResult.data.filter { !alreadyFetchedIds.contains(it.id) }
+            val itemViewModels = createInboxEntriesFromResponse(newConversations)
+            _itemViewModels.value = _itemViewModels.value?.plus(itemViewModels)
+        } else {
+            _events.postValue(Event(InboxAction.FailedToLoadNextPage))
+        }
+
+        if (_itemViewModels.value.isNullOrEmpty()) {
+            postEmptyState()
+        } else {
+            _state.postValue(ViewState.Success)
+        }
     }
 }
