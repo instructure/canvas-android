@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Hlaða upp í Skrárnar mínar</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Skila verkefni</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Velja námskeið</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Veldu námskeið, valið námskeið er: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Velja verkefni</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Veldu námskeið, valið námskeið er: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Hætta við upphleðslu?</string>
     <string name="cancelFileUploadMessage">Þetta hættir við upphleðsluna þína.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Búið til af Student View</string>
     <string name="discussionErrorToast">Villa kom upp. Ef til vill er efnið ekki lengur tiltækt.</string>
     <string name="cameraPermissionPermanentlyDenied">Aðgangsheimild myndar var varanlega hafnað. Farðu í smáforritastillingar til að leyfa það.</string>
+    <string name="unpublish_assignment_error">Ekki hægt að fela ef skil nemenda eru til staðar.</string>
+    <string name="subscribeToCalendar">Gerast áskrifandi að dagatalsveitu</string>
+    <string name="subscribeToCalendarMessage">Þú getur samstillt Canvas-dagatalið þitt við Google Calendar-reikninginn þinn með því að smella á hnappinn Gerast áskrifandi í þessum glugga. Síðan þarftu að fara í Google Calendar-appið í tækinu þínu og virkja samstillingu í stillingum fyrir nýja dagatalið.</string>
+    <string name="subscribeButton">Gerast áskrifandi</string>
+    <string name="switchToLightMode">Skipta yfir í ljósan ham</string>
+    <string name="switchToDarkMode">Skipta yfir í ljósan ham</string>
+    <string name="acceptableUsePolicyDescription">Annað hvort ertu nýr notandi eða Stefna um ásættanlega notkun hefur breyst síðan þú samþykktir hana síðast. Vinsamlegast samþykktu Stefnu um ásættanlega notkun áður en þú heldur áfram.</string>
+    <string name="acceptableUsePolicyTitle">Stefna um ásættanlega notkun</string>
+    <string name="acceptableUsePolicyButton">Stefna um ásættanlega notkun</string>
+    <string name="acceptableUsePolicyAgree">Ég samþykki Stefnu um ásættanlega notkun.</string>
+    <string name="acceptableUsePolicySubmit">Skila</string>
+    <string name="acceptFail">Mistókst að senda inn samþykki anna.</string>
 </resources>

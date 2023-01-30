@@ -22,6 +22,7 @@ import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
+import 'package:flutter_parent/network/api/features_api.dart';
 import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/network/api/help_links_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
@@ -69,6 +70,7 @@ import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interac
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/db/user_colors_db.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/permission_handler.dart';
@@ -106,6 +108,7 @@ void setupLocator() {
   locator.registerLazySingleton<PageApi>(() => PageApi());
   locator.registerLazySingleton<PlannerApi>(() => PlannerApi());
   locator.registerLazySingleton<UserApi>(() => UserApi());
+  locator.registerLazySingleton<FeaturesApi>(() => FeaturesApi());
 
   // DB helpers
   locator.registerLazySingleton<Database>(() => DbUtil.instance);

@@ -1303,7 +1303,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Tải lên tới Các Tập Tin Của Tôi</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Nộp bài tập</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Lựa chọn một khóa học</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Lựa chọn một khóa học, khóa học đã chọn là: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Lựa chọn một bài tập</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Lựa chọn một bài tập, bài tập đã chọn là: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Hủy Tải Lên?</string>
     <string name="cancelFileUploadMessage">Thao tác này sẽ hủy quá trình tải lên của bạn.</string>
@@ -1318,4 +1320,16 @@
     <string name="createdByStudentView">Được Góc Nhìn Của Sinh Viên Tạo Ra</string>
     <string name="discussionErrorToast">Đã xảy ra lỗi. Chủ đề có thể không còn nữa.</string>
     <string name="cameraPermissionPermanentlyDenied">Quyền truy cập camera đã bị từ chối vĩnh viễn. Đi tới cài đặt ứng dụng để cho phép truy cập. </string>
+    <string name="unpublish_assignment_error">Không thể hủy phát hành bài tập nếu có bài nộp của sinh viên.</string>
+    <string name="subscribeToCalendar">Đăng Ký Nguồn Cấp Dữ Liệu Lịch</string>
+    <string name="subscribeToCalendarMessage">Bạn có thể đồng bộ lịch Canvas của mình với tài khoản Lịch Google bằng cách nhấp vào nút Đăng Ký trong hộp thoại này. Sau đó, bạn sẽ cần truy cập vào ứng dụng Lịch Google trên thiết bị của mình và bật chức năng đồng bộ trong phần cài đặt cho lịch mới.</string>
+    <string name="subscribeButton">Đăng Ký</string>
+    <string name="switchToLightMode">Chuyển sang Chế Độ Sáng</string>
+    <string name="switchToDarkMode">Chuyển sang Chế Độ Tối</string>
+    <string name="acceptableUsePolicyDescription">Bạn là người dùng mới hoặc Chính Sách Sử Dụng Có Thể Chấp Nhận Được đã thay đổi kể từ lần cuối cùng bạn đồng ý. Vui lòng đồng ý với Chính Sách Sử Dụng Có Thể Chấp Nhận Được trước khi bạn tiếp tục.</string>
+    <string name="acceptableUsePolicyTitle">Chính Sách Sử Dụng Có Thể Chấp Nhận Được</string>
+    <string name="acceptableUsePolicyButton">Chính Sách Sử Dụng Có Thể Chấp Nhận Được</string>
+    <string name="acceptableUsePolicyAgree">Tôi đồng ý với Chính Sách Sử Dụng Có Thể Chấp Nhận Được.</string>
+    <string name="acceptableUsePolicySubmit">Nộp</string>
+    <string name="acceptFail">Không thể gửi chấp nhận điều khoản.</string>
 </resources>

@@ -1334,7 +1334,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Загрузить в Мои файлы</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Отправить задание</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Выберите курс</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Выберите курс, выбранный курс: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Выбрать задание</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Выберите задание, выбранное задание: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Отменить загрузку?</string>
     <string name="cancelFileUploadMessage">Это приведет к отмене вашей загрузки.</string>
@@ -1349,4 +1351,16 @@
     <string name="createdByStudentView">Создано с помощью Student View</string>
     <string name="discussionErrorToast">Произошла ошибка. Тема более недоступна.</string>
     <string name="cameraPermissionPermanentlyDenied">Разрешение для камеры в настоящее время отклонено. Перейдите к настройкам приложения, чтобы установить это разрешение.</string>
+    <string name="unpublish_assignment_error">Отмена публикации задания невозможна, если имеются отправки студентов.</string>
+    <string name="subscribeToCalendar">Подписаться на ленту новостей в календаре</string>
+    <string name="subscribeToCalendarMessage">Вы можете синхронизировать свой календарь Canvas со своей учетной записью Google Calendar, нажав кнопку Subscribe (Подписаться) в этом диалоговом окне. Затем нужно перейти в приложение Google Calendar на своем устройстве и включить синхронизацию в настройках для нового календаря.</string>
+    <string name="subscribeButton">Подписаться</string>
+    <string name="switchToLightMode">Перейти в светлый режим</string>
+    <string name="switchToDarkMode">Перейти в темный режим</string>
+    <string name="acceptableUsePolicyDescription">Вы либо новый пользователь, либо Политика допустимого использования изменились после того, как вы в последний раз приняли их. Согласитесь с Политикой допустимого использования, прежде чем продолжить.</string>
+    <string name="acceptableUsePolicyTitle">Приемлемая политика использования</string>
+    <string name="acceptableUsePolicyButton">Приемлемая политика использования</string>
+    <string name="acceptableUsePolicyAgree">Я соглашаюсь с Политикой допустимого использования.</string>
+    <string name="acceptableUsePolicySubmit">Отправить</string>
+    <string name="acceptFail">Не удалось отправить заявку на принятие условий.</string>
 </resources>

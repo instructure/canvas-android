@@ -19,9 +19,7 @@ package com.instructure.dataseeding.util
 
 import com.github.javafaker.Faker
 import com.instructure.dataseeding.model.*
-import java.util.Date
-import java.util.UUID
-import java.util.Locale
+import java.util.*
 
 object Randomizer {
     private val faker = Faker()
@@ -67,7 +65,7 @@ object Randomizer {
     fun randomGradingPeriodSetTitle(): String = "${faker.pokemon().location()} Set"
     fun randomGradingPeriodName(): String = "${faker.pokemon().name()} Grading Period"
 
-    fun randomAssignment(withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?, importantDate: Boolean?): CreateAssignment =
+    fun randomAssignment(withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?, importantDate: Boolean?, assignmentGroupId: Long? = null): CreateAssignment =
             CreateAssignment(
                     name = faker.lorem().sentence(),
                     description = if (withDescription) faker.lorem().paragraph() else null,
@@ -81,7 +79,8 @@ object Randomizer {
                     groupCategoryId = groupCategoryId,
                     pointsPossible = pointsPossible,
                     allowedExtensions = allowedExtensions,
-                    importantDate = importantDate
+                    importantDate = importantDate,
+                    assignmentGroupId = assignmentGroupId
             )
 
     fun randomAssignmentOverrideTitle(): String = faker.food().ingredient()

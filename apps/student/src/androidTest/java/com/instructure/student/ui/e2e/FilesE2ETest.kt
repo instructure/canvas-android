@@ -141,7 +141,7 @@ class FilesE2ETest: StudentTest() {
         }
 
         Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'Submissions' is displayed.")
         fileListPage.assertItemDisplayed("Submissions")
@@ -195,7 +195,7 @@ class FilesE2ETest: StudentTest() {
         ViewUtils.pressBackButton(4)
 
         Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"

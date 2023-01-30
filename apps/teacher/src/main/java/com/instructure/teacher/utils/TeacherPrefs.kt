@@ -16,9 +16,7 @@
  */
 package com.instructure.teacher.utils
 
-import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.GsonListPref
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.canvasapi2.utils.StringPref
 
@@ -31,8 +29,6 @@ object TeacherPrefs : PrefManager(BaseAppManager.PREF_FILE_NAME) {
 
     /* Whether the user has viewed the 'Tap and hold for description' Rubric tutorial in SpeedGrader */
     var hasViewedRubricTutorial by BooleanPref()
-
-    var pendingSubmissionComments by GsonListPref(PendingSubmissionComment::class.java)
 
     var attendanceExternalToolId by StringPref()
 

@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Llwytho i fyny i Fy Ffeiliau</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Cyflwyno aseiniad</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Dewis cwrs</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Dewiswch gwrs, y cwrs sydd wedi’i ddewis yw: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Dewis aseiniad</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Dewiswch aseiniad, yr aseiniad sydd wedi’i ddewis yw: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Canslo’r broses llwytho i fyny?</string>
     <string name="cancelFileUploadMessage">Bydd hyn yn canslo eich ffeil sy’n cael ei llwytho i fyny.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Wedi’i Greu gan Wedd Myfyriwr</string>
     <string name="discussionErrorToast">Cafwyd gwall. Efallai nad yw’r pwnc hwn ar gael mwyach.</string>
     <string name="cameraPermissionPermanentlyDenied">Mae’r hawl camera wedi’i wrthod am byth. Ewch i osodiadau’r ap i’w ganiatáu.</string>
+    <string name="unpublish_assignment_error">Does dim modd datgyhoeddi aseiniad os oes cyflwyniadau gan fyfyrwyr.</string>
+    <string name="subscribeToCalendar">Tanysgrifio i Ffrwd y Calendr</string>
+    <string name="subscribeToCalendarMessage">Gallwch chi gysoni eich calendr Canvas i’r Calendr Google drwy glicio’r botwm Tanysgrifio yn y ddeialog hon. Yna, bydd angen i chi fyn i’r ap Calendr Google ar eich dyfais a gallu cysoni yn y gosodiadau ar gyfer y calendr newydd.</string>
+    <string name="subscribeButton">Tanysgrifio</string>
+    <string name="switchToLightMode">Newid i’r Modd Golau</string>
+    <string name="switchToDarkMode">Newid i’r Modd Tywyll</string>
+    <string name="acceptableUsePolicyDescription">Naill ai rydych chi’n ddefnyddiwr newydd, neu mae’r Polisi Defnydd Derbyniol wedi newid ers i chi gytuno i’r Polisi ddiwethaf. Mae angen i chi gytuno i’r Polisi Defnydd Derbyniol cyn bwrw ymlaen.</string>
+    <string name="acceptableUsePolicyTitle">Polisi Defnydd Derbyniol</string>
+    <string name="acceptableUsePolicyButton">Polisi Defnydd Derbyniol</string>
+    <string name="acceptableUsePolicyAgree">Mae’n rhaid i chi gytuno i’r Polisi Defnydd Derbyniol</string>
+    <string name="acceptableUsePolicySubmit">Cyflwyno</string>
+    <string name="acceptFail">Wedi methu cyflwyno eich bod yn derbyn y telerau.</string>
 </resources>

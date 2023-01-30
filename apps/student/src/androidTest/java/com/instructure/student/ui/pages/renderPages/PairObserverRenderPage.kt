@@ -17,8 +17,13 @@
 package com.instructure.student.ui.pages.renderPages
 
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.PairObserverPage
 import org.hamcrest.Matchers.allOf
@@ -34,7 +39,7 @@ class PairObserverRenderPage : PairObserverPage() {
     }
 
     fun assertCodeDisplayed(itemText: String) {
-        waitForMatcherWithSleeps(withId(R.id.pairObserverContent), waitMs = 5000)
+        waitForMatcherWithSleeps(withId(R.id.pairObserverContent), timeout = 5000)
         errorView.assertGone()
         loadingView.assertGone()
         pairingView.assertDisplayed()

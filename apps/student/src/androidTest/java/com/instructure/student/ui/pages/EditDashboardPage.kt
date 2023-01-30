@@ -16,18 +16,11 @@
 
 package com.instructure.student.ui.pages
 
-import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onData
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withParent
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
@@ -52,21 +45,29 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
     }
 
     fun unfavoriteCourse(course: Course) {
+        unfavoriteCourse(course.name)
+    }
+
+    fun unfavoriteCourse(courseName: String) {
         val childMatcher = withContentDescription("Remove from dashboard")
         val itemMatcher = allOf(
                 withContentDescription(containsString(", favorite")),
-                withContentDescription(containsString(course.name)),
+                withContentDescription(containsString(courseName)),
                 hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
 
     fun favoriteCourse(course: Course) {
+        favoriteCourse(course.name)
+    }
+
+    fun favoriteCourse(courseName: String) {
         val childMatcher = withContentDescription("Add to dashboard")
         val itemMatcher = allOf(
-                withContentDescription(containsString(", not favorite")),
-                withContentDescription(containsString(course.name)),
-                hasDescendant(childMatcher))
+            withContentDescription(containsString(", not favorite")),
+            withContentDescription(containsString(courseName)),
+            hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
@@ -93,4 +94,21 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
+
+    fun assertCourseMassSelectButtonIsDisplayed(someSelected: Boolean) {
+
+        if (someSelected) {
+            val childMatcher = withContentDescription("Remove all from dashboard")
+            val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+
+            onView(withParent(itemMatcher) + childMatcher).assertDisplayed()
+        }
+        else {
+            val childMatcher = withContentDescription("Add all to dashboard")
+            val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+
+            onView(withParent(itemMatcher) + childMatcher).assertDisplayed()
+        }
+    }
+
 }

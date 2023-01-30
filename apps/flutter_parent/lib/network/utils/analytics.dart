@@ -14,7 +14,10 @@
 import 'package:device_info/device_info.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_parent/network/api/heap_api.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 /// Event names
 /// The naming scheme for the majority of these is found in a google doc so that we can be consistent
@@ -79,10 +82,12 @@ class AnalyticsParamConstants {
 
 class Analytics {
 
+  HeapApi get _heap => HeapApi();
   /// Set the current screen in analytics
   void setCurrentScreen(String screenName) async {
-    if (kReleaseMode) {
-
+    final usageMetricsEnabled = await FeaturesUtils.getUsageMetricFeatureFlag();
+    if (kReleaseMode && usageMetricsEnabled) {
+      await _heap.track(screenName);
     }
 
     if (DebugFlags.isDebug) {
@@ -97,8 +102,9 @@ class Analytics {
   /// * [event] should be one of [AnalyticsEventConstants]
   /// * [extras] a map of keys [AnalyticsParamConstants] to values. Use sparingly, we only get 25 unique parameters
   void logEvent(String event, {Map<String, dynamic> extras = const {}}) async {
-    if (kReleaseMode) {
-
+    final usageMetricsEnabled = await FeaturesUtils.getUsageMetricFeatureFlag();
+    if (kReleaseMode && usageMetricsEnabled) {
+      await _heap.track(event, extras: extras);
     }
 
     if (DebugFlags.isDebug) {
