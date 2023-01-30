@@ -54,7 +54,7 @@ class BookmarkInteractionTest : StudentTest() {
         Espresso.pressBack() // to course
         Espresso.pressBack() // to main dashboard
 
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
     }
 
@@ -74,7 +74,7 @@ class BookmarkInteractionTest : StudentTest() {
         )
 
         dashboardPage.waitForRender()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
         bookmarkPage.clickBookmark(bookmarkName)
 
@@ -97,7 +97,7 @@ class BookmarkInteractionTest : StudentTest() {
         )
 
         dashboardPage.waitForRender()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
         val newName = "New Bookmark Name"
         bookmarkPage.changeBookmarkName(bookmarkName, newName)

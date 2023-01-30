@@ -193,6 +193,15 @@ class DioConfig {
         pageSize: pageSize);
   }
 
+  static DioConfig heap() {
+    final baseUrl = "https://heapanalytics.com/api/";
+    final headers = {
+      'accept': 'application/json',
+      'content-type': 'application/json'
+    };
+    return DioConfig(baseUrl: baseUrl, baseHeaders: headers);
+  }
+
   /// Clears the cache, deleting only the entries related to path OR clearing everything if path is null
   Future<bool> clearCache({String path}) {
     // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been

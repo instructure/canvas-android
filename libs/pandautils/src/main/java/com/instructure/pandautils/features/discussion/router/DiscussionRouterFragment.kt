@@ -1,6 +1,8 @@
 package com.instructure.pandautils.features.discussion.router
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +70,7 @@ class DiscussionRouterFragment : Fragment() {
             }
             is DiscussionRouterAction.ShowToast -> {
                 toast(action.toast, Toast.LENGTH_SHORT)
-                requireActivity().onBackPressed()
+                Handler(Looper.getMainLooper()).post { requireActivity().onBackPressed() }
             }
         }
     }

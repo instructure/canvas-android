@@ -408,7 +408,7 @@
         <item>@string/gpa_scale</item>
     </string-array>
 
-  <string name="not_a_teacher">不是教师？</string>
+    <string name="not_a_teacher">不是教师？</string>
     <string name="not_a_teacher_tap_to_visit_play_store">我们的其他应用可能更合适。单击可访问 Play Store。</string>
     <string name="sg_tab_grade">评分</string>
     <string name="sg_tab_comments">评论</string>

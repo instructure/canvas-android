@@ -233,9 +233,9 @@ class CalendarEventFragment : ParentFragment() {
     }
 
     private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebViewWrapper.setVisible()
-        calendarEventWebViewWrapper.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebViewWrapper.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+        calendarEventWebViewWrapper?.setVisible()
+        calendarEventWebViewWrapper?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+        calendarEventWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     private fun setUpCallback() {

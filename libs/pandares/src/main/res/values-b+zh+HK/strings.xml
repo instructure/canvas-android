@@ -1286,7 +1286,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">上傳到「我的檔案」</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">提交作業</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">選擇課程</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">選擇課程，所選取的課程是：%s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">選擇作業</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">選擇作業，所選取的作業是：%s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s，%2$s</string>
     <string name="cancelFileUploadTitle">取消上傳？</string>
     <string name="cancelFileUploadMessage">這將取消您的上傳。</string>
@@ -1301,4 +1303,16 @@
     <string name="createdByStudentView">以學生視圖建立</string>
     <string name="discussionErrorToast">發生錯誤。主題可能再也無法使用。</string>
     <string name="cameraPermissionPermanentlyDenied">相機權限永久遭到拒絕。請前往應用程式設定以允許該權限。</string>
+    <string name="unpublish_assignment_error">如有學生提交項目，則無法取消發佈作業。</string>
+    <string name="subscribeToCalendar">訂閱 Calendar Feed</string>
+    <string name="subscribeToCalendarMessage">您可以在此對話中按一下「訂閱」按鈕將您的 Canvas 行事曆與您的 Google Calendar 帳戶同步。然後，您需要前往您裝置上的 Google Calendar 應用程式，並在針對新行事曆的設定中啟用同步。</string>
+    <string name="subscribeButton">訂閱</string>
+    <string name="switchToLightMode">轉換到明亮模式</string>
+    <string name="switchToDarkMode">轉換到黑暗模式</string>
+    <string name="acceptableUsePolicyDescription">無論您是新的使用者，或是自上次同意以來，「可接受使用政策」都已經變更。請在您繼續使用前同意「可接受使用政策」。</string>
+    <string name="acceptableUsePolicyTitle">可接受使用政策</string>
+    <string name="acceptableUsePolicyButton">可接受使用政策</string>
+    <string name="acceptableUsePolicyAgree">您必須同意「可接受使用政策」。</string>
+    <string name="acceptableUsePolicySubmit">提交</string>
+    <string name="acceptFail">無法提交條款接受。</string>
 </resources>

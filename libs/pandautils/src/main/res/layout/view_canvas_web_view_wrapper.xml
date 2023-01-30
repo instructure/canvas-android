@@ -63,8 +63,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/backgroundLightest"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
         android:minHeight="48dp"
         android:scrollbars="none" />
 

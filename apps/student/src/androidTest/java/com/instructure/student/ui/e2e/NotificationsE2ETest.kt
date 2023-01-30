@@ -44,9 +44,7 @@ import java.lang.Thread.sleep
 class NotificationsE2ETest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -106,13 +104,29 @@ class NotificationsE2ETest : StudentTest() {
         dashboardPage.clickNotificationsTab()
 
         Log.d(STEP_TAG,"Assert that there are some notifications on the Notifications Page. There should be 4 notification at this point, but sometimes the API does not work properly.")
-        notificationPage.assertNotificationCountIsGreaterThan(0) //At least one notification is displayed.
-        try {
-            notificationPage.assertNotificationCountIsGreaterThan(3) //"Soft assert", because API does not working consistently. Sometimes it simply does not create notifications about some events, even if we would wait enough to let it do that.
-            Log.d(STEP_TAG,"All four notifications are displayed.")
+
+        var notificationApiResponseAttempt = 1
+        while(notificationApiResponseAttempt < 10) {
+            try {
+                notificationPage.assertNotificationCountIsGreaterThan(0) //At least one notification is displayed.
+                break
+            } catch (e: java.lang.AssertionError) {
+                try {
+                    refresh()
+                    notificationPage.assertNotificationCountIsGreaterThan(0) //At least one notification is displayed.
+                    notificationApiResponseAttempt++
+                    break
+                } catch (e: java.lang.AssertionError) {
+                    println("${notificationApiResponseAttempt--}. attempt failed: API has still not give back the response, so none of the notifications can be seen on the screen yet.")
+                }
+            }
         }
-        catch(e: AssertionError) {
-            println("API may not work properly, so not all the notifications can be seen on the screen.")
+
+        try {
+                notificationPage.assertNotificationCountIsGreaterThan(3) //"Soft assert", because API does not working consistently. Sometimes it simply does not create notifications about some events, even if we would wait enough to let it do that.
+                Log.d(STEP_TAG, "All four notifications are displayed.")
+        } catch (e: AssertionError) {
+                println("API may not work properly, so not all the notifications can be seen on the screen.")
         }
 
         Log.d(PREPARATION_TAG,"Submit ${testAssignment.name} assignment with student: ${student.name}.")

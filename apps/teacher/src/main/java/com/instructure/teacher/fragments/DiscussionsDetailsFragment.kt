@@ -449,7 +449,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         discussionRepliesWebViewWrapper.webView.onResume()
 
         setupWebView(discussionTopicHeaderWebViewWrapper.webView, false)
-        setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = true)
+        setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = !discussionRepliesWebViewWrapper.themeSwitched)
         discussionRepliesWebViewWrapper.onThemeChanged = { themeChanged, html ->
             setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = !themeChanged)
             discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
@@ -516,20 +516,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 showToast(R.string.downloadingFile)
                 RouteMatcher.openMedia(activity, url)
             }
-            override fun onPageStartedCallback(webView: WebView, url: String) {
-                // This executes a JavaScript to add the dark theme.
-                // It won't work exactl when the page starts to load, because the html document is not yet created,
-                // so we add a little delay to make sure the script can modify the document.
-                if (addDarkTheme) {
-                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 100)
-                }
-            }
-            override fun onPageFinishedCallback(webView: WebView, url: String) {
-                // This is just a fallback if in some cases the document wouldn't be loaded after the delay
-                if (addDarkTheme) {
-                    webView.addDarkThemeToHtmlDocument()
-                }
-            }
+            override fun onPageStartedCallback(webView: WebView, url: String) = Unit
+            override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
         }
 
         webView.addVideoClient(requireActivity())

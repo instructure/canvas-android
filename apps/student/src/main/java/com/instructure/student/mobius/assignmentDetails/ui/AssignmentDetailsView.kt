@@ -158,6 +158,9 @@ class AssignmentDetailsView(
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
+
+        descriptionWebViewWrapper.webView.focusable = View.NOT_FOCUSABLE
+        descriptionWebViewWrapper.webView.isFocusableInTouchMode = false
     }
 
     override fun render(state: AssignmentDetailsViewState) {
@@ -233,7 +236,7 @@ class AssignmentDetailsView(
     }
 
     private fun loadDescriptionHtml(html: String, contentDescription: String?, baseUrl: String?) {
-        descriptionWebViewWrapper.loadHtml(html, contentDescription, baseUrl = baseUrl)
+        descriptionWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = baseUrl)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {

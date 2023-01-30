@@ -58,7 +58,7 @@ class SettingsE2ETest : StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open Profile Settings Page.")
@@ -71,12 +71,12 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Assert that the username has been changed to $newUserName.")
         ViewUtils.pressBackButton(2)
-        dashboardPage.assertUserLoggedIn(newUserName)
+        leftSideNavigationDrawerPage.assertUserLoggedIn(newUserName)
 
         val originalSavedPandaAvatarCount = getSavedPandaAvatarCount()
 
         Log.d(STEP_TAG, "Navigate to Settings Page again and open Panda Avatar Creator.")
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
         settingsPage.openProfileSettings()
         profileSettingsPage.assertPageObjects()
@@ -120,7 +120,7 @@ class SettingsE2ETest : StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings.")
@@ -142,7 +142,7 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings again.")
         Espresso.pressBack()
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openAppThemeSettings()
 
         Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
@@ -169,7 +169,7 @@ class SettingsE2ETest : StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'Legal' link to open Legal Page. Assert that Legal Page has opened.")
@@ -191,7 +191,7 @@ class SettingsE2ETest : StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'About' link to open About Page. Assert that About Page has opened.")
@@ -224,7 +224,7 @@ class SettingsE2ETest : StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
 
         Log.d(PREPARATION_TAG,"Store the initial values on Remote Config Settings Page.")
         val initialValues = mutableMapOf<String, String?>()
@@ -277,7 +277,7 @@ class SettingsE2ETest : StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'Subscribe to Calendar'.")

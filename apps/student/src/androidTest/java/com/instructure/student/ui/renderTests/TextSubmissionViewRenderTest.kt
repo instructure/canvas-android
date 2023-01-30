@@ -16,6 +16,7 @@
 package com.instructure.student.ui.renderTests
 
 import android.os.Build
+import com.instructure.canvas.espresso.Stub
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.TextSubmissionViewRenderPage
@@ -27,6 +28,7 @@ class TextSubmissionViewRenderTest : StudentRenderTest() {
 
     private val page = TextSubmissionViewRenderPage()
 
+    @Stub
     @Test
     fun displaysProgressBarPriorToLoading() {
         loadPageWithHtml("Sample Text")

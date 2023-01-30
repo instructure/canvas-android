@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Lataa omiin tiedostoihin</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lähetä tehtävä</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Valitse kurssi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Valitse kurssi, valittu kurssi on: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Valitse tehtävä</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Valitse tehtävä, valittu tehtävä on: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Peruutetaanko lataus?</string>
     <string name="cancelFileUploadMessage">Tämä peruuttaa latauksesi.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Opiskelijanäkymän luoma</string>
     <string name="discussionErrorToast">Ilmeni virhe. Aihe ei ehkä enää ole saatavilla.</string>
     <string name="cameraPermissionPermanentlyDenied">Kameran käyttöoikeus kiellettiin pysyvästi. Voit sallia käyttöoikeuden sovellusasetuksista.</string>
+    <string name="unpublish_assignment_error">Tehtävää ei voida peruuttaa, jos on opiskelijalähetyksiä.</string>
+    <string name="subscribeToCalendar">Tilaa kalenterin syöte</string>
+    <string name="subscribeToCalendarMessage">Voit synkronoida Canvas-kalenterisi Google-kalenteritiliin napsauttamalla tässä keskustelussa olevaa Tilaa-painiketta. Sitten sinun täytyy siirtyä Google-kalenterisovelluksiin ja ottaa synkronointi käyttöön uuden kalenterin asetuksissa.</string>
+    <string name="subscribeButton">Tilaa</string>
+    <string name="switchToLightMode">Vaihda valoisaan tilaan</string>
+    <string name="switchToDarkMode">Vaihda pimeään tilaan</string>
+    <string name="acceptableUsePolicyDescription">Olet joko uusi käyttäjä tai hyväksyttävää käyttöä koskeva käytäntö on muuttunut sen jälkeen, kun viimeksi hyväksyit sen. Hyväksy hyväksyttävää käyttöä koskeva käytäntö ennen kuin jatkat.</string>
+    <string name="acceptableUsePolicyTitle">Hyväksyttävää käyttöä koskeva käytäntö</string>
+    <string name="acceptableUsePolicyButton">Hyväksyttävää käyttöä koskeva käytäntö</string>
+    <string name="acceptableUsePolicyAgree">Sinun täytyy hyväksyä hyväksyttävää käyttöä koskeva käytäntö</string>
+    <string name="acceptableUsePolicySubmit">Lähetä</string>
+    <string name="acceptFail">Ehtojen hyväksynnän lähettäminen epäonnistui.</string>
 </resources>

@@ -17,12 +17,9 @@
 package com.instructure.student.ui.pages
 
 import android.widget.Button
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.AssignmentApiModel
@@ -30,7 +27,7 @@ import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.Matchers
@@ -42,6 +39,10 @@ class TodoPage: BasePage(R.id.todoPage) {
 
     fun assertAssignmentDisplayed(assignment: AssignmentApiModel) {
         assertTextDisplayedInRecyclerView(assignment.name)
+    }
+
+    fun assertAssignmentNotDisplayed(assignment: AssignmentApiModel) {
+        onView(withText(assignment.name)).check(doesNotExist())
     }
 
     fun assertAssignmentDisplayed(assignment: Assignment) {
@@ -74,16 +75,24 @@ class TodoPage: BasePage(R.id.todoPage) {
         onView(withText(quiz.title!!)).click()
     }
 
-
-
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
-        onView(containsTextCaseInsensitive("Favorited Courses")).click()
-        onView(allOf(isAssignableFrom(Button::class.java), containsTextCaseInsensitive("OK"))).click()
+        onView(withText(R.string.favoritedCoursesLabel)).click()
+        onView(allOf(isAssignableFrom(Button::class.java), withText(R.string.ok))).click()
     }
 
     fun clearFilter() {
         onView(withId(R.id.clearFilterTextView)).click()
+    }
+
+    fun assertEmptyView() {
+        onView(withId(R.id.emptyView) + withAncestor(withId(R.id.todoPage))).assertDisplayed()
+        onView(withText(R.string.noTodos) + withId(R.id.title)).assertDisplayed()
+    }
+
+    fun assertFavoritedCoursesFilterHeader() {
+        onView(allOf(withId(R.id.todoFilterTitle), withText(R.string.favoritedCoursesLabel), withParent(R.id.todoFilterContainer))).assertDisplayed()
+        onView(allOf(withId(R.id.clearFilterTextView), withText(R.string.clearFilter), withParent(R.id.todoFilterContainer))).assertDisplayed()
     }
 
     // Assert that a string is displayed somewhere in the RecyclerView

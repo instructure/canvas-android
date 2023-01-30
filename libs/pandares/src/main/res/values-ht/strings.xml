@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Transfere nan Fichye Mwen</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Soumèt devwa</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Chwazi yon kou</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Chwazi yon kou, kou ki seleksyone a se: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Chwazi yon devwa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Chwazi yon devwa, devwa ki seleksyone a se: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Anile Transfè?</string>
     <string name="cancelFileUploadMessage">Sa ap anile transfè w la.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Kreye pa Afichaj Elèv</string>
     <string name="discussionErrorToast">Yon erè pase. Sijè a kapab pa disponib ankò.</string>
     <string name="cameraPermissionPermanentlyDenied">Pèmisyon kamera a te refize an pèmanans. Ale nan paramèt app la pou otorize li.</string>
+    <string name="unpublish_assignment_error">Yo paka depibliye yon devwa si elèv yo fè soumisyon.</string>
+    <string name="subscribeToCalendar">Abòne nan fil RSS Kalandriye</string>
+    <string name="subscribeToCalendarMessage">Ou ka senkwonize kalandriye Canvas ou ak kont Google Calendar ou depi w klike sou bouton Enskri ki nan dyalòg sa a. Apre sa, ou prale sou app Google Calendar ki sou aparèy ou a epi aktive senkwonizasyon an nan paramèt yo pou nouvo kalandriye a.</string>
+    <string name="subscribeButton">Enskri</string>
+    <string name="switchToLightMode">Pase a Mòd Klè</string>
+    <string name="switchToDarkMode">Pase a Mòd Sonm</string>
+    <string name="acceptableUsePolicyDescription">Swa ou se yon nouvo itilizatè oswa Politik Itilizasyon Akseptab la chanje aprè dènye fwa w te aksepte li a. Aksepte politik Itilizasyon Akseptab la anvan w kontinye.</string>
+    <string name="acceptableUsePolicyTitle">Politik Itilizasyon Akseptab</string>
+    <string name="acceptableUsePolicyButton">Politik Itilizasyon Akseptab</string>
+    <string name="acceptableUsePolicyAgree">Mwen dakò ak Politik Itilizasyon Akseptab la.</string>
+    <string name="acceptableUsePolicySubmit">Soumèt</string>
+    <string name="acceptFail">Echèk pou voye kondisyon akseptasyon yo.</string>
 </resources>
