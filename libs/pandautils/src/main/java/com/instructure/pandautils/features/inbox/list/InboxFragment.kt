@@ -29,10 +29,12 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -42,6 +44,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
+import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -66,6 +69,8 @@ private const val ANIM_DURATION = 150L
 class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: InboxViewModel by viewModels()
+
+    private val sharedViewModel: InboxSharedViewModel by activityViewModels()
 
     @Inject
     lateinit var inboxRouter: InboxRouter
@@ -110,6 +115,15 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         viewModel.data.observe(viewLifecycleOwner) { data ->
             setMenuItems(data.editMenuItems)
             animateToolbars(data.selectionMode)
+        }
+
+        sharedViewModel.events.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                when (it) {
+                    InboxFilterAction.FilterCleared -> viewModel.allCoursesSelected()
+                    is InboxFilterAction.FilterSelected -> viewModel.canvasContextFilterSelected(it.id)
+                }
+            }
         }
     }
 
@@ -191,6 +205,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage()
             InboxAction.FailedToLoadNextPage -> Snackbar.make(requireView(), R.string.failedToLoadNextPage, Snackbar.LENGTH_LONG).show()
             InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
+            is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
         }
     }
 
@@ -240,6 +255,11 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         }
 
         popup.show()
+    }
+
+    private fun openContextFilterSelector(canvasContexts: List<CanvasContext>) {
+        val contextFilterDialog = ContextFilterFragment.newInstance(canvasContexts)
+        contextFilterDialog.show(requireActivity().supportFragmentManager, ContextFilterFragment::javaClass.name)
     }
 
     override fun onAttach(context: Context) {

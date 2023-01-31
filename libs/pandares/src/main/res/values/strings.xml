@@ -1361,4 +1361,6 @@
     <string name="deleteConfirmation">These conversations will be deleted from the Inbox on all your devices. This action cannot be undone.</string>
     <string name="failedToLoadNextPage">Failed to load next page. Check your internet connection.</string>
     <string name="inboxScopeInbox">Inbox</string>
+    <string name="inboxContextSelectorTitle">Select Course or Group</string>
+    <string name="inboxClearFilter">Clear</string>
 </resources>

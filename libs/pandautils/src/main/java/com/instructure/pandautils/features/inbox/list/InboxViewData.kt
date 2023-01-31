@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.inbox.list
 
 import android.view.View
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 
 data class InboxViewData(
@@ -54,4 +55,5 @@ sealed class InboxAction {
     object CreateNewMessage : InboxAction()
     object FailedToLoadNextPage : InboxAction()
     object UpdateUnreadCount : InboxAction()
+    data class OpenContextFilterSelector(val canvasContexts: List<CanvasContext>) : InboxAction()
 }

@@ -392,32 +392,23 @@ class InboxViewModel @Inject constructor(
         _events.postValue(Event(InboxAction.CreateNewMessage))
     }
 
-    // TODO Temporary until design is ready
-    var courseFilterIndex = -1
-
     fun coursesFilterClicked() {
-        courseFilterIndex++
-
-        if (courseFilterIndex >= canvasContexts.size) {
-            courseFilterIndex = -1
-        }
-
-        if (courseFilterIndex == -1) {
-            allCoursesSelected()
-        } else {
-            canvasContextFilterSelected(canvasContexts[courseFilterIndex])
-        }
+        _events.postValue(Event(InboxAction.OpenContextFilterSelector(canvasContexts)))
     }
 
-    fun canvasContextFilterSelected(canvasContext: CanvasContext) {
-        contextFilter = canvasContext
-        _data.value = _data.value?.copy(filterText = canvasContext.name ?: "")
+    fun canvasContextFilterSelected(id: Long) {
+        if (id == contextFilter?.id) return
+
+        contextFilter = canvasContexts.find { it.id == id }
+        _data.value = _data.value?.copy(filterText = contextFilter?.name ?: "")
         _state.postValue(ViewState.Loading)
         _itemViewModels.postValue(emptyList())
         fetchData()
     }
 
     fun allCoursesSelected() {
+        if (contextFilter == null) return
+
         contextFilter = null
         _data.value = _data.value?.copy(filterText = resources.getString(R.string.allCourses))
         _state.postValue(ViewState.Loading)
