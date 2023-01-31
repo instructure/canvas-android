@@ -46,7 +46,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val createMessageButton by OnViewWithId(R.id.addMessage)
     private val scopeButton by OnViewWithId(R.id.scopeFilter)
-    private val filterButton by OnViewWithId(R.id.inboxFilter)
+    private val filterButton by OnViewWithId(R.id.courseFilter)
     private val inboxRecyclerView by WaitForViewWithId(R.id.inboxRecyclerView)
 
     fun assertConversationDisplayed(conversation: ConversationApiModel) {
