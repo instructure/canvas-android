@@ -93,7 +93,7 @@ class PeopleE2ETest : StudentTest() {
         ViewUtils.pressBackButton(3)
 
         Log.d(STEP_TAG,"Sign out with ${student1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
         tokenLogin(student2)

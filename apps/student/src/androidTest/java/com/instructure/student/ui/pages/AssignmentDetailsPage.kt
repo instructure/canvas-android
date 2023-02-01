@@ -94,7 +94,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun scrollToAssignmentDescription() {
         Thread.sleep(3000)
-        waitForMatcherWithSleeps(withId(R.id.contentWebView), waitMs = 30000, sleepMs = 1000).scrollTo()
+        waitForMatcherWithSleeps(withId(R.id.contentWebView), timeout = 30000, pollInterval = 1000).scrollTo()
     }
 
     fun addBookmark(bookmarkName: String) {

@@ -20,7 +20,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.net.Uri
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -110,9 +109,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     }
 
     private fun bindViews() {
-        // Only show the what's new text if the app supports it
-        changesLayout.visibility = if (appChangesLink() != null) View.VISIBLE else View.GONE
-
         canvasNetwork.onClick {
             if (APIHelper.hasNetworkConnection()) {
                 val intent = beginCanvasNetworkFlow(URL_CANVAS_NETWORK)
@@ -122,15 +118,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                 NoInternetConnectionDialog.show(supportFragmentManager)
             }
         }
-
-        whatsNew.onClick {
-            val i = Intent(Intent.ACTION_VIEW)
-            i.data = Uri.parse(appChangesLink())
-            startActivity(i)
-        }
-
-        helpButton.setHidden(true) // hiding the help button until we make mobile login better
-        helpButton.onClickPopupMenu(getString(R.string.requestLoginHelp) to { requestLoginHelp() })
 
         if(loginWithQRCodeEnabled()) {
             qrLogin.setVisible()
@@ -203,10 +190,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                     }
                 })
         previousLoginWrapper.visibility = if (previousUsers.size > 0) View.VISIBLE else View.GONE
-        // Don't show the new changes view if there are previous users, it will clutter the view
-        if (appChangesLink() != null) {
-            changesLayout.visibility = if (previousUsers.size > 0) View.GONE else View.VISIBLE
-        }
 
     }
 

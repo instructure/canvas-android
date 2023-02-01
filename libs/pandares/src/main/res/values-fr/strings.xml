@@ -1127,8 +1127,8 @@
     <string name="noConferencesMessage">Il n’y a aucune conférence à afficher pour le moment</string>
     <string name="noConferenceDescription">Il n\'y a aucune description pour cette conférence</string>
     <string name="conferenceListError">Une erreur est survenue lors du chargement de vos conférences</string>
-    <string name="conferenceConcludedDateAtTime">Terminé le %s à %s</string>
-    <string name="conferenceStartedDateAtTime">A démarré le %s à %s</string>
+    <string name="conferenceConcludedDateAtTime">Terminé le %1$s à %2$s</string>
+    <string name="conferenceStartedDateAtTime">A démarré le %1$s à %2$s</string>
     <string name="notStarted">Non commencé</string>
     <string name="inProgress">En cours</string>
     <string name="join">Rejoindre</string>
@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Envoi vers Mes Fichiers</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Soumettre le travail</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choisir un cours</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choisissez un cours, le cours sélectionné est : %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choisir un travail</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choisissez un travail, le travail sélectionné est : %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Annuler l’envoi ?</string>
     <string name="cancelFileUploadMessage">Cette action annulera votre envoi.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Créé par Student View</string>
     <string name="discussionErrorToast">Une erreur est survenue. Le sujet n’est peut-être plus disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">L\'autorisation d\'accès à l’appareil photo a été refusée de manière permanente. Rendez-vous dans les paramètres d\'application pour l\'autoriser.</string>
+    <string name="unpublish_assignment_error">Impossible de dépublier un travail si des élèves ont déjà envoyé leurs soumissions.</string>
+    <string name="subscribeToCalendar">S\'abonner au fil RSS du calendrier</string>
+    <string name="subscribeToCalendarMessage">Vous pouvez synchroniser votre calendrier Canvas avec votre compte Google Calendar en cliquant sur le bouton S\'abonner (Subscribe) dans cette boîte de dialogue. Puis, vous devrez vous rendre dans l’application Google Calendar de votre appareil et activer la synchronisation dans les paramètres du nouveau calendrier.</string>
+    <string name="subscribeButton">S’inscrire</string>
+    <string name="switchToLightMode">Passer en mode clair</string>
+    <string name="switchToDarkMode">Passer en mode sombre</string>
+    <string name="acceptableUsePolicyDescription">Vous êtes un nouvel utilisateur, ou bien le Règlement d\'utilisation acceptable a été modifié depuis la dernière fois que vous l\'avez approuvé. Veuillez accepter le Règlement d\'utilisation acceptable avant de continuer</string>
+    <string name="acceptableUsePolicyTitle">Règlement d\'utilisation acceptable</string>
+    <string name="acceptableUsePolicyButton">Règlement d\'utilisation acceptable</string>
+    <string name="acceptableUsePolicyAgree">J\'accepte le Règlement d\'utilisation acceptable</string>
+    <string name="acceptableUsePolicySubmit">Soumettre</string>
+    <string name="acceptFail">Échec de l’envoi de l’acceptation des conditions</string>
 </resources>

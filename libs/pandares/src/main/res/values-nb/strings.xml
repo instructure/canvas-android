@@ -1303,7 +1303,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Last opp til Mine filer</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lever oppgave</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Velg et emne</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Velg et emne, valgt emne er: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Velg en oppgave</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Velg en oppgave, valgt oppgave er: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Avbryt opplasting?</string>
     <string name="cancelFileUploadMessage">Dette vil avbryte opplastingen din.</string>
@@ -1318,4 +1320,16 @@
     <string name="createdByStudentView">Laget av Studentvisning</string>
     <string name="discussionErrorToast">Det oppsto en feil. Temaet er kanskje ikke tilgjengelig lenger.</string>
     <string name="cameraPermissionPermanentlyDenied">Kameratillatelse ble midlertidig nektet. Gå til appinnstillinger for å tillate det.</string>
+    <string name="unpublish_assignment_error">Kan ikke fjerne publisering av oppgave hvis det finnes studentinnleveringer.</string>
+    <string name="subscribeToCalendar">Abonnere på kalenderstrømmen</string>
+    <string name="subscribeToCalendarMessage">Du kan synkronisere din Canvas-kalender til Google Kalender-kontoen ved å klikke på Abonner-knappen i denne dialogen. Deretter må du gå til Google Kalender-appen på enheten din og aktivere synkronisering i innstillingene for den nye kalenderen.</string>
+    <string name="subscribeButton">Abonner</string>
+    <string name="switchToLightMode">Bytt til Lys modus</string>
+    <string name="switchToDarkMode">Bytt til Mørk modus</string>
+    <string name="acceptableUsePolicyDescription">Enten du er ny bruker eller retningslinjer for akseptabel bruk er endret siden sist du godkjente dem. Du må godta retningslinjer for akseptabel bruk før du fortsetter.</string>
+    <string name="acceptableUsePolicyTitle">Retningslinjer for retningslinjer for akseptabel bruk bruk</string>
+    <string name="acceptableUsePolicyButton">Retningslinjer for retningslinjer for akseptabel bruk bruk</string>
+    <string name="acceptableUsePolicyAgree">Jeg godtar retningslinjer for akseptabel bruk</string>
+    <string name="acceptableUsePolicySubmit">Send inn</string>
+    <string name="acceptFail">Kunne ikke sende inn aksept av retningslinjer.</string>
 </resources>

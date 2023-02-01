@@ -25,7 +25,6 @@ import androidx.test.espresso.intent.ActivityResultFunction
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasFlag
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.Stub
@@ -236,7 +235,7 @@ class UserFilesInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
         dashboardPage.waitForRender()
 
-        dashboardPage.gotoGlobalFiles()
+        leftSideNavigationDrawerPage.clickFilesMenu()
         fileListPage.clickAddButton()
         fileListPage.clickUploadFileButton()
 

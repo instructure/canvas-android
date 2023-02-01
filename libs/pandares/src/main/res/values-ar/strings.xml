@@ -1365,7 +1365,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">التحميل إلى ملفاتي</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">إرسال المهمة</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">اختر مساقًا</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">اختر مساقًا، المساق المحدد هو: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">اختر مهمة</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">اختر مهمة، المهمة المحددة هي: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s، %2$s</string>
     <string name="cancelFileUploadTitle">هل تريد إلغاء التحميل؟</string>
     <string name="cancelFileUploadMessage">سيؤدي هذا إلى إلغاء تحميلك.</string>
@@ -1380,4 +1382,16 @@
     <string name="createdByStudentView">تم الإنشاء في طريقة عرض الطالب</string>
     <string name="discussionErrorToast">حدث خطأ ما. ربما لم يعد الموضوع متاحًا.</string>
     <string name="cameraPermissionPermanentlyDenied">تم رفض إذن الكاميرا بشكل دائم. انتقل إلى إعدادات التطبيق للسماح به.</string>
+    <string name="unpublish_assignment_error">لا يمكن إلغاء نشر المهمة في حالة وجود إرسالات طلاب.</string>
+    <string name="subscribeToCalendar">الاشتراك في تغذية التقويم</string>
+    <string name="subscribeToCalendarMessage">يمكنك مزامنة تقويم Canvas إلى حسابك على Google Calendar بالنقر فوق زر اشتراك في مربع الحوار هذا. ستحتاج حينها للانتقال إلى تطبيق Google Calendar على جهازك وتمكين المزامنة في الإعدادات للتقويم الجديد.</string>
+    <string name="subscribeButton">اشتراك</string>
+    <string name="switchToLightMode">التبديل إلى الوضع الفاتح</string>
+    <string name="switchToDarkMode">التبديل إلى الوضع الداكن</string>
+    <string name="acceptableUsePolicyDescription">إما أنك مستخدم جديد أو أن سياسة الاستخدام المقبول قد تغيرت منذ أن وافقت عليها آخر مرة. الرجاء الموافقة على سياسة الاستخدام المقبول قبل المتابعة.</string>
+    <string name="acceptableUsePolicyTitle">سياسة الاستخدام المقبول</string>
+    <string name="acceptableUsePolicyButton">سياسة الاستخدام المقبول</string>
+    <string name="acceptableUsePolicyAgree">أوافق على سياسة الاستخدام المقبول</string>
+    <string name="acceptableUsePolicySubmit">إرسال</string>
+    <string name="acceptFail">تعذر إرسال قبول الشروط.</string>
 </resources>

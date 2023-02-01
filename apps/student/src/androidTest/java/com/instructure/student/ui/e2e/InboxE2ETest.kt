@@ -122,7 +122,7 @@ class InboxE2ETest: StudentTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG,"Log out with ${student1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${student2.name}, login id: ${student2.loginId}.")
         tokenLogin(student2)

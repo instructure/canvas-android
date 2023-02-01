@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Cargar a Mis archivos</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Entregar tarea</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Escoger un curso</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Seleccione un curso, el curso seleccionado es: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Elegir una tarea</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Seleccione una tarea, la tarea seleccionada es: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">¿Quiere cancelar la carga?</string>
     <string name="cancelFileUploadMessage">Esto cancelará su carga.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Creado por Student View</string>
     <string name="discussionErrorToast">Ha ocurrido un error. Es posible que el tema ya no esté disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">Se denegó permanentemente el permiso a la cámara. Diríjase a la configuración de la aplicación para habilitarlo.</string>
+    <string name="unpublish_assignment_error">No se puede cancelar la publicación de una tarea si hay presentaciones de estudiantes.</string>
+    <string name="subscribeToCalendar">Suscribirse al feed del calendario</string>
+    <string name="subscribeToCalendarMessage">Puede sincronizar su calendario de Canvas con su cuenta de Google Calendar haciendo clic en el botón Suscribirse (Subscribe) en este cuadro de diálogo. Luego, deberá ingresar a la aplicación Google Calendar en su dispositivo y habilitar la sincronización en la configuración del nuevo calendario.</string>
+    <string name="subscribeButton">Suscribirse</string>
+    <string name="switchToLightMode">Cambiar a modo claro</string>
+    <string name="switchToDarkMode">Cambiar a modo oscuro</string>
+    <string name="acceptableUsePolicyDescription">Usted es un usuario nuevo o la Política de uso aceptable cambió desde la última vez que la aceptó. Acepte la Política de uso aceptable antes de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política de uso aceptable</string>
+    <string name="acceptableUsePolicyButton">Política de uso aceptable</string>
+    <string name="acceptableUsePolicyAgree">Acepto la Política de uso aceptable.</string>
+    <string name="acceptableUsePolicySubmit">Entregar</string>
+    <string name="acceptFail">No se pudo entregar la aceptación de los términos.</string>
 </resources>
