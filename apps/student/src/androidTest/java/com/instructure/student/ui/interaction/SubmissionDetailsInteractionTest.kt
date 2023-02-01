@@ -51,12 +51,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
                 pointsPossible = 10
         )
 
-        data.addSubmissionForAssignment(
-            assignmentId = assignment.id,
-            userId = data.users.values.first().id,
-            type = "online_text_entry"
-        )
-
         // Create our rubric criterion and keep a reference to it
         val rubricCriterion = RubricCriterion(
                 id = data.newItemId().toString(),

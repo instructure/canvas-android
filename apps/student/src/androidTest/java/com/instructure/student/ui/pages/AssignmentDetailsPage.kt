@@ -60,8 +60,8 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun verifyAssignmentLocked() {
-        onView(withId(R.id.lockMessageTextView)).assertDisplayed()
-        onView(withId(R.id.lockMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
+        onView(withId(R.id.lockedMessageTextView)).assertDisplayed()
+        onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
     }
 
     fun refresh() {
