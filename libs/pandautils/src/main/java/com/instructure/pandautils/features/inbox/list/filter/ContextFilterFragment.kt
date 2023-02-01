@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.list.filter
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -79,6 +80,11 @@ class ContextFilterFragment : BottomSheetDialogFragment() {
                 dismiss()
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        sharedViewModel.filterDialogDismissed() // We need to react to dialog dismiss to set the status bar color correctly
     }
 
     private fun setFullScreen() {

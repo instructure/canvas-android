@@ -34,9 +34,14 @@ class InboxSharedViewModel : ViewModel() {
     fun clearFilter() {
         _events.value = Event(InboxFilterAction.FilterCleared)
     }
+
+    fun filterDialogDismissed() {
+        _events.value = Event(InboxFilterAction.FilterDialogDismissed)
+    }
 }
 
 sealed class InboxFilterAction {
     data class FilterSelected(val id: Long) : InboxFilterAction()
     object FilterCleared : InboxFilterAction()
+    object FilterDialogDismissed : InboxFilterAction()
 }

@@ -91,18 +91,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.editToolbar.setupAsBackButton(this)
-        binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
-            when (it.itemId) {
-                R.id.inboxStarSelected -> viewModel.starSelected()
-                R.id.inboxUnstarSelected -> viewModel.unstarSelected()
-                R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
-                R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
-                R.id.inboxDeleteSelected -> deleteSelected()
-                R.id.inboxArchiveSelected -> viewModel.archiveSelected()
-                R.id.inboxUnarchiveSelected -> viewModel.unarchiveSelected()
-            }
-        }
+        setUpEditToolbar()
         applyTheme()
         setUpScrollingBehavior()
 
@@ -119,10 +108,22 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
         sharedViewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
-                when (it) {
-                    InboxFilterAction.FilterCleared -> viewModel.allCoursesSelected()
-                    is InboxFilterAction.FilterSelected -> viewModel.canvasContextFilterSelected(it.id)
-                }
+                handleSharedAction(it)
+            }
+        }
+    }
+
+    private fun setUpEditToolbar() {
+        binding.editToolbar.setupAsBackButton(this)
+        binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
+            when (it.itemId) {
+                R.id.inboxStarSelected -> viewModel.starSelected()
+                R.id.inboxUnstarSelected -> viewModel.unstarSelected()
+                R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
+                R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
+                R.id.inboxDeleteSelected -> deleteSelected()
+                R.id.inboxArchiveSelected -> viewModel.archiveSelected()
+                R.id.inboxUnarchiveSelected -> viewModel.unarchiveSelected()
             }
         }
     }
@@ -260,6 +261,14 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     private fun openContextFilterSelector(canvasContexts: List<CanvasContext>) {
         val contextFilterDialog = ContextFilterFragment.newInstance(canvasContexts)
         contextFilterDialog.show(requireActivity().supportFragmentManager, ContextFilterFragment::javaClass.name)
+    }
+
+    private fun handleSharedAction(it: InboxFilterAction) {
+        when (it) {
+            InboxFilterAction.FilterCleared -> viewModel.allCoursesSelected()
+            is InboxFilterAction.FilterSelected -> viewModel.canvasContextFilterSelected(it.id)
+            InboxFilterAction.FilterDialogDismissed -> ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+        }
     }
 
     override fun onAttach(context: Context) {
