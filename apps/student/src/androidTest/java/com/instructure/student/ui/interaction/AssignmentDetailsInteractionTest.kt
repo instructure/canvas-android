@@ -18,6 +18,7 @@ package com.instructure.student.ui.interaction
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.panda_annotations.*
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
@@ -25,6 +26,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.util.*
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {
@@ -60,28 +62,100 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun testSubmissionStatus_NotSubmitted() {
+    fun testSubmissionStatus_Missing() {
         // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
-        val testAssignment = goToAssignmentFromList(false)
+        val data = goToAssignmentFromList()
+        val assignmentList = data.assignments
+        val assignmentWithoutSubmissionEntry = assignmentList.filter { it.value.submission == null && it.value.dueAt != null && !it.value.isSubmitted }
+
+        val missingAssignment = assignmentWithoutSubmissionEntry.entries.first().value
+        assignmentListPage.clickAssignment(missingAssignment)
+        assignmentDetailsPage.assertStatusMissing()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testSubmissionStatus_NotSubmitted() {
+
+        val data = goToAssignmentFromList()
+        val assignmentList = data.assignments
+        val assignmentWithoutSubmissionEntry = assignmentList.filter {it.value.submission == null && it.value.dueAt == null}
+        val assignmentWithoutSubmission = assignmentWithoutSubmissionEntry.entries.first().value
+
+        assignmentListPage.clickAssignment(assignmentWithoutSubmission)
+
         assignmentDetailsPage.assertPageObjects()
-        assignmentDetailsPage.assertAssignmentDetails(testAssignment)
         assignmentDetailsPage.assertStatusNotSubmitted()
+        assignmentDetailsPage.assertDisplaysDate("No Due Date")
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDisplayToolbarTitles() {
+        val data = goToAssignmentFromList()
+        val assignmentList = data.assignments
+        val testAssignment = assignmentList.entries.first().value
+        val course = data.courses.values.first()
+
+        assignmentListPage.clickAssignment(testAssignment)
+
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course!!.name!!)
+
+   }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDisplayBookmarMenu() {
+        val data = goToAssignmentFromList()
+        val assignmentList = data.assignments
+        val testAssignment = assignmentList.entries.first().value
+
+        assignmentListPage.clickAssignment(testAssignment)
+
+        assignmentDetailsPage.openOverflowMenu()
+        assignmentDetailsPage.assertDisplaysAddBookmarkButton()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDisplayDueDate() {
+        val data = goToAssignmentFromList()
+        val calendar = Calendar.getInstance().apply { set(2023, 0, 31, 23, 59, 0) }
+        val expectedDueDate = "January 31, 2023 11:59 PM"
+        val course = data.courses.values.first()
+        val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString())
+        assignmentListPage.clickAssignment(assignmentWithNoDueDate)
+
+        assignmentDetailsPage.assertDisplaysDate(expectedDueDate)
     }
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testNavigating_viewAssignmentDetails() {
         // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
-        val testAssignment = goToAssignmentFromList()
+        val data = goToAssignmentFromList()
+        val assignmentList = data.assignments
+        val assignmentWithSubmissionEntry = assignmentList.filter {it.value.submission != null}
+        val assignmentWithSubmission = assignmentWithSubmissionEntry.entries.first().value
+
+        assignmentListPage.clickAssignment(assignmentWithSubmission)
+
         assignmentDetailsPage.assertPageObjects()
-        assignmentDetailsPage.assertAssignmentDetails(testAssignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignmentWithSubmission)
     }
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testNavigating_viewSubmissionDetails() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
-        goToAssignmentFromList()
+        val data = goToAssignmentFromList()
+        val assignmentList = data.assignments
+        val assignmentWithSubmissionEntry = assignmentList.filter {it.value.submission != null}
+        val assignmentWithSubmission = assignmentWithSubmissionEntry.entries.first().value
+
+        assignmentListPage.clickAssignment(assignmentWithSubmission)
+
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.assertPageObjects()
     }
@@ -118,7 +192,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         */
     }
 
-    private fun goToAssignmentFromList(withSubmission: Boolean = true): Assignment {
+    private fun goToAssignmentFromList(): MockCanvas {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         val data = MockCanvas.init(
             studentCount = 1,
@@ -139,12 +213,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         assertNotNull("Expected at least one assignment with a submission", assignmentWithSubmission)
         assertNotNull("Expected at least one assignment without a submission", assignmentWithoutSubmission)
 
-        return if(withSubmission) {
-            assignmentListPage.clickAssignment(assignmentWithSubmission!!)
-            assignmentWithSubmission
-        } else {
-            assignmentListPage.clickAssignment(assignmentWithoutSubmission!!)
-            assignmentWithoutSubmission
-        }
+        return data
+
     }
 }
