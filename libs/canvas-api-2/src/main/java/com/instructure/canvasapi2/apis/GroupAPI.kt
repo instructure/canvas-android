@@ -43,11 +43,11 @@ object GroupAPI {
         @GET("users/self/favorites/groups")
         fun getFirstPageFavoriteGroups(): Call<List<Group>>
 
-        @GET("users/self/favorites/groups")
-        suspend fun getFirstPageFavoriteGroups(@Tag params: RestParams): DataResult<List<Group>>
-
         @GET("users/self/groups?include[]=favorites&include[]=can_access")
         fun getFirstPageGroups(): Call<List<Group>>
+
+        @GET("users/self/groups?include[]=favorites&include[]=can_access")
+        suspend fun getFirstPageGroups(@Tag params: RestParams): DataResult<List<Group>>
 
         @GET
         fun getNextPageGroups(@Url nextUrl: String): Call<List<Group>>

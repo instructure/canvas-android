@@ -71,7 +71,7 @@ class InboxRepository(
 
         if (coursesResult.isFail) return coursesResult
 
-        val groupsResult = groupsApi.getFirstPageFavoriteGroups(params)
+        val groupsResult = groupsApi.getFirstPageGroups(params)
             .depaginate { nextUrl -> groupsApi.getNextPageGroups(nextUrl, params) }
 
         val courses = (coursesResult as DataResult.Success).data
