@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Ladda upp till Mina filer</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lämna in uppgift</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Välj en kurs</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Välj en kurs, vald kurs är: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Välj en uppgift</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Välj en uppgift, vald uppgift är: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Vill du avbryta uppladdningen?</string>
     <string name="cancelFileUploadMessage">Detta avbryter din uppladdning.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Skapad av Elevens Vy</string>
     <string name="discussionErrorToast">Ett fel uppstod. Det här ämnet är kanske inte längre tillgängligt.</string>
     <string name="cameraPermissionPermanentlyDenied">Kameraåtkomsten nekades permanent. Gå till appinställningarna för att tillåta den.</string>
+    <string name="unpublish_assignment_error">Det går inte att avpublicera uppgiften om elevinlämningar föreligger.</string>
+    <string name="subscribeToCalendar">Prenumerera på kalenderflöde</string>
+    <string name="subscribeToCalendarMessage">Du kan synkronisera din Canvas-kalender med ditt Google-kalenderkonto genom att klicka på knappen Prenumerera i den här dialogrutan. Du måste sedan gå till din Google-kalenderapp på din enhet och aktivera synkronisering i inställningarna för den nya kalendern.</string>
+    <string name="subscribeButton">Prenumerera</string>
+    <string name="switchToLightMode">Växla till ljust läge</string>
+    <string name="switchToDarkMode">Växla till mörkt läge</string>
+    <string name="acceptableUsePolicyDescription">Antingen är du en ny användare eller så har policyn för godkänd användning ändrats sedan du senast godkände den. Godkänn policyn för godkänd användning innan du fortsätter.</string>
+    <string name="acceptableUsePolicyTitle">Acceptable Use Policy (Policy för godkänd användning)</string>
+    <string name="acceptableUsePolicyButton">Acceptable Use Policy (Policy för godkänd användning)</string>
+    <string name="acceptableUsePolicyAgree">Jag godkänner policyn för godkänd användning.</string>
+    <string name="acceptableUsePolicySubmit">Spara</string>
+    <string name="acceptFail">Det gick inte att lämna in godkännande av terminer</string>
 </resources>

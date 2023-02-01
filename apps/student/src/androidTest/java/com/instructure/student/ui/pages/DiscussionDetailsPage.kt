@@ -77,7 +77,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 
     fun scrollToRepliesWebview() {
-        waitForMatcherWithSleeps(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper), waitMs = 20000)
+        waitForMatcherWithSleeps(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper), timeout = 20000)
         onView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper)).scrollTo()
     }
 

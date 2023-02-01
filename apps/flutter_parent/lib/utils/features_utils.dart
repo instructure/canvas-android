@@ -39,7 +39,7 @@ class FeaturesUtils {
 
   static Future<void> performLogout() async {
     if (_prefs != null) {
-      await _prefs.clear();
+      await _prefs.remove(KEY_SEND_USAGE_METRICS);
     }
   }
 }

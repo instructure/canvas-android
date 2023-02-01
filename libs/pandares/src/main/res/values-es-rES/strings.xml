@@ -233,7 +233,7 @@
     <string name="closed_discussion">No admite comentarios</string>
     <string name="discussionUploadDialog">Carga de foro de discusión</string>
     <string name="totalScore">Total:</string>
-    <string name="noGradeText">No procede</string>
+    <string name="noGradeText">N/A</string>
     <string name="checkBoxFinalGradeOption">Basarse en actividades evaluadas</string>
     <string name="checkBoxWhatIfGradeOption">Mostrar la puntuación hipotética</string>
     <string name="whatIfDialogText">Puntuación hipotética</string>
@@ -1304,7 +1304,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Cargando a archivos</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Entregar actividad</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Selecciona una asignatura</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Elige una asignatura, la asignatura seleccionada es: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Elegir una actividad</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Elige una actividad, la actividad seleccionada es: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">¿Cancelar carga?</string>
     <string name="cancelFileUploadMessage">Esto cancelará tu carga.</string>
@@ -1319,4 +1321,16 @@
     <string name="createdByStudentView">Creado por la vista de estudiante</string>
     <string name="discussionErrorToast">Ha habido un error. El tema podría no estar ya disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">El permiso de la cámara se rechazó para siempre. Pasa por ajustes para activarlo.</string>
+    <string name="unpublish_assignment_error">No se puede cancelar la actividad si hay entregas de estudiantes.</string>
+    <string name="subscribeToCalendar">Suscribirse a la actividad del calendario</string>
+    <string name="subscribeToCalendarMessage">Puedes sincronizar tu calendario de Canvas con tu cuenta Google Calendar haciendo clic en el botón de suscribirse en este cuadro de diálogo. Luego, tendrás que ir a la aplicación de Google Calendar en tu dispositivo y habilitar la sincronización en la configuración para el nuevo calendario.</string>
+    <string name="subscribeButton">Suscribirse</string>
+    <string name="switchToLightMode">Cambiar al Modo Claro</string>
+    <string name="switchToDarkMode">Cambiar al Modo Oscuro</string>
+    <string name="acceptableUsePolicyDescription">Es un usuario nuevo o la Política de uso aceptable ha cambiado desde la última vez que la aceptó. Aceptar la Política de uso aceptable antes de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política de uso aceptable</string>
+    <string name="acceptableUsePolicyButton">Política de uso aceptable</string>
+    <string name="acceptableUsePolicyAgree">Acepto la política de uso aceptable.</string>
+    <string name="acceptableUsePolicySubmit">Entregar</string>
+    <string name="acceptFail">Ha habido un error al entregar los términos de aceptación.</string>
 </resources>

@@ -1334,7 +1334,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Prześlij do Moich plików</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Prześlij zadanie</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Wybierz kurs</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Wybierz kurs, wybrany kurs to: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Wybierz zadanie</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Wybierz zadanie, wybrane zadanie to: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Anulować przesyłanie?</string>
     <string name="cancelFileUploadMessage">Spowoduje to anulowanie przesyłania.</string>
@@ -1349,4 +1351,16 @@
     <string name="createdByStudentView">Widok Utworzone przez uczestnika</string>
     <string name="discussionErrorToast">Wystąpił błąd. Temat może już nie być dostępny.</string>
     <string name="cameraPermissionPermanentlyDenied">Nastąpiła trwała odmowa uprawnień kamery. Przejdź do ustawień aplikacji, aby to zmienić.</string>
+    <string name="unpublish_assignment_error">Nie można cofnąć publikacji, jeśli zawiera przesyłki uczestników.</string>
+    <string name="subscribeToCalendar">Subskrybuj kanał kalendarza</string>
+    <string name="subscribeToCalendarMessage">Można zsynchronizować kalendarz Canvas z kontem Kalendarza Google, klikając przycisk Subskrybuj w tym oknie dialogowym. Następnie należy przejść do aplikacji Kalendarz Google na urządzeniu i włączyć synchronizację w ustawieniach dla nowego kalendarza.</string>
+    <string name="subscribeButton">Subskrybuj</string>
+    <string name="switchToLightMode">Przełącz na tryb jasny</string>
+    <string name="switchToDarkMode">Przełącz na tryb ciemny</string>
+    <string name="acceptableUsePolicyDescription">Albo jesteś nowym użytkownikiem, albo Zasady dozwolonego użytku uległy zmianie od momentu, gdy wyraziłeś na nie zgodę. Zaakceptuj Zasady dozwolonego użytku, aby kontynuować.</string>
+    <string name="acceptableUsePolicyTitle">Zasady dozwolonego użytku</string>
+    <string name="acceptableUsePolicyButton">Zasady dozwolonego użytku</string>
+    <string name="acceptableUsePolicyAgree">Wyrażam zgodę na Zasady dozwolonego użytku.</string>
+    <string name="acceptableUsePolicySubmit">Prześlij</string>
+    <string name="acceptFail">Nie udało się przesłać akceptacji zasad.</string>
 </resources>
