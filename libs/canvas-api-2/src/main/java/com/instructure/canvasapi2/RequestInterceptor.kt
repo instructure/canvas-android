@@ -88,8 +88,7 @@ class RequestInterceptor : Interceptor {
         }
 
         if (params.usePerPageQueryParam) {
-            // TODO For testing purposes, we won't need this
-            val url = request.url.newBuilder().addQueryParameter("per_page", Integer.toString(params.perPageCount)).build()
+            val url = request.url.newBuilder().addQueryParameter("per_page", Integer.toString(ApiPrefs.perPageCount)).build()
             request = request.newBuilder().url(url).build()
         }
 

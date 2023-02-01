@@ -43,8 +43,7 @@ class InboxRepository(
 ) {
 
     suspend fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, filter: CanvasContext?, nextPageLink: String? = null): DataResult<List<Conversation>> {
-        // TODO Change perPageCount to default at the end, this is only for testing purposes.
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork, perPageCount = 15)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return if (nextPageLink == null) {
             if (filter == null) {
                 getConversationsAllCourses(scope, params)
