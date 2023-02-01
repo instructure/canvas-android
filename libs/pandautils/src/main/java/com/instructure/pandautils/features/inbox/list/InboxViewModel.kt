@@ -18,8 +18,6 @@ package com.instructure.pandautils.features.inbox.list
 
 import android.content.Context
 import android.content.res.Resources
-import android.text.SpannableStringBuilder
-import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,11 +26,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Progress
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.Pronouns
-import com.instructure.canvasapi2.utils.localized
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
@@ -46,9 +40,9 @@ import javax.inject.Inject
 @HiltViewModel
 class InboxViewModel @Inject constructor(
     private val inboxRepository: InboxRepository,
-    private val apiPrefs: ApiPrefs,
     @ApplicationContext private val context: Context,
-    private val resources: Resources
+    private val resources: Resources,
+    private val inboxEntryItemCreator: InboxEntryItemCreator
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -80,7 +74,7 @@ class InboxViewModel @Inject constructor(
 
     val bottomReachedCallback: () -> Unit = {
         viewModelScope.launch {
-            if (_state.value != ViewState.Loading && _state.value != ViewState.LoadingNextPage && nextPageLink != null) {
+            if (_state.value?.isInLoadingState() != true  && nextPageLink != null) {
                 loadNextPage()
             }
         }
@@ -125,11 +119,11 @@ class InboxViewModel @Inject constructor(
                     _state.postValue(ViewState.Success)
                 }
 
-                inboxRepository.getCanvasContexts(forceNetwork).dataOrNull?.let {
+                if (forceNetwork) _events.postValue(Event(InboxAction.UpdateUnreadCount))
+
+                inboxRepository.getCanvasContexts().dataOrNull?.let {
                     canvasContexts = it
                 }
-
-                if (forceNetwork) _events.postValue(Event(InboxAction.UpdateUnreadCount))
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
@@ -144,19 +138,7 @@ class InboxViewModel @Inject constructor(
     }
 
     private fun createItemViewModelFromConversation(conversation: Conversation): InboxEntryItemViewModel {
-        val viewData = InboxEntryViewData(
-            conversation.id,
-            createAvatarData(conversation),
-            createMessageTitle(conversation),
-            conversation.subject ?: "",
-            conversation.lastMessagePreview ?: "",
-            createDateText(conversation),
-            conversation.workflowState == Conversation.WorkflowState.UNREAD,
-            conversation.isStarred,
-            conversation.hasAttachments() || conversation.hasMedia()
-        )
-
-        return InboxEntryItemViewModel(viewData, { starred ->
+        return inboxEntryItemCreator.createInboxEntryItem(conversation, { starred ->
             _events.postValue(Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope)))
         }, { view, selected ->
             _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
@@ -196,34 +178,6 @@ class InboxViewModel @Inject constructor(
         }
 
         return menuItems
-    }
-
-    private fun createAvatarData(conversation: Conversation): AvatarViewData {
-        return AvatarViewData(
-            conversation.avatarUrl ?: "",
-            conversation.participants[0].name ?: "",
-            conversation.participants.size > 2
-        )
-    }
-
-    private fun createDateText(conversation: Conversation): String {
-        val date = conversation.lastAuthoredMessageSent ?: conversation.lastMessageSent
-        return DateHelper.dateToDayMonthYearString(context, date) ?: ""
-    }
-
-    private fun createMessageTitle(conversation: Conversation): String {
-        if (conversation.isMonologue(apiPrefs.user?.id ?: 0)) return resources.getString(R.string.monologue)
-
-        val users = conversation.participants
-
-        return when (users.size) {
-            0 -> ""
-            1, 2 -> users.joinTo(SpannableStringBuilder()) { Pronouns.span(it.name, it.pronouns) }.toString()
-            else -> TextUtils.concat(
-                Pronouns.span(users[0].name, users[0].pronouns),
-                ", +${(users.size - 1).localized}"
-            ).toString()
-        }
     }
 
     private fun getTextForScope(scope: InboxApi.Scope): String {
@@ -269,7 +223,7 @@ class InboxViewModel @Inject constructor(
     }
 
     fun starSelected() {
-        performBatchOperation("star", { ids, progress ->
+        performBatchOperation("star", { ids, _ ->
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
                 it.notifyChange()
@@ -393,24 +347,34 @@ class InboxViewModel @Inject constructor(
     }
 
     fun coursesFilterClicked() {
-        _events.postValue(Event(InboxAction.OpenContextFilterSelector(canvasContexts)))
+        if (canvasContexts.isNullOrEmpty()) {
+            viewModelScope.launch {
+                inboxRepository.getCanvasContexts().dataOrNull?.let {
+                    canvasContexts = it
+                }
+                _events.postValue(Event(InboxAction.OpenContextFilterSelector(canvasContexts)))
+            }
+        } else {
+            _events.postValue(Event(InboxAction.OpenContextFilterSelector(canvasContexts)))
+        }
     }
 
     fun canvasContextFilterSelected(id: Long) {
         if (id == contextFilter?.id) return
 
         contextFilter = canvasContexts.find { it.id == id }
-        _data.value = _data.value?.copy(filterText = contextFilter?.name ?: "")
-        _state.postValue(ViewState.Loading)
-        _itemViewModels.postValue(emptyList())
-        fetchData()
+        filterChanged(contextFilter?.name ?: "")
     }
 
     fun allCoursesSelected() {
         if (contextFilter == null) return
 
         contextFilter = null
-        _data.value = _data.value?.copy(filterText = resources.getString(R.string.allCourses))
+        filterChanged(resources.getString(R.string.allCourses))
+    }
+
+    private fun filterChanged(filterTitle: String) {
+        _data.value = _data.value?.copy(filterText = filterTitle)
         _state.postValue(ViewState.Loading)
         _itemViewModels.postValue(emptyList())
         fetchData()

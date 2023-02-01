@@ -64,8 +64,8 @@ class InboxRepository(
         return inboxApi.getConversationsFiltered(InboxApi.conversationScopeToString(scope), contextId, params)
     }
 
-    suspend fun getCanvasContexts(forceNetwork: Boolean): DataResult<List<CanvasContext>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+    suspend fun getCanvasContexts(): DataResult<List<CanvasContext>> {
+        val params = RestParams(usePerPageQueryParam = true)
 
         val coursesResult = coursesApi.getFirstPageCourses(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }

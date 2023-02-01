@@ -26,4 +26,8 @@ sealed class ViewState {
     object LoadingNextPage : ViewState()
     data class Empty(@StringRes val emptyTitle: Int? = null, @StringRes val emptyMessage: Int? = null, @DrawableRes val emptyImage: Int? = null) : ViewState()
     data class Error(val errorMessage: String = "") : ViewState()
+
+    fun isInLoadingState(): Boolean {
+        return this is Loading || this is Refresh || this is LoadingNextPage
+    }
 }
