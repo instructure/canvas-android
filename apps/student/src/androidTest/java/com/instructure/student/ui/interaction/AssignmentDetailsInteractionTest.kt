@@ -147,7 +147,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testNavigating_viewSubmissionDetails() {
+    fun testNavigating_viewSubmissionDetailsWithSubmission() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         val data = goToAssignmentFromList()
         val assignmentList = data.assignments
@@ -155,6 +155,21 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val assignmentWithSubmission = assignmentWithSubmissionEntry.entries.first().value
 
         assignmentListPage.clickAssignment(assignmentWithSubmission)
+
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.assertPageObjects()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testNavigating_viewSubmissionDetailsWithoutSubmission() {
+        // Test clicking on the Submission and Rubric button to load the Submission Details Page
+        val data = goToAssignmentFromList()
+        val assignmentList = data.assignments
+        val assignmentWithoutSubmissionEntry = assignmentList.filter {it.value.submission == null}
+        val assignmentWithoutSubmission = assignmentWithoutSubmissionEntry.entries.first().value
+
+        assignmentListPage.clickAssignment(assignmentWithoutSubmission)
 
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.assertPageObjects()
