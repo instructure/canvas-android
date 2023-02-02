@@ -62,12 +62,6 @@ class LinkHeadersTest {
     }
 
     private fun generateLinkHeaders(): LinkHeaders {
-        val linkHeaders = LinkHeaders()
-        linkHeaders.prevUrl = "prevUrl"
-        linkHeaders.nextUrl = "nextUrl"
-        linkHeaders.lastUrl = "lastUrl"
-        linkHeaders.firstUrl = "firstUrl"
-
-        return linkHeaders
+        return LinkHeaders("prevUrl", "nextUrl", "lastUrl", "firstUrl")
     }
 }
