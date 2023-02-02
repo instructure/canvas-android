@@ -27,7 +27,11 @@ data class PendingSubmissionCommentWithFileUploadInput(
             date = pendingSubmissionCommentEntity.date
             id = pendingSubmissionCommentEntity.id
             status = CommentSendStatus.valueOf(pendingSubmissionCommentEntity.status)
-            workerId = UUID.fromString(pendingSubmissionCommentEntity.workerId)
+            workerId = if (pendingSubmissionCommentEntity.workerId != null && pendingSubmissionCommentEntity.workerId != "null") {
+                UUID.fromString(pendingSubmissionCommentEntity.workerId)
+            } else {
+                null
+            }
             workerInputData = FileUploadWorkerData(
                 fileUploadInput?.filePaths ?: emptyList(),
                 fileUploadInput?.courseId ?: -1L,

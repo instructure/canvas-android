@@ -408,8 +408,10 @@ class SpeedGraderCommentsPresenter(
 
     private fun subscribePendingWorkers() {
         subscribeJob = weave {
-            val pendingComments = pendingSubmissionCommentDao.findByPageId(mPageId).orEmpty()
-            viewCallback?.subscribePendingWorkers(pendingComments.mapNotNull { UUID.fromString( it.pendingSubmissionCommentEntity.workerId) })
+            val workerIds = pendingSubmissionCommentDao.findByPageId(mPageId).orEmpty()
+                .filter { it.pendingSubmissionCommentEntity.workerId != null && it.pendingSubmissionCommentEntity.workerId != "null" }
+                .mapNotNull { UUID.fromString(it.pendingSubmissionCommentEntity.workerId) }
+            viewCallback?.subscribePendingWorkers(workerIds)
         }
     }
 }
