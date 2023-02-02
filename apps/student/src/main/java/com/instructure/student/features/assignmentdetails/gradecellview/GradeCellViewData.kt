@@ -19,10 +19,8 @@ data class GradeCellViewData(
     val showPointsLabel: Boolean = false,
     val score: String = "",
     val grade: String = "",
-    val gradeContentDescription: String = "",
     val gradeCellContentDescription: String = "",
     val outOf: String = "",
-    val outOfContentDescription: String = "",
     val latePenalty: String = "",
     val finalGrade: String = ""
 ) {
@@ -56,9 +54,24 @@ data class GradeCellViewData(
                 || (submission.submittedAt == null && !submission.isGraded)
                 || assignment.gradingType == Assignment.NOT_GRADED_TYPE
             ) {
-                GradeCellViewData(courseColor, State.EMPTY)
+                GradeCellViewData(
+                    courseColor = courseColor,
+                    state = State.EMPTY,
+                    gradeCellContentDescription = getContentDescriptionText(
+                        resources,
+                        resources.getString(R.string.submissionAndRubric)
+                    )
+                )
             } else if (submission.isSubmitted) {
-                GradeCellViewData(courseColor, State.SUBMITTED)
+                GradeCellViewData(
+                    courseColor = courseColor,
+                    state = State.SUBMITTED,
+                    gradeCellContentDescription = getContentDescriptionText(
+                        resources,
+                        resources.getString(R.string.submissionStatusSuccessTitle),
+                        resources.getString(R.string.submissionStatusSuccessSubtitle)
+                    )
+                )
             } else {
                 val pointsPossibleText = NumberHelper.formatDecimal(assignment.pointsPossible, 2, true)
                 val outOfText = resources.getString(R.string.outOfPointsAbbreviatedFormatted, pointsPossibleText)
@@ -66,25 +79,34 @@ data class GradeCellViewData(
 
                 if (submission.excused) {
                     GradeCellViewData(
-                        courseColor,
+                        courseColor = courseColor,
                         state = State.GRADED,
                         chartPercent = 1f,
                         showCompleteIcon = true,
                         grade = resources.getString(R.string.excused),
                         outOf = outOfText,
-                        outOfContentDescription = outOfContentDescriptionText
+                        gradeCellContentDescription = getContentDescriptionText(
+                            resources,
+                            resources.getString(R.string.gradeExcused),
+                            outOfContentDescriptionText
+                        )
                     )
                 } else if (assignment.gradingType == Assignment.PASS_FAIL_TYPE) {
                     val isComplete = (submission.grade == "complete")
+                    val grade = resources.getString(if (isComplete) R.string.gradeComplete else R.string.gradeIncomplete)
                     GradeCellViewData(
-                        courseColor,
+                        courseColor = courseColor,
                         state = State.GRADED,
                         chartPercent = 1f,
                         showCompleteIcon = isComplete,
                         showIncompleteIcon = !isComplete,
-                        grade = resources.getString(if (isComplete) R.string.gradeComplete else R.string.gradeIncomplete),
+                        grade = grade,
                         outOf = outOfText,
-                        outOfContentDescription = outOfContentDescriptionText
+                        gradeCellContentDescription = getContentDescriptionText(
+                            resources,
+                            grade,
+                            outOfContentDescriptionText
+                        )
                     )
                 } else {
                     val score = NumberHelper.formatDecimal(submission.enteredScore, 2, true)
@@ -122,22 +144,23 @@ data class GradeCellViewData(
                     }
 
                     GradeCellViewData(
-                        courseColor,
+                        courseColor = courseColor,
                         state = State.GRADED,
                         chartPercent = chartPercent,
                         showPointsLabel = true,
                         score = score,
                         grade = grade,
-                        gradeContentDescription = accessibleGradeString,
                         gradeCellContentDescription = gradeCellContentDescription,
                         outOf = outOfText,
-                        outOfContentDescription = outOfContentDescriptionText,
                         latePenalty = latePenalty,
                         finalGrade = finalGrade
                     )
                 }
             }
         }
+
+        private fun getContentDescriptionText(resources: Resources, vararg texts: String) = texts.joinToString(" ") +
+                System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHint)
 
         private val Submission.isSubmitted
             get() = workflowState == "submitted"
