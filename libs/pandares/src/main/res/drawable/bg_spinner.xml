@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2016 - present Instructure, Inc.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -13,16 +12,11 @@
   ~
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~
   -->
-
-<resources>
-
-    <dimen name="navigation_drawer_width">340dp</dimen>
-    <dimen name="actionbar_course_navigation_width">260dp</dimen>
-    <dimen name="card_outer_margin">12dp</dimen>
-    <dimen name="card_header_margins">16dp</dimen>
-    <dimen name="grade_cell_text_top_margin">8dp</dimen>
-    <dimen name="grade_cell_chart_top_margin">0dp</dimen>
-
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list android:paddingEnd="16dp">
+            <item android:drawable="@drawable/ic_arrow_down" android:gravity="center_vertical|right" />
+        </layer-list>
+    </item>
+</selector>

@@ -34,8 +34,8 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.quiz_list_layout.*

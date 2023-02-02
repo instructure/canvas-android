@@ -68,8 +68,12 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                 }
             }
             is SubmissionDetailsEvent.DataLoaded -> {
+                val selectedSubmission = event.rootSubmissionResult.dataOrNull?.submissionHistory?.find {
+                    it?.attempt == model.initialSelectedSubmissionAttempt
+                } ?: event.rootSubmissionResult.dataOrNull
+
                 val submissionType = getSubmissionContentType(
-                    event.rootSubmissionResult.dataOrNull,
+                    selectedSubmission,
                     event.assignment.dataOrNull,
                     model.canvasContext,
                     event.isStudioEnabled,
@@ -83,7 +87,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         isLoading = false,
                         assignmentResult = event.assignment,
                         rootSubmissionResult = event.rootSubmissionResult,
-                        selectedSubmissionAttempt = event.rootSubmissionResult.dataOrNull?.attempt,
+                        selectedSubmissionAttempt = selectedSubmission?.attempt,
                         quizResult = event.quizResult
                     ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )

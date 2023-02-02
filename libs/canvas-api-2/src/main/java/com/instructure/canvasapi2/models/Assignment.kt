@@ -18,13 +18,12 @@
 package com.instructure.canvasapi2.models
 
 import android.content.Context
+import android.content.res.Resources
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 @Parcelize
 data class Assignment(
@@ -284,21 +283,25 @@ data class Assignment(
                 submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(submissionType), context)
 
         fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, context: Context): String? {
+            return submissionTypeToPrettyPrintString(submissionType, context.resources)
+        }
+
+        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, resources: Resources): String? {
             submissionType ?: return null
 
             return when (submissionType) {
-                SubmissionType.ONLINE_QUIZ -> context.getString(R.string.canvasAPI_onlineQuiz)
-                SubmissionType.NONE -> context.getString(R.string.canvasAPI_none)
-                SubmissionType.ON_PAPER -> context.getString(R.string.canvasAPI_onPaper)
-                SubmissionType.DISCUSSION_TOPIC -> context.getString(R.string.canvasAPI_discussionTopic)
-                SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> context.getString(R.string.canvasAPI_externalTool)
-                SubmissionType.ONLINE_UPLOAD -> context.getString(R.string.canvasAPI_onlineUpload)
-                SubmissionType.ONLINE_TEXT_ENTRY -> context.getString(R.string.canvasAPI_onlineTextEntry)
-                SubmissionType.ONLINE_URL -> context.getString(R.string.canvasAPI_onlineURL)
-                SubmissionType.MEDIA_RECORDING -> context.getString(R.string.canvasAPI_mediaRecording)
-                SubmissionType.ATTENDANCE -> context.getString(R.string.canvasAPI_attendance)
-                SubmissionType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
-                SubmissionType.STUDENT_ANNOTATION -> context.getString(R.string.canvasAPI_studentAnnotation)
+                SubmissionType.ONLINE_QUIZ -> resources.getString(R.string.canvasAPI_onlineQuiz)
+                SubmissionType.NONE -> resources.getString(R.string.canvasAPI_none)
+                SubmissionType.ON_PAPER -> resources.getString(R.string.canvasAPI_onPaper)
+                SubmissionType.DISCUSSION_TOPIC -> resources.getString(R.string.canvasAPI_discussionTopic)
+                SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> resources.getString(R.string.canvasAPI_externalTool)
+                SubmissionType.ONLINE_UPLOAD -> resources.getString(R.string.canvasAPI_onlineUpload)
+                SubmissionType.ONLINE_TEXT_ENTRY -> resources.getString(R.string.canvasAPI_onlineTextEntry)
+                SubmissionType.ONLINE_URL -> resources.getString(R.string.canvasAPI_onlineURL)
+                SubmissionType.MEDIA_RECORDING -> resources.getString(R.string.canvasAPI_mediaRecording)
+                SubmissionType.ATTENDANCE -> resources.getString(R.string.canvasAPI_attendance)
+                SubmissionType.NOT_GRADED -> resources.getString(R.string.canvasAPI_notGraded)
+                SubmissionType.STUDENT_ANNOTATION -> resources.getString(R.string.canvasAPI_studentAnnotation)
             }
         }
 

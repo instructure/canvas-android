@@ -140,6 +140,16 @@ class ApiModule {
     }
 
     @Provides
+    fun provideQuizManager(): QuizManager {
+        return QuizManager
+    }
+
+    @Provides
+    fun provideSubmissionManager(): SubmissionManager {
+        return SubmissionManager
+    }
+
+    @Provides
     fun provideInboxApi(): InboxApi.InboxInterface {
         return RestBuilder().build(InboxApi.InboxInterface::class.java, RestParams())
     }

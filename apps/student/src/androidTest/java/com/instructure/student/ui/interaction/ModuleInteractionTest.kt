@@ -302,11 +302,10 @@ class ModuleInteractionTest : StudentTest() {
                 item = unavailableAssignment
         )
 
-
         // Refresh to get module list update, select module2, and assert that unavailableAssignment is locked
         modulesPage.refresh()
         modulesPage.clickModule(module)
-        modulesPage.clickModuleItem(module2,unavailableAssignment.name!!)
+        modulesPage.clickModuleItem(module2, unavailableAssignment.name!!)
         assignmentDetailsPage.verifyAssignmentLocked()
     }
 

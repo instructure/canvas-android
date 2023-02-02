@@ -81,7 +81,6 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.navigation.AccountMenuItem
 import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.NavigationMenuItem
@@ -342,7 +341,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             requestCode == PICK_FILE_FROM_DEVICE ||
             requestCode == PICK_IMAGE_GALLERY ||
             PickerSubmissionUploadEffectHandler.isPickerRequest(requestCode) ||
-            AssignmentDetailsFragment.isFileRequest(requestCode) ||
             SubmissionDetailsEmptyContentFragment.isFileRequest(requestCode)
         ) {
             // UploadFilesFragment will not be notified of onActivityResult(), alert manually
