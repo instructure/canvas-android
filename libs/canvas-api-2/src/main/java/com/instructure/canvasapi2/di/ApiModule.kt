@@ -138,4 +138,14 @@ class ApiModule {
     fun provideDiscussionManager(): DiscussionManager {
         return DiscussionManager
     }
+
+    @Provides
+    fun provideQuizManager(): QuizManager {
+        return QuizManager
+    }
+
+    @Provides
+    fun provideSubmissionManager(): SubmissionManager {
+        return SubmissionManager
+    }
 }

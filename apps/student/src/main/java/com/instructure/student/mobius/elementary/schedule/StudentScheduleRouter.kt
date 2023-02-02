@@ -22,10 +22,10 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CalendarEventFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentScheduleRouter(private val activity: FragmentActivity) : ScheduleRouter {

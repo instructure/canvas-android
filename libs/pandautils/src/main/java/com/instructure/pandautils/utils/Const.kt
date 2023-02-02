@@ -102,6 +102,7 @@ object Const {
     const val SUBMISSION_COMMENT_SUBMITTED = "submission-comment-submitted"
     const val SUBMISSION = "submission"
     const val SUBMISSION_ID = "submission_id"
+    const val SUBMISSION_ATTEMPT = "submission_attempt"
     const val SUBMISSION_TARGET = "submission_target"
     const val DISCUSSION_REPLY_SUBMITTED = "discussion_reply_submitted"
     const val TITLE = "title"

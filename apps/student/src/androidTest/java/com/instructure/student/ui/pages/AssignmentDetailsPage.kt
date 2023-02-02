@@ -24,10 +24,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
@@ -57,14 +54,14 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun verifyAssignmentGraded(score: String) {
-        onView(withId(R.id.gradeContainer)).scrollTo().assertDisplayed()
+        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
     }
 
     fun verifyAssignmentLocked() {
-        onView(withId(R.id.lockMessageTextView)).assertDisplayed()
-        onView(withId(R.id.lockMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
+        onView(withId(R.id.lockedMessageTextView)).assertDisplayed()
+        onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
     }
 
     fun refresh() {
@@ -80,7 +77,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun goToSubmissionDetails() {
-        onView(withId(R.id.submissionAndRubricLabel)).scrollTo().click()
+        onView(withId(R.id.gradeCell)).click()
     }
 
     fun assertSubmittedStatus() {

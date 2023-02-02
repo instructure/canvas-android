@@ -25,9 +25,9 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.student.activity.BaseRouterActivity
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.router.RouteMatcher

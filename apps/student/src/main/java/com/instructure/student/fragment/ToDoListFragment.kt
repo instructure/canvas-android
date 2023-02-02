@@ -35,8 +35,8 @@ import com.instructure.pandautils.features.discussion.router.DiscussionRouterFra
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_list_todo.*
 import kotlinx.android.synthetic.main.fragment_list_todo.view.*

@@ -1116,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1340,4 +1341,11 @@
     <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
     <string name="acceptableUsePolicySubmit">Submit</string>
     <string name="acceptFail">Failed to submit terms acceptance.</string>
+
+    <string name="attempt">Attempt %d</string>
+    <string name="quizQuestions">Questions: %d</string>
+    <string name="quizTimeLimit">Time limit: %s</string>
+    <string name="allowedAttempts">Allowed attempts: %s</string>
+    <string name="usedAttempts">Attempts used: %d</string>
+    <string name="generalUnexpectedError">An unexpected error occurred.</string>
 </resources>

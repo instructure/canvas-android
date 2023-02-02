@@ -1,37 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2019 - present Instructure, Inc.
-  ~
-  ~     This program is free software: you can redistribute it and/or modify
-  ~     it under the terms of the GNU General Public License as published by
-  ~     the Free Software Foundation, version 3 of the License.
-  ~
-  ~     This program is distributed in the hope that it will be useful,
-  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~     GNU General Public License for more details.
-  ~
-  ~     You should have received a copy of the GNU General Public License
-  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/assignmentDetailsPage"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintParent"
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData.State" />
+
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
+
+        <variable
+            name="viewModel"
+            type="com.instructure.student.features.assignmentdetails.AssignmentDetailsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/assignmentDetailsPage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="6dp"
+            app:layout_constraintTop_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="#00bcd5"
             tools:navigationIcon="@drawable/ic_back_arrow"
@@ -44,705 +37,485 @@
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:background="@color/backgroundLightest"
+            app:layout_constraintBottom_toTopOf="@id/submitButton"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toTopOf="@+id/submitButton">
+            app:onRefreshListener="@{() -> viewModel.refresh()}"
+            app:refreshState="@{viewModel.state}">
 
             <ScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:contentDescription="@string/scrollInstructions"
                 android:fillViewport="true">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/divider"
-                    android:orientation="vertical"
-                    android:showDividers="middle">
+                    android:layout_height="wrap_content">
 
-                    <!-- Error View -->
-
-                    <LinearLayout
-                        android:id="@+id/errorContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="32dp"
-                        android:visibility="gone"
-                        tools:ignore="UseCompoundDrawables"
-                        tools:visibility="gone">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_warning"
-                            android:tint="@color/textDark" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:gravity="center"
-                            android:text="@string/errorLoadingAssignment" />
-
-                    </LinearLayout>
-
-                    <!-- Title, points, submission status -->
-
-                    <LinearLayout
-                        android:id="@+id/titleContainer"
+                    <TextView
+                        android:id="@+id/assignmentName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@{viewModel.data.assignmentName}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="22sp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Creative Machines and Innovative Instrumentation - ASTR 21400" />
 
-                        <TextView
-                            android:id="@+id/assignmentName"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:accessibilityHeading="true"
-                            android:textSize="20sp"
-                            tools:text="Ecosystem Health and Human Well-Being" />
+                    <TextView
+                        android:id="@+id/points"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@{viewModel.data.points}"
+                        android:textColor="@color/textDark"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
+                        tools:text="100 pts" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/submissionStatusIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="4dp"
+                        android:importantForAccessibility="no"
+                        android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.INVISIBLE}"
+                        app:imageRes="@{viewModel.data.submissionStatusIcon}"
+                        app:layout_constraintStart_toEndOf="@id/points"
+                        app:layout_constraintTop_toBottomOf="@id/assignmentName"
+                        app:tint="@{viewModel.data.submissionStatusTint}"
+                        tools:src="@drawable/ic_complete_solid"
+                        tools:tint="@color/textSuccess" />
 
-                            <TextView
-                                android:id="@+id/points"
-                                style="@style/TextFont.Medium"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/textDark"
-                                tools:text="30 pts" />
+                    <TextView
+                        android:id="@+id/submissionStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="@{viewModel.data.submissionStatusText}"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.submissionStatusVisible ? View.VISIBLE : View.INVISIBLE}"
+                        app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
+                        app:layout_constraintStart_toEndOf="@id/submissionStatusIcon"
+                        app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
+                        tools:text="Submitted" />
 
-                            <ImageView
-                                android:id="@+id/submissionStatusIcon"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_marginStart="12dp"
-                                android:importantForAccessibility="no"
-                                tools:src="@drawable/ic_complete_solid"
-                                tools:tint="@color/textSuccess" />
-
-                            <TextView
-                                android:id="@+id/submissionStatus"
-                                style="@style/TextFont.Medium"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                tools:text="Submitted"
-                                tools:textColor="#00ac18" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <!-- Submission Upload Status -->
-
-                    <FrameLayout
-                        android:id="@+id/submissionUploadStatusContainer"
+                    <View
+                        android:id="@+id/draftDivider"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        tools:visibility="visible">
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.hasDraft ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/submissionStatus" />
 
-                        <LinearLayout
-                            android:id="@+id/submissionStatusUploading"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="16dp"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <TextView
-                                style="@style/TextFont.Medium"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/submissionStatusUploadingTitle"
-                                android:textColor="@color/textDarkest"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/submissionStatusUploadingSubtitle"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:gravity="center"
-                                android:text="@string/submissionStatusUploadingSubtitle"
-                                android:textColor="@color/textInfo" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/submissionStatusFailed"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="16dp"
-                            android:visibility="gone">
-
-                            <TextView
-                                style="@style/TextFont.Medium"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/submissionStatusFailedTitle"
-                                android:textColor="@color/textDarkest"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/submissionStatusFailedSubtitle"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:gravity="center"
-                                android:text="@string/submissionStatusFailedSubtitle"
-                                android:textColor="@color/textInfo" />
-
-                        </LinearLayout>
-
-                    </FrameLayout>
-
-
-                        <LinearLayout
-                            android:id="@+id/draftAvailableContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="16dp"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <TextView
-                                style="@style/TextFont.Medium"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/submissionDraftAvailableTitle"
-                                android:textColor="@color/textDarkest"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/draftAvailableSubtitle"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:gravity="center"
-                                android:text="@string/submissionDraftAvailableSubtitle"
-                                android:textColor="@color/textInfo" />
-
-                        </LinearLayout>
-
-                    <!-- Due Date -->
-
-                    <LinearLayout
-                        android:id="@+id/dueDateContainer"
+                    <TextView
+                        android:id="@+id/draftTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginTop="30dp"
+                        android:drawablePadding="6dp"
+                        android:gravity="center_horizontal"
+                        android:onClick="@{()->viewModel.onDraftClicked()}"
+                        android:text="@string/submissionDraftAvailableTitle"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="20sp"
+                        android:visibility="@{viewModel.data.hasDraft ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/draftDivider" />
 
-                        <TextView
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="@string/dueLabel"
-                            android:textColor="@color/textDark" />
-
-                        <TextView
-                            android:id="@+id/dueDateTextView"
-                            style="@style/TextFont.Regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/textDark"
-                            tools:text="April 1 at 11:59 PM" />
-
-                    </LinearLayout>
-
-                    <!-- Submission Types -->
-
-                    <LinearLayout
-                        android:id="@+id/submissionTypesContainer"
+                    <TextView
+                        android:id="@+id/draftSubtitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_horizontal"
+                        android:onClick="@{()->viewModel.onDraftClicked()}"
+                        android:text="@string/submissionDraftAvailableSubtitle"
+                        android:textColor="@color/textInfo"
+                        android:visibility="@{viewModel.data.hasDraft ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/draftTitle" />
 
-                        <TextView
-                            android:id="@+id/submissionTypesSectionLabel"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/submission_types"
-                            android:textColor="@color/textDark" />
+                    <View
+                        android:id="@+id/attemptDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@color/borderMedium"
+                        app:layout_constraintTop_toBottomOf="@id/draftSubtitle" />
 
-                        <TextView
-                            android:id="@+id/submissionTypesTextView"
-                            style="@style/TextFont.Regular"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:lineSpacingExtra="4dp"
-                            android:textSize="16sp"
-                            tools:text="File upload, Website URL" />
+                    <Space
+                        android:id="@+id/attemptSpacer"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        app:layout_constraintTop_toBottomOf="@id/attemptDivider" />
 
-                    </LinearLayout>
-
-                    <!-- Allowed File Types -->
-
-                    <LinearLayout
-                        android:id="@+id/fileTypesContainer"
+                    <Spinner
+                        android:id="@+id/attemptSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_spinner"
+                        android:backgroundTint="@color/textDark"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAttemptSelected(position)}"
+                        android:visibility="@{viewModel.data.attempts.size() > 1 ? View.VISIBLE : View.GONE}"
+                        app:itemViewModels="@{viewModel.data.attempts}"
+                        app:layoutRes="@{@layout/item_assignment_detail_attempt_spinner}"
+                        app:layout_constraintTop_toBottomOf="@id/attemptDivider"
+                        tools:ignore="RtlSymmetry" />
 
-                        <TextView
-                            android:id="@+id/fileTypesSectionLabel"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/allowedFileTypes"
-                            android:textColor="@color/textDark" />
-
-                        <TextView
-                            android:id="@+id/fileTypesTextView"
-                            style="@style/TextFont.Regular"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:lineSpacingExtra="4dp"
-                            android:textSize="16sp"
-                            tools:text="png, pdf, xls, SVG" />
-
-                    </LinearLayout>
-
-                    <!-- Allowed Attempts -->
-
-                    <LinearLayout
-                        android:id="@+id/allowedAttemptsContainer"
+                    <include
+                        android:id="@+id/attemptView"
+                        layout="@layout/item_assignment_detail_attempt_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginTop="8dp"
+                        android:visibility="@{viewModel.data.attempts.size() == 1 ? View.VISIBLE : View.GONE}"
+                        app:itemViewModel="@{viewModel.data.firstAttemptOrNull}"
+                        app:layout_constraintTop_toBottomOf="@id/attemptSpinner" />
 
-                        <TextView
-                            android:id="@+id/allowedAttemptsLabel"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="8dp"
-                            android:text="@string/attempts"
-                            android:textColor="@color/textDark" />
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/gradeCellBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="attemptSpacer,attemptView" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingBottom="4dp">
-
-                            <TextView
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/attemptsAllowedLabel"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:tint="@color/textDark" />
-
-                            <TextView
-                                android:id="@+id/allowedAttemptsText"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="4dp"
-                                android:textSize="16sp"
-                                android:tint="@color/textDark"
-                                tools:text="5" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/attemptsUsedLabel"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:tint="@color/textDark" />
-
-                            <TextView
-                                android:id="@+id/usedAttemptsText"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="4dp"
-                                android:textSize="16sp"
-                                android:tint="@color/textDark"
-                                tools:text="5" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Grade -->
-
-                    <LinearLayout
-                        android:id="@+id/gradeContainer"
+                    <include
+                        android:id="@+id/gradeCell"
+                        layout="@layout/view_student_enhanced_grade_cell"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:background="?attr/selectableItemBackground"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginHorizontal="16dp"
+                        android:onClick="@{()->viewModel.onGradeCellClicked()}"
+                        app:layout_constraintTop_toBottomOf="@id/gradeCellBarrier"
+                        app:viewData="@{viewModel.data.selectedGradeCellViewData}" />
 
-                        <TextView
-                            android:id="@+id/gradeSectionLabel"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/grade"
-                            android:textColor="@color/textDark" />
+                    <View
+                        android:id="@+id/lockedDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.lockedMessage.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/gradeCell" />
 
-                        <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
-                            android:id="@+id/gradeCell"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- Locked Message -->
-
-                    <LinearLayout
-                        android:id="@+id/lockMessageContainer"
+                    <TextView
+                        android:id="@+id/lockedMessageLabel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/locked"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.lockedMessage.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/lockedDivider" />
 
-                        <TextView
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="@string/locked"
-                            android:textColor="@color/textDark" />
-
-                        <TextView
-                            android:id="@+id/lockMessageTextView"
-                            style="@style/TextFont.Regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/textDark"
-                            tools:text="April 1 at 11:59 PM" />
-
-                    </LinearLayout>
-
-                    <!-- Submission & Rubric button -->
-
-                    <LinearLayout
-                        android:id="@+id/submissionRubricButton"
+                    <TextView
+                        android:id="@+id/lockedMessageTextView"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@{viewModel.data.lockedMessage}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.lockedMessage.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/lockedMessageLabel" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_panda_locked"
+                        android:visibility="@{viewModel.data.fullLocked ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lockedMessageTextView" />
+
+                    <View
+                        android:id="@+id/dueDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="32dp"
+                        android:background="@color/borderMedium"
+                        app:layout_constraintTop_toBottomOf="@id/lockedMessageTextView" />
+
+                    <TextView
+                        android:id="@+id/dueLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/dueLabel"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/dueDivider" />
+
+                    <TextView
+                        android:id="@+id/dueDateTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@{viewModel.data.dueDate}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/dueLabel" />
+
+                    <TextView
+                        android:id="@+id/submissionTypesLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/submission_types"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.submissionTypes.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/dueDateTextView" />
+
+                    <TextView
+                        android:id="@+id/submissionTypesTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@{viewModel.data.submissionTypes}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.submissionTypes.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/submissionTypesLabel" />
+
+                    <TextView
+                        android:id="@+id/allowedFileTypesLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/allowedFileTypes"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.allowedFileTypes.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/submissionTypesTextView" />
+
+                    <TextView
+                        android:id="@+id/allowedFileTypesTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@{viewModel.data.allowedFileTypes}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.allowedFileTypes.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/allowedFileTypesLabel" />
+
+                    <TextView
+                        android:id="@+id/quizDataLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/settings"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/allowedFileTypesTextView" />
+
+                    <TextView
+                        android:id="@+id/quizQuestionCountTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@{viewModel.data.quizDetails.questionCount}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/quizDataLabel" />
+
+                    <TextView
+                        android:id="@+id/quizTimeLimitTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:text="@{viewModel.data.quizDetails.timeLimit}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/quizQuestionCountTextView" />
+
+                    <TextView
+                        android:id="@+id/quizAllowedAttemptsTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:text="@{viewModel.data.quizDetails.allowedAttempts}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/quizTimeLimitTextView" />
+
+                    <TextView
+                        android:id="@+id/attemptsDataLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/attempts"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/quizAllowedAttemptsTextView" />
+
+                    <TextView
+                        android:id="@+id/allowedAttemptsLabelTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@{viewModel.data.attemptsViewData.allowedAttempts}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/attemptsDataLabel" />
+
+                    <TextView
+                        android:id="@+id/attemptsUsedTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:text="@{viewModel.data.attemptsViewData.usedAttempts}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/allowedAttemptsLabelTextView" />
+
+                    <View
+                        android:id="@+id/descriptionDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/attemptsUsedTextView" />
+
+                    <TextView
+                        android:id="@+id/descriptionLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/description"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/descriptionDivider" />
+
+                    <ImageView
+                        android:id="@+id/authorAvatar"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="16dp"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData == null ? View.GONE : View.VISIBLE}"
+                        app:avatarA11y="@{viewModel.data.discussionHeaderViewData.authorName}"
+                        app:layout_constraintBottom_toBottomOf="@id/authoredDate"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/authorName"
+                        app:userAvatar="@{viewModel.data.discussionHeaderViewData.authorAvatarUrl}"
+                        app:userName="@{viewModel.data.discussionHeaderViewData.authorName}"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/authorName"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="12dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@{viewModel.data.discussionHeaderViewData.authorNameWithPronouns}"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintEnd_toStartOf="@id/attachmentIcon"
+                        app:layout_constraintStart_toEndOf="@id/authorAvatar"
+                        app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
+
+                    <TextView
+                        android:id="@+id/authoredDate"
+                        style="@style/TextFont.Regular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@{viewModel.data.discussionHeaderViewData.authoredDate}"
+                        android:textColor="@color/textDark"
+                        android:textSize="12sp"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintEnd_toStartOf="@id/attachmentIcon"
+                        app:layout_constraintStart_toEndOf="@id/authorAvatar"
+                        app:layout_constraintTop_toBottomOf="@id/authorName" />
+
+                    <ImageView
+                        android:id="@+id/attachmentIcon"
+                        android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="16dp"
                         android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:visibility="gone">
+                        android:contentDescription="@string/attachment"
+                        android:onClick="@{()->viewModel.data.discussionHeaderViewData.onAttachmentClicked.invoke()}"
+                        android:padding="14dp"
+                        android:scaleType="centerInside"
+                        android:visibility="@{viewModel.data.discussionHeaderViewData.attachmentIconVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@id/authorAvatar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/authorAvatar"
+                        app:srcCompat="@drawable/ic_attachment"
+                        app:tint="@color/textDark" />
 
-                        <TextView
-                            android:id="@+id/submissionAndRubricLabel"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/submissionAndRubric"
-                            android:textColor="@color/textInfo"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_forward_arrow"
-                            android:tint="@color/textDark" />
-
-                    </LinearLayout>
-
-
-                    <!-- Locked Image -->
-
-                    <LinearLayout
-                        android:id="@+id/lockImageContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="32dp"
-                        android:visibility="gone"
-                        tools:visibility="visible">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_panda_locked" />
-
-                    </LinearLayout>
-
-                    <!-- Assignment Description -->
-
-                    <LinearLayout
-                        android:id="@+id/quizDetails"
+                    <TextView
+                        android:id="@+id/noDescriptionTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:visibility="gone"
-                        tools:visibility="visible">
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/noAssignmentDescriptionStudent"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.noDescriptionVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/authoredDate" />
 
-
-                        <LinearLayout
-                            android:id="@+id/questionsContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/questionCountLabel"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/quizQuestionLabel"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:tint="@color/textDark" />
-
-                            <TextView
-                                android:id="@+id/questionCountText"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:textSize="16sp"
-                                android:tint="@color/textDark"
-                                tools:text="5" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/timeLimitContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/timeLimitLabel"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/timeLimitLabel"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:tint="@color/textDark" />
-
-                            <TextView
-                                android:id="@+id/timeLimitText"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:textSize="16sp"
-                                android:tint="@color/textDark"
-                                tools:text="None" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/allowedQuizAttemptsContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/allowedAttemptsLabel"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:tint="@color/textDark" />
-
-                            <TextView
-                                android:id="@+id/allowedQuizAttemptsText"
-                                style="@style/TextFont.Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:textSize="16sp"
-                                android:tint="@color/textDark"
-                                tools:text="Unlimited" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <!-- Assignment Description -->
-
-                    <LinearLayout
-                        android:id="@+id/descriptionContainer"
+                    <com.instructure.pandautils.views.CanvasWebViewWrapper
+                        android:id="@+id/descriptionWebViewWrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:orientation="vertical">
+                        android:background="@color/backgroundLightest"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:visibility="@{viewModel.data.description.empty || viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
+                        app:htmlContent="@{viewModel.data.description}"
+                        app:htmlTitle="@{viewModel.data.assignmentName}"
+                        app:layout_constraintTop_toBottomOf="@id/authoredDate"
+                        app:onLtiButtonPressed="@{(url) -> viewModel.onLtiButtonPressed(url)}" />
 
-                        <TextView
-                            android:id="@+id/descriptionLabel"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginEnd="16dp"
-                            android:labelFor="@+id/noDescriptionContainer"
-                            android:text="@string/description"
-                            android:textColor="@color/textDark" />
-
-                        <TextView
-                            android:id="@+id/noDescriptionContainer"
-                            style="@style/TextFont.Regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="16dp"
-                            android:importantForAccessibility="yes"
-                            android:text="@string/noAssignmentDescriptionStudent"
-                            android:textColor="@color/textDarkest"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-
-                        <!-- Discussion Topic Header -->
-
-                        <LinearLayout
-                            android:id="@+id/discussionTopicHeaderContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginEnd="16dp"
-                            android:orientation="horizontal"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <ImageView
-                                android:id="@+id/authorAvatar"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                tools:src="@mipmap/ic_launcher" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/authorName"
-                                    style="@style/TextFont.Medium"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:ellipsize="end"
-                                    android:maxLines="2"
-                                    android:textSize="14sp"
-                                    tools:text="Hackdown Hodor" />
-
-                                <TextView
-                                    android:id="@+id/authoredDate"
-                                    style="@style/TextFont.Regular"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:ellipsize="end"
-                                    android:maxLines="2"
-                                    android:textColor="@color/textDark"
-                                    android:textSize="12sp"
-                                    tools:text="July 1 at 5:21 PM" />
-
-                            </LinearLayout>
-
-                            <ImageView
-                                android:id="@+id/attachmentIcon"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="?attr/selectableItemBackground"
-                                android:contentDescription="@string/attachment"
-                                android:padding="14dp"
-                                android:scaleType="centerInside"
-                                android:visibility="gone"
-                                app:srcCompat="@drawable/ic_attachment" />
-
-                        </LinearLayout>
-
-                        <com.instructure.pandautils.views.CanvasWebViewWrapper
-                            android:id="@+id/descriptionWebViewWrapper"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/backgroundLightest"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </ScrollView>
 
@@ -752,21 +525,38 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.2f}"
             android:background="@color/backgroundInfo"
+            android:backgroundTint="@{ThemePrefs.INSTANCE.buttonColor}"
+            android:enabled="@{viewModel.data.submitEnabled}"
             android:foreground="?attr/selectableItemBackground"
-            android:text="@string/submitAssignment"
+            android:minHeight="48dp"
+            android:onClick="@{()->viewModel.onSubmitButtonClicked()}"
+            android:text="@{viewModel.data.submitButtonText}"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:visibility="@{viewModel.data.submitVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Resubmit Assignment" />
+
+        <com.instructure.pandautils.views.FloatingRecordingView
+            android:id="@+id/floatingRecordingView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/backgroundLightest"
+            android:translationZ="100dp"
+            app:emptyViewState="@{viewModel.state}"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.instructure.pandautils.views.FloatingRecordingView
-        android:id="@+id/floatingRecordingView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:elevation="12dp"
-        android:visibility="gone" />
-
-</FrameLayout>
+</layout>

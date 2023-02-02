@@ -33,7 +33,6 @@ abstract class StudentRenderTest : StudentTest() {
         // Do nothing for page render tests
     }
 
-    val assignmentDetailsRenderPage = AssignmentDetailsRenderPage()
     val conferenceListRenderPage = ConferenceListRenderPage()
     val conferenceDetailsRenderPage = ConferenceDetailsRenderPage()
     val submissionDetailsRenderPage = SubmissionDetailsRenderPage()

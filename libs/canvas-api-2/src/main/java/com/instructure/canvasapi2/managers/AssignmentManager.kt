@@ -40,8 +40,18 @@ object AssignmentManager {
         AssignmentAPI.getAssignmentIncludeObservees(courseId, assignmentId, adapter, callback, params)
     }
 
+    fun getAssignmentIncludeObserveesAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean) = apiAsync<ObserveeAssignment> {
+        getAssignmentIncludeObservees(assignmentId, courseId, forceNetwork, it)
+    }
+
     fun getAssignmentAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean)
             = apiAsync<Assignment> { getAssignment(assignmentId, courseId, forceNetwork, it) }
+
+    fun getAssignmentWithHistoryAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean) = apiAsync<Assignment> {
+        val adapter = RestBuilder(it)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        AssignmentAPI.getAssignmentWithHistory(courseId, assignmentId, adapter, it, params)
+    }
 
     fun getExternalToolLaunchUrlAsync(courseId: Long, externalToolId: Long, assignmentId: Long) = apiAsync<LTITool> {
         AssignmentAPI.getExternalToolLaunchUrl(
