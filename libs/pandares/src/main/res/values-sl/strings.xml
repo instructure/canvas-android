@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Nalagam v Moje datoteke</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Oddaj nalogo</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Izberite predmet</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Izberite predmet; izbrani predmet je: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Izberite nalogo</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Izberite nalogo, izbrana naloga je: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Želite preklicati nalaganje?</string>
     <string name="cancelFileUploadMessage">S tem boste nalaganje preklicali.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Ustvarjeno v pogledu študenta</string>
     <string name="discussionErrorToast">Prišlo je napake. Tema morda ni več na voljo.</string>
     <string name="cameraPermissionPermanentlyDenied">Dovoljenje za kamero je bilo trajno zavrnjeno. Pojdite v nastavitve aplikacije, da to omogočite.</string>
+    <string name="unpublish_assignment_error">Če obstajajo oddaje študenta, objave naloge ni mogoče preklicati.</string>
+    <string name="subscribeToCalendar">Naročite se na vir koledarja</string>
+    <string name="subscribeToCalendarMessage">Svoj koledar Canvas lahko sinhronizirate z računom Google Koledar, tako da v tem pogovornem oknu kliknete gumb Naroči se. Nato boste morali na svoji napravi odpreti aplikacijo Google Koledar in v nastavitvah novega koledarja omogočiti sinhronizacijo.</string>
+    <string name="subscribeButton">Naroči se</string>
+    <string name="switchToLightMode">Preklopi v svetli način</string>
+    <string name="switchToDarkMode">Preklopi v temni način</string>
+    <string name="acceptableUsePolicyDescription">Ste nov uporabnik ali pa so Pravilnik o sprejemljivi rabi spremenili, odkar ste se nazadnje strinjali z njim. Pred nadaljevanjem potrdite, da se strinjate s Pravilnikom o sprejemljivi rabi.</string>
+    <string name="acceptableUsePolicyTitle">Pravilnik o sprejemljivi rabi</string>
+    <string name="acceptableUsePolicyButton">Pravilnik o sprejemljivi rabi</string>
+    <string name="acceptableUsePolicyAgree">Strinjam se s Pravilnikom o sprejemljivi rabi.</string>
+    <string name="acceptableUsePolicySubmit">Oddaj</string>
+    <string name="acceptFail">Oddaja sprejetja pogojev ni uspela.</string>
 </resources>

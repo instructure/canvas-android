@@ -1303,7 +1303,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Penja-ho a Els meus fitxers</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Envia la tasca</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Tria una assignatura</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Trieu una assignatura, l’assignatura seleccionada és: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Tria una tasca</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Trieu una activitat, l’activitat seleccionada és: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Voleu cancel·lar la penjada?</string>
     <string name="cancelFileUploadMessage">Amb aquesta acció es cancel·larà la penjada.</string>
@@ -1318,4 +1320,16 @@
     <string name="createdByStudentView">Creat per Vista d\'estudiant</string>
     <string name="discussionErrorToast">S\'ha produït un error. És possible que el tema ja no estigui disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">S’ha denegat permanentment el permís per a la càmera. Aneu a la configuració de l’aplicació per donar-hi permís.</string>
+    <string name="unpublish_assignment_error">No es pot cancel·lar la publicació de l\'activitat si hi ha entregues d’estudiants.</string>
+    <string name="subscribeToCalendar">Subscriviu-vos al canal de continguts del calendari</string>
+    <string name="subscribeToCalendarMessage">Per sincronitzar el calendari del Canvas amb el compte de Google Calendar, podeu fer clic al botó Subscriu-t’hi d’aquest quadre de diàleg. A continuació, haureu d’anar a l’aplicació Google Calendar al vostre dispositiu i activar la sincronització a la configuració del calendari nou.</string>
+    <string name="subscribeButton">Subscriu-t\'hi</string>
+    <string name="switchToLightMode">Canvia al mode clar</string>
+    <string name="switchToDarkMode">Canvia al mode fosc</string>
+    <string name="acceptableUsePolicyDescription">O bé sou un usuari nou o la política d’ús acceptable ha canviat des de la darrera vegada que la vau acceptar. Accepteu la política d’ús acceptable abans de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política d’ús acceptable</string>
+    <string name="acceptableUsePolicyButton">Política d’ús acceptable</string>
+    <string name="acceptableUsePolicyAgree">Accepto la política d’ús acceptable.</string>
+    <string name="acceptableUsePolicySubmit">Entrega</string>
+    <string name="acceptFail">No s’ha pogut enviar l’acceptació de les condicions.</string>
 </resources>

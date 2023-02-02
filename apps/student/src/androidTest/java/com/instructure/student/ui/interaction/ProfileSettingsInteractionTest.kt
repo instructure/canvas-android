@@ -42,14 +42,14 @@ class ProfileSettingsInteractionTest : StudentTest() {
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openProfileSettings()
         profileSettingsPage.changeUserNameTo(newUserName)
 
         Espresso.pressBack() // to settings page
         Espresso.pressBack() // to dashboard
 
-        dashboardPage.assertUserLoggedIn(newUserName)
+        leftSideNavigationDrawerPage.assertUserLoggedIn(newUserName)
     }
 
     @Test
@@ -61,7 +61,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openProfileSettings()
         profileSettingsPage.assertSettingsDisabled() // No permissions granted
     }
@@ -85,7 +85,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
 
         // Navigate to avatar creation page
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openProfileSettings()
         profileSettingsPage.launchPandaAvatarCreator()
 

@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Carregar para os Meus Ficheiros</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Enviar tarefa</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Escolha uma disciplina</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Escolher um curso, o curso selecionado é: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Escolha uma tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment"> Escolher um trabalho, o trabalho seleccionado é: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Cancelar carregamento?</string>
     <string name="cancelFileUploadMessage">Isto irá cancelar o seu carregamento.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Criado por Vista de aluno</string>
     <string name="discussionErrorToast">Um erro ocorreu. O tópico pode já não estar disponível.</string>
     <string name="cameraPermissionPermanentlyDenied">A permissão da câmara foi permanentemente negada. Ir para as definições da aplicação para a permitir.</string>
+    <string name="unpublish_assignment_error">Não é possível inutilizar o trabalho se houver candidaturas de alunos.</string>
+    <string name="subscribeToCalendar">Subscrever Feed de calendário</string>
+    <string name="subscribeToCalendarMessage">Pode sincronizar o seu calendário Canvas com a sua conta Google Calendar clicando no botão Subscrever neste diálogo. Depois, terá de ir para a aplicação Google Calendar no seu dispositivo e ativar a sincronização nas definições para o novo calendário.</string>
+    <string name="subscribeButton">Subscrever</string>
+    <string name="switchToLightMode">Mudar para o modo de luz</string>
+    <string name="switchToDarkMode">Mudar para o Modo Escuro</string>
+    <string name="acceptableUsePolicyDescription">Ou é um novo utilizador ou a Política de Utilização Aceitável mudou desde a última vez que concordou com ela. Por favor, aceite a Política de Utilização Aceitável antes de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política de Utilização Aceitável</string>
+    <string name="acceptableUsePolicyButton">Política de Utilização Aceitável</string>
+    <string name="acceptableUsePolicyAgree">Concordo com a Política de Utilização Aceitável.</string>
+    <string name="acceptableUsePolicySubmit">Submeter</string>
+    <string name="acceptFail">Falha em submeter a aceitação dos termos.</string>
 </resources>

@@ -57,7 +57,7 @@ class SettingsInteractionTest : StudentTest() {
     fun testLegal_showCanvasOnGithub() {
         setUpAndSignIn()
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openLegalPage()
 
         Intents.init()
@@ -78,7 +78,7 @@ class SettingsInteractionTest : StudentTest() {
     fun testLegal_showTermsOfUse() {
         setUpAndSignIn()
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openLegalPage()
         legalPage.openTermsOfUse()
         legalPage.assertTermsOfUseDisplayed()
@@ -90,7 +90,7 @@ class SettingsInteractionTest : StudentTest() {
     fun testLegal_showPrivacyPolicy() {
         setUpAndSignIn()
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openLegalPage()
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
@@ -106,7 +106,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         ApiPrefs.canGeneratePairingCode = true
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openPairObserverPage()
 
         pairObserverPage.hasCode("1")
