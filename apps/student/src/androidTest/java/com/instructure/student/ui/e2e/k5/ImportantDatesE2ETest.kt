@@ -139,7 +139,7 @@ class ImportantDatesE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Opening ${testAssignment1.name} important date assignment's event. Assert that the Assignment Details Page is displayed.")
         importantDatesPage.clickImportantDatesItem(testAssignment1.name)
-        assignmentDetailsPage.verifyAssignmentTitle(testAssignment1.name)
+        assignmentDetailsPage.assertAssignmentTitle(testAssignment1.name)
 
         Log.d(STEP_TAG, "Navigate back to Important Dates page.")
         Espresso.pressBack()

@@ -24,27 +24,44 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
-    fun verifyAssignmentDetails(assignment: Assignment) {
+    val toolbar by OnViewWithId(R.id.toolbar)
+    val points by OnViewWithId(R.id.points)
+    val date by OnViewWithId(R.id.dueDateTextView)
+    val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)
+
+    fun assertDisplayToolbarTitle() {
+        onView(allOf(withText(R.string.assignmentDetails), withParent(R.id.toolbar))).assertDisplayed()
+    }
+
+    fun assertDisplayToolbarSubtitle(courseNameText: String) {
+        onView(allOf(withText(courseNameText), withParent(R.id.toolbar))).assertDisplayed()
+    }
+
+    fun assertDisplaysDate(dateText: String) {
+        date.assertHasText(dateText)
+    }
+
+    fun assertAssignmentDetails(assignment: Assignment) {
         onView(withId(R.id.assignmentName)).assertHasText(assignment.name!!)
         onView(allOf(withId(R.id.points), isDisplayed()))
                 .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
     }
 
-    fun verifyAssignmentTitle(assignmentName: String) {
+    fun assertAssignmentTitle(assignmentName: String) {
         onView(withId(R.id.assignmentName)).assertHasText(assignmentName)
     }
 
@@ -53,13 +70,13 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
     }
 
-    fun verifyAssignmentGraded(score: String) {
+    fun assertAssignmentGraded(score: String) {
         onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
     }
 
-    fun verifyAssignmentLocked() {
+    fun assertAssignmentLocked() {
         onView(withId(R.id.lockedMessageTextView)).assertDisplayed()
         onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
     }
@@ -80,8 +97,20 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.gradeCell)).click()
     }
 
-    fun assertSubmittedStatus() {
-        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(R.string.submitted)))
+    private fun assertStatus(statusResourceId: Int) {
+        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(statusResourceId)))
+    }
+
+    fun assertStatusSubmitted() {
+        assertStatus(R.string.submitted)
+    }
+
+    fun assertStatusNotSubmitted() {
+        assertStatus(R.string.notSubmitted)
+    }
+
+    fun assertStatusMissing() {
+        assertStatus(R.string.missingAssignment)
     }
 
     fun viewQuiz() {
@@ -98,15 +127,23 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun addBookmark(bookmarkName: String) {
-        Espresso.onView(
-                allOf(
-                        ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
-                        isDisplayed()
-                )).click()
+        openOverflowMenu()
         Espresso.onView(withText("Add Bookmark")).click()
         Espresso.onView(withId(R.id.bookmarkEditText)).clearText()
         Espresso.onView(withId(R.id.bookmarkEditText)).typeText(bookmarkName)
         Espresso.onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("Save"))).click()
+    }
+
+    fun openOverflowMenu() {
+        Espresso.onView(
+            allOf(
+                ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
+                isDisplayed()
+            )).click()
+    }
+
+    fun assertDisplaysAddBookmarkButton() {
+        onViewWithText(R.string.addBookmark).assertDisplayed()
     }
 }
 

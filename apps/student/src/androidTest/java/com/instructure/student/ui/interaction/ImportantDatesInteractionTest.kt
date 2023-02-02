@@ -137,7 +137,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         //Opening the calendar assignment event
         importantDatesPage.clickImportantDatesItem(assignment.name!!)
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(assignmentScheduleItem.startDate))
     }
 
