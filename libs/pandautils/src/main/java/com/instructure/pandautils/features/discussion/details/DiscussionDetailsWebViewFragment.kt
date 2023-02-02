@@ -25,6 +25,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN
@@ -37,6 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_discussion_details_web_view.*
 import javax.inject.Inject
 
+@PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN)
 @AndroidEntryPoint
 class DiscussionDetailsWebViewFragment : Fragment() {
@@ -49,6 +52,9 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
 
     private val viewModel: DiscussionDetailsWebViewViewModel by viewModels()
+
+    @PageViewUrlParam("topicId")
+    private fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {

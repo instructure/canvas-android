@@ -20,21 +20,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.student.R
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
+import com.instructure.student.R
 import kotlinx.android.synthetic.main.fragment_course_settings.*
 import kotlinx.android.synthetic.main.fragment_course_settings.view.*
 
+@PageView
 @ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : ParentFragment() {
 
     var course: Course by ParcelableArg(key = Const.CANVAS_CONTEXT)
+
+    @PageViewUrl
+    fun makePageViewUrl() = "courses/${course.id}/settings"
 
     override fun title(): String = getString(R.string.settings)
 

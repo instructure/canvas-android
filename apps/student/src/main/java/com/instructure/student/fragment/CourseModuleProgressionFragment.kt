@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -63,6 +64,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import java.util.*
 
+@PageView(url = "courses/{canvasContext}/modules")
 @ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
