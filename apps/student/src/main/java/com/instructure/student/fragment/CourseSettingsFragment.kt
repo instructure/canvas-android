@@ -39,8 +39,9 @@ class CourseSettingsFragment : ParentFragment() {
 
     var course: Course by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
+    @Suppress("unused")
     @PageViewUrl
-    fun makePageViewUrl() = "courses/${course.id}/settings"
+    private fun makePageViewUrl() = "courses/${course.id}/settings"
 
     override fun title(): String = getString(R.string.settings)
 
