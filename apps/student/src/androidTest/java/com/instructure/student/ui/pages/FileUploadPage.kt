@@ -66,7 +66,7 @@ class FileUploadPage : BasePage() {
         val fileItemMatcher = withId(R.id.fileItem) + withDescendant(withId(R.id.fileName) + withText(filename))
 
         val removeMatcher = withId(R.id.removeFile) + ViewMatchers.isDescendantOfA(fileItemMatcher)
-        waitForViewToBeClickable(removeMatcher).click()
+        waitForViewToBeClickable(removeMatcher).scrollTo().click()
     }
 
     fun assertDialogTitle(title: String) {
