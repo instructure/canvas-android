@@ -54,7 +54,7 @@ class BookmarkInteractionTest : StudentTest() {
         Espresso.pressBack() // to course
         Espresso.pressBack() // to main dashboard
 
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
     }
 
@@ -74,11 +74,11 @@ class BookmarkInteractionTest : StudentTest() {
         )
 
         dashboardPage.waitForRender()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
         bookmarkPage.clickBookmark(bookmarkName)
 
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
     // Tests that we can change the name of a bookmark and still click through to the intended location
@@ -97,7 +97,7 @@ class BookmarkInteractionTest : StudentTest() {
         )
 
         dashboardPage.waitForRender()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
         val newName = "New Bookmark Name"
         bookmarkPage.changeBookmarkName(bookmarkName, newName)
@@ -105,7 +105,7 @@ class BookmarkInteractionTest : StudentTest() {
         bookmarkPage.assertBookmarkDisplayed(newName)
         bookmarkPage.clickBookmark(newName)
 
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
     // Common initialization code.  Creates a student, course and assignment, and signs you in.

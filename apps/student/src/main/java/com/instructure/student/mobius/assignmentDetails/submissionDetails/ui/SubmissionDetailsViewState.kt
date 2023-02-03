@@ -51,3 +51,12 @@ sealed class SubmissionDetailsTabData(val tabName: String) {
         val submission: Submission
     ) : SubmissionDetailsTabData(name)
 }
+
+data class SubmissionTypesVisibilities(
+    var textEntry: Boolean = false,
+    var urlEntry: Boolean = false,
+    var fileUpload: Boolean = false,
+    var mediaRecording: Boolean = false,
+    var studioUpload: Boolean = false,
+    var studentAnnotation: Boolean = false
+)

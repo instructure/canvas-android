@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Uploader til Mine filer</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Aflever opgave</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Vælg et fag</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Vælg et fag, det valgte fag er: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Vælg en opgave</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Vælg en opgave, den valgte opgave er: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Annuller upload?</string>
     <string name="cancelFileUploadMessage">Dette annullerer din upload.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Skabt i visning for elever</string>
     <string name="discussionErrorToast">Fejl opstod. Emnet er muligvis ikke længere tilgængeligt.</string>
     <string name="cameraPermissionPermanentlyDenied">Kameratilladelse blev permanent nægtet. Gå til appindstillinger for at tillade det.</string>
+    <string name="unpublish_assignment_error">Det er ikke muligt at fjerne offentliggørelse for opgave, hvis der er afleveringer fra elever.</string>
+    <string name="subscribeToCalendar">Tilmeld til kalender-feed</string>
+    <string name="subscribeToCalendarMessage">Du kan synkronisere din Canvas-kalender til din Google Kalender-konto ved at klikke på knappen Abonner i denne dialog. Derefter skal du gå til Google Kalender-appen på din enhed og aktivere synkronisering i indstillingerne for den nye kalender.</string>
+    <string name="subscribeButton">Abonner</string>
+    <string name="switchToLightMode">Skift til lys tilstand</string>
+    <string name="switchToDarkMode">Skift til mørk tilstand</string>
+    <string name="acceptableUsePolicyDescription">Enten er du en ny bruger, eller Betingelser for acceptabel brug er blevet ændret, siden du accepterede dem. Du bedes acceptere Betingelser for acceptabel brug, før du fortsætter.</string>
+    <string name="acceptableUsePolicyTitle">Acceptabel brugspolitik</string>
+    <string name="acceptableUsePolicyButton">Acceptabel brugspolitik</string>
+    <string name="acceptableUsePolicyAgree">Jeg accepterer betingelserne for acceptabel brug.</string>
+    <string name="acceptableUsePolicySubmit">Aflever</string>
+    <string name="acceptFail">Kunne ikke indsende accept af vilkår.</string>
 </resources>

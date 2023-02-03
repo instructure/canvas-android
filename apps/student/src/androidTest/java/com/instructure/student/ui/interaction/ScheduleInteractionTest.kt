@@ -35,7 +35,6 @@ import com.instructure.student.ui.utils.FakeDateTimeProvider
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Before
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject
@@ -216,7 +215,7 @@ class ScheduleInteractionTest : StudentTest() {
         schedulePage.clickScheduleItem(assignment.name!!)
 
         assignmentDetailsPage.assertPageObjects()
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
     @Test

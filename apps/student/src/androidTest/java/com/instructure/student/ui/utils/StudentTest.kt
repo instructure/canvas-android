@@ -39,7 +39,6 @@ import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import java.io.File
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 abstract class StudentTest : CanvasTest() {
@@ -90,6 +89,7 @@ abstract class StudentTest : CanvasTest() {
     val elementaryCoursePage = ElementaryCoursePage()
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
+    val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val discussionDetailsPage = DiscussionDetailsPage()
     val discussionListPage = DiscussionListPage()
     val editDashboardPage = EditDashboardPage()

@@ -43,8 +43,8 @@ import com.instructure.student.R
 import com.instructure.student.adapter.GradesListRecyclerAdapter
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.dialog.WhatIfDialogStyled
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_course_grades.*
 import retrofit2.Response

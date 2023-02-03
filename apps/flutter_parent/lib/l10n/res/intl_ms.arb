@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2022-01-28T12:37:40.360857",
+  "@@last_modified": "2022-10-28T11:03:07.232972",
   "alertsLabel": "Isyarat",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -255,6 +255,13 @@
   "findSchool": "Cari Sekolah",
   "@findSchool": {
     "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findAnotherSchool": "Cari sekolah lain",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

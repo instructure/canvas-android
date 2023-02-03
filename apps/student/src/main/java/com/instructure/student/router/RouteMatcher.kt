@@ -37,7 +37,6 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
-import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
@@ -47,10 +46,10 @@ import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 import com.instructure.student.activity.*
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FileUtils

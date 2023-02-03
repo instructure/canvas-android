@@ -19,6 +19,7 @@ package com.instructure.pandautils.utils
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
+import android.content.res.Resources
 import android.view.accessibility.AccessibilityManager
 import com.instructure.pandautils.R
 
@@ -42,10 +43,15 @@ val AccessibilityManager.isSwitchAccessEnabled: Boolean
     get() = getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK).any { "com.android.switchaccess.SwitchAccessService" in it.id }
 
 fun getContentDescriptionForMinusGradeString(grade: String, context: Context): String {
+    return getContentDescriptionForMinusGradeString(grade, context.resources)
+}
+
+fun getContentDescriptionForMinusGradeString(grade: String, resources: Resources): String {
     return if (grade.contains("-")) {
-        context.getString(
-                R.string.a11y_gradeLetterMinusContentDescription,
-                grade.substringBefore("-"))
+        resources.getString(
+            R.string.a11y_gradeLetterMinusContentDescription,
+            grade.substringBefore("-")
+        )
     } else grade
 }
 

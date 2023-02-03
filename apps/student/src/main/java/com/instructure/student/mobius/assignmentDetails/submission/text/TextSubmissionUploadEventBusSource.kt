@@ -17,10 +17,9 @@
 package com.instructure.student.mobius.assignmentDetails.submission.text
 
 import android.app.Activity
-import android.net.Uri
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.pandautils.utils.*
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.remove
 import com.instructure.student.mobius.common.EventBusSource
 import org.greenrobot.eventbus.Subscribe
 

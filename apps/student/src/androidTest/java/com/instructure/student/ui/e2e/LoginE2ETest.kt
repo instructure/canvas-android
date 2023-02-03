@@ -64,7 +64,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student1)
 
         Log.d(STEP_TAG, "Log out with ${student1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
         loginWithUser(student2, true)
@@ -73,7 +73,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student2)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -85,7 +85,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student1)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -102,7 +102,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student2)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -135,7 +135,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student1)
 
         Log.d(STEP_TAG, "Log out with ${student1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
         loginWithLastSavedSchool(student2)
@@ -173,7 +173,7 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${student.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         loginWithUser(teacher, true)
@@ -185,7 +185,7 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${teacher.name} teacher.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${ta.name}, login id: ${ta.loginId}.")
         loginWithUser(ta, true)
@@ -197,7 +197,7 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${ta.name} teacher assistant.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
         loginWithUser(parent, true)
@@ -206,7 +206,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(parent)
 
         Log.d(STEP_TAG,"Log out with ${parent.name} parent.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
     }
 
     // Verify that students can sign into vanity domain
@@ -254,7 +254,7 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${student.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
@@ -302,7 +302,7 @@ class LoginE2ETest : StudentTest() {
     private fun assertDashboardPageDisplayed(user: CanvasUserApiModel)
     {
         dashboardPage.waitForRender()
-        dashboardPage.assertUserLoggedIn(user)
+        leftSideNavigationDrawerPage.assertUserLoggedIn(user)
         dashboardPage.assertDisplaysCourses()
         dashboardPage.assertPageObjects()
     }

@@ -47,6 +47,7 @@ class SubmissionDetailsFragment :
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
     val isObserver by BooleanArg(key = Const.IS_OBSERVER, default = false)
+    private val initialSelectedSubmissionAttempt by LongArg(key = Const.SUBMISSION_ATTEMPT)
 
     override fun makeEffectHandler() = SubmissionDetailsEffectHandler()
 
@@ -57,7 +58,12 @@ class SubmissionDetailsFragment :
 
     override fun makePresenter() = SubmissionDetailsPresenter
 
-    override fun makeInitModel() = SubmissionDetailsModel(canvasContext = canvasContext, assignmentId = assignmentId, isObserver = isObserver)
+    override fun makeInitModel() = SubmissionDetailsModel(
+        canvasContext = canvasContext,
+        assignmentId = assignmentId,
+        isObserver = isObserver,
+        initialSelectedSubmissionAttempt = initialSelectedSubmissionAttempt
+    )
 
     override fun getExternalEventSources() = listOf(
         ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
@@ -89,10 +95,11 @@ class SubmissionDetailsFragment :
         )
 
     companion object {
-        fun makeRoute(course: CanvasContext, assignmentId: Long, isObserver: Boolean = false): Route {
+        fun makeRoute(course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null): Route {
             val bundle = course.makeBundle {
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
                 putBoolean(Const.IS_OBSERVER, isObserver)
+                initialSelectedSubmissionAttempt?.let { putLong(Const.SUBMISSION_ATTEMPT, it) }
             }
             return Route(null, SubmissionDetailsFragment::class.java, course, bundle)
         }
@@ -110,6 +117,11 @@ class SubmissionDetailsFragment :
             if (route.paramsHash.containsKey(RouterParams.ASSIGNMENT_ID)) {
                 val assignmentId = route.paramsHash[RouterParams.ASSIGNMENT_ID]?.toLong() ?: -1
                 route.arguments.putLong(Const.ASSIGNMENT_ID, assignmentId)
+            }
+
+            if (route.paramsHash.containsKey(Const.SUBMISSION_ATTEMPT)) {
+                val submissionAttempt = route.paramsHash[Const.SUBMISSION_ATTEMPT]?.toLong() ?: -1
+                route.arguments.putLong(Const.SUBMISSION_ATTEMPT, submissionAttempt)
             }
 
             return SubmissionDetailsFragment().withArgs(route.arguments)

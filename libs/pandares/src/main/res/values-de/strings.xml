@@ -1302,7 +1302,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Nach „Meine Dateien“ hochladen</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Aufgabe abgeben</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Einen Kurs auswählen</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Wählen Sie einen Kurs, der ausgewählte Kurs ist: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Aufgabe auswählen</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Wählen Sie eine Aufgabe, die ausgewählte Aufgabe ist: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Hochladen abbrechen?</string>
     <string name="cancelFileUploadMessage">Dies bricht das Hochladen ab.</string>
@@ -1317,4 +1319,16 @@
     <string name="createdByStudentView">Erstellt von Studierendenansicht</string>
     <string name="discussionErrorToast">Fehler aufgetreten. Das Thema ist möglicherweise nicht mehr verfügber.</string>
     <string name="cameraPermissionPermanentlyDenied">Die Kameraberechtigung wurde dauerhaft verweigert. Gehen Sie zu den App-Einstellungen, um die Berechtigung zu erteilen.</string>
+    <string name="unpublish_assignment_error">Die Veröffentlichung der Aufgabe kann nicht aufgehoben werden, wenn es Einsendungen von Studierenden gibt.</string>
+    <string name="subscribeToCalendar">Kalender-Feed abonnieren</string>
+    <string name="subscribeToCalendarMessage">Sie können Ihren Canvas-Kalender mit dem Kalender Ihres Google-Kontos synchronisieren, indem Sie in diesem Dialog auf die Schaltfläche „Abonnieren“ klicken. Anschließend müssen Sie die Google-Kalender-App auf Ihrem Gerät aufrufen und die Synchronisierung in den Einstellungen für den neuen Kalender aktivieren.</string>
+    <string name="subscribeButton">Anmelden</string>
+    <string name="switchToLightMode">In den hellen Modus wechseln</string>
+    <string name="switchToDarkMode">In den dunklen Modus wechseln</string>
+    <string name="acceptableUsePolicyDescription">Entweder sind Sie ein(e) neue(r) Benutzer*in oder die Richtlinie zur akzeptablen Nutzung hat sich geändert, seit Sie ihr zuletzt zugestimmt haben. Bitte stimmen Sie der Richtlinie zur akzeptablen Nutzung zu, bevor Sie fortfahren.</string>
+    <string name="acceptableUsePolicyTitle">Richtlinie zur akzeptablen Nutzung</string>
+    <string name="acceptableUsePolicyButton">Richtlinie zur akzeptablen Nutzung</string>
+    <string name="acceptableUsePolicyAgree">Ich stimme der Richtlinie zur akzeptablen Nutzung zu</string>
+    <string name="acceptableUsePolicySubmit">Absenden</string>
+    <string name="acceptFail">Zustimmung zu Richtlinie konnte nicht abgesendet werden</string>
 </resources>

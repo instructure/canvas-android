@@ -53,7 +53,7 @@ class TodoInteractionTest : StudentTest() {
 
         todoPage.assertAssignmentDisplayed(assignment)
         todoPage.selectAssignment(assignment)
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
         Espresso.pressBack() // Back to todo page
 
         todoPage.assertQuizDisplayed(quiz)

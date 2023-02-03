@@ -15,11 +15,7 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionStreamItem
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
@@ -48,7 +44,7 @@ class PushNotificationInteractionTest : StudentTest() {
         notificationPage.assertNotificationDisplayed(assignment.name!!)
         notificationPage.clickNotification(assignment.name!!)
 
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
     private fun goToNotifications(numSubmissions: Int = 1) : MockCanvas {

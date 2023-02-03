@@ -199,7 +199,7 @@ class ScheduleE2ETest : StudentTest() {
             Log.d(STEP_TAG, "Open '${testMissingAssignment.name}' assignment and verify if we are landing on the ${testMissingAssignment.name} assignment's details page by checking it's title, which is actually is the assignment's name.")
             schedulePage.clickScheduleItem(testMissingAssignment.name)
             assignmentDetailsPage.assertPageObjects()
-            assignmentDetailsPage.verifyAssignmentTitle(testMissingAssignment.name)
+            assignmentDetailsPage.assertAssignmentTitle(testMissingAssignment.name)
 
             Log.d(STEP_TAG, "Navigate back to Schedule Page and assert it is loaded.")
             Espresso.pressBack()
