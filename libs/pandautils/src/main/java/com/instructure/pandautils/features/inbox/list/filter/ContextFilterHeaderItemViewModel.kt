@@ -25,5 +25,5 @@ class ContextFilterHeaderItemViewModel(val title: String) : ItemViewModel {
         get() = R.layout.item_context_filter_header
 
     override val viewType: Int
-        get() = 1
+        get() = ContextFilterItemViewType.HEADER.viewType
 }

@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.inbox.list
 
-import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,7 +32,6 @@ import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryI
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,7 +39,6 @@ import javax.inject.Inject
 @HiltViewModel
 class InboxViewModel @Inject constructor(
     private val inboxRepository: InboxRepository,
-    @ApplicationContext private val context: Context,
     private val resources: Resources,
     private val inboxEntryItemCreator: InboxEntryItemCreator
 ) : ViewModel() {
@@ -52,7 +49,7 @@ class InboxViewModel @Inject constructor(
 
     val data: LiveData<InboxViewData>
         get() = _data
-    private val _data = MutableLiveData<InboxViewData>(InboxViewData(getTextForScope(InboxApi.Scope.INBOX), filterText = resources.getString(R.string.allCourses)))
+    private val _data = MutableLiveData(InboxViewData(getTextForScope(InboxApi.Scope.INBOX), filterText = resources.getString(R.string.allCourses)))
 
     val itemViewModels: LiveData<List<InboxEntryItemViewModel>>
         get() = _itemViewModels
@@ -147,12 +144,15 @@ class InboxViewModel @Inject constructor(
     }
 
     private fun createItemViewModelFromConversation(conversation: Conversation): InboxEntryItemViewModel {
-        return inboxEntryItemCreator.createInboxEntryItem(conversation, { starred ->
-            _events.value = Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope))
-        }, { view, selected ->
-            _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
-            handleSelectionMode()
-        })
+        return inboxEntryItemCreator.createInboxEntryItem(
+            conversation,
+            openConversationCallback = { starred ->
+                _events.value = Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope))
+            },
+            selectionModeCallback = { view, selected ->
+                _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
+                handleSelectionMode()
+            })
     }
 
     private fun handleSelectionMode() {

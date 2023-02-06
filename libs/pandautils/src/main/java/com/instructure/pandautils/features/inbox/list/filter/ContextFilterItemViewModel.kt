@@ -25,7 +25,7 @@ class ContextFilterItemViewModel(val title: String, val id: Long, val onClick: (
         get() = R.layout.item_context_filter
 
     override val viewType: Int
-        get() = 0
+        get() = ContextFilterItemViewType.FILTER_ITEM.viewType
 
     fun onClicked() {
         onClick(id)

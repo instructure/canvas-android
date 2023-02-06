@@ -1358,13 +1358,13 @@
     <string name="unstarSelected">Unstar</string>
 
     <string name="inboxOperationFailed">Failed to perform operation</string>
-    <string name="inboxDeletedConfirmation">%1$s deleted</string>
-    <string name="inboxArchivedConfirmation">%1$s archived</string>
-    <string name="inboxUnarchivedConfirmation">%1$s unarchived</string>
-    <string name="inboxMarkAsReadConfirmation">%1$s marked as read</string>
-    <string name="inboxMarkAsUnreadConfirmation">%1$s marked as unread</string>
-    <string name="inboxStarredConfirmation">%1$s starred</string>
-    <string name="inboxUnstarredConfirmation">%1$s unstarred</string>
+    <string name="inboxDeletedConfirmation">%s deleted</string>
+    <string name="inboxArchivedConfirmation">%s archived</string>
+    <string name="inboxUnarchivedConfirmation">%s unarchived</string>
+    <string name="inboxMarkAsReadConfirmation">%s marked as read</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marked as unread</string>
+    <string name="inboxStarredConfirmation">%s starred</string>
+    <string name="inboxUnstarredConfirmation">%s unstarred</string>
 
     <string name="deleteConfirmation">These conversations will be deleted from the Inbox on all your devices. This action cannot be undone.</string>
     <string name="failedToLoadNextPage">Failed to load next page. Check your internet connection.</string>

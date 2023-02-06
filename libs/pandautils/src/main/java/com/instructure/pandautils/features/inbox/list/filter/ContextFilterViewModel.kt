@@ -67,3 +67,8 @@ class ContextFilterViewModel @Inject constructor(
         _itemViewModels.value = items
     }
 }
+
+enum class ContextFilterItemViewType(val viewType: Int) {
+    FILTER_ITEM(0),
+    HEADER(1)
+}

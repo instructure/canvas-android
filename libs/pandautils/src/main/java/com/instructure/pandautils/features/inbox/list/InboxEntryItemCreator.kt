@@ -31,7 +31,8 @@ import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryI
 class InboxEntryItemCreator(private val context: Context, private val apiPrefs: ApiPrefs) {
 
     fun createInboxEntryItem(
-        conversation: Conversation, openConversationCallback: (Boolean) -> Unit,
+        conversation: Conversation,
+        openConversationCallback: (Boolean) -> Unit,
         selectionModeCallback: (View, Boolean) -> Unit
     ): InboxEntryItemViewModel {
         val viewData = InboxEntryViewData(
