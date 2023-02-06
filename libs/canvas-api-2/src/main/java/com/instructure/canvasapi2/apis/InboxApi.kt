@@ -32,8 +32,6 @@ import java.io.IOException
 
 object InboxApi {
 
-    const val CONVERSATION_MARK_UNREAD = "mark_as_unread"
-
     enum class Scope {
         INBOX, UNREAD, ARCHIVED, STARRED, SENT
     }
@@ -97,8 +95,8 @@ object InboxApi {
                        @Field("attachment_ids[]") attachmentIds: LongArray,
                        @Field("context_code") contextCode: String?): Call<Conversation>
 
-        @PUT("conversations")
-        fun markConversationAsUnread(@Query("conversation_ids[]") conversationId: Long, @Query("event") conversationEvent: String): Call<Void>
+        @PUT("conversations/{conversationId}?conversation[workflow_state]=unread")
+        fun markConversationAsUnread(@Path("conversationId") conversationId: Long): Call<Void>
 
         @PUT("conversations")
         suspend fun batchUpdateConversations(@Query("conversation_ids[]") conversationIds: List<Long>, @Query("event") conversationEvent: String): DataResult<Progress>
@@ -154,8 +152,8 @@ object InboxApi {
         callback.addCall(adapter.build(InboxInterface::class.java, params).addMessage(conversationId, recipientIds, message, includedMessageIds, attachmentIds, contextCode)).enqueue(callback)
     }
 
-    fun markConversationAsUnread(adapter: RestBuilder, callback: StatusCallback<Void>, params: RestParams, conversationId: Long, conversationEvent: String) {
-        callback.addCall(adapter.build(InboxInterface::class.java, params).markConversationAsUnread(conversationId, conversationEvent)).enqueue(callback)
+    fun markConversationAsUnread(adapter: RestBuilder, callback: StatusCallback<Void>, params: RestParams, conversationId: Long) {
+        callback.addCall(adapter.build(InboxInterface::class.java, params).markConversationAsUnread(conversationId)).enqueue(callback)
     }
 
     @Throws(IOException::class)

@@ -121,7 +121,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 R.id.inboxUnstarSelected -> viewModel.unstarSelected()
                 R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
                 R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
-                R.id.inboxDeleteSelected -> deleteSelected()
+                R.id.inboxDeleteSelected -> viewModel.confirmDelete()
                 R.id.inboxArchiveSelected -> viewModel.archiveSelected()
                 R.id.inboxUnarchiveSelected -> viewModel.unarchiveSelected()
             }
@@ -147,9 +147,10 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         })
     }
 
-    private fun deleteSelected() {
+    private fun deleteSelected(count: Int) {
+        val message = resources.getQuantityString(R.plurals.inboxConfirmDelete, count)
         AlertDialog.Builder(requireContext())
-            .setMessage(R.string.deleteConfirmation)
+            .setMessage(message)
             .setPositiveButton(R.string.delete) { _, _ -> viewModel.deleteSelected() }
             .setNegativeButton(R.string.cancel, null)
             .showThemed()
@@ -208,6 +209,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
             is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
             InboxAction.RefreshFailed -> Snackbar.make(requireView(), R.string.conversationsRefreshFailed, Snackbar.LENGTH_LONG).show()
+            is InboxAction.ConfirmDelete -> deleteSelected(action.count)
         }
     }
 

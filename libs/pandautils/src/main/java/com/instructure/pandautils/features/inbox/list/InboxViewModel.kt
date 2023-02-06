@@ -102,6 +102,7 @@ class InboxViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 silentRefreshJob?.cancel()
+                exitSelectionMode()
                 lastRequestedPageLink = null
                 val dataResult = inboxRepository.getConversations(scope, forceNetwork, contextFilter)
                 val conversations = dataResult.dataOrThrow
@@ -335,16 +336,20 @@ class InboxViewModel @Inject constructor(
 
     fun handleBackPressed(): Boolean {
         if (_data.value?.selectionMode == true) {
-            _itemViewModels.value?.forEach {
-                it.selected = false
-                it.selectionModeActive = false
-                it.notifyChange()
-            }
-            _data.value = _data.value?.copy(selectedItemsCount = "", selectionMode = false)
+            exitSelectionMode()
             return true
         } else {
             return false
         }
+    }
+
+    private fun exitSelectionMode() {
+        _itemViewModels.value?.forEach {
+            it.selected = false
+            it.selectionModeActive = false
+            it.notifyChange()
+        }
+        _data.value = _data.value?.copy(selectedItemsCount = "", selectionMode = false)
     }
 
     fun invalidateCache() {
@@ -420,5 +425,10 @@ class InboxViewModel @Inject constructor(
         } else {
             _state.postValue(ViewState.Success)
         }
+    }
+
+    fun confirmDelete() {
+        val selectedCount = _itemViewModels.value?.count { it.selected } ?: 1
+        _events.value = Event(InboxAction.ConfirmDelete(selectedCount))
     }
 }

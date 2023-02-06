@@ -132,10 +132,10 @@ object InboxManager {
         )
     }
 
-    fun markConversationAsUnread(conversationId: Long, conversationEvent: String, callback: StatusCallback<Void>) {
+    fun markConversationAsUnread(conversationId: Long, callback: StatusCallback<Void>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
-        InboxApi.markConversationAsUnread(adapter, callback, params, conversationId, conversationEvent)
+        InboxApi.markConversationAsUnread(adapter, callback, params, conversationId)
     }
 
     fun getConversationSynchronous(conversationId: Long, forceNetwork: Boolean): Conversation? {

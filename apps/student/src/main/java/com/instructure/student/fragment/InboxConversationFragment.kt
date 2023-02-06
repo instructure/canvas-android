@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -310,7 +309,7 @@ class InboxConversationFragment : ParentFragment() {
     private fun markConversationUnread() {
         unreadCall?.cancel()
         unreadCall = tryWeave {
-            awaitApi<Void> { InboxManager.markConversationAsUnread(conversation.id, InboxApi.CONVERSATION_MARK_UNREAD, it) }
+            awaitApi<Void> { InboxManager.markConversationAsUnread(conversation.id, it) }
             onConversationUpdated(true)
         } catch {
             toast(R.string.errorConversationGeneric)
