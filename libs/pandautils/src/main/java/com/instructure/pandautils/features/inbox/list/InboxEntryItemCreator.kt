@@ -53,7 +53,7 @@ class InboxEntryItemCreator(private val context: Context, private val apiPrefs: 
     private fun createAvatarData(conversation: Conversation): AvatarViewData {
         return AvatarViewData(
             conversation.avatarUrl ?: "",
-            conversation.participants[0].name ?: "",
+            conversation.participants.firstOrNull()?.name ?: "",
             conversation.participants.size > 2
         )
     }

@@ -232,17 +232,17 @@ class InboxViewModel @Inject constructor(
     }
 
     fun starSelected() {
-        performBatchOperation("star", { ids, _ ->
+        performBatchOperation("star") { ids, _ ->
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
                 it.notifyChange()
                 _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size)))
             }
-        })
+        }
     }
 
     fun unstarSelected() {
-        performBatchOperation("unstar", { ids, progress ->
+        performBatchOperation("unstar") { ids, progress ->
             if (scope == InboxApi.Scope.STARRED) {
                 removeItemsAndSilentUpdate(ids, progress)
             } else {
@@ -252,11 +252,11 @@ class InboxViewModel @Inject constructor(
                     _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
                 }
             }
-        })
+        }
     }
 
     fun markAsReadSelected() {
-        performBatchOperation("mark_as_read", { ids, progress ->
+        performBatchOperation("mark_as_read") { ids, progress ->
             if (scope == InboxApi.Scope.UNREAD) {
                 removeItemsAndSilentUpdate(ids, progress)
             } else {
@@ -267,43 +267,43 @@ class InboxViewModel @Inject constructor(
                     _events.value = Event(InboxAction.UpdateUnreadCount)
                 }
             }
-        })
+        }
     }
 
     fun markAsUnreadSelected() {
-        performBatchOperation("mark_as_unread", { ids, progress ->
+        performBatchOperation("mark_as_unread") { ids, progress ->
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
                 it.notifyChange()
                 _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
                 _events.value = Event(InboxAction.UpdateUnreadCount)
             }
-        })
+        }
     }
 
     fun deleteSelected() {
-        performBatchOperation("destroy", { ids, progress ->
+        performBatchOperation("destroy") { ids, progress ->
             removeItemsAndSilentUpdate(ids, progress)
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxDeletedConfirmation, ids.size)))
             _events.value = Event(InboxAction.UpdateUnreadCount)
-        })
+        }
     }
 
     fun archiveSelected() {
-        performBatchOperation("archive", { ids, progress ->
+        performBatchOperation("archive") { ids, progress ->
             if (scope != InboxApi.Scope.STARRED) {
                 removeItemsAndSilentUpdate(ids, progress)
             }
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, ids.size)))
             _events.value = Event(InboxAction.UpdateUnreadCount)
-        })
+        }
     }
 
     fun unarchiveSelected() {
-        performBatchOperation("mark_as_read", { ids, progress ->
+        performBatchOperation("mark_as_read") { ids, progress ->
             removeItemsAndSilentUpdate(ids, progress)
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnarchivedConfirmation, ids.size)))
-        })
+        }
     }
 
     private fun performBatchOperation(operation: String, onSuccess: (Set<Long>, Progress) -> Unit) {

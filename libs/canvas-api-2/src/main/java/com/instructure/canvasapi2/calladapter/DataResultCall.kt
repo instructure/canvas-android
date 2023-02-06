@@ -64,13 +64,13 @@ class DataResultCall<T : Any>(private val delegate: Call<T>): Call<DataResult<T>
 
     private fun createSuccessResult(response: Response<T>): DataResult<T> {
         val body = response.body()
-        if (body != null) {
+        return if (body != null) {
             val linkHeaders = APIHelper.parseLinkHeaderResponse(response.headers())
             val isCachedResponse = APIHelper.isCachedResponse(response.raw())
             val apiType = if (isCachedResponse) ApiType.CACHE else ApiType.API
-            return DataResult.Success(body, linkHeaders, apiType)
+            DataResult.Success(body, linkHeaders, apiType)
         } else {
-            return DataResult.Fail()
+            DataResult.Fail()
         }
     }
 

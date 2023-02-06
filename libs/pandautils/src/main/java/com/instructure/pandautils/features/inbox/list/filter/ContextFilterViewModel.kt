@@ -50,17 +50,21 @@ class ContextFilterViewModel @Inject constructor(
         if (courses.isNotEmpty()) {
             items.add(ContextFilterHeaderItemViewModel(resources.getString(R.string.courses)))
             items.addAll(
-                courses.map { ContextFilterItemViewModel(it.name ?: "", it.id, {
-                    _events.value = Event(it)
-                }) }
+                courses.map {
+                    ContextFilterItemViewModel(it.name ?: "", it.id) {
+                        _events.value = Event(it)
+                    }
+                }
             )
         }
         if (groups.isNotEmpty()) {
             items.add(ContextFilterHeaderItemViewModel(resources.getString(R.string.groups)))
             items.addAll(
-                groups.map { ContextFilterItemViewModel(it.name ?: "", it.id, {
-                    _events.value = Event(it)
-                }) }
+                groups.map {
+                    ContextFilterItemViewModel(it.name ?: "", it.id) {
+                        _events.value = Event(it)
+                    }
+                }
             )
         }
 

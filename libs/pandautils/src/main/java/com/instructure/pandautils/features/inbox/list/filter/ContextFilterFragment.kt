@@ -100,9 +100,8 @@ class ContextFilterFragment : BottomSheetDialogFragment() {
     companion object {
 
         fun newInstance(canvasContexts: List<CanvasContext>): ContextFilterFragment {
-            val canvasContextsArrayList = canvasContexts as? ArrayList ?: ArrayList<CanvasContext>()
             val bundle = Bundle().apply {
-                putParcelableArrayList(CANVAS_CONTEXTS, canvasContextsArrayList)
+                putParcelableArrayList(CANVAS_CONTEXTS, ArrayList(canvasContexts))
             }
             return ContextFilterFragment().withArgs(bundle)
         }

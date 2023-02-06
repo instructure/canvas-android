@@ -159,8 +159,8 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         if (selectionMode && binding.editToolbar.isVisible) return
         if (!selectionMode && binding.toolbar.isVisible) return
 
-        var currentToolbar: Toolbar
-        var newToolbar: Toolbar
+        val currentToolbar: Toolbar
+        val newToolbar: Toolbar
         if (selectionMode) {
             currentToolbar = binding.toolbar
             newToolbar = binding.editToolbar
@@ -183,7 +183,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     }
 
     override val navigation: Navigation?
-        get() = if (activity is Navigation) activity as Navigation else null
+        get() = activity as? Navigation
 
     override fun title(): String = getString(R.string.inbox)
 
