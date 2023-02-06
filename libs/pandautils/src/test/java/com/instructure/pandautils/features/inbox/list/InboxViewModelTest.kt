@@ -599,5 +599,5 @@ class InboxViewModelTest {
         assertEquals(2, viewModel.itemViewModels.value!![1].data.id)
     }
 
-    private fun createViewModel() = InboxViewModel(inboxRepository, context, resources, inboxEntryItemCreator)
+    private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)
 }
