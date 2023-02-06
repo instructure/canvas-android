@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
@@ -100,7 +101,7 @@ class InboxViewModel @Inject constructor(
         fetchData()
     }
 
-    private fun fetchData(forceNetwork: Boolean = false) {
+    private fun fetchData(forceNetwork: Boolean = false, refresh: Boolean = false) {
         viewModelScope.launch {
             try {
                 silentRefreshJob?.cancel()
@@ -108,6 +109,9 @@ class InboxViewModel @Inject constructor(
                 val dataResult = inboxRepository.getConversations(scope, forceNetwork, contextFilter)
                 val conversations = dataResult.dataOrThrow
                 if (dataResult is DataResult.Success) {
+                    // Throw an error if the refreshed data comes from cache, this can happen when there is something with the network.
+                    // Refresh should always give fresh data
+                    if (refresh && dataResult.apiType == ApiType.CACHE) throw IllegalStateException()
                     nextPageLink = dataResult.linkHeaders.nextUrl
                 }
 
@@ -126,7 +130,12 @@ class InboxViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
+                if (_itemViewModels.value?.isNotEmpty() == true) {
+                    _events.postValue(Event(InboxAction.RefreshFailed))
+                    _state.postValue(ViewState.Success)
+                } else {
+                    _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
+                }
             }
         }
     }
@@ -139,7 +148,7 @@ class InboxViewModel @Inject constructor(
 
     private fun createItemViewModelFromConversation(conversation: Conversation): InboxEntryItemViewModel {
         return inboxEntryItemCreator.createInboxEntryItem(conversation, { starred ->
-            _events.postValue(Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope)))
+            _events.value = Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope))
         }, { view, selected ->
             _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
             handleSelectionMode()
@@ -205,7 +214,7 @@ class InboxViewModel @Inject constructor(
 
     fun refresh() {
         _state.postValue(ViewState.Refresh)
-        fetchData(true)
+        fetchData(true, true)
     }
 
     fun openScopeSelector() {

@@ -56,4 +56,5 @@ sealed class InboxAction {
     object FailedToLoadNextPage : InboxAction()
     object UpdateUnreadCount : InboxAction()
     data class OpenContextFilterSelector(val canvasContexts: List<CanvasContext>) : InboxAction()
+    object RefreshFailed : InboxAction()
 }

@@ -207,6 +207,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             InboxAction.FailedToLoadNextPage -> Snackbar.make(requireView(), R.string.failedToLoadNextPage, Snackbar.LENGTH_LONG).show()
             InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
             is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
+            InboxAction.RefreshFailed -> Snackbar.make(requireView(), R.string.conversationsRefreshFailed, Snackbar.LENGTH_LONG).show()
         }
     }
 
