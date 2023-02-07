@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.inbox.list
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +50,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.setHidden
@@ -301,6 +303,12 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(inboxRouter)
+    }
+
+    // We might need to change this for the teacher implementation
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.emptyInboxView.handleConfigChange(isTablet, resources.configuration.orientation)
     }
 
     companion object {
