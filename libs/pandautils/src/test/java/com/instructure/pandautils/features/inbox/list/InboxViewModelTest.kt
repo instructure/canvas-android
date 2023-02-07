@@ -599,5 +599,20 @@ class InboxViewModelTest {
         assertEquals(2, viewModel.itemViewModels.value!![1].data.id)
     }
 
+    @Test
+    fun `Confirm delete sends event with the selected item count`() {
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+        )
+
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.itemViewModels.value!![0].onLongClick(View(context))
+        viewModel.itemViewModels.value!![1].onClick(View(context))
+        viewModel.confirmDelete()
+
+        assertEquals(InboxAction.ConfirmDelete(2), viewModel.events.value!!.peekContent())
+    }
+
     private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)
 }
