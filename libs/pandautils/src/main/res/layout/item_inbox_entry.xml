@@ -41,7 +41,8 @@
         android:background="@{itemViewModel.selected ? @color/backgroundMedium : @color/backgroundLightest}"
         android:onClick="@{(view) -> itemViewModel.onClick(view)}"
         android:onLongClick="@{(view) -> itemViewModel.onLongClick(view)}"
-        android:longClickable="true">
+        android:longClickable="true"
+        app:accessibilityLongClickDescription="@{@string/a11y_inboxEntryLongClickDescription}">
 
         <ImageView
             android:id="@+id/unreadMark"

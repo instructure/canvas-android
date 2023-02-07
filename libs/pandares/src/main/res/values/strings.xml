@@ -1375,4 +1375,9 @@
     <string name="inboxScopeInbox">Inbox</string>
     <string name="inboxContextSelectorTitle">Select Course or Group</string>
     <string name="inboxClearFilter">Clear</string>
+    <string name="a11y_courseFilterContentDescription">Course filter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">select</string>
+    <string name="a11y_itemSelectedSwipeForActions">Selection mode activated. Swipe for actions.</string>
+    <string name="a11y_conversationSelected">Conversation selected</string>
+    <string name="a11y_conversationDeselected">Conversation deselected</string>
 </resources>

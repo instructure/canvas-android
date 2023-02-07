@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -179,7 +180,9 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         val fadeIn = AlphaAnimation(0f, 1f)
         fadeIn.duration = ANIM_DURATION
         fadeIn.startOffset = ANIM_DURATION
-        fadeIn.addListener(onStart = { newToolbar.setVisible(true) })
+        fadeIn.addListener(onStart = { newToolbar.setVisible(true) }, onEnd = {
+            if (selectionMode) binding.editToolbar.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+        })
 
         currentToolbar.startAnimation(fadeOut)
         newToolbar.startAnimation(fadeIn)
@@ -239,7 +242,10 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         val inAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.flip_in_anim)
         inAnimation.duration = ANIM_DURATION
         inAnimation.startOffset = ANIM_DURATION
-        inAnimation.addListener(onStart = { inView.setHidden(false) })
+        inAnimation.addListener(onStart = { inView.setHidden(false) }, onEnd = {
+            val textResource = if (selected) R.string.a11y_conversationSelected else R.string.a11y_conversationDeselected
+            inView.announceForAccessibility(getString(textResource))
+        })
 
         outView.startAnimation(outAnimation)
         inView.startAnimation(inAnimation)
