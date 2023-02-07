@@ -118,6 +118,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private fun setUpEditToolbar() {
         binding.editToolbar.setupAsBackButton(this)
+        binding.editToolbar.setNavigationContentDescription(R.string.a11y_exitSelectionMode)
         binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
             when (it.itemId) {
                 R.id.inboxStarSelected -> viewModel.starSelected()
@@ -181,7 +182,11 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         fadeIn.duration = ANIM_DURATION
         fadeIn.startOffset = ANIM_DURATION
         fadeIn.addListener(onStart = { newToolbar.setVisible(true) }, onEnd = {
-            if (selectionMode) binding.editToolbar.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+            if (selectionMode) {
+                binding.editToolbar.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+            } else {
+                newToolbar.announceForAccessibility(getString(R.string.a11y_selectionModeDeactivated))
+            }
         })
 
         currentToolbar.startAnimation(fadeOut)

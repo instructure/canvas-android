@@ -1377,7 +1377,9 @@
     <string name="inboxClearFilter">Clear</string>
     <string name="a11y_courseFilterContentDescription">Course filter: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">select</string>
-    <string name="a11y_itemSelectedSwipeForActions">Selection mode activated. Swipe for actions.</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversation selected. Selection mode activated. Navigate for actions.</string>
     <string name="a11y_conversationSelected">Conversation selected</string>
     <string name="a11y_conversationDeselected">Conversation deselected</string>
+    <string name="a11y_exitSelectionMode">Exit selection mode</string>
+    <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
 </resources>
