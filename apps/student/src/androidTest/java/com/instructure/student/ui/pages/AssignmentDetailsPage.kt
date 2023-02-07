@@ -22,6 +22,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
@@ -96,6 +97,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.gradeCell)).scrollTo().click()
     }
 
+    fun assertSubmissionAndRubricLabel() {
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric)))
+    }
+
     private fun assertStatus(statusResourceId: Int) {
         onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(statusResourceId)))
     }
@@ -143,6 +148,30 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun assertDisplaysAddBookmarkButton() {
         onViewWithText(R.string.addBookmark).assertDisplayed()
+    }
+
+    fun assertSelectedAttempt(attemptNumber: Int) {
+        assertAttemptInformation()
+        onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)), withText("Attempt $attemptNumber"))).assertDisplayed()
+    }
+
+    fun assertNoAttemptSpinner() {
+        onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).check(doesNotExist())
+        onView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).check(doesNotExist())
+    }
+
+    fun assertAttemptSpinnerDisplayed() {
+        onView(withId(R.id.attemptSpinner)).assertDisplayed()
+    }
+
+    fun selectAttempt(attemptNumber: Int) {
+        onView(withId(R.id.attemptSpinner)).click()
+        onView(allOf(withId(R.id.attemptTitle), withText("Attempt $attemptNumber"))).click()
+    }
+
+    private fun assertAttemptInformation() {
+        waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
+        waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
     }
 }
 

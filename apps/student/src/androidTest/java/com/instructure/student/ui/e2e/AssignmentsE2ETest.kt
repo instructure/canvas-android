@@ -92,18 +92,31 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.assertHasAssignment(pointsTextAssignment)
         assignmentListPage.clickAssignment(pointsTextAssignment)
 
-        Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
-        SubmissionsApi.submitCourseAssignment(
-                submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
-                courseId = course.id,
-                assignmentId = pointsTextAssignment.id,
-                studentToken = student.token,
-                fileIds = emptyList<Long>().toMutableList()
-        )
+        Log.d(STEP_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page, and there is no submission yet.")
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(STEP_TAG,"Refresh the page, and assert that the assignment ${pointsTextAssignment.name} has been submitted successfully.")
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertAssignmentSubmitted()
+        Log.d(STEP_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.goToSubmissionDetails()
+
+        Log.d(STEP_TAG, "Assert that there is no submission yet for the '${pointsTextAssignment.name}' assignment.")
+        submissionDetailsPage.assertNoSubmissionEmptyView()
+        Espresso.pressBack()
+
+        Log.d(PREPARATION_TAG,"Submit assignment via UI: ${pointsTextAssignment.name} for student: ${student.name}." +
+                "Assert that the Text Submission Upload Page is displayed.")
+        assignmentDetailsPage.clickSubmit()
+        textSubmissionUploadPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Type some text into the RCE editor input field and click on 'SUBMIT' button.")
+        textSubmissionUploadPage.typeText("This is the submission text.")
+        textSubmissionUploadPage.clickOnSubmitButton()
+
+        Log.d(STEP_TAG, "Wait for the submission to propogate and assert that the status became 'Submitted' and the 'Submission & Rubric' is still displayed.")
+        assignmentDetailsPage.waitForSubmissionComplete()
+        assignmentDetailsPage.assertStatusSubmitted()
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
 
         Log.d(PREPARATION_TAG,"Grade submission: ${pointsTextAssignment.name} with 13 points.")
         val textGrade = SubmissionsApi.gradeSubmission(
@@ -581,5 +594,79 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that the audio comment has been displayed.")
         submissionDetailsPage.assertAudioCommentDisplayed()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testSubmissionAttemptSelection() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
+        val pointsTextAssignment = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacher.token,
+                pointsPossible = 15.0,
+                dueAt = 1.days.fromNow.iso8601
+            )
+        )
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: ${course.name}.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG, "Verify that our assignments are present," +
+                "along with any grade/date info. Click on assignment ${pointsTextAssignment.name}.")
+        assignmentListPage.assertHasAssignment(pointsTextAssignment)
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+
+        Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
+            courseId = course.id,
+            assignmentId = pointsTextAssignment.id,
+            studentToken = student.token,
+            fileIds = emptyList<Long>().toMutableList()
+        )
+
+        Log.d(STEP_TAG, "Refresh the page.")
+        assignmentDetailsPage.refresh()
+
+        Log.d(STEP_TAG, "Assert that when only there is one attempt, the spinner is not displayed.")
+        assignmentDetailsPage.assertNoAttemptSpinner()
+
+        Log.d(PREPARATION_TAG,"Generate another submission for assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
+            courseId = course.id,
+            assignmentId = pointsTextAssignment.id,
+            studentToken = student.token,
+            fileIds = emptyList<Long>().toMutableList()
+        )
+
+        Log.d(STEP_TAG, "Refresh the page.")
+        assignmentDetailsPage.refresh()
+
+        Log.d(STEP_TAG, "Assert that when only there is one attempt, the spinner is displayed and the last/newest attempt is selected.")
+        assignmentDetailsPage.assertAttemptSpinnerDisplayed()
+        assignmentDetailsPage.assertSelectedAttempt(2)
+
+        Log.d(STEP_TAG, "Select the other attempt (1st) and assert if it's displayed as the selected one.")
+        assignmentDetailsPage.selectAttempt(1)
+        assignmentDetailsPage.assertSelectedAttempt(1)
     }
 }

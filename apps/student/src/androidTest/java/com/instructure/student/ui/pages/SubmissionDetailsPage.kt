@@ -17,7 +17,6 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -33,14 +32,16 @@ import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.OnViewWithStringTextIgnoreCase
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.*
+import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
+import org.hamcrest.Matchers.containsString
 import java.lang.Thread.sleep
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
@@ -235,6 +236,9 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
     }
 
+    fun assertNoSubmissionEmptyView() {
+        onView(allOf(withId(R.id.title), withText(R.string.submissionDetailsNoSubmissionYet), withAncestor(withId(R.id.submissionDetailsEmptyContent)))).assertDisplayed()
+    }
 
 }
 
