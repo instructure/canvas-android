@@ -226,7 +226,7 @@ class InboxViewModel @Inject constructor(
         if (newScope != scope) {
             scope = newScope
             _state.postValue(ViewState.Loading)
-            _data.postValue(_data.value?.copy(scope = getTextForScope(scope)))
+            _data.value = _data.value?.copy(scope = getTextForScope(scope))
             _itemViewModels.postValue(emptyList())
             fetchData()
         }
