@@ -151,7 +151,7 @@ class MessageThreadPresenter(
 
     fun markConversationUnread() {
         tryWeave {
-            awaitApi<Void> { markConversationAsUnread(conversation.id, InboxApi.CONVERSATION_MARK_UNREAD, it) }
+            awaitApi<Void> { markConversationAsUnread(conversation.id, it) }
             conversation.workflowState = Conversation.WorkflowState.UNREAD
             viewCallback?.onConversationMarkedAsUnread(position)
         } catch {
