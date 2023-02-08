@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.NetworkUtils
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -44,6 +45,7 @@ import com.instructure.student.events.post
 import kotlinx.android.synthetic.main.fragment_create_announcement.*
 import kotlinx.coroutines.Job
 
+@PageView("courses/{canvasContext}/discussion_topics/new?is_announcement=true")
 @ScreenView(SCREEN_VIEW_CREATE_ANNOUNCEMENT)
 class CreateAnnouncementFragment : ParentFragment() {
 

@@ -26,13 +26,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notification_preferences.*
 import javax.inject.Inject
 
+@PageView(url = "profile/communication")
+@ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @AndroidEntryPoint
 class EmailNotificationPreferencesFragment : Fragment() {
 
