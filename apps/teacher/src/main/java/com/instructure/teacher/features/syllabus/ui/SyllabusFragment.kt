@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
@@ -28,6 +29,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.features.syllabus.*
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 
+@PageView("{canvasContext}/assignments/syllabus")
 @ScreenView(SCREEN_VIEW_SYLLABUS)
 class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState>() {
 

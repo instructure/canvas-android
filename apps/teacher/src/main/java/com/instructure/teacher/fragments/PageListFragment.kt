@@ -17,13 +17,13 @@
 
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -46,19 +46,20 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView(url = "{canvasContext}/pages")
 @ScreenView(SCREEN_VIEW_PAGE_LIST)
 class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView, PageViewHolder, PageListAdapter>(), PageListView {
 
-    private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
-    private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
+    private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
 
-    private var mNeedToForceNetwork = false
+    private var needToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_page_list
     override val recyclerView: RecyclerView get() = pageRecyclerView
-    override fun getPresenterFactory() = PageListPresenterFactory(mCanvasContext)
+    override fun getPresenterFactory() = PageListPresenterFactory(canvasContext)
     override fun onPresenterPrepared(presenter: PageListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
             rootView = rootView,
@@ -86,14 +87,14 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
     override fun onCreateView(view: View) {
-        mLinearLayoutManager.orientation = RecyclerView.VERTICAL
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
     }
 
     override fun onReadySetGo(presenter: PageListPresenter) {
         if(recyclerView.adapter == null) {
             mRecyclerView.adapter = adapter
         }
-        presenter.loadData(mNeedToForceNetwork)
+        presenter.loadData(needToForceNetwork)
     }
 
     override fun onResume() {
@@ -112,9 +113,9 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
     override fun createAdapter(): PageListAdapter {
-        return PageListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor) { page ->
+        return PageListAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { page ->
             val args = PageDetailsFragment.makeBundle(page)
-            RouteMatcher.route(requireContext(), Route(null, PageDetailsFragment::class.java, mCanvasContext, args))
+            RouteMatcher.route(requireContext(), Route(null, PageDetailsFragment::class.java, canvasContext, args))
         }
     }
 
@@ -147,7 +148,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
 
     private fun setupToolbar() {
         pageListToolbar.title = getString(R.string.tab_pages)
-        pageListToolbar.subtitle = mCanvasContext.name
+        pageListToolbar.subtitle = canvasContext.name
         pageListToolbar.setupBackButton(this)
         pageListToolbar.addSearch(getString(R.string.searchPagesHint)) { query ->
             if (query.isBlank()) {
@@ -157,7 +158,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), pageListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), pageListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews() {
@@ -165,7 +166,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
         createNewPage.backgroundTintList = ViewStyler.makeColorStateListForButton()
         createNewPage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewPage.drawable))
         createNewPage.onClickWithRequireNetwork {
-            val args = CreateOrEditPageDetailsFragment.newInstanceCreate(mCanvasContext).nonNullArgs
+            val args = CreateOrEditPageDetailsFragment.newInstanceCreate(canvasContext).nonNullArgs
             RouteMatcher.route(requireContext(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
         }
     }
@@ -177,7 +178,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
             // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
             // overwrite the data from the network if we refresh the presenter from here.
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
         }
     }
 
@@ -188,7 +189,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
             // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
             // overwrite the data from the network if we refresh the presenter from here.
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
         }
     }
 
@@ -205,7 +206,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     companion object {
 
         fun newInstance(canvasContext: CanvasContext) = PageListFragment().apply {
-            mCanvasContext = canvasContext
+            this.canvasContext = canvasContext
         }
     }
 }

@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
@@ -41,8 +43,11 @@ import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
+@PageView
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 class LtiLaunchFragment : BaseFragment() {
+
+    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private var title: String? by NullableStringArg(key = Const.TITLE)
     private var ltiUrl: String by StringArg(key = LTI_URL)
@@ -55,6 +60,11 @@ class LtiLaunchFragment : BaseFragment() {
     private var customTabLaunched: Boolean = false
 
     private var ltiUrlLaunchJob: Job? = null
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() =
+        ltiTab?.externalUrl ?: ApiPrefs.fullDomain + canvasContext?.toAPIString() + "/external_tools"
 
     override fun layoutResId(): Int = R.layout.fragment_lti_launch
 

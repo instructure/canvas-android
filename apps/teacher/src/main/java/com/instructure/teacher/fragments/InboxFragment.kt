@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
@@ -53,6 +54,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView(url = "conversations")
 @ScreenView(SCREEN_VIEW_INBOX)
 class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, InboxViewHolder, InboxAdapter>(), InboxView {
 

@@ -27,10 +27,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.NullableParcelableArg
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.loadHtmlWithIframes
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
@@ -42,6 +39,8 @@ import kotlinx.coroutines.Job
 
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
 class CalendarEventFragment : BaseFragment() {
+
+    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private val transformer = CalendarEventStateTransformer()
 

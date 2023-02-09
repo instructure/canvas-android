@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT
@@ -57,6 +58,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@PageView("courses/{canvasContext}/discussion_topics/new?is_announcement=true")
 @ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT)
 class CreateOrEditAnnouncementFragment :
         BasePresenterFragment<CreateOrEditAnnouncementPresenter, CreateOrEditAnnouncementView>(),
@@ -65,24 +67,24 @@ class CreateOrEditAnnouncementFragment :
         FileUploadDialogParent {
 
     /* The course this announcement belongs to */
-    private var mCanvasContext by ParcelableArg<CanvasContext>(Course())
+    private var canvasContext by ParcelableArg<CanvasContext>(Course())
 
     /* The announcement to be edited. This will be null if we're creating a new announcement */
-    private var mEditAnnouncement by NullableParcelableArg<DiscussionTopicHeader>()
+    private var editAnnouncement by NullableParcelableArg<DiscussionTopicHeader>()
 
     /* Menu buttons. We don't cache these because the toolbar is reconstructed on configuration change. */
-    private val mSaveMenuButton get() = toolbar.menu.findItem(R.id.menuSaveAnnouncement)
-    private val mAttachmentButton get() = toolbar.menu.findItem(R.id.menuAddAttachment)
-    private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
+    private val saveMenuButton get() = toolbar.menu.findItem(R.id.menuSaveAnnouncement)
+    private val attachmentButton get() = toolbar.menu.findItem(R.id.menuAddAttachment)
+    private val saveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
 
     /* Formats for displaying the delayed post date */
-    private val mDateFormat by lazy { DateHelper.fullMonthNoLeadingZeroDateFormat }
-    private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
+    private val dateFormat by lazy { DateHelper.fullMonthNoLeadingZeroDateFormat }
+    private val timeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
 
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
 
     /* The default date to show when the user enables delayed posting (the current date just before midnight) */
-    private val mDefaultDate: Date
+    private val defaultDate: Date
         get() = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 59)
@@ -98,7 +100,7 @@ class CreateOrEditAnnouncementFragment :
     override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_announcement
 
-    override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(mCanvasContext, mEditAnnouncement?.parcelCopy())
+    override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(canvasContext, editAnnouncement?.parcelCopy())
 
     override fun onStart() {
         super.onStart()
@@ -159,12 +161,12 @@ class CreateOrEditAnnouncementFragment :
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
-        if (presenter.isEditing) with(mSaveMenuButton) {
+        if (presenter.isEditing) with(saveMenuButton) {
             setIcon(0)
             setTitle(R.string.save)
         }
 
-        mSaveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
+        saveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun setupViews() {
@@ -235,7 +237,7 @@ class CreateOrEditAnnouncementFragment :
         updatePostDate()
 
         delaySwitch.setOnCheckedChangeListener { _, isChecked ->
-            presenter.announcement.delayedPostDate = if (isChecked) mDefaultDate else null
+            presenter.announcement.delayedPostDate = if (isChecked) defaultDate else null
             updatePostDate()
         }
 
@@ -302,8 +304,8 @@ class CreateOrEditAnnouncementFragment :
             postDateWrapper.setGone()
         } else {
             postDateWrapper.setVisible()
-            postDate.setText(mDateFormat.format(date))
-            postTime.setText(mTimeFormat.format(date))
+            postDate.setText(dateFormat.format(date))
+            postTime.setText(timeFormat.format(date))
         }
     }
 
@@ -361,7 +363,7 @@ class CreateOrEditAnnouncementFragment :
     }
 
     override fun onSaveStarted() {
-        mSaveMenuButton.isVisible = false
+        saveMenuButton.isVisible = false
         updateAttachmentButton(show = false)
         savingProgressBar.announceForAccessibility(getString(R.string.saving))
         savingProgressBar.setVisible()
@@ -369,18 +371,18 @@ class CreateOrEditAnnouncementFragment :
 
     private fun updateAttachmentButton(show: Boolean = true) {
         // Only show if (1) we're in creation mode and (2) we don't already have an attachment
-        mAttachmentButton?.isVisible = show && !presenter.isEditing && presenter.attachment == null
+        attachmentButton?.isVisible = show && !presenter.isEditing && presenter.attachment == null
     }
 
     override fun onSaveError() {
-        mSaveMenuButton.isVisible = true
+        saveMenuButton.isVisible = true
         updateAttachmentButton()
         savingProgressBar.setGone()
         toast(R.string.errorSavingAnnouncement)
     }
 
     override fun onDeleteError() {
-        mSaveMenuButton.isVisible = true
+        saveMenuButton.isVisible = true
         updateAttachmentButton()
         savingProgressBar.setGone()
         toast(R.string.errorDeletingAnnouncement)
@@ -442,13 +444,13 @@ class CreateOrEditAnnouncementFragment :
 
         fun newInstanceCreate(canvasContext: CanvasContext) =
                 CreateOrEditAnnouncementFragment().apply {
-                    mCanvasContext = canvasContext
+                    this.canvasContext = canvasContext
                 }
 
         fun newInstanceEdit(canvasContext: CanvasContext, editAnnouncement: DiscussionTopicHeader) =
                 CreateOrEditAnnouncementFragment().apply {
-                    mCanvasContext = canvasContext
-                    mEditAnnouncement = editAnnouncement
+                    this.canvasContext = canvasContext
+                    this.editAnnouncement = editAnnouncement
                 }
     }
 }

@@ -25,14 +25,12 @@ import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.NullableParcelableArg
 import instructure.androidblueprint.FragmentPresenter
 import instructure.androidblueprint.FragmentViewInterface
 import instructure.androidblueprint.PresenterFragment
 
 abstract class BasePresenterFragment<PRESENTER : FragmentPresenter<VIEW>, VIEW : FragmentViewInterface> :
     PresenterFragment<PRESENTER, VIEW>(), NavigationCallbacks {
-    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
     protected lateinit var rootView: View
 
     abstract fun layoutResId(): Int

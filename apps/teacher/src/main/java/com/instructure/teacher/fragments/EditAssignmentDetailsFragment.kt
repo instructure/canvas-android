@@ -44,8 +44,11 @@ import com.instructure.canvasapi2.models.Assignment.Companion.PASS_FAIL_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.PERCENT_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.POINTS_TYPE
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
@@ -76,15 +79,16 @@ import java.text.DecimalFormat
 import java.text.ParseException
 import java.util.*
 
+@PageView(url = "{canvasContext}/assignments/{assignmentId}")
 @ScreenView(SCREEN_VIEW_EDIT_ASSIGNMENT_DETAILS)
 class EditAssignmentDetailsFragment : BaseFragment() {
 
-    private var mCourse: Course by ParcelableArg(Course())
-    private var mAssignment: Assignment by ParcelableArg(key = ASSIGNMENT)
-    private var mIsPublished: Boolean = true
-    private var mScrollToDates: Boolean by BooleanArg(key = SHOULD_SCROLL_TO_DATES)
-    private var mDisplayGradeAs: String? = null
-    private var mSessionAuthJob: Job? = null
+    private var course: Course by ParcelableArg(Course())
+    private var assignment: Assignment by ParcelableArg(key = ASSIGNMENT)
+    private var isPublished: Boolean = true
+    private var scrollToDates: Boolean by BooleanArg(key = SHOULD_SCROLL_TO_DATES)
+    private var displayGradeAs: String? = null
+    private var sessionAuthJob: Job? = null
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
 
     private var rceImageUploadJob: Job? = null
@@ -98,19 +102,19 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     // Keeps track of which override we were editing so we can scroll back to it when the user returns from editing assignees
     private var scrollBackToOverride: AssignmentOverrideView? = null
 
-    private var mDueDateApiCalls: Job? = null
-    private var mPutAssignmentCall: Job? = null
+    private var dueDateApiCalls: Job? = null
+    private var putAssignmentCall: Job? = null
 
-    private var mScrollHandler: Handler = Handler()
+    private var scrollHandler: Handler = Handler()
 
-    private var mScrollToRunnable: Runnable = Runnable {
+    private var scrollToRunnable: Runnable = Runnable {
         if(isAdded) scrollView.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
     // We maintain a copy of the groupedDueDates to manipulate and use to display
     // overrides. When pushing changes, we update the original assignment object
     // with the changes in the copy.
-    private var mEditDateGroups: EditDateGroups = arrayListOf()
+    private var editDateGroups: EditDateGroups = arrayListOf()
 
     private val datePickerOnClick: (date: Date?, (Int, Int, Int) -> Unit) -> Unit = { date, callback ->
         DatePickerDialogFragment.getInstance(requireActivity().supportFragmentManager, date) { year, month, dayOfMonth ->
@@ -127,10 +131,14 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     private val removeOverrideClick: (DueDateGroup) -> Unit = { callback ->
         // Show confirmation dialog
         ConfirmRemoveAssignmentOverrideDialog.show(requireActivity().supportFragmentManager) {
-            if (mEditDateGroups.contains(callback)) mEditDateGroups.remove(callback)
+            if (editDateGroups.contains(callback)) editDateGroups.remove(callback)
             setupOverrides()
         }
     }
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,7 +153,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {
             @Suppress("UNCHECKED_CAST")
-            mEditDateGroups = (savedInstanceState.getSerializable(EDIT_DATE_GROUPS) as ArrayList<DueDateGroup>)
+            editDateGroups = (savedInstanceState.getSerializable(EDIT_DATE_GROUPS) as ArrayList<DueDateGroup>)
         }
 
         // Hide Keyboard
@@ -173,7 +181,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 RequestCodes.CAMERA_PIC_REQUEST -> MediaUploadUtils.handleCameraPicResult(requireActivity(), null)
                 else -> null
             }?.let { imageUri ->
-                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl -> descriptionEditor.insertImage(requireActivity(), imageUrl) }
+                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, course, requireActivity()) { imageUrl -> descriptionEditor.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
@@ -188,13 +196,13 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupPublishSwitch() = with(mAssignment) {
+    private fun setupPublishSwitch() = with(assignment) {
         // If a student has submitted something, we can't let the teacher unpublish the assignment
         // Publish status
         publishSwitch.applyTheme()
         publishSwitch.isChecked = published
-        mIsPublished = published
-        publishSwitch.setOnCheckedChangeListener { _, isChecked -> mIsPublished = isChecked }
+        isPublished = published
+        publishSwitch.setOnCheckedChangeListener { _, isChecked -> isPublished = isChecked }
         if (published && !unpublishable) {
             publishSwitch.alpha = 0.5f
             publishSwitch.setOnTouchListener { _, motionEvent ->
@@ -212,7 +220,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         ViewStyler.themeSpinner(requireContext(), displayGradeAsSpinner, ThemePrefs.brandColor)
         displayGradeAsSpinner.onItemSelectedListener = null
 
-        when(mDisplayGradeAs) {
+        when(displayGradeAs) {
             POINTS_TYPE -> displayGradeAsSpinner.setSelection(spinnerAdapter.getPosition(getString(R.string.points)))
             GPA_SCALE_TYPE -> displayGradeAsSpinner.setSelection(spinnerAdapter.getPosition(getString(R.string.gpa_scale)))
             LETTER_GRADE_TYPE -> displayGradeAsSpinner.setSelection(spinnerAdapter.getPosition(getString(R.string.letter_grade)))
@@ -225,12 +233,12 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if(view == null) return
                 when((view as TextView).text.toString()) {
-                    getString(R.string.points) -> mDisplayGradeAs = POINTS_TYPE
-                    getString(R.string.gpa_scale) -> mDisplayGradeAs = GPA_SCALE_TYPE
-                    getString(R.string.letter_grade) -> mDisplayGradeAs = LETTER_GRADE_TYPE
-                    getString(R.string.complete_incomplete) -> mDisplayGradeAs = PASS_FAIL_TYPE
-                    getString(R.string.percentage) -> mDisplayGradeAs = PERCENT_TYPE
-                    getString(R.string.not_graded) -> mDisplayGradeAs = NOT_GRADED_TYPE
+                    getString(R.string.points) -> displayGradeAs = POINTS_TYPE
+                    getString(R.string.gpa_scale) -> displayGradeAs = GPA_SCALE_TYPE
+                    getString(R.string.letter_grade) -> displayGradeAs = LETTER_GRADE_TYPE
+                    getString(R.string.complete_incomplete) -> displayGradeAs = PASS_FAIL_TYPE
+                    getString(R.string.percentage) -> displayGradeAs = PERCENT_TYPE
+                    getString(R.string.not_graded) -> displayGradeAs = NOT_GRADED_TYPE
                 }
             }
 
@@ -239,7 +247,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun setupViews() = with(mAssignment) {
+    private fun setupViews() = with(assignment) {
 
         descriptionEditor.hideEditorToolbar()
         descriptionEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@EditAssignmentDetailsFragment) }
@@ -275,8 +283,8 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
         setupPublishSwitch()
 
-        if(mDisplayGradeAs == null) {
-            mDisplayGradeAs = gradingType
+        if(displayGradeAs == null) {
+            displayGradeAs = gradingType
         }
         setupDisplayGradeAs()
 
@@ -287,14 +295,14 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         // Description
         setupDescription()
 
-        if (mEditDateGroups.isEmpty()) mEditDateGroups.addAll(mAssignment.groupedDueDates)
+        if (editDateGroups.isEmpty()) editDateGroups.addAll(assignment.groupedDueDates)
 
-        mDueDateApiCalls = weave {
+        dueDateApiCalls = weave {
             try {
                 if (groupsMapped.isEmpty() && sectionsMapped.isEmpty() && studentsMapped.isEmpty()) {
                     val sections = awaitApi<List<Section>> { SectionManager.getAllSectionsForCourse(courseId, it, false) }
                     val groups = if (groupCategoryId > 0L) awaitApi<List<Group>> { GroupCategoriesManager.getAllGroupsForCategory(groupCategoryId, it, false) } else emptyList()
-                    val students = awaitApi<List<User>> { UserManager.getAllPeopleList(mCourse, it, false) }
+                    val students = awaitApi<List<User>> { UserManager.getAllPeopleList(course, it, false) }
                     groupsMapped += groups.associateBy { it.id }
                     sectionsMapped += sections.associateBy { it.id }
                     studentsMapped += students.associateBy { it.id }
@@ -302,14 +310,14 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 setupAddOverrideButton()
                 setupOverrides()
 
-                if (mScrollToDates) {
-                    mScrollToDates = false
+                if (scrollToDates) {
+                    scrollToDates = false
                     // We came from the Dates page, scroll to the dates for editing
-                    mScrollHandler.postDelayed(mScrollToRunnable, 300)
+                    scrollHandler.postDelayed(scrollToRunnable, 300)
                 }
 
                 scrollBackToOverride?.let {
-                    if (!mScrollToDates)
+                    if (!scrollToDates)
                         scrollView.post {
                             scrollView.fullScroll(ScrollView.FOCUS_DOWN)
                         }
@@ -331,7 +339,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         plus.setColorFilter(ThemePrefs.textButtonColor)
 
         addOverride.setOnClickListener {
-            mEditDateGroups.add(DueDateGroup())
+            editDateGroups.add(DueDateGroup())
             setupOverrides()
             scrollView.post {
                 scrollView.fullScroll(ScrollView.FOCUS_DOWN)
@@ -344,11 +352,11 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     private fun setupOverrides() {
         overrideContainer.removeAllViews()
         // Load in overrides
-        mEditDateGroups.forEachIndexed { index, dueDateGroup ->
+        editDateGroups.forEachIndexed { index, dueDateGroup ->
             val assignees = ArrayList<CharSequence>()
             val v = AssignmentOverrideView(requireActivity())
             if (dueDateGroup.isEveryone) {
-                assignees += getString(if (mEditDateGroups.any { it.hasOverrideAssignees }) R.string.everyone_else else R.string.everyone)
+                assignees += getString(if (editDateGroups.any { it.hasOverrideAssignees }) R.string.everyone_else else R.string.everyone)
             }
             dueDateGroup.groupIds.forEach { assignees.add(groupsMapped[it]?.name!!) }
             dueDateGroup.sectionIds.forEach { assignees.add(sectionsMapped[it]?.name!!) }
@@ -359,14 +367,14 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 }
             }
 
-            v.setupOverride(index, dueDateGroup, mEditDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
+            v.setupOverride(index, dueDateGroup, editDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
                 val args = AssigneeListFragment.makeBundle(
-                        mEditDateGroups,
+                        editDateGroups,
                         index,
                         sectionsMapped.values.toList(),
                         groupsMapped.values.toList(),
                         studentsMapped.values.toList())
-                RouteMatcher.route(requireContext(), Route(AssigneeListFragment::class.java, mCourse, args))
+                RouteMatcher.route(requireContext(), Route(AssigneeListFragment::class.java, course, args))
                 scrollBackToOverride = v
             }
 
@@ -385,8 +393,8 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
         // Load description
         // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
-        if (CanvasWebView.containsLTI(mAssignment.description.orEmpty(), "UTF-8")) {
-            descriptionEditor.setHtml(DiscussionUtils.createLTIPlaceHolders(requireContext(), mAssignment.description ?: "") { _, placeholder ->
+        if (CanvasWebView.containsLTI(assignment.description.orEmpty(), "UTF-8")) {
+            descriptionEditor.setHtml(DiscussionUtils.createLTIPlaceHolders(requireContext(), assignment.description ?: "") { _, placeholder ->
                 placeHolderList.add(placeholder)
             },
                     getString(R.string.assignmentDescriptionContentDescription),
@@ -394,7 +402,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                     ThemePrefs.brandColor, ThemePrefs.textButtonColor)
 
         } else {
-            descriptionEditor.setHtml(mAssignment.description,
+            descriptionEditor.setHtml(assignment.description,
                     getString(R.string.assignmentDescriptionContentDescription),
                     getString(R.string.rce_empty_description),
                     ThemePrefs.brandColor, ThemePrefs.textButtonColor)
@@ -424,22 +432,22 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         val postData = AssignmentPostBody()
         postData.name = editAssignmentName.text.toString()
         postData.pointsPossible = pointsPossible
-        postData.setGroupedDueDates(mEditDateGroups)
+        postData.setGroupedDueDates(editDateGroups)
         postData.description = handleLTIPlaceHolders(placeHolderList, descriptionEditor.html)
         postData.notifyOfUpdate = false
-        postData.gradingType = mDisplayGradeAs
+        postData.gradingType = displayGradeAs
 
         // TODO: remove this section when we support editing submission types
         // There is some weirdness with the API dealing with not graded stuff. When you change it from not graded you also
         // need to set the submission type to be something. When we implement submission type editing we won't need this here
-        if(mAssignment.gradingType == NOT_GRADED_TYPE && mDisplayGradeAs != NOT_GRADED_TYPE) {
+        if(assignment.gradingType == NOT_GRADED_TYPE && displayGradeAs != NOT_GRADED_TYPE) {
             val type = "none"
             val submissionList = listOf(type)
             postData.submissionTypes = submissionList
         }
 
         // if we want to set the type as not graded, we don't want a submission type or points possible
-        if(mDisplayGradeAs == NOT_GRADED_TYPE) {
+        if(displayGradeAs == NOT_GRADED_TYPE) {
             //set points to 0 if we aren't grading it
             postData.pointsPossible = null
             val type = NOT_GRADED_TYPE
@@ -448,24 +456,24 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
 
         // only set the published flag if we can unpublish/publish the assignment
-        if (mAssignment.unpublishable) postData.published = mIsPublished
-        else postData.published = mAssignment.published
+        if (assignment.unpublishable) postData.published = isPublished
+        else postData.published = assignment.published
 
         @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-        mPutAssignmentCall = weave {
+        putAssignmentCall = weave {
             try {
                 saveButton?.setGone()
                 savingProgressBar.announceForAccessibility(getString(R.string.saving))
                 savingProgressBar.setVisible()
-                mAssignment = awaitApi { AssignmentManager.editAssignment(mAssignment.courseId, mAssignment.id, postData, it, false) }
-                AssignmentUpdatedEvent(mAssignment.id).post() // Post bus event
+                assignment = awaitApi { AssignmentManager.editAssignment(assignment.courseId, assignment.id, postData, it, false) }
+                AssignmentUpdatedEvent(assignment.id).post() // Post bus event
                 toast(R.string.successfully_updated_assignment) // let the user know the assignment was saved
                 editAssignmentName.hideKeyboard() // close the keyboard
                 requireActivity().onBackPressed() // close this fragment
             } catch (e: Throwable) {
                 saveButton?.setVisible()
                 savingProgressBar.setGone()
-                if (mAssignment.inClosedGradingPeriod) {
+                if (assignment.inClosedGradingPeriod) {
                     toast(R.string.error_saving_assignment_closed_grading_period)
                 } else {
                     toast(R.string.error_saving_assignment)
@@ -479,7 +487,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     fun onAssigneesChanged(event: AssigneesUpdatedEvent) {
         // Update grouped due dates (EditDateGroups)
         event.once(javaClass.simpleName) { dates ->
-            mEditDateGroups = dates
+            editDateGroups = dates
             setupOverrides()
             //remove it so when we go to another assignment it won't show up there too
             EventBus.getDefault().removeStickyEvent(event)
@@ -487,16 +495,16 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(EDIT_DATE_GROUPS, ArrayList<DueDateGroup>(mEditDateGroups))
+        outState.putSerializable(EDIT_DATE_GROUPS, ArrayList<DueDateGroup>(editDateGroups))
         super.onSaveInstanceState(outState)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mDueDateApiCalls?.cancel()
-        mPutAssignmentCall?.cancel()
-        mScrollHandler.removeCallbacks(mScrollToRunnable)
-        mSessionAuthJob?.cancel()
+        dueDateApiCalls?.cancel()
+        putAssignmentCall?.cancel()
+        scrollHandler.removeCallbacks(scrollToRunnable)
+        sessionAuthJob?.cancel()
         rceImageUploadJob?.cancel()
     }
 
@@ -506,7 +514,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         const val EDIT_DATE_GROUPS = "editDateGroups"
 
         fun newInstance(course: Course, args: Bundle) = EditAssignmentDetailsFragment().withArgs(args).apply {
-            mCourse = course
+            this.course = course
         }
 
         fun makeBundle(assignment: Assignment, scrollToDates: Boolean): Bundle {

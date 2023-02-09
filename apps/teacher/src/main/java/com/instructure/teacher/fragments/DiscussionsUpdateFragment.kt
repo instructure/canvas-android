@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_UPDATE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -48,13 +50,15 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
 import kotlinx.android.synthetic.main.fragment_discussions_edit.*
 
+@PageView(url = "{canvasContext}/discussion_topics/{topicId}/edit")
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_UPDATE)
 class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresenter, DiscussionsUpdateView>(), DiscussionsUpdateView {
 
-    private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
-    private var mDiscussionTopicHeaderId: Long by LongArg(key = DISCUSSION_TOPIC_HEADER_ID, default = 0L) // The topic the discussion belongs too
-    private var mDiscussionEntry: DiscussionEntry by ParcelableArg(key = DISCUSSION_ENTRY, default = DiscussionEntry())
-    private var mDiscussionTopic: DiscussionTopic by ParcelableArg(key = DISCUSSION_TOPIC, default = DiscussionTopic())
+    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    @get:PageViewUrlParam("topicId")
+    private var discussionTopicHeaderId: Long by LongArg(key = DISCUSSION_TOPIC_HEADER_ID, default = 0L) // The topic the discussion belongs too
+    private var discussionEntry: DiscussionEntry by ParcelableArg(key = DISCUSSION_ENTRY, default = DiscussionEntry())
+    private var discussionTopic: DiscussionTopic by ParcelableArg(key = DISCUSSION_TOPIC, default = DiscussionTopic())
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +72,7 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
 
     override fun layoutResId(): Int = R.layout.fragment_discussions_edit
 
-    override fun getPresenterFactory() = DiscussionsUpdatePresenterFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntry, mDiscussionTopic)
+    override fun getPresenterFactory() = DiscussionsUpdatePresenterFactory(canvasContext, discussionTopicHeaderId, discussionEntry, discussionTopic)
 
     override fun onPresenterPrepared(presenter: DiscussionsUpdatePresenter) {}
 
@@ -188,6 +192,6 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         }
 
         fun newInstance(canvasContext: CanvasContext, args: Bundle) =
-            DiscussionsUpdateFragment().withArgs(args).apply { mCanvasContext = canvasContext }
+            DiscussionsUpdateFragment().withArgs(args).apply { this.canvasContext = canvasContext }
     }
 }

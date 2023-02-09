@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.postmodels.PagePostBody
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -45,6 +46,7 @@ import com.instructure.student.events.PageUpdatedEvent
 import kotlinx.android.synthetic.main.fragment_edit_page.*
 import org.greenrobot.eventbus.EventBus
 
+@PageView
 @ScreenView(SCREEN_VIEW_EDIT_PAGE_DETAILS)
 class EditPageDetailsFragment : ParentFragment() {
 

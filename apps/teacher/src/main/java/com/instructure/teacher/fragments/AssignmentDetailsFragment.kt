@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPr
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
@@ -57,18 +59,23 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@PageView
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
         AssignmentDetailsView>(), AssignmentDetailsView, Identity {
 
-    private var mAssignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
-    private var mCourse: Course by ParcelableArg(Course())
-    private var mAssignmentId: Long by LongArg(0L, ASSIGNMENT_ID)
+    private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
+    private var course: Course by ParcelableArg(Course())
+    private var assignmentId: Long by LongArg(0L, ASSIGNMENT_ID)
 
-    private var mNeedToForceNetwork = false
+    private var needToForceNetwork = false
 
     private var loadHtmlJob: Job? = null
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
 
     override fun layoutResId() = R.layout.fragment_assignment_details
 
@@ -86,38 +93,38 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     override fun onReadySetGo(presenter: AssignmentDetailsPresenter) {
         // if we don't have an assignmentId that means we have an assignment, so we can load the data
-        if(mAssignmentId == 0L) {
-            presenter.loadData(mNeedToForceNetwork)
+        if(assignmentId == 0L) {
+            presenter.loadData(needToForceNetwork)
         } else {
-            presenter.getAssignment(mAssignmentId, mCourse)
+            presenter.getAssignment(assignmentId, course)
         }
     }
 
     override fun populateAssignmentDetails(assignment: Assignment) {
-        mAssignment = assignment
+        this.assignment = assignment
         toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(assignment) }
         swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
         setupListeners(assignment)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(mAssignment)
+    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment)
 
     override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
 
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
         toolbar.title = getString(R.string.assignment_details)
         if(!isTablet) {
-            toolbar.subtitle = mCourse.name
+            toolbar.subtitle = course.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(assignment: Assignment) {
@@ -226,19 +233,19 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             submissionTypesArrowIcon.setVisible()
             submissionTypesLayout.onClickWithRequireNetwork {
                 // If the user is a designer we don't want to let them look at LTI tools
-                if (mCourse.isDesigner) {
+                if (course.isDesigner) {
                     toast(R.string.errorIsDesigner)
                     return@onClickWithRequireNetwork
                 }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
-                    val args = LtiLaunchFragment.makeBundle(mCourse, ltiUrl, assignment.name!!, true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
+                    val args = LtiLaunchFragment.makeBundle(course, ltiUrl, assignment.name!!, true)
+                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, course, args))
                 }
             }
         }
 
-        submissionsLayout.setVisible(!mCourse.isDesigner)
+        submissionsLayout.setVisible(!course.isDesigner)
     }
 
     @Suppress("UsePropertyAccessSyntax")
@@ -278,9 +285,9 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
         // Load description
         loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
-            descriptionWebViewWrapper.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
+            descriptionWebViewWrapper.loadHtml(it, name, baseUrl = this@AssignmentDetailsFragment.assignment.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCourse, it)
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), course, it)
         }
     }
 
@@ -358,21 +365,21 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun setupListeners(assignment: Assignment) {
         dueLayout.setOnClickListener {
             val args = DueDatesFragment.makeBundle(assignment)
-            RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, mCourse, args))
+            RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, course, args))
         }
 
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
         }
         viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
         gradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
         }
         ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
         }
         notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
         }
         noDescriptionTextView.setOnClickListener { openEditPage(assignment) }
 
@@ -382,7 +389,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
         assignment.discussionTopicHeader?.let { discussionTopicHeader ->
             viewDiscussionButton.setOnClickListener {
-                RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(mCourse, discussionTopicHeader))
+                RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(course, discussionTopicHeader))
             }
         } ?: viewDiscussionButton.setGone()
 
@@ -391,7 +398,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun openEditPage(assignment: Assignment) {
         if(APIHelper.hasNetworkConnection()) {
             val args = EditAssignmentDetailsFragment.makeBundle(assignment, false)
-            RouteMatcher.route(requireContext(), Route(EditAssignmentDetailsFragment::class.java, mCourse, args))
+            RouteMatcher.route(requireContext(), Route(EditAssignmentDetailsFragment::class.java, course, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -421,7 +428,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentEdited(event: AssignmentUpdatedEvent) {
         event.once(javaClass.simpleName) {
-            if (it == presenter.mAssignment.id) mNeedToForceNetwork = true
+            if (it == presenter.mAssignment.id) needToForceNetwork = true
         }
     }
 
@@ -437,12 +444,12 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
         event.once(javaClass.simpleName) {
-            if(presenter.mAssignment.id == it) mNeedToForceNetwork = true
+            if(presenter.mAssignment.id == it) needToForceNetwork = true
         }
     }
 
     //Because of the presenter lifecycle using the assignment from there will result in random crashes.
-    override val identity: Long? get() = if(mAssignmentId != 0L) mAssignmentId else mAssignment.id
+    override val identity: Long? get() = if(assignmentId != 0L) assignmentId else assignment.id
     override val skipCheck: Boolean get() = false
 
     companion object {
@@ -450,7 +457,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         @JvmStatic val ASSIGNMENT_ID = "assignmentId"
 
         fun newInstance(course: Course, args: Bundle) = AssignmentDetailsFragment().withArgs(args).apply {
-            mCourse = course
+            this.course = course
         }
 
         fun makeBundle(assignment: Assignment): Bundle {

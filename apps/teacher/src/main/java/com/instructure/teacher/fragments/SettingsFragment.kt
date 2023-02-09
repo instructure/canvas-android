@@ -18,6 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.os.Bundle
 import android.view.View
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
@@ -40,6 +41,8 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 @ScreenView(SCREEN_VIEW_SETTINGS)
 class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter, ProfileSettingsFragmentView>(),
     ProfileSettingsFragmentView {
+
+    private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     override fun layoutResId() = R.layout.fragment_settings
 

@@ -18,11 +18,12 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.globalName
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -39,12 +40,17 @@ import kotlinx.android.synthetic.main.fragment_course_settings.*
 import kotlinx.android.synthetic.main.view_edit_course_homepage.*
 import kotlinx.android.synthetic.main.view_rename_course.*
 
+@PageView
 @ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : BasePresenterFragment<
         CourseSettingsFragmentPresenter,
         CourseSettingsFragmentView>(), CourseSettingsFragmentView {
 
-    private var mCourse: Course by ParcelableArg(default = Course())
+    private var course: Course by ParcelableArg(default = Course())
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() = "courses/${course.id}/settings"
 
     private val mHomePages: Map<String, String> by lazy {
         // Use LinkedHashMap map to keep order consistent between API levels
@@ -62,16 +68,16 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
         setupToolbar()
-        courseImage.setCourseImage(mCourse, mCourse.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
+        courseImage.setCourseImage(course, course.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState == null) {
-            updateCourseName(mCourse)
-            updateCourseHomePage(mCourse.homePage)
+            updateCourseName(course)
+            updateCourseHomePage(course.homePage)
         } else {
-            updateCourseName(mCourse)
+            updateCourseName(course)
         }
     }
 
@@ -89,12 +95,12 @@ class CourseSettingsFragment : BasePresenterFragment<
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.course_settings)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        toolbar.setSubtitleTextColor(mCourse.textAndIconColor)
+        toolbar.setSubtitleTextColor(course.textAndIconColor)
     }
 
     override fun showEditCourseNameDialog() {
-        val dialog: EditCourseNameDialog = EditCourseNameDialog.getInstance(requireActivity().supportFragmentManager, mCourse) { newName ->
-            presenter.editCourseName(newName, mCourse)
+        val dialog: EditCourseNameDialog = EditCourseNameDialog.getInstance(requireActivity().supportFragmentManager, course) { newName ->
+            presenter.editCourseName(newName, course)
         }
 
         dialog.show(requireActivity().supportFragmentManager, EditCourseNameDialog::class.java.simpleName)
@@ -102,9 +108,9 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun showEditCourseHomePageDialog() {
         val (keys, values) = mHomePages.toList().unzip()
-        val selectedIdx = keys.indexOf(mCourse.homePage?.apiString)
+        val selectedIdx = keys.indexOf(course.homePage?.apiString)
         val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.set_home_to), values as ArrayList<String>, selectedIdx) { idx ->
-            presenter.editCourseHomePage(keys[idx], mCourse)
+            presenter.editCourseHomePage(keys[idx], course)
         }
 
        dialog.show(requireActivity().supportFragmentManager, RadioButtonDialog::class.java.simpleName)
@@ -113,18 +119,18 @@ class CourseSettingsFragment : BasePresenterFragment<
     override fun updateCourseName(course: Course) {
         courseName.text = course.globalName
         toolbar.subtitle = course.globalName
-        mCourse.globalName = course.globalName
+        this.course.globalName = course.globalName
         setResult()
     }
 
     override fun updateCourseHomePage(newHomePage: Course.HomePage?) {
         courseHomePage.text = mHomePages[newHomePage?.apiString]
-        mCourse.homePage = newHomePage
+        course.homePage = newHomePage
         setResult()
     }
 
     private fun setResult() {
-        requireActivity().setResult(Activity.RESULT_OK, Intent().apply { putExtra(Const.COURSE, mCourse as Parcelable) })
+        requireActivity().setResult(Activity.RESULT_OK, Intent().apply { putExtra(Const.COURSE, course as Parcelable) })
     }
 
     override fun onRefreshFinished() {}
@@ -133,7 +139,7 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     companion object {
         fun newInstance(course: Course) = CourseSettingsFragment().apply {
-            mCourse = course
+            this.course = course
         }
     }
 }

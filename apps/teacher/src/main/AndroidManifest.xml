@@ -223,6 +223,11 @@
         <service android:name=".services.FileDownloadService" />
         <service android:name="com.instructure.pandautils.services.NotoriousUploadService"/>
 
+        <service
+            android:name=".services.TeacherPageViewService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
         <!--Push Notifications-->
 
         <receiver android:name=".receivers.InitializeReceiver"

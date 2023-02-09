@@ -21,9 +21,12 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.TextView
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
@@ -31,6 +34,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
@@ -57,23 +61,30 @@ import java.net.URI
 import java.net.URL
 import java.util.*
 
+@PageView
 @ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
 class QuizDetailsFragment : BasePresenterFragment<
         QuizDetailsPresenter,
         QuizDetailsView>(),
         QuizDetailsView, Identity {
 
-    private var mCourse: Course by ParcelableArg(default = Course())
-    private var mQuizId: Long by LongArg(0L, QUIZ_ID)
-    private var mQuiz: Quiz by ParcelableArg(Quiz(), QUIZ)
+    private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
-    private var mNeedToForceNetwork = false
+    private var course: Course by ParcelableArg(default = Course())
+    private var quizId: Long by LongArg(0L, QUIZ_ID)
+    private var quiz: Quiz by ParcelableArg(Quiz(), QUIZ)
+
+    private var needToForceNetwork = false
 
     private var loadHtmlJob: Job? = null
 
+    @Suppress("unused")
+    @PageViewUrl
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/quizzes/${quizId}"
+
     override fun layoutResId(): Int = R.layout.fragment_quiz_details
 
-    override fun getPresenterFactory() = QuizDetailsPresenterFactory(mCourse, mQuiz)
+    override fun getPresenterFactory() = QuizDetailsPresenterFactory(course, quiz)
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -81,12 +92,12 @@ class QuizDetailsFragment : BasePresenterFragment<
     }
 
     override fun onReadySetGo(presenter: QuizDetailsPresenter) {
-        if (mQuizId == 0L) {
+        if (quizId == 0L) {
             // No Quiz ID so we must have a quiz
-            presenter.loadData(mNeedToForceNetwork)
+            presenter.loadData(needToForceNetwork)
         } else {
             // No Quiz, we need to get it
-            presenter.getQuiz(mQuizId, mCourse, true)
+            presenter.getQuiz(quizId, course, true)
         }
 
         setupToolbar()
@@ -101,16 +112,16 @@ class QuizDetailsFragment : BasePresenterFragment<
         clearListeners()
     }
 
-    override val identity: Long? get() = if(mQuizId != 0L) mQuizId else mQuiz.id
+    override val identity: Long? get() = if(quizId != 0L) quizId else quiz.id
     override val skipCheck: Boolean get() = false
 
     override fun populateQuizDetails(quiz: Quiz) {
-        mQuiz = quiz
+        this.quiz = quiz
         toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(quiz) }
         swipeRefreshLayout.isRefreshing = false
         setupViews(quiz)
         setupListeners(quiz)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
 
         fullDateDetailsButton.setVisible(quiz._assignment != null)
     }
@@ -118,7 +129,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -126,7 +137,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         if (!isTablet) {
             toolbar.subtitle = presenter.mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(quiz: Quiz) = with(quiz) {
@@ -216,7 +227,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         // If the user is a designer we don't want to show the submissions layout
-        submissionsLayout.setVisible(!mCourse.isDesigner)
+        submissionsLayout.setVisible(!course.isDesigner)
 
 
         if (!isGradeable) {
@@ -364,7 +375,7 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         // Load instructions
         loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), quiz.description, {
-            instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = mQuiz.htmlUrl)
+            instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = this.quiz.htmlUrl)
         }) {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         }
@@ -374,22 +385,22 @@ class QuizDetailsFragment : BasePresenterFragment<
         dueLayout.setOnClickListener {
             if(quiz._assignment != null) {
                 val args = DueDatesFragment.makeBundle(quiz._assignment!!)
-                RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, mCourse, args))
+                RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, course, args))
             }
         }
 
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.ALL)
+            navigateToSubmissions(course, quiz._assignment, SubmissionListFilter.ALL)
         }
         viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
         gradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.GRADED)
+            navigateToSubmissions(course, quiz._assignment, SubmissionListFilter.GRADED)
         }
         ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.NOT_GRADED)
+            navigateToSubmissions(course, quiz._assignment, SubmissionListFilter.NOT_GRADED)
         }
         notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.MISSING)
+            navigateToSubmissions(course, quiz._assignment, SubmissionListFilter.MISSING)
         }
         noInstructionsTextView.setOnClickListener {
             openEditPage(quiz)
@@ -398,19 +409,19 @@ class QuizDetailsFragment : BasePresenterFragment<
         ViewStyler.themeButton(quizPreviewButton)
         quizPreviewButton.setOnClickListener {
             try {
-                var urlStr = mQuiz.htmlUrl +"/take?preview=1&persist_headless=1"
+                var urlStr = this.quiz.htmlUrl +"/take?preview=1&persist_headless=1"
                 val url = URL(urlStr)
                 val uri = URI(url.protocol, url.userInfo, url.host, url.port, url.path, url.query, url.ref)
                 urlStr = uri.toASCIIString()
                 val args = QuizPreviewWebviewFragment.makeBundle(urlStr, getString(R.string.quizPreview))
-                RouteMatcher.route(requireContext(), Route(QuizPreviewWebviewFragment::class.java, mCourse, args))
+                RouteMatcher.route(requireContext(), Route(QuizPreviewWebviewFragment::class.java, course, args))
             } catch (e: UnsupportedEncodingException) {}
         }
     }
 
     private fun navigateToSubmissions(course: Course, assignment: Assignment?, filter: SubmissionListFilter) {
         assignment ?: return // We can't navigate to the submission list if there isn't an associated assignment
-        val assignmentWithAnonymousGrading = assignment.copy(anonymousGrading = mQuiz.allowAnonymousSubmissions)
+        val assignmentWithAnonymousGrading = assignment.copy(anonymousGrading = quiz.allowAnonymousSubmissions)
         val args = AssignmentSubmissionListFragment.makeBundle(assignmentWithAnonymousGrading, filter)
         RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }
@@ -428,7 +439,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     fun openEditPage(quiz: Quiz) {
         if(APIHelper.hasNetworkConnection()) {
             val args = EditQuizDetailsFragment.makeBundle(quiz, false)
-            RouteMatcher.route(requireContext(), Route(EditQuizDetailsFragment::class.java, mCourse, args))
+            RouteMatcher.route(requireContext(), Route(EditQuizDetailsFragment::class.java, course, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -448,7 +459,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizEdited(event: QuizUpdatedEvent) {
         event.once(javaClass.simpleName) {
-            if (it == presenter.mQuiz.id) mNeedToForceNetwork = true
+            if (it == presenter.mQuiz.id) needToForceNetwork = true
         }
     }
 
@@ -456,7 +467,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizGraded(event: QuizSubmissionGradedEvent) {
         event.once(javaClass.simpleName) {
-            if (presenter.mQuiz.assignmentId == it.assignmentId) mNeedToForceNetwork = true
+            if (presenter.mQuiz.assignmentId == it.assignmentId) needToForceNetwork = true
         }
     }
 
@@ -468,6 +479,6 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         fun makeBundle(quiz: Quiz): Bundle = Bundle().apply { putParcelable(QuizDetailsFragment.QUIZ, quiz) }
 
-        fun newInstance(course: Course, args: Bundle) = QuizDetailsFragment().withArgs(args).apply { mCourse = course }
+        fun newInstance(course: Course, args: Bundle) = QuizDetailsFragment().withArgs(args).apply { this.course = course }
     }
 }

@@ -22,13 +22,15 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.os.Build
 import androidx.annotation.RequiresPermission
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.zonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -186,7 +188,7 @@ abstract class PageViewUploadService : JobService() {
 
 
                     setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    setPeriodic(TimeUnit.MINUTES.toMillis(2))
+                    setPeriodic(TimeUnit.SECONDS.toMillis(10))
 
             }.build()
 
