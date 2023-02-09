@@ -46,6 +46,7 @@ class InitActivityPresenter : Presenter<InitActivityView> {
     private var view: InitActivityView? = null
     private var apiCall: WeaveJob? = null
     private var colorOverlayJob: Job? = null
+    private var unreadCountJob: Job? = null
 
     override fun onViewAttached(view: InitActivityView): InitActivityPresenter {
         this.view = view
@@ -67,6 +68,16 @@ class InitActivityPresenter : Presenter<InitActivityView> {
                 view?.gotLaunchDefinitions(definitions)
             }
 
+            val inboxUnreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
+            val unreadCountInt = (inboxUnreadCount.unreadCount ?: "0").toInt()
+            view?.updateInboxUnreadCount(unreadCountInt)
+        } catch {
+            it.printStackTrace()
+        }
+    }
+
+    fun updateUnreadCount() {
+        unreadCountJob = tryWeave {
             val inboxUnreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
             val unreadCountInt = (inboxUnreadCount.unreadCount ?: "0").toInt()
             view?.updateInboxUnreadCount(unreadCountInt)

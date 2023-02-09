@@ -50,6 +50,8 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
@@ -86,7 +88,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(),
     InitActivityView, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
-    MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener {
+    MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener, OnUnreadCountInvalidated {
 
     @Inject
     lateinit var updateManager: UpdateManager
@@ -373,6 +375,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         updateBottomBarBadge(R.id.tab_inbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
     }
 
+    override fun invalidateUnreadCount() {
+        presenter?.updateUnreadCount()
+    }
+
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) {
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count
@@ -400,7 +406,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         if (supportFragmentManager.findFragmentByTag(InboxFragment::class.java.simpleName) == null) {
             // if we're a tablet we want the master detail view
             if (resources.getBoolean(R.bool.isDeviceTablet)) {
-                val route = Route(InboxFragment::class.java, null)
+                val route = InboxFragment.makeRoute()
                 val masterFragment = RouteResolver.getMasterFragment(null, route)
                 val detailFragment =
                     EmptyFragment.newInstance(RouteMatcher.getClassDisplayName(this, route.primaryClass))

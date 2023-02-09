@@ -33,6 +33,7 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MESSAGE_THREAD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -45,6 +46,7 @@ import com.instructure.teacher.events.ConversationUpdatedEvent
 import com.instructure.teacher.events.ConversationUpdatedEventTablet
 import com.instructure.teacher.events.MessageAddedEvent
 import com.instructure.teacher.factory.MessageThreadPresenterFactory
+import com.instructure.teacher.features.inbox.list.TeacherInboxRouter
 import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.presenters.MessageThreadPresenter
@@ -401,9 +403,9 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
     override fun onConversationDeleted(position: Int) {
         if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, InboxFragment::class.java.simpleName + ".onPost()"))
+            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, TeacherInboxRouter::class.java.simpleName))
         } else {
-            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, InboxFragment::class.java.simpleName + ".onResume()"))
+            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, TeacherInboxRouter::class.java.simpleName))
         }
 
         // Only go back a screen on phones
