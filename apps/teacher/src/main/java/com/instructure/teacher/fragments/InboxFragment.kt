@@ -59,7 +59,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
     private val CANVAS_CONTEXT = "canvas_context"
     private var canvasContextSelected: CanvasContext? = null
     //used to keep track of scope for configuration changes
-    private var currentScope = InboxApi.Scope.ALL
+    private var currentScope = InboxApi.Scope.INBOX
 
     override fun layoutResId(): Int = R.layout.fragment_inbox
     override fun withPagination() = true
@@ -139,7 +139,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         //phone specific event for updates (archives/read/unread/stars)
         val event = EventBus.getDefault().getStickyEvent(ConversationUpdatedEvent::class.java)
         event?.once(javaClass.simpleName) {
-            if((presenter.scope == event.scope && presenter.scope != InboxApi.Scope.UNREAD) || presenter.scope == InboxApi.Scope.ALL)
+            if((presenter.scope == event.scope && presenter.scope != InboxApi.Scope.UNREAD) || presenter.scope == InboxApi.Scope.INBOX)
             //for removed stars and archives, we need to update the list completely
                 presenter.refresh(true)
             else
@@ -231,10 +231,10 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
             if (context == null) return@OnClickListener
 
             val popup = PopupMenu(requireContext(), popupViewPosition)
-            popup.menuInflater.inflate(R.menu.conversation_scope, popup.menu)
+            popup.menuInflater.inflate(R.menu.menu_conversation_scope, popup.menu)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.inbox_all -> onScopeChanged(InboxApi.Scope.ALL)
+                    R.id.inbox_all -> onScopeChanged(InboxApi.Scope.INBOX)
                     R.id.inbox_unread -> onScopeChanged(InboxApi.Scope.UNREAD)
                     R.id.inbox_starred -> onScopeChanged(InboxApi.Scope.STARRED)
                     R.id.inbox_sent -> onScopeChanged(InboxApi.Scope.SENT)
@@ -305,7 +305,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
     private fun getTextByScope(scope: InboxApi.Scope): String {
         return when (scope) {
-            InboxApi.Scope.ALL -> getString(R.string.inbox_all_messages)
+            InboxApi.Scope.INBOX -> getString(R.string.inbox_all_messages)
             InboxApi.Scope.UNREAD -> getString(R.string.inbox_unread)
             InboxApi.Scope.STARRED -> getString(R.string.inbox_starred)
             InboxApi.Scope.SENT -> getString(R.string.inbox_sent)

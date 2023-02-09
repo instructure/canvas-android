@@ -62,8 +62,10 @@ import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -495,6 +497,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
     }
 
+    fun attachNavigationIcon(toolbar: Toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+        toolbar.setNavigationOnClickListener {
+            openNavigationDrawer()
+        }
+    }
+
     private fun setUpColorOverlaySwitch() {
         navigationDrawerColorOverlaySwitch.isChecked = !StudentPrefs.hideCourseColorOverlay
         lateinit var checkListener: CompoundButton.OnCheckedChangeListener
@@ -841,8 +851,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         val topFragment = topFragment
-        if (topFragment is ParentFragment) {
-            if (!topFragment.handleBackPressed()) {
+        if (topFragment is NavigationCallbacks) {
+            if (!topFragment.onHandleBackPressed()) {
                 if (isBottomNavFragment(topFragment)) {
                     handleBottomNavBackStack()
                 } else {
@@ -1069,7 +1079,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         toast(R.string.errorOccurred)
     }
 
-    private fun createBottomNavFragment(name: String?): ParentFragment? {
+    private fun createBottomNavFragment(name: String?): Fragment? {
         return when (name) {
             navigationBehavior.homeFragmentClass.name -> {
                 val route = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)

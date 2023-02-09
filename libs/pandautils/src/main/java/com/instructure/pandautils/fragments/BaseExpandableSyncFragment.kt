@@ -63,8 +63,6 @@ abstract class BaseExpandableSyncFragment<
 
     override fun onHandleBackPressed(): Boolean = false
 
-    override fun onHandleClose(): Boolean = false
-
     companion object {
         fun createBundle(canvasContext: CanvasContext?): Bundle {
             val extras = Bundle()

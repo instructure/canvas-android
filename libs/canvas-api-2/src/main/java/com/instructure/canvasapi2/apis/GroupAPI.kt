@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -31,12 +32,13 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Tag
 import retrofit2.http.Url
 import java.io.IOException
 
 object GroupAPI {
 
-    internal interface GroupInterface {
+    interface GroupInterface {
 
         @GET("users/self/favorites/groups")
         fun getFirstPageFavoriteGroups(): Call<List<Group>>
@@ -44,8 +46,14 @@ object GroupAPI {
         @GET("users/self/groups?include[]=favorites&include[]=can_access")
         fun getFirstPageGroups(): Call<List<Group>>
 
+        @GET("users/self/groups?include[]=favorites&include[]=can_access")
+        suspend fun getFirstPageGroups(@Tag params: RestParams): DataResult<List<Group>>
+
         @GET
         fun getNextPageGroups(@Url nextUrl: String): Call<List<Group>>
+
+        @GET
+        suspend fun getNextPageGroups(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<Group>>
 
         @GET("groups/{groupId}?include[]=permissions&include[]=favorites")
         fun getDetailedGroup(@Path("groupId") groupId: Long): Call<Group>

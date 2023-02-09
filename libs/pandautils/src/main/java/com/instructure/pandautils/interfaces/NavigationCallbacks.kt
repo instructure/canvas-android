@@ -22,10 +22,4 @@ interface NavigationCallbacks {
      * @return True is for when the fragment handles the back press event, False otherwise
      */
     fun onHandleBackPressed(): Boolean
-
-    /**
-     * Gives fragments the opportunity to deal with close events, usually an arrow or x in the top corner.
-     * @return True is for when the fragment handles the back press event, False otherwise
-     */
-    fun onHandleClose(): Boolean
 }

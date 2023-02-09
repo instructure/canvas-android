@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.postmodels.PagePostBody
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -55,6 +57,17 @@ class EditPageDetailsFragment : ParentFragment() {
 
     private val saveMenuButton get() = toolbar.menu.findItem(R.id.menuSavePage)
     private val saveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSavePage)
+
+    @PageViewUrl
+    @Suppress("unused")
+    private fun makePageViewUrl(): String {
+        val url = StringBuilder(ApiPrefs.fullDomain)
+        page.let {
+            url.append(canvasContext.toAPIString())
+            if (!it.frontPage) url.append("/pages/${it.url}/edit")
+        }
+        return url.toString()
+    }
 
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

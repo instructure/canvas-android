@@ -65,8 +65,6 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
 
     override fun onHandleBackPressed() = view.onHandleBackPressed()
 
-    override fun onHandleClose() = false
-
     override fun onPause() {
         view.saveState()
         super.onPause()

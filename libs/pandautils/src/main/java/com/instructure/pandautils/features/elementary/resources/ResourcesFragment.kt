@@ -26,6 +26,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_RESOURCES
@@ -42,6 +43,7 @@ import kotlinx.android.synthetic.main.fragment_resources.*
 import kotlinx.android.synthetic.main.item_important_links.view.*
 import javax.inject.Inject
 
+@PageView("#resources")
 @ScreenView(SCREEN_VIEW_K5_RESOURCES)
 @AndroidEntryPoint
 class ResourcesFragment : Fragment() {

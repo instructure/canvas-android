@@ -31,7 +31,7 @@ import instructure.androidblueprint.SyncPresenter
 
 class InboxPresenter : SyncPresenter<Conversation, InboxView>(Conversation::class.java) {
 
-    var scope: InboxApi.Scope = InboxApi.Scope.ALL
+    var scope: InboxApi.Scope = InboxApi.Scope.INBOX
         set(scope) {
             field = scope
             refresh(true)

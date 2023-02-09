@@ -28,6 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_HOMEROOM
@@ -45,6 +46,7 @@ import kotlinx.android.synthetic.main.fragment_homeroom.*
 import kotlinx.android.synthetic.main.item_announcement.view.*
 import javax.inject.Inject
 
+@PageView("#homeroom")
 @ScreenView(SCREEN_VIEW_K5_HOMEROOM)
 @AndroidEntryPoint
 class HomeroomFragment : Fragment() {

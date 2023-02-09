@@ -174,6 +174,24 @@ open class EmptyView @JvmOverloads constructor(
         title.text = titleText
     }
 
+    fun handleConfigChange(isTablet: Boolean, orientation: Int) {
+        changeTextSize()
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (isTablet) {
+                setGuidelines(.24f, .53f, .62f, .12f, .88f)
+            } else {
+                setGuidelines(.28f, .6f, .73f, .12f, .88f)
+
+            }
+        } else {
+            if (isTablet) {
+                //change nothing, at least for now
+            } else {
+                setGuidelines(.25f, .7f, .74f, .15f, .85f)
+            }
+        }
+    }
+
     fun changeTextSize(isCalendar: Boolean = false) {
         if (isCalendar) {
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {

@@ -33,7 +33,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.withAncestor
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
@@ -48,9 +48,8 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     }
 
     fun clickModule(module: ModuleObject) {
-        val matcher = withText(module.name)
-        scrollRecyclerView(R.id.listView, matcher)
-        onView(matcher).click()
+        val matcher = allOf(withText(module.name), withAncestor(withId(R.id.listView)))
+        onView(matcher).scrollTo().click()
     }
 
     /** Asserts that *any* module is locked.  It is exceedingly hard to check that the

@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_DASHBOARD
@@ -37,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
 import javax.inject.Inject
 
+@PageView(url = "courses")
 @ScreenView(SCREEN_VIEW_EDIT_DASHBOARD)
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
