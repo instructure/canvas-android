@@ -317,6 +317,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         }
     }
 
+    override fun handleBackPressed() = false
+
     companion object {
         const val PAGE_NAME = "pageDetailsName"
         const val PAGE = "pageDetails"
