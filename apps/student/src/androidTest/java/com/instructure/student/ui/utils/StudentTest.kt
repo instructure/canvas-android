@@ -120,6 +120,7 @@ abstract class StudentTest : CanvasTest() {
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val settingsPage = SettingsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
+    val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()
     val todoPage = TodoPage()
     val urlSubmissionUploadPage = UrlSubmissionUploadPage()
