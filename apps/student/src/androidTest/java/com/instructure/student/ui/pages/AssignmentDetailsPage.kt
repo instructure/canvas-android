@@ -98,7 +98,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun assertSubmissionAndRubricLabel() {
-        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric)))
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).assertDisplayed()
     }
 
     private fun assertStatus(statusResourceId: Int) {

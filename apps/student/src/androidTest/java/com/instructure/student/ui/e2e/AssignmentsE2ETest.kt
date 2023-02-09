@@ -661,7 +661,7 @@ class AssignmentsE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Refresh the page.")
         assignmentDetailsPage.refresh()
 
-        Log.d(STEP_TAG, "Assert that when only there is one attempt, the spinner is displayed and the last/newest attempt is selected.")
+        Log.d(STEP_TAG, "Assert that the spinner is displayed and the last/newest attempt is selected.")
         assignmentDetailsPage.assertAttemptSpinnerDisplayed()
         assignmentDetailsPage.assertSelectedAttempt(2)
 
