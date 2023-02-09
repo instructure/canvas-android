@@ -401,7 +401,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         // Setup the actionbar but make sure we call super last so the fragments can override it as needed.
         mDrawerToggle?.onConfigurationChanged(newConfig)
         super.onConfigurationChanged(newConfig)
-}
+        applyThemeForAllFragments()
+    }
+
+    private fun applyThemeForAllFragments() {
+        supportFragmentManager.fragments.forEach {
+            (it as? FragmentInteractions)?.applyTheme()
+        }
+    }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
