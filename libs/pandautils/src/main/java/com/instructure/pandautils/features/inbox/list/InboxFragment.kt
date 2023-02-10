@@ -289,11 +289,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     override fun onAttach(context: Context) {
         super.onAttach(requireContext())
-        try {
-            onUnreadCountInvalidated = context as OnUnreadCountInvalidated?
-        } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + " must implement OnUnreadCountInvalidated")
-        }
+        onUnreadCountInvalidated = context as? OnUnreadCountInvalidated
     }
 
     override fun onHandleBackPressed(): Boolean {

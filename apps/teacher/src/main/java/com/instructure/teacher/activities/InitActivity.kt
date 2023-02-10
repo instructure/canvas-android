@@ -28,6 +28,7 @@ import androidx.annotation.PluralsRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -53,6 +54,7 @@ import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -550,6 +552,12 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         if (isDrawerOpen) {
             closeNavigationDrawer()
         } else {
+            if (masterDetailContainer.isVisible) {
+                if (supportFragmentManager.findFragmentById(R.id.master) is NavigationCallbacks) {
+                    if ((supportFragmentManager.findFragmentById(R.id.master) as NavigationCallbacks).onHandleBackPressed()) return
+                }
+                super.onBackPressed()
+            }
             super.onBackPressed()
         }
     }
