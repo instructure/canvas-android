@@ -3,8 +3,6 @@
 	<head>
 		<meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 		<style>
-			{$DARK_THEME}
-
 			body {
 				margin: 0px;
 				padding-bottom: 15px;
@@ -52,7 +50,7 @@
 				width: 100%;
 				padding-right: 5px;
 				margin-top: 15px;
-				color: #000000;
+				color: {$TEXT_DARKEST$};
 			}
 
 			.rate_post {
@@ -73,7 +71,7 @@
 				font-size:14px;
 				white-space: nowrap;
 				text-overflow: ellipsis;
-				color:#394B58;
+				color:{$TEXT_DARKEST$};
 			}
 
 			.timestamp {
@@ -82,7 +80,7 @@
 				font-size: 12px;
 				overflow: hidden;
 				white-space: nowrap;
-				color:#556572;
+				color:{$TEXT_DARK$};
 			}
 
 			.timestamp_wrapper {
@@ -101,7 +99,7 @@
 			}
 
 			.container .isUnread {
-				background:#0076A3;
+				background:{$BACKGROUND_INFO$};
 			}
 
 			.container ul, .container li {
@@ -110,7 +108,7 @@
 				min-width:15px;
 				padding:3% 3% 3%;
 				text-align: center;
-				background:#0076A3;
+				background:{$BACKGROUND_INFO$};
 				color:white;
 			}
 
@@ -138,12 +136,12 @@
 
 			.unread {
 				float: left;
-				color: #CBCBCB;
+				color: {$BACKGROUND_MEDIUM$};
 			}
 
 			.is_unread {
 				float: left;
-				color: #CBCBCB;
+				color: {$BACKGROUND_MEDIUM$};
 				margin-top: 5px;
 			}
 
@@ -166,14 +164,14 @@
 
 			.message_content {
 				position: relative;
-				color: black;
+				color: ${TEXT_DARKEST};
 				height: 100%;
 				word-wrap: break-word;
 				margin-top: 6px;
 				margin-left: 30px;
 				margin-right: 16px;
 				padding-left: 25px;
-				border-left: thin solid #EBEDEE;
+				border-left: thin solid {$BACKGROUND_MEDIUM$};
 			}
 
 			.likes_wrapper, .reply_wrapper, .comments_count_wrapper, .menu_wrapper {
@@ -183,7 +181,7 @@
 			}
 
 			.reply, .likes, .delete, .menu {
-            	color: #556572;
+            	color: {$TEXT_DARK$};
 				width: 100%;
 				height: 30px;
 				text-align: center;
@@ -197,7 +195,7 @@
             }
 
             .deleted_info {
-            	color: #556572;
+            	color: {$TEXT_DARK$};
 				width: 100%;
 				height: 30px;
 				height: 30px;
@@ -215,7 +213,7 @@
             	margin-left: 10px;
             	margin-right: 10px;
             	float:left;
-        		color: #556572;
+        		color: {$TEXT_DARK$};
         		height: 30px;
         		font-size: 18px;
         		text-align: center;
@@ -255,7 +253,7 @@
             .unread_indicator {
             	width: 7px;
             	height: 7px;
-            	background: #008ee2;
+            	background: {$BACKGROUND_INFO$};
             	border-radius: 6px;
             	float: left;
             	margin-top: 0px;
@@ -272,7 +270,7 @@
         	}
 
         	.forbidden_status {
-        	    background:#FFFFFF;
+        	    background:{$BACKGROUND_LIGHTEST$};
 				clear:left;
 				overflow:hidden;
 				position: relative;
@@ -291,7 +289,7 @@
 				width: 4px;
 				height: 4px;
 				margin: 2px;
-				background: #556572;
+				background: {$TEXT_DARK$};
 				border-radius: 50%;
 				display: block;
 			}

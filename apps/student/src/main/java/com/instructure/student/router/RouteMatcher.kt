@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const

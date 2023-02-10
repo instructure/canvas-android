@@ -1,11 +1,16 @@
 package com.instructure.canvasapi2.di
 
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.HelpLinksAPI
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.builders.RestBuilder
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,11 +20,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class ApiModule {
-
-    @Provides
-    fun provideRemoteConfigUtils(): RemoteConfigUtils {
-        return RemoteConfigUtils
-    }
 
     @Provides
     fun provideCourseManager(): CourseManager {
@@ -147,5 +147,25 @@ class ApiModule {
     @Provides
     fun provideSubmissionManager(): SubmissionManager {
         return SubmissionManager
+    }
+
+    @Provides
+    fun provideInboxApi(): InboxApi.InboxInterface {
+        return RestBuilder().build(InboxApi.InboxInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideCourseApi(): CourseAPI.CoursesInterface {
+        return RestBuilder().build(CourseAPI.CoursesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideGroupApi(): GroupAPI.GroupInterface {
+        return RestBuilder().build(GroupAPI.GroupInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideProgressApi(): ProgressAPI.ProgressInterface {
+        return RestBuilder().build(ProgressAPI.ProgressInterface::class.java, RestParams())
     }
 }

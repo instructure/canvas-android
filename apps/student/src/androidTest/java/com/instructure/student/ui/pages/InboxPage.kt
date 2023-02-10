@@ -16,20 +16,16 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -41,7 +37,6 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
@@ -50,8 +45,8 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val createMessageButton by OnViewWithId(R.id.addMessage)
-    private val scopeButton by OnViewWithId(R.id.filterButton)
-    private val filterButton by OnViewWithId(R.id.inboxFilter)
+    private val scopeButton by OnViewWithId(R.id.scopeFilter)
+    private val filterButton by OnViewWithId(R.id.courseFilter)
     private val inboxRecyclerView by WaitForViewWithId(R.id.inboxRecyclerView)
 
     fun assertConversationDisplayed(conversation: ConversationApiModel) {
@@ -98,10 +93,10 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun selectInboxScope(scope: InboxApi.Scope) {
-        waitForView(withId(R.id.filterText))
+        waitForView(withId(R.id.scopeFilterText))
         scopeButton.click()
         when (scope) {
-            InboxApi.Scope.ALL -> onViewWithText("All").scrollTo().click()
+            InboxApi.Scope.INBOX -> onViewWithText("All").scrollTo().click()
             InboxApi.Scope.UNREAD -> onViewWithText("Unread").scrollTo().click()
             InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").scrollTo().click()
             InboxApi.Scope.STARRED -> onViewWithText("Starred").scrollTo().click()
@@ -128,9 +123,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
             withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
             hasSibling(withId(R.id.userName)),
             hasSibling(withId(R.id.date)),
-            ViewMatchers.withParent(ViewMatchers.withParent(withChild(
-                allOf(withId(R.id.subjectView), withText(subject))))
-            ))
+            hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).assertDisplayed()
@@ -141,9 +134,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
         val matcher = allOf(
                 withId(R.id.unreadMark),
                 withEffectiveVisibility(visibility),
-                ViewMatchers.withParent(hasSibling(withChild(
-                        allOf(withId(R.id.message), withText(conversation.lastMessage))
-                ))))
+                hasSibling(allOf(withId(R.id.message), withText(conversation.lastMessage))))
 
         if(visibility == ViewMatchers.Visibility.VISIBLE) {
             waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
@@ -160,9 +151,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
             withId(R.id.unreadMark),
             withEffectiveVisibility(visibility),
             hasSibling(allOf(withId(R.id.avatar))),
-            ViewMatchers.withParent(hasSibling(withChild(
-                allOf(withId(R.id.subjectView), withText(subject))))
-            )
+            hasSibling(allOf(withId(R.id.subjectView), withText(subject)))
         )
         if(visibility == ViewMatchers.Visibility.VISIBLE) {
             waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
