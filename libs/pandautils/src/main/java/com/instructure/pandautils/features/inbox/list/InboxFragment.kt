@@ -29,6 +29,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -107,6 +108,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         viewModel.data.observe(viewLifecycleOwner) { data ->
             setMenuItems(data.editMenuItems)
             animateToolbars(data.selectionMode)
+            if (!data.selectionMode) animateBackAvatars()
         }
 
         sharedViewModel.events.observe(viewLifecycleOwner) { event ->
@@ -191,6 +193,15 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
         currentToolbar.startAnimation(fadeOut)
         newToolbar.startAnimation(fadeIn)
+    }
+
+    private fun animateBackAvatars() {
+        binding.inboxRecyclerView.children.forEach {
+            val itemBinding = DataBindingUtil.findBinding<ItemInboxEntryBinding>(it)
+            if (itemBinding?.avatarSelected?.visibility == View.VISIBLE) {
+                animateAvatar(it, false)
+            }
+        }
     }
 
     override val navigation: Navigation?
