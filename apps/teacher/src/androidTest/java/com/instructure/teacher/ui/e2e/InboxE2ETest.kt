@@ -114,7 +114,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertHasConversation()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'All' category from the spinner on Inbox Page.")
-        inboxPage.filterInbox("All")
+        inboxPage.filterInbox("Inbox")
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the previously seeded Inbox conversation is displayed.")
         inboxPage.refresh()
