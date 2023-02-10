@@ -18,19 +18,42 @@ package com.instructure.student.di
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.student.features.inbox.list.StudentInboxRepository
 import com.instructure.student.features.inbox.list.StudentInboxRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class InboxModule {
+class InboxFragmentModule {
 
     @Provides
     fun providesInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
         return StudentInboxRouter(activity, fragment)
     }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class InboxModule {
+
+    @Provides
+    fun provideInboxRepository(
+        inboxApi: InboxApi.InboxInterface,
+        coursesApi: CourseAPI.CoursesInterface,
+        groupsApi: GroupAPI.GroupInterface,
+        progressApi: ProgressAPI.ProgressInterface
+    ): InboxRepository {
+        return StudentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+    }
+
 }
