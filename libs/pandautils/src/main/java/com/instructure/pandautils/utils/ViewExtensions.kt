@@ -650,6 +650,7 @@ fun Toolbar?.addSearch(hintText: String? = null, @ColorInt color: Int = Color.WH
     inflateMenu(R.menu.search)
     val searchItem = menu.findItem(R.id.search)
     with(searchItem.actionView as SearchView) {
+        maxWidth = Int.MAX_VALUE
         setIconifiedByDefault(false)
         search_mag_icon.setImageDrawable(null)
         queryHint = hintText ?: context.getString(R.string.search)
