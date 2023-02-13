@@ -23,11 +23,11 @@ import instructure.androidblueprint.SyncManager
 
 interface MessageThreadView : SyncManager<Message> {
     fun refreshConversationData()
-    fun onConversationArchived(position: Int)
-    fun onConversationDeleted(position: Int)
-    fun onConversationMarkedAsUnread(position: Int)
-    fun onConversationRead(position: Int)
-    fun onConversationStarred(position: Int)
+    fun onConversationArchived()
+    fun onConversationDeleted()
+    fun onConversationMarkedAsUnread()
+    fun onConversationRead()
+    fun onConversationStarred()
     fun onMessageDeleted()
     fun showUserMessage(userMessageResId: Int)
     fun setupConversationDetails()

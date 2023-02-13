@@ -32,7 +32,6 @@ import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.events.ConversationDeletedEvent
 import com.instructure.teacher.events.ConversationUpdatedEvent
-import com.instructure.teacher.events.ConversationUpdatedEventTablet
 import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.fragments.MessageThreadFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -43,12 +42,12 @@ import org.greenrobot.eventbus.ThreadMode
 class TeacherInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
-        //we send a parcel copy so that we can properly propagate updates through our events
-        if (activity.resources.getBoolean(R.bool.isDeviceTablet)) { //but tablets need reference, since the detail view remains in view
-            val args = MessageThreadFragment.createBundle(conversation, 1, InboxApi.conversationScopeToString(scope))
+        // we send a parcel copy so that we can properly propagate updates through our events
+        if (activity.resources.getBoolean(R.bool.isDeviceTablet)) { // but tablets need reference, since the detail view remains in view
+            val args = MessageThreadFragment.createBundle(conversation, InboxApi.conversationScopeToString(scope))
             RouteMatcher.route(activity, Route(null, MessageThreadFragment::class.java, null, args))
         } else { //phones use the parcel copy
-            val args = MessageThreadFragment.createBundle(conversation.parcelCopy(), 1, InboxApi.conversationScopeToString(scope))
+            val args = MessageThreadFragment.createBundle(conversation.parcelCopy(), InboxApi.conversationScopeToString(scope))
             RouteMatcher.route(activity, Route(null, MessageThreadFragment::class.java, null, args))
         }
     }
@@ -79,17 +78,7 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onConversationUpdated(event: ConversationUpdatedEventTablet) {
-        event.once(javaClass.simpleName) {
-            if (fragment is InboxFragment) {
-                fragment.conversationUpdated()
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onConversationUpdated2(event: ConversationUpdatedEvent) {
+    fun onConversationUpdated(event: ConversationUpdatedEvent) {
         event.once(javaClass.simpleName) {
             if (fragment is InboxFragment) {
                 fragment.conversationUpdated()
@@ -100,7 +89,7 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onConversationDeleted(event: ConversationDeletedEvent) {
-        event.once(javaClass.simpleName + ".onPost()") {
+        event.once(javaClass.simpleName) {
             if (fragment is InboxFragment) {
                 fragment.conversationUpdated()
             }
@@ -113,7 +102,6 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
                     val transaction = fragmentManager.beginTransaction()
                     transaction.remove(currentFrag)
                     transaction.commit()
-                    fragmentManager.popBackStack()
                 }
             }
         }
