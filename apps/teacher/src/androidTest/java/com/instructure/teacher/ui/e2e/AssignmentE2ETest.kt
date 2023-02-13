@@ -274,7 +274,7 @@ class AssignmentE2ETest : TeacherTest() {
         speedGraderCommentsPage.sendAudioComment()
         speedGraderCommentsPage.assertAudioCommentDisplayed()
 
-        Log.d(STEP_TAG, "Send an audio comment and assert that is displayed among the comments.")
+        Log.d(STEP_TAG, "Send a video comment and assert that is displayed among the comments.")
         speedGraderCommentsPage.sendVideoComment()
         speedGraderCommentsPage.assertVideoCommentDisplayed()
 
