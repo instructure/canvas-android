@@ -153,6 +153,9 @@ class InboxViewModel @Inject constructor(
             selectionModeCallback = { view, selected ->
                 _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
                 handleSelectionMode()
+            },
+            avatarClickedCallback = { starred ->
+                _events.value = Event(InboxAction.AvatarClickedCallback(conversation.copy(isStarred = starred), scope))
             })
     }
 

@@ -231,6 +231,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
             InboxAction.RefreshFailed -> Snackbar.make(requireView(), R.string.conversationsRefreshFailed, Snackbar.LENGTH_LONG).show()
             is InboxAction.ConfirmDelete -> deleteSelected(action.count)
+            is InboxAction.AvatarClickedCallback -> inboxRouter.avatarClicked(action.conversation, action.scope)
         }
     }
 

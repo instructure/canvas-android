@@ -20,13 +20,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
+import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.events.ConversationDeletedEvent
 import com.instructure.teacher.events.ConversationUpdatedEvent
 import com.instructure.teacher.events.ConversationUpdatedEventTablet
@@ -61,6 +64,17 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
     override fun routeToNewMessage() {
         val args = AddMessageFragment.createBundle()
         RouteMatcher.route(activity, Route(AddMessageFragment::class.java, null, args))
+    }
+
+    override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {
+        val canvasContext = CanvasContext.fromContextCode(conversation.contextCode)
+        val isAvatarClickable = conversation.participants.size == 1 || conversation.participants.size == 2
+        if (canvasContext is Course && isAvatarClickable) {
+            val bundle = StudentContextFragment.makeBundle(conversation.participants.first().id, canvasContext.id, false)
+            RouteMatcher.route(activity, Route(StudentContextFragment::class.java, null, bundle))
+        } else {
+            openConversation(conversation, scope)
+        }
     }
 
     @Suppress("unused")
