@@ -208,17 +208,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
           ..domain = widget.domain
           ..name = widget.accountName);
         ApiPrefs.setLastAccount(lastAccount, widget.loginFlow);
-        locator<WebContentInteractor>()
-            .isTermsAcceptanceRequired('$_domain/users/self')
-            .then((aupRequired) => {
-                  if (aupRequired) {
-                    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.aup())
-                  }
-                  else {
-                      locator<QuickNav>().pushRouteAndClearStack(
-                          context, PandaRouter.rootSplash())
-                    }
-                });
+        locator<QuickNav>().pushRouteAndClearStack(
+            context, PandaRouter.rootSplash());
       }).catchError((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_FAILURE,

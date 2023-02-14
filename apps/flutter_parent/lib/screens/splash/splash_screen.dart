@@ -22,6 +22,7 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -81,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           builder: (BuildContext context, AsyncSnapshot<SplashScreenData> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data.isObserver || snapshot.data.canMasquerade) {
-                _navigate(PandaRouter.dashboard());
+                _navigateToDashboardOrAup();
               } else {
                 // User is not an observer and cannot masquerade. Show the not-a-parent screen.
                 _navigate(PandaRouter.notParent());
@@ -92,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     .addPostFrameCallback((_) => Navigator.pop(context, L10n(context).loginWithQRCodeError));
               } else {
                 // On error, proceed without pre-fetched student list
-                _navigate(PandaRouter.dashboard());
+                _navigateToDashboardOrAup();
               }
             }
             return Container(
@@ -123,6 +124,19 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     MasqueradeUI.of(context)?.refresh();
     _route = route;
     _controller.forward(); // Start the animation, we'll navigate when it finishes
+  }
+
+  _navigateToDashboardOrAup() {
+    locator<WebContentInteractor>()
+        .isTermsAcceptanceRequired('${ApiPrefs.getCurrentLogin().domain}/users/self')
+        .then((aupRequired) => {
+      if (aupRequired) {
+        _navigate(PandaRouter.aup())
+      }
+      else {
+        _navigate(PandaRouter.dashboard())
+      }
+    });
   }
 
   _animationListener() {
