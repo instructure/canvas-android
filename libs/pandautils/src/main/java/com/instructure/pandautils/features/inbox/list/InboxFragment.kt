@@ -34,7 +34,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
@@ -49,6 +49,7 @@ import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
@@ -97,7 +98,6 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
-        setUpScrollingBehavior()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -111,11 +111,25 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             if (!data.selectionMode) animateBackAvatars()
         }
 
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            handleAppBarBehavior(state)
+        }
+
         sharedViewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleSharedAction(it)
             }
         }
+    }
+
+    private fun handleAppBarBehavior(state: ViewState?) {
+        val params = binding.filterSection.layoutParams as? AppBarLayout.LayoutParams
+        params?.scrollFlags = if (state is ViewState.Empty || state is ViewState.Error) {
+            0
+        } else {
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        }
+        binding.filterSection.layoutParams = params
     }
 
     private fun setUpEditToolbar() {
@@ -138,19 +152,6 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         binding.editToolbar.menu.items.forEach {
             it.isVisible = editMenuItems.map { it.id }.contains(it.itemId)
         }
-    }
-
-    private fun setUpScrollingBehavior() {
-        binding.inboxRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0 && binding.addMessage.visibility == View.VISIBLE) {
-                    binding.addMessage.hide()
-                } else if (dy < 0 && binding.addMessage.visibility != View.VISIBLE) {
-                    binding.addMessage.show()
-                }
-            }
-        })
     }
 
     private fun deleteSelected(count: Int) {
