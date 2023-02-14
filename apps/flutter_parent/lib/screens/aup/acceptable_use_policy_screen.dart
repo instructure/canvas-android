@@ -15,13 +15,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/aup/acceptable_use_policy_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/html_description_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+
+import '../../parent_app.dart';
 
 class AcceptableUsePolicyScreen extends StatefulWidget {
   @override
@@ -102,7 +109,14 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
             ));
   }
 
-  void _close() {}
+  void _close() async {
+    await ParentTheme.of(context).setSelectedStudent(null);
+    await ApiPrefs.performLogout(app: ParentApp.of(context));
+    MasqueradeUI.of(context).refresh();
+    await locator<Analytics>().logEvent(AnalyticsEventConstants.LOGOUT);
+    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+    await FeaturesUtils.performLogout();
+  }
 
   void _confirm() {}
 
