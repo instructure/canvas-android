@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -69,7 +70,12 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
         val canvasContext = CanvasContext.fromContextCode(conversation.contextCode)
         val isAvatarClickable = conversation.participants.size == 1 || conversation.participants.size == 2
         if (canvasContext is Course && isAvatarClickable) {
-            val bundle = StudentContextFragment.makeBundle(conversation.participants.first().id, canvasContext.id, false)
+            val userId = if (conversation.participants.size == 1) {
+                conversation.participants.first().id
+            } else {
+                conversation.participants.first { it.id != ApiPrefs.user?.id }.id
+            }
+            val bundle = StudentContextFragment.makeBundle(userId, canvasContext.id, false)
             RouteMatcher.route(activity, Route(StudentContextFragment::class.java, null, bundle))
         } else {
             openConversation(conversation, scope)
