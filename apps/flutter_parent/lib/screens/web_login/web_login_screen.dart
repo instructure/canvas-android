@@ -25,6 +25,7 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -207,8 +208,17 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
           ..domain = widget.domain
           ..name = widget.accountName);
         ApiPrefs.setLastAccount(lastAccount, widget.loginFlow);
-        locator<QuickNav>().pushRouteAndClearStack(
-            context, PandaRouter.rootSplash());
+        locator<WebContentInteractor>()
+            .isTermsAcceptanceRequired('$_domain/users/self')
+            .then((aupRequired) => {
+                  if (aupRequired) {
+
+                  }
+                  else {
+                      locator<QuickNav>().pushRouteAndClearStack(
+                          context, PandaRouter.rootSplash())
+                    }
+                });
       }).catchError((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_FAILURE,

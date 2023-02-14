@@ -11,6 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -32,6 +33,18 @@ class WebContentInteractor {
       return _authUrl(targetUrl);
     } else {
       return targetUrl;
+    }
+  }
+
+  Future<bool> _requiresTermsAcceptance(String targetUrl) async {
+    return (await _api.getAuthenticatedUrl(targetUrl))?.requiresTermsAcceptance ?? false;
+  }
+
+  Future<bool> isTermsAcceptanceRequired(String targetUrl) async {
+    if (targetUrl.contains(ApiPrefs.getDomain())) {
+      return _requiresTermsAcceptance(targetUrl);
+    } else {
+      return false;
     }
   }
 
