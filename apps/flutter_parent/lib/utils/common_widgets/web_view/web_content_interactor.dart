@@ -35,18 +35,6 @@ class WebContentInteractor {
     }
   }
 
-  Future<bool> _requiresTermsAcceptance(String targetUrl) async {
-    return (await _api.getAuthenticatedUrl(targetUrl))?.requiresTermsAcceptance ?? false;
-  }
-
-  Future<bool> isTermsAcceptanceRequired(String targetUrl) async {
-    if (targetUrl.contains(ApiPrefs.getDomain())) {
-      return _requiresTermsAcceptance(targetUrl);
-    } else {
-      return false;
-    }
-  }
-
   Future<String> authContent(String content, String externalToolButtonText) async {
     if (content == null || content.isEmpty) return content;
 

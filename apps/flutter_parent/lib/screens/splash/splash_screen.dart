@@ -127,8 +127,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   _navigateToDashboardOrAup() {
-    locator<WebContentInteractor>()
-        .isTermsAcceptanceRequired('${ApiPrefs.getCurrentLogin().domain}/users/self')
+    locator<SplashScreenInteractor>()
+        .isTermsAcceptanceRequired()
         .then((aupRequired) => {
       if (aupRequired) {
         _navigate(PandaRouter.aup())
