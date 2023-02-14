@@ -25,6 +25,9 @@ class AcceptableUsePolicyScreen extends StatefulWidget {
 }
 
 class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
+
+  bool _isAccepted = false;
+
   @override
   Widget build(BuildContext context) {
     return DefaultParentTheme(
@@ -37,7 +40,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                 ),
                 actions: [
                   TextButton(
-                      onPressed: () => _confirm,
+                      onPressed: _isAccepted ? () => _confirm() : null,
                       child: Text(L10n(context).acceptableUsePolicyConfirm))
                 ],
               ),
@@ -82,7 +85,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                         ),
                         Spacer(),
                         Switch(
-                            value: false,
+                            value: _isAccepted,
                             onChanged: (isEnabled) =>
                                 _onSwitchChanged(isEnabled))
                       ],
@@ -100,5 +103,9 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
 
   void _readPolicy() {}
 
-  void _onSwitchChanged(bool isEnabled) {}
+  void _onSwitchChanged(bool isEnabled) {
+    setState(() {
+      _isAccepted = isEnabled;
+    });
+  }
 }
