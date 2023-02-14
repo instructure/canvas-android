@@ -11,7 +11,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/service_locator.dart';

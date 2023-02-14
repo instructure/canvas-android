@@ -122,6 +122,6 @@ class HtmlDescriptionTile extends StatelessWidget {
     // may have personally identifiable information (and shouldn't be logged by the screen parameter analytics).
     // We'll at least get a screen view for that screen name, and a log entry, so we should still be able to track
     // any issues that come from navigating to this screen.
-    locator<QuickNav>().push(context, HtmlDescriptionScreen(html));
+    locator<QuickNav>().push(context, HtmlDescriptionScreen(html, L10n(context).descriptionTitle));
   }
 }

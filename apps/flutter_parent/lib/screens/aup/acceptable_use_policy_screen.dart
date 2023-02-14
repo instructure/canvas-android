@@ -15,9 +15,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/screens/aup/acceptable_use_policy_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/html_description_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class AcceptableUsePolicyScreen extends StatefulWidget {
   @override
@@ -25,7 +29,8 @@ class AcceptableUsePolicyScreen extends StatefulWidget {
 }
 
 class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
-
+  AcceptableUsePolicyInteractor _interactor =
+      locator<AcceptableUsePolicyInteractor>();
   bool _isAccepted = false;
 
   @override
@@ -101,7 +106,13 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
 
   void _confirm() {}
 
-  void _readPolicy() {}
+  void _readPolicy() {
+    _interactor.getTermsOfService().then((termsOfService) => locator<QuickNav>()
+        .push(
+            context,
+            HtmlDescriptionScreen(termsOfService.content,
+                L10n(context).acceptableUsePolicyTitle)));
+  }
 
   void _onSwitchChanged(bool isEnabled) {
     setState(() {
