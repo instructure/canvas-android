@@ -50,7 +50,8 @@ sealed class SubmissionCommentsEffect {
         val assignmentId: Long,
         val assignmentName: String,
         val courseId: Long,
-        val isGroupMessage: Boolean
+        val isGroupMessage: Boolean,
+        val attemptId: Long?
     ) : SubmissionCommentsEffect()
 
     data class ShowFilePicker(
@@ -63,7 +64,8 @@ sealed class SubmissionCommentsEffect {
         val assignmentId: Long,
         val assignmentName: String,
         val courseId: Long,
-        val isGroupMessage: Boolean
+        val isGroupMessage: Boolean,
+        val attemptId: Long?
     ) : SubmissionCommentsEffect()
 
     data class RetryCommentUpload(val commentId: Long) : SubmissionCommentsEffect()
@@ -86,6 +88,7 @@ sealed class SubmissionCommentsEffect {
 }
 
 data class SubmissionCommentsModel(
+    val attemptId: Long?,
     val comments: List<SubmissionComment>,
     val submissionHistory: List<Submission>,
     val assignment: Assignment,

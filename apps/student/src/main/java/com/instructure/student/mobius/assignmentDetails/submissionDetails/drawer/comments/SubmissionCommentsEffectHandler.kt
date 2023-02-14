@@ -51,7 +51,8 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
                     assignmentId = effect.assignmentId,
                     assignmentName = effect.assignmentName,
                     mediaFile = effect.file,
-                    isGroupMessage = effect.isGroupMessage
+                    isGroupMessage = effect.isGroupMessage,
+                    attemptId = effect.attemptId
                 )
             }
             is SubmissionCommentsEffect.ShowFilePicker -> {
@@ -69,7 +70,8 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
                     effect.assignmentName,
                     effect.message,
                     emptyList(),
-                    effect.isGroupMessage
+                    effect.isGroupMessage,
+                    effect.attemptId
                 )
             }
             is SubmissionCommentsEffect.RetryCommentUpload -> {

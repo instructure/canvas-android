@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.util.getStudioLTITool
 import com.squareup.sqldelight.Query
@@ -439,12 +440,6 @@ class AssignmentDetailsViewModel @Inject constructor(
             hasDraft = hasDraft
         )
     }
-
-    private fun getFormattedAttemptDate(date: Date) = DateFormat.getDateTimeInstance(
-        DateFormat.MEDIUM,
-        DateFormat.SHORT,
-        Locale.getDefault()
-    ).format(date)
 
     private fun postAction(action: AssignmentDetailAction) {
         _events.postValue(Event(action))

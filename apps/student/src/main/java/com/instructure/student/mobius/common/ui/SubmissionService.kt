@@ -19,7 +19,6 @@ package com.instructure.student.mobius.common.ui
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -405,7 +404,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                         commentText = comment.message.orEmpty(),
                         isGroupMessage = comment.isGroupMessage,
                         attachments = attachmentIds,
-                        callback = callback
+                        callback = callback,
+                        attemptId = comment.attemptId
                     )
                 }
 
@@ -777,7 +777,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentName: String,
             message: String?,
             attachments: List<FileSubmitObject>?,
-            isGroupMessage: Boolean
+            isGroupMessage: Boolean,
+            attemptId: Long?
         ) {
             require(message.isValid() || attachments?.isNotEmpty() == true)
             val db = Db.getInstance(context)
@@ -789,7 +790,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 lastActivityDate = Date.now(),
                 isGroupMessage = isGroupMessage,
                 message = message,
-                mediaPath = null
+                mediaPath = null,
+                attemptId = attemptId
             )
             val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
             attachments?.forEach { db.submissionCommentFileQueries.insertFile(commentId, it.name, it.size, it.contentType, it.fullPath) }
@@ -810,7 +812,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentId: Long,
             assignmentName: String,
             mediaFile: File,
-            isGroupMessage: Boolean
+            isGroupMessage: Boolean,
+            attemptId: Long?
         ) {
             val db = Db.getInstance(context)
             db.pendingSubmissionCommentQueries.insertComment(
@@ -821,7 +824,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 lastActivityDate = Date.now(),
                 isGroupMessage = isGroupMessage,
                 message = null,
-                mediaPath = mediaFile.absolutePath
+                mediaPath = mediaFile.absolutePath,
+                attemptId = attemptId
             )
             val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
 

@@ -50,7 +50,8 @@ class SubmissionCommentsUpdate :
                     model.assignment.id,
                     model.assignment.name.orEmpty(),
                     model.assignment.courseId,
-                    model.assignment.groupCategoryId > 0
+                    model.assignment.groupCategoryId > 0,
+                    model.attemptId
                 )
                 Next.next(
                     model.copy(isFileButtonEnabled = true),
@@ -66,7 +67,8 @@ class SubmissionCommentsUpdate :
                     model.assignment.id,
                     model.assignment.name.orEmpty(),
                     model.assignment.courseId,
-                    model.assignment.groupCategoryId > 0
+                    model.assignment.groupCategoryId > 0,
+                    model.attemptId
                 )
                 Next.dispatch(setOf(effect, SubmissionCommentsEffect.ClearTextInput))
             }

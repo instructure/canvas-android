@@ -17,8 +17,8 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import android.content.Context
-import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsViewState
 import com.instructure.student.mobius.common.ui.Presenter
@@ -32,19 +32,15 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         val rootSubmission = model.rootSubmissionResult.dataOrThrow
         val assignment = model.assignmentResult.dataOrThrow
 
-        val atSeparator = context.getString(R.string.at)
-
         val validSubmissions = rootSubmission.submissionHistory
             .filterNotNull()
             .sortedByDescending { it.submittedAt }
 
         val selectedSubmission = validSubmissions.firstOrNull { it.attempt == model.selectedSubmissionAttempt }
 
-        val submissionVersions: List<Pair<Long, String>> = validSubmissions
-            .map {
-                val formattedDate = DateHelper.getMonthDayAtTime(context, it.submittedAt, atSeparator) ?: ""
-                it.attempt to formattedDate
-            }
+        val submissionVersions: List<Pair<Long, String>> = validSubmissions.map { submission ->
+            submission.attempt to submission.submittedAt?.let { it -> getFormattedAttemptDate(it) }.orEmpty()
+        }
 
         val selectedVersionIdx = submissionVersions
             .indexOfFirst { it.first == model.selectedSubmissionAttempt }
@@ -56,7 +52,8 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         tabData += SubmissionDetailsTabData.CommentData(
             name = context.getString(R.string.comments),
             assignment = assignment,
-            submission = rootSubmission
+            submission = rootSubmission,
+            attemptId = model.selectedSubmissionAttempt
         )
 
         // Files tab

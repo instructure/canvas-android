@@ -23,19 +23,11 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.FilePrefs
-import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.pandautils.utils.OnActivityResults
-import com.instructure.pandautils.utils.PermissionUtils
-import com.instructure.pandautils.utils.remove
-import com.instructure.pandautils.utils.requestPermissions
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.features.documentscanning.DocumentScanningActivity
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.CommentAttachment
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.FileSubmission
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.MediaSubmission
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionService
@@ -157,7 +149,8 @@ class PickerSubmissionUploadEffectHandler constructor(
                     assignmentName = model.assignmentName,
                     message = null,
                     attachments = model.files,
-                    isGroupMessage = model.assignmentGroupCategoryId > 0
+                    isGroupMessage = model.assignmentGroupCategoryId > 0,
+                    attemptId = null
                 )
             }
         }
