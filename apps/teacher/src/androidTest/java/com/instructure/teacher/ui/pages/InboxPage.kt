@@ -1,7 +1,10 @@
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.*
@@ -55,7 +58,8 @@ class InboxPage: BasePage() {
     }
 
     fun refresh() {
-        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+        onView(withId(R.id.swipeRefreshLayout))
+            .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(50)))
     }
 
     fun filterInbox(filterFor: String) {
