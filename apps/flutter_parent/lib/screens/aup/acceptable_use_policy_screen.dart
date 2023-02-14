@@ -118,7 +118,11 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
     await FeaturesUtils.performLogout();
   }
 
-  void _confirm() {}
+  void _confirm() async {
+    await _interactor.acceptTermsOfUse();
+    locator<QuickNav>().pushRouteAndClearStack(
+        context, PandaRouter.rootSplash());
+  }
 
   void _readPolicy() {
     _interactor.getTermsOfService().then((termsOfService) => locator<QuickNav>()

@@ -13,11 +13,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/terms_of_service.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
+import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AcceptableUsePolicyInteractor {
   Future<TermsOfService> getTermsOfService() {
     return locator<AccountsApi>().getTermsOfService();
+  }
+
+  Future<User> acceptTermsOfUse() {
+    return locator<UserApi>().acceptUserTermsOfUse();
   }
 }
