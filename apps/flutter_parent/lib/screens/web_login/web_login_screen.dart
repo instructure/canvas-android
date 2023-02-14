@@ -212,7 +212,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             .isTermsAcceptanceRequired('$_domain/users/self')
             .then((aupRequired) => {
                   if (aupRequired) {
-
+                    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.aup())
                   }
                   else {
                       locator<QuickNav>().pushRouteAndClearStack(

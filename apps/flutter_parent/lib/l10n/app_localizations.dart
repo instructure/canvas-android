@@ -1666,4 +1666,10 @@ class AppLocalizations {
 
   String get messageSent =>
       Intl.message('Message sent', desc: 'confirmation message on the screen when the user succesfully sends a message');
+
+  String get acceptableUsePolicyTitle =>
+      Intl.message('Acceptable Use Policy', desc: 'title for the acceptable use policy screen');
+
+  String get acceptableUsePolicyConfirm =>
+      Intl.message('Submit', desc: 'submit button title for acceptable use policy screen');
 }
