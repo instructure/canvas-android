@@ -19,6 +19,9 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -127,14 +130,7 @@ class AssignmentE2ETest : TeacherTest() {
         )
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
-        SubmissionsApi.gradeSubmission(
-                teacherToken = teacher.token,
-                courseId = course.id,
-                assignmentId = assignment[0].id,
-                studentId = gradedStudent.id,
-                postedGrade = "15",
-                excused = false
-        )
+        gradeSubmission(teacher, course, assignment, gradedStudent)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the number of 'Graded' is increased and the number of 'Not Submitted' and 'Needs Grading' are decreased.")
         assignmentDetailsPage.refresh()
@@ -216,6 +212,22 @@ class AssignmentE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the there is a due date with '$dueDateForEveryoneElse' value and another one with '$dueDateForStudentSpecially'.")
         assignmentDueDatesPage.assertDueDateTime("Due $dueDateForEveryoneElse")
         assignmentDueDatesPage.assertDueDateTime("Due $dueDateForStudentSpecially")
+    }
+
+    private fun gradeSubmission(
+        teacher: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: List<AssignmentApiModel>,
+        gradedStudent: CanvasUserApiModel
+    ) {
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = assignment[0].id,
+            studentId = gradedStudent.id,
+            postedGrade = "15",
+            excused = false
+        )
     }
 
 }
