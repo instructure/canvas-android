@@ -553,9 +553,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             closeNavigationDrawer()
         } else {
             if (masterDetailContainer.isVisible) {
-                if (supportFragmentManager.findFragmentById(R.id.master) is NavigationCallbacks) {
-                    if ((supportFragmentManager.findFragmentById(R.id.master) as NavigationCallbacks).onHandleBackPressed()) return
-                }
+                if ((supportFragmentManager.findFragmentById(R.id.master) as? NavigationCallbacks)?.onHandleBackPressed() == true) return
                 super.onBackPressed()
             }
             super.onBackPressed()

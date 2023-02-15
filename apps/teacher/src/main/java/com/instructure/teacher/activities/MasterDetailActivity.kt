@@ -278,9 +278,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.findFragmentById(R.id.master) is NavigationCallbacks) {
-            if ((supportFragmentManager.findFragmentById(R.id.master) as NavigationCallbacks).onHandleBackPressed()) return
-        }
+        if ((supportFragmentManager.findFragmentById(R.id.master) as? NavigationCallbacks)?.onHandleBackPressed() == true) return
         super.onBackPressed()
     }
 
