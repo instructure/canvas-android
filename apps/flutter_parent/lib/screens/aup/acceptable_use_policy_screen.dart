@@ -109,7 +109,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
             ));
   }
 
-  void _close() async {
+  _close() async {
     await ParentTheme.of(context).setSelectedStudent(null);
     await ApiPrefs.performLogout(app: ParentApp.of(context));
     MasqueradeUI.of(context).refresh();
@@ -118,13 +118,13 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
     await FeaturesUtils.performLogout();
   }
 
-  void _confirm() async {
+  _confirm() async {
     await _interactor.acceptTermsOfUse();
     locator<QuickNav>().pushRouteAndClearStack(
         context, PandaRouter.rootSplash());
   }
 
-  void _readPolicy() {
+  _readPolicy() {
     _interactor.getTermsOfService().then((termsOfService) => locator<QuickNav>()
         .push(
             context,
@@ -132,7 +132,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                 L10n(context).acceptableUsePolicyTitle)));
   }
 
-  void _onSwitchChanged(bool isEnabled) {
+  _onSwitchChanged(bool isEnabled) {
     setState(() {
       _isAccepted = isEnabled;
     });
