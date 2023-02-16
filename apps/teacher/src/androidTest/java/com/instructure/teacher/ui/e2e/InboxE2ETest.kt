@@ -70,10 +70,8 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the reply has successfully sent and it's displayed.")
         inboxMessagePage.assertHasReply()
 
-        Log.d(STEP_TAG,"Navigate back to Inbox Page.")
+        Log.d(STEP_TAG,"Navigate back to Inbox Page. Assert that the message is not unread anymore.")
         Espresso.pressBack()
-
-        Log.d(STEP_TAG, "Assert that the message is not unread anymore.")
         inboxPage.assertThereIsAnUnreadMessage(false)
 
         Log.d(STEP_TAG,"Add a new conversation message manually via UI. Click on 'New Message' ('+') button.")
