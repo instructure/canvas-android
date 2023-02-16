@@ -147,7 +147,7 @@ class ConversationUpdatedEventTablet(position: Int, val scope: InboxApi.Scope, s
 
 /** A RationedBusEvent for the deletion of conversations, used between InboxFragment/MessageThreadFragment
  *  @see [RationedBusEvent] */
-class ConversationDeletedEvent(position: Int, skipId: String? = null) : RationedBusEvent<Int>(position, skipId)
+class ConversationDeletedEvent(skipId: String? = null) : RationedBusEvent<Any?>(skipId)
 
 /** A RationedBusEvent adding a new message to the MessageThreadFragment. @see [RationedBusEvent] */
 class MessageAddedEvent(shouldUpdate: Boolean, skipId: String? = null) : RationedBusEvent<Boolean>(shouldUpdate, skipId)

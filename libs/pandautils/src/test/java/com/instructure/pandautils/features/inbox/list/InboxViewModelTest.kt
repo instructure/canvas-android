@@ -33,7 +33,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -83,12 +82,12 @@ class InboxViewModelTest {
         every { resources.getString(R.string.errorOccurred) } returns "Error"
         every { resources.getString(R.string.inboxOperationFailed) } returns "Epic Fail"
 
-        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2]) }
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3]) }
     }
 
-    private fun createItem(conversation: Conversation, any: Any?, any1: Any?, starred: Boolean = false, unread: Boolean = false): InboxEntryItemViewModel {
+    private fun createItem(conversation: Conversation, openConversation: Any?, selectionCallback: Any?, avatarCallback: Any?, starred: Boolean = false, unread: Boolean = false): InboxEntryItemViewModel {
         val viewData = InboxEntryViewData(id = conversation.id, AvatarViewData("", "", false), "", "", "", "", unread, starred, false)
-        return InboxEntryItemViewModel(viewData, any as (Boolean) -> Unit, any1 as (View, Boolean) -> Unit)
+        return InboxEntryItemViewModel(viewData, openConversation as (Boolean) -> Unit, selectionCallback as (View, Boolean) -> Unit, avatarCallback as (Boolean) -> Unit)
     }
 
     @After
@@ -229,6 +228,23 @@ class InboxViewModelTest {
     }
 
     @Test
+    fun `Clicking avatar sends avatar clicked action`() {
+        val conversation = Conversation(id = 1)
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(conversation))
+
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.itemViewModels.value!![0].onAvatarClick(View(context))
+
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever(Observer {
+            events.add(it)
+        })
+
+        assertTrue(events.any { it.peekContent() == InboxAction.AvatarClickedCallback(conversation, InboxApi.Scope.INBOX) })
+    }
+
+    @Test
     fun `Star selected items`() {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
 
@@ -248,7 +264,7 @@ class InboxViewModelTest {
     @Test
     fun `Unstar selected items`() {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
-        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], starred = true) }
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], starred = true) }
 
         viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner) {}
@@ -270,7 +286,7 @@ class InboxViewModelTest {
             DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))), // We need an other call for the scope change
             DataResult.Success(emptyList())
         )
-        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], starred = true) }
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], starred = true) }
 
         viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner) {}
@@ -303,7 +319,7 @@ class InboxViewModelTest {
     @Test
     fun `Mark selected items as read`() {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
-        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], unread = true) }
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
 
         viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner) {}
@@ -325,7 +341,7 @@ class InboxViewModelTest {
             DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))), // We need an other call for the scope change
             DataResult.Success(emptyList())
         )
-        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], unread = true) }
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
 
         viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner) {}

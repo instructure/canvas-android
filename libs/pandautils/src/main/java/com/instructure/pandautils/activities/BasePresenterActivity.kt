@@ -59,6 +59,8 @@ abstract class BasePresenterActivity<PRESENTER : Presenter<VIEW>, VIEW> : Presen
                 if (fragments.isNotEmpty()) {
                     return fragments[supportFragmentManager.backStackEntryCount - 1]
                 }
+            } else {
+                return supportFragmentManager.fragments.lastOrNull()
             }
             return null
         }
