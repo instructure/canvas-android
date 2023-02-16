@@ -15,7 +15,8 @@
 import 'package:flutter_parent/network/utils/dio_config.dart';
 
 class ErrorReportApi {
-  static const DEFAULT_DOMAIN = 'https://canvas.instructure.com';
+  // static const DEFAULT_DOMAIN = 'https://canvas.instructure.com';
+  static const DEFAULT_DOMAIN = 'https://canvas-test.emeritus.org';
 
   Future<void> submitErrorReport({
     String subject,

@@ -15,11 +15,11 @@
  */
 package com.instructure.teacher.ui.utils
 
-import com.instructure.teacher.SingleFragmentTestActivity
+//import com.instructure.teacher.SingleFragmentTestActivity
 
 abstract class TeacherRenderTest : TeacherTest() {
 
-    override val activityRule = TeacherActivityTestRule(SingleFragmentTestActivity::class.java)
+//    override val activityRule = TeacherActivityTestRule("SingleFragmentTestActivity"::class.java)
 
     override fun displaysPageObjects() = Unit // Ignore for render tests
 

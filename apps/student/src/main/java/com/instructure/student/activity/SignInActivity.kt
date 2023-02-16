@@ -51,5 +51,12 @@ class SignInActivity : BaseLoginSignInActivity() {
             intent.putExtras(extras)
             return intent
         }
+
+        fun createIntent(context: Context): Intent {
+            val intent = Intent(context, SignInActivity::class.java)
+            val extras = Bundle()
+            intent.putExtras(extras)
+            return intent
+        }
     }
 }

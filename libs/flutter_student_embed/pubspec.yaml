@@ -43,16 +43,16 @@ dependencies:
   shared_preferences: ^2.0.8
   collection: ^1.15.0
   device_info: ^2.0.3
-  firebase_crashlytics: ^2.3.0
+  firebase_crashlytics: 2.3.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#  flutter_test:
+#    sdk: flutter
 
   # Test dependencies
-  mockito: ^5.0.15
-  test: ^1.17.10
-  transparent_image: ^2.0.0
+#  mockito: ^5.0.15
+#  test: ^1.23.0
+#  transparent_image: ^2.0.0
 
   # Generators
   build_resolvers: ^2.0.4

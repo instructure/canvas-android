@@ -44,7 +44,8 @@ class _ViewAttachmentScreenState extends State<ViewAttachmentScreen> {
         key: scaffoldKey,
         appBar: AppBar(
           elevation: 2,
-          title: Text(widget.attachment.displayName ?? widget.attachment.filename),
+          title:
+              Text(widget.attachment.displayName ?? widget.attachment.filename),
           bottom: ParentTheme.of(context).appBarDivider(),
           actions: <Widget>[_overflowMenu()],
         ),
@@ -56,7 +57,8 @@ class _ViewAttachmentScreenState extends State<ViewAttachmentScreen> {
   Widget _body(BuildContext context) {
     String contentType = widget.attachment.inferContentType();
 
-    if (contentType == null) return UnknownAttachmentTypeViewer(widget.attachment);
+    if (contentType == null)
+      return UnknownAttachmentTypeViewer(widget.attachment);
 
     if (contentType.startsWith('audio') || contentType.startsWith('video')) {
       return AudioVideoAttachmentViewer(widget.attachment);
@@ -101,11 +103,9 @@ class _ViewAttachmentScreenState extends State<ViewAttachmentScreen> {
 
   _openExternally() {
     _interactor.openExternally(widget.attachment).catchError((_) {
-      scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(L10n(context).noApplicationsToHandleFile),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(L10n(context).noApplicationsToHandleFile),
+      ));
     });
   }
 }

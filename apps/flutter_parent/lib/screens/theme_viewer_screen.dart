@@ -139,15 +139,14 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                     items: [
                       new BottomNavigationBarItem(
                         icon: Icon(CanvasIcons.courses),
-                        title: Text('Courses'),
+                        label: 'Courses',
                       ),
                       new BottomNavigationBarItem(
-                        icon: Icon(CanvasIcons.calendar_month),
-                        title: Text('Calendar'),
+                        icon: Icon(CanvasIcons.calendar_month),label:'Calendar',
                       ),
                       new BottomNavigationBarItem(
                         icon: Icon(CanvasIcons.alerts),
-                        title: Text('Alerts'),
+                        label: 'Alerts',
                       ),
                     ],
                   ),

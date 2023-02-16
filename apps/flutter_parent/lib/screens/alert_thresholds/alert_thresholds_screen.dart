@@ -127,13 +127,13 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
               ),
               actions: <Widget>[
                 if (!busy)
-                  FlatButton(
+                  TextButton(
                     child: Text(L10n(context).cancel.toUpperCase()),
                     onPressed: () => Navigator.of(context).pop(),
-                    textColor: ParentColors.ash,
+                    // textColor: ParentColors.ash,
                   ),
                 if (!busy)
-                  FlatButton(
+                  TextButton(
                     child: Text(L10n(context).delete.toUpperCase()),
                     onPressed: () async {
                       setState(() {

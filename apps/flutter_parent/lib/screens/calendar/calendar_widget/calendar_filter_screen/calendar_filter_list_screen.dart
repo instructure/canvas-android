@@ -147,16 +147,14 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                         selectedContextIds.add(c.contextFilterId());
                       } else {
                         // We are full, show an error and do nothing
-                        _scaffoldKey.currentState.removeCurrentSnackBar();
-                        _scaffoldKey.currentState
-                            .showSnackBar(SnackBar(content: Text(L10n(context).tooManyCalendarsError)));
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(L10n(context).tooManyCalendarsError)));
                       }
                     } else {
                       if (selectedContextIds.length == 1) {
                         // The list cannot be empty, the calendar wouldn't do anything!
-                        _scaffoldKey.currentState.removeCurrentSnackBar();
-                        _scaffoldKey.currentState
-                            .showSnackBar(SnackBar(content: Text(L10n(context).minimumCalendarsError)));
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(L10n(context).minimumCalendarsError)));
                       } else {
                         selectedContextIds.remove(c.contextFilterId());
                       }

@@ -30,9 +30,9 @@ object CanvasNetworkAdapter {
     val canvasDomain = "mobileqa.beta.instructure.com"
     val baseUrl = "https://$canvasDomain/api/v1/"
     val redirectUri = "urn:ietf:wg:oauth:2.0:oob"
-    val adminToken = DATA_SEEDING_ADMIN_TOKEN
-    val clientId = DATA_SEEDING_CLIENT_ID
-    val clientSecret = DATA_SEEDING_CLIENT_SECRET
+    val adminToken = "DATA_SEEDING_ADMIN_TOKEN"
+    val clientId = "DATA_SEEDING_CLIENT_ID"
+    val clientSecret = "DATA_SEEDING_CLIENT_SECRET"
 
     private var log = true
     private val TIMEOUT_IN_SECONDS = 60L

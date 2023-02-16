@@ -38,7 +38,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun beginLoginFlowIntent(): Intent {
-        return LoginLandingPageActivity.createIntent(this);
+        return SignInActivity.createIntent(this)
+//        return LoginLandingPageActivity.createIntent(this);
     }
 
     override fun themeColor(): Int {

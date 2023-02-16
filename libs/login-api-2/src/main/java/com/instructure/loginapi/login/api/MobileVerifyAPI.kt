@@ -57,6 +57,7 @@ object MobileVerifyAPI {
                 "https://canvas.beta.instructure.com/api/v1/"
             } else {
                 "https://canvas.instructure.com/api/v1/"
+//                "https://canvas-test.emeritus.org/api/v1/"
             }
 
             return Retrofit.Builder()

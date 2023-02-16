@@ -26,11 +26,13 @@ import 'package:flutter_student_embed/utils/service_locator.dart';
 import 'network/utils/api_prefs.dart';
 
 void main() async {
+  print("sandeep - student ");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   runZonedGuarded<Future<void>>(() async {
     NativeComm.init();
+    await Firebase.initializeApp();
     setupLocator();
 
     await Future.wait([

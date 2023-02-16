@@ -18,7 +18,7 @@ service SeedyObservers {
 // Request messages
 
 // Any users can add their own observee if they have the credentials
-// https://canvas.instructure.com/doc/api/all_resources.html#method.user_observees.create
+// https://canvas-test.emeritus.org/doc/api/all_resources.html#method.user_observees.create
 message AddObserveeWithCredentialsRequest {
     string loginId = 1;
     string password = 2;

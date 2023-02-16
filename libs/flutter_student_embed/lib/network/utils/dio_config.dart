@@ -147,7 +147,7 @@ class DioConfig {
     bool forceRefresh: false,
     PageSize pageSize: PageSize.none,
   }) {
-    var baseUrl = 'https://canvas.instructure.com/';
+    var baseUrl = 'https://canvas-test.emeritus.org/';
     if (includeApiPath) baseUrl += 'api/v1/';
 
     return DioConfig(

@@ -69,10 +69,10 @@ class FlutterA11yOffsetTransformer() : ClassTransformer() {
         val method = declaredMethods.find { it.name == "updateSemantics" }
         if (method != null) {
             // Insert at line "lastLeftFrameInset = insets.getSystemWindowInsetLeft();"
-            method.insertAt(1534, """
-                float topOffset = (float) insets.getSystemWindowInsetTop();
-                android.opengl.Matrix.translateM(identity, 0, 0f, topOffset, 0f);
-            """.trimIndent())
+//            method.insertAt(1534, """
+//                float topOffset = (float) insets.getSystemWindowInsetTop();
+//                android.opengl.Matrix.translateM(identity, 0, 0f, topOffset, 0f);
+//            """.trimIndent())
             println("    :Flutter AccessibilityBridge patched")
         } else {
             throw IllegalStateException("Method 'updateSemantics' is null for transformer $transformName")
