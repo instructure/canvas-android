@@ -31,6 +31,7 @@ data class PendingSubmissionComment(
     var filePath = ""
     var workerId: UUID? = null
     var workerInputData: FileUploadWorkerData? = null
+    var attemptId: Long? = null
 }
 
 data class FileUploadWorkerData(

@@ -57,7 +57,8 @@ class SpeedGraderCommentsPresenter(
     val authorDao: AuthorDao,
     val mediaCommentDao: MediaCommentDao,
     val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
-    val fileUploadInputDao: FileUploadInputDao
+    val fileUploadInputDao: FileUploadInputDao,
+    var selectedAttemptId: Long?
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
@@ -85,10 +86,10 @@ class SpeedGraderCommentsPresenter(
                     awaitApi { SubmissionManager.getSingleSubmission(courseId, assignmentId, assignee.id, it, true) }
 
                 // Add normal comments
-                addNormalComments(updatedSubmission.submissionComments)
+                addNormalComments(updatedSubmission.submissionComments.filter { it.attempt == selectedAttemptId })
 
                 // Add submission history as comments
-                addSubmissionHistoryAsComments(updatedSubmission.submissionHistory.mapNotNull { it })
+                addSubmissionHistoryAsComments(updatedSubmission.submissionHistory.mapNotNull { it }.filter { it.attempt == selectedAttemptId })
 
                 // Add pending comments
                 addPendingComments()
@@ -102,26 +103,27 @@ class SpeedGraderCommentsPresenter(
             // Use cached comments
 
             // Add normal comments
-            data.addOrUpdate(comments)
+            data.addOrUpdate(comments.filter { it.comment.attempt == selectedAttemptId })
 
             // Add submission history as comments
-            addSubmissionHistoryAsComments(submissionHistory)
+            addSubmissionHistoryAsComments(submissionHistory.filter { it.attempt == selectedAttemptId })
 
             // Add pending comments
             addPendingComments()
-            subscribePendingWorkers()
 
             viewCallback?.onRefreshFinished()
             viewCallback?.checkIfEmpty()
         }
+
+        subscribePendingWorkers()
     }
 
-    fun addNormalComments(comments: List<SubmissionComment>) = data.addOrUpdate(comments.map { CommentWrapper(it) })
+    private fun addNormalComments(comments: List<SubmissionComment>) = data.addOrUpdate(comments.map { CommentWrapper(it) })
 
-    fun addSubmissionHistoryAsComments(submissionHistory: List<Submission>) =
+    private fun addSubmissionHistoryAsComments(submissionHistory: List<Submission>) =
         data.addOrUpdate(submissionHistory.map { SubmissionWrapper(it) })
 
-    fun addPendingComments() {
+    private fun addPendingComments() {
         // Add pending comments
         pendingSubmissionCommentFetchJob = weave {
             val (drafts, pending) =  pendingSubmissionCommentDao.findByPageId(mPageId)
@@ -131,7 +133,7 @@ class SpeedGraderCommentsPresenter(
                 .partition { it.pendingComment.status == CommentSendStatus.DRAFT }
 
             drafts.firstOrNull()?.let { viewCallback?.setDraftText(it.pendingComment.comment) }
-            data.addOrUpdate(pending)
+            data.addOrUpdate(pending.filter { it.pendingComment.attemptId == selectedAttemptId })
         }
     }
 
@@ -188,7 +190,8 @@ class SpeedGraderCommentsPresenter(
                         comment.pendingComment.comment ?: "",
                         groupMessage,
                         arrayListOf(),
-                        it
+                        it,
+                        comment.pendingComment.attemptId
                     )
                 }
 
@@ -297,7 +300,8 @@ class SpeedGraderCommentsPresenter(
                     assignmentId = assignmentId,
                     userId = assignee.id,
                     filePaths = selectedFilePaths.orEmpty(),
-                    action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT
+                    action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
+                    attemptId = selectedAttemptId
                 )
                 fileUploadInputDao.insert(fileUploadInput)
             }

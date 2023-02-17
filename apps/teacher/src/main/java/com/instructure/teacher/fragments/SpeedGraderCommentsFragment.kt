@@ -59,6 +59,7 @@ import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.view
 import com.instructure.teacher.view.CommentTextFocusedEvent
 import com.instructure.teacher.view.MediaCommentDialogClosedEvent
+import com.instructure.teacher.view.SubmissionSelectedEvent
 import com.instructure.teacher.view.UploadMediaCommentEvent
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,6 +69,7 @@ import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -96,6 +98,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
     var mSubmissionId by LongArg()
+    var mSubmission by ParcelableArg<Submission>()
     var mSubmissionHistory by ParcelableArrayListArg<Submission>()
     var mAssignee by ParcelableArg<Assignee>(StudentAssignee(User()))
     var mCourseId by LongArg()
@@ -114,7 +117,21 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
-    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage, submissionCommentDao, attachmentDao, authorDao, mediaCommentDao, pendingSubmissionCommentDao, fileUploadInputDao)
+    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(
+        mRawComments,
+        mSubmissionHistory,
+        mAssignee,
+        mCourseId,
+        mAssignmentId,
+        mIsGroupMessage,
+        submissionCommentDao,
+        attachmentDao,
+        authorDao,
+        mediaCommentDao,
+        pendingSubmissionCommentDao,
+        fileUploadInputDao,
+        mSubmission.attempt
+    )
     override fun onCreateView(view: View) {
         commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
             if (commentEditText.text.toString() != it.comment) {
@@ -347,6 +364,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSwitchSubmission(event: SubmissionSelectedEvent) {
+        presenter.selectedAttemptId = event.submission?.attempt
+        presenter.refresh(false)
+    }
+
     companion object {
         fun newInstance(
                 submission: Submission?,
@@ -356,6 +379,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                 isGroupMessage: Boolean,
                 gradeAnonymously: Boolean
         ) = SpeedGraderCommentsFragment().apply {
+            mSubmission = submission ?: Submission()
             mRawComments = ArrayList(submission?.submissionComments ?: emptyList())
             mSubmissionId = submission?.id ?: -1
             mSubmissionHistory = ArrayList(submission?.submissionHistory?.filterNotNull()?.filter { it.submissionType != null && it.workflowState != "unsubmitted" } ?: emptyList())
