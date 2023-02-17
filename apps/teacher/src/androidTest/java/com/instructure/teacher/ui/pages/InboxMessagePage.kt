@@ -23,7 +23,10 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
@@ -32,7 +35,7 @@ class InboxMessagePage: BasePage() {
 
     private val starImageButton by OnViewWithId(R.id.starred)
     private val authorNameTextView by OnViewWithId(R.id.authorName)
-    private val subjectTextView by OnViewWithMatcher(allOf(withId(R.id.subjectView), withParent(R.id.header), withAncestor(R.id.detail)))
+    private val subjectTextView by OnViewWithMatcher(allOf(withId(R.id.subjectView), withParent(R.id.header)))
     private val messageRecyclerView by WaitForViewWithId(R.id.recyclerView)
     private val replyTextView by OnViewWithId(R.id.reply)
 
