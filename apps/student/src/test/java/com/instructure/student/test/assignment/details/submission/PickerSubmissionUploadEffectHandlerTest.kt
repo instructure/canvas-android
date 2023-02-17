@@ -384,7 +384,8 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
             assignmentGroupCategoryId = 3L,
             assignmentName = "AssignmentName",
             allowedExtensions = emptyList(),
-            mode = PickerSubmissionMode.CommentAttachment
+            mode = PickerSubmissionMode.CommentAttachment,
+            attemptId = 1
         )
 
         mockkObject(SubmissionService.Companion)
@@ -403,7 +404,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
                 null,
                 ArrayList(model.files),
                 true,
-                null
+                1
             )
             view.closeSubmissionView()
         }
