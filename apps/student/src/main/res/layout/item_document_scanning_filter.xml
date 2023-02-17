@@ -23,7 +23,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.documentscanning.itemviewmodels.FilterItemViewModel" />
+            type="com.emeritus.student.features.documentscanning.itemviewmodels.FilterItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

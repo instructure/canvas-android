@@ -52,7 +52,7 @@ android {
     buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        applicationId "com.instructure.candroid"
+        applicationId "com.emeritus.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
         versionCode = 248
@@ -60,7 +60,7 @@ android {
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
-        testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
+        testInstrumentationRunner 'com.emeritus.student.espresso.StudentHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
         buildConfigField "boolean", "IS_TESTING", "false"
 
@@ -217,7 +217,7 @@ android {
     registerTransform(
             new ProjectTransformer(
                     android,
-                    new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
+                    new MasqueradeUITransformer('com.emeritus.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
                     new LocaleTransformer(project),

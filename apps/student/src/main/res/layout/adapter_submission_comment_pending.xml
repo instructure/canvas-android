@@ -24,7 +24,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="16dp">
 
-    <com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentView
+    <com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentView
         android:id="@+id/commentHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

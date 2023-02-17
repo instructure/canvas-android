@@ -13,7 +13,7 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<com.instructure.student.view.CourseBrowserHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.emeritus.student.view.CourseBrowserHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/courseBrowserHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -43,4 +43,4 @@
         android:maxLines="1"
         android:textColor="@color/white" />
 
-</com.instructure.student.view.CourseBrowserHeaderView>
+</com.emeritus.student.view.CourseBrowserHeaderView>

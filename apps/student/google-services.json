@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "175792624305",
-    "project_id": "selfhosted-canvas",
-    "storage_bucket": "selfhosted-canvas.appspot.com"
+    "project_number": "535094477968",
+    "project_id": "emeritus-student",
+    "storage_bucket": "emeritus-student.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:175792624305:android:3672ffb73048d3377a4890",
+        "mobilesdk_app_id": "1:535094477968:android:3d5bd6da2e7bb52bc10415",
         "android_client_info": {
-          "package_name": "com.instructure.candroid"
+          "package_name": "com.emeritus.candroid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "175792624305-t930bqgt6oo01bd6j9gs2sqlfnmbn8j3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.instructure.candroid",
-            "certificate_hash": "fc7c3ed61d03faf4e5d5fadc72eeff9100586846"
-          }
-        },
-        {
-          "client_id": "175792624305-kdprase2p3i75q3sl254v10hlc3q20mk.apps.googleusercontent.com",
+          "client_id": "535094477968-isg7ejjeqt6tgcvtj7e3tcpks4cg4aq7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDourupbIw35HeNAAQ3IkGKmysorYp2KAo"
+          "current_key": "AIzaSyB3A3edsxnMLBdw5MR-Cq_A6ebmcE0MkuY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "175792624305-kdprase2p3i75q3sl254v10hlc3q20mk.apps.googleusercontent.com",
+              "client_id": "535094477968-isg7ejjeqt6tgcvtj7e3tcpks4cg4aq7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

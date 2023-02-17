@@ -42,7 +42,7 @@
         <include layout="@layout/course_grid_recycler_refresh_layout" />
     </FrameLayout>
 
-    <com.instructure.student.view.EmptyCoursesView
+    <com.emeritus.student.view.EmptyCoursesView
         android:id="@+id/emptyCoursesView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

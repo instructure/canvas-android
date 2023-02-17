@@ -39,7 +39,7 @@ class FlutterTextureDisconnectFix : ClassTransformer() {
         val method = declaredMethods.single { it.name == "disconnectSurfaceFromRenderer" }
         val message = "FlutterTextureView.disconnectSurfaceFromRenderer called with null renderSurface"
         method.addCatch("""
-            com.instructure.student.util.LoggingUtility.INSTANCE.log(android.util.Log.DEBUG, "$message");
+            com.emeritus.student.util.LoggingUtility.INSTANCE.log(android.util.Log.DEBUG, "$message");
             return;""".trimIndent(), exceptionClass)
         println("    :FlutterTextureView patched")
         true

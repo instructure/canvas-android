@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/flutter_calendar_fragment"
-        android:name="com.instructure.student.fragment.FlutterCalendarFragment"
+        android:name="com.emeritus.student.fragment.FlutterCalendarFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

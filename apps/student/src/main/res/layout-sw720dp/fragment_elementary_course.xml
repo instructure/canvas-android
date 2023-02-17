@@ -25,7 +25,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.student.features.elementary.course.ElementaryCourseViewModel" />
+            type="com.emeritus.student.features.elementary.course.ElementaryCourseViewModel" />
 
         <variable
             name="course"
@@ -41,7 +41,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".features.elementary.course.ElementaryCourseFragment">
+            tools:context="com.emeritus.student.features.elementary.course.ElementaryCourseFragment">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
