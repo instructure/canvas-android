@@ -35,6 +35,7 @@ sealed class SubmissionDetailsEvent {
     data class SubmissionAndAttachmentClicked(val submissionAttempt: Long, val attachment: Attachment) : SubmissionDetailsEvent()
     data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmissionResult: DataResult<Submission>, val ltiUrlResult: DataResult<LTITool>?, val isStudioEnabled: Boolean, val quizResult: DataResult<Quiz>?, val studioLTIToolResult: DataResult<LTITool>?, val isObserver: Boolean = false) :
         SubmissionDetailsEvent()
+    data class SubmissionCommentsUpdated(val submissionComments: List<SubmissionComment>) : SubmissionDetailsEvent()
 }
 
 sealed class SubmissionDetailsEffect {
@@ -63,7 +64,8 @@ data class SubmissionDetailsModel(
     val studioLTIToolResult: DataResult<LTITool>? = null,
     val isObserver: Boolean = false,
     val ltiTool: DataResult<LTITool>? = null,
-    val initialSelectedSubmissionAttempt: Long? = null
+    val initialSelectedSubmissionAttempt: Long? = null,
+    val submissionComments: List<SubmissionComment>? = null
 )
 
 sealed class SubmissionDetailsContentType {

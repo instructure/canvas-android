@@ -146,6 +146,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             SubmissionDetailsEvent.SubmissionUploadFinished ->  Next.next(
                 model.copy(isLoading = true),
                 setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId)))
+            is SubmissionDetailsEvent.SubmissionCommentsUpdated -> Next.next(model.copy(submissionComments = event.submissionComments))
         }
     }
 

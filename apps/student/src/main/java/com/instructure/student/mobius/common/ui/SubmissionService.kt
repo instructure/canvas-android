@@ -46,6 +46,7 @@ import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
 import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.events.ShowConfettiEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.ChannelSource
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -411,6 +412,10 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
                 val newComment = submission.submissionComments.last()
                 ChannelSource.getChannel<SubmissionComment>().trySend(newComment)
+
+                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+                    SubmissionDetailsSharedEvent.SubmissionCommentsUpdated(submission.submissionComments)
+                )
 
                 // Remove db entry
                 commentDb.deleteCommentById(comment.id)

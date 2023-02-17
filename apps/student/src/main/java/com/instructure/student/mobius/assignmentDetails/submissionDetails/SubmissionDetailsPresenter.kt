@@ -32,6 +32,10 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         val rootSubmission = model.rootSubmissionResult.dataOrThrow
         val assignment = model.assignmentResult.dataOrThrow
 
+        model.submissionComments?.let {
+            rootSubmission.submissionComments = it
+        }
+
         val validSubmissions = rootSubmission.submissionHistory
             .filterNotNull()
             .sortedByDescending { it.submittedAt }
