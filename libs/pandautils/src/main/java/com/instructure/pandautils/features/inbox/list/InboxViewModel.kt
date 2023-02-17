@@ -401,6 +401,75 @@ class InboxViewModel @Inject constructor(
         fetchData()
     }
 
+    fun archiveConversation(id: Long) {
+        if (scope != InboxApi.Scope.STARRED) {
+            val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+            _itemViewModels.value = newMessages
+        }
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, 1)))
+
+        updateWorkflowState(id, Conversation.WorkflowState.ARCHIVED) {
+            if (scope != InboxApi.Scope.STARRED) {
+                viewModelScope.launch {
+                    silentRefresh()
+                }
+            }
+        }
+    }
+
+    fun markConversationAsRead(id: Long) {
+        if (scope == InboxApi.Scope.UNREAD) {
+            val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+            _itemViewModels.value = newMessages
+        } else {
+            _itemViewModels.value?.forEach {
+                if (id == it.data.id) {
+                    it.data = it.data.copy(unread = false)
+                    it.notifyChange()
+                }
+            }
+        }
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, 1)))
+
+        updateWorkflowState(id, Conversation.WorkflowState.READ) {
+            if (scope == InboxApi.Scope.UNREAD) {
+                viewModelScope.launch {
+                    silentRefresh()
+                }
+            }
+        }
+    }
+
+    fun markConversationAsUnread(id: Long) {
+        _itemViewModels.value?.forEach {
+            if (id == it.data.id) {
+                it.data = it.data.copy(unread = true)
+                it.notifyChange()
+            }
+        }
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, 1)))
+
+        updateWorkflowState(id, Conversation.WorkflowState.UNREAD)
+    }
+
+    private fun updateWorkflowState(id: Long, workflowState: Conversation.WorkflowState, onSuccess: () -> Unit = {}) {
+        handleSelectionMode()
+        viewModelScope.launch {
+            val dataResult = inboxRepository.updateConversation(id, workflowState)
+            if (dataResult.isSuccess) {
+                inboxRepository.invalidateCachedResponses()
+                _events.value = Event(InboxAction.UpdateUnreadCount)
+                onSuccess()
+            } else {
+                // The data we are showing is not valid so we should refresh as a fallback
+                refresh()
+            }
+        }
+    }
+
     private fun pollProgress(progress: Progress) {
         silentRefreshJob = viewModelScope.launch {
             val progressResult = inboxRepository.pollProgress(progress)
