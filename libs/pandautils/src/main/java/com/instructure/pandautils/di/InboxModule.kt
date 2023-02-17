@@ -17,13 +17,8 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.inbox.list.InboxEntryItemCreator
-import com.instructure.pandautils.features.inbox.list.InboxRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,16 +28,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 @Module
 @InstallIn(ViewModelComponent::class)
 class InboxModule {
-
-    @Provides
-    fun provideInboxRepository(
-        inboxApi: InboxApi.InboxInterface,
-        coursesApi: CourseAPI.CoursesInterface,
-        groupsApi: GroupAPI.GroupInterface,
-        progressApi: ProgressAPI.ProgressInterface
-    ): InboxRepository {
-        return InboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
-    }
 
     @Provides
     fun provideInboxEntryCreator(@ApplicationContext context: Context, apiPrefs: ApiPrefs): InboxEntryItemCreator {

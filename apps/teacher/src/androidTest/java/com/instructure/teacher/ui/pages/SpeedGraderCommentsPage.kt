@@ -16,7 +16,11 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withParent
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
@@ -27,6 +31,7 @@ class SpeedGraderCommentsPage : BasePage() {
 
     private val commentEditText by OnViewWithId(R.id.commentEditText)
     private val sendCommentButton by WaitForViewWithId(R.id.sendCommentButton)
+    private val addAttachmentButton by OnViewWithId(R.id.addAttachment)
 
     fun assertDisplaysAuthorName(name: String) {
         onView(withText(name)).assertVisible()
@@ -80,6 +85,58 @@ class SpeedGraderCommentsPage : BasePage() {
         commentEditText.typeText(comment)
         Espresso.closeSoftKeyboard()
         callOnClick(withId(R.id.sendCommentButton))
+    }
+
+    fun sendVideoComment() {
+        clickOnAttachmentButton()
+        onView(allOf(withId(R.id.videoText), withText(R.string.addVideoComment))).click()
+        waitForView(withId(R.id.startRecordingButton)).click()
+        Thread.sleep(3000) // Let the video recording go for a bit
+        waitForView(withId(R.id.endRecordingButton)).click()
+        waitForView(withId(R.id.sendButton)).click()
+    }
+
+    fun sendAudioComment() {
+        clickOnAttachmentButton()
+        onView(allOf(withId(R.id.audioText), withText(R.string.addAudioComment))).click()
+        waitForView(withId(R.id.recordAudioButton)).click()
+        Thread.sleep(3000) // Let the audio recording go for a bit
+        waitForView(withId(R.id.stopButton)).click()
+        waitForView(withId(R.id.sendAudioButton)).click()
+    }
+
+    private fun clickOnAttachmentButton() {
+        addAttachmentButton.click()
+    }
+
+    fun assertVideoCommentDisplayed() {
+        val videoCommentMatcher = allOf(
+            withId(R.id.commentHolder),
+            hasDescendant(allOf(containsTextCaseInsensitive("video"), withId(R.id.attachmentNameTextView)))
+        )
+
+        waitForView(videoCommentMatcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertAudioCommentDisplayed() {
+        val audioCommentMatcher = allOf(
+            withId(R.id.commentHolder),
+            hasDescendant(allOf(containsTextCaseInsensitive("audio"), withId(R.id.attachmentNameTextView)))
+        )
+
+        waitForView(audioCommentMatcher).scrollTo().assertDisplayed()
+    }
+
+    fun clickOnAudioComment() {
+        waitForView(allOf(withId(R.id.attachmentNameTextView), withText(R.string.mediaUploadAudio))).click()
+    }
+
+    fun clickOnVideoComment() {
+        waitForView(allOf(withId(R.id.attachmentNameTextView), withText(R.string.mediaUploadVideo))).click()
+    }
+
+    fun assertMediaCommentPreviewDisplayed() {
+        onView(allOf(withId(R.id.prepareMediaButton), withParent(R.id.mediaPreviewContainer))).assertDisplayed()
     }
 
 }

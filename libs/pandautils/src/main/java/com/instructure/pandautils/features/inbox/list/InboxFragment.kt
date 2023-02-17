@@ -29,11 +29,12 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
@@ -48,6 +49,7 @@ import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
@@ -96,7 +98,6 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
-        setUpScrollingBehavior()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -107,6 +108,11 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         viewModel.data.observe(viewLifecycleOwner) { data ->
             setMenuItems(data.editMenuItems)
             animateToolbars(data.selectionMode)
+            if (!data.selectionMode) animateBackAvatars()
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            handleAppBarBehavior(state)
         }
 
         sharedViewModel.events.observe(viewLifecycleOwner) { event ->
@@ -114,6 +120,16 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 handleSharedAction(it)
             }
         }
+    }
+
+    private fun handleAppBarBehavior(state: ViewState?) {
+        val params = binding.filterSection.layoutParams as? AppBarLayout.LayoutParams
+        params?.scrollFlags = if (state is ViewState.Empty || state is ViewState.Error) {
+            0
+        } else {
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        }
+        binding.filterSection.layoutParams = params
     }
 
     private fun setUpEditToolbar() {
@@ -136,19 +152,6 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         binding.editToolbar.menu.items.forEach {
             it.isVisible = editMenuItems.map { it.id }.contains(it.itemId)
         }
-    }
-
-    private fun setUpScrollingBehavior() {
-        binding.inboxRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0 && binding.addMessage.visibility == View.VISIBLE) {
-                    binding.addMessage.hide()
-                } else if (dy < 0 && binding.addMessage.visibility != View.VISIBLE) {
-                    binding.addMessage.show()
-                }
-            }
-        })
     }
 
     private fun deleteSelected(count: Int) {
@@ -193,6 +196,15 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         newToolbar.startAnimation(fadeIn)
     }
 
+    private fun animateBackAvatars() {
+        binding.inboxRecyclerView.children.forEach {
+            val itemBinding = DataBindingUtil.findBinding<ItemInboxEntryBinding>(it)
+            if (itemBinding?.avatarSelected?.visibility == View.VISIBLE) {
+                animateAvatar(it, false)
+            }
+        }
+    }
+
     override val navigation: Navigation?
         get() = activity as? Navigation
 
@@ -220,6 +232,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
             InboxAction.RefreshFailed -> Snackbar.make(requireView(), R.string.conversationsRefreshFailed, Snackbar.LENGTH_LONG).show()
             is InboxAction.ConfirmDelete -> deleteSelected(action.count)
+            is InboxAction.AvatarClickedCallback -> inboxRouter.avatarClicked(action.conversation, action.scope)
         }
     }
 
@@ -289,11 +302,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     override fun onAttach(context: Context) {
         super.onAttach(requireContext())
-        try {
-            onUnreadCountInvalidated = context as OnUnreadCountInvalidated?
-        } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + " must implement OnUnreadCountInvalidated")
-        }
+        onUnreadCountInvalidated = context as? OnUnreadCountInvalidated
     }
 
     override fun onHandleBackPressed(): Boolean {

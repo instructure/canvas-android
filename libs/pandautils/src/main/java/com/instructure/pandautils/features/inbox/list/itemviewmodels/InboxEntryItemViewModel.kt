@@ -29,6 +29,7 @@ class InboxEntryItemViewModel(
     var data: InboxEntryViewData,
     val openConversationCallback: (Boolean) -> Unit,
     val selectionModeCallback: (View, Boolean) -> Unit,
+    val avatarClickedCallback: (Boolean) -> Unit,
     var selectionModeActive: Boolean = false,
     @get:Bindable
     var selected: Boolean = false
@@ -41,6 +42,14 @@ class InboxEntryItemViewModel(
             changeSelection(view)
         } else {
             openConversationCallback(data.starred)
+        }
+    }
+
+    fun onAvatarClick(view: View) {
+        if (selectionModeActive) {
+            changeSelection(view)
+        } else {
+            avatarClickedCallback(data.starred)
         }
     }
 

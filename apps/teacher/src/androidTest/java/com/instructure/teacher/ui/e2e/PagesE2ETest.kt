@@ -5,6 +5,9 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -33,31 +36,13 @@ class PagesE2ETest : TeacherTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Create an unpublished page for course: ${course.name}.")
-        val testPage1 = PagesApi.createCoursePage(
-                courseId = course.id,
-                published = false,
-                frontPage = false,
-                token = teacher.token,
-                body = "<h1 id=\"header1\">Unpublished Page Text</h1>"
-        )
+        val testPage1 = createCoursePage(course, teacher, published = false, frontPage = false, body = "<h1 id=\"header1\">Unpublished Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Create a published page for course: ${course.name}.")
-        val testPage2 = PagesApi.createCoursePage(
-                courseId = course.id,
-                published = true,
-                frontPage = false,
-                token = teacher.token,
-                body = "<h1 id=\"header1\">Regular Page Text</h1>"
-        )
+        val testPage2 = createCoursePage(course, teacher, published = true, frontPage = false, body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Create a front page for course: ${course.name}.")
-        val testPage3 = PagesApi.createCoursePage(
-                courseId = course.id,
-                published = true,
-                frontPage = true,
-                token = teacher.token,
-                body = "<h1 id=\"header1\">Front Page Text</h1>"
-        )
+        val testPage3 = createCoursePage(course, teacher, published = true, frontPage = true, body = "<h1 id=\"header1\">Front Page Text</h1>")
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -160,12 +145,30 @@ class PagesE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Assert that '$newPageTitle' page is displayed and published.")
         pageListPage.assertPageIsPublished(newPageTitle)
+
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created page's title.")
         pageListPage.openSearch()
         pageListPage.enterSearchQuery("Test")
+
         Log.d(STEP_TAG,"Assert that the '$newPageTitle' titled page is displayed and it is the only one.")
         pageListPage.assertPageIsPublished(newPageTitle)
         pageListPage.assertPageCount(1)
+    }
+
+    private fun createCoursePage(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel,
+        published: Boolean = true,
+        frontPage: Boolean = false,
+        body: String = EMPTY_STRING
+    ): PageApiModel {
+        return PagesApi.createCoursePage(
+            courseId = course.id,
+            published = published,
+            frontPage = frontPage,
+            token = teacher.token,
+            body = body
+        )
     }
 
 }

@@ -44,7 +44,11 @@ class InboxRepositoryTest {
     private val groupsApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
 
-    private val inboxRepository = InboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+    private val inboxRepository = object : InboxRepository(inboxApi, groupsApi, progressApi) {
+        override suspend fun getCourses(params: RestParams): DataResult<List<Course>> {
+            return coursesApi.getFirstPageCourses(params)
+        }
+    }
 
     @Test
     fun `Get all conversations for scope if filter is null`() = runBlockingTest {
@@ -118,24 +122,6 @@ class InboxRepositoryTest {
             Group(id = 63, courseId = 44, name = "First group"),
             Group(id = 63, courseId = 33, name = "First group"), // Invalid course id
         )
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
-        coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
-
-        val canvasContextsResults = inboxRepository.getCanvasContexts()
-
-        assertEquals(2, canvasContextsResults.dataOrNull!!.size)
-        assertEquals(courses[0].id, canvasContextsResults.dataOrNull!![0].id)
-        assertEquals(groups[0].id, canvasContextsResults.dataOrNull!![1].id)
-        assertEquals(groups[0].name, canvasContextsResults.dataOrNull!![1].name)
-    }
-
-    @Test
-    fun `Get contexts returns only valid courses`() = runBlockingTest {
-        val courses = listOf(
-            Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
-            Course(11) // no active enrollment
-        )
-        val groups = listOf(Group(id = 63, courseId = 44, name = "First group"),)
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
 

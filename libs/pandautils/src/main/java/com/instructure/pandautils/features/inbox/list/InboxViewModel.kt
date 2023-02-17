@@ -153,6 +153,9 @@ class InboxViewModel @Inject constructor(
             selectionModeCallback = { view, selected ->
                 _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
                 handleSelectionMode()
+            },
+            avatarClickedCallback = { starred ->
+                _events.value = Event(InboxAction.AvatarClickedCallback(conversation.copy(isStarred = starred), scope))
             })
     }
 
@@ -262,11 +265,13 @@ class InboxViewModel @Inject constructor(
                 removeItemsAndSilentUpdate(ids, progress)
             } else {
                 _itemViewModels.value?.forEach {
-                    if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
-                    it.notifyChange()
-                    _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
-                    _events.value = Event(InboxAction.UpdateUnreadCount)
+                    if (ids.contains(it.data.id)) {
+                        it.data = it.data.copy(unread = false)
+                        it.notifyChange()
+                    }
                 }
+                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
+                _events.value = Event(InboxAction.UpdateUnreadCount)
             }
         }
     }
@@ -274,11 +279,13 @@ class InboxViewModel @Inject constructor(
     fun markAsUnreadSelected() {
         performBatchOperation("mark_as_unread") { ids, progress ->
             _itemViewModels.value?.forEach {
-                if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
-                it.notifyChange()
-                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
-                _events.value = Event(InboxAction.UpdateUnreadCount)
+                if (ids.contains(it.data.id)) {
+                    it.data = it.data.copy(unread = true)
+                    it.notifyChange()
+                }
             }
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
+            _events.value = Event(InboxAction.UpdateUnreadCount)
         }
     }
 

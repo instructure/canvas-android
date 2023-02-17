@@ -48,6 +48,7 @@ class LoginE2ETest : TeacherTest() {
         val teacher2 = data.teachersList[1]
         val course = data.coursesList[0]
 
+        Log.d(STEP_TAG, "Login with user: ${teacher1.name}, login id: ${teacher1.loginId}.")
         loginWithUser(teacher1)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
@@ -59,6 +60,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Log out with ${teacher1.name} student.")
         dashboardPage.logOut()
 
+        Log.d(STEP_TAG, "Login with user: ${teacher2.name}, login id: ${teacher2.loginId}.")
         loginWithUser(teacher2, true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
@@ -70,6 +72,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
 
+        Log.d(STEP_TAG, "Login with user: ${teacher1.name}, login id: ${teacher1.loginId}.")
         loginWithUser(teacher1, true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
@@ -103,6 +106,7 @@ class LoginE2ETest : TeacherTest() {
         val student = data.studentsList[0]
         val parent = parentData.parentsList[0]
 
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         loginWithUser(student)
 
         Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")
@@ -114,6 +118,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert the Teacher app's Login Landing Page's screen is displayed.")
         loginLandingPage.assertPageObjects()
 
+        Log.d(STEP_TAG, "Login with user: ${parent.name}, login id: ${parent.loginId}.")
         loginWithUser(parent, true)
 
         Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")
@@ -145,6 +150,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Log out with ${teacher1.name} student.")
         dashboardPage.logOut()
 
+        Log.d(STEP_TAG, "Login with user: ${teacher2.name}, login id: ${teacher2.loginId}, via the last saved school's button.")
         loginWithLastSavedSchool(teacher2)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")

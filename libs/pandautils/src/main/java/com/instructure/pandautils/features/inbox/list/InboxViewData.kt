@@ -58,4 +58,5 @@ sealed class InboxAction {
     data class OpenContextFilterSelector(val canvasContexts: List<CanvasContext>) : InboxAction()
     object RefreshFailed : InboxAction()
     data class ConfirmDelete(val count: Int) : InboxAction()
+    data class AvatarClickedCallback(val conversation: Conversation, val scope: InboxApi.Scope) : InboxAction()
 }

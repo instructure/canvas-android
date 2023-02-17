@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
@@ -274,6 +275,11 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(MASTER_VISIBLE, master.visibility == View.VISIBLE)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onBackPressed() {
+        if ((supportFragmentManager.findFragmentById(R.id.master) as? NavigationCallbacks)?.onHandleBackPressed() == true) return
+        super.onBackPressed()
     }
 
     companion object {
