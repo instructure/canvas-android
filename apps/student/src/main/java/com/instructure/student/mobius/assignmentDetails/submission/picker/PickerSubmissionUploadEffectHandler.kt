@@ -150,7 +150,7 @@ class PickerSubmissionUploadEffectHandler constructor(
                     message = null,
                     attachments = model.files,
                     isGroupMessage = model.assignmentGroupCategoryId > 0,
-                    attemptId = null
+                    attemptId = model.attemptId
                 )
             }
         }

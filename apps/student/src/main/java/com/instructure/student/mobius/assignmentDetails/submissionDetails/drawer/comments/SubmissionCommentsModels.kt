@@ -56,7 +56,8 @@ sealed class SubmissionCommentsEffect {
 
     data class ShowFilePicker(
         val canvasContext: CanvasContext,
-        val assignment: Assignment
+        val assignment: Assignment,
+        val attemptId: Long?
     ) : SubmissionCommentsEffect()
 
     data class UploadMediaComment constructor(

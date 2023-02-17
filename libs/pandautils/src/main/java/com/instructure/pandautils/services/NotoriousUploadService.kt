@@ -207,7 +207,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             when (action) {
                 ACTION.SUBMISSION_COMMENT -> broadcastSubmission(awaitApi {
                     SubmissionManager.postMediaSubmissionComment(
-                        course, assignment?.id ?: 0, studentId, result.id!!, mediaType, isGroupComment, it
+                        course, assignment?.id ?: 0, studentId, result.id!!, mediaType, null, isGroupComment, it
                     )
                 })
                 ACTION.ASSIGNMENT_SUBMISSION -> broadcastSubmission(awaitApi {

@@ -19,11 +19,7 @@ package com.instructure.student.test.assignment.details.submission
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Author
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.SubmissionComment
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.db.Db
@@ -94,12 +90,15 @@ class SubmissionCommentsPresenterTest : Assert() {
                 author=Author(displayName=user.name,avatarImageUrl=user.avatarUrl),
                 authorId = user.id,
                 comment="Aye Carumba!",
-                createdAt = Date())
+                createdAt = Date(),
+                attempt = 1
+        )
 
         baseModel = SubmissionCommentsModel(
                 assignment = baseAssignment,
                 comments = listOf(submissionComment),
-                submissionHistory = listOf(baseSubmission)
+                submissionHistory = listOf(baseSubmission),
+                attemptId = 1
         )
 
     }
@@ -185,8 +184,8 @@ class SubmissionCommentsPresenterTest : Assert() {
     @Test
     fun `Returns properly sorted commentStates`() {
         // Feather some comments and submissions together so they are jumbled time-wise
-        val comment1 = submissionComment.copy(id=2, createdAt = Date(119,7,4, 15, 22))
-        val comment2 = submissionComment.copy(id=3, createdAt = Date(119,7,4, 16, 4))
+        val comment1 = submissionComment.copy(id=2, createdAt = Date(119,7,4, 15, 22), attempt = 1)
+        val comment2 = submissionComment.copy(id=3, createdAt = Date(119,7,4, 16, 4), attempt = 1)
         val submission1 = baseSubmission.copy(attempt = 1, submittedAt = Date(119, 7, 4, 15, 27))
         val submission2 = baseSubmission.copy(attempt = 2, submittedAt = Date(119, 7, 4, 16, 12))
 
@@ -197,8 +196,8 @@ class SubmissionCommentsPresenterTest : Assert() {
 
         val actualState = SubmissionCommentsPresenter.present(model, context)
 
-        assertEquals(4, actualState.commentStates.count())
-        for(i in 1..actualState.commentStates.count()-1) {
+        assertEquals(3, actualState.commentStates.count())
+        for(i in 1 until actualState.commentStates.count()) {
             val before = actualState.commentStates[i] // Should be sorted in descending order, so latest come first
             val beforeDate = dateFromCommentState(before)
             val after = actualState.commentStates[i-1]

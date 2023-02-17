@@ -81,7 +81,8 @@ class SubmissionCommentsUpdate :
             SubmissionCommentsEvent.UploadFilesClicked -> {
                 val effect = SubmissionCommentsEffect.ShowFilePicker(
                     CanvasContext.emptyCourseContext(model.assignment.courseId),
-                    model.assignment
+                    model.assignment,
+                    model.attemptId
                 )
                 Next.dispatch(setOf(effect))
             }

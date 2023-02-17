@@ -47,7 +47,8 @@ class SubmissionCommentsUpdateTest : Assert() {
         initModel = SubmissionCommentsModel(
             comments = arrayListOf(),
             submissionHistory = emptyList(),
-            assignment = Assignment(id = 123L, name = "Test Assignment", courseId = 456L)
+            assignment = Assignment(id = 123L, name = "Test Assignment", courseId = 456L),
+            attemptId = 1
         )
     }
 
@@ -110,7 +111,8 @@ class SubmissionCommentsUpdateTest : Assert() {
             assignmentId = 123L,
             assignmentName = "Test Assignment",
             courseId = 456L,
-            isGroupMessage = false
+            isGroupMessage = false,
+            attemptId = 1
         )
         updateSpec
             .given(initModel)
@@ -130,7 +132,8 @@ class SubmissionCommentsUpdateTest : Assert() {
             assignmentName = "Test Assignment",
             courseId = 456L,
             isGroupMessage = false,
-            message = message
+            message = message,
+            attemptId = 1
         )
         updateSpec
             .given(initModel)
@@ -221,7 +224,8 @@ class SubmissionCommentsUpdateTest : Assert() {
     fun `UploadFilesClicked results in ShowFilePicker effect`() {
         val expectedEffect = SubmissionCommentsEffect.ShowFilePicker(
             canvasContext = Course(456L),
-            assignment = initModel.assignment
+            assignment = initModel.assignment,
+            attemptId = 1
         )
         updateSpec
             .given(initModel)

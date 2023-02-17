@@ -56,7 +56,7 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
                 )
             }
             is SubmissionCommentsEffect.ShowFilePicker -> {
-                view?.showFilePicker(effect.canvasContext, effect.assignment)
+                view?.showFilePicker(effect.canvasContext, effect.assignment, effect.attemptId)
             }
             SubmissionCommentsEffect.ClearTextInput -> {
                 view?.clearTextInput()

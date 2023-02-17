@@ -233,6 +233,7 @@ object SubmissionManager {
         studentId: Long,
         mediaId: String,
         mediaType: String,
+        attemptId: Long?,
         isGroupComment: Boolean,
         callback: StatusCallback<Submission>
     ) {
@@ -245,6 +246,7 @@ object SubmissionManager {
             studentId,
             mediaId,
             mediaType,
+            attemptId,
             isGroupComment,
             adapter,
             params,

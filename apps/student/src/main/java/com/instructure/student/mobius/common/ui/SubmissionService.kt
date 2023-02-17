@@ -390,7 +390,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                             mediaId = result.id!!,
                             mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType),
                             isGroupComment = comment.isGroupMessage,
-                            callback = callback
+                            callback = callback,
+                            attemptId = comment.attemptId
                         )
                     }
                 } ?: awaitApi { callback ->
