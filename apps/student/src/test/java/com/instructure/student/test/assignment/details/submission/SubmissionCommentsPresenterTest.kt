@@ -98,7 +98,8 @@ class SubmissionCommentsPresenterTest : Assert() {
                 assignment = baseAssignment,
                 comments = listOf(submissionComment),
                 submissionHistory = listOf(baseSubmission),
-                attemptId = 1
+                attemptId = 1,
+                assignmentEnhancementsEnabled = true
         )
 
     }

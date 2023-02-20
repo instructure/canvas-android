@@ -48,7 +48,8 @@ class SubmissionCommentsUpdateTest : Assert() {
             comments = arrayListOf(),
             submissionHistory = emptyList(),
             assignment = Assignment(id = 123L, name = "Test Assignment", courseId = 456L),
-            attemptId = 1
+            attemptId = 1,
+            assignmentEnhancementsEnabled = true
         )
     }
 
