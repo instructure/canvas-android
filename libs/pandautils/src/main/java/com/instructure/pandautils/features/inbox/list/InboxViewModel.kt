@@ -240,8 +240,8 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
                 it.notifyChange()
-                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size)))
             }
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size)))
         }
     }
 
@@ -253,9 +253,9 @@ class InboxViewModel @Inject constructor(
                 _itemViewModels.value?.forEach {
                     if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
                     it.notifyChange()
-                    _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
                 }
             }
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
         }
     }
 
@@ -270,9 +270,9 @@ class InboxViewModel @Inject constructor(
                         it.notifyChange()
                     }
                 }
-                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
-                _events.value = Event(InboxAction.UpdateUnreadCount)
             }
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
+            _events.value = Event(InboxAction.UpdateUnreadCount)
         }
     }
 
