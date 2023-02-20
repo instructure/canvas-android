@@ -26,6 +26,7 @@ import com.instructure.panda_annotations.*
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
+import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
