@@ -39,7 +39,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
 
         val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
 
-        val comments = model.comments.filter { it.attempt == model.attemptId }.map { comment ->
+        val comments = model.comments.filter { it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }.map { comment ->
             val date = comment.createdAt ?: Date(0)
             CommentItemState.CommentItem(
                 id = comment.id,
@@ -57,7 +57,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
         }
 
         val submissions = model.submissionHistory
-            .filter { it.attempt == model.attemptId }
+            .filter { it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }
             .filter { it.workflowState != "unsubmitted" && it.submissionType != null }
             .map { submission ->
                 val date = submission.submittedAt ?: Date(0)
@@ -76,7 +76,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
             .pendingSubmissionCommentQueries
             .getCommentsByAccountAssignment(ApiPrefs.domain, model.assignment.id)
             .executeAsList()
-            .filter { it.attemptId == model.attemptId }
+            .filter { it.attemptId == model.attemptId || !model.assignmentEnhancementsEnabled }
             .map { pendingComment ->
                 val date = Date(pendingComment.lastActivityDate.toInstant().toEpochMilli())
                 CommentItemState.PendingCommentItem(

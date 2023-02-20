@@ -249,7 +249,8 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
             name = "Name",
             assignment = baseAssignment,
             submission = baseSubmission,
-            attemptId = 1
+            attemptId = 1,
+            true
         )
         val fragment = SubmissionCommentsFragment.newInstance(data).apply {
             overrideInitViewState = state

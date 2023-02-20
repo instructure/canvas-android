@@ -88,7 +88,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         assignmentResult = event.assignment,
                         rootSubmissionResult = event.rootSubmissionResult,
                         selectedSubmissionAttempt = selectedSubmission?.attempt,
-                        quizResult = event.quizResult
+                        quizResult = event.quizResult,
+                        assignmentEnhancementsEnabled = event.assignmentEnhancementsEnabled
                     ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }

@@ -95,5 +95,6 @@ data class SubmissionCommentsModel(
     val assignment: Assignment,
     val pendingCommentIds: List<Long> = emptyList(),
     val isFileButtonEnabled: Boolean = true,
-    val showSendButton: Boolean = false
+    val showSendButton: Boolean = false,
+    val assignmentEnhancementsEnabled: Boolean
 )

@@ -17,10 +17,7 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.QuizManager
-import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -28,6 +25,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ChannelSource
@@ -121,7 +119,10 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
                 }
             } else null
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiTool, isStudioEnabled, quizResult, studioLTIToolResult, effect.isObserver))
+            val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(effect.courseId, true).await().dataOrNull
+            val assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
+
+            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiTool, isStudioEnabled, quizResult, studioLTIToolResult, effect.isObserver, assignmentEnhancementsEnabled))
         }
     }
 

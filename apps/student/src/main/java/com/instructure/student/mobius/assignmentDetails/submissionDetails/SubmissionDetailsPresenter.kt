@@ -57,7 +57,8 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
             name = context.getString(R.string.comments),
             assignment = assignment,
             submission = rootSubmission,
-            attemptId = model.selectedSubmissionAttempt
+            attemptId = model.selectedSubmissionAttempt,
+            assignmentEnhancementsEnabled = model.assignmentEnhancementsEnabled
         )
 
         // Files tab

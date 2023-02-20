@@ -51,7 +51,7 @@ class SubmissionCommentsUpdate :
                     model.assignment.name.orEmpty(),
                     model.assignment.courseId,
                     model.assignment.groupCategoryId > 0,
-                    model.attemptId
+                    model.attemptId.takeIf { model.assignmentEnhancementsEnabled }
                 )
                 Next.next(
                     model.copy(isFileButtonEnabled = true),
@@ -68,7 +68,7 @@ class SubmissionCommentsUpdate :
                     model.assignment.name.orEmpty(),
                     model.assignment.courseId,
                     model.assignment.groupCategoryId > 0,
-                    model.attemptId
+                    model.attemptId.takeIf { model.assignmentEnhancementsEnabled }
                 )
                 Next.dispatch(setOf(effect, SubmissionCommentsEffect.ClearTextInput))
             }
@@ -82,7 +82,7 @@ class SubmissionCommentsUpdate :
                 val effect = SubmissionCommentsEffect.ShowFilePicker(
                     CanvasContext.emptyCourseContext(model.assignment.courseId),
                     model.assignment,
-                    model.attemptId
+                    model.attemptId.takeIf { model.assignmentEnhancementsEnabled }
                 )
                 Next.dispatch(setOf(effect))
             }
