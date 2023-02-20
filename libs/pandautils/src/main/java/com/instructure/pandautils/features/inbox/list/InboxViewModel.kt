@@ -443,16 +443,27 @@ class InboxViewModel @Inject constructor(
     }
 
     fun markConversationAsUnread(id: Long) {
-        _itemViewModels.value?.forEach {
-            if (id == it.data.id) {
-                it.data = it.data.copy(unread = true)
-                it.notifyChange()
+        if (scope == InboxApi.Scope.ARCHIVED) {
+            val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+            _itemViewModels.value = newMessages
+        } else {
+            _itemViewModels.value?.forEach {
+                if (id == it.data.id) {
+                    it.data = it.data.copy(unread = true)
+                    it.notifyChange()
+                }
             }
         }
 
         _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, 1)))
 
-        updateWorkflowState(id, Conversation.WorkflowState.UNREAD)
+        updateWorkflowState(id, Conversation.WorkflowState.UNREAD) {
+            if (scope == InboxApi.Scope.ARCHIVED) {
+                viewModelScope.launch {
+                    silentRefresh()
+                }
+            }
+        }
     }
 
     private fun updateWorkflowState(id: Long, workflowState: Conversation.WorkflowState, onSuccess: () -> Unit = {}) {

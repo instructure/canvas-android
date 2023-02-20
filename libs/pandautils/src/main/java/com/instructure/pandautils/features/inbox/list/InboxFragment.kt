@@ -92,6 +92,8 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private var onUnreadCountInvalidated: OnUnreadCountInvalidated? = null
 
+    private var touchCallback: ItemTouchHelper.SimpleCallback? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -117,6 +119,12 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             setMenuItems(data.editMenuItems)
             animateToolbars(data.selectionMode)
             if (!data.selectionMode) animateBackAvatars()
+
+            if (data.scope == getString(R.string.inbox_archived) || data.scope == getString(R.string.inbox_sent)) {
+                touchCallback?.setDefaultSwipeDirs(ItemTouchHelper.END)
+            } else {
+                touchCallback?.setDefaultSwipeDirs(ItemTouchHelper.START or ItemTouchHelper.END)
+            }
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
@@ -140,7 +148,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         val width = resources.displayMetrics.widthPixels
         val paint = Paint().apply { style = Paint.Style.FILL }
 
-        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START or ItemTouchHelper.END) {
+        touchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START or ItemTouchHelper.END) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = true
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -152,10 +160,10 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                     } else {
                         viewModel.markConversationAsUnread(itemViewModel.data.id)
                     }
-                    binding.inboxRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
                 } else {
                     viewModel.archiveConversation(itemViewModel.data.id)
                 }
+                binding.inboxRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
             }
 
             override fun onChildDraw(
@@ -200,7 +208,9 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
                 super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
-        })
+        }
+
+        val itemTouchHelper = ItemTouchHelper(touchCallback!!)
 
         itemTouchHelper.attachToRecyclerView(binding.inboxRecyclerView)
     }
