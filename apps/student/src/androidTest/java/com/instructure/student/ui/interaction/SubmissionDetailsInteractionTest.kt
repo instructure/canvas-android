@@ -149,7 +149,8 @@ class SubmissionDetailsInteractionTest : StudentTest() {
                 comment = commentText,
                 createdAt = Date(),
                 attachments = arrayListOf(attachment),
-                author = Author(id = user.id, displayName=user.shortName)
+                author = Author(id = user.id, displayName=user.shortName),
+                attempt = 1
         )
 
         // Create/add a submission for our assignment containing our submissionComment

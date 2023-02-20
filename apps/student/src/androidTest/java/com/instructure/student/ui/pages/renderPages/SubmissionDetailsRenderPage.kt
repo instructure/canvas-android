@@ -21,16 +21,17 @@ import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
+import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
 import com.instructure.student.ui.pages.SubmissionDetailsPage
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.anything
 import org.hamcrest.Description
+
 
 class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
 
@@ -108,11 +109,11 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
     }
 
     fun assertSpinnerMatchesText(text: String) {
-        versionSpinner.check(matches(withSpinnerText(containsString(text))))
+        onView(allOf(withId(R.id.attemptDate), withText(text))).assertDisplayed()
     }
 
     fun assertSpinnerDropdownItemHasText(position: Int, text: String) {
-        onData(anything()).atPosition(position).check(matches(ViewMatchers.withText(text)))
+        onData(anything()).atPosition(position).check(matches(withChild(withText(text))))
     }
 
     fun waitForDrawerRender() {
