@@ -175,7 +175,7 @@ class InboxViewModel @Inject constructor(
         val menuItems = mutableSetOf<InboxMenuItem>(InboxMenuItem.DELETE)
         when {
             scope == InboxApi.Scope.ARCHIVED -> menuItems.add(InboxMenuItem.UNARCHIVE)
-            scope != InboxApi.Scope.SENT -> menuItems.add(InboxMenuItem.ARCHIVE)
+            scope != InboxApi.Scope.SENT && scope != InboxApi.Scope.STARRED -> menuItems.add(InboxMenuItem.ARCHIVE)
         }
 
         if (selectedItems.any { it.data.unread }) {
@@ -418,6 +418,19 @@ class InboxViewModel @Inject constructor(
         }
     }
 
+    fun unarchiveConversation(id: Long) {
+        val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+        _itemViewModels.value = newMessages
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnarchivedConfirmation, 1)))
+
+        updateWorkflowState(id, Conversation.WorkflowState.READ) {
+            viewModelScope.launch {
+                silentRefresh()
+            }
+        }
+    }
+
     fun markConversationAsRead(id: Long) {
         if (scope == InboxApi.Scope.UNREAD) {
             val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
@@ -466,10 +479,23 @@ class InboxViewModel @Inject constructor(
         }
     }
 
-    private fun updateWorkflowState(id: Long, workflowState: Conversation.WorkflowState, onSuccess: () -> Unit = {}) {
+    fun unstarConversation(id: Long) {
+        val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+        _itemViewModels.value = newMessages
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, 1)))
+
+        updateWorkflowState(id, starred = false) {
+            viewModelScope.launch {
+                silentRefresh()
+            }
+        }
+    }
+
+    private fun updateWorkflowState(id: Long, workflowState: Conversation.WorkflowState? = null, starred: Boolean? = null, onSuccess: () -> Unit = {}) {
         handleSelectionMode()
         viewModelScope.launch {
-            val dataResult = inboxRepository.updateConversation(id, workflowState)
+            val dataResult = inboxRepository.updateConversation(id, workflowState, starred)
             if (dataResult.isSuccess) {
                 inboxRepository.invalidateCachedResponses()
                 _events.value = Event(InboxAction.UpdateUnreadCount)

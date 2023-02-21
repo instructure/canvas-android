@@ -187,6 +187,6 @@ class InboxRepositoryTest {
     fun `Test update conversations`() = runBlockingTest {
         inboxRepository.updateConversation(16L, Conversation.WorkflowState.ARCHIVED)
 
-        coVerify { inboxApi.updateConversation(16L, "archived", any<RestParams>()) }
+        coVerify { inboxApi.updateConversation(16L, "archived", any<Boolean>(), any<RestParams>()) }
     }
 }

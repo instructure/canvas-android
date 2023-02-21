@@ -76,7 +76,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1)))
         coEvery { inboxRepository.batchUpdateConversations(any(), any()) } returns DataResult.Success(Progress())
         coEvery { inboxRepository.pollProgress(any()) } returns DataResult.Success(Progress(workflowState = "completed"))
-        coEvery { inboxRepository.updateConversation(any(), any()) } returns DataResult.Success(
+        coEvery { inboxRepository.updateConversation(any(), any(), any()) } returns DataResult.Success(
             Conversation()
         )
 
@@ -734,6 +734,43 @@ class InboxViewModelTest {
         assertEquals(1, viewModel.itemViewModels.value!!.size)
         assertEquals(2, viewModel.itemViewModels.value!![0].data.id)
         coVerify { inboxRepository.updateConversation(1, Conversation.WorkflowState.UNREAD) }
+    }
+
+    @Test
+    fun `Remove conversation when unstarred`() {
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], starred = true) }
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
+        )
+
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.scopeChanged(InboxApi.Scope.STARRED)
+        viewModel.unstarConversation(1)
+
+        assertEquals(1, viewModel.itemViewModels.value!!.size)
+        assertEquals(2, viewModel.itemViewModels.value!![0].data.id)
+        coVerify { inboxRepository.updateConversation(1, null, false) }
+    }
+
+    @Test
+    fun `Remove conversation when unarchived`() {
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
+        )
+
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
+        viewModel.unarchiveConversation(1)
+
+        assertEquals(1, viewModel.itemViewModels.value!!.size)
+        assertEquals(2, viewModel.itemViewModels.value!![0].data.id)
+        coVerify { inboxRepository.updateConversation(1, Conversation.WorkflowState.READ, any()) }
     }
 
     private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)

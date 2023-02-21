@@ -19,7 +19,10 @@ package com.instructure.pandautils.features.inbox.list
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -120,7 +123,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             animateToolbars(data.selectionMode)
             if (!data.selectionMode) animateBackAvatars()
 
-            if (data.scope == getString(R.string.inbox_archived) || data.scope == getString(R.string.inbox_sent)) {
+            if (data.scope == getString(R.string.inbox_sent)) {
                 touchCallback?.setDefaultSwipeDirs(ItemTouchHelper.END)
             } else {
                 touchCallback?.setDefaultSwipeDirs(ItemTouchHelper.START or ItemTouchHelper.END)
@@ -143,9 +146,6 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     private fun configureItemTouchHelper() {
         val markAsColor = requireContext().getColor(R.color.backgroundInfo)
         val archiveColor = requireContext().getColor(R.color.ash)
-
-        val archiveIcon = resources.getDrawable(R.drawable.ic_archive, null)
-        val width = resources.displayMetrics.widthPixels
         val paint = Paint().apply { style = Paint.Style.FILL }
 
         touchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START or ItemTouchHelper.END) {
@@ -161,7 +161,11 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                         viewModel.markConversationAsUnread(itemViewModel.data.id)
                     }
                 } else {
-                    viewModel.archiveConversation(itemViewModel.data.id)
+                    when (viewModel.data.value?.scope) {
+                        getString(R.string.inbox_archived) -> viewModel.unarchiveConversation(itemViewModel.data.id)
+                        getString(R.string.inbox_starred) -> viewModel.unstarConversation(itemViewModel.data.id)
+                        else -> viewModel.archiveConversation(itemViewModel.data.id)
+                    }
                 }
                 binding.inboxRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
             }
@@ -188,6 +192,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
                     val drawableId = if (itemViewModel.data.unread) R.drawable.ic_mark_as_read else R.drawable.ic_mark_as_unread
                     val markAsIcon = resources.getDrawable(drawableId, null)
+                    markAsIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
                     markAsIcon.bounds = Rect(
                         margin,
                         bounds.top + height/2 - markAsIcon.intrinsicHeight/2,
@@ -198,6 +203,14 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                     paint.color = archiveColor
                     canvas.drawRect(bounds, paint)
 
+                    val archiveIcon = when (viewModel.data.value?.scope) {
+                        getString(R.string.inbox_archived) -> resources.getDrawable(R.drawable.ic_unarchive, null)
+                        getString(R.string.inbox_starred) -> resources.getDrawable(R.drawable.ic_star_outline, null)
+                        else -> resources.getDrawable(R.drawable.ic_archive, null)
+                    }
+                    archiveIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
+
+                    val width = resources.displayMetrics.widthPixels
                     archiveIcon.bounds = Rect(
                         width - margin - archiveIcon.intrinsicWidth,
                         bounds.top + height/2 - archiveIcon.intrinsicHeight/2,
