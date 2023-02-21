@@ -111,4 +111,8 @@ abstract class InboxRepository(
             DataResult.Fail(Failure.Network("Progress timed out"))
         }
     }
+
+    suspend fun updateConversation(id: Long, workflowState: Conversation.WorkflowState? = null, starred: Boolean? = null): DataResult<Conversation> {
+        return inboxApi.updateConversation(id, workflowState?.apiString, starred, RestParams(isForceReadFromNetwork = true))
+    }
 }

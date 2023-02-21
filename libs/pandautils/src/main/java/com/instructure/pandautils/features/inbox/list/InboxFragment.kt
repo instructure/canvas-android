@@ -18,6 +18,12 @@ package com.instructure.pandautils.features.inbox.list
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +40,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
@@ -45,9 +53,11 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
+import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -61,6 +71,7 @@ import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
@@ -83,6 +94,8 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     private lateinit var binding: FragmentInboxBinding
 
     private var onUnreadCountInvalidated: OnUnreadCountInvalidated? = null
+
+    private var touchCallback: ItemTouchHelper.SimpleCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -109,6 +122,12 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             setMenuItems(data.editMenuItems)
             animateToolbars(data.selectionMode)
             if (!data.selectionMode) animateBackAvatars()
+
+            if (data.scope == getString(R.string.inbox_sent)) {
+                touchCallback?.setDefaultSwipeDirs(ItemTouchHelper.END)
+            } else {
+                touchCallback?.setDefaultSwipeDirs(ItemTouchHelper.START or ItemTouchHelper.END)
+            }
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
@@ -120,6 +139,93 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 handleSharedAction(it)
             }
         }
+
+        configureItemTouchHelper()
+    }
+
+    private fun configureItemTouchHelper() {
+        val markAsColor = requireContext().getColor(R.color.backgroundInfo)
+        val archiveColor = requireContext().getColor(R.color.ash)
+        val paint = Paint().apply { style = Paint.Style.FILL }
+
+        touchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START or ItemTouchHelper.END) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = true
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val itemViewModel = (viewHolder as BindableViewHolder).itemViewModel as? InboxEntryItemViewModel
+                if (itemViewModel == null) return
+                if (direction == ItemTouchHelper.END) {
+                    if (itemViewModel.data.unread) {
+                        viewModel.markConversationAsRead(itemViewModel.data.id)
+                    } else {
+                        viewModel.markConversationAsUnread(itemViewModel.data.id)
+                    }
+                } else {
+                    when (viewModel.data.value?.scope) {
+                        getString(R.string.inbox_archived) -> viewModel.unarchiveConversation(itemViewModel.data.id)
+                        getString(R.string.inbox_starred) -> viewModel.unstarConversation(itemViewModel.data.id)
+                        else -> viewModel.archiveConversation(itemViewModel.data.id)
+                    }
+                }
+                binding.inboxRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
+            }
+
+            override fun onChildDraw(
+                canvas: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemViewModel = (viewHolder as BindableViewHolder).itemViewModel as? InboxEntryItemViewModel
+                if (itemViewModel == null) return
+
+                val bounds = Rect(viewHolder.itemView.left, viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
+                val height = viewHolder.itemView.height
+                val margin = 16.toPx
+
+                if (dX > 0) {
+                    paint.color = markAsColor
+                    canvas.drawRect(bounds, paint)
+
+                    val drawableId = if (itemViewModel.data.unread) R.drawable.ic_mark_as_read else R.drawable.ic_mark_as_unread
+                    val markAsIcon = resources.getDrawable(drawableId, null)
+                    markAsIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
+                    markAsIcon.bounds = Rect(
+                        margin,
+                        bounds.top + height/2 - markAsIcon.intrinsicHeight/2,
+                        margin + markAsIcon.intrinsicWidth,
+                        bounds.top + height/2 + markAsIcon.intrinsicHeight/2)
+                    markAsIcon.draw(canvas)
+                } else {
+                    paint.color = archiveColor
+                    canvas.drawRect(bounds, paint)
+
+                    val archiveIcon = when (viewModel.data.value?.scope) {
+                        getString(R.string.inbox_archived) -> resources.getDrawable(R.drawable.ic_unarchive, null)
+                        getString(R.string.inbox_starred) -> resources.getDrawable(R.drawable.ic_star_outline, null)
+                        else -> resources.getDrawable(R.drawable.ic_archive, null)
+                    }
+                    archiveIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
+
+                    val width = resources.displayMetrics.widthPixels
+                    archiveIcon.bounds = Rect(
+                        width - margin - archiveIcon.intrinsicWidth,
+                        bounds.top + height/2 - archiveIcon.intrinsicHeight/2,
+                        width - margin,
+                        bounds.top + height/2 + archiveIcon.intrinsicHeight/2)
+                    archiveIcon.draw(canvas)
+                }
+
+                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(touchCallback!!)
+
+        itemTouchHelper.attachToRecyclerView(binding.inboxRecyclerView)
     }
 
     private fun handleAppBarBehavior(state: ViewState?) {

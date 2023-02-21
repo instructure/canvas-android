@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
@@ -180,5 +181,12 @@ class InboxRepositoryTest {
 
         assertEquals(DataResult.Fail(Failure.Network("Progress timed out")), progressResult)
         coVerify(exactly = 10) { progressApi.getProgress(any(), any()) }
+    }
+
+    @Test
+    fun `Test update conversations`() = runBlockingTest {
+        inboxRepository.updateConversation(16L, Conversation.WorkflowState.ARCHIVED)
+
+        coVerify { inboxApi.updateConversation(16L, "archived", any<Boolean>(), any<RestParams>()) }
     }
 }
