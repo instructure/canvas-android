@@ -56,7 +56,8 @@ sealed class SubmissionCommentsEffect {
 
     data class ShowFilePicker(
         val canvasContext: CanvasContext,
-        val assignment: Assignment
+        val assignment: Assignment,
+        val attemptId: Long?
     ) : SubmissionCommentsEffect()
 
     data class UploadMediaComment constructor(
@@ -94,5 +95,6 @@ data class SubmissionCommentsModel(
     val assignment: Assignment,
     val pendingCommentIds: List<Long> = emptyList(),
     val isFileButtonEnabled: Boolean = true,
-    val showSendButton: Boolean = false
+    val showSendButton: Boolean = false,
+    val assignmentEnhancementsEnabled: Boolean
 )

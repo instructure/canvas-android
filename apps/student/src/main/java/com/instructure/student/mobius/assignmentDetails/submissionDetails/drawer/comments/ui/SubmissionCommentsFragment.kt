@@ -42,6 +42,7 @@ class SubmissionCommentsFragment :
     private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
     private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
     private var attemptId by NLongArg(key = Const.SUBMISSION_ATTEMPT)
+    private var assignmentEnhancementsEnabled by BooleanArg(key = Const.ASSIGNMENT_ENHANCEMENTS_ENABLED)
 
     override fun makeEffectHandler() = SubmissionCommentsEffectHandler(requireContext())
     override fun makeUpdate() = SubmissionCommentsUpdate()
@@ -52,7 +53,8 @@ class SubmissionCommentsFragment :
         attemptId = attemptId,
         comments = submission.submissionComments,
         submissionHistory = submission.submissionHistory.filterNotNull(),
-        assignment = assignment
+        assignment = assignment,
+        assignmentEnhancementsEnabled = assignmentEnhancementsEnabled
     )
 
     override fun getExternalEventSources() = listOf(
@@ -80,6 +82,7 @@ class SubmissionCommentsFragment :
             submission = data.submission
             assignment = data.assignment
             attemptId = data.attemptId
+            assignmentEnhancementsEnabled = data.assignmentEnhancementsEnabled
         }
     }
 }

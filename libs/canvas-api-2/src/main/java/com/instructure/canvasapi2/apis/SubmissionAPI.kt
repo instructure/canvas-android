@@ -97,6 +97,7 @@ object SubmissionAPI {
                 @Path("contextId") contextId: Long,
                 @Path("assignmentId") assignmentId: Long,
                 @Path("userId") userId: Long,
+                @Query("comment[attempt]") attemptId: Long?,
                 @Query("comment[media_comment_id]") mediaId: String,
                 @Query("comment[media_comment_type]") commentType: String,
                 @Query("comment[group_comment]") isGroupComment: Boolean): Call<Submission>
@@ -207,8 +208,8 @@ object SubmissionAPI {
         ).enqueue(callback)
     }
 
-    fun postMediaSubmissionComment(canvasContextId: Long, assignmentId: Long, studentId: Long, mediaId: String, mediaType: String, isGroupComment: Boolean, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postMediaSubmissionComment(canvasContextId, assignmentId, studentId, mediaId, mediaType, isGroupComment)).enqueue(callback)
+    fun postMediaSubmissionComment(canvasContextId: Long, assignmentId: Long, studentId: Long, mediaId: String, mediaType: String, attemptId: Long?, isGroupComment: Boolean, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
+        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postMediaSubmissionComment(canvasContextId, assignmentId, studentId, attemptId, mediaId, mediaType, isGroupComment)).enqueue(callback)
     }
 
     fun postMediaSubmission(canvasContextId: Long, assignmentId: Long, submissionType: String, mediaId: String, mediaType: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {

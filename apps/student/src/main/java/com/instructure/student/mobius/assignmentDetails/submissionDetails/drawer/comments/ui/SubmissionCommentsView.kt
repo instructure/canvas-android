@@ -129,10 +129,10 @@ class SubmissionCommentsView(
         dialog.show()
     }
 
-    fun showFilePicker(canvasContext: CanvasContext, assignment: Assignment) {
+    fun showFilePicker(canvasContext: CanvasContext, assignment: Assignment, attemptId: Long?) {
         RouteMatcher.route(
             context,
-            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.CommentAttachment)
+            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.CommentAttachment, attemptId)
         )
     }
 

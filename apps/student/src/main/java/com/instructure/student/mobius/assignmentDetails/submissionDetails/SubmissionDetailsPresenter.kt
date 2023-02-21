@@ -32,6 +32,10 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         val rootSubmission = model.rootSubmissionResult.dataOrThrow
         val assignment = model.assignmentResult.dataOrThrow
 
+        model.submissionComments?.let {
+            rootSubmission.submissionComments = it
+        }
+
         val validSubmissions = rootSubmission.submissionHistory
             .filterNotNull()
             .sortedByDescending { it.submittedAt }
@@ -53,7 +57,8 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
             name = context.getString(R.string.comments),
             assignment = assignment,
             submission = rootSubmission,
-            attemptId = model.selectedSubmissionAttempt
+            attemptId = model.selectedSubmissionAttempt,
+            assignmentEnhancementsEnabled = model.assignmentEnhancementsEnabled
         )
 
         // Files tab
