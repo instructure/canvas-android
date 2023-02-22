@@ -360,7 +360,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
             putExtra(Const.PAGE_ID, presenter.mPageId)
             putExtra(Const.ID, dbId)
-            putExtra(Const.SUBMISSION_ATTEMPT, attemptId)
+            putExtra(Const.SUBMISSION_ATTEMPT, attemptId.takeIf { presenter.assignmentEnhancementsEnabled })
         }
 
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)
