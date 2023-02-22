@@ -251,7 +251,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         lifecycleScope.launch {
             if (mAssignee.id == event.assigneeId) {
                 val id = presenter.createPendingMediaComment(event.file.absolutePath)
-                uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id)
+                uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id, event.attemptId)
                 addMediaAttachment.isEnabled = true
             }
         }
@@ -261,7 +261,8 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
             presenter.courseId,
             presenter.assignmentId,
-            presenter.assignee.id
+            presenter.assignee.id,
+            presenter.selectedAttemptId
         )
 
         FileUploadDialogFragment.newInstance(bundle).show(
@@ -346,7 +347,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
      *
      * @param mediaFile File pointing to the media to upload
      */
-    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long, dbId: Long) {
+    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long, dbId: Long, attemptId: Long?) {
         val mediaUri = Uri.fromFile(mediaFile)
 
         val serviceIntent = Intent(requireActivity(), NotoriousUploadService::class.java)
@@ -359,6 +360,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
             putExtra(Const.PAGE_ID, presenter.mPageId)
             putExtra(Const.ID, dbId)
+            putExtra(Const.SUBMISSION_ATTEMPT, attemptId)
         }
 
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 - present Instructure, Inc.
+ * Copyright (C) 2022 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -15,15 +15,14 @@
  *
  */
 
-package com.instructure.pandautils.room
+package com.instructure.pandautils.features.assignmentdetails
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE PendingSubmissionCommentEntity ADD COLUMN attemptId INTEGER")
-        database.execSQL("ALTER TABLE FileUploadInputEntity ADD COLUMN attemptId INTEGER")
-        database.execSQL("ALTER TABLE SubmissionCommentEntity ADD COLUMN attemptId INTEGER")
-    }
+class AssignmentDetailsAttemptItemViewModel(
+    val data: AssignmentDetailsAttemptViewData
+) : ItemViewModel {
+    //Don't care
+    override val layoutId: Int
+        get() = 0
 }

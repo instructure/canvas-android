@@ -64,7 +64,7 @@ class SpeedGraderCommentsPresenter(
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
     var selectedFilePaths: List<String>? = null
 
-    private val comments = rawComments.map { CommentWrapper(it) }
+    private val comments = rawComments.map { CommentWrapper(it) }.toMutableList()
     private var fileUploadJob: Job? = null
     private var pendingSubmissionCommentFetchJob: Job? = null
     private var sendCommentJob: Job? = null
@@ -152,9 +152,9 @@ class SpeedGraderCommentsPresenter(
             viewCallback?.setDraftText("")
             val drafts = pendingSubmissionCommentDao.findByPageId(mPageId)
                 .orEmpty()
-                .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }.orEmpty()
+                .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }
             pendingSubmissionCommentDao.deleteAll(drafts.map { it.pendingSubmissionCommentEntity })
-            val newComment = PendingSubmissionComment(mPageId, text)
+            val newComment = PendingSubmissionComment(mPageId, text).apply { attemptId = selectedAttemptId }
             pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
             val commentWrapper = PendingCommentWrapper(newComment)
             data.add(commentWrapper)
@@ -205,7 +205,9 @@ class SpeedGraderCommentsPresenter(
                     data.remove(comment)
 
                     // Add new comment to list
-                    data.add(CommentWrapper(it))
+                    val wrappedComment = CommentWrapper(it)
+                    comments.add(wrappedComment)
+                    data.add(wrappedComment)
                     viewCallback?.checkIfEmpty()
                 }
                 SubmissionUpdatedEvent(submission).post()
@@ -236,7 +238,9 @@ class SpeedGraderCommentsPresenter(
                     data.remove(PendingCommentWrapper(pendingComment))
 
                     // Add new comment to list
-                    data.add(CommentWrapper(submissionComment))
+                    val comment = CommentWrapper(submissionComment)
+                    this@SpeedGraderCommentsPresenter.comments.add(comment)
+                    data.add(comment)
                     viewCallback?.checkIfEmpty()
                 } else {
                     // submissionComment is null if there was an error sending the pending intent
@@ -247,7 +251,7 @@ class SpeedGraderCommentsPresenter(
     }
 
     suspend fun createPendingMediaComment(filePath: String): Long {
-        val newComment = PendingSubmissionComment(mPageId)
+        val newComment = PendingSubmissionComment(mPageId).apply { attemptId = selectedAttemptId }
         newComment.filePath = filePath
         newComment.status = CommentSendStatus.SENDING
         val id = pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
@@ -284,7 +288,7 @@ class SpeedGraderCommentsPresenter(
 
             pendingSubmissionCommentDao.deleteAll(currentDrafts.map { it.pendingSubmissionCommentEntity })
 
-            val newComment = PendingSubmissionComment(mPageId, text)
+            val newComment = PendingSubmissionComment(mPageId, text).apply { attemptId = selectedAttemptId }
             if (text.isNotBlank()) pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
 
         }
@@ -319,6 +323,7 @@ class SpeedGraderCommentsPresenter(
                         assignmentId,
                         assignee.id
                     )
+                    this.attemptId = selectedAttemptId
                 }
                 pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
                 PendingCommentWrapper(newComment)
@@ -359,7 +364,10 @@ class SpeedGraderCommentsPresenter(
                 submissionCommentDao.findById(submissionCommentId)?.let {
                     val submissionComment = it.toApiModel()
                     dbCleanUp(it)
-                    data.add(CommentWrapper(submissionComment))
+                    val comment = CommentWrapper(submissionComment)
+                    comments.add(comment)
+                    data.add(comment)
+                    viewCallback?.scrollToBottom()
                     SubmissionCommentsUpdated().post()
                 }
             }

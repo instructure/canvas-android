@@ -159,19 +159,18 @@
         android:layout_toStartOf="@+id/panelContent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/submissionVersionsButton"
-            style="@style/Base.Widget.AppCompat.Spinner"
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/submissionVersionsSpinner"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/backgroundDark"
-            android:fontFamily="sans-serif-medium"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:textColor="@color/textDark"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/bg_spinner"
+            android:backgroundTint="@color/textDark"
+            android:dropDownWidth="10000dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:prompt="@string/submissionVersions"
+            android:spinnerMode="dropdown"
             android:visibility="gone"
-            tools:ignore="UnusedAttribute"
-            tools:text="July 29, 2016 at 4:16 PM"
             tools:visibility="visible" />
 
         <View

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -15,14 +15,14 @@
  *
  */
 
-package com.instructure.student.features.assignmentdetails
+package com.instructure.pandautils.features.assignmentdetails
 
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.canvasapi2.models.Submission
 
-class AssignmentDetailsAttemptItemViewModel(
-    val data: AssignmentDetailAttemptViewData
-) : ItemViewModel {
-    //Don't care
-    override val layoutId: Int
-        get() = 0
-}
+data class AssignmentDetailsAttemptViewData(
+    val title: String,
+    val date: String,
+    val submission: Submission? = null,
+    val isUploading: Boolean = false,
+    val isFailed: Boolean = false
+)

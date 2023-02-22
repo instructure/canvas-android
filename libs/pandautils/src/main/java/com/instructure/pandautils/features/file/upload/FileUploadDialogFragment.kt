@@ -33,8 +33,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -44,7 +42,6 @@ import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import java.util.*
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : DialogFragment() {
@@ -66,6 +63,7 @@ class FileUploadDialogFragment : DialogFragment() {
     private var quizId: Long by LongArg()
     private var courseId: Long by LongArg()
     private var userId: Long by LongArg()
+    private var attemptId: Long? by NLongArg()
 
     private var dialogCallback: ((Int) -> Unit)? = null
 
@@ -192,7 +190,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
         viewModel.setData(
             assignment, fileSubmitUris, uploadType, canvasContext, parentFolderId, quizQuestionId,
-            position, quizId, userId, dialogCallback
+            position, quizId, userId, attemptId, dialogCallback
         )
     }
 
@@ -285,6 +283,7 @@ class FileUploadDialogFragment : DialogFragment() {
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
                 userId = args.getLong(Const.USER_ID, INVALID_ID)
+                attemptId = args.getLong(Const.SUBMISSION_ATTEMPT, INVALID_ID).takeIf { it != INVALID_ID }
             }
         }
 
@@ -380,11 +379,13 @@ class FileUploadDialogFragment : DialogFragment() {
         fun createTeacherSubmissionCommentBundle(
             courseId: Long,
             assignmentId: Long,
-            userId: Long
+            userId: Long,
+            attemptId: Long?
         ): Bundle {
             val bundle = createBundle(arrayListOf(), FileUploadType.TEACHER_SUBMISSION_COMMENT, null)
             bundle.putParcelable(Const.ASSIGNMENT, Assignment(assignmentId, courseId = courseId))
             bundle.putLong(Const.USER_ID, userId)
+            bundle.putLong(Const.SUBMISSION_ATTEMPT, attemptId.orDefault(-1))
             return bundle
         }
     }

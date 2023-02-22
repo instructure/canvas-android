@@ -65,6 +65,7 @@ class FileUploadDialogViewModel @Inject constructor(
     private var quizQuestionId: Long = -1L
     private var quizId: Long = -1L
     private var position: Int = -1
+    private var attemptId: Long? = null
 
     var dialogCallback: ((Int) -> Unit)? = null
 
@@ -80,6 +81,7 @@ class FileUploadDialogViewModel @Inject constructor(
         position: Int,
         quizId: Long,
         userId: Long,
+        attemptId: Long?,
         dialogCallback: ((Int) -> Unit)? = null
     ) {
         this.assignment = assignment
@@ -97,6 +99,7 @@ class FileUploadDialogViewModel @Inject constructor(
         this.quizId = quizId
         this.position = position
         this.userId = userId
+        this.attemptId = attemptId
         dialogCallback?.let {
             this.dialogCallback = it
         }
@@ -371,7 +374,8 @@ class FileUploadDialogViewModel @Inject constructor(
                     action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
                     courseId = assignment?.courseId.orDefault(),
                     assignmentId = assignment?.id.orDefault(),
-                    userId = userId.orDefault()
+                    userId = userId.orDefault(),
+                    attemptId = attemptId
                 )
             }
             else -> {
