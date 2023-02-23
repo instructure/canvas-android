@@ -205,7 +205,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             }
         }
 
-        addMediaAttachment.onClick {
+        addAttachment.onClick {
             (requireActivity() as SpeedGraderActivity).closeCommentLibrary()
             SGAddMediaCommentDialog.show(requireActivity().supportFragmentManager,
                     presenter.assignmentId, presenter.courseId,
@@ -217,7 +217,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                 else -> false
             }, ::showFileUploadDialog)
 
-            addMediaAttachment.isEnabled = false
+            addAttachment.isEnabled = false
         }
     }
 
@@ -252,7 +252,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             if (mAssignee.id == event.assigneeId) {
                 val id = presenter.createPendingMediaComment(event.file.absolutePath)
                 uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id, event.attemptId)
-                addMediaAttachment.isEnabled = true
+                addAttachment.isEnabled = true
             }
         }
     }
@@ -317,7 +317,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     @Suppress("UNUSED_PARAMETER", "unused")
     @Subscribe
     fun onMediaCommentDialogClosed(event: MediaCommentDialogClosedEvent) {
-        addMediaAttachment.isEnabled = true
+        addAttachment.isEnabled = true
     }
 
     @Suppress("unused")

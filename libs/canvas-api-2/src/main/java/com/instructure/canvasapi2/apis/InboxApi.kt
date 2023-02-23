@@ -80,6 +80,9 @@ object InboxApi {
         @PUT("conversations/{conversationId}")
         fun updateConversation(@Path("conversationId") conversationId: Long, @Query("conversation[workflow_state]") workflowState: String, @Query("conversation[starred]") isStarred: Boolean?): Call<Conversation>
 
+        @PUT("conversations/{conversationId}")
+        suspend fun updateConversation(@Path("conversationId") conversationId: Long, @Query("conversation[workflow_state]") workflowState: String?, @Query("conversation[starred]") isStarred: Boolean?, @Tag params: RestParams): DataResult<Conversation>
+
         @DELETE("conversations/{conversationId}")
         fun deleteConversation(@Path("conversationId") conversationId: Long): Call<Conversation>
 

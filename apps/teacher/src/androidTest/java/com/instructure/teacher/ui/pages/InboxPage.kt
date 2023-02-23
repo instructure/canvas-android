@@ -1,7 +1,10 @@
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.*
@@ -19,8 +22,8 @@ class InboxPage: BasePage() {
     private val addMessageFAB by WaitForViewWithId(R.id.addMessage)
 
     //Only displayed when inbox is empty
-    private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
-    private val filterText by OnViewWithId(R.id.filterText)
+    private val emptyPandaView by WaitForViewWithId(R.id.emptyInboxView)
+    private val scopeFilterText by OnViewWithId(R.id.scopeFilterText)
 
     override fun assertPageObjects(duration: Long) {
         toolbarTitle.assertDisplayed()
@@ -51,15 +54,16 @@ class InboxPage: BasePage() {
     }
 
     fun assertInboxEmpty() {
-        onView(withId(R.id.emptyPandaView)).assertDisplayed()
+        onView(withId(R.id.emptyInboxView)).assertDisplayed()
     }
 
     fun refresh() {
-        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+        onView(withId(R.id.swipeRefreshLayout))
+            .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(50)))
     }
 
     fun filterInbox(filterFor: String) {
-        onView(withId(R.id.filterButton)).click()
+        onView(withId(R.id.scopeFilter)).click()
         waitForViewWithText(filterFor).click()
     }
 

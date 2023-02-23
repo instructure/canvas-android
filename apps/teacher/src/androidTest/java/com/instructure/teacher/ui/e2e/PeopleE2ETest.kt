@@ -20,6 +20,9 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -74,14 +77,7 @@ class PeopleE2ETest: TeacherTest() {
         )
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${assignments[0].name} assignment.")
-        SubmissionsApi.gradeSubmission(
-                teacherToken = teacher.token,
-                courseId = course.id,
-                assignmentId = assignments[0].id,
-                studentId = gradedStudent.id,
-                postedGrade = "10",
-                excused = false
-        )
+        gradeSubmission(teacher, course, assignments, gradedStudent)
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -122,6 +118,7 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.assertStudentSubmission("1")
         studentContextPage.assertAssignmentListed(assignments[0].name)
 
+        Log.d(STEP_TAG, "Click on the '+' (aka. Compose new message) button.")
         studentContextPage.clickOnNewMessageButton()
 
         val subject = "Test Subject"
@@ -158,4 +155,20 @@ class PeopleE2ETest: TeacherTest() {
         Log.d(STEP_TAG,"Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()
      }
+
+    private fun gradeSubmission(
+        teacher: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignments: List<AssignmentApiModel>,
+        gradedStudent: CanvasUserApiModel
+    ) {
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = assignments[0].id,
+            studentId = gradedStudent.id,
+            postedGrade = "10",
+            excused = false
+        )
+    }
 }

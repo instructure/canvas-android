@@ -20,7 +20,6 @@ import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.KnownBug
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
@@ -30,8 +29,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.FileUploadType
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.espresso.ViewUtils
 import com.instructure.panda_annotations.FeatureCategory
@@ -49,17 +47,12 @@ import java.io.FileWriter
 
 @HiltAndroidTest
 class FilesE2ETest: TeacherTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //Intentionally empty, because we don't check accessibility in E2E tests.
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
-    @KnownBug
     @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
     fun testFilesE2E() {
 
@@ -70,13 +63,7 @@ class FilesE2ETest: TeacherTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seed a text assignment/file/submission.")
-        val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = false,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                allowedExtensions = listOf("txt"),
-                teacherToken = teacher.token
-        ))
+        val assignment = createAssignment(course, teacher)
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
@@ -87,13 +74,7 @@ class FilesE2ETest: TeacherTest() {
         )
 
         Log.d(PREPARATION_TAG, "Submit the ${assignment.name} assignment.")
-        SubmissionsApi.submitCourseAssignment(
-                submissionType = SubmissionType.ONLINE_UPLOAD,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(submissionUploadInfo.id),
-                studentToken = student.token
-        )
+        submitCourseAssignment(course, assignment, submissionUploadInfo, student)
 
         Log.d(PREPARATION_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
@@ -103,18 +84,10 @@ class FilesE2ETest: TeacherTest() {
                 fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
 
-        SubmissionsApi.commentOnSubmission(
-                studentToken = student.token,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(commentUploadInfo.id)
-        )
+        commentOnSubmission(student, course, assignment, commentUploadInfo)
 
         Log.d(PREPARATION_TAG,"Seed a discussion topic. Will add a reply with attachment below.")
-        val discussionTopic = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = student.token
-        )
+        val discussionTopic = createDiscussion(course, student)
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -206,11 +179,64 @@ class FilesE2ETest: TeacherTest() {
 
         Log.d(STEP_TAG,"Delete $newFileName file.")
         fileListPage.deleteFile(newFileName)
-        //TODO bug: https://instructure.atlassian.net/browse/MBL-16108
         fileListPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
+        Log.d(STEP_TAG,"Assert that empty view is displayed after deletion, because no file left to display.")
         fileListPage.assertViewEmpty()
+    }
+
+    private fun createDiscussion(
+        course: CourseApiModel,
+        student: CanvasUserApiModel
+    ): DiscussionApiModel {
+        return DiscussionTopicsApi.createDiscussion(
+            courseId = course.id,
+            token = student.token
+        )
+    }
+
+    private fun commentOnSubmission(
+        student: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        commentUploadInfo: AttachmentApiModel
+    ) {
+        SubmissionsApi.commentOnSubmission(
+            studentToken = student.token,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(commentUploadInfo.id)
+        )
+    }
+
+    private fun submitCourseAssignment(
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        submissionUploadInfo: AttachmentApiModel,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_UPLOAD,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(submissionUploadInfo.id),
+            studentToken = student.token
+        )
+    }
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                withDescription = false,
+                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+                allowedExtensions = listOf("txt"),
+                teacherToken = teacher.token
+            )
+        )
     }
 
 }

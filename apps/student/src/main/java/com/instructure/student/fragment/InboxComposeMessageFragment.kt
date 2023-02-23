@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
@@ -442,14 +441,12 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
-        val isMonologue = initialRecipientIds.size == 1
         val recipients = initialRecipientIds
             .mapNotNull { longId ->
                 val id = longId.toString()
                 participants.find {
-                    // Map IDs to participants (excluding the current user if not monologue)
-                    it.stringId == id && (isMonologue || it.stringId != myId)
+                    // Map IDs to participants
+                    it.stringId == id
                 }
             }
             .minus(chips.recipients)
@@ -458,10 +455,9 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private fun addRecipients(newRecipients: List<Recipient>) {
         val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = newRecipients.filter { recipient ->
-            // Skip existing recipients and self
-            recipient.stringId != myId && selectedRecipients.none { it.stringId == recipient.stringId }
+            // Skip existing recipients
+            selectedRecipients.none { it.stringId == recipient.stringId }
         }
         chips.addRecipients(recipients)
     }

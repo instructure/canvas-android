@@ -25,7 +25,7 @@ void main() {
 
   // Can't test html content in webview, so just make sure it renders one on the screen
   testWidgetsWithAccessibilityChecks('renders', (tester) async {
-    await tester.pumpWidget(TestApp(HtmlDescriptionScreen('anything')));
+    await tester.pumpWidget(TestApp(HtmlDescriptionScreen('anything', 'Description')));
     await tester.pumpAndSettle();
 
     expect(find.byType(CanvasWebView), findsOneWidget);

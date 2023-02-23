@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -133,6 +134,19 @@ class SplashScreenInteractor {
     await DioConfig().clearCache();
 
     return Future.value(true);
+  }
+
+  Future<bool> _requiresTermsAcceptance(String targetUrl) async {
+    return (await locator.get<OAuthApi>().getAuthenticatedUrl(targetUrl))?.requiresTermsAcceptance ?? false;
+  }
+
+  Future<bool> isTermsAcceptanceRequired() async {
+    final targetUrl = '${ApiPrefs.getCurrentLogin().domain}/users/self';
+    if (targetUrl.contains(ApiPrefs.getDomain())) {
+      return _requiresTermsAcceptance(targetUrl);
+    } else {
+      return false;
+    }
   }
 }
 

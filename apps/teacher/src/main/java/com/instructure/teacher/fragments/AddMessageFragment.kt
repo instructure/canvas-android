@@ -28,7 +28,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
@@ -419,12 +418,11 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
         val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = initialRecipientIds
             .map { it.toString() }
             .filter { id ->
-                // Skip existing recipients and self
-                id != myId && selectedRecipients.none { it.stringId == id }
+                // Skip existing recipients
+                selectedRecipients.none { it.stringId == id }
             }
             .mapNotNull { presenter.getParticipantById(it) }
         chips.addRecipients(recipients)
@@ -432,11 +430,10 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     private fun addRecipients(newRecipients: List<Recipient>) {
         val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = newRecipients.filter { recipient ->
-            // Skip existing recipients and self
+            // Skip existing recipients
             val stringId = recipient.stringId
-            stringId != myId && selectedRecipients.none { it.stringId == stringId }
+            selectedRecipients.none { it.stringId == stringId }
         }
         chips.addRecipients(recipients)
     }

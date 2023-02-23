@@ -33,6 +33,7 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MESSAGE_THREAD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -42,9 +43,9 @@ import com.instructure.teacher.adapters.MessageAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.events.ConversationDeletedEvent
 import com.instructure.teacher.events.ConversationUpdatedEvent
-import com.instructure.teacher.events.ConversationUpdatedEventTablet
 import com.instructure.teacher.events.MessageAddedEvent
 import com.instructure.teacher.factory.MessageThreadPresenterFactory
+import com.instructure.teacher.features.inbox.list.TeacherInboxRouter
 import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.presenters.MessageThreadPresenter
@@ -208,7 +209,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             return MessageThreadPresenterFactory(conversationId = nonNullArgs.getLong(Const.CONVERSATION_ID, 0))
         }
 
-        return MessageThreadPresenterFactory(nonNullArgs.getParcelable<Parcelable>(Const.CONVERSATION) as Conversation, nonNullArgs.getInt(Const.POSITION))
+        return MessageThreadPresenterFactory(nonNullArgs.getParcelable<Parcelable>(Const.CONVERSATION) as Conversation)
     }
 
     override fun onPresenterPrepared(presenter: MessageThreadPresenter) {
@@ -399,12 +400,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         initConversationDetails()
     }
 
-    override fun onConversationDeleted(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, InboxFragment::class.java.simpleName + ".onPost()"))
-        } else {
-            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, InboxFragment::class.java.simpleName + ".onResume()"))
-        }
+    override fun onConversationDeleted() {
+        EventBus.getDefault().postSticky(ConversationDeletedEvent(TeacherInboxRouter::class.java.simpleName))
 
         // Only go back a screen on phones
         if (!isTablet) {
@@ -412,12 +409,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override fun onConversationMarkedAsUnread(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.UNREAD, null))
-        }
+    override fun onConversationMarkedAsUnread() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
 
         // Only go back a screen on phones
         if (!isTablet) {
@@ -425,12 +418,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override fun onConversationRead(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.UNREAD, null))
-        }
+    override fun onConversationRead() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
     }
 
     override fun onMessageDeleted() {
@@ -438,12 +427,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         presenter.refresh(true)
     }
 
-    override fun onConversationArchived(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.ARCHIVED, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.ARCHIVED, null))
-        }
+    override fun onConversationArchived() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.ARCHIVED, null))
 
         // Only go back a screen on phones
         if (!isTablet) {
@@ -451,12 +436,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override fun onConversationStarred(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.STARRED, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.STARRED, null))
-        }
+    override fun onConversationStarred() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.STARRED, null))
     }
 
     override fun onConversationLoadFailed() {
@@ -495,10 +476,9 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 
     companion object {
-        fun createBundle(conversation: Conversation, position: Int, scope: String): Bundle =
+        fun createBundle(conversation: Conversation, scope: String): Bundle =
                 Bundle().apply {
                     putParcelable(Const.CONVERSATION, conversation)
-                    putInt(Const.POSITION, position)
                     putString(Const.SCOPE, scope)
                 }
 

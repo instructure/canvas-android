@@ -23,6 +23,9 @@ class _$AuthenticatedUrlSerializer
       'session_url',
       serializers.serialize(object.sessionUrl,
           specifiedType: const FullType(String)),
+      'requires_terms_acceptance',
+      serializers.serialize(object.requiresTermsAcceptance,
+          specifiedType: const FullType(bool)),
     ];
 
     return result;
@@ -38,12 +41,15 @@ class _$AuthenticatedUrlSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object value = iterator.current;
       switch (key) {
         case 'session_url':
           result.sessionUrl = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
+          break;
+        case 'requires_terms_acceptance':
+          result.requiresTermsAcceptance = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
           break;
       }
     }
@@ -55,15 +61,19 @@ class _$AuthenticatedUrlSerializer
 class _$AuthenticatedUrl extends AuthenticatedUrl {
   @override
   final String sessionUrl;
+  @override
+  final bool requiresTermsAcceptance;
 
   factory _$AuthenticatedUrl(
           [void Function(AuthenticatedUrlBuilder) updates]) =>
       (new AuthenticatedUrlBuilder()..update(updates)).build();
 
-  _$AuthenticatedUrl._({this.sessionUrl}) : super._() {
-    if (sessionUrl == null) {
-      throw new BuiltValueNullFieldError('AuthenticatedUrl', 'sessionUrl');
-    }
+  _$AuthenticatedUrl._({this.sessionUrl, this.requiresTermsAcceptance})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        sessionUrl, 'AuthenticatedUrl', 'sessionUrl');
+    BuiltValueNullFieldError.checkNotNull(
+        requiresTermsAcceptance, 'AuthenticatedUrl', 'requiresTermsAcceptance');
   }
 
   @override
@@ -77,18 +87,22 @@ class _$AuthenticatedUrl extends AuthenticatedUrl {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is AuthenticatedUrl && sessionUrl == other.sessionUrl;
+    return other is AuthenticatedUrl &&
+        sessionUrl == other.sessionUrl &&
+        requiresTermsAcceptance == other.requiresTermsAcceptance;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, sessionUrl.hashCode));
+    return $jf(
+        $jc($jc(0, sessionUrl.hashCode), requiresTermsAcceptance.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('AuthenticatedUrl')
-          ..add('sessionUrl', sessionUrl))
+          ..add('sessionUrl', sessionUrl)
+          ..add('requiresTermsAcceptance', requiresTermsAcceptance))
         .toString();
   }
 }
@@ -101,13 +115,20 @@ class AuthenticatedUrlBuilder
   String get sessionUrl => _$this._sessionUrl;
   set sessionUrl(String sessionUrl) => _$this._sessionUrl = sessionUrl;
 
+  bool _requiresTermsAcceptance;
+  bool get requiresTermsAcceptance => _$this._requiresTermsAcceptance;
+  set requiresTermsAcceptance(bool requiresTermsAcceptance) =>
+      _$this._requiresTermsAcceptance = requiresTermsAcceptance;
+
   AuthenticatedUrlBuilder() {
     AuthenticatedUrl._initializeBuilder(this);
   }
 
   AuthenticatedUrlBuilder get _$this {
-    if (_$v != null) {
-      _sessionUrl = _$v.sessionUrl;
+    final $v = _$v;
+    if ($v != null) {
+      _sessionUrl = $v.sessionUrl;
+      _requiresTermsAcceptance = $v.requiresTermsAcceptance;
       _$v = null;
     }
     return this;
@@ -115,9 +136,7 @@ class AuthenticatedUrlBuilder
 
   @override
   void replace(AuthenticatedUrl other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AuthenticatedUrl;
   }
 
@@ -128,10 +147,17 @@ class AuthenticatedUrlBuilder
 
   @override
   _$AuthenticatedUrl build() {
-    final _$result = _$v ?? new _$AuthenticatedUrl._(sessionUrl: sessionUrl);
+    final _$result = _$v ??
+        new _$AuthenticatedUrl._(
+            sessionUrl: BuiltValueNullFieldError.checkNotNull(
+                sessionUrl, 'AuthenticatedUrl', 'sessionUrl'),
+            requiresTermsAcceptance: BuiltValueNullFieldError.checkNotNull(
+                requiresTermsAcceptance,
+                'AuthenticatedUrl',
+                'requiresTermsAcceptance'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.APIHelper.expandTildeId
 import com.instructure.canvasapi2.utils.findWithPrevious
+import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
@@ -30,7 +31,7 @@ import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragm
 import com.instructure.student.fragment.*
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
-import com.instructure.student.fragment.MasteryPathLockedFragment.Companion.makeRoute
+import com.instructure.student.fragment.LockedModuleItemFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment.Companion.makeRoute
 import com.instructure.student.fragment.PageDetailsFragment.Companion.makeRoute
 import java.util.*
@@ -46,7 +47,7 @@ object ModuleUtility {
                 DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
             }
         }
-        "Locked" -> MasteryPathLockedFragment.newInstance(makeRoute(item.title!!))
+        "Locked" -> LockedModuleItemFragment.newInstance(makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
         "SubHeader" -> null // Don't do anything with headers, they're just dividers so we don't show them here.
         "Quiz" -> {
             val apiURL = removeDomain(item.url)
@@ -57,9 +58,13 @@ object ModuleUtility {
             MasteryPathSelectionFragment.newInstance(route)
         }
         "ExternalUrl", "ExternalTool" -> {
-            val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
-            val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
-            InternalWebviewFragment.newInstance(route)
+            if (item.isLocked()) {
+                LockedModuleItemFragment.newInstance(makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
+            } else {
+                val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
+                val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
+                InternalWebviewFragment.newInstance(route)
+            }
         }
         "File" -> {
             val url = removeDomain(item.url)

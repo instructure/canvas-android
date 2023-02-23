@@ -17,6 +17,7 @@ import 'dart:async';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/screens/aup/acceptable_use_policy_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
@@ -58,8 +59,10 @@ void main() {
 
     final completer = Completer<SplashScreenData>();
     when(interactor.getData()).thenAnswer((_) => completer.future);
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(SplashScreen()));
+    await tester.pump();
     await tester.pump();
 
     expect(find.byType(CanvasLoadingIndicator), findsOneWidget);
@@ -73,6 +76,7 @@ void main() {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
     when(interactor.getData()).thenAnswer((_) async => SplashScreenData(false, false));
 
     await tester.pumpWidget(TestApp(
@@ -80,8 +84,34 @@ void main() {
       platformConfig: PlatformConfig(initLoggedInUser: login),
     ));
     await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(NotAParentScreen), findsOneWidget);
+    await ApiPrefs.clean();
+  });
+
+  testWidgetsWithAccessibilityChecks('Routes to Acceptable Use Policy screen if needed', (tester) async {
+    var interactor = _MockInteractor();
+    var mockNav = _MockNav();
+    setupTestLocator((locator) {
+      locator.registerFactory<SplashScreenInteractor>(() => interactor);
+      locator.registerLazySingleton<QuickNav>(() => mockNav);
+    });
+    
+    when(interactor.getData()).thenAnswer((_) async => SplashScreenData(true, false));
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => true);
+
+    await tester.pumpWidget(TestApp(
+      SplashScreen(),
+      platformConfig: PlatformConfig(initLoggedInUser: login),
+    ));
+    await tester.pump(); // Pump to get data
+    await tester.pump(); // Pump to update with result
+    await tester.pump(); // Pump to update with result
+    await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
+
+    verify(mockNav.pushRouteWithCustomTransition(any, '/aup', any, any, any));
     await ApiPrefs.clean();
   });
 
@@ -94,12 +124,14 @@ void main() {
     });
 
     when(interactor.getData()).thenAnswer((_) async => SplashScreenData(false, true));
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
       platformConfig: PlatformConfig(initLoggedInUser: login),
     ));
     await tester.pump(); // Pump to get data
+    await tester.pump(); // Pump to update with result
     await tester.pump(); // Pump to update with result
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 
@@ -116,12 +148,14 @@ void main() {
     });
 
     when(interactor.getData()).thenAnswer((_) async => SplashScreenData(true, false));
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
       platformConfig: PlatformConfig(initLoggedInUser: login),
     ));
     await tester.pump(); // Pump to get data
+    await tester.pump(); // Pump to update with result
     await tester.pump(); // Pump to update with result
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 
@@ -199,6 +233,7 @@ void main() {
 
     final completer = Completer<SplashScreenData>();
     when(interactor.getData()).thenAnswer((_) => completer.future);
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
@@ -207,6 +242,7 @@ void main() {
     await tester.pump();
 
     completer.completeError('Fake error');
+    await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 350));
 
@@ -232,6 +268,7 @@ void main() {
       ApiPrefs.switchLogins(maskedLogin);
       return SplashScreenData(true, false);
     });
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
@@ -242,6 +279,7 @@ void main() {
     // Should not show masquerade info at this point
     expect(find.text(masqueradeInfo), findsNothing);
 
+    await tester.pump(); // Pump to update with result
     await tester.pump(); // Pump to update with result
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 

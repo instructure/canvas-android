@@ -1382,4 +1382,5 @@
     <string name="a11y_conversationDeselected">Conversation deselected</string>
     <string name="a11y_exitSelectionMode">Exit selection mode</string>
     <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
+    <string name="a11y_avatarContentDescription">Avatar of %s</string>
 </resources>
