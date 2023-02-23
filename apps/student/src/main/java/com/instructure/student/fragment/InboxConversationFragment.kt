@@ -333,10 +333,15 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun replyAllMessage() {
+        val users = if (adapter.participants.size == 1) {
+            adapter.participants.values
+        } else {
+            adapter.participants.values.filter { it.id != ApiPrefs.user?.id }
+        }
         val route = InboxComposeMessageFragment.makeRoute(
                 true,
                 conversation,
-                adapter.participants.values.map { Recipient.from(it) },
+                users.map { Recipient.from(it) },
                 longArrayOf(),
                 null)
         RouteMatcher.route(requireContext(), route)
@@ -364,19 +369,28 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun getMessageRecipientsForReplyAll(message: Message): List<BasicUser> {
-        return message.participatingUserIds
-                // Map the conversations participating users to the messages participating users
-                .mapNotNull { participatingUserId ->
-                    adapter.participants.values.find { basicUser ->
-                        basicUser.id == participatingUserId
-                    }
+        val userIds = if (message.participatingUserIds.size == 1) {
+            message.participatingUserIds
+        } else {
+            message.participatingUserIds.filter { it != ApiPrefs.user?.id }
+        }
+        return userIds
+            // Map the conversations participating users to the messages participating users
+            .mapNotNull { participatingUserId ->
+                adapter.participants.values.find { basicUser ->
+                    basicUser.id == participatingUserId
                 }
+            }
     }
 
     private fun getMessageRecipientsForReply(message: Message): List<BasicUser>  {
         // If the author is self, we default to all other participants
         return if (message.authorId == ApiPrefs.user!!.id) {
-            adapter.participants.values.toList()
+            if (adapter.participants.size == 1) {
+                adapter.participants.values.toList()
+            } else {
+                adapter.participants.values.filter { it.id != ApiPrefs.user?.id }
+            }
         } else {
             listOf(adapter.participants.values.first { it.id == message.authorId })
         }
