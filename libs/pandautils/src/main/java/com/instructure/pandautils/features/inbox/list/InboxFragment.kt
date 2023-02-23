@@ -37,6 +37,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -304,7 +305,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private fun animateBackAvatars() {
         binding.inboxRecyclerView.children.forEach {
-            val itemBinding = DataBindingUtil.findBinding<ItemInboxEntryBinding>(it)
+            val itemBinding = DataBindingUtil.findBinding<ViewDataBinding>(it) as? ItemInboxEntryBinding
             if (itemBinding?.avatarSelected?.visibility == View.VISIBLE) {
                 animateAvatar(it, false)
             }
@@ -331,7 +332,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             is InboxAction.OpenConversation -> inboxRouter.openConversation(action.conversation, action.scope)
             InboxAction.OpenScopeSelector -> openScopeSelector()
             is InboxAction.ItemSelectionChanged -> animateAvatar(action.view, action.selected)
-            is InboxAction.ShowConfirmationSnackbar -> Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG).show()
+            is InboxAction.ShowConfirmationSnackbar -> showConfirmation(action)
             InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage()
             InboxAction.FailedToLoadNextPage -> Snackbar.make(requireView(), R.string.failedToLoadNextPage, Snackbar.LENGTH_LONG).show()
             InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
@@ -340,6 +341,20 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             is InboxAction.ConfirmDelete -> deleteSelected(action.count)
             is InboxAction.AvatarClickedCallback -> inboxRouter.avatarClicked(action.conversation, action.scope)
         }
+    }
+
+    private fun showConfirmation(action: InboxAction.ShowConfirmationSnackbar) {
+        val snackbar = Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG)
+
+        if (action.undoAction != null) {
+            snackbar
+                .setActionTextColor(ThemePrefs.textButtonColor)
+                .setAction(R.string.inboxUndo) {
+                    action.undoAction.invoke()
+                }
+        }
+
+        snackbar.show()
     }
 
     private fun animateAvatar(view: View, selected: Boolean) {
