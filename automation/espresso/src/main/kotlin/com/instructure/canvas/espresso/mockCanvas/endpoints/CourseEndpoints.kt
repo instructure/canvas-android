@@ -161,7 +161,7 @@ object CourseEndpoint : Endpoint(
  */
 object CourseEnabledFeaturesEndpoint : Endpoint( response = {
     GET {
-        request.successResponse(listOf<String>()) // Empty string for now.
+        request.successResponse(listOf("assignments_2_student"))
     }
 })
 

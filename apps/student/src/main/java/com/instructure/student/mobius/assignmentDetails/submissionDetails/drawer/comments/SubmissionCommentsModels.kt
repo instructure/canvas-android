@@ -50,12 +50,14 @@ sealed class SubmissionCommentsEffect {
         val assignmentId: Long,
         val assignmentName: String,
         val courseId: Long,
-        val isGroupMessage: Boolean
+        val isGroupMessage: Boolean,
+        val attemptId: Long?
     ) : SubmissionCommentsEffect()
 
     data class ShowFilePicker(
         val canvasContext: CanvasContext,
-        val assignment: Assignment
+        val assignment: Assignment,
+        val attemptId: Long?
     ) : SubmissionCommentsEffect()
 
     data class UploadMediaComment constructor(
@@ -63,7 +65,8 @@ sealed class SubmissionCommentsEffect {
         val assignmentId: Long,
         val assignmentName: String,
         val courseId: Long,
-        val isGroupMessage: Boolean
+        val isGroupMessage: Boolean,
+        val attemptId: Long?
     ) : SubmissionCommentsEffect()
 
     data class RetryCommentUpload(val commentId: Long) : SubmissionCommentsEffect()
@@ -86,10 +89,12 @@ sealed class SubmissionCommentsEffect {
 }
 
 data class SubmissionCommentsModel(
+    val attemptId: Long?,
     val comments: List<SubmissionComment>,
     val submissionHistory: List<Submission>,
     val assignment: Assignment,
     val pendingCommentIds: List<Long> = emptyList(),
     val isFileButtonEnabled: Boolean = true,
-    val showSendButton: Boolean = false
+    val showSendButton: Boolean = false,
+    val assignmentEnhancementsEnabled: Boolean
 )

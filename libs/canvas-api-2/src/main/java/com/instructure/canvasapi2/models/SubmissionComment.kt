@@ -38,7 +38,8 @@ data class SubmissionComment(
     @SerializedName("media_comment")
     val mediaComment: MediaComment? = null,
     val attachments: ArrayList<Attachment> = ArrayList(),
-    val author: Author? = null
+    val author: Author? = null,
+    val attempt: Long? = null
 ) : CanvasComparable<SubmissionComment>(), Parcelable {
 
     override val comparisonDate get() = createdAt

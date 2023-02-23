@@ -23,8 +23,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
@@ -77,11 +75,12 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             assignmentId = 123L,
             assignmentName = "Test Assignment",
             courseId = 123L,
-            isGroupMessage = false
+            isGroupMessage = false,
+            attemptId = 1
         )
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.startMediaCommentUpload(any(), any(), any(), any(), any(), any())
+            SubmissionService.startMediaCommentUpload(any(), any(), any(), any(), any(), any(), any())
         } returns Unit
 
         connection.accept(effect)
@@ -93,7 +92,8 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
                 123L,
                 "Test Assignment",
                 File("test"),
-                false
+                false,
+                1
             )
         }
 
@@ -202,12 +202,13 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             assignmentId = 123L,
             assignmentName = "Test Assignment",
             courseId = 456L,
-            isGroupMessage = false
+            isGroupMessage = false,
+            attemptId = 1
         )
 
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
+            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any(), any())
         } returns Unit
 
         connection.accept(effect)
@@ -220,7 +221,8 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
                 assignmentName = "Test Assignment",
                 message = "Test message",
                 attachments = emptyList(),
-                isGroupMessage = false
+                isGroupMessage = false,
+                attemptId = 1
             )
         }
 
@@ -231,11 +233,11 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
     fun `ShowFilePicker effect results in view calling showFilePicker`() {
         val course = Course(name = "Test Course")
         val assignment = Assignment(name = "Test Assignment")
-        val effect = SubmissionCommentsEffect.ShowFilePicker(course, assignment)
+        val effect = SubmissionCommentsEffect.ShowFilePicker(course, assignment, 1)
         connection.accept(effect)
 
         verify(timeout = 100) {
-            mockView.showFilePicker(course, assignment)
+            mockView.showFilePicker(course, assignment, 1)
         }
 
         confirmVerified(mockView)

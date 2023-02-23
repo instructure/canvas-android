@@ -77,22 +77,23 @@ class SubmissionDetailsFragment :
                 is SubmissionDetailsSharedEvent.SubmissionAttachmentClicked -> {
                     SubmissionDetailsEvent.SubmissionAndAttachmentClicked(it.submission.attempt, it.attachment)
                 }
+                is SubmissionDetailsSharedEvent.SubmissionCommentsUpdated -> SubmissionDetailsEvent.SubmissionCommentsUpdated(it.submissionComments)
             }
         },
         DBSource.ofSingle<Submission, SubmissionDetailsEvent>(
             Db.getInstance(ContextKeeper.appContext)
                 .submissionQueries
                 .getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id ?: -1)
-                ) { submission ->
-                    if (submission?.progress == 100.0) {
-                        // A submission for this assignment was finished - we'll want to reload data
-                        SubmissionDetailsEvent.SubmissionUploadFinished
-                    } else {
-                        // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
-                        null
-                    }
-                }
-        )
+        ) { submission ->
+            if (submission?.progress == 100.0) {
+                // A submission for this assignment was finished - we'll want to reload data
+                SubmissionDetailsEvent.SubmissionUploadFinished
+            } else {
+                // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
+                null
+            }
+        }
+    )
 
     companion object {
         fun makeRoute(course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null): Route {

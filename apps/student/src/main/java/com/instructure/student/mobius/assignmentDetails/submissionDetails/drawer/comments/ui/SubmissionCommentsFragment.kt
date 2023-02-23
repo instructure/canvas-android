@@ -25,8 +25,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.*
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
@@ -42,6 +41,8 @@ class SubmissionCommentsFragment :
 
     private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
     private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
+    private var attemptId by NLongArg(key = Const.SUBMISSION_ATTEMPT)
+    private var assignmentEnhancementsEnabled by BooleanArg(key = Const.ASSIGNMENT_ENHANCEMENTS_ENABLED)
 
     override fun makeEffectHandler() = SubmissionCommentsEffectHandler(requireContext())
     override fun makeUpdate() = SubmissionCommentsUpdate()
@@ -49,9 +50,11 @@ class SubmissionCommentsFragment :
     override fun makePresenter() = SubmissionCommentsPresenter
 
     override fun makeInitModel() = SubmissionCommentsModel(
+        attemptId = attemptId,
         comments = submission.submissionComments,
         submissionHistory = submission.submissionHistory.filterNotNull(),
-        assignment = assignment
+        assignment = assignment,
+        assignmentEnhancementsEnabled = assignmentEnhancementsEnabled
     )
 
     override fun getExternalEventSources() = listOf(
@@ -78,6 +81,8 @@ class SubmissionCommentsFragment :
         fun newInstance(data: SubmissionDetailsTabData.CommentData) = SubmissionCommentsFragment().apply {
             submission = data.submission
             assignment = data.assignment
+            attemptId = data.attemptId
+            assignmentEnhancementsEnabled = data.assignmentEnhancementsEnabled
         }
     }
 }

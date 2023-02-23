@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 
 sealed class SubmissionDetailsSharedEvent {
     data class FileSelected(val file: Attachment) : SubmissionDetailsSharedEvent()
@@ -28,4 +29,5 @@ sealed class SubmissionDetailsSharedEvent {
     ) : SubmissionDetailsSharedEvent()
     object AudioRecordingViewLaunched : SubmissionDetailsSharedEvent()
     object VideoRecordingViewLaunched : SubmissionDetailsSharedEvent()
+    data class SubmissionCommentsUpdated(val submissionComments: List<SubmissionComment>) : SubmissionDetailsSharedEvent()
 }

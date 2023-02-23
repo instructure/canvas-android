@@ -37,7 +37,9 @@ sealed class SubmissionDetailsTabData(val tabName: String) {
     data class CommentData(
         val name: String,
         val assignment: Assignment,
-        val submission: Submission
+        val submission: Submission,
+        val attemptId: Long?,
+        val assignmentEnhancementsEnabled: Boolean
     ) : SubmissionDetailsTabData(name)
     data class FileData(
         val name: String,
