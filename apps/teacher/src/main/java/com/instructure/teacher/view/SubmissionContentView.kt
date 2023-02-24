@@ -19,8 +19,6 @@ package com.instructure.teacher.view
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -28,6 +26,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -43,6 +42,7 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -54,7 +54,10 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.binding.BindableSpinnerAdapter
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
@@ -65,7 +68,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
-import com.instructure.teacher.dialog.RadioButtonDialog
 import com.instructure.teacher.events.RationedBusEvent
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.fragments.*
@@ -86,6 +88,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
+import java.text.DateFormat
 import java.util.*
 
 @SuppressLint("ViewConstructor")
@@ -125,6 +128,9 @@ class SubmissionContentView(
 
     val hasUnsavedChanges: Boolean
         get() = mGradeFragment.hasUnsavedChanges
+
+    private var selectedSubmission: Submission? = null
+    private var assignmentEnhancementsEnabled = false
 
     override fun showNoInternetDialog() {
         NoInternetConnectionDialog.show(supportFragmentManager)
@@ -233,6 +239,8 @@ class SubmissionContentView(
                         )
                     }
                 }
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(mCourse.id, true).await().dataOrNull
+                assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
                 mStudentSubmission.isCached = true
             }
             setup()
@@ -310,7 +318,7 @@ class SubmissionContentView(
 
     //region private helpers
     private fun setSubmission(submission: Submission?) {
-        if (submission != null) submissionVersionsButton.text = submission.submittedAt.getSubmissionFormattedDate(context)
+        selectedSubmission = submission
         val content = when {
             SubmissionType.NONE.apiString in mAssignment.submissionTypesRaw -> NoneContent
             SubmissionType.ON_PAPER.apiString in mAssignment.submissionTypesRaw -> OnPaperContent
@@ -411,23 +419,37 @@ class SubmissionContentView(
     }
 
     private fun setupSubmissionVersions(unsortedSubmissions: List<Submission>?) {
-        if (unsortedSubmissions == null) return
-        when (unsortedSubmissions.size) {
-            0 -> submissionVersionsButton.setGone()
-            1 -> submissionVersionsButton.setVisible().background = ColorDrawable(Color.TRANSPARENT)
-            else -> unsortedSubmissions.sortedByDescending { it.submittedAt }.let { submissions ->
-                val submissionDates = submissions.map { it.submittedAt.getSubmissionFormattedDate(context) }
-                submissionVersionsButton.onClickWithRequireNetwork {
-                    val dialog = RadioButtonDialog.getInstance(supportFragmentManager, resources.getString(R.string.submission_versions), submissionDates as ArrayList,
-                            submissionDates.indexOf(submissionVersionsButton.text.toString())) { selectedIdx ->
-                        EventBus.getDefault().post(SubmissionSelectedEvent(submissions[selectedIdx]))
-                    }
-                    dialog.show(supportFragmentManager, RadioButtonDialog::class.java.simpleName)
+        if (unsortedSubmissions.isNullOrEmpty()) {
+            submissionVersionsSpinner.setGone()
+        } else {
+            unsortedSubmissions.sortedByDescending { it.submittedAt }.let { submissions ->
+                val itemViewModels = submissions.mapIndexed { index, submission ->
+                    AssignmentDetailsAttemptItemViewModel(
+                        AssignmentDetailsAttemptViewData(
+                            context.getString(R.string.attempt, unsortedSubmissions.size - index),
+                            submission.submittedAt?.let { getFormattedAttemptDate(it) }.orEmpty()
+                        )
+                    )
                 }
-                submissionVersionsButton.setVisible()
+                submissionVersionsSpinner.adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
+                submissionVersionsSpinner.setSelection(0, false)
+                submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        EventBus.getDefault().post(SubmissionSelectedEvent(submissions[position]))
+                    }
+                }
+                submissionVersionsSpinner.setVisible()
+                submissionVersionsSpinner.isEnabled = submissions.size > 1
             }
         }
     }
+
+    private fun getFormattedAttemptDate(date: Date): String = DateFormat.getDateTimeInstance(
+        DateFormat.MEDIUM,
+        DateFormat.SHORT,
+        Locale.getDefault()
+    ).format(date)
 
     private fun setupToolbar(assignee: Assignee) {
         speedGraderToolbar.setupBackButton {
@@ -639,17 +661,17 @@ class SubmissionContentView(
                     @Suppress("NON_EXHAUSTIVE_WHEN") //we don't want to update for all states, just these three
                     when (newState) {
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
-                            submissionVersionsButton?.isClickable = true
+                            submissionVersionsSpinner?.isClickable = true
                             postPanelEvent(newState, 0.5f)
                             contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                         }
                         SlidingUpPanelLayout.PanelState.EXPANDED -> {
-                            submissionVersionsButton?.isClickable = false
+                            submissionVersionsSpinner?.isClickable = false
                             postPanelEvent(newState, 1.0f)
                             contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                         }
                         SlidingUpPanelLayout.PanelState.COLLAPSED -> {
-                                submissionVersionsButton?.isClickable = true
+                            submissionVersionsSpinner?.isClickable = true
                             //fix for rotating when the panel is collapsed
                             pdfFragment?.notifyLayoutChanged()
                             postPanelEvent(newState, 0.0f)
@@ -689,7 +711,8 @@ class SubmissionContentView(
                         mCourse.id,
                         mAssignment.id,
                         mAssignment.groupCategoryId > 0 && mAssignee is GroupAssignee,
-                        mAssignment.anonymousGrading
+                        mAssignment.anonymousGrading,
+                        assignmentEnhancementsEnabled
                 ))
                 .add(SpeedGraderFilesFragment.newInstance(mRootSubmission))
                 .setFileCount(mRootSubmission?.attachments?.size ?: 0)
@@ -744,7 +767,7 @@ class SubmissionContentView(
         floatingRecordingView.startVideoView()
         floatingRecordingView.recordingCallback = {
             it?.let {
-                EventBus.getDefault().post(UploadMediaCommentEvent(it, mAssignment.id, mAssignment.courseId, mAssignee.id))
+                EventBus.getDefault().post(UploadMediaCommentEvent(it, mAssignment.id, mAssignment.courseId, mAssignee.id, selectedSubmission?.attempt))
             }
         }
         floatingRecordingView.stoppedCallback = {
@@ -767,7 +790,7 @@ class SubmissionContentView(
         }
         floatingRecordingView.recordingCallback = {
             it?.let {
-                EventBus.getDefault().post(UploadMediaCommentEvent(it, mAssignment.id, mAssignment.courseId, mAssignee.id))
+                EventBus.getDefault().post(UploadMediaCommentEvent(it, mAssignment.id, mAssignment.courseId, mAssignee.id, selectedSubmission?.attempt))
             }
         }
     }
@@ -951,7 +974,7 @@ class AnnotationCommentEdited(val annotation: CanvaDocAnnotation, val assigneeId
 class AnnotationCommentDeleted(val annotation: CanvaDocAnnotation, val isHeadAnnotation: Boolean, val assigneeId: Long)
 class AnnotationCommentDeleteAcknowledged(val annotationList: List<CanvaDocAnnotation>, val assigneeId: Long)
 class TabSelectedEvent(val selectedTabIdx: Int)
-class UploadMediaCommentEvent(val file: File, val assignmentId: Long, val courseId: Long, val assigneeId: Long)
+class UploadMediaCommentEvent(val file: File, val assignmentId: Long, val courseId: Long, val assigneeId: Long, val attemptId: Long?)
 
 
 sealed class GradeableContent

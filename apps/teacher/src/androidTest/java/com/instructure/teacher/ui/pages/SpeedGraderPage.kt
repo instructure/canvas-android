@@ -30,7 +30,7 @@ import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
-import java.util.Locale
+import java.util.*
 
 @Suppress("unused")
 class SpeedGraderPage : BasePage() {
@@ -42,23 +42,12 @@ class SpeedGraderPage : BasePage() {
     private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault()))
     private val commentsTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_comments).uppercase(Locale.getDefault()))
 
-    private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsButton)
+    private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsSpinner)
     private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
     private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
 
     fun assertHasSubmissionDropDown() {
         submissionDropDown.assertDisplayed()
-    }
-
-    fun assertSubmissionDialogDisplayed() {
-        submissionVersionDialogTitle.assertDisplayed()
-    }
-
-    fun openSubmissionsDialog() {
-        ClickUntilMethod.run(
-                onView(withId(R.id.submissionVersionsButton)),
-                onView(withText(R.string.submission_versions))
-        )
     }
 
     fun selectGradesTab() {

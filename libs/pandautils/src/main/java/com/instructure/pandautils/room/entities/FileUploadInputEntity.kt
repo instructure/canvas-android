@@ -18,4 +18,5 @@ data class FileUploadInputEntity(
     val attachments: List<Long> = emptyList(),
     val submissionId: Long? = null,
     var filePaths: List<String>,
+    val attemptId: Long? = null
 )

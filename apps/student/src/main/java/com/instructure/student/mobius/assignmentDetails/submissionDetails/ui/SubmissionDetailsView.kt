@@ -38,11 +38,11 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.binding.BindableSpinnerAdapter
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
-import com.instructure.student.features.assignmentdetails.AssignmentDetailAttemptViewData
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
@@ -215,7 +215,7 @@ class SubmissionDetailsView(
     private fun setupSubmissionVersionSpinner(submissions: List<Pair<Long, String>>, selectedIdx: Int) {
         val itemViewModels = submissions.mapIndexed { index, submission ->
             AssignmentDetailsAttemptItemViewModel(
-                AssignmentDetailAttemptViewData(
+                AssignmentDetailsAttemptViewData(
                     context.getString(R.string.attempt, submissions.size - index),
                     submission.second
                 )
