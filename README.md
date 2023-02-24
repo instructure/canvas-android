@@ -68,7 +68,7 @@ SoSeedyGRPC  | gRPC server for using data seeding with iOS from Xcode
 Foosball     | A Foosball Application created and used interally to boost fun by over 120%.
 Login-Api    | *Deprecated* - The Library used to making logging in and getting a token relatively easy. (deprecated)
 Login-Api-2  | The libarary used to make logging in and getting a token relative easy and is testable.
-PandaUtils   | The core library for new features affecting both the Student and Teacher apps.
+PandaUtils   | The core library for new features in the Student and Teacher apps.
 PandaRecyclerView | A fancy RecyclerView library that supports expanding and collapsing, pagination, and stuff like that.
 Rceditor     | A wrapper for rich content editing used in Canvas Teacher.
 
