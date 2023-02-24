@@ -105,7 +105,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     var mAssignmentId by LongArg()
     var mIsGroupMessage by BooleanArg()
     var mGradeAnonymously by BooleanArg()
-    var mAssignmentEnhancementsEnabled by BooleanArg()
+    var assignmentEnhancementsEnabled by BooleanArg()
 
     var changeCommentFieldExternallyFlag = false
 
@@ -132,7 +132,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         pendingSubmissionCommentDao,
         fileUploadInputDao,
         mSubmission.attempt,
-        mAssignmentEnhancementsEnabled
+        assignmentEnhancementsEnabled
     )
     override fun onCreateView(view: View) {
         commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
@@ -362,7 +362,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
             putExtra(Const.PAGE_ID, presenter.mPageId)
             putExtra(Const.ID, dbId)
-            putExtra(Const.SUBMISSION_ATTEMPT, attemptId.takeIf { mAssignmentEnhancementsEnabled })
+            putExtra(Const.SUBMISSION_ATTEMPT, attemptId.takeIf { assignmentEnhancementsEnabled })
         }
 
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)
@@ -393,7 +393,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             mAssignmentId = assignmentId
             mIsGroupMessage = isGroupMessage
             mGradeAnonymously = gradeAnonymously
-            mAssignmentEnhancementsEnabled = assignmentEnhancementsEnabled
+            this.assignmentEnhancementsEnabled = assignmentEnhancementsEnabled
         }
     }
 
