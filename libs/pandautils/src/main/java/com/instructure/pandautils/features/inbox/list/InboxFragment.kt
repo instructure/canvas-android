@@ -98,6 +98,8 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private var touchCallback: ItemTouchHelper.SimpleCallback? = null
 
+    private var confirmationSnackbar: Snackbar? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -340,21 +342,22 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             InboxAction.RefreshFailed -> Snackbar.make(requireView(), R.string.conversationsRefreshFailed, Snackbar.LENGTH_LONG).show()
             is InboxAction.ConfirmDelete -> deleteSelected(action.count)
             is InboxAction.AvatarClickedCallback -> inboxRouter.avatarClicked(action.conversation, action.scope)
+            InboxAction.DismissSnackbar -> confirmationSnackbar?.dismiss()
         }
     }
 
     private fun showConfirmation(action: InboxAction.ShowConfirmationSnackbar) {
-        val snackbar = Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG)
+        confirmationSnackbar = Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG)
 
         if (action.undoAction != null) {
-            snackbar
-                .setActionTextColor(ThemePrefs.textButtonColor)
-                .setAction(R.string.inboxUndo) {
+            confirmationSnackbar
+                ?.setActionTextColor(ThemePrefs.textButtonColor)
+                ?.setAction(R.string.inboxUndo) {
                     action.undoAction.invoke()
                 }
         }
 
-        snackbar.show()
+        confirmationSnackbar?.show()
     }
 
     private fun animateAvatar(view: View, selected: Boolean) {

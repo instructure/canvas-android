@@ -231,6 +231,7 @@ class InboxViewModel @Inject constructor(
             _state.postValue(ViewState.Loading)
             _data.value = _data.value?.copy(scope = getTextForScope(scope))
             _itemViewModels.postValue(emptyList())
+            _events.value = Event(InboxAction.DismissSnackbar)
             fetchData()
         }
     }
@@ -382,6 +383,7 @@ class InboxViewModel @Inject constructor(
         _data.value = _data.value?.copy(filterText = filterTitle)
         _state.postValue(ViewState.Loading)
         _itemViewModels.postValue(emptyList())
+        _events.value = Event(InboxAction.DismissSnackbar)
         fetchData()
     }
 

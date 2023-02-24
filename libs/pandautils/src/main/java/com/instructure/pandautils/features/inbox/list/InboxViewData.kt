@@ -59,4 +59,5 @@ sealed class InboxAction {
     object RefreshFailed : InboxAction()
     data class ConfirmDelete(val count: Int) : InboxAction()
     data class AvatarClickedCallback(val conversation: Conversation, val scope: InboxApi.Scope) : InboxAction()
+    object DismissSnackbar : InboxAction()
 }
