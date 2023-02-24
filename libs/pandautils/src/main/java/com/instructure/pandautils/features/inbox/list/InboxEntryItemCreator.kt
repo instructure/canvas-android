@@ -32,7 +32,7 @@ class InboxEntryItemCreator(private val context: Context, private val apiPrefs: 
 
     fun createInboxEntryItem(
         conversation: Conversation,
-        openConversationCallback: (Boolean) -> Unit,
+        openConversationCallback: (Boolean, Boolean) -> Unit,
         selectionModeCallback: (View, Boolean) -> Unit,
         avatarClickedCallback: (Boolean) -> Unit
     ): InboxEntryItemViewModel {

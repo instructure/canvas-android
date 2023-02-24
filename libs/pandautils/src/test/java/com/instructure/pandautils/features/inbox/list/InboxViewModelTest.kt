@@ -35,6 +35,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -90,7 +91,7 @@ class InboxViewModelTest {
 
     private fun createItem(conversation: Conversation, openConversation: Any?, selectionCallback: Any?, avatarCallback: Any?, starred: Boolean = false, unread: Boolean = false): InboxEntryItemViewModel {
         val viewData = InboxEntryViewData(id = conversation.id, AvatarViewData("", "", false), "", "", "", "", unread, starred, false)
-        return InboxEntryItemViewModel(viewData, openConversation as (Boolean) -> Unit, selectionCallback as (View, Boolean) -> Unit, avatarCallback as (Boolean) -> Unit)
+        return InboxEntryItemViewModel(viewData, openConversation as (Boolean, Boolean) -> Unit, selectionCallback as (View, Boolean) -> Unit, avatarCallback as (Boolean) -> Unit)
     }
 
     @After
@@ -650,18 +651,28 @@ class InboxViewModelTest {
     }
 
     @Test
-    fun `Don't remove swiped items from the list when archived if we are in starred scope`() {
+    fun `Undoing archived conversation keeps it in the list`() {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
             DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
         )
 
         viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever(Observer {
+            events.add(it)
+        })
         viewModel.data.observe(lifecycleOwner) {}
-        viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.archiveConversation(1)
 
+        val snackbarEvent = events.find { it.peekContent() is InboxAction.ShowConfirmationSnackbar }?.peekContent() as InboxAction.ShowConfirmationSnackbar
+        snackbarEvent.undoAction!!.invoke()
+
         assertEquals(2, viewModel.itemViewModels.value!!.size)
-        coVerify { inboxRepository.updateConversation(1, Conversation.WorkflowState.ARCHIVED) }
+        coVerifyOrder {
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.ARCHIVED)
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.READ)
+        }
     }
 
     @Test
@@ -701,6 +712,34 @@ class InboxViewModelTest {
     }
 
     @Test
+    fun `Undoing mark conversation as read in unread scope keeps it in the list`() {
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
+        )
+
+        viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever(Observer {
+            events.add(it)
+        })
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.scopeChanged(InboxApi.Scope.UNREAD)
+        viewModel.markConversationAsRead(1)
+
+        val snackbarEvent = events.find { it.peekContent() is InboxAction.ShowConfirmationSnackbar }?.peekContent() as InboxAction.ShowConfirmationSnackbar
+        snackbarEvent.undoAction!!.invoke()
+
+        assertEquals(2, viewModel.itemViewModels.value!!.size)
+        coVerifyOrder {
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.READ)
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.UNREAD)
+        }
+    }
+
+    @Test
     fun `Update conversation when marked as unread`() {
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = false) }
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
@@ -737,6 +776,34 @@ class InboxViewModelTest {
     }
 
     @Test
+    fun `Undoing mark conversation as unread in archived scope keeps it in the list`() {
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = false) }
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
+        )
+
+        viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever(Observer {
+            events.add(it)
+        })
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
+        viewModel.markConversationAsUnread(1)
+
+        val snackbarEvent = events.find { it.peekContent() is InboxAction.ShowConfirmationSnackbar }?.peekContent() as InboxAction.ShowConfirmationSnackbar
+        snackbarEvent.undoAction!!.invoke()
+
+        assertEquals(2, viewModel.itemViewModels.value!!.size)
+        coVerifyOrder {
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.UNREAD)
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.ARCHIVED)
+        }
+    }
+
+    @Test
     fun `Remove conversation when unstarred`() {
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], starred = true) }
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
@@ -756,6 +823,34 @@ class InboxViewModelTest {
     }
 
     @Test
+    fun `Undoing unstar conversation keeps it in the list and makes it starred`() {
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], starred = true) }
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
+        )
+
+        viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever(Observer {
+            events.add(it)
+        })
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.scopeChanged(InboxApi.Scope.STARRED)
+        viewModel.unstarConversation(1)
+
+        val snackbarEvent = events.find { it.peekContent() is InboxAction.ShowConfirmationSnackbar }?.peekContent() as InboxAction.ShowConfirmationSnackbar
+        snackbarEvent.undoAction!!.invoke()
+
+        assertEquals(2, viewModel.itemViewModels.value!!.size)
+        coVerifyOrder {
+            inboxRepository.updateConversation(1, null, false)
+            inboxRepository.updateConversation(1, null, true)
+        }
+    }
+
+    @Test
     fun `Remove conversation when unarchived`() {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
             DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
@@ -771,6 +866,33 @@ class InboxViewModelTest {
         assertEquals(1, viewModel.itemViewModels.value!!.size)
         assertEquals(2, viewModel.itemViewModels.value!![0].data.id)
         coVerify { inboxRepository.updateConversation(1, Conversation.WorkflowState.READ, any()) }
+    }
+
+    @Test
+    fun `Undoing unarchive conversation keeps it in the list and makes it archived`() {
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
+        )
+
+        viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever(Observer {
+            events.add(it)
+        })
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.scopeChanged(InboxApi.Scope.STARRED)
+        viewModel.unarchiveConversation(1)
+
+        val snackbarEvent = events.find { it.peekContent() is InboxAction.ShowConfirmationSnackbar }?.peekContent() as InboxAction.ShowConfirmationSnackbar
+        snackbarEvent.undoAction!!.invoke()
+
+        assertEquals(2, viewModel.itemViewModels.value!!.size)
+        coVerifyOrder {
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.READ, any())
+            inboxRepository.updateConversation(1, Conversation.WorkflowState.ARCHIVED, any())
+        }
     }
 
     private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)

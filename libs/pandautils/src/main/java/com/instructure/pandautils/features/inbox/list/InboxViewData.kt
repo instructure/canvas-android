@@ -51,7 +51,7 @@ sealed class InboxAction {
     data class OpenConversation(val conversation: Conversation, val scope: InboxApi.Scope) : InboxAction()
     object OpenScopeSelector : InboxAction()
     data class ItemSelectionChanged(val view: View, val selected: Boolean) : InboxAction()
-    data class ShowConfirmationSnackbar(val text: String) : InboxAction()
+    data class ShowConfirmationSnackbar(val text: String, val undoAction: (() -> Unit)? = null) : InboxAction()
     object CreateNewMessage : InboxAction()
     object FailedToLoadNextPage : InboxAction()
     object UpdateUnreadCount : InboxAction()
@@ -59,4 +59,5 @@ sealed class InboxAction {
     object RefreshFailed : InboxAction()
     data class ConfirmDelete(val count: Int) : InboxAction()
     data class AvatarClickedCallback(val conversation: Conversation, val scope: InboxApi.Scope) : InboxAction()
+    object DismissSnackbar : InboxAction()
 }
