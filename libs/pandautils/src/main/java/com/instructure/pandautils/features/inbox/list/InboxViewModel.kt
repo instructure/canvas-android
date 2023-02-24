@@ -147,8 +147,9 @@ class InboxViewModel @Inject constructor(
     private fun createItemViewModelFromConversation(conversation: Conversation): InboxEntryItemViewModel {
         return inboxEntryItemCreator.createInboxEntryItem(
             conversation,
-            openConversationCallback = { starred ->
-                _events.value = Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope))
+            openConversationCallback = { starred, unread ->
+                val workflowState = if (unread) Conversation.WorkflowState.UNREAD else conversation.workflowState
+                _events.value = Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred, workflowState = workflowState), scope))
             },
             selectionModeCallback = { view, selected ->
                 _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))

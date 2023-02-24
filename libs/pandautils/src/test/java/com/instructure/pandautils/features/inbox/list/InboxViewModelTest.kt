@@ -91,7 +91,7 @@ class InboxViewModelTest {
 
     private fun createItem(conversation: Conversation, openConversation: Any?, selectionCallback: Any?, avatarCallback: Any?, starred: Boolean = false, unread: Boolean = false): InboxEntryItemViewModel {
         val viewData = InboxEntryViewData(id = conversation.id, AvatarViewData("", "", false), "", "", "", "", unread, starred, false)
-        return InboxEntryItemViewModel(viewData, openConversation as (Boolean) -> Unit, selectionCallback as (View, Boolean) -> Unit, avatarCallback as (Boolean) -> Unit)
+        return InboxEntryItemViewModel(viewData, openConversation as (Boolean, Boolean) -> Unit, selectionCallback as (View, Boolean) -> Unit, avatarCallback as (Boolean) -> Unit)
     }
 
     @After
