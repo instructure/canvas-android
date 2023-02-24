@@ -17,7 +17,6 @@
 package com.instructure.teacher.presenters
 
 import androidx.work.WorkInfo
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
@@ -34,7 +33,6 @@ import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.pandautils.room.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.model.SubmissionCommentWithAttachments
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
@@ -60,12 +58,12 @@ class SpeedGraderCommentsPresenter(
     val mediaCommentDao: MediaCommentDao,
     val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
     val fileUploadInputDao: FileUploadInputDao,
-    var selectedAttemptId: Long?
+    var selectedAttemptId: Long?,
+    val assignmentEnhancementsEnabled: Boolean
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
     var selectedFilePaths: List<String>? = null
-    var assignmentEnhancementsEnabled = false
 
     private val comments = rawComments.map { CommentWrapper(it) }.toMutableList()
     private var fileUploadJob: Job? = null
@@ -84,9 +82,6 @@ class SpeedGraderCommentsPresenter(
         if (forceNetwork) {
             // Grab new submission comments
             tryWeave {
-                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(courseId, true).await().dataOrNull
-                assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
-
                 // Get updated submission
                 val updatedSubmission: Submission = awaitApi {
                     SubmissionManager.getSingleSubmission(courseId, assignmentId, assignee.id, it, true)

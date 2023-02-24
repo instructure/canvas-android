@@ -105,6 +105,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     var mAssignmentId by LongArg()
     var mIsGroupMessage by BooleanArg()
     var mGradeAnonymously by BooleanArg()
+    var mAssignmentEnhancementsEnabled by BooleanArg()
 
     var changeCommentFieldExternallyFlag = false
 
@@ -130,7 +131,8 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         mediaCommentDao,
         pendingSubmissionCommentDao,
         fileUploadInputDao,
-        mSubmission.attempt
+        mSubmission.attempt,
+        mAssignmentEnhancementsEnabled
     )
     override fun onCreateView(view: View) {
         commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
@@ -360,7 +362,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
             putExtra(Const.PAGE_ID, presenter.mPageId)
             putExtra(Const.ID, dbId)
-            putExtra(Const.SUBMISSION_ATTEMPT, attemptId.takeIf { presenter.assignmentEnhancementsEnabled })
+            putExtra(Const.SUBMISSION_ATTEMPT, attemptId.takeIf { mAssignmentEnhancementsEnabled })
         }
 
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)
@@ -379,7 +381,8 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                 courseId: Long,
                 assignmentId: Long,
                 isGroupMessage: Boolean,
-                gradeAnonymously: Boolean
+                gradeAnonymously: Boolean,
+                assignmentEnhancementsEnabled: Boolean
         ) = SpeedGraderCommentsFragment().apply {
             mSubmission = submission ?: Submission()
             mRawComments = ArrayList(submission?.submissionComments ?: emptyList())
@@ -390,6 +393,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             mAssignmentId = assignmentId
             mIsGroupMessage = isGroupMessage
             mGradeAnonymously = gradeAnonymously
+            mAssignmentEnhancementsEnabled = assignmentEnhancementsEnabled
         }
     }
 

@@ -42,6 +42,7 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -129,6 +130,7 @@ class SubmissionContentView(
         get() = mGradeFragment.hasUnsavedChanges
 
     private var selectedSubmission: Submission? = null
+    private var assignmentEnhancementsEnabled = false
 
     override fun showNoInternetDialog() {
         NoInternetConnectionDialog.show(supportFragmentManager)
@@ -237,6 +239,8 @@ class SubmissionContentView(
                         )
                     }
                 }
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(mCourse.id, true).await().dataOrNull
+                assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
                 mStudentSubmission.isCached = true
             }
             setup()
@@ -707,7 +711,8 @@ class SubmissionContentView(
                         mCourse.id,
                         mAssignment.id,
                         mAssignment.groupCategoryId > 0 && mAssignee is GroupAssignee,
-                        mAssignment.anonymousGrading
+                        mAssignment.anonymousGrading,
+                        assignmentEnhancementsEnabled
                 ))
                 .add(SpeedGraderFilesFragment.newInstance(mRootSubmission))
                 .setFileCount(mRootSubmission?.attachments?.size ?: 0)

@@ -37,7 +37,8 @@ class SpeedGraderCommentsPresenterFactory(
         val mediaCommentDao: MediaCommentDao,
         val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
         val fileUploadInputDao: FileUploadInputDao,
-        val selectedAttemptId: Long
+        val selectedAttemptId: Long,
+        val assignmentEnhancementsEnabled: Boolean
 ) : PresenterFactory<SpeedGraderCommentsView, SpeedGraderCommentsPresenter> {
         override fun create() = SpeedGraderCommentsPresenter(
                 rawComments,
@@ -52,6 +53,7 @@ class SpeedGraderCommentsPresenterFactory(
                 mediaCommentDao,
                 pendingSubmissionCommentDao,
                 fileUploadInputDao,
-                selectedAttemptId
+                selectedAttemptId,
+                assignmentEnhancementsEnabled
         )
 }
