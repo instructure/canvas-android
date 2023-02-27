@@ -41,7 +41,7 @@
 
     <instrumentation
         android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
-        android:targetPackage="com.instructure.candroid" />
+        android:targetPackage="com.emeritus.candroid" />
 
     <uses-feature
         android:name="android.hardware.camera"
