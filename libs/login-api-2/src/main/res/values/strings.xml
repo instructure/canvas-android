@@ -44,7 +44,7 @@
     <string name="removedForever">You\'ll have to sign into this user again to access their content.</string>
 
     <!--Content Descriptions-->
-    <string name="canvasLogo">Canvas Logo</string>
+    <string name="canvasLogo">Emeritus Logo</string>
 
     <string name="canvasLoginOn">Canvas_Login: ON</string>
     <string name="canvasLoginOff">Canvas_Login: OFF</string>
