@@ -24,7 +24,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
-    if ( System.getenv("IS_TESTING") == "true" ) {
+    if (System.getenv("IS_TESTING") == "true") {
         "true"
     } else {
         "false"
@@ -48,12 +48,14 @@ android {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
+        buildConfigField "String", "BASE_URL", "\"https://canvas-test.emeritus.org\""
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"https://classroom.emeritus.org\""
         }
     }
 
@@ -69,9 +71,9 @@ androidExtensions {
 apollo {
     useJavaBeansSemanticNaming = true
     customTypeMapping = [
-            "URL" : "java.lang.String",
+            "URL"     : "java.lang.String",
             "DateTime": "java.util.Date",
-            "ID"  : "java.lang.String"
+            "ID"      : "java.lang.String"
     ]
 }
 
@@ -108,10 +110,10 @@ dependencies {
     api(Libs.APOLLO_RUNTIME) {
         exclude module: 'okhttp'
     }
-    api (Libs.APOLLO_ANDROID_SUPPORT) {
+    api(Libs.APOLLO_ANDROID_SUPPORT) {
         exclude module: 'okhttp'
     }
-    implementation (Libs.APOLLO_HTTP_CACHE) {
+    implementation(Libs.APOLLO_HTTP_CACHE) {
         exclude module: 'okhttp'
     }
 

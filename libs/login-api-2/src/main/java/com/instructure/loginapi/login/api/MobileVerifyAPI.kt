@@ -16,6 +16,7 @@
  */
 package com.instructure.loginapi.login.api
 
+import com.instructure.canvasapi2.BuildConfig
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.utils.APIHelper.paramIsNull
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -56,7 +57,7 @@ object MobileVerifyAPI {
             val baseUrl = if (mobileVerifyBetaEnabled && domain?.contains(".beta.") == true) {
                 "https://canvas.beta.instructure.com/api/v1/"
             } else {
-                "https://canvas.instructure.com/api/v1/"
+                "${BuildConfig.BASE_URL}/api/v1/"
 //                "https://canvas-test.emeritus.org/api/v1/"
             }
 

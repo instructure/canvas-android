@@ -18,7 +18,7 @@
 
 <resources>
 
-    <string name="student_app_name" translatable="false">Emeritus Classroom</string>
+<!--    <string name="student_app_name" translatable="false">Emeritus Classroom</string>-->
 
     <string name="patched_appbar_scrolling_view_behavior" translatable="false">com.emeritus.student.view.PatchedScrollingViewBehavior</string>
 

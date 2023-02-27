@@ -53,6 +53,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs.protocol
 import com.instructure.canvasapi2.utils.ApiPrefs.refreshToken
 import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.Logger.d
+import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.api.MobileVerifyAPI.mobileVerify
@@ -374,19 +375,17 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
 
     private fun loadLoginWeb() {
-        var apiProtocol1 = "https"
-        var domain1 = "canvas-test.emeritus.org"
-        apiProtocol1 = "https"
+        var apiProtocol1 = BuildConfig.PROTOCOL
+        var domain1 = BuildConfig.DOMAIN
 
-        clientId = "10000000000024"
-        clientSecret =
-            "mFw7IJFwGOgzjq1mEBewi9sIlCY8oDYvyyzdjAP1rU71lRRA6u2NyX7Td8f0Skq1"
+
+        clientId = BuildConfig.CLIENT_ID
+        clientSecret = BuildConfig.CLIENT_SECRET
         accountDomain.domain = domain1
         //End - debug setting urls
 
         buildAuthenticationUrl(
             apiProtocol1,
-            //                        AccountDomain(domain = "canvas-test.emeritus.org"),
             accountDomain,
             clientId,
             false
@@ -409,7 +408,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
     }
 
-    protected fun loadAuthenticationUrl(apiProtocol: String, domain: String?) {
+    protected fun
+            loadAuthenticationUrl(apiProtocol: String, domain: String?) {
         if (canvasLogin == CANVAS_LOGIN_FLOW) {
             authenticationURL += "&canvas_login=1"
         } else if (canvasLogin == MASQUERADE_FLOW) {
@@ -470,10 +470,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             //Skip mobile verify
             builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
         } else {
+
 //            builder.appendQueryParameter("redirect_uri", "https://canvas.instructure.com/login/oauth2/auth")
             builder.appendQueryParameter(
                 "redirect_uri",
-                "https://canvas-test.emeritus.org/login/canvas"
+                "${BuildConfig.BASE_URL}/login/canvas"
             )
         }
 

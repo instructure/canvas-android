@@ -47,6 +47,11 @@ android {
         /* BuildConfig Fields */
         buildConfigField "boolean", "IS_TESTING", isTesting()
         buildConfigField "String", "ANONYMOUS_SCHOOL_DOMAIN", "\"$anonymousSchoolDomain\""
+        buildConfigField "String", "PROTOCOL", "\"https\""
+        buildConfigField "String", "DOMAIN", "\"canvas-test.emeritus.org\""
+        buildConfigField "String", "BASE_URL", "\"https://canvas-test.emeritus.org\""
+        buildConfigField "String", "CLIENT_ID", "\"10000000000024\""
+        buildConfigField "String", "CLIENT_SECRET", "\"mFw7IJFwGOgzjq1mEBewi9sIlCY8oDYvyyzdjAP1rU71lRRA6u2NyX7Td8f0Skq1\""
     }
 
     buildTypes {
@@ -59,6 +64,12 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            buildConfigField "String", "PROTOCOL", "\"https\""
+            buildConfigField "String", "DOMAIN", "\"classroom.emeritus.org\""
+            buildConfigField "String", "BASE_URL", "\"https://classroom.emeritus.org\""
+            buildConfigField "String", "CLIENT_ID", "\"10000000000011\""
+            buildConfigField "String", "CLIENT_SECRET", "\"03POWNLXCBJLcVybUWzjbPtKBQqeZiVeeyHWtrnUgVk8KhiHtzb3z2MP3uKJrAKh\""
         }
     }
 

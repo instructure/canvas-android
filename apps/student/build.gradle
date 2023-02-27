@@ -55,8 +55,8 @@ android {
         applicationId "com.emeritus.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 248
-        versionName = '6.22.0'
+        versionCode = 100
+        versionName = '0.0.1'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -109,6 +109,7 @@ android {
     buildTypes {
 
         debug {
+            applicationIdSuffix ".debug"
             testCoverageEnabled = coverageEnabled
             debuggable true
             minifyEnabled false
@@ -127,20 +128,20 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
-
+            resValue "string", "student_app_name", "Emeritus Student (Debug)"
             ext {
                 heapEnabled = true
             }
         }
 
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             debuggable false
             minifyEnabled true
             shrinkResources true
             buildConfigField 'boolean', 'IS_DEBUG', 'false'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-
+            resValue "string", "student_app_name", "Emeritus Student"
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
             }
