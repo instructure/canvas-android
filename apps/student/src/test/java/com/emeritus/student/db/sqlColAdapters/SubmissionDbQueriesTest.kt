@@ -23,8 +23,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.emeritus.student.FileSubmissionQueries
 import com.emeritus.student.Submission
 import com.emeritus.student.SubmissionQueries
-import com.instructure.student.db.Db
-import com.instructure.student.db.Schema
+import com.emeritus.student.db.Db
+import com.emeritus.student.db.Schema
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import org.junit.After
 import org.junit.Assert

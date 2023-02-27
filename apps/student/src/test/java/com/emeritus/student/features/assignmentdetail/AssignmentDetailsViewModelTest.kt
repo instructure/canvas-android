@@ -40,9 +40,9 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.student.db.StudentDb
-import com.instructure.student.features.assignmentdetails.AssignmentDetailAction
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsViewModel
-import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import com.emeritus.student.features.assignmentdetails.AssignmentDetailAction
+import com.emeritus.student.features.assignmentdetails.AssignmentDetailsViewModel
+import com.emeritus.student.features.assignmentdetails.gradecellview.GradeCellViewData
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

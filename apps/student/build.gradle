@@ -260,7 +260,7 @@ dependencies {
     implementation project(path: ':DocumentScanner')
 
     /* Flutter embed */
-    implementation (project(path: ':flutter-student-embed')) {
+    implementation(project(path: ':flutter-student-embed')) {
         exclude group: 'com.google.firebase'
         exclude group: 'com.google.android.gms'
     }
@@ -286,7 +286,7 @@ dependencies {
     }
     implementation Libs.FIREBASE_MESSAGING
     implementation Libs.FIREBASE_CRASHLYTICS_NDK
-    implementation (Libs.FIREBASE_CRASHLYTICS) {
+    implementation(Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
 
@@ -393,8 +393,8 @@ if (coverageEnabled) {
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
             html.enabled true
-            csv.enabled  false
-            xml.enabled  false
+            csv.enabled false
+            xml.enabled false
         }
     }
 
