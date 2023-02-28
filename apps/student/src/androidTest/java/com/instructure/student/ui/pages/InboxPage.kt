@@ -154,8 +154,8 @@ class InboxPage : BasePage(R.id.inboxPage) {
         else if(visibility == ViewMatchers.Visibility.GONE) {
             onView(matcher).check(matches(not(isDisplayed())))
         }
-
     }
+
     fun assertUnreadMarkerVisibility(subject: String, visibility: ViewMatchers.Visibility) {
         val matcher = allOf(
             withId(R.id.unreadMark),
