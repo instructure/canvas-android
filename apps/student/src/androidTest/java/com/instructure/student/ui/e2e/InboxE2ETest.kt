@@ -135,7 +135,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationDisplayed("Group Message")
 
         Log.d(STEP_TAG,"Select $newGroupMessageSubject conversation.")
-        inboxPage.selectConversation(newMessageSubject)
+        inboxPage.openConversation(newMessageSubject)
         val newReplyMessage = "This is a quite new reply message."
         Log.d(STEP_TAG,"Reply to $newGroupMessageSubject conversation with '$newReplyMessage' message. Assert that the reply is displayed.")
         inboxConversationPage.replyToMessage(newReplyMessage)
@@ -151,7 +151,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationDisplayed("Group Message")
 
         Log.d(STEP_TAG,"Select ${seededConversation.subject} conversation. Assert that is has not been starred already.")
-        inboxPage.selectConversation(seededConversation)
+        inboxPage.openConversation(seededConversation)
         inboxConversationPage.assertNotStarred()
 
         Log.d(STEP_TAG,"Toggle Starred to mark ${seededConversation.subject} conversation as favourite. Assert that it has became starred.")
@@ -164,14 +164,14 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Select ${seededConversation.subject} conversation. Mark as Unread by clicking on the 'More Options' menu, 'Mark as Unread' menu point.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
-        inboxPage.selectConversation(seededConversation)
+        inboxPage.openConversation(seededConversation)
         inboxConversationPage.markUnread() //After select 'Mark as Unread', we will be navigated back to Inbox Page
 
         Log.d(STEP_TAG,"Assert that ${seededConversation.subject} conversation has been marked as unread.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
 
         Log.d(STEP_TAG,"Select ${seededConversation.subject} conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
-        inboxPage.selectConversation(seededConversation)
+        inboxPage.openConversation(seededConversation)
         inboxConversationPage.archive() //After select 'Archive', we will be navigated back to Inbox Page
 
         Log.d(STEP_TAG,"Assert that ${seededConversation.subject} conversation has removed from 'All' tab.") //TODO: Discuss this logic if it's ok if we don't show Archived messages on 'All' tab...

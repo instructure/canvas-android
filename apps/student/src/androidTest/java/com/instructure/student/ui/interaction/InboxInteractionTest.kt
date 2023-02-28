@@ -17,9 +17,20 @@ package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addConversation
+import com.instructure.canvas.espresso.mockCanvas.addConversations
+import com.instructure.canvas.espresso.mockCanvas.addConversationsToCourseMap
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
+import com.instructure.canvas.espresso.mockCanvas.addSentConversation
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -115,7 +126,7 @@ class InboxInteractionTest : StudentTest() {
             data
         )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
-        inboxPage.selectConversation(sentConversation)
+        inboxPage.openConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
@@ -144,7 +155,7 @@ class InboxInteractionTest : StudentTest() {
             data
         )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
-        inboxPage.selectConversation(sentConversation)
+        inboxPage.openConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
@@ -173,7 +184,7 @@ class InboxInteractionTest : StudentTest() {
             data
         )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
-        inboxPage.selectConversation(sentConversation)
+        inboxPage.openConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
@@ -184,7 +195,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(getFirstConversation(data))
+        inboxPage.openConversation(getFirstConversation(data))
         val message = "What is this, hodor?"
         inboxConversationPage.replyToMessage(message)
         inboxConversationPage.assertMessageDisplayed(message)
@@ -198,7 +209,7 @@ class InboxInteractionTest : StudentTest() {
         data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         val conversation = getFirstConversation(data)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         val message = "What is this, hodor?"
         inboxConversationPage.replyToMessage(message)
 
@@ -367,7 +378,7 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversationSubject)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         inboxConversationPage.assertMessageDisplayed(conversationMessageBody)
         inboxConversationPage.replyAllToMessage(replyAllReply, 2)
         Espresso.pressBack() // To main inbox page
@@ -389,7 +400,7 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversationSubject)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         inboxConversationPage.assertNotStarred()
         inboxConversationPage.toggleStarred()
         inboxConversationPage.assertStarred()
@@ -413,10 +424,10 @@ class InboxInteractionTest : StudentTest() {
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversationSubject)
         inboxPage.assertUnreadMarkerVisibility(conversation, ViewMatchers.Visibility.VISIBLE)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         Espresso.pressBack()
         inboxPage.assertUnreadMarkerVisibility(conversation, ViewMatchers.Visibility.GONE)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         inboxConversationPage.markUnread() // Should kick us back to the main inbox page
         inboxPage.assertUnreadMarkerVisibility(conversation, ViewMatchers.Visibility.VISIBLE)
     }
@@ -436,7 +447,7 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversationSubject)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         inboxConversationPage.archive() // Should kick you back to the main inbox page
         inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
         inboxPage.assertConversationDisplayed(conversationSubject)
@@ -457,7 +468,7 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversationSubject)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         inboxConversationPage.deleteConversation() // Should kick you back to the main inbox page
         inboxPage.assertConversationNotDisplayed(conversationSubject)
     }
@@ -478,10 +489,209 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversationSubject)
-        inboxPage.selectConversation(conversation)
+        inboxPage.openConversation(conversation)
         inboxConversationPage.replyToMessage(replyMessage)
         inboxConversationPage.deleteMessage(replyMessage)
         inboxConversationPage.assertMessageNotDisplayed(replyMessage)
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_showEditToolbarWhenConversationIsSelected() {
+        val data = goToInbox()
+        val conversation = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+        dashboardPage.clickInboxTab()
+        inboxPage.selectConversation(conversation)
+        inboxPage.assertEditToolbarDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_archiveMultipleConversations() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation1 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+        val conversation2 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body 2",
+            messageSubject = "Subject 2")
+        dashboardPage.clickInboxTab()
+        inboxPage.selectConversation(conversation1)
+        inboxPage.selectConversation(conversation2)
+        inboxPage.clickArchive()
+        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
+
+        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.assertConversationDisplayed(conversation1.subject ?: "")
+        inboxPage.assertConversationDisplayed(conversation2.subject ?: "")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_starMultipleConversations() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation1 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+        val conversation2 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body 2",
+            messageSubject = "Subject 2")
+        dashboardPage.clickInboxTab()
+        inboxPage.selectConversation(conversation1)
+        inboxPage.selectConversation(conversation2)
+        inboxPage.clickStar()
+        inboxPage.assertConversationStarred(conversation1.subject ?: "")
+        inboxPage.assertConversationStarred(conversation2.subject ?: "")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_unstarMultipleConversations() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation1 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+        data.conversations[conversation1.id] = conversation1.copy(isStarred = true)
+        val conversation2 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body 2",
+            messageSubject = "Subject 2")
+        data.conversations[conversation2.id] = conversation2.copy(isStarred = true)
+
+        dashboardPage.clickInboxTab()
+        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.selectConversation(conversation1)
+        inboxPage.selectConversation(conversation2)
+        inboxPage.clickUnstar()
+        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_markAsReadUnreadMultipleConversations() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation1 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+        val conversation2 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body 2",
+            messageSubject = "Subject 2")
+
+        dashboardPage.clickInboxTab()
+        inboxPage.selectConversation(conversation1)
+        inboxPage.selectConversation(conversation2)
+        inboxPage.clickMarkAsRead()
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: "", ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: "", ViewMatchers.Visibility.GONE)
+
+        inboxPage.clickMarkAsUnread()
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: "", ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: "", ViewMatchers.Visibility.VISIBLE)
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_deleteMultipleConversations() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation1 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+        val conversation2 = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body 2",
+            messageSubject = "Subject 2")
+        dashboardPage.clickInboxTab()
+        inboxPage.selectConversation(conversation1)
+        inboxPage.selectConversation(conversation2)
+        inboxPage.clickDelete()
+        inboxPage.confirmDelete()
+        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_swipeToReadUnread() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+
+        dashboardPage.clickInboxTab()
+        inboxPage.swipeConversationRight(conversation)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: "", ViewMatchers.Visibility.GONE)
+
+        inboxPage.swipeConversationRight(conversation)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: "", ViewMatchers.Visibility.VISIBLE)
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_swipeToArchive() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+
+        dashboardPage.clickInboxTab()
+        inboxPage.swipeConversationLeft(conversation)
+        inboxPage.assertConversationNotDisplayed(conversation.subject ?: "")
+
+        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.assertConversationDisplayed(conversation.subject ?: "")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_swipeToUnstar() {
+        val data = goToInbox()
+        data.addConversations(userId = student1.id, messageBody = "Short body")
+        val conversation = data.addConversation(
+            senderId = data.teachers.first().id,
+            receiverIds = listOf(data.students.first().id),
+            messageBody = "Body",
+            messageSubject = "Subject")
+        data.conversations[conversation.id] = conversation.copy(isStarred = true)
+
+        dashboardPage.clickInboxTab()
+        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.swipeConversationLeft(conversation)
+        inboxPage.assertConversationNotDisplayed(conversation.subject ?: "")
     }
 
     /*
@@ -503,9 +713,11 @@ class InboxInteractionTest : StudentTest() {
     */
 
     private fun getFirstConversation(data: MockCanvas, includeIsAuthor: Boolean = false): Conversation {
-        return data.conversations.values.toList().first {
-            if(includeIsAuthor) it.messages.first().authorId == student1.id else it.messages.first().authorId != student1.id
-        }
+        return data.conversations.values.toList()
+            .filter { it.workflowState != Conversation.WorkflowState.ARCHIVED }
+            .first {
+                if (includeIsAuthor) it.messages.first().authorId == student1.id else it.messages.first().authorId != student1.id
+            }
     }
 
     private fun createHtmlAttachment(displayName: String, mockCanvas: MockCanvas): Attachment {
