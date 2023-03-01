@@ -17,6 +17,7 @@
 
 package com.instructure.canvasapi2.apis
 
+import com.google.gson.Gson
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
@@ -36,6 +37,7 @@ object BookmarkAPI {
                 @Query("name") name: String,
                 @Query(value = "url", encoded = true) url: String,
                 @Query("position") position: Int,
+                @Query("data") data: String,
                 @Body body: String): Call<Bookmark>
 
         @PUT("users/self/bookmarks/{id}")
@@ -54,7 +56,7 @@ object BookmarkAPI {
     }
 
     fun createBookmark(bookmark: Bookmark, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Bookmark>) {
-        callback.addCall(adapter.build(BookmarkInterface::class.java, params).createBookmark(bookmark.name!!, bookmark.url!!, bookmark.position, "")).enqueue(callback)
+        callback.addCall(adapter.build(BookmarkInterface::class.java, params).createBookmark(bookmark.name!!, bookmark.url!!, bookmark.position, Gson().toJson(bookmark.data), "")).enqueue(callback)
     }
 
     fun deleteBookmark(bookmarkId: Long, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Bookmark>) {

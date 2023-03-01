@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.BookmarkAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Bookmark
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object BookmarkManager {
 
@@ -29,6 +30,8 @@ object BookmarkManager {
 
         BookmarkAPI.getBookmarks(adapter, params, callback);
     }
+
+    fun getBookmarksAsync(forceNetwork: Boolean) = apiAsync<List<Bookmark>> { getBookmarks(it, forceNetwork) }
 
     fun createBookmark(bookmark: Bookmark, callback: StatusCallback<Bookmark>) {
         val adapter = RestBuilder(callback)

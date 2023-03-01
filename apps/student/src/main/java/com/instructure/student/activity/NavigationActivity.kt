@@ -160,11 +160,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     RouteMatcher.route(this@NavigationActivity, route)
                 }
                 R.id.navigationDrawerItem_bookmarks -> {
-                    val route = BookmarksFragment.makeRoute(ApiPrefs.user)
-                    addFragment(
-                            BookmarksFragment.newInstance(route) {
-                                RouteMatcher.routeUrl(this@NavigationActivity, it.url!!)
-                            }, route)
+                    addFragment(com.instructure.student.features.bookmarks.BookmarksFragment.newInstance(), Route(com.instructure.student.features.bookmarks.BookmarksFragment::class.java, ApiPrefs.user))
+//                    val route = BookmarksFragment.makeRoute(ApiPrefs.user)
+//                    addFragment(
+//                            BookmarksFragment.newInstance(route) {
+//                                RouteMatcher.routeUrl(this@NavigationActivity, it.url!!)
+//                            }, route)
                 }
                 R.id.navigationDrawerItem_changeUser -> {
                     StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS, typefaceBehavior = typefaceBehavior).execute()

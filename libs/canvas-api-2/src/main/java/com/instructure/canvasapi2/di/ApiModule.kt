@@ -1,12 +1,6 @@
 package com.instructure.canvasapi2.di
 
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.HelpLinksAPI
-import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.*
@@ -167,5 +161,10 @@ class ApiModule {
     @Provides
     fun provideProgressApi(): ProgressAPI.ProgressInterface {
         return RestBuilder().build(ProgressAPI.ProgressInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideBookmarkManager(): BookmarkManager {
+        return BookmarkManager
     }
 }

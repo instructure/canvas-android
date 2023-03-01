@@ -31,6 +31,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.managers.BookmarkManager
 import com.instructure.canvasapi2.models.Bookmark
+import com.instructure.canvasapi2.models.BookmarkData
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -100,7 +101,9 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
         }
 
         bookmarkJob = tryWeave {
-            awaitApi<Bookmark> { BookmarkManager.createBookmark(Bookmark(name = label, url = arguments?.getString(BOOKMARK_URL), position = 0), it) }
+            awaitApi<Bookmark> { BookmarkManager.createBookmark(Bookmark(name = label, url = arguments?.getString(BOOKMARK_URL), position = 0).apply { setData(
+                BookmarkData("Test label")
+            ) }, it) }
             Analytics.trackBookmarkCreated(activity)
             Toast.makeText(activity, R.string.bookmarkAddedSuccess, Toast.LENGTH_SHORT).show()
             CacheControlFlags.forceRefreshBookmarks = true

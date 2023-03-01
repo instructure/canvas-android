@@ -17,6 +17,7 @@
 
 package com.instructure.canvasapi2.models
 
+import com.google.gson.Gson
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -27,9 +28,20 @@ data class Bookmark(
         override val id: Long = 0,
         val name: String? = null,
         val url: String? = null,
-        val position: Int = 0
+        val position: Int = 0,
+        var data: String? = null
 
 ) : CanvasModel<Bookmark>() {
     // A helper for storing a course id, not part of the API
     var courseId: Long = 0
+
+    fun setData(data: BookmarkData) {
+        this.data = Gson().toJson(data)
+    }
+
+    fun getData(): BookmarkData? {
+        return data?.let {
+            Gson().fromJson(data, BookmarkData::class.java)
+        }
+    }
 }
