@@ -19,11 +19,11 @@ package instructure.rceditor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.os.Build
 import android.text.Html
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputConnection
 import android.webkit.WebView
 import androidx.annotation.RestrictTo
 import jp.wasabeef.richeditor.RichEditor
@@ -84,6 +84,12 @@ class RCETextEditor @JvmOverloads constructor(
     override fun onOverScrolled(scrollX: Int, scrollY: Int, clampedX: Boolean, clampedY: Boolean) {
         super.onOverScrolled(scrollX, scrollY, clampedX, clampedY)
         requestDisallowInterceptTouchEvent(!clampedY)
+    }
+
+    override fun onCreateInputConnection(outAttrs: EditorInfo?): InputConnection? {
+        val editorInfo = outAttrs ?: EditorInfo()
+        editorInfo.privateImeOptions = "disableSticker=true;disableGifKeyboard=true"
+        return super.onCreateInputConnection(editorInfo)
     }
 
     companion object {
