@@ -1,0 +1,483 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">選擇媒體</string>
+    <string name="takeVideo">錄製視頻</string>
+    <string name="noCameraOnDevice">無攝像頭</string>
+    <string name="takePhoto">拍攝照片</string>
+    <string name="choosePhotoFromGallery">從圖片庫選取照片</string>
+
+    <string name="utils_edit">編輯</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">上傳到 Canvas</string>
+    <string name="preparingUpload">準備上傳</string>
+    <string name="loadingFilesIndeterminate">正在載入檔案&#8230;</string>
+    <string name="fileUploadSuccess">上傳成功</string>
+    <string name="noNetwork">網絡不可用 - 請稍後再嘗試。</string>
+    <string name="uploadMessage">"上傳進行中。在通知中查看上傳狀態。</string>
+    <string name="uploadingFile">正在上傳檔案&#8230;</string>
+    <string name="errorUploadingFile">上傳檔案時發生錯誤。請重試。</string>
+    <string name="fileSubmission">提交檔案</string>
+    <string name="uploadFiles">上傳檔案</string>
+    <string name="upload">上傳</string>
+    <string name="errorSendingMessage">發送訊息時發生錯誤。請重試。</string>
+
+    <string name="notificationChannelNameFileUploadsName">上傳通知</string>
+    <string name="notificationChannelNameFileUploadsDescription">持續上傳的 Canvas 通知。</string>
+
+
+    <!-- Turn in Files -->
+    <string name="addFile">添加檔案</string>
+
+    <string name="fromCamera">攝像頭</string>
+    <string name="fromGallery">圖片庫</string>
+    <string name="fromDevice">設備</string>
+    <string name="fromDocumentScanning">掃描器</string>
+    <string name="fromOtherApplication">其他</string>
+    <string name="Domain">網域</string>
+    <string name="files">檔案</string>
+    <string name="file">檔案</string>
+    <string name="fileTalkBack">檔案 %s</string>
+    <string name="folderTalkBack">資料夾 %s</string>
+    <string name="addItem">添加項目</string>
+    <string name="assignment">作業</string>
+    <string name="attachedFiles">附加的檔案</string>
+    <string name="turnIn">提交</string>
+    <string name="course">課程</string>
+    <string name="sending">正在發送&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">1 星評分</string>
+    <string name="star2">2 星評分</string>
+    <string name="star3">3 星評分</string>
+    <string name="star4">4 星評分</string>
+    <string name="star5">5 星評分</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">您的檔案存儲配額目前已用完。</string>
+    <string name="errorSubmittingFiles">遞交檔案時發生錯誤。請重試。</string>
+    <string name="errorLoadingFiles">載入檔案時發生錯誤。請檢查您的網路連接，然後重試。</string>
+    <string name="filesUploadedSuccessfully">檔案已成功上傳。</string>
+    <string name="filesSubmittedSuccessfully">檔案已成功提交。</string>
+    <string name="messageSentSuccessfully">訊息已成功發送。</string>
+    <string name="shareWithCanvas">其他應用程式可與 Canvas 共享檔案！在應用程式內尋找以下圖示，然後點下 Canvas。</string>
+    <string name="shareWithCanvas2">這樣會開啟此應用程式。然後您只需要選擇希望將檔案提交到哪一個課程和作業即可。</string>
+    <string name="contentDescriptionSocialShare">分享圖示</string>
+    <string name="submitAssignment">提交作業</string>
+    <string name="assignmentHeader">作業：</string>
+    <string name="submittingAssignment">正在提交作業&#8230;</string>
+    <string name="conversations">交談</string>
+    <string name="inbox">收件匣</string>
+    <string name="divider">分隔器</string>
+    <string name="legal">法律事務</string>
+    <string name="completeHomework">完成您的作業</string>
+    <string name="takeExam">參加考試</string>
+    <string name="fileIcon">檔案圖示</string>
+    <string name="uploadingFileNum" formatted="false">正在上傳第 %d / %d 個檔案</string>
+    <string name="fileLocked" formatted="false">%s 已被鎖定。</string>
+    <string name="filePermissionGranted">檔案已準備好下載，請再試一次。</string>
+    <string name="filePermissionDenied">檔案未經授權，不可被下載。</string>
+    <string name="pleaseTryAgain">權限授予，請重試。</string>
+    <string name="pickFile">選取檔案</string>
+    <string name="assignmentSubmissionUpload">上傳 %s 的提交項目</string>
+    <string name="assignmentSubmissionError">%s 的提交項目提交失敗</string>
+    <string name="assignmentSubmissionComplete">成功提交 %s</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">意外錯誤出現。</string>
+    <string name="serverError">伺服器發生錯誤。</string>
+    <string name="unauthorized">您未獲得存取權限。您沒有獲得授權或尚未獲得存取權限（例如您的課程尚未開始）</string>
+    <string name="fileNoLongerExists">該檔案已不存在。</string>
+    <string name="invalidAccessToken">您的會話已過期。請登入以開啟新會話。</string>
+    <string name="uploadingFromSourceFailed">無法完成從該來源上傳檔案。</string>
+    <string name="errorGettingPhoto">載入照片時發生錯誤。請重試。</string>
+    <string name="errorTextMissing">添加文字以發送訊息</string>
+
+    <string name="fileUploadNotSupported">您無法上傳檔案到選定的作業。</string>
+    <string name="noCourseSelected">請選定一個課程</string>
+    <string name="selectCourse">選擇課程</string>
+    <string name="selectAssignment">選擇一項作業</string>
+    <string name="loadingAssignments">正在載入作業&#8230;&#8230;</string>
+    <string name="noAssignmentSelected">請選擇一項作業</string>
+    <string name="noAssignmentsWithFileUpload">該課程沒有允許檔案上傳的作業。</string>
+    <string name="teacherNotAllowedFileSubmission">您作為本課程中的教師，無法提交檔案</string>
+    <string name="noFilesUploaded">您尚未選擇任何檔案。</string>
+    <string name="oneOrMoreExtensionNotAllowed">一個或多個檔案中含有不允許的檔案擴展名</string>
+    <string name="extensionNotAllowed">選中的檔案類型不被允許。</string>
+    <string name="allowedExtensions">允許的擴展名：&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection">請檢查您的數據連接並重試。</string>
+    <string name="noApps">您的設備沒有安裝可處理此檔案的應用程式。</string>
+    <string name="noAppsShort">無法打開</string>
+    <string name="unexpectedErrorOpeningFile">在嘗試打開該檔案時發生意外錯誤。</string>
+    <string name="unexpectedErrorDownloadingFile">在嘗試下載該檔案時發生意外錯誤。</string>
+
+    <string name="done">已完成</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">要使用該功能，必須首先獲得許可權限。</string>
+    <string name="noConnection">無連接</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">您的最愛課程 &amp; 小組會在此處顯示。</string>
+    <string name="addCoursesGroups">添加課程或小組</string>
+    <string name="noDiscussions">無討論區</string>
+    <string name="noDiscussionsSubtext">與其他人開始交談</string>
+    <string name="noDiscussionsTeacher">與您的學生開始交談。</string>
+    <string name="nothingUnread">收件匣無訊息！</string>
+    <string name="nothingUnreadSubtext">您已讀完所有新訊息</string>
+    <string name="nothingStarred">無已加星號訊息</string>
+    <string name="nothingStarredSubtext">點選每段訊息的星號以保留此分班內的重要訊息。</string>
+    <string name="nothingSent">無已發送訊息</string>
+    <string name="nothingSentSubtext">您尚未發送任何訊息。</string>
+    <string name="nothingArchived">無已存檔訊息</string>
+    <string name="nothingArchivedSubtext">您尚未存檔任何訊息。</string>
+    <string name="noQuizzes">無測驗</string>
+    <string name="noQuizzesSubtext">抱歉，尚未有任何測驗。</string>
+    <string name="noQuizzesTeacher">沒有可顯示的已發佈測驗。</string>
+    <string name="noAnnouncements">沒有通告</string>
+    <string name="noAnnouncementsSubtext">尚未有任何通告。</string>
+    <string name="noCourses">無課程</string>
+    <string name="noCoursesSubtext">看來沒有與您帳戶關聯的課程。現在就前往網站，創建課程。</string>
+    <string name="noAssignments">無作業</string>
+    <string name="noAssignmentsSubtext">看來這裡並未建立任何作業。是時候出外探索。</string>
+    <string name="noAssignmentsTeacher">看來尚未發佈任何作業。</string>
+    <string name="noFiles">無檔案</string>
+    <string name="noFilesForAssignment">沒有針對此提交項目的檔案</string>
+    <string name="noFilesSubtext">沒有與您帳戶關聯的檔案。</string>
+    <string name="emptyFolder">此資料夾為空</string>
+    <string name="notSupported">不支援</string>
+    <string name="noEvents">今天並無活動！</string>
+    <string name="noEventsSubtext">看來是適合休息放鬆的一天。</string>
+    <string name="noSubmission">無提交項目</string>
+    <string name="noSubmissionTeacher">此學生尚未提交任何項目。</string>
+    <string name="locked">已鎖定</string>
+    <string name="lockedSubtext">此作業已被鎖定，直至 %1$s 的 %2$s。</string>
+    <string name="chooseFile">選擇檔案</string>
+    <string name="chooseFileSubtext">點選下列的一個選項，以加入附件檔案至提交項目。</string>
+    <string name="chooseFileForUploadSubtext">點選下面一個選項，以選取檔案進行上傳</string>
+    <string name="noNotifications">無通知</string>
+    <string name="noNotificationsSubtext">尚未有任何通知。</string>
+    <string name="noTodos">做得好！</string>
+    <string name="noTodosSubtext">您的待辦清單並無任何項目。是時候充一充電。</string>
+    <string name="noSyllabus">無課程大綱</string>
+    <string name="noSyllabusSubtext">尚未建立課程大綱。</string>
+    <string name="noBookmarks">無書籤</string>
+    <string name="noBookmarksSubtext">書籤是應用程式內任何畫面的捷徑。於您想標記的屏幕上添加書籤。</string>
+    <string name="noModules">無單元</string>
+    <string name="noModulesSubtext">看來尚未建立任何單元。</string>
+    <string name="noPages">無頁面</string>
+    <string name="noPagesSubtext">看來尚未建立任何頁面。</string>
+    <string name="modulesLockedSubtext">已停用此課程的單元。</string>
+    <string name="modulesLocked">發生問題</string>
+
+    <!--General-->
+    <string name="yes">是</string>
+    <string name="no">否</string>
+
+    <string name="inbox_all">收件匣</string>
+    <string name="inbox_unread">未讀</string>
+    <string name="inbox_starred">已加星號</string>
+    <string name="inbox_sent">已發送</string>
+    <string name="inbox_archived">已存檔</string>
+
+    <string name="forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
+
+    <string name="like">讚好</string>
+    <string name="likes">讚好</string>
+    <string name="lockedAssignmentNotModule">該作業已被鎖定。</string>
+    <string name="deletedEntryNoChildren">該已刪除的討論條目尚未回复。</string>
+    <string name="deleted">已刪除</string>
+    <string name="deleted_by">[已被 %1$s 刪除]</string>
+    <string name="lockedDiscussionDesc">這項討論是%s單元的一部分，而且未被鎖定。</string>
+    <string name="gradedDiscussion">已評分的討論</string>
+    <string name="pointsPossible">可能的分數</string>
+    <string name="sideCommentEntry">在這類型的討論中，您不能在這個層面上作出任何評論。</string>
+
+    <string name="accessibility_overflow">過多</string>
+
+    <string name="discussion_response">評論</string>
+    <string name="discussion_responses">評論</string>
+    <string name="discussion_unread">未讀</string>
+    <string name="discussion_reply">回覆</string>
+    <string name="close">關閉</string>
+
+    <string name="noInternetConnectionTitle">沒有網絡連線</string>
+    <string name="noInternetConnectionMessage">此操作需要網絡連線。</string>
+    <string name="content_description_avatar">頭像</string>
+    <string name="a11y_avatarNameFormatted">%s 頭像</string>
+    <string name="formattedAvatarAction">檢視 %s 的使用者詳情。</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas 教師</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_speedgrader">Speedgrader（快速評分器）</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">我們表現如何？</string>
+    <string name="utils_rateUs">您如何評價我們？</string>
+    <string name="utils_doBetter">我們有何可改進之處？</string>
+    <string name="utils_sendFeedback">發送回饋</string>
+    <string name="utils_suggestions">對 Android 版的建議</string>
+    <string name="utils_domain">網域</string>
+    <string name="utils_versionNum">版本：</string>
+    <string name="utils_userId">使用者 ID</string>
+    <string name="utils_email">電子郵件</string>
+    <string name="utils_dontShowAgain">不要再次顯示</string>
+    <string name="utils_installDate">安裝日期：</string>
+    <string name="utils_device">設備</string>
+    <string name="utils_osVersion">OS 版本</string>
+    <string name="loading">正在載入</string>
+    <string name="save">儲存</string>
+    <string name="cropInstructions">輕點及拖曳以調校圖像。</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="other">%s 個回覆</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">已刪除此回覆 %s</string>
+    <string name="utils_discussionsUnknownAuthor">未知作者</string>
+    <string name="utils_discussionsReply">回覆</string>
+    <string name="utils_discussionsEdit">編輯</string>
+    <string name="utils_discussionsDeleteWarning">您是否確定要刪除此回覆？</string>
+    <string name="utils_availableToLabel">可用結束日期：</string>
+    <string name="utils_availableFromLabel">可用起始日期：</string>
+    <string name="utils_dueDateHeaderLabel">截止日期</string>
+    <string name="utils_dueLabel">截止日期：</string>
+    <string name="utils_delete">刪除</string>
+    <string name="utils_dueDateAtTime" formatted="false">截止於 %1s 的 %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">可用性：</string>
+    <string name="utils_pinnedIcon">釘選討論圖示</string>
+    <string name="utils_pinDiscussion">將討論釘選</string>
+    <string name="utils_unpinDiscussion">將討論解除釘選</string>
+    <string name="utils_discussionPinned">討論已釘選</string>
+    <string name="utils_pinnedDiscussions">已釘選</string>
+    <string name="utils_discussionUnpinned">討論區</string>
+    <string name="utils_emptyDiscussions">在本章節中沒有要顯示的討論。</string>
+    <string name="utils_description">說明</string>
+    <string name="utils_allowThreadedReplies">允許執行緒回復</string>
+    <string name="utils_usersMustPost">學生必須發佈，然後才能看到回覆</string>
+    <string name="utils_discussionsClosed">已關閉以徵求評論</string>
+    <string name="utils_discussionsOpen">開啟以徵求評論</string>
+    <string name="utils_discussionsPin">釘選</string>
+    <string name="utils_discussionsUnpin">取消釘選</string>
+    <string name="utils_discussionsOptions">選項</string>
+    <string name="utils_discussionsDeleteTitle">刪除討論區？</string>
+    <string name="utils_discussionsDelete">刪除討論區</string>
+    <string name="utils_discussionsDeleteMessage">系統會刪除整個討論區和主題。</string>
+    <string name="utils_discussionSentSuccess">成功回覆討論區。</string>
+    <string name="utils_discussionUpdateSuccess">成功編輯討論區。</string>
+    <string name="utils_discussionSentEmpty">討論區回覆不可為空白。</string>
+    <string name="utils_discussionSentFailure">無法回覆討論區。</string>
+    <string name="utils_createDiscussion">新討論區</string>
+    <string name="utils_editDiscussion">編輯討論區</string>
+    <string name="utils_discussionDetails">討論區詳細資料</string>
+    <string name="utils_discussionSuccessfullyUpdated">已成功更新討論區。</string>
+    <string name="utils_saving">正在儲存</string>
+    <string name="utils_discussionSuccessfullyCreated">已成功創建討論區。</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">無法添加附件到此討論區中。請檢查您的檔案限額，然後重試。</string>
+    <string name="utils_noTitle">無標題</string>
+    <string name="utils_discussionsReplies_Title">回覆</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">更多選項</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">上次發帖 %s</string>
+    <string name="utils_postedOnDate">發佈於 %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">只有曾發送一個或以上回覆的才能查閱回覆。</string>
+    <string name="utils_createAnnouncementDelayPosting">延遲發佈</string>
+    <string name="utils_postAt">發佈於</string>
+    <string name="utils_postDate">發佈日期</string>
+    <string name="utils_postTime">發佈時間</string>
+    <string name="utils_editAnnouncementTitle">編輯通告</string>
+    <string name="utils_createAnnouncementTitle">新通告</string>
+    <string name="utils_announcementDetails">通告詳細資料</string>
+    <string name="utils_createAnnouncementNoDescription">描述為必填</string>
+    <string name="utils_errorSavingAnnouncement">嘗試儲存通告時發生錯誤。請再試一次。</string>
+    <string name="utils_announcementSuccessfullyUpdated">通告已成功更新。</string>
+    <string name="utils_announcementSuccessfullyCreated">已成功建立通告。</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="other">%s 個未讀</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">添加附件</item>
+        <item quantity="other">添加附件</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">解除鎖定日期不能在截止日期之後</string>
+    <string name="utils_lockBeforeDueDateError">鎖定日期不能在截止日期之前</string>
+    <string name="utils_lockAfterUnlockError">鎖定日期不能在解鎖日期之前</string>
+    <string name="utils_assigneeBlankError">獲配人不可為空白</string>
+    <string name="utils_assignTo">分配至</string>
+    <string name="utils_availableFrom">可用起始日期</string>
+    <string name="utils_availableTo">可用結束日期</string>
+    <string name="utils_availableFromDate">可用的起始日期</string>
+    <string name="utils_availableFromTime">可用的起始時間</string>
+    <string name="utils_availableToDate">可用的結束日期</string>
+    <string name="utils_availableToTime">可用的結束時間</string>
+    <string name="utils_dueDate">截止日期</string>
+    <string name="utils_dueTime">截止時間</string>
+    <string name="utils_addNew">添加新項目</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">下載附件</string>
+    <string name="utils_removeAttachment">移除附件</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">繼續操作而不儲存？</string>
+    <string name="utils_continueWithoutSavingMessage">您確定要繼續操作而不儲存嗎？</string>
+    <string name="utils_continueUnsaved">繼續</string>
+    <string name="utils_exitWithoutSavingTitle">退出而不儲存？</string>
+    <string name="utils_exitWithoutSavingMessage">您確定要退出而不儲存嗎？</string>
+    <string name="utils_exitUnsaved">退出</string>
+    <string name="utils_cancel">取消</string>
+
+    <string name="utils_contentDescriptionFiles">檔案圖示</string>
+    <string name="utils_turn_in">提交</string>
+    <string name="utils_upload">上傳</string>
+    <string name="utils_okay">確定</string>
+    <string name="utils_loadingFilesIndeterminate">正在載入檔案&#8230;</string>
+    <string name="utils_allowedExtensions">允許的擴展名：&#160;</string>
+    <string name="utils_extensionNotAllowed">選中的檔案類型不被允許。</string>
+    <string name="utils_errorUploadingFile">上傳檔案時發生錯誤。請重試。</string>
+    <string name="utils_filesUploadedSuccessfully">檔案已成功上傳。</string>
+    <string name="utils_uploadingFiles">正在上傳檔案&#8230;</string>
+    <string name="utils_uploadingFile">正在上傳檔案&#8230;</string>
+    <string name="utils_noApps">您的設備沒有安裝可處理此檔案的任何應用程式。</string>
+    <string name="utils_errorGettingPhoto">載入照片時發生錯誤。請重試。</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">一個或多個檔案中含有不允許的檔案擴展名</string>
+    <string name="utils_fileUploadNotSupported">您無法上傳檔案到選定的作業。</string>
+    <string name="utils_noFilesUploaded">您尚未選擇任何檔案。</string>
+    <string name="utils_attachments">附件</string>
+    <string name="utils_uploadTo">上傳至</string>
+    <string name="utils_uploadToCanvas">上傳至 Canvas</string>
+    <string name="utils_uploadMyFiles">我的檔案</string>
+    <string name="utils_uploadCourseFiles">課程檔案</string>
+    <string name="utils_uploadGroupFiles">群組檔案</string>
+    <string name="utils_uploadToSubmissionComment">上傳到提交項目評論</string>
+    <string name="utils_attachFile">附加檔案</string>
+    <string name="utils_with">與</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas 通知</string>
+    <string name="notificationChannelNamePrimary">一般 Canvas 通知</string>
+    <string name="notificationChannelDescriptionPrimary">可於 Canvas 通知偏好的部分進行更多通知配置。</string>
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d 個新通知</item>
+    </plurals>
+
+    <string name="copyLinkAddress">複製連結地址</string>
+    <string name="copyLink">複製連結</string>
+    <string name="linkCopied">已複製連結</string>
+    <string name="link">連結</string>
+    <string name="fileExists">檔案存在</string>
+    <string name="replace">替換</string>
+    <string name="shareLink">分享連結</string>
+
+    <string name="utils_launchExternalTool">啟動外部工具</string>
+    <string name="utils_externalToolTitle">外部工具</string>
+    <string name="utils_placeholderTitle">外部工具</string>
+    <string name="utils_placeholderDescription">訪問您的 Canvas 網絡帳戶來編輯此外部工具。</string>
+    <string name="utils_unableToViewInBrowser">我們未能找到外部應用程式以檢視此 LTI 工具。</string>
+
+    <string name="utils_unsupportedFileMessage">無法顯示檔案。按下下方按鈕，使用裝置上其他應用程式開啟檔案。</string>
+    <string name="utils_openWithAnotherApp">以其他應用程式開啟</string>
+    <string name="utils_couldNotPlayFormat">並不支援該媒體格式</string>
+    <string name="utils_fullscreen">全螢幕</string>
+
+    <string name="utils_dataUsageWarningTitle">數據使用警告</string>
+    <string name="utils_dataUsageWarningMessage">本操作可能會消耗大量數據，導致超額費用。確認要繼續？</string>
+    <string name="utils_doNotShowMessageAgain">不要再顯示此訊息</string>
+
+    <string name="utils_no_data_connection">請檢查您的數據連接並重試。</string>
+    <string name="utils_playMedia">播放媒體</string>
+    <string name="utils_tryAgain">請再試一次</string>
+    <string name="image_uploading">正在上傳圖像...</string>
+    <string name="image_upload_error">圖像上傳錯誤</string>
+    <string name="retry">重試</string>
+    <string name="search">搜尋</string>
+    <string name="searchAssignmentsHint">搜尋作業</string>
+    <string name="searchAnnouncementsHint">搜尋通告</string>
+    <string name="searchDiscussionsHint">搜尋討論區</string>
+    <string name="searchPagesHint">搜尋頁面</string>
+    <string name="searchQuizzesHint">搜尋測驗</string>
+    <string name="noItemsMatchingQuery">沒有吻合的項目 \"%s\"</string>
+
+    <string name="selected">已選擇</string>
+
+    <string name="notificationChannelNameInAppUpdate">應用程式更新通知</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas 的應用程式內更新通知</string>
+    <string name="appUpdateReadyTitle">應用程式準備好更新</string>
+    <string name="appUpdateReadyDescription">重新啟動應用程式以安裝新版本</string>
+    <string name="nothing_planned_yet">尚未計劃</string>
+    <string name="schedule_tag_graded">已評分</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="other">%d 個回覆 ></item>
+    </plurals>
+    <string name="schedule_tag_feedback">反饋</string>
+    <string name="schedule_tag_late">逾期</string>
+    <string name="schedule_tag_redo">重做</string>
+    <string name="schedule_tag_excused">已免除</string>
+    <string name="tomorrow">明天</string>
+    <string name="yesterday">昨天</string>
+    <string name="schedule_calendar_event_due_text">時間 %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s 至 %2$s</string>
+    <string name="schedule_todo_due_text">待辦事項：%s</string>
+    <string name="schedule_due_text">截止日期：%s</string>
+    <string name="show_missing_items_title">顯示 %d 個缺少的項目</string>
+    <string name="hide_missing_items_title">隱藏 %d 個缺少的項目</string>
+    <string name="schedule_error_message">無法取得您的排程</string>
+    <string name="schedule_todo_title">待辦事項</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s 分</item>
+        <item quantity="other">%s 分</item>
+    </plurals>
+
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f 分</item>
+        <item quantity="other">%.1f 分</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">全天</string>
+    <string name="schedule_tag_missing">缺少</string>
+    <string name="previous_week">上週</string>
+    <string name="next_week">下週</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s，%2$s</string>
+    <string name="a11y_schedule_course_header_content_description">課程 %s</string>
+    <string name="a11y_announcement">通告</string>
+    <string name="a11y_discussion_topic">討論</string>
+    <string name="a11y_calendar_event">行事曆活動</string>
+    <string name="a11y_assignment">作業</string>
+    <string name="a11y_planner_note">規劃註釋</string>
+    <string name="a11y_quiz">測驗</string>
+    <string name="a11y_todo">待辦事項</string>
+    <string name="a11y_page">頁面</string>
+    <string name="a11y_marked_as_done">標記為已完成</string>
+    <string name="a11y_not_marked_as_done">未被標記為已完成</string>
+    <string name="error_loading_course_details">噢！載入課程詳細資料時發生錯誤。</string>
+    <string name="a11y_schedule_marked_as_not_done">%s 標記為未完成</string>
+    <string name="a11y_markAsDoneWithName">%s 標記為已完成</string>
+    <string name="a11y_markAsNotDoneWithName">%s 標記為未完成</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+</resources>

@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Þú getur opnað upplýsingar um skil héðan</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Mínúta</item>
         <item quantity="other">%s mínútur</item>
@@ -1331,4 +1333,44 @@
     <string name="acceptableUsePolicyAgree">Ég samþykki Stefnu um ásættanlega notkun.</string>
     <string name="acceptableUsePolicySubmit">Skila</string>
     <string name="acceptFail">Mistókst að senda inn samþykki anna.</string>
+    <string name="attempt">Tilraun %d</string>
+    <string name="quizQuestions">Spurningar: %d</string>
+    <string name="quizTimeLimit">Tímamörk: %s</string>
+    <string name="allowedAttempts">Heimilaðar tilraunir: %s</string>
+    <string name="usedAttempts">Tilraunir notaðar: %d</string>
+    <string name="generalUnexpectedError">Óvænt villa kom upp.</string>
+
+    <string name="deleteSelected">Eyða</string>
+    <string name="archiveSelected">Safn</string>
+    <string name="unarchiveSelected">Taka úr safni</string>
+    <string name="markAsReadSelected">Merkja sem lesið</string>
+    <string name="markAsUnreadSelected">Merkja sem ólesið</string>
+    <string name="starSelected">Stjörnumerkja</string>
+    <string name="unstarSelected">Eyða stjörnumerki</string>
+
+    <string name="inboxOperationFailed">Ekki tókst að framkvæma leit</string>
+    <string name="inboxDeletedConfirmation">%s eytt</string>
+    <string name="inboxArchivedConfirmation">%s sett í safn</string>
+    <string name="inboxUnarchivedConfirmation">%s tekið úr safni</string>
+    <string name="inboxMarkAsReadConfirmation">%s merkt sem lesið</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s merkt sem ólesið</string>
+    <string name="inboxStarredConfirmation">%s stjörnumerkt</string>
+    <string name="inboxUnstarredConfirmation">%s afstjörnumerkt</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Þessari samræðu verður eytt úr innhólfinu á öllum búnaðinum þínum. Þessi aðgerð er óafturkræf.</item>
+        <item quantity="other">Þessum samræðum verður eytt úr innhólfinu á öllum búnaðinum þínum. Þessi aðgerð er óafturkræf.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Mistókst að hlaða næstu síðu. Athugaðu nettenginguna þína.</string>
+    <string name="conversationsRefreshFailed">Ekki tókst að endurglæða samræðurnar. Athugaðu nettenginguna þína.</string>
+    <string name="inboxScopeInbox">Innhólf</string>
+    <string name="inboxContextSelectorTitle">Veldu námskeið eða hóp</string>
+    <string name="inboxClearFilter">Hreinsa</string>
+    <string name="a11y_courseFilterContentDescription">Námskeiðssía: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">velja</string>
+    <string name="a11y_itemSelectedSwipeForActions">Samræða valin. Valhamur virkjaður. Skoða fyrir aðgerðir.</string>
+    <string name="a11y_conversationSelected">Samræða valin</string>
+    <string name="a11y_conversationDeselected">Samræða afvalin</string>
+    <string name="a11y_exitSelectionMode">Fara úr valham</string>
+    <string name="a11y_selectionModeDeactivated">Valhamur afvirkjaður.</string>
 </resources>
