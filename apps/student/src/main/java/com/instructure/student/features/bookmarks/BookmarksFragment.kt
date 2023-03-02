@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
+import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -14,6 +18,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.BookmarkShortcutActivity
 import com.instructure.student.databinding.FragmentBookmarksBinding
 import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.util.ShortcutUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_bookmarks_fragment.*
 
@@ -36,6 +41,69 @@ class BookmarksFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        viewModel.events.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: BookmarksAction) {
+        when (action) {
+            is BookmarksAction.OpenPopup -> {
+                openPopup(action.view, action.id)
+            }
+            is BookmarksAction.CreateShortcut -> {
+                createShortcut(action.bookmark)
+            }
+            is BookmarksAction.ShowSnackbar -> {
+                Snackbar.make(requireView(), action.snackbar, Snackbar.LENGTH_SHORT).show()
+            }
+            is BookmarksAction.ShowDeleteConfirmation -> {
+                showDeleteConfirmationDialog(action.bookmark)
+            }
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(bookmark: Bookmark) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.bookmarkDelete)
+            .setMessage(bookmark.name)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                viewModel.deleteBookmark(bookmark.id)
+            }
+            .setNegativeButton(R.string.no, null)
+            .create()
+            .show()
+    }
+
+    private fun createShortcut(bookmark: Bookmark) {
+        ShortcutUtils.generateShortcut(requireContext(), bookmark)
+    }
+
+    private fun openPopup(view: View, id: Long) {
+        val popup = PopupMenu(requireContext(), view)
+        popup.menuInflater.inflate(R.menu.bookmark_add_shortcut_edit_delete, popup.menu)
+
+        popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_add_to_homescreen -> {
+                    viewModel.createShortcut(id)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.menu_edit -> {
+                    viewModel.editBookmarkClicked(id)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.menu_delete -> {
+                    viewModel.deleteBookmarkClicked(id)
+                    return@OnMenuItemClickListener true
+                }
+            }
+            false
+        })
+        popup.show()
     }
 
     override fun title(): String = getString(R.string.bookmarks)

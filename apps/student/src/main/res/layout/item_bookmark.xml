@@ -74,7 +74,8 @@
                 android:padding="2dp"
                 android:scaleType="fitCenter"
                 android:tint="@color/textDark"
-                app:srcCompat="@drawable/ic_overflow_white_18dp" />
+                app:srcCompat="@drawable/ic_overflow_white_18dp"
+                android:onClick="@{(view) -> itemViewModel.openPopupHandler.invoke(view)}"/>
 
         </FrameLayout>
 

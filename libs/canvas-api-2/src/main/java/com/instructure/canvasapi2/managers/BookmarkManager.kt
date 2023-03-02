@@ -47,6 +47,8 @@ object BookmarkManager {
         BookmarkAPI.deleteBookmark(bookmarkId, adapter, params, callback);
     }
 
+    fun deleteBookmarkAsync(bookmarkId: Long) = apiAsync<Bookmark> { deleteBookmark(bookmarkId, it) }
+
     fun updateBookmark(bookmark: Bookmark, callback: StatusCallback<Bookmark>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()

@@ -17,12 +17,14 @@
 
 package com.instructure.student.features.bookmarks.itemviewmodels
 
+import android.view.View
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.student.R
 import com.instructure.student.features.bookmarks.BookmarkViewData
 
 class BookmarkItemViewModel(
-    val data: BookmarkViewData
+    val data: BookmarkViewData,
+    val openPopupHandler: (View) -> Unit
 ) : ItemViewModel {
     override val layoutId: Int
         get() = R.layout.item_bookmark

@@ -27,15 +27,24 @@
             app:title="@string/bookmarks"
             app:titleTextColor="@android:color/black" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bookmarksRecyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:recyclerViewItemViewModels="@{viewModel.data.items}"
-            tools:listitem="@layout/item_bookmark" />
+            app:onRefreshListener="@{() -> viewModel.refresh()}"
+            app:refreshState="@{viewModel.state}">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/bookmarksRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:recyclerViewItemViewModels="@{viewModel.data.items}"
+                app:useDiffUtil="@{true}"
+                tools:listitem="@layout/item_bookmark" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
         <com.instructure.pandautils.views.EmptyView
             android:id="@+id/bookmarkEmptyView"
