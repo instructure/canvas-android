@@ -24,6 +24,7 @@ import android.text.Html
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.webkit.ValueCallback
 import android.webkit.WebView
 import androidx.annotation.RestrictTo
 import jp.wasabeef.richeditor.RichEditor
@@ -84,6 +85,20 @@ class RCETextEditor @JvmOverloads constructor(
     override fun onOverScrolled(scrollX: Int, scrollY: Int, clampedX: Boolean, clampedY: Boolean) {
         super.onOverScrolled(scrollX, scrollY, clampedX, clampedY)
         requestDisallowInterceptTouchEvent(!clampedY)
+    }
+
+    fun getSelectedText(callback: (String) -> Unit) {
+        evaluateJavascript("(function(){return window.getSelection().toString()})()", object : ValueCallback<String> {
+            override fun onReceiveValue(value: String?) {
+                if ((value?.count() ?: 0) > 1) {
+                    // We need to remove the last and first character because it returns an extra " character at the start and at the end
+                    val result = value?.substring(1, value.count() - 1)
+                    callback(result ?: "")
+                } else {
+                    callback("")
+                }
+            }
+        })
     }
 
     companion object {

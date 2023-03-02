@@ -29,6 +29,7 @@ import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
+import com.google.android.material.textfield.TextInputLayout
 import instructure.rceditor.RCEUtils.increaseAlpha
 import instructure.rceditor.RCEUtils.makeEditTextColorStateList
 
@@ -55,6 +56,7 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         builder.setNegativeButton(R.string.rce_dialogCancel) { _, _ -> dismiss() }
         val defaultColor = context?.getColor(R.color.rce_defaultTextColor) ?: Color.BLACK
         val themeColor = arguments?.getInt(THEME_COLOR, defaultColor) ?: defaultColor
+        val linkText = arguments?.getString(LINK_TEXT, "") ?: ""
         val highlightColor = increaseAlpha(themeColor)
         val colorStateList = makeEditTextColorStateList(defaultColor, themeColor)
         altEditText = root.findViewById(R.id.altEditText)
@@ -63,6 +65,11 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         urlEditText.highlightColor = highlightColor
         altEditText.supportBackgroundTintList = colorStateList
         urlEditText.supportBackgroundTintList = colorStateList
+        if (linkText.isNotBlank()) {
+            altEditText.setText(linkText)
+            val altInputLayout = root.findViewById<TextInputLayout>(R.id.alt_input_layout)
+            altInputLayout.visibility = View.GONE
+        }
         val dialog = builder.create()
         dialog.setOnShowListener {
             val buttonColor = arguments?.getInt(BUTTON_COLOR, defaultColor) ?: defaultColor
@@ -112,6 +119,7 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         private const val THEME_COLOR = "theme_color"
         private const val BUTTON_COLOR = "button_color"
         private const val VERIFY_URL = "verify_url"
+        private const val LINK_TEXT = "link_text"
 
         fun newInstance(title: String?, @ColorInt themeColor: Int, @ColorInt buttonColor: Int): RCEInsertDialog {
             val dialog = RCEInsertDialog()
@@ -123,13 +131,14 @@ class RCEInsertDialog : AppCompatDialogFragment() {
             return dialog
         }
 
-        fun newInstance(title: String?, @ColorInt themeColor: Int, @ColorInt buttonColor: Int, isVerifyUrl: Boolean): RCEInsertDialog {
+        fun newInstance(title: String?, @ColorInt themeColor: Int, @ColorInt buttonColor: Int, isVerifyUrl: Boolean, linkText: String): RCEInsertDialog {
             val dialog = RCEInsertDialog()
             val args = Bundle()
             args.putString(TITLE, title)
             args.putInt(THEME_COLOR, themeColor)
             args.putInt(BUTTON_COLOR, buttonColor)
             args.putBoolean(VERIFY_URL, isVerifyUrl)
+            args.putString(LINK_TEXT, linkText)
             dialog.arguments = args
             return dialog
         }
