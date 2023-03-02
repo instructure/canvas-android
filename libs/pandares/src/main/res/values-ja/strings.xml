@@ -1104,6 +1104,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">「提出」の詳細はここで開くことができます</string>
+
     <plurals name="minutes">
         <item quantity="other">%s 分</item>
     </plurals>
@@ -1315,4 +1317,43 @@
     <string name="acceptableUsePolicyAgree">許可される使用ポリシーに合意します</string>
     <string name="acceptableUsePolicySubmit">提出</string>
     <string name="acceptFail">許可される使用ポリシーの提出に失敗しました。</string>
+    <string name="attempt">%d 試行</string>
+    <string name="quizQuestions">質問:%d</string>
+    <string name="quizTimeLimit">時間制限:%s</string>
+    <string name="allowedAttempts">試行許可数：%s</string>
+    <string name="usedAttempts">試行した回数：%d</string>
+    <string name="generalUnexpectedError">予期しないエラーが発生しました。</string>
+
+    <string name="deleteSelected">削除</string>
+    <string name="archiveSelected">アーカイブ</string>
+    <string name="unarchiveSelected">アーカイブ解凍</string>
+    <string name="markAsReadSelected">既読にする</string>
+    <string name="markAsUnreadSelected">未読にする</string>
+    <string name="starSelected">スター</string>
+    <string name="unstarSelected">スター取り消し</string>
+
+    <string name="inboxOperationFailed">オペレーションの実行に失敗しました</string>
+    <string name="inboxDeletedConfirmation">%sが削除されました</string>
+    <string name="inboxArchivedConfirmation">%sがアーカイブされました</string>
+    <string name="inboxUnarchivedConfirmation">%sがアーカイブ解除されました</string>
+    <string name="inboxMarkAsReadConfirmation">%sが赤でマークされました</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s未読としてマークされました</string>
+    <string name="inboxStarredConfirmation">%sにスターが付けられました</string>
+    <string name="inboxUnstarredConfirmation">%sのスターが解除されました</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="other">これらの会話は、お使いのすべてのデバイスの受信トレイから削除されます。この操作は元に戻すことはできません。</item>
+    </plurals>
+    <string name="failedToLoadNextPage">次のページの読み込みに失敗しました。インターネット接続を確認してください。</string>
+    <string name="conversationsRefreshFailed">会話の更新に失敗しました。インターネット接続を確認してください。</string>
+    <string name="inboxScopeInbox">受信トレイ</string>
+    <string name="inboxContextSelectorTitle">コースまたはグループを選択する</string>
+    <string name="inboxClearFilter">クリア</string>
+    <string name="a11y_courseFilterContentDescription">コースフィルタ：%s</string>
+    <string name="a11y_inboxEntryLongClickDescription">選択する</string>
+    <string name="a11y_itemSelectedSwipeForActions">会話が選択されました。選択モードが有効にされました。アクションに移動します。</string>
+    <string name="a11y_conversationSelected">会話が選択されました</string>
+    <string name="a11y_conversationDeselected">会話が選択解除されました</string>
+    <string name="a11y_exitSelectionMode">選択モードを終了する</string>
+    <string name="a11y_selectionModeDeactivated">選択モードが解除されました。</string>
 </resources>

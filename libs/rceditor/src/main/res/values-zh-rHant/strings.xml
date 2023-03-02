@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">撤銷</string>
+    <string name="rce_contentDescription_redo">重做</string>
+    <string name="rce_contentDescription_bold">粗體格式</string>
+    <string name="rce_contentDescription_italic">斜體格式</string>
+    <string name="rce_contentDescription_strikethrough">刪除線</string>
+    <string name="rce_contentDescription_underline">下劃線</string>
+    <string name="rce_contentDescription_format_text_color">文字顏色格式</string>
+    <string name="rce_contentDescription_border_color">文字邊框顏色格式</string>
+    <string name="rce_contentDescription_indent_increase">增加縮排</string>
+    <string name="rce_contentDescription_indent_decrease">減少縮排</string>
+    <string name="rce_contentDescription_align_left">向左對齊</string>
+    <string name="rce_contentDescription_align_right">向右對齊</string>
+    <string name="rce_contentDescription_align_center">置中對齊</string>
+    <string name="rce_contentDescription_insert_bullets">插入符號列表</string>
+    <string name="rce_contentDescription_insert_numbers">插入數字列表</string>
+    <string name="rce_contentDescription_insert_photo">插入相片</string>
+    <string name="rce_contentDescription_upload_photo">從裝置上載照片</string>
+    <string name="rce_contentDescription_insert_link">插入連結</string>
+    <string name="rce_contentDescription_block_quote">塊引用</string>
+
+    <string name="rce_contentDescription_color_none">顏色無</string>
+    <string name="rce_contentDescription_color_white">顏色白色</string>
+    <string name="rce_contentDescription_color_black">顏色黑色</string>
+    <string name="rce_contentDescription_color_blue">顏色藍色</string>
+    <string name="rce_contentDescription_color_red">顏色紅色</string>
+    <string name="rce_contentDescription_color_green">顏色綠色</string>
+    <string name="rce_contentDescription_color_gray">顏色灰色</string>
+    <string name="rce_contentDescription_color_magenta">顏色洋紅色</string>
+    <string name="rce_contentDescription_color_cyan">顏色青色</string>
+    <string name="rce_contentDescription_color_orange">顏色橙色</string>
+    <string name="rce_contentDescription_color_yellow">顏色黃色</string>
+    <string name="rce_contentDescription_color_purple">顏色紫色</string>
+
+    <string name="rce_editTextUrlHint">連結</string>
+    <string name="rce_editTextALTHint">文本</string>
+    <string name="rce_dialogDone">已完成</string>
+    <string name="rce_dialogCancel">取消</string>
+    <string name="rce_insertLink">插入連結</string>
+    <string name="rce_insertImage">插入圖像</string>
+
+    <string name="rce_uploadImage">上傳影像</string>
+    <string name="rce_done">已完成</string>
+    <string name="rce_cancel">取消</string>
+    <string name="rce_exit">退出</string>
+    <string name="rce_dialog_exit_title">離開作業編輯？</string>
+    <string name="rce_dialog_exit_message">是否確定離開？任何未保存的數據都將丟失。</string>
+    <string name="rce_empty_message">訊息</string>
+    <string name="rce_empty_description">添加描述</string>
+    <string name="rce_scrollInstructions">滾動查看所有編輯工具</string>
+    <string name="rce_emptyUrlError">URL 不可空白</string>
+    <string name="rce_httpNotAllowed">僅接受 https url</string>
+    <string name="rce_dialogAltText">為螢幕讀取器添加替代文字</string>
+</resources>
