@@ -60,6 +60,10 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
   next unless File.directory? src_dir
   Dir.glob("#{src_dir}/*.{xml,arb}") do |file|
     language = File.basename(src_dir).gsub('_', '-')
+    
+    # Fix Chinese directories
+    language = language.gsub('zh-', 'b+zh+')
+
     if language.include? '-x-'
       # BCP 47 private-use subtag. Convert to new Android format and
       # prepend subtag with 'inst'
@@ -85,6 +89,9 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
       puts "Skipping #{language} translation for untracked project #{project}"
       next
     end
+
+    # Fix apostrophes
+    File.write(file, File.open(file, &:read).gsub('&apos;', '\\\\\''))
 
     # Preserve arb file extensions (flutter also names resources slightly different)
     if file.end_with?('.arb')
