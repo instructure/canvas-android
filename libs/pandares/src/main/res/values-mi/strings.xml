@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Mai i konei, ka kite koe i nga Taipitopito Tukunga.</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Meneti</item>
         <item quantity="other">%s meneti</item>
@@ -1331,4 +1333,44 @@
     <string name="acceptableUsePolicyAgree">Ko te Kaupapa Whakamahi Whakaae he pai ki ahau.</string>
     <string name="acceptableUsePolicySubmit">Tuku</string>
     <string name="acceptFail">I rahua te tuku kupu whakaaetanga.</string>
+    <string name="attempt">Whakamātau %d</string>
+    <string name="quizQuestions">Ngā pātai: %d</string>
+    <string name="quizTimeLimit">Whaiti wā: %s</string>
+    <string name="allowedAttempts">Nganatanga whakaaetia: %s</string>
+    <string name="usedAttempts">Nganatanga i whakamahia: %d</string>
+    <string name="generalUnexpectedError">He hapa ohorere i puta.</string>
+
+    <string name="deleteSelected">Muku</string>
+    <string name="archiveSelected">Pūranga</string>
+    <string name="unarchiveSelected">Kore pūrangatia</string>
+    <string name="markAsReadSelected">Mākā kua pānuitia</string>
+    <string name="markAsUnreadSelected">Mākā kua Pānuitia</string>
+    <string name="starSelected">Whetū</string>
+    <string name="unstarSelected">Unstar</string>
+
+    <string name="inboxOperationFailed">Kaore e taea te mahi</string>
+    <string name="inboxDeletedConfirmation">%s kua mukua</string>
+    <string name="inboxArchivedConfirmation">%s pūrangatia</string>
+    <string name="inboxUnarchivedConfirmation">%s kāore i pūrangatia</string>
+    <string name="inboxMarkAsReadConfirmation">%s tohua hei panui</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s tohua hei kaore ano kia panuitia</string>
+    <string name="inboxStarredConfirmation">%s wheturangitia</string>
+    <string name="inboxUnstarredConfirmation">%s kore wheturangitia</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Ka whakawāteahia ngā Pouakauru katoa o ō taputapu i ēnei kōrero. Kaore e taea te wete i tēnei mahi.</item>
+        <item quantity="other">Ka whakawāteahia ngā Pouakauru katoa o ō taputapu i ēnei kōrero. Kaore e taea te wete i tēnei mahi.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">I rahua te uta i te wharangi panuku. Tirohia to hononga ipurangi.</string>
+    <string name="conversationsRefreshFailed">I rahua te whakahou i nga korerorero. Tirohia to hononga ipurangi.</string>
+    <string name="inboxScopeInbox">Pouakauru</string>
+    <string name="inboxContextSelectorTitle">Tīpako Akoranga rōpū ranei</string>
+    <string name="inboxClearFilter">Ūkui</string>
+    <string name="a11y_courseFilterContentDescription">Tātari akoranga: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">whiriwhiri</string>
+    <string name="a11y_itemSelectedSwipeForActions">Kua tohua te korerorero. Kua whakahohehia te aratau whiriwhiri. Whakatere mo nga mahi.</string>
+    <string name="a11y_conversationSelected">Kua tohua te korerorero</string>
+    <string name="a11y_conversationDeselected">Kua whakakorehia te korerorero</string>
+    <string name="a11y_exitSelectionMode">Putaatu i te aratau whiriwhiri</string>
+    <string name="a11y_selectionModeDeactivated">Kua whakakorehia te aratau whiriwhiri.</string>
 </resources>

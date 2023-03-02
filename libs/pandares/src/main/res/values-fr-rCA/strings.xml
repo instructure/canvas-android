@@ -56,7 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l'\outil externe</string>
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
     <string name="submissionUploadByteProgress">%1$s sur %2$s</string>
@@ -72,7 +72,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Saisissez un URL ici pour votre envoi</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d'\ajout de fichier</string>
     <string name="recordAudio">Enregistrer le son</string>
     <string name="recordVideo">Enregistrer la vidéo</string>
     <string name="a11y_textSubmissionEditor">Éditeur d’envoi de texte</string>
@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Cette tâche n'\autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1093,8 +1093,8 @@
     <string name="closeRecordingView">Fermer la vue d’enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur s\'est produite lors de la tentative de lecture.</string>
-    <string name="errorSubmittingMediaComment">Une erreur s\'est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
+    <string name="errorShowingVideoReplay">Une erreur s'\est produite lors de la tentative de lecture.</string>
+    <string name="errorSubmittingMediaComment">Une erreur s'\est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
     <string name="addAudioComment">Ajouter un commentaire audio</string>
@@ -1114,8 +1114,10 @@
     <string name="discussions_unknown_date">Date inconnue</string>
     <string name="a11y_gradeLetterMinusContentDescription">%s. moins</string>
     <string name="a11y_letterGrade">%s.</string>
-    <string name="a11y_gradeCellContentDescription">%1$s %2$s</string>
-    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%1$s %2$s, %3$s</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Vous pouvez ouvrir les détails de l’envoi à partir d’ici</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1127,8 +1129,8 @@
     <string name="noConferencesMessage">Il n\'y a pas encore de conférences à afficher</string>
     <string name="noConferenceDescription">Il n\'y a aucune description pour cette conférence</string>
     <string name="conferenceListError">Une erreur est survenue lors du chargement de vos conférences.</string>
-    <string name="conferenceConcludedDateAtTime">Terminé %1$s à %2$s</string>
-    <string name="conferenceStartedDateAtTime">Commencé %1$s à %2$s</string>
+    <string name="conferenceConcludedDateAtTime">Terminé %s à %s</string>
+    <string name="conferenceStartedDateAtTime">Commencé %s à %s</string>
     <string name="notStarted">Non commencé</string>
     <string name="inProgress">En cours</string>
     <string name="join">Rejoindre</string>
@@ -1139,7 +1141,7 @@
     <string name="conferenceInProgress">Conférences en cours</string>
 
     <string name="a11y_criterion_content_description">Notes du critère %s</string>
-    <string name="a11y_criterion_description_content_description">%1$s, %2$s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">plus d\'informations</string>
     <string name="a11y_create_file_folder_visible">Les boutons « Créer un fichier » et « Créer un dossier » sont visibles</string>
     <string name="a11y_create_file_folder_gone">Les boutons « Créer un fichier » et « Créer un dossier » sont invisibles</string>
@@ -1331,4 +1333,44 @@
     <string name="acceptableUsePolicyAgree">J’accepte la Politique d\'utilisation acceptable.</string>
     <string name="acceptableUsePolicySubmit">Envoyer</string>
     <string name="acceptFail">Échec de l’envoi de l’acceptation des conditions.</string>
+    <string name="attempt">Tentative %d</string>
+    <string name="quizQuestions">Questions : %d</string>
+    <string name="quizTimeLimit">Limite de temps : %s</string>
+    <string name="allowedAttempts">Tentatives autorisées : %s</string>
+    <string name="usedAttempts">Tentatives utilisées : %d</string>
+    <string name="generalUnexpectedError">Une erreur inattendue s’est produite.</string>
+
+    <string name="deleteSelected">Supprimer</string>
+    <string name="archiveSelected">Archiver</string>
+    <string name="unarchiveSelected">Désarchiver</string>
+    <string name="markAsReadSelected">Marquer comme lues</string>
+    <string name="markAsUnreadSelected">Marquer comme non lues</string>
+    <string name="starSelected">Astérisque</string>
+    <string name="unstarSelected">Enlever l’astérisque</string>
+
+    <string name="inboxOperationFailed">Échec de l’exécution de l’opération</string>
+    <string name="inboxDeletedConfirmation">%s supprimé(s)</string>
+    <string name="inboxArchivedConfirmation">%s archivé(s)</string>
+    <string name="inboxUnarchivedConfirmation">%s désarchivé(s)</string>
+    <string name="inboxMarkAsReadConfirmation">%s marqué(s) comme lu</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marqué(s) comme non lu</string>
+    <string name="inboxStarredConfirmation">%s marqué(s) d’un astérisque</string>
+    <string name="inboxUnstarredConfirmation">%s avec étoile enlevé(s)</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Cette conversation sera supprimée de la boîte de réception sur tous vos appareils. Cette action ne peut pas être annulée.</item>
+        <item quantity="other">Ces conversations seront supprimées de la boîte de réception sur tous vos appareils. Cette action ne peut pas être annulée.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Échec du chargement de la page suivante. Vérifiez votre connexion Internet.</string>
+    <string name="conversationsRefreshFailed">Échec de l’actualisation des conversations. Vérifiez votre connexion Internet.</string>
+    <string name="inboxScopeInbox">Boîte de réception</string>
+    <string name="inboxContextSelectorTitle">Sélectionner un cours ou un groupe</string>
+    <string name="inboxClearFilter">Effacer</string>
+    <string name="a11y_courseFilterContentDescription">Filtrer les cours : %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">sélectionner</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversation sélectionnée. Mode de sélection activé. Naviguer pour les actions.</string>
+    <string name="a11y_conversationSelected">Conversation sélectionnée</string>
+    <string name="a11y_conversationDeselected">Conversation désélectionnée</string>
+    <string name="a11y_exitSelectionMode">Quitter le mode de sélection</string>
+    <string name="a11y_selectionModeDeactivated">Mode de sélection désactivé.</string>
 </resources>

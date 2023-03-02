@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Podeu obrir Informació de l’entrega des d\'aquí</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minuts</item>
@@ -1332,4 +1334,44 @@
     <string name="acceptableUsePolicyAgree">Accepto la política d’ús acceptable.</string>
     <string name="acceptableUsePolicySubmit">Entrega</string>
     <string name="acceptFail">No s’ha pogut enviar l’acceptació de les condicions.</string>
+    <string name="attempt">Intent %d</string>
+    <string name="quizQuestions">Preguntes: %d</string>
+    <string name="quizTimeLimit">Límit de temps: %s</string>
+    <string name="allowedAttempts">Intents permesos: %s</string>
+    <string name="usedAttempts">Intents utilitzats: %d</string>
+    <string name="generalUnexpectedError">S\'ha produït un error inesperat.</string>
+
+    <string name="deleteSelected">Suprimeix</string>
+    <string name="archiveSelected">Arxiva</string>
+    <string name="unarchiveSelected">Anul·la l’arxivament</string>
+    <string name="markAsReadSelected">Marca-ho com a llegit</string>
+    <string name="markAsUnreadSelected">Marca-ho com a no llegit</string>
+    <string name="starSelected">Marca amb una estrella</string>
+    <string name="unstarSelected">Suprimeix l\'estrella</string>
+
+    <string name="inboxOperationFailed">No s\'ha pogut realitzar l’operació</string>
+    <string name="inboxDeletedConfirmation">S\'ha suprimit %s</string>
+    <string name="inboxArchivedConfirmation">S’ha arxivat %s</string>
+    <string name="inboxUnarchivedConfirmation">S’ha anul·lat l’arxivament de %s</string>
+    <string name="inboxMarkAsReadConfirmation">S’ha marcat %s com a llegit</string>
+    <string name="inboxMarkAsUnreadConfirmation">S’ha marcat %s com a no llegit</string>
+    <string name="inboxStarredConfirmation">S’ha marcat %s amb una estrella</string>
+    <string name="inboxUnstarredConfirmation">S’ha suprimit l’estrella de %s</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Aquesta conversa se suprimirà de la safata d’entrada en tots els vostres dispositius. Aquesta acció no es pot desfer.</item>
+        <item quantity="other">Aquestes converses se suprimiran de la safata d’entrada en tots els vostres dispositius. Aquesta acció no es pot desfer.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">No s’ha pogut carregar la pàgina següent. Comproveu la vostra connexió a Internet.</string>
+    <string name="conversationsRefreshFailed">No s\'han pogut actualitzar les converses. Comproveu la vostra connexió a Internet.</string>
+    <string name="inboxScopeInbox">Safata d\'entrada</string>
+    <string name="inboxContextSelectorTitle">Seleccioneu una assignatura o un grup</string>
+    <string name="inboxClearFilter">Suprimeix</string>
+    <string name="a11y_courseFilterContentDescription">Filtre de l’assignatura: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">seleccionada</string>
+    <string name="a11y_itemSelectedSwipeForActions">S’ha seleccionat la conversa. S’ha activat el mode de selecció. Navegueu per cercar accions.</string>
+    <string name="a11y_conversationSelected">S’ha seleccionat la conversa</string>
+    <string name="a11y_conversationDeselected">S’ha anul·lat la selecció de la conversa.</string>
+    <string name="a11y_exitSelectionMode">Surt del mode de selecció</string>
+    <string name="a11y_selectionModeDeactivated">S’ha desactivat el mode de selecció.</string>
 </resources>
