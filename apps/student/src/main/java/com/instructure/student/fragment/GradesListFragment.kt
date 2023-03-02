@@ -174,7 +174,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             // cached data, so fast.
             if (!showWhatIfCheckBox.isChecked) {
                 recyclerAdapter.whatIfGrade = null
-                recyclerAdapter.refresh()
+                recyclerAdapter.loadCachedData()
             } else {
                 // Only log when what if grades is checked on
                 Analytics.logEvent(AnalyticsEventConstants.WHAT_IF_GRADES)
@@ -252,7 +252,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                         recyclerAdapter.loadData()
                     } else {
                         if(termAdapter?.isEmpty == false) {
-                            recyclerAdapter.loadAssignmentsForGradingPeriod(termAdapter?.getItem(position)?.id ?: 0, true)
+                            recyclerAdapter.loadAssignmentsForGradingPeriod(termAdapter?.getItem(position)?.id ?: 0, true, true)
                             termSpinner.isEnabled = false
                             termAdapter?.isLoading = true
                             termAdapter?.notifyDataSetChanged()
