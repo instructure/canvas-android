@@ -1384,4 +1384,5 @@
     <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
     <string name="a11y_avatarContentDescription">Avatar of %s</string>
     <string name="inboxUndo">Undo</string>
+    <string name="other">Other</string>
 </resources>

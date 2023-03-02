@@ -17,19 +17,18 @@
 
 package com.instructure.student.features.bookmarks.itemviewmodels
 
-import android.view.View
+import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.student.R
-import com.instructure.student.features.bookmarks.BookmarkViewData
+import com.instructure.student.features.bookmarks.BookmarkGroupViewData
 import com.instructure.student.features.bookmarks.BookmarkViewType
 
-class BookmarkItemViewModel(
-    val data: BookmarkViewData,
-    val openPopupHandler: (View) -> Unit
-) : ItemViewModel {
-    override val layoutId: Int
-        get() = R.layout.item_bookmark
+class BookmarkGroupItemViewModel(
+    val data: BookmarkGroupViewData,
+    items: List<ItemViewModel>) :
+    GroupItemViewModel(true, false, items) {
+    override val layoutId: Int = R.layout.item_bookmark_group
 
     override val viewType: Int
-        get() = BookmarkViewType.ITEM.type
+        get() = BookmarkViewType.HEADER.type
 }
