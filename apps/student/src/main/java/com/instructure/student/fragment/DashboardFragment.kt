@@ -27,10 +27,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
@@ -57,17 +61,21 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.course_grid_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.fragment_course_grid.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.swipeRefreshLayout
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
 
 private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
+@AndroidEntryPoint
 class DashboardFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -76,6 +84,9 @@ class DashboardFragment : ParentFragment() {
 
     private var courseColumns: Int = LIST_SPAN_COUNT
     private var groupColumns: Int = LIST_SPAN_COUNT
+
+    @Inject
+    lateinit var userApi: UserAPI.UsersInterface
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -270,7 +281,46 @@ class DashboardFragment : ParentFragment() {
                 RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
             }
         }
+
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP, 0) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                val from = viewHolder.bindingAdapterPosition
+                val to = target.bindingAdapterPosition
+                val fromItem = recyclerAdapter?.getItem(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, from - 1) as? Course
+
+                recyclerAdapter?.notifyItemMoved(from, to)
+
+                if (fromItem != null) {
+                    moveItemsCall = {
+                        recyclerAdapter?.moveItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, fromItem, to - 1)
+                        recyclerAdapter?.notifyDataSetChanged()
+                    }
+                }
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                moveItemsCall?.invoke()
+                moveItemsCall = null
+                val courseItems = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)?.map { it as? Course }
+                    ?.filterNotNull() ?: emptyList()
+                val positions = courseItems
+                    .mapIndexed { index, course -> Pair(course.contextId, index) }
+                    .toMap()
+
+                val dashboardPositions = DashboardPositions(positions)
+                lifecycleScope.launch {
+                    userApi.updateDashboardPositions(dashboardPositions, RestParams(isForceReadFromNetwork = true))
+                }
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
+
+    private var moveItemsCall: (() -> Unit)? = null
 
     override fun onStart() {
         super.onStart()
