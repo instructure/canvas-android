@@ -62,7 +62,9 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
     language = File.basename(src_dir).gsub('_', '-')
     
     # Fix Chinese directories
-    language = language.gsub('zh-', 'b+zh+')
+    if file.end_with?('.xml')
+      language = language.gsub('zh-', 'b+zh+')
+    end
 
     if language.include? '-x-'
       # BCP 47 private-use subtag. Convert to new Android format and
