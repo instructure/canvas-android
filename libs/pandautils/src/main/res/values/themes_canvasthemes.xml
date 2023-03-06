@@ -34,6 +34,12 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
+    </style>
+
+    <style name="NoGifEditText" parent="android:Widget.EditText">
+        <item name="android:privateImeOptions">disableSticker=true;disableGifKeyboard=true</item>
     </style>
 
     <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -49,6 +55,8 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="CanvasMaterialTheme_Default.Translucent">
@@ -57,6 +65,8 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="CanvasDialogTheme_Default" parent="Theme.AppCompat.DayNight.Dialog.Alert">
@@ -69,6 +79,8 @@
         <item name="android:colorAccent">@color/textDarkest</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@color/backgroundLightestElevated</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="AccentDialogTheme" parent="CanvasDialogTheme_Default">
@@ -78,9 +90,13 @@
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 </resources>
