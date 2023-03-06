@@ -58,6 +58,7 @@ import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.flutterChannels.FlutterComm
+import com.instructure.student.holders.CourseViewHolder
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
@@ -284,26 +285,31 @@ class DashboardFragment : ParentFragment() {
 
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP, 0) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                val from = viewHolder.bindingAdapterPosition
-                val to = target.bindingAdapterPosition
-                val fromItem = recyclerAdapter?.getItem(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, from - 1) as? Course
-
-                recyclerAdapter?.notifyItemMoved(from, to)
+                val fromPosition = viewHolder.bindingAdapterPosition
+                val toPosition = target.bindingAdapterPosition
+                val fromItem = recyclerAdapter?.getItem(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, fromPosition - 1) as? Course
 
                 if (fromItem != null) {
-                    moveItemsCall = {
-                        recyclerAdapter?.moveItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, fromItem, to - 1)
-                        recyclerAdapter?.notifyDataSetChanged()
+                    val itemsSize = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)?.size ?: 0
+                    val newPosition = when {
+                        toPosition - 1 < 0 -> 0
+                        toPosition - 1 > itemsSize - 1 -> itemsSize - 1
+                        else -> toPosition - 1
                     }
+                    recyclerAdapter?.moveItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, fromItem, newPosition)
                 }
                 return true
+            }
+
+            override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                return if (viewHolder is CourseViewHolder) {
+                    ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP
+                } else 0
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
 
             override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-                moveItemsCall?.invoke()
-                moveItemsCall = null
                 val courseItems = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)?.map { it as? Course }
                     ?.filterNotNull() ?: emptyList()
                 val positions = courseItems
@@ -319,8 +325,6 @@ class DashboardFragment : ParentFragment() {
 
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
-
-    private var moveItemsCall: (() -> Unit)? = null
 
     override fun onStart() {
         super.onStart()
