@@ -16,6 +16,7 @@
 
 package com.emeritus.student.flutterChannels
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
@@ -34,8 +35,10 @@ import io.flutter.plugin.common.MethodChannel
 import org.json.JSONObject
 import java.util.*
 
+@SuppressLint("StaticFieldLeak")
 object FlutterComm {
     private const val CHANNEL = "com.instructure.student/flutterComm"
+
 
     private const val METHOD_RESET = "reset"
     private const val METHOD_ROUTE_TO_CALENDAR = "routeToCalendar"
@@ -45,6 +48,7 @@ object FlutterComm {
     private const val METHOD_UPDATE_SHOULD_POP = "updateShouldPop"
     private const val METHOD_UPDATE_THEME_DATA = "updateThemeData"
     private const val METHOD_UPDATE_DARK_MODE = "updateLightOrDarkMode"
+    private const val METHOD_UPDATE_BASE_URL = "updateBaseUrl"
 
     private lateinit var context: Context
     private lateinit var channel: MethodChannel
@@ -67,7 +71,7 @@ object FlutterComm {
     }
 
     private fun handleCall(call: MethodCall, result: MethodChannel.Result) {
-        when(call.method) {
+        when (call.method) {
             METHOD_UPDATE_SHOULD_POP -> {
                 shouldPop = call.arguments as? Boolean ?: true
                 result.success(null)
@@ -118,7 +122,8 @@ object FlutterComm {
         channel.invokeMethod(METHOD_UPDATE_THEME_DATA, data)
     }
 
-    fun routeToCalendar(channelId: String) = channel.invokeMethod(METHOD_ROUTE_TO_CALENDAR, channelId)
+    fun routeToCalendar(channelId: String) =
+        channel.invokeMethod(METHOD_ROUTE_TO_CALENDAR, channelId)
 
     fun reset() = channel.invokeMethod(METHOD_RESET, null)
 
@@ -129,11 +134,18 @@ object FlutterComm {
     }
 
     fun updateDarkMode(activity: Activity) {
-        val nightModeFlags: Int = activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val nightModeFlags: Int =
+            activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val darkMode = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
 
         val data = mutableMapOf<String, Any?>()
         data["darkMode"] = darkMode
         channel.invokeMethod(METHOD_UPDATE_DARK_MODE, data)
+    }
+
+    fun updateBaseUrl(baseUrl: String) {
+        val data = mutableMapOf<String, Any?>()
+        data["baseurl"] = baseUrl
+        channel.invokeMethod(METHOD_UPDATE_BASE_URL, data)
     }
 }

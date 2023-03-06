@@ -91,6 +91,7 @@ import com.emeritus.student.tasks.StudentLogoutTask
 import com.emeritus.student.util.Analytics
 import com.emeritus.student.util.AppShortcutManager
 import com.emeritus.student.util.StudentPrefs
+import com.instructure.canvasapi2.BuildConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.loading_canvas_view.*
@@ -238,6 +239,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             finish()
         }
 
+        FlutterComm.updateBaseUrl(BuildConfig.BASE_URL)
         FlutterComm.updateDarkMode(this)
 
         bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)

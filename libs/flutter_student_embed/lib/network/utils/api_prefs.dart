@@ -21,6 +21,7 @@ import 'package:flutter_student_embed/models/user.dart';
 import 'package:package_info/package_info.dart';
 
 class ApiPrefs {
+  static String baseUrl;
   static Login _currentLogin;
   static PackageInfo _packageInfo;
 

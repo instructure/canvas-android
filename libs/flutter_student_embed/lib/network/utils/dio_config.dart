@@ -64,7 +64,8 @@ class DioConfig {
   /// Creates a [Dio] instance using this configuration
   Dio get dio {
     // Add canvas-string-ids header to ensure Canvas IDs are returned as Strings
-    baseHeaders[HttpHeaders.acceptHeader] = 'application/json+canvas-string-ids';
+    baseHeaders[HttpHeaders.acceptHeader] =
+        'application/json+canvas-string-ids';
 
     // Configure base options
     var options = BaseOptions(baseUrl: baseUrl, headers: baseHeaders);
@@ -78,7 +79,8 @@ class DioConfig {
 
     // Add cache configuration to base options
     if (cacheMaxAge != Duration.zero) {
-      var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
+      var extras =
+          buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
       options.extra.addAll(extras);
     }
 
@@ -106,11 +108,19 @@ class DioConfig {
   }
 
   Interceptor _cacheInterceptor() {
-    Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
+    Interceptor interceptor =
+        DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
     return InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
-      onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
-      onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) =>
+          options.method == 'GET'
+              ? interceptor.onRequest(options, handler)
+              : handler.next(options),
+      onResponse: (Response response, ResponseInterceptorHandler handler) =>
+          response.requestOptions.method == 'GET'
+              ? interceptor.onResponse(response, handler)
+              : handler.next(response),
+      onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(
+          e), // interceptor falls back to cache on error, a behavior we currently don't want
     );
   }
 
@@ -124,9 +134,11 @@ class DioConfig {
     PageSize pageSize: PageSize.none,
   }) {
     String masqueradeId = ApiPrefs.getCurrentLogin()?.masqueradeId;
-    Map<String, dynamic> extraParams = masqueradeId == null ? null : {'as_user_id': masqueradeId};
+    Map<String, dynamic> extraParams =
+        masqueradeId == null ? null : {'as_user_id': masqueradeId};
     return DioConfig(
-      baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
+      baseUrl:
+          includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
       baseHeaders: ApiPrefs.getHeaderMap(
         forceDeviceLanguage: forceDeviceLanguage,
         token: overrideToken,
@@ -147,7 +159,7 @@ class DioConfig {
     bool forceRefresh: false,
     PageSize pageSize: PageSize.none,
   }) {
-    var baseUrl = 'https://canvas-test.emeritus.org/';
+    var baseUrl = ApiPrefs.baseUrl;
     if (includeApiPath) baseUrl += 'api/v1/';
 
     return DioConfig(
@@ -162,12 +174,14 @@ class DioConfig {
   Future<bool> clearCache({String path}) {
     // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
     // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
-    if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
+    if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding)
+      return Future.value(true);
 
     if (path == null) {
       return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
     } else {
-      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path, requestMethod: "GET");
+      return DioCacheManager(CacheConfig(baseUrl: baseUrl))
+          .deleteByPrimaryKey(path, requestMethod: "GET");
     }
   }
 }
@@ -185,7 +199,8 @@ class PageSize {
   static const PageSize canvasMax = const PageSize(100);
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PageSize && this.size == other.size;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is PageSize && this.size == other.size;
 }
 
 /// Convenience method that returns a [Dio] instance configured by calling through to [DioConfig.canvas]

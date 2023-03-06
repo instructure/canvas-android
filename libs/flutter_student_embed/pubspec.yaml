@@ -49,16 +49,16 @@ dev_dependencies:
 #  flutter_test:
 #    sdk: flutter
 
-  # Test dependencies
+#   Test dependencies
 #  mockito: ^5.0.15
-#  test: ^1.23.0
+#  test: 1.23.0
 #  transparent_image: ^2.0.0
 
   # Generators
-  build_resolvers: ^2.0.4
-  build_runner: ^2.1.5
-  built_value_generator: ^8.1.1
-  intl_generator: ^0.2.0+0
+#  build_resolvers: ^2.0.4
+#  build_runner: ^2.1.5
+#  built_value_generator: ^8.1.1
+#  intl_generator: ^0.2.0+0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
