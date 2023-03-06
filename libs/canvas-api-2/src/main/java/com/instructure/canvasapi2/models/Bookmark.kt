@@ -41,7 +41,7 @@ data class Bookmark(
 
     fun getData(): BookmarkData? {
         return data?.let {
-            Gson().fromJson(data, BookmarkData::class.java)
+            Gson().fromJson(it, BookmarkData::class.java)
         }
     }
 }

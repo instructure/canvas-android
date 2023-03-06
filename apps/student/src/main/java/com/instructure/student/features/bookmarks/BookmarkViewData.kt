@@ -21,7 +21,6 @@ import android.view.View
 import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.features.bookmarks.itemviewmodels.BookmarkItemViewModel
 
 data class BookmarksViewData(
     val items: List<ItemViewModel>
@@ -43,6 +42,7 @@ sealed class BookmarksAction {
     data class CreateShortcut(val bookmark: Bookmark) : BookmarksAction()
     data class ShowSnackbar(val snackbar: String) : BookmarksAction()
     data class ShowDeleteConfirmation(val bookmark: Bookmark) : BookmarksAction()
+    data class ShowEditDialog(val bookmark: Bookmark) : BookmarksAction()
 }
 
 enum class BookmarkGrouping {

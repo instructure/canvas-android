@@ -17,6 +17,7 @@ import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.student.R
 import com.instructure.student.activity.BookmarkShortcutActivity
 import com.instructure.student.databinding.FragmentBookmarksBinding
+import com.instructure.student.features.bookmarks.edit.BookmarkEditFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.util.ShortcutUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,6 +63,9 @@ class BookmarksFragment : ParentFragment() {
             }
             is BookmarksAction.ShowDeleteConfirmation -> {
                 showDeleteConfirmationDialog(action.bookmark)
+            }
+            is BookmarksAction.ShowEditDialog -> {
+                BookmarkEditFragment.newInstance().show(childFragmentManager, null)
             }
         }
     }

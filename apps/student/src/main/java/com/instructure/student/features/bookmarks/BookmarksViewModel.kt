@@ -80,7 +80,9 @@ class BookmarksViewModel @Inject constructor(
     }
 
     fun editBookmarkClicked(id: Long) {
-        TODO("Not yet implemented")
+        bookmarkMap[id]?.let {
+            _events.postValue(Event(BookmarksAction.ShowEditDialog(it)))
+        } ?: _events.postValue(Event(BookmarksAction.ShowSnackbar(resources.getString(R.string.errorOccurred))))
     }
 
     fun deleteBookmarkClicked(id: Long) {

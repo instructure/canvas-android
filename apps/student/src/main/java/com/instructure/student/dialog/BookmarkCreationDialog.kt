@@ -23,12 +23,15 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.managers.BookmarkManager
 import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.canvasapi2.models.BookmarkData
@@ -48,6 +51,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.CacheControlFlags
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @ScreenView(SCREEN_VIEW_BOOKMARK_CREATION)
 class BookmarkCreationDialog : AppCompatDialogFragment() {
@@ -56,6 +60,16 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
 
     init {
         retainInstance = true
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch {
+            val labels = BookmarkManager.getBookmarksAsync(false).await().dataOrNull
+                ?.map {
+                    it.getData()?.label
+                }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -82,19 +96,34 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
     }
 
     private fun setupViews(view: View) {
-        bookmarkEditText = view.findViewById(R.id.bookmarkEditText)
-        bookmarkEditText?.let {
-            ViewStyler.themeEditText(
-                requireContext(), it,
-                arguments?.getParcelable<CanvasContext>(BOOKMARK_CANVAS_CONTEXT)?.textAndIconColor ?: ThemePrefs.brandColor
-            )
-            it.setText(arguments?.getString(BOOKMARK_LABEL, "").orEmpty())
-            it.setSelection(it.text?.length ?: 0)
+        lifecycleScope.launch {
+            val labels = BookmarkManager.getBookmarksAsync(false).await().dataOrNull
+                ?.map {
+                    it.getData()?.label
+                }
+                .orEmpty()
+                .toMutableList()
+            val bookmarkLabelEditText = view.findViewById<AutoCompleteTextView>(R.id.bookmarkGroupEditText)
+            ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, labels).also { adapter ->
+                bookmarkLabelEditText.setAdapter(adapter)
+            }
+
+            bookmarkEditText = view.findViewById(R.id.bookmarkEditText)
+            bookmarkEditText?.let {
+                ViewStyler.themeEditText(
+                    requireContext(), it,
+                    arguments?.getParcelable<CanvasContext>(BOOKMARK_CANVAS_CONTEXT)?.textAndIconColor ?: ThemePrefs.brandColor
+                )
+                it.setText(arguments?.getString(BOOKMARK_LABEL, "").orEmpty())
+                it.setSelection(it.text?.length ?: 0)
+            }
+
         }
     }
 
     private fun saveBookmark() {
         val label = bookmarkEditText!!.text.toString()
+        val group = view?.findViewById<AutoCompleteTextView>(R.id.bookmarkGroupEditText)?.text.toString()
         if(label.isBlank()) {
             Toast.makeText(activity, R.string.bookmarkTitleRequired, Toast.LENGTH_SHORT).show()
             return
@@ -102,7 +131,7 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
 
         bookmarkJob = tryWeave {
             awaitApi<Bookmark> { BookmarkManager.createBookmark(Bookmark(name = label, url = arguments?.getString(BOOKMARK_URL), position = 0).apply { setData(
-                BookmarkData("Test label")
+                BookmarkData(group)
             ) }, it) }
             Analytics.trackBookmarkCreated(activity)
             Toast.makeText(activity, R.string.bookmarkAddedSuccess, Toast.LENGTH_SHORT).show()
