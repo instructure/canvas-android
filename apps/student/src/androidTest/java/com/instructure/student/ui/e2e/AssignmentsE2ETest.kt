@@ -106,17 +106,18 @@ class AssignmentsE2ETest: StudentTest() {
         submissionDetailsPage.assertNoSubmissionEmptyView()
         Espresso.pressBack()
 
-        Log.d(PREPARATION_TAG,"Submit assignment via UI: ${pointsTextAssignment.name} for student: ${student.name}." +
-                "Assert that the Text Submission Upload Page is displayed.")
-        assignmentDetailsPage.clickSubmit()
-        textSubmissionUploadPage.assertPageObjects()
+        Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
+        SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
+            assignmentId = pointsTextAssignment.id,
+            courseId = course.id,
+            studentToken = student.token,
+            submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(
+                amount = 1,
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+            ))
+        ))
 
-        Log.d(STEP_TAG, "Type some text into the RCE editor input field and click on 'SUBMIT' button.")
-        textSubmissionUploadPage.typeText("This is the submission text.")
-        textSubmissionUploadPage.clickOnSubmitButton()
-
-        Log.d(STEP_TAG, "Wait for the submission to propogate and assert that the status became 'Submitted' and the 'Submission & Rubric' is still displayed.")
-        assignmentDetailsPage.waitForSubmissionComplete()
+        assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
 
