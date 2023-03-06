@@ -12,14 +12,15 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
+  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.StubTablet
   - class com.instructure.student.ui.e2e.AssignmentsE2ETest#testPointsGradeTextAssignmentE2E
   device:
   - model: Nexus7_clone_16_9
-    version: 26
+    version: 27
     locale: en_US
     orientation: landscape
   - model: Nexus7_clone_16_9
-    version: 26
+    version: 28
     locale: en_US
     orientation: portrait
 
