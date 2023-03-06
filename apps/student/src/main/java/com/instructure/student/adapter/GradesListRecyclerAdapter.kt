@@ -113,50 +113,60 @@ open class GradesListRecyclerAdapter(
     }
 
     final override fun loadData() {
-       loadDataJob = GlobalScope.launch(Dispatchers.Main) {
-           try {
-               // Logic regarding MGP is similar here as it is in both assignment recycler adapters,
-               // if changes are made here, check if they are needed in the other recycler adapters
-               val course = awaitApi<Course>{CourseManager.getCourseWithGrade(canvasContext!!.id, it, true)}
-               val enrollments = (canvasContext as Course).enrollments
-               canvasContext = course
+        loadData(true)
+    }
 
-               // Use the enrollments that were passed in with the course if one returned has none
-               // Should only be concluded courses that this applies
-               (canvasContext as Course).apply {
-                   if (this.enrollments.isNullOrEmpty()) {
-                       this.enrollments = enrollments
-                   }
-               }
+    fun loadCachedData() {
+        adapterToRecyclerViewCallback.refresh()
+        resetData()
+        loadData(false)
+    }
 
-               if (isAllGradingPeriodsSelected) {
-                   isRefresh = true
-                   updateCourseGrade()
-                   updateWithAllAssignments()
-                   return@launch
-               }
+    private fun loadData(forceNetwork: Boolean) {
+        loadDataJob = GlobalScope.launch(Dispatchers.Main) {
+            try {
+                // Logic regarding MGP is similar here as it is in both assignment recycler adapters,
+                // if changes are made here, check if they are needed in the other recycler adapters
+                val course = awaitApi<Course>{CourseManager.getCourseWithGrade(canvasContext!!.id, it, forceNetwork)}
+                val enrollments = (canvasContext as Course).enrollments
+                canvasContext = course
 
-               course.enrollments!!.firstOrNull {
-                   it.isStudent && it.multipleGradingPeriodsEnabled
-               }?.let { enrollment ->
-                   setupStudentGrades(enrollment, course)
-               } ?: course.enrollments!!.firstOrNull { it.isObserver }?.let { enrollment ->
-                   setupObserverGrades(enrollment, course)
-               }
+                // Use the enrollments that were passed in with the course if one returned has none
+                // Should only be concluded courses that this applies
+                (canvasContext as Course).apply {
+                    if (this.enrollments.isNullOrEmpty()) {
+                        this.enrollments = enrollments
+                    }
+                }
 
-               // If we've made it this far, MGP is not enabled, so we do the standard behavior
-               isRefresh = true
-               updateCourseGrade()
-               updateWithAllAssignments()
-           } catch (e: CancellationException) {
-               //We cancelled the job, nothing to do here
-           } catch (e: Throwable) {
-               Toast.makeText(context, R.string.errorOccurred, Toast.LENGTH_SHORT).show()
-           }
+                if (isAllGradingPeriodsSelected) {
+                    isRefresh = true
+                    updateCourseGrade()
+                    updateWithAllAssignments(forceNetwork)
+                    return@launch
+                }
+
+                course.enrollments!!.firstOrNull {
+                    it.isStudent && it.multipleGradingPeriodsEnabled
+                }?.let { enrollment ->
+                    setupStudentGrades(enrollment, course, forceNetwork)
+                } ?: course.enrollments!!.firstOrNull { it.isObserver }?.let { enrollment ->
+                    setupObserverGrades(enrollment, course, forceNetwork)
+                }
+
+                // If we've made it this far, MGP is not enabled, so we do the standard behavior
+                isRefresh = true
+                updateCourseGrade()
+                updateWithAllAssignments(forceNetwork)
+            } catch (e: CancellationException) {
+                //We cancelled the job, nothing to do here
+            } catch (e: Throwable) {
+                Toast.makeText(context, R.string.errorOccurred, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun setupObserverGrades(enrollment: Enrollment, course: Course) {
+    private fun setupObserverGrades(enrollment: Enrollment, course: Course, forceNetwork: Boolean) {
         // Load current term
         currentGradingPeriod = GradingPeriod(
             id = enrollment.currentGradingPeriodId,
@@ -169,19 +179,19 @@ open class GradesListRecyclerAdapter(
                 // We need to use an ID from an observee, not the user (who is currently logged in as an observer) when retrieving the enrollments
 
                 // Get the first student this user is observing, if none show empty assignments
-                val student = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }
+                val student = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(forceNetwork, it) }
                     .firstOrNull { it.courseId == course.id && it.observedUser != null }?.observedUser
                         ?: return@launch updateAssignmentGroups(emptyList())
 
                 // Get Assignment Groups
                 val assignmentGroups = awaitApi<List<AssignmentGroup>> { AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, currentGradingPeriod!!.id,
                     scopeToStudent = false,
-                    forceNetwork = true,
+                    forceNetwork = forceNetwork,
                     callback = it
                 ) }
                 // The assignments in the assignment groups do not come with their submissions (with the associated grades), so we get them all here
                 val assignmentIds = assignmentGroups.map { it.assignments }.flatten().map { it.id }
-                val submissions = awaitApi<List<Submission>>{ SubmissionManager.getSubmissionsForMultipleAssignments(student.id, course.id, assignmentIds, it, true) }
+                val submissions = awaitApi<List<Submission>>{ SubmissionManager.getSubmissionsForMultipleAssignments(student.id, course.id, assignmentIds, it, forceNetwork) }
                 assignmentGroups.forEach { group ->
                     group.assignments.forEach { assignment ->
                         assignment.submission = submissions.firstOrNull { it.assignmentId == assignment.id }
@@ -190,7 +200,7 @@ open class GradesListRecyclerAdapter(
 
                 updateAssignmentGroups(assignmentGroups)
 
-                awaitApi<List<Course>> { CourseManager.getCoursesWithSyllabus(true, it) }
+                awaitApi<List<Course>> { CourseManager.getCoursesWithSyllabus(forceNetwork, it) }
                     .onEach { course ->
                         course.enrollments?.find { it.userId == student.id }?.let {
                             course.enrollments = mutableListOf(it)
@@ -207,7 +217,7 @@ open class GradesListRecyclerAdapter(
         return
     }
 
-    private fun setupStudentGrades(enrollment: Enrollment, course: Course) {
+    private fun setupStudentGrades(enrollment: Enrollment, course: Course, forceNetwork: Boolean) {
         if (currentGradingPeriod == null || currentGradingPeriod?.title == null) {
             // We load current term
             currentGradingPeriod = GradingPeriod(
@@ -217,16 +227,16 @@ open class GradesListRecyclerAdapter(
 
             // Request the grading period objects and make the assignment calls
             // This callback is fulfilled in the grade list fragment.
-            CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback!!, course.id, true)
+            CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback!!, course.id, forceNetwork)
             return
         } else {
             // Otherwise we load the info from the current grading period
-            loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true)
+            loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true, forceNetwork)
             return
         }
     }
 
-    fun loadAssignmentsForGradingPeriod(gradingPeriodID: Long, refreshFirst: Boolean) {
+    fun loadAssignmentsForGradingPeriod(gradingPeriodID: Long, refreshFirst: Boolean, forceNetwork: Boolean) {
         // Logic regarding MGP is similar here as it is in both assignment recycler adapters,
         // if changes are made here, check if they are needed in the other recycler adapters
         if (refreshFirst) {
@@ -238,12 +248,12 @@ open class GradesListRecyclerAdapter(
         if (scopeToStudent) {
             assignmentsForGradingPeriodJob = GlobalScope.launch(Dispatchers.Main) {
                 try {
-                    val assignmentGroups = awaitApi<List<AssignmentGroup>>{AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, gradingPeriodID, scopeToStudent, true, it)}
+                    val assignmentGroups = awaitApi<List<AssignmentGroup>>{AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, gradingPeriodID, scopeToStudent, forceNetwork, it)}
                     updateAssignmentGroups(assignmentGroups)
 
                     // Fetch the enrollments associated with the selected gradingPeriodID, these will contain the
                     // correct grade for the period
-                    val enrollments = awaitApi<List<Enrollment>>{CourseManager.getUserEnrollmentsForGradingPeriod(canvasContext!!.id, ApiPrefs.user!!.id, gradingPeriodID, it, true)}
+                    val enrollments = awaitApi<List<Enrollment>>{CourseManager.getUserEnrollmentsForGradingPeriod(canvasContext!!.id, ApiPrefs.user!!.id, gradingPeriodID, it, forceNetwork)}
                     updateCourseGradeFromGradingPeriodSpecificEnrollment(enrollments)
 
                     // Inform the spinner things are done
@@ -275,11 +285,11 @@ open class GradesListRecyclerAdapter(
         adapterToGradesCallback?.notifyGradeChanged(courseGrade)
     }
 
-    private fun updateWithAllAssignments() {
+    private fun updateWithAllAssignments(forceNetwork: Boolean) {
         allAssignmentsAndGroupsJob = GlobalScope.launch(Dispatchers.Main) {
             try {
                 // Standard load assignments, unfiltered
-                val aGroups = awaitApi<List<AssignmentGroup>>{AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext!!.id, true, it)}
+                val aGroups = awaitApi<List<AssignmentGroup>>{AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext!!.id, forceNetwork, it)}
                 updateAssignmentGroups(aGroups)
             } catch (e: CancellationException) {
                 //We cancelled the job, nothing to do here
