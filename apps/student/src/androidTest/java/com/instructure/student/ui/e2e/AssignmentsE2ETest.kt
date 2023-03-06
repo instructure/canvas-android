@@ -21,7 +21,6 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.RunsOnTablet
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -59,7 +58,6 @@ class AssignmentsE2ETest: StudentTest() {
     )
 
     @E2E
-    @RunsOnTablet("Check a full submission flow on tablet.")
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPointsGradeTextAssignmentE2E() {

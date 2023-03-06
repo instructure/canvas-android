@@ -16,11 +16,11 @@ gcloud:
   - class com.instructure.student.ui.e2e.AssignmentsE2ETest#testPointsGradeTextAssignmentE2E
   device:
   - model: Nexus7_clone_16_9
-    version: 27
+    version: 26
     locale: en_US
     orientation: landscape
   - model: Nexus7_clone_16_9
-    version: 28
+    version: 26
     locale: en_US
     orientation: portrait
 
