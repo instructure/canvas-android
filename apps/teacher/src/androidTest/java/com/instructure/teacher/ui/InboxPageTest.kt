@@ -97,12 +97,12 @@ class InboxPageTest: TeacherTest() {
         inboxPage.selectConversation(conversation1)
         inboxPage.selectConversation(conversation2)
         inboxPage.clickArchive()
-        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
-        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
 
         inboxPage.filterInbox("Archived")
-        inboxPage.assertConversationDisplayed(conversation1.subject ?: "")
-        inboxPage.assertConversationDisplayed(conversation2.subject ?: "")
+        inboxPage.assertConversationDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationDisplayed(conversation2.subject!!)
     }
 
     @Test
@@ -125,8 +125,8 @@ class InboxPageTest: TeacherTest() {
         inboxPage.selectConversation(conversation1)
         inboxPage.selectConversation(conversation2)
         inboxPage.clickStar()
-        inboxPage.assertConversationStarred(conversation1.subject ?: "")
-        inboxPage.assertConversationStarred(conversation2.subject ?: "")
+        inboxPage.assertConversationStarred(conversation1.subject!!)
+        inboxPage.assertConversationStarred(conversation2.subject!!)
     }
 
     @Test
@@ -152,8 +152,8 @@ class InboxPageTest: TeacherTest() {
         inboxPage.selectConversation(conversation1)
         inboxPage.selectConversation(conversation2)
         inboxPage.clickUnstar()
-        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
-        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
     }
 
     @Test
@@ -176,12 +176,12 @@ class InboxPageTest: TeacherTest() {
         inboxPage.selectConversation(conversation1)
         inboxPage.selectConversation(conversation2)
         inboxPage.clickMarkAsRead()
-        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: "", ViewMatchers.Visibility.GONE)
-        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: "", ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.GONE)
 
         inboxPage.clickMarkAsUnread()
-        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: "", ViewMatchers.Visibility.VISIBLE)
-        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: "", ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.VISIBLE)
     }
 
     @Test
@@ -205,8 +205,8 @@ class InboxPageTest: TeacherTest() {
         inboxPage.selectConversation(conversation2)
         inboxPage.clickDelete()
         inboxPage.confirmDelete()
-        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
-        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
     }
 
     @Test
@@ -222,10 +222,10 @@ class InboxPageTest: TeacherTest() {
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: "", ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.GONE)
 
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: "", ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.VISIBLE)
     }
 
     @Test
@@ -241,10 +241,10 @@ class InboxPageTest: TeacherTest() {
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationLeft(conversation)
-        inboxPage.assertConversationNotDisplayed(conversation.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
         inboxPage.filterInbox("Archived")
-        inboxPage.assertConversationDisplayed(conversation.subject ?: "")
+        inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
     @Test
@@ -262,7 +262,7 @@ class InboxPageTest: TeacherTest() {
         navigateToInbox(data, data.teachers.first())
         inboxPage.filterInbox("Starred")
         inboxPage.swipeConversationLeft(conversation)
-        inboxPage.assertConversationNotDisplayed(conversation.subject ?: "")
+        inboxPage.assertConversationNotDisplayed(conversation.subject!!)
     }
 
     private fun createInitialData(): MockCanvas {

@@ -217,7 +217,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun clickDelete() {
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext())
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
         onView(ViewMatchers.withText("Delete"))
             .perform(ViewActions.click());
     }
