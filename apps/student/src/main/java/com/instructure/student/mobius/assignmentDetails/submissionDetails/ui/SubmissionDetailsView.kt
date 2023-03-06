@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -38,6 +37,9 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.binding.BindableSpinnerAdapter
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
@@ -210,12 +212,16 @@ class SubmissionDetailsView(
         drawerTabLayout.addOnTabSelectedListener(drawerTabLayoutListener)
     }
 
-
     private fun setupSubmissionVersionSpinner(submissions: List<Pair<Long, String>>, selectedIdx: Int) {
-        submissionVersionsSpinner.adapter =
-            ArrayAdapter(context, R.layout.spinner_submission_versions, submissions.map { it.second }).apply {
-                setDropDownViewResource(R.layout.spinner_submission_versions_dropdown)
-            }
+        val itemViewModels = submissions.mapIndexed { index, submission ->
+            AssignmentDetailsAttemptItemViewModel(
+                AssignmentDetailsAttemptViewData(
+                    context.getString(R.string.attempt, submissions.size - index),
+                    submission.second
+                )
+            )
+        }
+        submissionVersionsSpinner.adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
         submissionVersionsSpinner.setSelection(selectedIdx, false)
         submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit

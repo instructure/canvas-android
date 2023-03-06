@@ -59,6 +59,7 @@ import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.view
 import com.instructure.teacher.view.CommentTextFocusedEvent
 import com.instructure.teacher.view.MediaCommentDialogClosedEvent
+import com.instructure.teacher.view.SubmissionSelectedEvent
 import com.instructure.teacher.view.UploadMediaCommentEvent
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,6 +69,7 @@ import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -96,12 +98,14 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
     var mSubmissionId by LongArg()
+    var mSubmission by ParcelableArg<Submission>()
     var mSubmissionHistory by ParcelableArrayListArg<Submission>()
     var mAssignee by ParcelableArg<Assignee>(StudentAssignee(User()))
     var mCourseId by LongArg()
     var mAssignmentId by LongArg()
     var mIsGroupMessage by BooleanArg()
     var mGradeAnonymously by BooleanArg()
+    var assignmentEnhancementsEnabled by BooleanArg()
 
     var changeCommentFieldExternallyFlag = false
 
@@ -114,7 +118,22 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
-    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage, submissionCommentDao, attachmentDao, authorDao, mediaCommentDao, pendingSubmissionCommentDao, fileUploadInputDao)
+    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(
+        mRawComments,
+        mSubmissionHistory,
+        mAssignee,
+        mCourseId,
+        mAssignmentId,
+        mIsGroupMessage,
+        submissionCommentDao,
+        attachmentDao,
+        authorDao,
+        mediaCommentDao,
+        pendingSubmissionCommentDao,
+        fileUploadInputDao,
+        mSubmission.attempt,
+        assignmentEnhancementsEnabled
+    )
     override fun onCreateView(view: View) {
         commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
             if (commentEditText.text.toString() != it.comment) {
@@ -234,7 +253,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         lifecycleScope.launch {
             if (mAssignee.id == event.assigneeId) {
                 val id = presenter.createPendingMediaComment(event.file.absolutePath)
-                uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id)
+                uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id, event.attemptId)
                 addAttachment.isEnabled = true
             }
         }
@@ -244,7 +263,8 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
             presenter.courseId,
             presenter.assignmentId,
-            presenter.assignee.id
+            presenter.assignee.id,
+            presenter.selectedAttemptId
         )
 
         FileUploadDialogFragment.newInstance(bundle).show(
@@ -329,7 +349,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
      *
      * @param mediaFile File pointing to the media to upload
      */
-    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long, dbId: Long) {
+    private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long, dbId: Long, attemptId: Long?) {
         val mediaUri = Uri.fromFile(mediaFile)
 
         val serviceIntent = Intent(requireActivity(), NotoriousUploadService::class.java)
@@ -342,9 +362,16 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
             putExtra(Const.PAGE_ID, presenter.mPageId)
             putExtra(Const.ID, dbId)
+            putExtra(Const.SUBMISSION_ATTEMPT, attemptId.takeIf { assignmentEnhancementsEnabled })
         }
 
         ContextCompat.startForegroundService(requireActivity(), serviceIntent)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSwitchSubmission(event: SubmissionSelectedEvent) {
+        presenter.selectedAttemptId = event.submission?.attempt
+        presenter.refresh(false)
     }
 
     companion object {
@@ -354,8 +381,10 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                 courseId: Long,
                 assignmentId: Long,
                 isGroupMessage: Boolean,
-                gradeAnonymously: Boolean
+                gradeAnonymously: Boolean,
+                assignmentEnhancementsEnabled: Boolean
         ) = SpeedGraderCommentsFragment().apply {
+            mSubmission = submission ?: Submission()
             mRawComments = ArrayList(submission?.submissionComments ?: emptyList())
             mSubmissionId = submission?.id ?: -1
             mSubmissionHistory = ArrayList(submission?.submissionHistory?.filterNotNull()?.filter { it.submissionType != null && it.workflowState != "unsubmitted" } ?: emptyList())
@@ -364,6 +393,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             mAssignmentId = assignmentId
             mIsGroupMessage = isGroupMessage
             mGradeAnonymously = gradeAnonymously
+            this.assignmentEnhancementsEnabled = assignmentEnhancementsEnabled
         }
     }
 

@@ -164,17 +164,18 @@
                         android:layout_marginEnd="14dp"
                         android:background="@drawable/bg_spinner"
                         android:backgroundTint="@color/textDark"
+                        android:dropDownWidth="10000dp"
                         android:foreground="?attr/selectableItemBackground"
                         android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAttemptSelected(position)}"
                         android:visibility="@{viewModel.data.attempts.size() > 1 ? View.VISIBLE : View.GONE}"
                         app:itemViewModels="@{viewModel.data.attempts}"
-                        app:layoutRes="@{@layout/item_assignment_detail_attempt_spinner}"
+                        app:layoutRes="@{@layout/item_submission_attempt_spinner}"
                         app:layout_constraintTop_toBottomOf="@id/attemptDivider"
                         tools:ignore="RtlSymmetry" />
 
                     <include
                         android:id="@+id/attemptView"
-                        layout="@layout/item_assignment_detail_attempt_spinner"
+                        layout="@layout/item_submission_attempt_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"

@@ -31,12 +31,13 @@ CREATE TABLE pendingSubmissionComment (
     currentFile INTEGER NOT NULL DEFAULT 0,
     fileCount INTEGER NOT NULL DEFAULT 0,
     progress REAL,
-    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0
+    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
+    attemptId INTEGER
 );
 
 insertComment:
-INSERT INTO pendingSubmissionComment (accountDomain, canvasContext, assignmentName, assignmentId, lastActivityDate, isGroupMessage, message, mediaPath)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO pendingSubmissionComment (accountDomain, canvasContext, assignmentName, assignmentId, lastActivityDate, isGroupMessage, message, mediaPath, attemptId)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 getAllComments:
 SELECT *

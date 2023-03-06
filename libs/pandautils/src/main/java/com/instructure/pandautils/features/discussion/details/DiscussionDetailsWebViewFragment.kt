@@ -16,11 +16,13 @@
 
 package com.instructure.pandautils.features.discussion.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
@@ -29,6 +31,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
@@ -37,6 +40,8 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_discussion_details_web_view.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
@@ -71,6 +76,8 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         viewModel.data.observe(viewLifecycleOwner) {
             applyTheme(it.title)
         }
+        setupFilePicker()
+        discussionWebView.addVideoClient(requireActivity())
         discussionWebView.setDarkModeSupport()
         discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -99,6 +106,44 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
         discussionSwipeRefreshLayout.setOnRefreshListener {
             discussionWebView.reload()
+        }
+    }
+
+    private fun setupFilePicker() {
+        discussionWebView.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+            override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
+                startActivityForResult(intent, requestCode)
+            }
+
+            override fun permissionsGranted(): Boolean {
+                return if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    true
+                } else {
+                    requestFilePermissions()
+                    false
+                }
+            }
+        })
+    }
+
+    private fun requestFilePermissions() {
+        requestPermissions(
+            PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA),
+            PermissionUtils.PERMISSION_REQUEST_CODE
+        )
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRequestPermissionsResult(result: PermissionRequester.PermissionResult) {
+        if (PermissionUtils.allPermissionsGrantedResultSummary(result.grantResults)) {
+            discussionWebView.clearPickerCallback()
+            Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!discussionWebView.handleOnActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

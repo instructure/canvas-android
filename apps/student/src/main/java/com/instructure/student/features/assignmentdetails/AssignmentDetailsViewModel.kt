@@ -31,12 +31,15 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.util.getStudioLTITool
 import com.squareup.sqldelight.Query
@@ -117,7 +120,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     isUploading = true
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         add(0, AssignmentDetailsAttemptItemViewModel(
-                            AssignmentDetailAttemptViewData(
+                            AssignmentDetailsAttemptViewData(
                                 resources.getString(R.string.attempt, attempts.size + 1),
                                 dateString,
                                 isUploading = true
@@ -130,12 +133,13 @@ class AssignmentDetailsViewModel @Inject constructor(
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         removeFirst()
                         add(0, AssignmentDetailsAttemptItemViewModel(
-                            AssignmentDetailAttemptViewData(
+                            AssignmentDetailsAttemptViewData(
                                 resources.getString(R.string.attempt, attempts.size),
                                 dateString,
                                 isFailed = true
                             )
-                        ))
+                        )
+                        )
                     }.orEmpty()
                     _data.value?.notifyPropertyChanged(BR.attempts)
                 }
@@ -298,7 +302,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
             submission?.submittedAt?.let { getFormattedAttemptDate(it) }?.let {
                 AssignmentDetailsAttemptItemViewModel(
-                    AssignmentDetailAttemptViewData(
+                    AssignmentDetailsAttemptViewData(
                         resources.getString(R.string.attempt, submissionHistory.size - index),
                         it,
                         submission
@@ -439,12 +443,6 @@ class AssignmentDetailsViewModel @Inject constructor(
             hasDraft = hasDraft
         )
     }
-
-    private fun getFormattedAttemptDate(date: Date) = DateFormat.getDateTimeInstance(
-        DateFormat.MEDIUM,
-        DateFormat.SHORT,
-        Locale.getDefault()
-    ).format(date)
 
     private fun postAction(action: AssignmentDetailAction) {
         _events.postValue(Event(action))

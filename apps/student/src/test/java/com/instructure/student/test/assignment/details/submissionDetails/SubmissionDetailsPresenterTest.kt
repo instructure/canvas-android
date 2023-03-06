@@ -103,7 +103,7 @@ class SubmissionDetailsPresenterTest : Assert() {
             submissionHistory = listOf(
                 baseSubmission,
                 baseSubmission.copy(
-                    attempt = 2
+                    attempt = 1
                 )
             )
         )
@@ -146,8 +146,8 @@ class SubmissionDetailsPresenterTest : Assert() {
         )
         val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
         val expectedVersions = arrayListOf(
-            2L to "Jan 31 at 11:59 PM",
-            1L to "Jan 30 at 11:59 PM"
+            2L to "Jan 31, 2050, 11:59 PM",
+            1L to "Jan 30, 2050, 11:59 PM"
         )
         val actualVersions = viewState.submissionVersions
         assertEquals(expectedVersions, actualVersions)

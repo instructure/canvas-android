@@ -115,7 +115,10 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
 
 class BindableViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
 
+    var itemViewModel: ItemViewModel? = null
+
     fun bind(itemViewModel: ItemViewModel) {
+        this.itemViewModel = itemViewModel
         binding.setVariable(BR.itemViewModel, itemViewModel)
         binding.executePendingBindings()
     }
