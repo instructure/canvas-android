@@ -100,7 +100,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
 
-        inboxPage.filterInbox("Archived")
+        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
         inboxPage.assertConversationDisplayed(conversation1.subject!!)
         inboxPage.assertConversationDisplayed(conversation2.subject!!)
     }
@@ -148,7 +148,7 @@ class InboxPageTest: TeacherTest() {
         data.conversations[conversation2.id] = conversation2.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.filterInbox("Starred")
+        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
         inboxPage.selectConversation(conversation1)
         inboxPage.selectConversation(conversation2)
         inboxPage.clickUnstar()
@@ -243,7 +243,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.swipeConversationLeft(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
-        inboxPage.filterInbox("Archived")
+        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -260,7 +260,7 @@ class InboxPageTest: TeacherTest() {
         data.conversations[conversation.id] = conversation.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.filterInbox("Starred")
+        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
         inboxPage.swipeConversationLeft(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
     }

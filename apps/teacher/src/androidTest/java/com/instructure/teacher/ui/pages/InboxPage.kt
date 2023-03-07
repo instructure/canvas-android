@@ -10,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.*
@@ -69,9 +70,16 @@ class InboxPage: BasePage() {
             .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(50)))
     }
 
-    fun filterInbox(filterFor: String) {
+    fun selectInboxScope(scope: InboxApi.Scope) {
+        waitForView(withId(R.id.scopeFilterText))
         onView(withId(R.id.scopeFilter)).click()
-        waitForViewWithText(filterFor).click()
+        when (scope) {
+            InboxApi.Scope.INBOX -> onViewWithText("Inbox").scrollTo().click()
+            InboxApi.Scope.UNREAD -> onViewWithText("Unread").scrollTo().click()
+            InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").scrollTo().click()
+            InboxApi.Scope.STARRED -> onViewWithText("Starred").scrollTo().click()
+            InboxApi.Scope.SENT -> onViewWithText("Sent").scrollTo().click()
+        }
     }
 
     fun assertThereIsAnUnreadMessage(unread: Boolean) {
@@ -111,11 +119,19 @@ class InboxPage: BasePage() {
         }
     }
 
-    fun selectConversation(conversation: Conversation) {
+    fun selectConversation(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
-        val matcher = ViewMatchers.withText(conversation.subject)
+        val matcher = withText(conversationSubject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).longClick()
+    }
+
+    fun selectConversation(conversation: Conversation) {
+        selectConversation(conversation.subject!!)
+    }
+
+    fun selectConversation(conversation: ConversationApiModel) {
+        selectConversation(conversation.subject!!)
     }
 
     fun assertEditToolbarDisplayed() {
@@ -124,6 +140,10 @@ class InboxPage: BasePage() {
 
     fun clickArchive() {
         waitForViewWithId(R.id.inboxArchiveSelected).click()
+    }
+
+    fun clickUnArchive() {
+        waitForViewWithId(R.id.inboxUnarchiveSelected).click()
     }
 
     fun clickStar() {
@@ -151,20 +171,46 @@ class InboxPage: BasePage() {
     }
 
     fun confirmDelete() {
-        waitForViewWithText("DELETE")
+        waitForView(withText("DELETE") + withAncestor(R.id.buttonPanel)).click()
     }
 
-    fun swipeConversationRight(conversation: Conversation) {
+    fun swipeConversationRight(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
-        val matcher = ViewMatchers.withText(conversation.subject)
+        val matcher = withText(conversationSubject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).swipeRight()
     }
 
-    fun swipeConversationLeft(conversation: Conversation) {
+    fun swipeConversationRight(conversation: ConversationApiModel) {
+        swipeConversationRight(conversation.subject!!)
+    }
+
+    fun swipeConversationRight(conversation: Conversation) {
+        swipeConversationRight(conversation.subject!!)
+    }
+
+    fun swipeConversationLeft(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
-        val matcher = ViewMatchers.withText(conversation.subject)
+        val matcher = withText(conversationSubject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).swipeLeft()
+    }
+
+    fun swipeConversationLeft(conversation: Conversation) {
+        swipeConversationLeft(conversation.subject!!)
+    }
+
+    fun swipeConversationLeft(conversation: ConversationApiModel) {
+        swipeConversationLeft(conversation.subject!!)
+    }
+
+    fun selectConversations(conversations: List<String>) {
+        for(conversation in conversations) {
+            selectConversation(conversation)
+        }
+    }
+
+    fun assertSelectedConversationNumber(selectedConversationNumber: String) {
+        onView(withText(selectedConversationNumber) + withAncestor(R.id.editToolbar))
     }
 }

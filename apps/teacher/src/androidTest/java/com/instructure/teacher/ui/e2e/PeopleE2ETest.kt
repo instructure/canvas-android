@@ -19,6 +19,7 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -150,7 +151,7 @@ class PeopleE2ETest: TeacherTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
-        inboxPage.filterInbox("Sent")
+        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
 
         Log.d(STEP_TAG,"Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()
