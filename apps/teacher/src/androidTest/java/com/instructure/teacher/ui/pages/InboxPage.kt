@@ -71,7 +71,7 @@ class InboxPage: BasePage() {
     }
 
     fun selectInboxScope(scope: InboxApi.Scope) {
-        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+        onView(withId(R.id.inboxRecyclerView)).swipeDown()
         waitForView(withId(R.id.scopeFilterText))
         onView(withId(R.id.scopeFilter)).click()
         when (scope) {
