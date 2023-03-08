@@ -125,8 +125,8 @@ class InboxPage : BasePage(R.id.inboxPage) {
             hasSibling(withId(R.id.date)),
             hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).assertDisplayed()
+       // scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        onView(matcher).scrollTo().assertDisplayed()
 
     }
 
