@@ -94,8 +94,8 @@ class InboxPage: BasePage() {
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).assertDisplayed()
+        //scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertConversationNotDisplayed(subject: String) {
