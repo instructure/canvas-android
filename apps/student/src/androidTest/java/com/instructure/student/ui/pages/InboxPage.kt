@@ -26,6 +26,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.apis.InboxApi
@@ -91,7 +92,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun selectInboxScope(scope: InboxApi.Scope) {
-        onView(withId(R.id.inboxRecyclerView)).swipeDown()
+        refresh()
         waitForView(withId(R.id.scopeFilterText))
         scopeButton.click()
         when (scope) {
