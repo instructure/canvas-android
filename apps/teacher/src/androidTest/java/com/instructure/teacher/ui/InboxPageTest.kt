@@ -94,8 +94,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickArchive()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
@@ -122,8 +121,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickStar()
         inboxPage.assertConversationStarred(conversation1.subject!!)
         inboxPage.assertConversationStarred(conversation2.subject!!)
@@ -149,8 +147,7 @@ class InboxPageTest: TeacherTest() {
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickUnstar()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
@@ -173,8 +170,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickMarkAsRead()
         inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.GONE)
         inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.GONE)
@@ -201,8 +197,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickDelete()
         inboxPage.confirmDelete()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)

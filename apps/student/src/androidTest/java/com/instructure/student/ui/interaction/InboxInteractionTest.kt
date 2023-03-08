@@ -17,20 +17,9 @@ package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addConversation
-import com.instructure.canvas.espresso.mockCanvas.addConversations
-import com.instructure.canvas.espresso.mockCanvas.addConversationsToCourseMap
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
-import com.instructure.canvas.espresso.mockCanvas.addSentConversation
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -525,8 +514,7 @@ class InboxInteractionTest : StudentTest() {
             messageBody = "Body 2",
             messageSubject = "Subject 2")
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickArchive()
         inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
         inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
@@ -552,8 +540,7 @@ class InboxInteractionTest : StudentTest() {
             messageBody = "Body 2",
             messageSubject = "Subject 2")
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickStar()
         inboxPage.assertConversationStarred(conversation1.subject ?: "")
         inboxPage.assertConversationStarred(conversation2.subject ?: "")
@@ -579,8 +566,7 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickUnstar()
         inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
         inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
@@ -603,8 +589,7 @@ class InboxInteractionTest : StudentTest() {
             messageSubject = "Subject 2")
 
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickMarkAsRead()
         inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: "", ViewMatchers.Visibility.GONE)
         inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: "", ViewMatchers.Visibility.GONE)
@@ -630,8 +615,7 @@ class InboxInteractionTest : StudentTest() {
             messageBody = "Body 2",
             messageSubject = "Subject 2")
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickDelete()
         inboxPage.confirmDelete()
         inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")

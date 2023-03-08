@@ -178,8 +178,8 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun selectConversation(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversationSubject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).longClick()
+        //scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        onView(matcher).scrollTo().longClick()
     }
 
     fun selectConversation(conversation: Conversation) {
@@ -258,6 +258,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun selectConversations(conversations: List<String>) {
+        refresh()
         for(conversation in conversations) {
             selectConversation(conversation)
         }
