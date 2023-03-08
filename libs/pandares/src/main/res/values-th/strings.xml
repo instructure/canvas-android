@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">คุณสามารถเปิดรายละเอียดผลงานจัดส่ง (Submission details) ได้จากที่นี่</string>
+
     <plurals name="minutes">
         <item quantity="one">%s นาที</item>
         <item quantity="other">%s นาที</item>
@@ -1331,4 +1333,44 @@
     <string name="acceptableUsePolicyAgree">ฉันยอมรับนโยบายการใช้งานที่ยอมรับได้</string>
     <string name="acceptableUsePolicySubmit">ส่ง</string>
     <string name="acceptFail">ไม่สามารถส่งการตอบรับเงื่อนไข</string>
+    <string name="attempt">การดำเนินการ %d</string>
+    <string name="quizQuestions">คำถาม: %d</string>
+    <string name="quizTimeLimit">จำกัดเวลา: %s</string>
+    <string name="allowedAttempts">จำนวนครั้งที่อนุญาต: %s</string>
+    <string name="usedAttempts">จำนวนครั้งที่ใช้ไปแล้ว: %d</string>
+    <string name="generalUnexpectedError">เกิดข้อผิดพลาดที่ไม่คาดคิด</string>
+
+    <string name="deleteSelected">ลบ</string>
+    <string name="archiveSelected">จัดเก็บแยก</string>
+    <string name="unarchiveSelected">ยกเลิกการจัดเก็บแยก</string>
+    <string name="markAsReadSelected">กำกับว่าอ่านแล้ว</string>
+    <string name="markAsUnreadSelected">กำกับว่ายังไม่ได้อ่าน</string>
+    <string name="starSelected">Star</string>
+    <string name="unstarSelected">ลบดาว</string>
+
+    <string name="inboxOperationFailed">ไม่สามารถดำเนินการได้</string>
+    <string name="inboxDeletedConfirmation">%s ที่ถูกลบ</string>
+    <string name="inboxArchivedConfirmation">%s ที่จัดเก็บแยกไว้</string>
+    <string name="inboxUnarchivedConfirmation">%s ที่เลิกจัดเก็บแยก</string>
+    <string name="inboxMarkAsReadConfirmation">%s ที่กำกับว่าอ่านแล้ว</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s ที่กำกับว่าไม่ได้อ่าน</string>
+    <string name="inboxStarredConfirmation">%s ที่ติดดาวไว้</string>
+    <string name="inboxUnstarredConfirmation">%s ที่เลิกติดดาว</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">การพูดคุยนี้จะถูกลบจากกล่องจดหมายในอุปกรณ์ทั้งหมดของคุณ การดำเนินการนี้ไม่สามารถยกเลิกได้</item>
+        <item quantity="other">การพูดคุยเหล่านี้จะถูกลบทิ้งจากกล่องจดหมายในอุปกรณ์ทั้งหมดของคุณ การดำเนินการนี้ไม่สามารถยกเลิกได้</item>
+    </plurals>
+    <string name="failedToLoadNextPage">ไม่สามารถโหลดหน้าถัดไปได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ</string>
+    <string name="conversationsRefreshFailed">ไม่สามารถรีเฟรชการพูดคุยได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ</string>
+    <string name="inboxScopeInbox">กล่องจดหมาย</string>
+    <string name="inboxContextSelectorTitle">เลือกบทเรียนหรือกลุ่ม</string>
+    <string name="inboxClearFilter">ล้าง</string>
+    <string name="a11y_courseFilterContentDescription">ตัวกรองบทเรียน: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">เลือก</string>
+    <string name="a11y_itemSelectedSwipeForActions">การพูดคุยที่เลือก เปิดใช้งานโหมดเลือกรายการแล้ว ไปที่การดำเนินการ</string>
+    <string name="a11y_conversationSelected">เลือกการพูดคุยแล้ว</string>
+    <string name="a11y_conversationDeselected">เลิกการเลือกการพูดคุยแล้ว</string>
+    <string name="a11y_exitSelectionMode">ออกจากโหมดเลือก</string>
+    <string name="a11y_selectionModeDeactivated">ปิดใช้งานโหมดเลือกรายการแล้ว</string>
 </resources>
