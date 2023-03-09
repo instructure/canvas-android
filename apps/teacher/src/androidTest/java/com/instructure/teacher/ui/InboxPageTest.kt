@@ -245,18 +245,17 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun swipeToUnstar() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         val conversation = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         data.conversations[conversation.id] = conversation.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
         inboxPage.swipeConversationLeft(conversation)
-        Thread.sleep(3000)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
     }
 
