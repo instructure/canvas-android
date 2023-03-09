@@ -205,13 +205,13 @@ class RatingDialog : DialogFragment() {
          * @param context A valid context
          */
         fun showRatingDialog(context: FragmentActivity, appType: AppType) {
-            //if (Prefs.dontShowAgain || BuildConfig.IS_TESTING) return
-            //if (Prefs.dateFirstLaunched == 0L) {
-            //    Prefs.dateFirstLaunched = System.currentTimeMillis()
-            //}
-            //if (System.currentTimeMillis() >= Prefs.dateFirstLaunched + (Prefs.dateShowAgain.toLong() * 24 * 60 * 60 * 1000)) {
+            if (Prefs.dontShowAgain || BuildConfig.IS_TESTING) return
+            if (Prefs.dateFirstLaunched == 0L) {
+                Prefs.dateFirstLaunched = System.currentTimeMillis()
+            }
+            if (System.currentTimeMillis() >= Prefs.dateFirstLaunched + (Prefs.dateShowAgain.toLong() * 24 * 60 * 60 * 1000)) {
                 showRateDialog(context, appType)
-            //}
+            }
         }
 
         @Suppress("MemberVisibilityCanPrivate")
