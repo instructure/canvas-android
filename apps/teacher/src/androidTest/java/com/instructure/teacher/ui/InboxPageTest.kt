@@ -208,13 +208,12 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun swipeToReadUnread() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
-        val conversation = data.addConversation(
+         val conversation = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
-
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationRight(conversation)
         inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.GONE)
@@ -227,16 +226,15 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun swipeToArchive() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         val conversation = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationLeft(conversation)
-        Thread.sleep(3000)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
         inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)

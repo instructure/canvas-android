@@ -54,7 +54,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
-       // scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).scrollTo().assertDisplayed()
     }
 
@@ -125,7 +124,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
             hasSibling(withId(R.id.date)),
             hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
-       // scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).scrollTo().assertDisplayed()
 
     }
@@ -178,7 +176,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun selectConversation(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversationSubject)
-        //scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).scrollTo().longClick()
     }
 
@@ -230,7 +227,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun swipeConversationRight(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversationSubject)
-      //  scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).scrollTo().swipeRight()
     }
 
@@ -245,8 +241,8 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun swipeConversationLeft(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversationSubject)
-      //  scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).scrollTo().swipeLeft()
+        onView(matcher).scrollTo()
+        onView(matcher).swipeLeft()
     }
 
     fun swipeConversationLeft(conversation: Conversation) {

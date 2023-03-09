@@ -645,12 +645,12 @@ class InboxInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_swipeToArchive() {
         val data = createInitialData()
-        data.addConversations(userId = student1.id, messageBody = "Short body")
         val conversation = data.addConversation(
             senderId = data.teachers.first().id,
             receiverIds = listOf(data.students.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
+        data.addConversations(userId = student1.id, messageBody = "Short body")
 
         dashboardPage.clickInboxTab()
         inboxPage.swipeConversationLeft(conversation)
@@ -664,12 +664,12 @@ class InboxInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_swipeToUnstar() {
         val data = createInitialData()
-        data.addConversations(userId = student1.id, messageBody = "Short body")
         val conversation = data.addConversation(
             senderId = data.teachers.first().id,
             receiverIds = listOf(data.students.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         data.conversations[conversation.id] = conversation.copy(isStarred = true)
 
         dashboardPage.clickInboxTab()

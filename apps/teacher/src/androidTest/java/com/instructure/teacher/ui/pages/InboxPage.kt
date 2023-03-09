@@ -94,7 +94,6 @@ class InboxPage: BasePage() {
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
-        //scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).scrollTo().assertDisplayed()
     }
 
@@ -123,7 +122,6 @@ class InboxPage: BasePage() {
     fun selectConversation(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversationSubject)
-        //scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).scrollTo().longClick()
     }
 
@@ -178,7 +176,6 @@ class InboxPage: BasePage() {
     fun swipeConversationRight(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversationSubject)
-        //scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).scrollTo().swipeRight()
     }
 
@@ -193,8 +190,8 @@ class InboxPage: BasePage() {
     fun swipeConversationLeft(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversationSubject)
-        //scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).scrollTo().swipeLeft()
+        onView(matcher).scrollTo()
+        onView(matcher).swipeLeft()
     }
 
     fun swipeConversationLeft(conversation: Conversation) {
