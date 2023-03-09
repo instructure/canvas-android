@@ -40,7 +40,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.AvatarCropActivityBinding
 import com.instructure.pandautils.utils.AvatarCropActivity.Companion.createIntent
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.io.FileOutputStream
 

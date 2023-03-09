@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/rce_divider"
-        android:layout_above="@+id/rce_controller"/>
+        android:layout_above="@+id/rceControllerWrapper"/>
 
     <FrameLayout
         android:id="@+id/rce_colorPickerWrapper"
@@ -43,17 +43,21 @@
         android:layout_alignParentBottom="true"
         android:visibility="invisible">
 
-        <include layout="@layout/rce_color_picker"/>
+        <include
+            android:id="@+id/rceColorPicker"
+            layout="@layout/rce_color_picker"/>
 
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/rce_controller"
+        android:id="@+id/rceControllerWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <include layout="@layout/rce_controller"/>
+        <include
+            android:id="@+id/rceController"
+            layout="@layout/rce_controller"/>
 
     </FrameLayout>
 
