@@ -110,8 +110,7 @@ class ScheduleFragment : Fragment() {
                 jumpToToday()
             }
             is ScheduleAction.AnnounceForAccessibility -> {
-                // TODO ask this
-//                checkbox.announceForAccessibility(action.announcement)
+                binding.root.announceForAccessibility(action.announcement)
             }
         }
     }
