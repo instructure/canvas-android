@@ -236,6 +236,7 @@ class InboxPageTest: TeacherTest() {
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationLeft(conversation)
+        Thread.sleep(3000)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
         inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
@@ -257,6 +258,7 @@ class InboxPageTest: TeacherTest() {
         navigateToInbox(data, data.teachers.first())
         inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
         inboxPage.swipeConversationLeft(conversation)
+        Thread.sleep(3000)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
     }
 
