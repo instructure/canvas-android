@@ -21,8 +21,11 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/private_consts.dart';
 
 class HeapApi {
-  Future<Response> track(String event, {Map<String, dynamic> extras = const {}}) {
+  Future<bool> track(String event, {Map<String, dynamic> extras = const {}}) async {
     final heapDio = DioConfig.heap();
+    final currentLogin = ApiPrefs.getCurrentLogin();
+    if (currentLogin == null) return false;
+
     final userId = ApiPrefs.getCurrentLogin().user.id;
 
     final encrypter = encrypt.Encrypter(encrypt.AES(encrypt.Key.fromUtf8(ENCRYPT_KEY)));
@@ -38,6 +41,7 @@ class HeapApi {
       data['properties'] = json.encode(extras);
     }
 
-    return heapDio.dio.post('/track', data: data);
+    final response = await heapDio.dio.post('/track', data: data);
+    return response.statusCode == 200;
   }
 }

@@ -110,12 +110,17 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
   }
 
   _close() async {
-    await ParentTheme.of(context).setSelectedStudent(null);
-    await ApiPrefs.performLogout(app: ParentApp.of(context));
-    MasqueradeUI.of(context).refresh();
-    await locator<Analytics>().logEvent(AnalyticsEventConstants.LOGOUT);
-    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
-    await FeaturesUtils.performLogout();
+    try {
+      await locator<Analytics>().logEvent(AnalyticsEventConstants.LOGOUT);
+      await ParentTheme.of(context).setSelectedStudent(null);
+      await ApiPrefs.performLogout(app: ParentApp.of(context));
+      MasqueradeUI.of(context).refresh();
+      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+      await FeaturesUtils.performLogout();
+    } catch (e) {
+      // Just in case we experience any error we still need to go back to the login screen.
+      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+    }
   }
 
   _confirm() async {
