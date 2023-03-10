@@ -22,7 +22,6 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addConversation
 import com.instructure.canvas.espresso.mockCanvas.addConversations
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -94,8 +93,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickArchive()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
@@ -122,8 +120,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickStar()
         inboxPage.assertConversationStarred(conversation1.subject!!)
         inboxPage.assertConversationStarred(conversation2.subject!!)
@@ -149,8 +146,7 @@ class InboxPageTest: TeacherTest() {
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.filterInbox("Starred")
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickUnstar()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
@@ -173,8 +169,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickMarkAsRead()
         inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.GONE)
         inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.GONE)
@@ -201,8 +196,7 @@ class InboxPageTest: TeacherTest() {
             messageSubject = "Subject 2")
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectConversation(conversation1)
-        inboxPage.selectConversation(conversation2)
+        inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickDelete()
         inboxPage.confirmDelete()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
@@ -213,13 +207,12 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun swipeToReadUnread() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
-        val conversation = data.addConversation(
+         val conversation = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
-
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationRight(conversation)
         inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.GONE)
@@ -232,12 +225,12 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun swipeToArchive() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         val conversation = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationLeft(conversation)
@@ -251,12 +244,12 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun swipeToUnstar() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         val conversation = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body",
             messageSubject = "Subject")
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
         data.conversations[conversation.id] = conversation.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
