@@ -18,7 +18,6 @@ import 'package:dio/dio.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
-import 'package:flutter_parent/network/utils/fetch.dart';
 import 'package:flutter_parent/network/utils/private_consts.dart';
 
 class HeapApi {
@@ -39,6 +38,6 @@ class HeapApi {
       data['properties'] = json.encode(extras);
     }
 
-    return fetch(heapDio.dio.post('/track', data: data));
+    return heapDio.dio.post('/track', data: data);
   }
 }
