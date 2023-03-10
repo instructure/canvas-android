@@ -197,6 +197,7 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 
     hilt {
@@ -300,6 +301,8 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP
+
+    implementation Libs.CAMERA_VIEW
 
     /* ROOM */
     implementation Libs.ROOM

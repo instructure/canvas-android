@@ -26,16 +26,19 @@ import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.loadUri
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterAttachmentBinding
 import com.instructure.teacher.utils.isMediaSubmissionPlaceholder
-import kotlinx.android.synthetic.main.adapter_attachment.view.*
 
 class AttachmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_attachment
-    }
-
-    fun bind(context: Context, position: Int, attachment: Attachment, isSelected: Boolean, callback: (Attachment) -> Unit, selectionCallback: (Int) -> Unit) = with(itemView) {
+    fun bind(
+        context: Context,
+        position: Int,
+        attachment: Attachment,
+        isSelected: Boolean,
+        callback: (Attachment) -> Unit,
+        selectionCallback: (Int) -> Unit,
+        binding: AdapterAttachmentBinding
+    ) = with(binding) {
         //check if its the selected item
         if(isSelected) {
             isSelectedIcon.setVisible(true)

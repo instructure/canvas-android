@@ -25,13 +25,14 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentFileSearchBinding
 import com.instructure.teacher.holders.FileFolderViewHolder
 import com.instructure.teacher.utils.viewMedia
-import kotlinx.android.synthetic.main.fragment_file_search.*
 import com.instructure.pandautils.utils.ColorUtils as PandaColorUtils
 
 @ScreenView(SCREEN_VIEW_FILE_SEARCH)
@@ -41,6 +42,8 @@ class FileSearchFragment : BaseSyncFragment<
         FileSearchView,
         FileFolderViewHolder,
         FileSearchAdapter>(), FileSearchView {
+
+    private val binding by viewBinding(FragmentFileSearchBinding::bind)
 
     private val searchAdapter by lazy {
         FileSearchAdapter(requireContext(), canvasContext.textAndIconColor, presenter) {
@@ -52,38 +55,38 @@ class FileSearchFragment : BaseSyncFragment<
     override fun layoutResId() = R.layout.fragment_file_search
     override fun onCreateView(view: View) = Unit
     override fun getPresenterFactory() = FileSearchPresenterFactory(canvasContext!!)
-    override val recyclerView: RecyclerView get() = fileSearchRecyclerView
+    override val recyclerView: RecyclerView get() = binding.fileSearchRecyclerView
 
     override fun onPresenterPrepared(presenter: FileSearchPresenter) {
-        fileSearchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.fileSearchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun onReadySetGo(presenter: FileSearchPresenter) {
-        if (recyclerView.adapter == null) fileSearchRecyclerView.adapter = createAdapter()
+        if (recyclerView.adapter == null) binding.fileSearchRecyclerView.adapter = createAdapter()
         setupViews()
     }
 
     override fun createAdapter(): FileSearchAdapter = searchAdapter
 
     override fun onRefreshStarted() {
-        progressBar.setVisible()
+        binding.progressBar.setVisible()
     }
 
     override fun onRefreshFinished() {
-        progressBar.setInvisible()
+        binding.progressBar.setInvisible()
     }
 
     private fun setupViews() {
         themeSearchBar()
 
         // Set up empty state
-        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))
-        emptyPandaView.setListEmpty()
+        binding.emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))
+        binding.emptyPandaView.setListEmpty()
         checkIfEmpty()
 
         // Set up toolbar
-        clearButton.onClick { queryInput.setText("") }
-        backButton.onClick {
+        binding.clearButton.onClick { binding.queryInput.setText("") }
+        binding.backButton.onClick {
             if (activity is MasterDetailInteractions) {
                 requireActivity().finish()
             } else {
@@ -92,8 +95,8 @@ class FileSearchFragment : BaseSyncFragment<
         }
 
         // Set up query input
-        queryInput.onTextChanged { clearButton.setVisible(it.isNotEmpty()) }
-        queryInput.onChangeDebounce(FileSearchPresenter.MIN_QUERY_LENGTH, FileSearchPresenter.QUERY_DEBOUNCE) {
+        binding.queryInput.onTextChanged { binding.clearButton.setVisible(it.isNotEmpty()) }
+        binding.queryInput.onChangeDebounce(FileSearchPresenter.MIN_QUERY_LENGTH, FileSearchPresenter.QUERY_DEBOUNCE) {
             presenter.searchQuery = it
         }
     }
@@ -102,30 +105,30 @@ class FileSearchFragment : BaseSyncFragment<
         val primaryTextColor = if (canvasContext?.isUser.orDefault()) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.white)
         val primaryColor = canvasContext.backgroundColor
         ViewStyler.setStatusBarDark(requireActivity(), primaryColor)
-        searchHeader.setBackgroundColor(primaryColor)
-        queryInput.setTextColor(primaryTextColor)
-        queryInput.setHintTextColor(ColorUtils.setAlphaComponent(primaryTextColor, 0x66))
-        PandaColorUtils.colorIt(primaryTextColor, backButton)
-        PandaColorUtils.colorIt(primaryTextColor, clearButton)
+        binding.searchHeader.setBackgroundColor(primaryColor)
+        binding.queryInput.setTextColor(primaryTextColor)
+        binding.queryInput.setHintTextColor(ColorUtils.setAlphaComponent(primaryTextColor, 0x66))
+        PandaColorUtils.colorIt(primaryTextColor, binding.backButton)
+        PandaColorUtils.colorIt(primaryTextColor, binding.clearButton)
     }
 
     override fun checkIfEmpty() {
-        emptyPandaView.setTitleText(getString(R.string.noFilesFound))
-        emptyPandaView.setMessageText(getString(R.string.noItemsMatchingQuery, presenter.searchQuery))
-        emptyPandaView.setVisible(presenter.isEmpty && presenter.searchQuery.isNotBlank())
-        fileSearchRecyclerView.setVisible(!presenter.isEmpty)
+        binding.emptyPandaView.setTitleText(getString(R.string.noFilesFound))
+        binding.emptyPandaView.setMessageText(getString(R.string.noItemsMatchingQuery, presenter.searchQuery))
+        binding.emptyPandaView.setVisible(presenter.isEmpty && presenter.searchQuery.isNotBlank())
+        binding.fileSearchRecyclerView.setVisible(!presenter.isEmpty)
 
         val queryTooShort = presenter.searchQuery.length < FileSearchPresenter.MIN_QUERY_LENGTH
-        instructions.setVisible(queryTooShort)
+        binding.instructions.setVisible(queryTooShort)
 
         // A11y
         when {
-            queryTooShort -> instructions.announceForAccessibility(instructions.text)
-            presenter.isEmpty -> emptyPandaView.announceForAccessibility(emptyPandaView.getMessage().text)
+            queryTooShort -> binding.instructions.announceForAccessibility(binding.instructions.text)
+            presenter.isEmpty -> binding.emptyPandaView.announceForAccessibility(binding.emptyPandaView.getMessage().text)
             else -> {
                 val count = presenter.data.size()
                 val announcement = resources.getQuantityString(R.plurals.fileSearchResultCount, count, count)
-                fileSearchRecyclerView.announceForAccessibility(announcement)
+                binding.fileSearchRecyclerView.announceForAccessibility(announcement)
             }
         }
     }

@@ -61,7 +61,9 @@
             android:layout_weight="1"
             android:paddingTop="8dp">
 
-            <include layout="@layout/recycler_swipe_refresh_layout" />
+            <include
+                android:id="@+id/swipeRefreshLayoutContainer"
+                layout="@layout/recycler_swipe_refresh_layout" />
 
         </FrameLayout>
 

@@ -25,29 +25,34 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ViewholderRecipientBinding
 import com.instructure.teacher.interfaces.RecipientAdapterCallback
-import kotlinx.android.synthetic.main.viewholder_recipient.view.*
 
 class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     companion object {
-        const val HOLDER_RES_ID = R.layout.viewholder_recipient
         private const val SELECTION_TRANSPARENCY_MASK = 0x08FFFFFF
     }
 
-    fun bind(context: Context, holder: RecipientViewHolder, recipient: Recipient, adapterCallback: RecipientAdapterCallback, isSelected: Boolean) = with(itemView) {
-
+    fun bind(
+        context: Context,
+        holder: RecipientViewHolder,
+        recipient: Recipient,
+        adapterCallback: RecipientAdapterCallback,
+        isSelected: Boolean,
+        binding: ViewholderRecipientBinding
+    ) = with(binding) {
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
                 val selectionColor = context.getColor(R.color.backgroundInfo)
-                setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
+                root.setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
                 avatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_circle)?.apply {
                     mutate().setTintList(ColorStateList.valueOf(selectionColor))
                 })
                 checkMarkImageView.setVisible()
                 ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
             } else {
-                setBackgroundColor(Color.TRANSPARENT)
+                root.setBackgroundColor(Color.TRANSPARENT)
                 checkMarkImageView.setGone()
             }
         }

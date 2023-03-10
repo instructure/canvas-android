@@ -17,8 +17,12 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.teacher.databinding.AdapterAttachmentBinding
 import com.instructure.teacher.holders.AttachmentViewHolder
 import com.instructure.teacher.presenters.SpeedGraderFilesPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderFilesView
@@ -40,9 +44,10 @@ class AttachmentAdapter(
     fun setSelectedPosition(newPosition: Int) = mSelectionCallback(newPosition)
 
     override fun bindHolder(model: Attachment, holder: AttachmentViewHolder, position: Int) {
-        holder.bind(mContext, position, model, position == mSelectedAttachmentPosition, mCallback, mSelectionCallback)
+        holder.bind(mContext, position, model, position == mSelectedAttachmentPosition, mCallback, mSelectionCallback, binding as AdapterAttachmentBinding)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = AttachmentViewHolder(v)
-    override fun itemLayoutResId(viewType: Int) = AttachmentViewHolder.HOLDER_RES_ID
+
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterAttachmentBinding::inflate
 }

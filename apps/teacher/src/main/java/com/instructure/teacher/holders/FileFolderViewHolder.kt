@@ -27,11 +27,10 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.adapter_file_folder.view.*
+import com.instructure.teacher.databinding.AdapterFileFolderBinding
 
 class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    fun bind(item: FileFolder, iconColor: Int, context: Context, callback: (FileFolder) -> Unit) = with(itemView){
+    fun bind(item: FileFolder, iconColor: Int, context: Context, callback: (FileFolder) -> Unit, binding: AdapterFileFolderBinding) = with(binding) {
         fileFolderLayout.onClick { callback(item) }
         fileIconOrImage.setPublishedStatus(item) // Locked files are "unpublished"
 
@@ -74,9 +73,5 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fileSize.text = ""
             fileIconOrImage.setIcon(R.drawable.ic_folder_solid, iconColor)
         }
-    }
-
-    companion object {
-        const val HOLDER_RES_ID: Int = R.layout.adapter_file_folder
     }
 }

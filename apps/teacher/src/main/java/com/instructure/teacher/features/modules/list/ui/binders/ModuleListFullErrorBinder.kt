@@ -16,23 +16,24 @@
  */
 package com.instructure.teacher.features.modules.list.ui.binders
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
+import com.instructure.teacher.databinding.AdapterModuleListErrorFullBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
-import kotlinx.android.synthetic.main.adapter_module_list_error_full.view.*
 
 class ModuleListFullErrorBinder : ListItemBinder<ModuleListItemData.FullError, ModuleListCallback>() {
 
-    override val layoutResId = R.layout.adapter_module_list_error_full
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterModuleListErrorFullBinding::inflate
 
-    override val bindBehavior = Item { item, view, callback ->
-        with(view.retryButton) {
+    override val bindBehavior = Item { item, callback ->
+        with((binding as AdapterModuleListErrorFullBinding).retryButton) {
             backgroundTintList = android.content.res.ColorStateList.valueOf(item.buttonColor)
             setTextColor(ThemePrefs.buttonTextColor)
             setOnClickListener { callback.retryNextPage() }
         }
     }
-
 }

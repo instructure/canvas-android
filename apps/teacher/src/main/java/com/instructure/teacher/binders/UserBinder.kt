@@ -20,33 +20,30 @@ import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
-import com.instructure.teacher.holders.UserViewHolder
+import com.instructure.teacher.databinding.AdapterUsersBinding
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
-import kotlinx.android.synthetic.main.adapter_users.view.*
-
 
 object UserBinder {
-
-    fun bind(user: User, adapterToFragmentCallback: AdapterToFragmentCallback<User>, holder: UserViewHolder, position: Int) {
+    fun bind(user: User, adapterToFragmentCallback: AdapterToFragmentCallback<User>, position: Int, binding: AdapterUsersBinding) = with(binding) {
         // Set student avatar
         val basicUser = BasicUser()
         basicUser.name = user.name
         basicUser.pronouns = user.pronouns
         basicUser.avatarUrl = user.avatarUrl
-        ProfileUtils.loadAvatarForUser(holder.itemView.studentAvatar, basicUser.name, basicUser.avatarUrl)
+        ProfileUtils.loadAvatarForUser(studentAvatar, basicUser.name, basicUser.avatarUrl)
 
         // Set student name
-        holder.itemView.userName.text = Pronouns.span(user.name, user.pronouns)
+        userName.text = Pronouns.span(user.name, user.pronouns)
 
-        holder.itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(user, position) }
+        binding.root.setOnClickListener { adapterToFragmentCallback.onRowClicked(user, position) }
 
         // List enrollmentApiModel type(s)
         // Get a list of strings of the enrollments
         // Use hashSet to prevent duplicate enrollments
         val enrollments = user.enrollments
-                .map { it.type }
-                .toSet()
+            .map { it.type }
+            .toSet()
 
-        holder.itemView.userRole.text = android.text.TextUtils.join(", ", enrollments)
+        userRole.text = android.text.TextUtils.join(", ", enrollments)
     }
 }

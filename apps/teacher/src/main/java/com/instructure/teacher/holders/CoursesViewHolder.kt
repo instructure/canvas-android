@@ -24,20 +24,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterCoursesBinding
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.utils.Const.COURSE_EDIT_COLOR_ID
 import com.instructure.teacher.utils.Const.COURSE_EDIT_NAME_ID
 import com.instructure.teacher.utils.TeacherPrefs
-import kotlinx.android.synthetic.main.adapter_courses.view.*
 
 
 class CoursesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_courses
-    }
-
-    fun bind(course: Course, callback: DashboardFragment.CourseBrowserCallback?) = with(itemView) {
+    fun bind(course: Course, callback: DashboardFragment.CourseBrowserCallback?, binding: AdapterCoursesBinding) = with(binding) {
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 

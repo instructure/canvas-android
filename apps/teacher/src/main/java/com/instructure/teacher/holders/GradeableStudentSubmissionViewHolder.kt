@@ -33,29 +33,25 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.AdapterGradeableStudentSubmissionBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getResForSubmission
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
-import kotlinx.android.synthetic.main.adapter_gradeable_student_submission.view.*
 import java.util.*
 
 class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_gradeable_student_submission
-    }
-
     fun bind(
         context: Context,
         gradeableStudentSubmission: GradeableStudentSubmission,
         assignment: Assignment,
         courseId: Long,
-        callback: (GradeableStudentSubmission) -> Unit
-    ) = with(itemView) {
+        callback: (GradeableStudentSubmission) -> Unit,
+        binding: AdapterGradeableStudentSubmissionBinding
+    ) = with(binding) {
         // Set item a11y action to "view submission details"
-        accessibilityDelegate = object : View.AccessibilityDelegate() {
+        itemView.accessibilityDelegate = object : View.AccessibilityDelegate() {
             override fun onInitializeAccessibilityNodeInfo(v: View, info: AccessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(v, info)
                 val description = context.getString(R.string.a11y_viewSubmissionAction)

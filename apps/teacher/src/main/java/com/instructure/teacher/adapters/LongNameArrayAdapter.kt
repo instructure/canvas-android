@@ -17,14 +17,14 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import androidx.annotation.ArrayRes
-import androidx.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import androidx.annotation.ArrayRes
+import androidx.annotation.LayoutRes
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.spinner_long_text.view.*
 
 class LongNameArrayAdapter(context: Context, res: Int, textViewRes: Int, private val objects: List<CharSequence>) :
         ArrayAdapter<CharSequence>(context, res, textViewRes, objects) {
@@ -33,7 +33,7 @@ class LongNameArrayAdapter(context: Context, res: Int, textViewRes: Int, private
     fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.spinner_long_text, parent, false)
 
-        view.title.text = objects[position]
+        view.findViewById<TextView>(R.id.title).text = objects[position]
         return view
     }
 

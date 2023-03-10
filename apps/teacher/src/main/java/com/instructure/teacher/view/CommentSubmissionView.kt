@@ -31,12 +31,13 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.prettyPrint
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.CommentSubmissionAttachmentViewBinding
 import com.instructure.teacher.utils.getColorCompat
-import kotlinx.android.synthetic.main.comment_submission_attachment_view.view.*
 import org.greenrobot.eventbus.EventBus
 
 @SuppressLint("ViewConstructor")
 class CommentSubmissionView(context: Context, val submission: Submission) : LinearLayout(context) {
+
     init {
         orientation = VERTICAL
         val type = submission.submissionType?.let { Assignment.getSubmissionTypeFromAPIString(it) }
@@ -52,8 +53,8 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
     }
 
     private fun setupSubmissionAsAttachment(type: SubmissionType) {
-        val view = LayoutInflater.from(context).inflate(R.layout.comment_submission_attachment_view, this, false)
-        view.iconImageView.setColorFilter(ThemePrefs.brandColor)
+        val binding = CommentSubmissionAttachmentViewBinding.inflate(LayoutInflater.from(context), this, false)
+        binding.iconImageView.setColorFilter(ThemePrefs.brandColor)
 
         val (icon: Int, title: String, subtitle: String?) = when (type) {
             SubmissionType.ONLINE_TEXT_ENTRY -> {
@@ -83,16 +84,16 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
             else -> Triple(R.drawable.ic_attachment, type.prettyPrint(context), "")
         }
 
-        view.iconImageView.setImageResource(icon)
-        view.titleTextView.text = title
+        binding.iconImageView.setImageResource(icon)
+        binding.titleTextView.text = title
         if (subtitle.isNullOrBlank()) {
-            view.subtitleTextView.setGone()
+            binding.subtitleTextView.setGone()
         } else {
-            view.subtitleTextView.text = subtitle
+            binding.subtitleTextView.text = subtitle
         }
 
-        view.onClick { EventBus.getDefault().post(SubmissionSelectedEvent(submission)) }
-        addView(view)
+        binding.root.onClick { EventBus.getDefault().post(SubmissionSelectedEvent(submission)) }
+        addView(binding.root)
     }
 
     @Suppress("DEPRECATION")
@@ -111,17 +112,17 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
 
     private fun setupAttachments() {
         for (attachment in submission.attachments) {
-            val view = LayoutInflater.from(context).inflate(R.layout.comment_submission_attachment_view, this, false)
-            view.iconImageView.setColorFilter(ThemePrefs.brandColor)
-            view.iconImageView.setImageResource(attachment.iconRes)
-            view.titleTextView.text = attachment.displayName
-            view.subtitleTextView.text = Formatter.formatFileSize(context, attachment.size)
-            view.onClick {
+            val binding = CommentSubmissionAttachmentViewBinding.inflate(LayoutInflater.from(context), this, false)
+            binding.iconImageView.setColorFilter(ThemePrefs.brandColor)
+            binding.iconImageView.setImageResource(attachment.iconRes)
+            binding.titleTextView.text = attachment.displayName
+            binding.subtitleTextView.text = Formatter.formatFileSize(context, attachment.size)
+            binding.root.onClick {
                 EventBus.getDefault().post(SubmissionSelectedEvent(submission))
                 EventBus.getDefault().post(SubmissionFileSelectedEvent(submission.id, attachment))
             }
-            (view.layoutParams as LinearLayout.LayoutParams).topMargin = context.DP(4).toInt()
-            addView(view)
+            (binding.root.layoutParams as LayoutParams).topMargin = context.DP(4).toInt()
+            addView(binding.root)
         }
     }
 }

@@ -17,8 +17,12 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.teacher.databinding.AdapterCourseBrowserBinding
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.viewinterface.CourseBrowserView
@@ -30,12 +34,13 @@ class CourseBrowserAdapter(
     val iconTint: Int,
     val mCallback: (Tab) -> Unit) : SyncRecyclerAdapter<Tab, CourseBrowserViewHolder, CourseBrowserView>(context, presenter) {
 
-    override fun bindHolder(tab: Tab, holder: CourseBrowserViewHolder, position: Int) {
+    override fun bindHolder(model: Tab, holder: CourseBrowserViewHolder, position: Int) {
         context?.let {
-            holder.bind(tab, mCallback)
+            holder.bind(model, mCallback, binding as AdapterCourseBrowserBinding)
         }
     }
 
     override fun createViewHolder(v: View, viewType: Int): CourseBrowserViewHolder = CourseBrowserViewHolder(v, iconTint)
-    override fun itemLayoutResId(viewType: Int) = CourseBrowserViewHolder.HOLDER_RES_ID
+
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterCourseBrowserBinding::inflate
 }

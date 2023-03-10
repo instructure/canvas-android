@@ -26,19 +26,15 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterCourseBrowserBinding
 import com.instructure.teacher.utils.TeacherPrefs
-import kotlinx.android.synthetic.main.adapter_course_browser.view.*
 
 class CourseBrowserViewHolder(view: View, val iconTint: Int) : RecyclerView.ViewHolder(view) {
 
     // For instrumentation testing
     lateinit var labelText: TextView
 
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_course_browser
-    }
-
-    fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
+    fun bind(tab: Tab, clickedCallback: (Tab) -> Unit, binding: AdapterCourseBrowserBinding) {
         val res: Int = when (tab.tabId) {
             Tab.ASSIGNMENTS_ID -> R.drawable.ic_assignment
             Tab.QUIZZES_ID -> R.drawable.ic_quiz
@@ -65,7 +61,7 @@ class CourseBrowserViewHolder(view: View, val iconTint: Int) : RecyclerView.View
         d = DrawableCompat.wrap(d!!) as VectorDrawableCompat?
         DrawableCompat.setTint(d!!, iconTint)
 
-        setupTab(tab, d, clickedCallback)
+        setupTab(tab, d, clickedCallback, binding)
     }
 
     /**
@@ -75,23 +71,23 @@ class CourseBrowserViewHolder(view: View, val iconTint: Int) : RecyclerView.View
      * @param res The image resource for the tab
      * @param callback What we do when the user clicks this tab
      */
-    private fun setupTab(tab: Tab, drawable: Drawable, callback: (Tab) -> Unit) {
-        labelText = itemView.label
+    private fun setupTab(tab: Tab, drawable: Drawable, callback: (Tab) -> Unit, binding: AdapterCourseBrowserBinding) = with(binding) {
+        labelText = label
 
         // Manually set the text for Student View tab since it doesn't have any other info other than tabId
         if (tab.tabId == Tab.STUDENT_VIEW) {
-            itemView.label.text = itemView.context.getText(R.string.tab_student_view)
-            itemView.endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_open_externally))
-            itemView.description.setVisible()
-            itemView.description.text = itemView.context.getText(R.string.opensInCanvasStudent)
+            label.text = itemView.context.getText(R.string.tab_student_view)
+            endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_open_externally))
+            description.setVisible()
+            description.text = itemView.context.getText(R.string.opensInCanvasStudent)
         } else {
-            itemView.label.text = tab.label
-            itemView.endIcon.setImageDrawable(null)
-            itemView.description.setGone()
+            label.text = tab.label
+            endIcon.setImageDrawable(null)
+            description.setGone()
         }
 
-        itemView.icon.setImageDrawable(drawable)
-        itemView.setOnClickListener {
+        icon.setImageDrawable(drawable)
+        root.setOnClickListener {
             callback(tab)
         }
     }

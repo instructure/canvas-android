@@ -31,22 +31,23 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_UNSUPPORTED_FILE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.pandautils.utils.FileFolderDeletedEvent
-import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.teacher.databinding.FragmentUnsupportedFileTypeBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
-import kotlinx.android.synthetic.main.fragment_unsupported_file_type.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 @ScreenView(SCREEN_VIEW_VIEW_UNSUPPORTED_FILE)
 class ViewUnsupportedFileFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentUnsupportedFileTypeBinding::bind)
 
     private var downloadFileJob: Job? = null
 
@@ -69,10 +70,10 @@ class ViewUnsupportedFileFragment : Fragment() {
         if (fileFolderDeletedEvent != null)
             requireActivity().finish()
 
-        mEditableFile?.let { setupToolbar() } ?: toolbar.setGone()
+        mEditableFile?.let { setupToolbar() } ?: binding.toolbar.setGone()
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
 
         mEditableFile?.let {
             // Check if we need to update the file name
@@ -111,7 +112,7 @@ class ViewUnsupportedFileFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
+    override fun onStart() = with(binding) {
         super.onStart()
         Glide.with(requireContext())
                 .load(mPreviewUri)

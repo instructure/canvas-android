@@ -82,7 +82,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/recycler_swipe_refresh_layout" />
+        <include
+            android:id="@+id/swipeRefreshLayoutContainer"
+            layout="@layout/recycler_swipe_refresh_layout" />
 
     </FrameLayout>
 

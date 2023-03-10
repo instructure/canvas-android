@@ -17,8 +17,12 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.teacher.databinding.AdapterFileFolderBinding
 import com.instructure.teacher.holders.FileFolderViewHolder
 import com.instructure.teacher.presenters.FileListPresenter
 import com.instructure.teacher.viewinterface.FileListView
@@ -28,12 +32,13 @@ class FileListAdapter(
     private val mContext: Context,
     private val iconColor: Int,
     presenter: FileListPresenter,
-    private val mCallback: (FileFolder) -> Unit) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileListView>(mContext, presenter) {
+    private val mCallback: (FileFolder) -> Unit
+) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileListView>(mContext, presenter) {
 
     override fun bindHolder(model: FileFolder, holder: FileFolderViewHolder, position: Int) {
-        holder.bind(model, iconColor, mContext, mCallback)
+        holder.bind(model, iconColor, mContext, mCallback, binding as AdapterFileFolderBinding)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = FileFolderViewHolder(v)
-    override fun itemLayoutResId(viewType: Int) = FileFolderViewHolder.HOLDER_RES_ID
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterFileFolderBinding::inflate
 }

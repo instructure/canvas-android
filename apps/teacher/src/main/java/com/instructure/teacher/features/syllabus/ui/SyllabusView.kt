@@ -19,6 +19,9 @@ package com.instructure.teacher.features.syllabus.ui
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -27,8 +30,11 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.CanvasWebViewWrapper
+import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.MasterDetailActivity
+import com.instructure.teacher.databinding.FragmentSyllabusBinding
 import com.instructure.teacher.events.SyllabusUpdatedEvent
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
@@ -38,9 +44,6 @@ import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupMenu
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_syllabus.*
-import kotlinx.android.synthetic.main.fragment_syllabus_events.*
-import kotlinx.android.synthetic.main.fragment_syllabus_webview.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -48,10 +51,20 @@ import org.greenrobot.eventbus.ThreadMode
 private const val SYLLABUS_TAB_POSITION = 0
 private const val SUMMARY_TAB_POSITION = 1
 
-class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup
-) : MobiusView<SyllabusViewState, SyllabusEvent>(R.layout.fragment_syllabus, inflater, parent) {
+class SyllabusView(
+    val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup
+) : MobiusView<SyllabusViewState, SyllabusEvent, FragmentSyllabusBinding>(inflater, FragmentSyllabusBinding::inflate, parent) {
 
     private var consumer: Consumer<SyllabusEvent>? = null
+
+    private val syllabusEmptyView: EmptyView?
+        get() = binding.root.findViewById(R.id.syllabusEmptyView)
+
+    private val syllabusRetry: Button?
+        get() = binding.root.findViewById(R.id.syllabusRetry)
+
+    private val syllabusEventsRecyclerView: RecyclerView?
+        get() = binding.root.findViewById(R.id.syllabusEventsRecyclerView)
 
     private val tabListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -60,33 +73,35 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
             if (tab?.position == SYLLABUS_TAB_POSITION) {
-                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
+                binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
             } else {
-                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecyclerView, R.id.syllabusEmptyView)
+                binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecyclerView, R.id.syllabusEmptyView)
             }
         }
     }
 
     init {
-        toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
+        binding.toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
         setEditVisibility(false)
-        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
 
-        syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
+        binding.syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
 
         if (context !is MasterDetailActivity) {
-            toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+            binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         }
 
-        toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
-        toolbar.subtitle = canvasContext.name
+        binding.toolbar.apply {
+            title = context.getString(com.instructure.pandares.R.string.syllabus)
+            subtitle = canvasContext.name
+        }
 
-        syllabusPager.adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
-        syllabusTabLayout.setupWithViewPager(syllabusPager, true)
+        binding.syllabusPager.adapter = SyllabusTabAdapter(getTabTitles())
+        binding.syllabusTabLayout.setupWithViewPager(binding.syllabusPager, true)
     }
 
     private fun setEditVisibility(isVisible: Boolean) {
-        val editItem = toolbar.menu?.findItem(R.id.menu_edit)
+        val editItem = binding.toolbar.menu?.findItem(R.id.menu_edit)
         editItem?.isVisible = isVisible
     }
 
@@ -98,24 +113,24 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     override fun onConnect(output: Consumer<SyllabusEvent>) {
-        swipeRefreshLayout.setOnRefreshListener { output.accept(SyllabusEvent.PullToRefresh) }
-        syllabusTabLayout.addOnTabSelectedListener(tabListener)
+        binding.swipeRefreshLayout.setOnRefreshListener { output.accept(SyllabusEvent.PullToRefresh) }
+        binding.syllabusTabLayout.addOnTabSelectedListener(tabListener)
         consumer = output
     }
 
     override fun onDispose() {
-        syllabusTabLayout.removeOnTabSelectedListener(tabListener)
+        binding.syllabusTabLayout.removeOnTabSelectedListener(tabListener)
         consumer = null
     }
 
     override fun render(state: SyllabusViewState) {
         when (state) {
-            SyllabusViewState.Loading -> swipeRefreshLayout.isRefreshing = true
+            SyllabusViewState.Loading -> binding.swipeRefreshLayout.isRefreshing = true
             is SyllabusViewState.Loaded -> renderLoadedState(state)
         }.exhaustive
     }
 
-    private fun renderLoadedState(state: SyllabusViewState.Loaded) {
+    private fun renderLoadedState(state: SyllabusViewState.Loaded) = with(binding) {
         swipeRefreshLayout.isRefreshing = false
 
         if (syllabusPager.currentItem == SYLLABUS_TAB_POSITION) {
@@ -135,11 +150,13 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         syllabusPager.setCurrentItem(if (state.syllabus == null) SUMMARY_TAB_POSITION else SYLLABUS_TAB_POSITION, false)
 
+        val syllabusWebViewWrapper = binding.root.findViewById<CanvasWebViewWrapper>(R.id.syllabusWebViewWrapper)
         if (state.syllabus != null) syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
         if (state.eventsState != null) renderEvents(state.eventsState)
     }
 
     private fun renderEvents(eventsState: EventsViewState) {
+        val syllabusEventsError = binding.root.findViewById<LinearLayout>(R.id.syllabusEventsError)
         with(eventsState) {
             syllabusEmptyView?.setVisible(visibility.empty)
             syllabusEventsError?.setVisible(visibility.error)

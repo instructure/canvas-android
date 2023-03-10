@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.postpolicies.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,13 +27,15 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentPostPolicySettingsBinding
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
-import kotlinx.android.synthetic.main.fragment_post_policy_settings.*
-import kotlinx.android.synthetic.main.fragment_post_policy_settings.view.*
 
 class PostPolicyFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentPostPolicySettingsBinding::bind)
 
     private var assignment: Assignment by ParcelableArg(Assignment(), Const.ASSIGNMENT)
     private var course: Course by ParcelableArg(Course(), Const.CANVAS_CONTEXT)
@@ -43,8 +44,8 @@ class PostPolicyFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_post_policy_settings, container, false)
 
         val titles = listOf(getString(R.string.postGradesTab), getString(R.string.hideGradesTab))
-        view.postPolicyPager.adapter = PostPolicyPagerAdapter(course, assignment, childFragmentManager, titles)
-        view.postPolicyTabLayout.setupWithViewPager(view.postPolicyPager, true)
+        binding.postPolicyPager.adapter = PostPolicyPagerAdapter(course, assignment, childFragmentManager, titles)
+        binding.postPolicyTabLayout.setupWithViewPager(binding.postPolicyPager, true)
 
         return view
     }
@@ -55,14 +56,14 @@ class PostPolicyFragment : Fragment() {
     }
 
     private fun applyTheme() {
-        postPolicyToolbar.subtitle = assignment.name
-        postPolicyToolbar.setupBackButtonAsBackPressedOnly(this)
+        binding.postPolicyToolbar.subtitle = assignment.name
+        binding.postPolicyToolbar.setupBackButtonAsBackPressedOnly(this)
 
-        ViewStyler.themeToolbarLight(requireActivity(), postPolicyToolbar)
+        ViewStyler.themeToolbarLight(requireActivity(), binding.postPolicyToolbar)
 
         val courseColor = course.textAndIconColor
-        postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
-        postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
+        binding.postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
+        binding.postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
     }
 
     companion object {

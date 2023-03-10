@@ -17,8 +17,12 @@
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.teacher.databinding.AdapterAnnotationCommentBinding
 import instructure.androidblueprint.ListRecyclerAdapter
 
 class AnnotationCommentListAdapter(
@@ -29,7 +33,7 @@ class AnnotationCommentListAdapter(
 ) : ListRecyclerAdapter<CanvaDocAnnotation, AnnotationCommentViewHolder, AnnotationCommentListView>(context, presenter) {
 
     override fun createViewHolder(v: View, viewType: Int): AnnotationCommentViewHolder = AnnotationCommentViewHolder(v)
-    override fun itemLayoutResId(viewType: Int) = AnnotationCommentViewHolder.HOLDER_RES
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterAnnotationCommentBinding::inflate
     override fun bindHolder(model: CanvaDocAnnotation, holder: AnnotationCommentViewHolder, position: Int) {
         val canDelete = (presenter as AnnotationCommentListPresenter).docSession.annotationMetadata?.canManage() == true
                 || (presenter.docSession.annotationMetadata?.canWrite() == true
@@ -37,6 +41,6 @@ class AnnotationCommentListAdapter(
         val canEdit = presenter.docSession.annotationMetadata?.canWrite() == true
                 && model.userId == (presenter.docSession.annotationMetadata?.userId)
 
-        holder.bind(model, canEdit, canDelete, editCallback, deleteCallback)
+        holder.bind(model, canEdit, canDelete, editCallback, deleteCallback, binding as AdapterAnnotationCommentBinding)
     }
 }

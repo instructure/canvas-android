@@ -30,9 +30,11 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
+import com.instructure.teacher.databinding.FragmentStudentContextBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.StudentContextPresenterFactory
 import com.instructure.teacher.fragments.AddMessageFragment
@@ -45,13 +47,14 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.StudentContextView
 import instructure.androidblueprint.PresenterFragment
-import kotlinx.android.synthetic.main.fragment_student_context.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
 class StudentContextFragment : PresenterFragment<StudentContextPresenter, StudentContextView>(), StudentContextView {
+
+    private val binding by viewBinding(FragmentStudentContextBinding::bind)
 
     private var mStudentId by LongArg()
     private var mCourseId by LongArg()
@@ -87,16 +90,16 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     override fun getPresenterFactory() = StudentContextPresenterFactory(mStudentId, mCourseId)
 
     override fun onRefreshStarted() {
-        toolbar.setGone()
-        contentContainer.setGone()
-        loadingView.setVisible()
-        loadingView.announceForAccessibility(getString(R.string.Loading))
+        binding.toolbar.setGone()
+        binding.contentContainer.setGone()
+        binding.loadingView.setVisible()
+        binding.loadingView.announceForAccessibility(getString(R.string.Loading))
     }
 
     override fun onRefreshFinished() {
-        loadingView.setGone()
-        toolbar.setVisible()
-        contentContainer.setVisible()
+        binding.loadingView.setGone()
+        binding.toolbar.setVisible()
+        binding.contentContainer.setVisible()
     }
 
     override fun onPresenterPrepared(presenter: StudentContextPresenter) {}
@@ -109,7 +112,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     override fun clear() {
-        submissionListContainer.removeAllViewsInLayout()
+        binding.submissionListContainer.removeAllViewsInLayout()
     }
 
     override fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean) {
@@ -119,22 +122,22 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
 
         // Toolbar setup
         if (activity is MasterDetailInteractions) {
-            toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
-                toolbar.updateToolbarExpandCollapseIcon(this)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
+            binding.toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
+                binding.toolbar.updateToolbarExpandCollapseIcon(this)
+                ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
-            toolbar.setupBackButton(this)
+            binding.toolbar.setupBackButton(this)
         }
-        toolbar.title = Pronouns.span(student.shortName, student.pronouns)
-        toolbar.subtitle = course.name
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
+        binding.toolbar.title = Pronouns.span(student.shortName, student.pronouns)
+        binding.toolbar.subtitle = course.name
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
 
         // Message FAB
-        messageButton.setVisible()
-        ViewStyler.themeFAB(messageButton)
-        messageButton.setOnClickListener {
+        binding.messageButton.setVisible()
+        ViewStyler.themeFAB(binding.messageButton)
+        binding.messageButton.setOnClickListener {
             val recipient = Recipient(
                 stringId = student.id,
                 name = student.name,
@@ -145,15 +148,15 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
         }
 
-        studentNameView.text = Pronouns.span(student.shortName, student.pronouns)
-        studentEmailView.setVisible(student.email.isValid()).text = student.email
+        binding.studentNameView.text = Pronouns.span(student.shortName, student.pronouns)
+        binding.studentEmailView.setVisible(student.email.isValid()).text = student.email
 
         // Avatar
-        ProfileUtils.loadAvatarForUser(avatarView, student.name, student.avatarUrl)
+        ProfileUtils.loadAvatarForUser(binding.avatarView, student.name, student.avatarUrl)
 
         // Course and section names
-        courseNameView.text = course.name
-        sectionNameView.text = if (isStudent) {
+        binding.courseNameView.text = course.name
+        binding.sectionNameView.text = if (isStudent) {
             student.enrollments.joinToString(" | ") { it.section?.name ?: "" }
         } else {
             student.enrollments
@@ -166,8 +169,8 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         student.enrollments.mapNotNull { it.lastActivityAt }.maxOrNull()?.let {
             val dateString = DateHelper.getFormattedDate(requireContext(), it)
             val timeString = DateHelper.getFormattedTime(requireContext(), it)
-            lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
-        } ?: lastActivityView.setGone()
+            binding.lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
+        } ?: binding.lastActivityView.setGone()
 
         if (isStudent) {
             val enrollmentGrades = student.enrollments.find { it.type == EnrollmentType.STUDENTENROLLMENT }?.grades
@@ -179,34 +182,34 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val gradeAfterPostingText = enrollmentGrades?.let { it.unpostedCurrentGrade ?: it.unpostedCurrentScore?.toString() } ?: "--"
 
             if (gradeBeforePostingText == gradeAfterPostingText) {
-                gradeBeforePosting.text = gradeBeforePostingText
-                gradeBeforePosting.contentDescription =
+                binding.gradeBeforePosting.text = gradeBeforePostingText
+                binding.gradeBeforePosting.contentDescription =
                     getContentDescriptionForMinusGradeString(gradeBeforePostingText, requireContext())
-                gradeBeforePostingLabel.setText(R.string.currentGrade)
-                gradeAfterPostingContainer.setGone()
+                binding.gradeBeforePostingLabel.setText(R.string.currentGrade)
+                binding.gradeAfterPostingContainer.setGone()
             } else {
-                gradeBeforePosting.text = gradeBeforePostingText
-                gradeBeforePosting.contentDescription =
+                binding.gradeBeforePosting.text = gradeBeforePostingText
+                binding.gradeBeforePosting.contentDescription =
                     getContentDescriptionForMinusGradeString(gradeBeforePostingText, requireContext())
-                gradeAfterPosting.text = gradeAfterPostingText
-                gradeAfterPosting.contentDescription =
+                binding.gradeAfterPosting.text = gradeAfterPostingText
+                binding.gradeAfterPosting.contentDescription =
                     getContentDescriptionForMinusGradeString(gradeAfterPostingText, requireContext())
             }
 
             // Override Grade
             val overrideText = enrollmentGrades?.let { it.overrideGrade ?: it.overrideScore?.toString() }
             if (overrideText.isValid()) {
-                gradeOverride.text = overrideText
-                gradeOverride.contentDescription =
+                binding.gradeOverride.text = overrideText
+                binding.gradeOverride.contentDescription =
                     getContentDescriptionForMinusGradeString(overrideText, requireContext())
             } else {
-                gradeOverrideContainer.setGone()
+                binding.gradeOverrideContainer.setGone()
             }
 
-            val visibleGradeItems = gradeItems.children.filter { it.isVisible }
+            val visibleGradeItems = binding.gradeItems.children.filter { it.isVisible }
             if (visibleGradeItems.size == 1) {
                 // If there is only one grade item, add a second empty child so the first doesn't stretch to the full parent width
-                emptyGradeItemSpace.setVisible()
+                binding.emptyGradeItemSpace.setVisible()
             } else {
                 // Set color of last grade item
                 visibleGradeItems.lastOrNull()?.apply {
@@ -221,22 +224,22 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val submitted = onTime + late
 
             // Submitted
-            submittedCount.text = if (submitted <= 0) "--" else submitted.toString()
+            binding.submittedCount.text = if (submitted <= 0) "--" else submitted.toString()
 
             // Missing
-            missingCount.text = if (missing <= 0) "--" else missing.toString()
+            binding.missingCount.text = if (missing <= 0) "--" else missing.toString()
 
             // Late
-            lateCount.text = if (late <= 0) "--" else late.toString()
+            binding.lateCount.text = if (late <= 0) "--" else late.toString()
         } else {
-            messageButton.setGone()
-            val lastIdx = scrollContent.indexOfChild(additionalInfoContainer)
-            scrollContent.children.forEachIndexed { idx, v -> if (idx > lastIdx) v.setGone() }
+            binding.messageButton.setGone()
+            val lastIdx = binding.scrollContent.indexOfChild(binding.additionalInfoContainer)
+            binding.scrollContent.children.forEachIndexed { idx, v -> if (idx > lastIdx) v.setGone() }
         }
     }
 
     private fun setupScrollListener() {
-        contentContainer.viewTreeObserver.addOnScrollChangedListener(scrollListener)
+        binding.contentContainer.viewTreeObserver.addOnScrollChangedListener(scrollListener)
     }
 
     private val scrollListener = object : ViewTreeObserver.OnScrollChangedListener {
@@ -245,10 +248,10 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         private val touchSlop by lazy { ViewConfiguration.get(requireContext()).scaledTouchSlop }
 
         override fun onScrollChanged() {
-            if (!isAdded || contentContainer.height == 0 || scrollContent.height == 0 || loadMoreContainer.height == 0) return
-            val threshold = scrollContent.height - loadMoreContainer.top
-            val bottomOffset = contentContainer.height + contentContainer.scrollY - scrollContent.bottom
-            if (scrollContent.height <= contentContainer.height) {
+            if (!isAdded || binding.contentContainer.height == 0 || binding.scrollContent.height == 0 || binding.loadMoreContainer.height == 0) return
+            val threshold = binding.scrollContent.height - binding.loadMoreContainer.top
+            val bottomOffset = binding.contentContainer.height + binding.contentContainer.scrollY - binding.scrollContent.bottom
+            if (binding.scrollContent.height <= binding.contentContainer.height) {
                 presenter.loadMoreSubmissions()
             } else if (triggered && (threshold + touchSlop + bottomOffset < 0)) {
                 triggered = false
@@ -281,13 +284,13 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                     listOf(studentSubmission), 0)
                 RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
             }
-            submissionListContainer.addView(view)
+            binding.submissionListContainer.addView(view)
         }
-        contentContainer.post { scrollListener.onScrollChanged() }
+        binding.contentContainer.post { scrollListener.onScrollChanged() }
     }
 
     override fun showLoadMoreIndicator(show: Boolean) {
-        loadMoreIndicator.setVisible(show)
+        binding.loadMoreIndicator.setVisible(show)
     }
 
     override fun onErrorLoading(isDesigner: Boolean) {

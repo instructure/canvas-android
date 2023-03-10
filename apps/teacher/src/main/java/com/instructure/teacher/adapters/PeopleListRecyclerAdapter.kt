@@ -17,30 +17,30 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
-
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.User
 import com.instructure.teacher.binders.UserBinder
+import com.instructure.teacher.databinding.AdapterUsersBinding
 import com.instructure.teacher.holders.UserViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.PeopleListPresenter
 import com.instructure.teacher.viewinterface.PeopleListView
-
-import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
-
-class PeopleListRecyclerAdapter(context: Context, presenter: PeopleListPresenter, private val mCallback: AdapterToFragmentCallback<User>) : SyncRecyclerAdapter<User, UserViewHolder, PeopleListView>(context, presenter) {
+class PeopleListRecyclerAdapter(
+    context: Context, presenter: PeopleListPresenter, private val mCallback: AdapterToFragmentCallback<User>
+) : SyncRecyclerAdapter<User, UserViewHolder, PeopleListView>(context, presenter) {
 
     override fun bindHolder(user: User, holder: UserViewHolder, position: Int) {
-        UserBinder.bind(user, mCallback, holder, position)
+        UserBinder.bind(user, mCallback, position, binding as AdapterUsersBinding)
     }
 
     override fun createViewHolder(v: View, viewType: Int): UserViewHolder {
         return UserViewHolder(v)
     }
 
-    override fun itemLayoutResId(viewType: Int): Int {
-        return UserViewHolder.holderResId()
-    }
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterUsersBinding::inflate
 }

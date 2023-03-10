@@ -16,15 +16,17 @@
  */
 package com.instructure.teacher.features.modules.list.ui.binders
 
-import com.instructure.teacher.R
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.teacher.adapters.ListItemBinder
+import com.instructure.teacher.databinding.AdapterModuleEmptyItemBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 
 class ModuleListEmptyItemBinder : ListItemBinder<ModuleListItemData.EmptyItem, ModuleListCallback>() {
 
-    override val layoutResId: Int
-        get() = R.layout.adapter_module_empty_item
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterModuleEmptyItemBinding::inflate
 
     override val bindBehavior = NoBind()
 

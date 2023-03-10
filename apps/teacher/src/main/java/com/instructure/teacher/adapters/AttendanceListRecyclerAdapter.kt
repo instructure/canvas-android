@@ -17,8 +17,12 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Attendance
+import com.instructure.teacher.databinding.AdapterAttendanceBinding
 
 import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
@@ -34,14 +38,12 @@ class AttendanceListRecyclerAdapter(
 ) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder, AttendanceListView>(mContext, presenter) {
 
     override fun bindHolder(attendance: Attendance, holder: AttendanceViewHolder, position: Int) {
-        holder.bind(attendance, mCallback, position, context!!)
+        holder.bind(attendance, mCallback, position, context!!, binding as AdapterAttendanceBinding)
     }
 
     override fun createViewHolder(v: View, viewType: Int): AttendanceViewHolder {
         return AttendanceViewHolder(v)
     }
 
-    override fun itemLayoutResId(viewType: Int): Int {
-        return AttendanceViewHolder.HOLDER_RES_ID
-    }
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterAttendanceBinding::inflate
 }
