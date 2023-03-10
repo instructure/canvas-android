@@ -29,7 +29,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.ConversationApiModel
@@ -90,17 +89,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).click()
     }
 
-    fun selectInboxScope(scope: InboxApi.Scope) {
+    fun filterInbox(filterFor: String) {
         refresh()
         waitForView(withId(R.id.scopeFilterText))
         scopeButton.click()
-        when (scope) {
-            InboxApi.Scope.INBOX -> onViewWithText("Inbox").scrollTo().click()
-            InboxApi.Scope.UNREAD -> onViewWithText("Unread").scrollTo().click()
-            InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").scrollTo().click()
-            InboxApi.Scope.STARRED -> onViewWithText("Starred").scrollTo().click()
-            InboxApi.Scope.SENT -> onViewWithText("Sent").scrollTo().click()
-        }
+        waitForViewWithText(filterFor).click()
     }
 
     fun selectInboxFilter(course: Course) {

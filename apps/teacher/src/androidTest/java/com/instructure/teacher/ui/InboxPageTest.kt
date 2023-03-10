@@ -22,7 +22,6 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addConversation
 import com.instructure.canvas.espresso.mockCanvas.addConversations
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -99,7 +98,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
 
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversation1.subject!!)
         inboxPage.assertConversationDisplayed(conversation2.subject!!)
     }
@@ -146,7 +145,7 @@ class InboxPageTest: TeacherTest() {
         data.conversations[conversation2.id] = conversation2.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.filterInbox("Starred")
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickUnstar()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
@@ -237,7 +236,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.swipeConversationLeft(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -254,7 +253,7 @@ class InboxPageTest: TeacherTest() {
         data.conversations[conversation.id] = conversation.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.filterInbox("Starred")
         inboxPage.swipeConversationLeft(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
     }

@@ -10,7 +10,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.withCustomConstraints
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.*
@@ -70,17 +69,11 @@ class InboxPage: BasePage() {
             .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(50)))
     }
 
-    fun selectInboxScope(scope: InboxApi.Scope) {
+    fun filterInbox(filterFor: String) {
         refresh()
         waitForView(withId(R.id.scopeFilterText))
         onView(withId(R.id.scopeFilter)).click()
-        when (scope) {
-            InboxApi.Scope.INBOX -> onViewWithText("Inbox").scrollTo().click()
-            InboxApi.Scope.UNREAD -> onViewWithText("Unread").scrollTo().click()
-            InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").scrollTo().click()
-            InboxApi.Scope.STARRED -> onViewWithText("Starred").scrollTo().click()
-            InboxApi.Scope.SENT -> onViewWithText("Sent").scrollTo().click()
-        }
+        waitForViewWithText(filterFor).click()
     }
 
     fun assertThereIsAnUnreadMessage(unread: Boolean) {

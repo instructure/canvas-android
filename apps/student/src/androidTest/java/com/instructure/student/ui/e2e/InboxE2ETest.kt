@@ -22,7 +22,6 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.panda_annotations.FeatureCategory
@@ -174,7 +173,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation)
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
 
         Log.d(STEP_TAG,"Assert that ${seededConversation.subject} conversation is displayed by the 'Archived' filter, and other conversations are not displayed.")
         inboxPage.assertConversationDisplayed(seededConversation)
@@ -188,7 +187,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that ${seededConversation.subject} conversation is displayed.")
-        inboxPage.selectInboxScope(InboxApi.Scope.INBOX)
+        inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Select both of the conversations (${seededConversation.subject} and $newGroupMessageSubject) and star them." +
@@ -214,17 +213,17 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that both of the conversations are displayed there.")
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed(newGroupMessageSubject)
 
         Log.d(STEP_TAG, "Navigate to 'UNREAD' scope and assert that none of the conversations are displayed there, because a conversation cannot be archived and unread at the same time.")
-        inboxPage.selectInboxScope(InboxApi.Scope.UNREAD)
+        inboxPage.filterInbox("Unread")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
 
-        Log.d(STEP_TAG, "Navigate to 'UNREAD' scope and assert that both of the conversations are displayed there.")
-        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        Log.d(STEP_TAG, "Navigate to 'STARRED' scope and assert that both of the conversations are displayed there.")
+        inboxPage.filterInbox("Starred")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed(newGroupMessageSubject)
 
@@ -235,7 +234,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that both of the conversations are displayed there.")
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed(newGroupMessageSubject)
 
@@ -246,7 +245,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope and assert that both of the conversations are displayed there.")
-        inboxPage.selectInboxScope(InboxApi.Scope.INBOX)
+        inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed(newGroupMessageSubject)
 
@@ -264,7 +263,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope. Assert that the '${seededConversation.subject}' conversation is displayed in the 'ARCHIVED' scope.")
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'ARCHIVED' scope because it has became unarchived.")
@@ -272,7 +271,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope. Assert that the '${seededConversation.subject}' conversation is displayed in the 'INBOX' scope.")
-        inboxPage.selectInboxScope(InboxApi.Scope.INBOX)
+        inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
@@ -282,7 +281,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.clickMarkAsUnread()
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that both of the conversation are displayed in the 'STARRED' scope.")
-        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.filterInbox("Starred")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed(newGroupMessageSubject)
 
@@ -298,7 +297,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertUnreadMarkerVisibility(newGroupMessageSubject, ViewMatchers.Visibility.GONE)
 
         Log.d(STEP_TAG, "Navigate to 'UNREAD' scope. Assert that only the '${seededConversation.subject}' conversation is displayed in the 'UNREAD' scope.")
-        inboxPage.selectInboxScope(InboxApi.Scope.UNREAD)
+        inboxPage.filterInbox("Unread")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
 
@@ -307,11 +306,11 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope. Assert that the '${seededConversation.subject}' conversation is displayed in the 'ARCHIVED' scope.")
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope and seledct '$newGroupMessageSubject' conversation.")
-        inboxPage.selectInboxScope(InboxApi.Scope.INBOX)
+        inboxPage.filterInbox("Inbox")
         inboxPage.selectConversation(newGroupMessageSubject)
 
         Log.d(STEP_TAG, "Delete the '$newGroupMessageSubject' conversation and assert that it has been removed from the 'INBOX' scope.")

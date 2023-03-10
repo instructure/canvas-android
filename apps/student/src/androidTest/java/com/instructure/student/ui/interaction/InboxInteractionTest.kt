@@ -18,7 +18,6 @@ package com.instructure.student.ui.interaction
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.*
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -47,7 +46,8 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
         newMessagePage.clickSend()
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        //inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed(subject)
     }
 
@@ -65,7 +65,8 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
         newMessagePage.clickSend()
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        //inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed(subject)
     }
 
@@ -85,7 +86,8 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
         newMessagePage.clickSend()
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+       // inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed(subject)
     }
 
@@ -114,7 +116,8 @@ class InboxInteractionTest : StudentTest() {
             sentConversation,
             data
         )
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+       // inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.openConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
@@ -143,7 +146,8 @@ class InboxInteractionTest : StudentTest() {
             sentConversation,
             data
         )
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+       // inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.openConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
@@ -172,7 +176,8 @@ class InboxInteractionTest : StudentTest() {
             sentConversation,
             data
         )
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+      //  inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.openConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
@@ -232,7 +237,8 @@ class InboxInteractionTest : StudentTest() {
         val conversation = data.conversations.values.first {
             it.workflowState == Conversation.WorkflowState.UNREAD
         }
-        inboxPage.selectInboxScope(InboxApi.Scope.UNREAD)
+       // inboxPage.selectInboxScope(InboxApi.Scope.UNREAD)
+        inboxPage.filterInbox("Unread")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -246,7 +252,8 @@ class InboxInteractionTest : StudentTest() {
         val conversation = data.conversations.values.first {
             it.isStarred
         }
-        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+       // inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.filterInbox("Starred")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -260,7 +267,8 @@ class InboxInteractionTest : StudentTest() {
         val conversation = data.conversations.values.first {
             it.workflowState == Conversation.WorkflowState.UNREAD
         }
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+      //  inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -274,7 +282,8 @@ class InboxInteractionTest : StudentTest() {
         val conversation = data.conversations.values.first {
             it.workflowState == Conversation.WorkflowState.ARCHIVED
         }
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+       // inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -304,7 +313,8 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
         newMessagePage.clickSend()
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+      //  inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed(subject)
     }
 
@@ -334,7 +344,8 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
         newMessagePage.clickSend()
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+      //  inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed(subject)
     }
 
@@ -438,7 +449,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertConversationDisplayed(conversationSubject)
         inboxPage.openConversation(conversation)
         inboxConversationPage.archive() // Should kick you back to the main inbox page
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+      //  inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversationSubject)
     }
 
@@ -519,7 +531,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
         inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
 
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        //inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversation1.subject ?: "")
         inboxPage.assertConversationDisplayed(conversation2.subject ?: "")
     }
@@ -565,7 +578,8 @@ class InboxInteractionTest : StudentTest() {
         data.conversations[conversation2.id] = conversation2.copy(isStarred = true)
 
         dashboardPage.clickInboxTab()
-        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        //inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.filterInbox("Starred")
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickUnstar()
         inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
@@ -589,6 +603,7 @@ class InboxInteractionTest : StudentTest() {
             messageSubject = "Subject 2")
 
         dashboardPage.clickInboxTab()
+
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickMarkAsRead()
         inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: "", ViewMatchers.Visibility.GONE)
@@ -614,10 +629,13 @@ class InboxInteractionTest : StudentTest() {
             receiverIds = listOf(data.students.first().id),
             messageBody = "Body 2",
             messageSubject = "Subject 2")
+
         dashboardPage.clickInboxTab()
+
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickDelete()
         inboxPage.confirmDelete()
+
         inboxPage.assertConversationNotDisplayed(conversation1.subject ?: "")
         inboxPage.assertConversationNotDisplayed(conversation2.subject ?: "")
     }
@@ -656,7 +674,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.swipeConversationLeft(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject ?: "")
 
-        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        //inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversation.subject ?: "")
     }
 
@@ -673,7 +692,8 @@ class InboxInteractionTest : StudentTest() {
         data.conversations[conversation.id] = conversation.copy(isStarred = true)
 
         dashboardPage.clickInboxTab()
-        inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        //inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
+        inboxPage.filterInbox("Starred")
         inboxPage.swipeConversationLeft(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject ?: "")
     }
