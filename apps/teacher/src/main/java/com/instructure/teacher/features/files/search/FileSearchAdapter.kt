@@ -18,7 +18,6 @@ package com.instructure.teacher.features.files.search
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.FileFolder
@@ -35,9 +34,9 @@ class FileSearchAdapter(
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterFileFolderBinding::inflate
 
-    override fun createViewHolder(v: View, viewType: Int) = FileFolderViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = FileFolderViewHolder(binding as AdapterFileFolderBinding)
 
     override fun bindHolder(model: FileFolder, holder: FileFolderViewHolder, position: Int) {
-        holder.bind(model, courseTextColor, context!!, callback, binding as AdapterFileFolderBinding)
+        holder.bind(model, courseTextColor, context!!, callback)
     }
 }

@@ -17,11 +17,9 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.content.res.ColorStateList
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.viewbinding.ViewBinding
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
 import com.instructure.teacher.databinding.AdapterModuleItemBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
@@ -29,12 +27,13 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 
 class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, ModuleListCallback>() {
 
-    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterModuleItemBinding::inflate
+    override val layoutResId = R.layout.adapter_module_item
 
     override fun getItemId(item: ModuleListItemData.ModuleItemData) = item.id
 
-    override val bindBehavior = Item { item, callback ->
-        with(binding as AdapterModuleItemBinding) {
+    override val bindBehavior = Item { item, view, callback ->
+        val binding = AdapterModuleItemBinding.bind(view)
+        with(binding) {
             moduleItemIcon.setVisible(item.iconResId != null)
             item.iconResId?.let {
                 moduleItemIcon.setImageResource(it)

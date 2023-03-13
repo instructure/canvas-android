@@ -17,10 +17,8 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.content.res.ColorStateList
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.viewbinding.ViewBinding
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
 import com.instructure.teacher.databinding.AdapterModuleListErrorInlineBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
@@ -28,10 +26,11 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 
 class ModuleListInlineErrorBinder : ListItemBinder<ModuleListItemData.InlineError, ModuleListCallback>() {
 
-    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterModuleListErrorInlineBinding::inflate
+    override val layoutResId = R.layout.adapter_module_list_error_inline
 
-    override val bindBehavior = Item { item, callback ->
-        with((binding as AdapterModuleListErrorInlineBinding).retryButton) {
+    override val bindBehavior = Item { item, view, callback ->
+        val binding = AdapterModuleListErrorInlineBinding.bind(view)
+        with(binding.retryButton) {
             backgroundTintList = ColorStateList.valueOf(item.buttonColor)
             setTextColor(ThemePrefs.buttonTextColor)
             setOnClickListener { callback.retryNextPage() }

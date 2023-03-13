@@ -18,7 +18,6 @@ package com.instructure.teacher.holders
 
 import android.content.Context
 import android.net.Uri
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.utils.ThemePrefs
@@ -29,15 +28,14 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterAttachmentBinding
 import com.instructure.teacher.utils.isMediaSubmissionPlaceholder
 
-class AttachmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class AttachmentViewHolder(private val binding: AdapterAttachmentBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         context: Context,
         position: Int,
         attachment: Attachment,
         isSelected: Boolean,
         callback: (Attachment) -> Unit,
-        selectionCallback: (Int) -> Unit,
-        binding: AdapterAttachmentBinding
+        selectionCallback: (Int) -> Unit
     ) = with(binding) {
         //check if its the selected item
         if(isSelected) {

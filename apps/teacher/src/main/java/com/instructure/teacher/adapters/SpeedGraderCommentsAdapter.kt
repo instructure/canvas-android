@@ -18,8 +18,8 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -45,7 +45,7 @@ class SpeedGraderCommentsAdapter(
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> AdapterSubmissionCommentBinding = AdapterSubmissionCommentBinding::inflate
 
-    override fun createViewHolder(v: View, viewType: Int) = SpeedGraderCommentHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = SpeedGraderCommentHolder(binding as AdapterSubmissionCommentBinding)
 
     override fun bindHolder(model: SubmissionCommentWrapper, holder: SpeedGraderCommentHolder, position: Int) {
         val presenter = presenter as SpeedGraderCommentsPresenter
@@ -56,8 +56,7 @@ class SpeedGraderCommentsAdapter(
             assignee,
             gradeAnonymously,
             onAttachmentClicked,
-            presenter,
-            binding as AdapterSubmissionCommentBinding
+            presenter
         )
     }
 }

@@ -17,7 +17,6 @@
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
 import android.view.Gravity
-import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
@@ -28,14 +27,13 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterAnnotationCommentBinding
 
-class AnnotationCommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class AnnotationCommentViewHolder(private val binding: AdapterAnnotationCommentBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         annotation: CanvaDocAnnotation,
         canEdit: Boolean,
         canDelete: Boolean,
         editCallback: (CanvaDocAnnotation, Int) -> Unit,
-        deleteCallback: (CanvaDocAnnotation, Int) -> Unit,
-        binding: AdapterAnnotationCommentBinding
+        deleteCallback: (CanvaDocAnnotation, Int) -> Unit
     ) = with(binding) {
         val context = binding.root.context
         commentAuthorTextView.text = annotation.userName

@@ -17,7 +17,6 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attendance
@@ -31,13 +30,12 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterAttendanceBinding
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 
-class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class AttendanceViewHolder(private val binding: AdapterAttendanceBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         attendance: Attendance,
         callback: AttendanceToFragmentCallback<Attendance>,
         position: Int,
-        context: Context,
-        binding: AdapterAttendanceBinding
+        context: Context
     ) = with(binding) {
         // Set student avatar
         val basicUser = BasicUser()

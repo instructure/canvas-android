@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Conversation
@@ -39,10 +38,10 @@ open class MessageAdapter(
 ) : SyncRecyclerAdapter<Message, MessageHolder, MessageThreadView>(context, presenter) {
 
     override fun bindHolder(model: Message, holder: MessageHolder, position: Int) = MessageBinder.bind(
-        model, mConversation, mCallback.getParticipantById(model.authorId), position, mCallback, binding as AdapterMessageBinding
+        model, mConversation, mCallback.getParticipantById(model.authorId), position, mCallback, holder
     )
 
-    override fun createViewHolder(v: View, viewType: Int): MessageHolder = MessageHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = MessageHolder(binding as AdapterMessageBinding)
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterMessageBinding::inflate
 }

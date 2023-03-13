@@ -41,14 +41,13 @@ import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
 import java.util.*
 
-class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class GradeableStudentSubmissionViewHolder(private val binding: AdapterGradeableStudentSubmissionBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         context: Context,
         gradeableStudentSubmission: GradeableStudentSubmission,
         assignment: Assignment,
         courseId: Long,
-        callback: (GradeableStudentSubmission) -> Unit,
-        binding: AdapterGradeableStudentSubmissionBinding
+        callback: (GradeableStudentSubmission) -> Unit
     ) = with(binding) {
         // Set item a11y action to "view submission details"
         itemView.accessibilityDelegate = object : View.AccessibilityDelegate() {

@@ -17,13 +17,12 @@ package com.instructure.teacher.holders
 
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 import com.instructure.teacher.presenters.DiscussionListPresenter
 
-class DiscussionExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class DiscussionExpandableViewHolder(private val binding: ViewholderHeaderExpandableBinding) : RecyclerView.ViewHolder(binding.root) {
 
     var mIsExpanded = true
 
@@ -31,8 +30,7 @@ class DiscussionExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(i
         isExpanded: Boolean,
         holder: DiscussionExpandableViewHolder,
         group: String,
-        callback: (String) -> Unit,
-        binding: ViewholderHeaderExpandableBinding
+        callback: (String) -> Unit
     ) = with(binding) {
 
         mIsExpanded = isExpanded

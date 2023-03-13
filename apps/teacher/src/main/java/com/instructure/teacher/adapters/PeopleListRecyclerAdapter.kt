@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.User
@@ -34,13 +33,11 @@ class PeopleListRecyclerAdapter(
     context: Context, presenter: PeopleListPresenter, private val mCallback: AdapterToFragmentCallback<User>
 ) : SyncRecyclerAdapter<User, UserViewHolder, PeopleListView>(context, presenter) {
 
-    override fun bindHolder(user: User, holder: UserViewHolder, position: Int) {
-        UserBinder.bind(user, mCallback, position, binding as AdapterUsersBinding)
+    override fun bindHolder(model: User, holder: UserViewHolder, position: Int) {
+        UserBinder.bind(model, mCallback, position, holder)
     }
 
-    override fun createViewHolder(v: View, viewType: Int): UserViewHolder {
-        return UserViewHolder(v)
-    }
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = UserViewHolder(binding as AdapterUsersBinding)
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterUsersBinding::inflate
 }

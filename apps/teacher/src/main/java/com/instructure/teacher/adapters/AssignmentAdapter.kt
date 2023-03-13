@@ -19,7 +19,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -41,11 +40,9 @@ class AssignmentAdapter(
     private val mCallback: (Assignment) -> Unit
 ) : SyncExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder, AssignmentListView>(context, expandablePresenter) {
 
-    override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            Types.TYPE_ITEM -> AssignmentViewHolder(v)
-            else -> AssignmentGroupHeaderViewHolder(v)
-        }
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> AssignmentViewHolder(binding as AdapterAssignmentBinding)
+        else -> AssignmentGroupHeaderViewHolder(binding as AdapterAssignmentGroupHeaderBinding)
     }
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
@@ -56,13 +53,11 @@ class AssignmentAdapter(
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: AssignmentGroup, isExpanded: Boolean) {
         (holder as AssignmentGroupHeaderViewHolder).bind(
             group,
-            isExpanded,
-            { assignmentGroup -> expandCollapseGroup(assignmentGroup) },
-            binding as AdapterAssignmentGroupHeaderBinding
-        )
+            isExpanded
+        ) { assignmentGroup -> expandCollapseGroup(assignmentGroup) }
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: AssignmentGroup, item: Assignment) {
-        context?.let { (holder as AssignmentViewHolder).bind(it, item, iconColor, mCallback, binding as AdapterAssignmentBinding) }
+        context?.let { (holder as AssignmentViewHolder).bind(it, item, iconColor, mCallback) }
     }
 }

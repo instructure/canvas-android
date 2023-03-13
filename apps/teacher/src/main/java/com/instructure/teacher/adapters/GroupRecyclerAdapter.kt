@@ -24,12 +24,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import androidx.viewbinding.ViewBinding
 import com.instructure.pandarecycler.util.GroupSortedList
 import java.util.*
-
 
 abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
     context: Context,
@@ -153,18 +152,18 @@ abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
     @Suppress("UNCHECKED_CAST")
     private fun <I : T> getBinder(item: I): ListItemBinder<I, C> =
         registeredBinders[item::class.java] as? ListItemBinder<I, C>
-                ?: throw IllegalStateException("No binder registered for ${item::class.java.name}")
+            ?: throw IllegalStateException("No binder registered for ${item::class.java.name}")
 
     private fun performBind(item: T, holder: ViewHolder, isExpanded: Boolean) {
         val binder = getBinder(item)
         when (val behavior = binder.bindBehavior) {
-            is ListItemBinder.Item -> behavior.onBind(item, callback)
+            is ListItemBinder.Item -> behavior.onBind(item, holder.itemView, callback)
             is ListItemBinder.Header -> {
                 holder.itemView.setOnClickListener {
                     sortedList.expandCollapseGroup(item, true)
                     behavior.onExpand(item, isGroupExpanded(item), callback)
                 }
-                behavior.onBind(item, isExpanded, callback)
+                behavior.onBind(item, holder.itemView, isExpanded, callback)
             }
             is ListItemBinder.NoBind -> Unit // Do nothing
             else -> throw IllegalArgumentException("Unknown bind behavior: ${binder.bindBehavior::class.java.name}")
@@ -388,9 +387,8 @@ abstract class ListItemBinder<T : Any, C : ListItemCallback> {
 
     var viewType: Int = 0
 
-    protected lateinit var binding: ViewBinding
-
-    abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
+    @get:LayoutRes
+    abstract val layoutResId: Int
 
     /**
      * Returns an ID for the specified item. By default this returns a negative value that is assigned to
@@ -401,9 +399,9 @@ abstract class ListItemBinder<T : Any, C : ListItemCallback> {
     open fun getItemId(item: T): Long = -viewType.toLong()
 
     fun createViewHolder(context: Context, parent: ViewGroup): ViewHolder {
-        binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
-        initView(binding.root)
-        return object : ViewHolder(binding.root) {}
+        val view = LayoutInflater.from(context).inflate(layoutResId, parent, false)
+        initView(view)
+        return object : ViewHolder(view) {}
     }
 
     open fun initView(view: View) = Unit
@@ -423,14 +421,14 @@ abstract class ListItemBinder<T : Any, C : ListItemCallback> {
     inner class NoBind : BindBehavior<T, C>()
 
     inner class Item(
-        val onBind: (item: T, callback: C) -> Unit
+        val onBind: (item: T, view: View, callback: C) -> Unit
     ) : BindBehavior<T, C>()
 
     inner class Header(
         val collapsible: Boolean = true,
         val collapsedByDefault: Boolean = false,
         val onExpand: (item: T, isExpanded: Boolean, callback: C) -> Unit = { _, _, _ -> },
-        val onBind: (item: T, isCollapsed: Boolean, callback: C) -> Unit
+        val onBind: (item: T, view: View, isCollapsed: Boolean, callback: C) -> Unit
     ) : BindBehavior<T, C>()
 
     // endregion
@@ -438,8 +436,3 @@ abstract class ListItemBinder<T : Any, C : ListItemCallback> {
 }
 
 interface ListItemCallback
-
-
-
-
-

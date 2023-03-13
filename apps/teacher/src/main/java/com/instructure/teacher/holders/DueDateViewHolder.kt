@@ -18,7 +18,6 @@ package com.instructure.teacher.holders
 
 import android.content.Context
 import android.text.SpannableStringBuilder
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
@@ -31,14 +30,13 @@ import com.instructure.teacher.models.DueDateGroup
 import java.util.*
 
 
-class DueDateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class DueDateViewHolder(private val binding: AdapterAssignmentDueDateBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         date: DueDateGroup,
         allDatesCount: Int,
         sections: Map<Long, Section>,
         groups: Map<Long, Group>,
-        students: Map<Long, User>,
-        binding: AdapterAssignmentDueDateBinding
+        students: Map<Long, User>
     ) = with(binding) {
         val context = binding.root.context
         val atSeparator = context.getString(R.string.at)

@@ -17,7 +17,6 @@
 package com.instructure.teacher.holders
 
 import android.graphics.drawable.Drawable
-import android.view.View
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -29,12 +28,12 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterCourseBrowserBinding
 import com.instructure.teacher.utils.TeacherPrefs
 
-class CourseBrowserViewHolder(view: View, val iconTint: Int) : RecyclerView.ViewHolder(view) {
+class CourseBrowserViewHolder(private val binding: AdapterCourseBrowserBinding, val iconTint: Int) : RecyclerView.ViewHolder(binding.root) {
 
     // For instrumentation testing
     lateinit var labelText: TextView
 
-    fun bind(tab: Tab, clickedCallback: (Tab) -> Unit, binding: AdapterCourseBrowserBinding) {
+    fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
         val res: Int = when (tab.tabId) {
             Tab.ASSIGNMENTS_ID -> R.drawable.ic_assignment
             Tab.QUIZZES_ID -> R.drawable.ic_quiz

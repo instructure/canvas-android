@@ -27,8 +27,8 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterPageBinding
 
-class PageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    fun bind(context: Context, page: Page, iconColor: Int, callback: (Page) -> Unit, binding: AdapterPageBinding) = with(binding) {
+class PageViewHolder(private val binding: AdapterPageBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(context: Context, page: Page, iconColor: Int, callback: (Page) -> Unit) = with(binding) {
         pageLayout.setOnClickListener { callback(page) }
         pageTitle.text = page.title
         pageIcon.setIcon(R.drawable.ic_pages, iconColor)

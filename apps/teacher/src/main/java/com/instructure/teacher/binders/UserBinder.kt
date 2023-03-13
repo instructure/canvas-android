@@ -20,11 +20,11 @@ import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
-import com.instructure.teacher.databinding.AdapterUsersBinding
+import com.instructure.teacher.holders.UserViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 
 object UserBinder {
-    fun bind(user: User, adapterToFragmentCallback: AdapterToFragmentCallback<User>, position: Int, binding: AdapterUsersBinding) = with(binding) {
+    fun bind(user: User, adapterToFragmentCallback: AdapterToFragmentCallback<User>, position: Int, holder: UserViewHolder) = with(holder.binding) {
         // Set student avatar
         val basicUser = BasicUser()
         basicUser.name = user.name
@@ -35,7 +35,7 @@ object UserBinder {
         // Set student name
         userName.text = Pronouns.span(user.name, user.pronouns)
 
-        binding.root.setOnClickListener { adapterToFragmentCallback.onRowClicked(user, position) }
+        root.setOnClickListener { adapterToFragmentCallback.onRowClicked(user, position) }
 
         // List enrollmentApiModel type(s)
         // Get a list of strings of the enrollments

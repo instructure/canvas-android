@@ -18,7 +18,6 @@ package instructure.androidblueprint
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -38,11 +37,9 @@ abstract class SyncRecyclerAdapter<
     private val presenter: SyncPresenter<MODEL, VIEW>
 ) : RecyclerView.Adapter<HOLDER>() {
 
-    protected lateinit var binding: ViewBinding
-
     abstract fun bindHolder(model: MODEL, holder: HOLDER, position: Int)
 
-    abstract fun createViewHolder(v: View, viewType: Int): HOLDER
+    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
 
     private val contextReference: WeakReference<Context> = WeakReference(context)
 
@@ -70,8 +67,8 @@ abstract class SyncRecyclerAdapter<
     abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HOLDER {
-        binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
-        return createViewHolder(binding.root, viewType)
+        val binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
+        return createViewHolder(binding, viewType)
     }
 
     override fun onBindViewHolder(baseHolder: HOLDER, position: Int) {

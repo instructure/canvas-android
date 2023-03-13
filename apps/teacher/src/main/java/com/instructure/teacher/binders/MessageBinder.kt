@@ -34,7 +34,7 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAvatarA11y
-import com.instructure.teacher.databinding.AdapterMessageBinding
+import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.utils.linkifyTextView
 import java.text.SimpleDateFormat
@@ -47,18 +47,18 @@ object MessageBinder {
         author: BasicUser?,
         position: Int,
         callback: MessageAdapterCallback,
-        binding: AdapterMessageBinding
-    ): Unit = with(binding) {
+        holder: MessageHolder
+    ): Unit = with(holder.binding) {
         // Set author info
         with(authorName) {
             if (author != null) {
                 text = getAuthorTitle(author.id, conversation, message)
-                ProfileUtils.loadAvatarForUser(binding.authorAvatar, author.name, author.avatarUrl)
+                ProfileUtils.loadAvatarForUser(authorAvatar, author.name, author.avatarUrl)
                 setupAvatarA11y(author.name)
                 setOnClickListener { callback.onAvatarClicked(author) }
             } else {
                 text = ""
-                with(binding.authorAvatar) {
+                with(authorAvatar) {
                     setImageDrawable(null)
                     setOnClickListener(null)
                 }

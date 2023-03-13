@@ -16,8 +16,7 @@
 
 package com.instructure.teacher.holders
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.teacher.databinding.AdapterMessageBinding
 
-
-class MessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+class MessageHolder(val binding: AdapterMessageBinding) : RecyclerView.ViewHolder(binding.root)

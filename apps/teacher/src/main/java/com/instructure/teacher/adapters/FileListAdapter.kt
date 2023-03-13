@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.FileFolder
@@ -36,9 +35,10 @@ class FileListAdapter(
 ) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileListView>(mContext, presenter) {
 
     override fun bindHolder(model: FileFolder, holder: FileFolderViewHolder, position: Int) {
-        holder.bind(model, iconColor, mContext, mCallback, binding as AdapterFileFolderBinding)
+        holder.bind(model, iconColor, mContext, mCallback)
     }
 
-    override fun createViewHolder(v: View, viewType: Int) = FileFolderViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = FileFolderViewHolder(binding as AdapterFileFolderBinding)
+
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterFileFolderBinding::inflate
 }

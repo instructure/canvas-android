@@ -18,7 +18,6 @@ package com.instructure.teacher.holders
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Recipient
@@ -28,7 +27,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ViewholderRecipientBinding
 import com.instructure.teacher.interfaces.RecipientAdapterCallback
 
-class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class RecipientViewHolder(private val binding: ViewholderRecipientBinding) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         private const val SELECTION_TRANSPARENCY_MASK = 0x08FFFFFF
@@ -39,8 +38,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         holder: RecipientViewHolder,
         recipient: Recipient,
         adapterCallback: RecipientAdapterCallback,
-        isSelected: Boolean,
-        binding: ViewholderRecipientBinding
+        isSelected: Boolean
     ) = with(binding) {
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
@@ -68,7 +66,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         // Show user count if group, load avatars
         if (recipient.recipientType == Recipient.Type.Group) {
             checkBox.setVisible()
-            if(isSelected) {
+            if (isSelected) {
                 setChecked(true)
             } else {
                 ProfileUtils.loadAvatarForUser(avatar, recipient.name, recipient.avatarURL)
@@ -86,7 +84,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         } else {
             checkBox.setGone()
             userCount.setGone()
-            if(isSelected) {
+            if (isSelected) {
                 setChecked(true)
             } else {
                 userCount.text = ""

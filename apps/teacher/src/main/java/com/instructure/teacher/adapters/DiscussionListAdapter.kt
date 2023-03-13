@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -46,11 +45,9 @@ class DiscussionListAdapter(
         setExpandedByDefault(true)
     }
 
-    override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            Types.TYPE_ITEM -> DiscussionListHolder(v)
-            else -> if (mIsAnnouncement) EmptyViewHolder(v) else DiscussionExpandableViewHolder(v)
-        }
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> DiscussionListHolder(binding as AdapterDiscussionBinding)
+        else -> if (mIsAnnouncement) EmptyViewHolder(binding.root) else DiscussionExpandableViewHolder(binding as ViewholderHeaderExpandableBinding)
     }
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
@@ -64,10 +61,8 @@ class DiscussionListAdapter(
                 (holder as DiscussionExpandableViewHolder).bind(
                     isExpanded,
                     holder,
-                    group,
-                    { discussionGroup -> expandCollapseGroup(discussionGroup) },
-                    binding as ViewholderHeaderExpandableBinding
-                )
+                    group
+                ) { discussionGroup -> expandCollapseGroup(discussionGroup) }
             }
         }
     }
@@ -81,8 +76,7 @@ class DiscussionListAdapter(
                 iconColor,
                 mIsAnnouncement,
                 mCallback,
-                mOverflowCallback,
-                binding as AdapterDiscussionBinding
+                mOverflowCallback
             )
         }
     }

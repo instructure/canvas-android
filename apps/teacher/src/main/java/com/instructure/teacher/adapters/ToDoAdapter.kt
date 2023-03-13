@@ -19,7 +19,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.ToDo
@@ -37,11 +36,11 @@ class ToDoAdapter(
 ) :
     SyncRecyclerAdapter<ToDo, ToDoViewHolder, ToDoView>(context, presenter) {
 
-    override fun createViewHolder(v: View, viewType: Int) = ToDoViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = ToDoViewHolder(binding as AdapterTodoBinding)
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterTodoBinding::inflate
 
     override fun bindHolder(model: ToDo, holder: ToDoViewHolder, position: Int) {
-        context?.let { holder.bind(it, model, mCallback, position, binding as AdapterTodoBinding) }
+        context?.let { holder.bind(it, model, mCallback, position) }
     }
 }

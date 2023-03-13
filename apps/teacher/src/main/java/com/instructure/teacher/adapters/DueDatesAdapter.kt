@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.teacher.databinding.AdapterAssignmentDueDateBinding
@@ -31,8 +30,10 @@ import instructure.androidblueprint.SyncRecyclerAdapter
 class DueDatesAdapter(context: Context, val presenter: DueDatesPresenter) :
     SyncRecyclerAdapter<DueDateGroup, DueDateViewHolder, DueDatesView>(context, presenter) {
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterAssignmentDueDateBinding::inflate
-    override fun createViewHolder(v: View, viewType: Int) = DueDateViewHolder(v)
+
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = DueDateViewHolder(binding as AdapterAssignmentDueDateBinding)
+
     override fun bindHolder(model: DueDateGroup, holder: DueDateViewHolder, position: Int) = holder.bind(
-        model, list.size(), presenter.sectionMap, presenter.groupMap, presenter.studentMap, binding as AdapterAssignmentDueDateBinding
+        model, list.size(), presenter.sectionMap, presenter.groupMap, presenter.studentMap
     )
 }

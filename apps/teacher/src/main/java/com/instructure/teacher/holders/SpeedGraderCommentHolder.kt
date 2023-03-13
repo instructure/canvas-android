@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.holders
 
-import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
@@ -43,16 +42,15 @@ import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
 import com.instructure.teacher.view.*
 
-class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
+class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
-            wrapper: SubmissionCommentWrapper,
-            currentUser: User,
-            courseId: Long,
-            assignee: Assignee,
-            gradeAnonymously: Boolean,
-            onAttachmentClicked: (Attachment) -> Unit,
-            presenter: SpeedGraderCommentsPresenter,
-            binding: AdapterSubmissionCommentBinding
+        wrapper: SubmissionCommentWrapper,
+        currentUser: User,
+        courseId: Long,
+        assignee: Assignee,
+        gradeAnonymously: Boolean,
+        onAttachmentClicked: (Attachment) -> Unit,
+        presenter: SpeedGraderCommentsPresenter
     ): Unit = with(binding.commentHolder) {
 
         // Reset extra view container

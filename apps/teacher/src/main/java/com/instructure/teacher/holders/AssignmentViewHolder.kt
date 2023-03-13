@@ -32,9 +32,9 @@ import com.instructure.teacher.databinding.AdapterAssignmentBinding
 import com.instructure.teacher.utils.getAssignmentIcon
 import java.util.*
 
-class AssignmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class AssignmentViewHolder(private val binding: AdapterAssignmentBinding) : RecyclerView.ViewHolder(binding.root) {
     init {
-        val ungradedCount = view.findViewById<TextView>(R.id.ungradedCount)
+        val ungradedCount = binding.root.findViewById<TextView>(R.id.ungradedCount)
         ungradedCount.setTextColor(ThemePrefs.brandColor)
         DrawableCompat.setTint(ungradedCount.background, ThemePrefs.brandColor)
     }
@@ -42,8 +42,7 @@ class AssignmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(
         context: Context,
         assignment: Assignment,
-        iconColor: Int, callback: (Assignment) -> Unit,
-        binding: AdapterAssignmentBinding
+        iconColor: Int, callback: (Assignment) -> Unit
     ) = with(binding) {
         assignmentLayout.setOnClickListener { callback(assignment) }
         assignmentTitle.text = assignment.name

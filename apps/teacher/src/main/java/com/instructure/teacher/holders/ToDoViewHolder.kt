@@ -18,7 +18,6 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
-import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -36,14 +35,14 @@ import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.utils.getAssignmentIcon
 import java.util.*
 
-class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ToDoViewHolder(private val binding: AdapterTodoBinding) : RecyclerView.ViewHolder(binding.root) {
     init {
         val ungradedCount = itemView.findViewById<TextView>(R.id.ungradedCount)
         ungradedCount.setTextColor(ThemePrefs.brandColor)
         DrawableCompat.setTint(ungradedCount.background, ThemePrefs.brandColor)
     }
 
-    fun bind(context: Context, toDo: ToDo, callback: AdapterToFragmentCallback<ToDo>, position: Int, binding: AdapterTodoBinding) = with(binding) {
+    fun bind(context: Context, toDo: ToDo, callback: AdapterToFragmentCallback<ToDo>, position: Int) = with(binding) {
         toDoLayout.setOnClickListener { callback.onRowClicked(toDo, position) }
         toDoTitle.text = toDo.title
 

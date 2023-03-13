@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Assignment
@@ -38,10 +37,10 @@ class GradeableStudentSubmissionAdapter(
 ) : SyncRecyclerAdapter<GradeableStudentSubmission, GradeableStudentSubmissionViewHolder, AssignmentSubmissionListView>(mContext, presenter) {
 
     override fun bindHolder(model: GradeableStudentSubmission, holder: GradeableStudentSubmissionViewHolder, position: Int) {
-        holder.bind(mContext, model, mAssignment, mCourseId, mCallback, binding as AdapterGradeableStudentSubmissionBinding)
+        holder.bind(mContext, model, mAssignment, mCourseId, mCallback)
     }
 
-    override fun createViewHolder(v: View, viewType: Int) = GradeableStudentSubmissionViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = GradeableStudentSubmissionViewHolder(binding as AdapterGradeableStudentSubmissionBinding)
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterGradeableStudentSubmissionBinding::inflate
 }

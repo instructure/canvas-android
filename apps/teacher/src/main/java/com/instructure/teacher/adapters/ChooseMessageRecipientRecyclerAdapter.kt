@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Recipient
@@ -41,12 +40,11 @@ class ChooseMessageRecipientRecyclerAdapter(
             holder,
             model,
             mAdapterCallback,
-            mAdapterCallback.isRecipientSelected(model),
-            binding as ViewholderRecipientBinding
+            mAdapterCallback.isRecipientSelected(model)
         )
     }
 
-    override fun createViewHolder(v: View, viewType: Int): RecipientViewHolder = RecipientViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = RecipientViewHolder(binding as ViewholderRecipientBinding)
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = ViewholderRecipientBinding::inflate
 }

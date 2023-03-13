@@ -18,7 +18,6 @@ package instructure.androidblueprint
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -34,8 +33,6 @@ abstract class ListRecyclerAdapter<MODEL, HOLDER : RecyclerView.ViewHolder, VIEW
     context: Context,
     val presenter: ListPresenter<MODEL, VIEW>
 ) : RecyclerView.Adapter<HOLDER>() {
-
-    protected lateinit var binding: ViewBinding
 
     private val contextReference: WeakReference<Context>?
 
@@ -63,13 +60,13 @@ abstract class ListRecyclerAdapter<MODEL, HOLDER : RecyclerView.ViewHolder, VIEW
 
     abstract fun bindHolder(model: MODEL, holder: HOLDER, position: Int)
 
-    abstract fun createViewHolder(v: View, viewType: Int): HOLDER
+    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
 
     abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HOLDER {
-        binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
-        return createViewHolder(binding.root, viewType)
+        val binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
+        return createViewHolder(binding, viewType)
     }
 
     override fun onBindViewHolder(baseHolder: HOLDER, position: Int) {

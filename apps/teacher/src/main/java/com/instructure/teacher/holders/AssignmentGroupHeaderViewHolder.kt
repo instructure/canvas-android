@@ -18,21 +18,19 @@ package com.instructure.teacher.holders
 
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterAssignmentGroupHeaderBinding
 
-class AssignmentGroupHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class AssignmentGroupHeaderViewHolder(private val binding: AdapterAssignmentGroupHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
 
     private var mIsExpanded = false
 
     fun bind(
         assignmentGroup: AssignmentGroup,
         isExpanded: Boolean,
-        callback: (AssignmentGroup) -> Unit,
-        binding: AdapterAssignmentGroupHeaderBinding
+        callback: (AssignmentGroup) -> Unit
     ) = with(binding) {
 
         mIsExpanded = isExpanded

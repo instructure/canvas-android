@@ -30,12 +30,11 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterDiscussionBinding
 import java.util.*
 
-class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
+class DiscussionListHolder(private val binding: AdapterDiscussionBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         context: Context, discussionTopicHeader: DiscussionTopicHeader, group: String?, iconColor: Int, isAnnouncement: Boolean,
         callback: (DiscussionTopicHeader) -> Unit,
-        overflowCallback: (String?, DiscussionTopicHeader) -> Unit,
-        binding: AdapterDiscussionBinding
+        overflowCallback: (String?, DiscussionTopicHeader) -> Unit
     ) = with(binding) {
         discussionLayout.onClick { callback(discussionTopicHeader) }
         if (isAnnouncement) {

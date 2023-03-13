@@ -32,18 +32,15 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterQuizBinding
 import java.util.*
 
-class QuizViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_quiz
-    }
+class QuizViewHolder(private val binding: AdapterQuizBinding) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        val ungradedCount = view.findViewById<TextView>(R.id.ungradedCount)
+        val ungradedCount = itemView.findViewById<TextView>(R.id.ungradedCount)
         ungradedCount.setTextColor(ThemePrefs.brandColor)
         DrawableCompat.setTint(ungradedCount.background, ThemePrefs.brandColor)
     }
 
-    fun bind(context: Context, quiz: Quiz, iconColor: Int, callback: (Quiz) -> Unit, binding: AdapterQuizBinding) = with(binding) {
+    fun bind(context: Context, quiz: Quiz, iconColor: Int, callback: (Quiz) -> Unit) = with(binding) {
         quizLayout.setOnClickListener { callback(quiz) }
         quizTitle.text = quiz.title
         quizIcon.setIcon(R.drawable.ic_quiz, iconColor)

@@ -38,7 +38,7 @@ import com.instructure.teacher.presenters.AssigneeListPresenter
 
 abstract class AssigneeViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
+class AssigneeItemViewHolder(private val binding: AdapterAssigneeBinding) : AssigneeViewHolder(binding.root) {
 
     lateinit var assigneeTitleViewForTest: TextView
 
@@ -46,7 +46,7 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
         private const val SELECTION_TRANSPARENCY_MASK = 0x08FFFFFF
     }
 
-    fun bind(item: Any, presenter: AssigneeListPresenter, selectionColor: Int, binding: AdapterAssigneeBinding) = with(binding) {
+    fun bind(item: Any, presenter: AssigneeListPresenter, selectionColor: Int) = with(binding) {
 
         assigneeTitleViewForTest = assigneeTitleView
 
@@ -118,8 +118,8 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
     }
 }
 
-class AssigneeTypeViewHolder(view: View) : AssigneeViewHolder(view) {
-    fun bind(type: AssigneeCategory, binding: AdapterAssigneeHeaderBinding) = with(binding) {
+class AssigneeTypeViewHolder(private val binding: AdapterAssigneeHeaderBinding) : AssigneeViewHolder(binding.root) {
+    fun bind(type: AssigneeCategory) = with(binding) {
         assigneeTypeTextView.text = root.context.getString(
             when (type) {
                 AssigneeCategory.SECTIONS -> R.string.assignee_type_course_sections

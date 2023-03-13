@@ -17,7 +17,6 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -29,8 +28,8 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterFileFolderBinding
 
-class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(item: FileFolder, iconColor: Int, context: Context, callback: (FileFolder) -> Unit, binding: AdapterFileFolderBinding) = with(binding) {
+class FileFolderViewHolder(private val binding: AdapterFileFolderBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(item: FileFolder, iconColor: Int, context: Context, callback: (FileFolder) -> Unit) = with(binding) {
         fileFolderLayout.onClick { callback(item) }
         fileIconOrImage.setPublishedStatus(item) // Locked files are "unpublished"
 

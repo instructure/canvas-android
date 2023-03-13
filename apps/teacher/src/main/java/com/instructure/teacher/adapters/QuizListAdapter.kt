@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -39,9 +38,9 @@ class QuizListAdapter(
     private val mCallback: (Quiz) -> Unit
 ) : SyncExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder, QuizListView>(context, expandablePresenter) {
 
-    override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
-        Types.TYPE_ITEM -> QuizViewHolder(v)
-        else -> QuizExpandableViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> QuizViewHolder(binding as AdapterQuizBinding)
+        else -> QuizExpandableViewHolder(binding as ViewholderHeaderExpandableBinding)
     }
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
@@ -55,14 +54,12 @@ class QuizListAdapter(
                 it,
                 isExpanded,
                 holder,
-                group,
-                { assignmentGroup -> expandCollapseGroup(assignmentGroup) },
-                binding as ViewholderHeaderExpandableBinding
-            )
+                group
+            ) { assignmentGroup -> expandCollapseGroup(assignmentGroup) }
         }
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, item: Quiz) {
-        context?.let { (holder as QuizViewHolder).bind(it, item, iconColor, mCallback, binding as AdapterQuizBinding) }
+        context?.let { (holder as QuizViewHolder).bind(it, item, iconColor, mCallback) }
     }
 }

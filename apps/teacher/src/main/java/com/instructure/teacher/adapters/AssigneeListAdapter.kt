@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -36,17 +35,18 @@ import com.instructure.teacher.presenters.AssigneeListPresenter
 import com.instructure.teacher.viewinterface.AssigneeListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
-class AssigneeListAdapter(context: Context, val presenter: AssigneeListPresenter) : SyncExpandableRecyclerAdapter<AssigneeCategory, CanvasComparable<*>, AssigneeViewHolder, AssigneeListView>(context, presenter) {
+class AssigneeListAdapter(
+    context: Context, val presenter: AssigneeListPresenter
+) : SyncExpandableRecyclerAdapter<AssigneeCategory, CanvasComparable<*>, AssigneeViewHolder, AssigneeListView>(context, presenter) {
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: AssigneeCategory, isExpanded: Boolean) {
-        (holder as? AssigneeTypeViewHolder)?.bind(group, binding as AdapterAssigneeHeaderBinding)
+        (holder as? AssigneeTypeViewHolder)?.bind(group)
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: AssigneeCategory, item: CanvasComparable<*>) {
         (holder as? AssigneeItemViewHolder)?.bind(
             item,
             presenter,
-            context?.getColor(R.color.backgroundInfo) ?: ThemePrefs.brandColor,
-            binding as AdapterAssigneeBinding
+            context?.getColor(R.color.backgroundInfo) ?: ThemePrefs.brandColor
         )
     }
 
@@ -55,8 +55,8 @@ class AssigneeListAdapter(context: Context, val presenter: AssigneeListPresenter
         else -> AdapterAssigneeHeaderBinding::inflate
     }
 
-    override fun createViewHolder(v: View, viewType: Int) = when (viewType) {
-        Types.TYPE_ITEM -> AssigneeItemViewHolder(v)
-        else -> AssigneeTypeViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> AssigneeItemViewHolder(binding as AdapterAssigneeBinding)
+        else -> AssigneeTypeViewHolder(binding as AdapterAssigneeHeaderBinding)
     }
 }

@@ -18,13 +18,12 @@ package com.instructure.teacher.holders
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 
-class QuizExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class QuizExpandableViewHolder(private val binding: ViewholderHeaderExpandableBinding) : RecyclerView.ViewHolder(binding.root) {
 
     var mIsExpanded = false
 
@@ -33,8 +32,7 @@ class QuizExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
         isExpanded: Boolean,
         holder: QuizExpandableViewHolder,
         group: String,
-        callback: (String) -> Unit,
-        binding: ViewholderHeaderExpandableBinding
+        callback: (String) -> Unit
     ) = with(binding) {
 
         mIsExpanded = isExpanded

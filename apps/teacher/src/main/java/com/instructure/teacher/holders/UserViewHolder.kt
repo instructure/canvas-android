@@ -16,7 +16,7 @@
 
 package com.instructure.teacher.holders
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.teacher.databinding.AdapterUsersBinding
 
-class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+class UserViewHolder(val binding: AdapterUsersBinding) : RecyclerView.ViewHolder(binding.root)

@@ -19,7 +19,6 @@ package instructure.androidblueprint
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,9 +37,7 @@ abstract class SyncExpandableRecyclerAdapter<
     presenter: SyncExpandablePresenter<GROUP, MODEL, VIEW>
 ) : RecyclerView.Adapter<HOLDER>() {
 
-    protected lateinit var binding: ViewBinding
-
-    abstract fun createViewHolder(v: View, viewType: Int): HOLDER
+    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
 
     abstract fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: GROUP, isExpanded: Boolean)
 
@@ -88,8 +85,8 @@ abstract class SyncExpandableRecyclerAdapter<
     abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HOLDER {
-        binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
-        return createViewHolder(binding.root, viewType)
+        val binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
+        return createViewHolder(binding, viewType)
     }
 
     override fun onBindViewHolder(baseHolder: HOLDER, position: Int) {
