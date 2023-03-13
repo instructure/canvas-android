@@ -35,11 +35,11 @@
         android:src="@color/backgroundDarkest"/>
 
     <include
-        android:id="@+id/rename_course"
+        android:id="@+id/renameCourse"
         layout="@layout/view_rename_course" />
 
     <include
-        android:id="@+id/edit_course_homepage"
+        android:id="@+id/editCourseHomepage"
         layout="@layout/view_edit_course_homepage" />
 
 </LinearLayout>
