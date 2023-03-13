@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.modules.list.ui
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -74,13 +73,13 @@ class ModuleListView(
         // Toolbar setup
         binding.toolbar.apply {
             subtitle = course.name
-            setupBackButton(context)
-            ViewStyler.themeToolbarColored(context as Activity, this, course)
+            setupBackButton(activity)
+            ViewStyler.themeToolbarColored(activity, this, course)
         }
 
         binding.recyclerView.apply {
-            layoutManager = layoutManager
-            adapter = adapter
+            layoutManager = this@ModuleListView.layoutManager
+            adapter = this@ModuleListView.adapter
             addOnScrollListener(scrollListener)
         }
 

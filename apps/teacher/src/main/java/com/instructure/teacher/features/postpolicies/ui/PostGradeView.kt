@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.postpolicies.ui
 
-import android.app.Activity
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -145,7 +144,7 @@ class PostGradeView(
     fun showGradesPosted(isHidingGrades: Boolean, assignmentId: Long) {
         Toast.makeText(context, if (isHidingGrades) R.string.postPolicyHiddenToast else R.string.postPolicyPostedToast, Toast.LENGTH_SHORT).show()
         AssignmentGradedEvent(assignmentId).post() //post bus event
-        (context as Activity).onBackPressed()
+        activity.onBackPressed()
     }
 
     fun showPostFailed(isHidingGrades: Boolean) {

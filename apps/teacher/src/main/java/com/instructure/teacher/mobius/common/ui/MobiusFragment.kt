@@ -16,7 +16,9 @@
  */
 package com.instructure.teacher.mobius.common.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -150,6 +152,15 @@ abstract class MobiusView<VIEW_STATE, EVENT, BINDING : ViewBinding>(
 
     protected val context: Context
         get() = parent.context
+
+    protected val activity: Activity
+        get() = getActivity(context)
+
+    private fun getActivity(context: Context): Activity {
+        if (context is Activity) return context
+        if (context is ContextWrapper) return getActivity(context.baseContext)
+        else throw IllegalStateException("Not activity context")
+    }
 
     abstract fun onConnect(output: Consumer<EVENT>)
 

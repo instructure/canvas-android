@@ -83,12 +83,12 @@ class SyllabusView(
     init {
         binding.toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
         setEditVisibility(false)
-        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(activity, binding.toolbar, canvasContext)
 
         binding.syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
 
         if (context !is MasterDetailActivity) {
-            binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+            binding.toolbar.setupAsBackButton { activity.onBackPressed() }
         }
 
         binding.toolbar.apply {
