@@ -76,7 +76,7 @@ class CourseSettingsFragment : BasePresenterFragment<
     }
 
     override fun onPresenterPrepared(presenter: CourseSettingsFragmentPresenter) = with(binding) {
-        editCourseHomepage.root.onClickWithRequireNetwork {
+        renameCourse.root.onClickWithRequireNetwork {
             presenter.editCourseNameClicked()
         }
 

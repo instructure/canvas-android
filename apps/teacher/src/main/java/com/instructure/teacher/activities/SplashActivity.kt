@@ -68,7 +68,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(ColorDrawable(getColor(R.color.backgroundLightest)))
-        setContentView(R.layout.activity_splash)
+        setContentView(binding.root)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
 

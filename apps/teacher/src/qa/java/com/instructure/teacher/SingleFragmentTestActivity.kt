@@ -30,7 +30,7 @@ class SingleFragmentTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_single_fragment_test)
+        setContentView(binding.root)
     }
 
     fun loadFragment(fragment: Fragment) {
