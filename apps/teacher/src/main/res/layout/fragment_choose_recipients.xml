@@ -27,9 +27,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar">
 
-        <include
-            android:id="@+id/swipeRefreshLayoutContainer"
-            layout="@layout/recycler_swipe_refresh_layout" />
+        <include layout="@layout/recycler_swipe_refresh_layout" />
 
     </FrameLayout>
 

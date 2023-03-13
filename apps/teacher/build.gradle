@@ -21,7 +21,7 @@ import com.instructure.android.buildtools.transform.ScreenViewTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -203,10 +203,6 @@ android {
     hilt {
         enableAggregatingTask = false
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 dependencies {

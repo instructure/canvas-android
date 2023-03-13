@@ -74,7 +74,6 @@
             android:background="@color/backgroundMedium" />
 
         <include
-            android:id="@+id/swipeRefreshLayoutContainer"
             layout="@layout/recycler_swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

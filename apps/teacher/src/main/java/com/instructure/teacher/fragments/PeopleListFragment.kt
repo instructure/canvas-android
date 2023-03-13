@@ -35,6 +35,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.PeopleListRecyclerAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.databinding.FragmentPeopleListLayoutBinding
+import com.instructure.teacher.databinding.RecyclerSwipeRefreshLayoutBinding
 import com.instructure.teacher.dialog.PeopleListFilterDialog
 import com.instructure.teacher.factory.PeopleListPresenterFactory
 import com.instructure.teacher.holders.UserViewHolder
@@ -51,7 +52,14 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     private val binding by viewBinding(FragmentPeopleListLayoutBinding::bind)
 
+    private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
+
     private var mCanvasContextsSelected: ArrayList<CanvasContext>? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+    }
 
     override fun layoutResId(): Int = R.layout.fragment_people_list_layout
 
@@ -76,7 +84,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         peopleListToolbar.menu.findItem(R.id.search).setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 filterTitleWrapper.visibility = View.GONE
-                swipeRefreshLayoutContainer.swipeRefreshLayout.isEnabled = false
+                swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isEnabled = false
                 if (peopleListToolbar.menu.findItem(R.id.peopleFilterMenuItem) != null) {
                     peopleListToolbar.menu.findItem(R.id.peopleFilterMenuItem).isVisible = false
                 }
@@ -85,7 +93,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 filterTitleWrapper.visibility = View.VISIBLE
-                swipeRefreshLayoutContainer.swipeRefreshLayout.isEnabled = true
+                swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isEnabled = true
                 if (peopleListToolbar.menu.findItem(R.id.peopleFilterMenuItem) != null) {
                     peopleListToolbar.menu.findItem(R.id.peopleFilterMenuItem).isVisible = true
                 }
@@ -153,7 +161,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
     override fun onPresenterPrepared(presenter: PeopleListPresenter) {
         RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
-        addSwipeToRefresh(binding.swipeRefreshLayoutContainer.swipeRefreshLayout)
+        addSwipeToRefresh(swipeRefreshLayoutContainerBinding.swipeRefreshLayout)
     }
 
     override fun createAdapter(): PeopleListRecyclerAdapter {
@@ -178,17 +186,17 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         return true
     }
 
-    override val recyclerView: RecyclerView? get() = binding.swipeRefreshLayoutContainer.recyclerView
+    override val recyclerView: RecyclerView get() = swipeRefreshLayoutContainerBinding.recyclerView
 
     override fun withPagination(): Boolean = true
 
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 
     override fun onRefreshFinished() {
-        binding.swipeRefreshLayoutContainer.swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun onRefreshStarted() = with(binding.swipeRefreshLayoutContainer) {
+    override fun onRefreshStarted() = with(swipeRefreshLayoutContainerBinding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.visibility  = View.VISIBLE
@@ -198,9 +206,9 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     override fun checkIfEmpty() {
         RecyclerViewUtils.checkIfEmpty(
-            binding.swipeRefreshLayoutContainer.emptyPandaView,
+            swipeRefreshLayoutContainerBinding.emptyPandaView,
             recyclerView,
-            binding.swipeRefreshLayoutContainer.swipeRefreshLayout,
+            swipeRefreshLayoutContainerBinding.swipeRefreshLayout,
             adapter,
             presenter.isEmpty
         )

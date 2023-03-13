@@ -81,10 +81,10 @@ class CalendarEventFragment : BaseFragment() {
         loadHtmlJob?.cancel()
     }
 
-    private fun applyTheme(viewState: CalendarEventViewState) {
-        binding.toolbar.title = viewState.eventTitle
-        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
-        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+    private fun applyTheme(viewState: CalendarEventViewState) = with(binding) {
+        toolbar.title = viewState.eventTitle
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
+        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
     }
 
     private fun initWebView() {
@@ -115,14 +115,14 @@ class CalendarEventFragment : BaseFragment() {
         }
     }
 
-    private fun setupViews(viewState: CalendarEventViewState) {
-        binding.dateTitle.text = viewState.dateTitle
-        binding.dateSubtitle.text = viewState.dateSubtitle
-        binding.locationTitle.text = viewState.locationTitle
-        binding.locationSubtitle.text = viewState.locationSubtitle
+    private fun setupViews(viewState: CalendarEventViewState) = with(binding) {
+        dateTitle.text = viewState.dateTitle
+        dateSubtitle.text = viewState.dateSubtitle
+        locationTitle.text = viewState.locationTitle
+        locationSubtitle.text = viewState.locationSubtitle
 
         if (viewState.htmlContent.isNotEmpty()) {
-            loadHtmlJob = binding.calendarEventWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), viewState.htmlContent, {
+            loadHtmlJob = calendarEventWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), viewState.htmlContent, {
                 loadCalendarHtml(it, viewState.eventTitle)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
@@ -131,8 +131,10 @@ class CalendarEventFragment : BaseFragment() {
     }
 
     private fun loadCalendarHtml(html: String, contentDescription: String) {
-        binding.calendarEventWebViewWrapper?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        binding.calendarEventWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+        binding.calendarEventWebViewWrapper.apply {
+            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+            loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+        }
     }
 
     companion object {

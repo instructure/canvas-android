@@ -42,6 +42,7 @@ import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.MessageAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.databinding.FragmentMessageThreadBinding
+import com.instructure.teacher.databinding.RecyclerSwipeRefreshLayoutBinding
 import com.instructure.teacher.events.ConversationDeletedEvent
 import com.instructure.teacher.events.ConversationUpdatedEvent
 import com.instructure.teacher.events.MessageAddedEvent
@@ -75,6 +76,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
     private val toolbar: Toolbar
         get() = binding.root.findViewById(R.id.toolbar)
+
+    private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
 
     private val menuListener = Toolbar.OnMenuItemClickListener { item ->
         when (item.itemId) {
@@ -175,6 +178,11 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     private val conversation: Conversation?
         get() = presenter.getConversation()
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -190,8 +198,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     override fun onCreateView(view: View) {}
 
     override fun onReadySetGo(presenter: MessageThreadPresenter) = with(binding) {
-        if (recyclerView?.adapter == null && conversation != null) {
-            recyclerView?.adapter = adapter
+        if (recyclerView.adapter == null && conversation != null) {
+            recyclerView.adapter = adapter
         }
 
         starred.onClick {
@@ -200,7 +208,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
         // Set to true so we actually mark the conversation as read
         presenter.loadData(true)
-        swipeRefreshLayoutContainer.emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
     }
 
     override fun getPresenterFactory(): MessageThreadPresenterFactory {
@@ -228,7 +236,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     private fun setupRecyclerView() {
         RecyclerViewUtils.buildRecyclerView(requireActivity().window.decorView.rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
-        recyclerView?.let {
+        recyclerView.also {
             val linearLayoutManager = LinearLayoutManager(requireContext())
             it.layoutManager = linearLayoutManager
 
@@ -239,7 +247,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             dividerItemDecoration.setDrawable(requireContext().getDrawableCompat(R.drawable.item_decorator_gray))
             it.removeAllItemDecorations()
             it.addItemDecoration(dividerItemDecoration)
-            addSwipeToRefresh(binding.swipeRefreshLayoutContainer.swipeRefreshLayout)
+            addSwipeToRefresh(swipeRefreshLayoutContainerBinding.swipeRefreshLayout)
         }
     }
 
@@ -273,9 +281,9 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     }
 
     override fun setupConversationDetails() = with(binding) {
-        if(recyclerView?.adapter == null) {
+        if(recyclerView.adapter == null) {
             // If we didn't setup the adapter initially (we didn't start off with the conversation), then do it now
-            recyclerView?.adapter = adapter
+            recyclerView.adapter = adapter
         }
 
         setupRecyclerView()
@@ -383,21 +391,21 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override val recyclerView: RecyclerView get() = binding.swipeRefreshLayoutContainer.recyclerView
+    override val recyclerView: RecyclerView get() = swipeRefreshLayoutContainerBinding.recyclerView
 
     override fun onRefreshFinished() {
-        binding.swipeRefreshLayoutContainer.swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onRefreshStarted() {
-        binding.swipeRefreshLayoutContainer.emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
     }
 
     override fun checkIfEmpty() {
         RecyclerViewUtils.checkIfEmpty(
-            binding.swipeRefreshLayoutContainer.emptyPandaView,
+            swipeRefreshLayoutContainerBinding.emptyPandaView,
             recyclerView,
-            binding.swipeRefreshLayoutContainer.swipeRefreshLayout,
+            swipeRefreshLayoutContainerBinding.swipeRefreshLayout,
             adapter,
             presenter.isEmpty
         )
@@ -459,7 +467,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.COMPOSE_MESSAGE && resultCode == RESULT_OK) {
             if (presenter != null) {
-                binding.swipeRefreshLayoutContainer.swipeRefreshLayout.isRefreshing = true
+                swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = true
                 presenter.refresh(true)
             }
         }
@@ -472,7 +480,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     fun onMessageEdited(event: MessageAddedEvent) {
         event.once(javaClass.simpleName + conversation!!.id + "_" + conversation!!.messageCount) { aBoolean ->
             if (aBoolean) {
-                binding.swipeRefreshLayoutContainer.swipeRefreshLayout.isRefreshing = true
+                swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = true
                 presenter.refresh(true)
             }
         }

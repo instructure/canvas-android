@@ -35,6 +35,7 @@ import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ChooseMessageRecipientRecyclerAdapter
 import com.instructure.teacher.databinding.FragmentChooseRecipientsBinding
+import com.instructure.teacher.databinding.RecyclerSwipeRefreshLayoutBinding
 import com.instructure.teacher.events.ChooseMessageEvent
 import com.instructure.teacher.factory.ChooseRecipientsPresenterFactory
 import com.instructure.teacher.holders.RecipientViewHolder
@@ -50,6 +51,8 @@ import java.util.*
 class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPresenter, ChooseRecipientsView, RecipientViewHolder, ChooseMessageRecipientRecyclerAdapter>(), ChooseRecipientsView {
 
     private val binding by viewBinding(FragmentChooseRecipientsBinding::bind)
+
+    private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
 
     private var mRecyclerAdapter: ChooseMessageRecipientRecyclerAdapter? = null
 
@@ -104,6 +107,11 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
         setupToolbar(view)
         view.findViewById<TextView>(R.id.menuDone).setTextColor(ThemePrefs.textButtonColor)
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun layoutResId(): Int = R.layout.fragment_choose_recipients
@@ -163,16 +171,16 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
     override val recyclerView: RecyclerView? = mRecyclerView
 
     override fun onRefreshFinished() {
-        binding.swipeRefreshLayoutContainer.swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onRefreshStarted() {
-        binding.swipeRefreshLayoutContainer.emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
     }
 
     override fun withPagination(): Boolean = true
 
-    override fun checkIfEmpty() = with(binding.swipeRefreshLayoutContainer) {
+    override fun checkIfEmpty() = with(swipeRefreshLayoutContainerBinding) {
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 

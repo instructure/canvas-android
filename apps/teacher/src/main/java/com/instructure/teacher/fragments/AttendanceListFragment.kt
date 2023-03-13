@@ -52,6 +52,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AttendanceListRecyclerAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.databinding.FragmentAttendanceListBinding
+import com.instructure.teacher.databinding.RecyclerSwipeRefreshLayoutBinding
 import com.instructure.teacher.factory.AttendanceListPresenterFactory
 import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
@@ -71,12 +72,19 @@ class AttendanceListFragment : BaseSyncFragment<
 
     private val binding by viewBinding(FragmentAttendanceListBinding::bind)
 
+    private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
+
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyCourseContext())
     private var mTab: Tab by ParcelableArg(default = Tab("", "", type = TYPE_INTERNAL))
 
     private lateinit var mRecyclerView: RecyclerView
 
     private var ltiJob: WeaveJob? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+    }
 
     override fun layoutResId(): Int = R.layout.fragment_attendance_list
 
@@ -145,7 +153,7 @@ class AttendanceListFragment : BaseSyncFragment<
     override fun onPresenterPrepared(presenter: AttendanceListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
-        addSwipeToRefresh(binding.swipeRefreshLayoutContainer.swipeRefreshLayout)
+        addSwipeToRefresh(swipeRefreshLayoutContainerBinding.swipeRefreshLayout)
     }
 
     override fun createAdapter(): AttendanceListRecyclerAdapter {
@@ -168,8 +176,8 @@ class AttendanceListFragment : BaseSyncFragment<
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 
     override fun onRefreshFinished() = with(binding) {
-        swipeRefreshLayoutContainer.swipeRefreshLayout.isRefreshing = false
-        swipeRefreshLayoutContainer.emptyPandaView.setGone()
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setGone()
         toolbar.menu.findItem(R.id.menuCalendar)?.isEnabled = true
         toolbar.menu.findItem(R.id.menuFilterSections)?.isEnabled = true
         themeToolbar()
@@ -178,16 +186,16 @@ class AttendanceListFragment : BaseSyncFragment<
     override fun onRefreshStarted(): Unit = with(binding) {
         toolbar.menu.findItem(R.id.menuCalendar)?.isEnabled = false
         toolbar.menu.findItem(R.id.menuFilterSections)?.isEnabled = false
-        swipeRefreshLayoutContainer.emptyPandaView.setVisible(!swipeRefreshLayoutContainer.swipeRefreshLayout.isRefreshing)
-        swipeRefreshLayoutContainer.emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setVisible(!swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing)
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
         hideMarkRestButton()
     }
 
     override fun checkIfEmpty() {
         RecyclerViewUtils.checkIfEmpty(
-            binding.swipeRefreshLayoutContainer.emptyPandaView,
+            swipeRefreshLayoutContainerBinding.emptyPandaView,
             mRecyclerView,
-            binding.swipeRefreshLayoutContainer.swipeRefreshLayout,
+            swipeRefreshLayoutContainerBinding.swipeRefreshLayout,
             adapter,
             presenter.isEmpty
         )

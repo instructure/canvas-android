@@ -55,15 +55,15 @@ class PostPolicyFragment : Fragment() {
         applyTheme()
     }
 
-    private fun applyTheme() {
-        binding.postPolicyToolbar.subtitle = assignment.name
-        binding.postPolicyToolbar.setupBackButtonAsBackPressedOnly(this)
+    private fun applyTheme() = with(binding) {
+        postPolicyToolbar.subtitle = assignment.name
+        postPolicyToolbar.setupBackButtonAsBackPressedOnly(this@PostPolicyFragment)
 
-        ViewStyler.themeToolbarLight(requireActivity(), binding.postPolicyToolbar)
+        ViewStyler.themeToolbarLight(requireActivity(), postPolicyToolbar)
 
         val courseColor = course.textAndIconColor
-        binding.postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
-        binding.postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
+        postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
+        postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
     }
 
     companion object {

@@ -56,15 +56,15 @@ class EditSyllabusView(
         binding.showSummarySwitch.applyTheme()
     }
 
-    fun setupToolbar() {
+    fun setupToolbar() = with(binding) {
         val activity = context as? FragmentActivity
-        binding.toolbar.setupCloseButton { activity?.onBackPressed() }
-        binding.toolbar.setupMenu(R.menu.menu_edit_syllabus) { menuItem ->
+        toolbar.setupCloseButton { activity?.onBackPressed() }
+        toolbar.setupMenu(R.menu.menu_edit_syllabus) { menuItem ->
             when (menuItem.itemId) {
                 R.id.menuSaveSyllabus -> activity?.withRequireNetwork { savePage() }
             }
         }
-        ViewStyler.themeToolbarLight(activity!!, binding.toolbar)
+        ViewStyler.themeToolbarLight(activity!!, toolbar)
         saveMenuView?.setTextColor(ThemePrefs.textButtonColor)
     }
 

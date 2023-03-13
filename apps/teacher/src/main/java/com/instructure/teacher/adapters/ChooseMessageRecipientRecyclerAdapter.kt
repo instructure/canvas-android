@@ -35,13 +35,13 @@ class ChooseMessageRecipientRecyclerAdapter(
     private val mAdapterCallback: RecipientAdapterCallback
 ) : SyncRecyclerAdapter<Recipient, RecipientViewHolder, ChooseRecipientsView>(context, presenter) {
 
-    override fun bindHolder(recipient: Recipient, holder: RecipientViewHolder, position: Int) {
+    override fun bindHolder(model: Recipient, holder: RecipientViewHolder, position: Int) {
         holder.bind(
             context!!,
             holder,
-            recipient,
+            model,
             mAdapterCallback,
-            mAdapterCallback.isRecipientSelected(recipient),
+            mAdapterCallback.isRecipientSelected(model),
             binding as ViewholderRecipientBinding
         )
     }

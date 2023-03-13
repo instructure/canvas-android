@@ -95,13 +95,13 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun populateAssignmentDetails(assignment: Assignment) {
+    override fun populateAssignmentDetails(assignment: Assignment) = with(binding) {
         mAssignment = assignment
-        binding.toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(assignment) }
-        binding.swipeRefreshLayout.isRefreshing = false
+        toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(assignment) }
+        swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
         setupListeners(assignment)
-        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun getPresenterFactory() = AssignmentDetailPresenterFactory(mAssignment)
@@ -195,26 +195,27 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun configureDueDates(assignment: Assignment) = with(assignment) {
+    private fun configureDueDates(assignment: Assignment) = with(binding) {
         val atSeparator = getString(R.string.at)
 
+        val allDates = assignment.allDates
         if (allDates.size > 1) {
-            binding.otherDueDateTextView.setVisible()
-            binding.otherDueDateTextView.setText(R.string.multiple_due_dates)
+            otherDueDateTextView.setVisible()
+            otherDueDateTextView.setText(R.string.multiple_due_dates)
         } else {
             if (allDates.isEmpty() || allDates[0].dueAt == null) {
-                binding.otherDueDateTextView.setVisible()
-                binding.otherDueDateTextView.setText(R.string.no_due_date)
+                otherDueDateTextView.setVisible()
+                otherDueDateTextView.setText(R.string.no_due_date)
 
-                binding.dueForLayout.setVisible()
-                binding.dueForTextView.text = if (allDates.isEmpty() || allDates[0].isBase) getString(R.string.everyone) else allDates[0].title ?: ""
+                dueForLayout.setVisible()
+                dueForTextView.text = if (allDates.isEmpty() || allDates[0].isBase) getString(R.string.everyone) else allDates[0].title ?: ""
 
             } else with(allDates[0]) {
-                binding.dueDateLayout.setVisible()
-                binding.dueDateTextView.text = DateHelper.getMonthDayAtTime(requireContext(), dueDate, atSeparator)
+                dueDateLayout.setVisible()
+                dueDateTextView.text = DateHelper.getMonthDayAtTime(requireContext(), dueDate, atSeparator)
 
-                binding.dueForLayout.setVisible()
-                binding.dueForTextView.text = if (isBase) getString(R.string.everyone) else title ?: ""
+                dueForLayout.setVisible()
+                dueForTextView.text = if (isBase) getString(R.string.everyone) else title ?: ""
             }
         }
     }
