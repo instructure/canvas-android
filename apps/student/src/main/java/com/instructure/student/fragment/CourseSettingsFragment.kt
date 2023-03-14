@@ -28,14 +28,16 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_course_settings.*
-import kotlinx.android.synthetic.main.fragment_course_settings.view.*
+import com.instructure.student.databinding.FragmentCourseSettingsBinding
 
 @PageView
 @ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentCourseSettingsBinding::bind)
 
     var course: Course by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -46,24 +48,24 @@ class CourseSettingsFragment : ParentFragment() {
     override fun title(): String = getString(R.string.settings)
 
     override fun applyTheme() {
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
+        binding.toolbar.title = title()
+        binding.toolbar.setupAsBackButton(this)
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_course_settings, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         courseName.text = course.name
         courseCode.text = course.courseCode
         license.text = course.license?.prettyString
         visibility.text = getString(if (course.isPublic) R.string.publiclyAvailable else R.string.privatelyAvailable)
-        startLayout.setVisible(course.startDate != null).startDate.text =
-                DateHelper.dateToDayMonthYearString(requireContext(), course.startDate)
-        endLayout.setVisible(course.endDate != null).endDate.text =
-                DateHelper.dateToDayMonthYearString(requireContext(), course.endDate)
+        startLayout.setVisible(course.startDate != null)
+        startDate.text = DateHelper.dateToDayMonthYearString(requireContext(), course.startDate)
+        endLayout.setVisible(course.endDate != null)
+        endDate.text = DateHelper.dateToDayMonthYearString(requireContext(), course.endDate)
     }
 
     companion object {

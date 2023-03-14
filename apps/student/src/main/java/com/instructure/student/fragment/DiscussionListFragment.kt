@@ -43,17 +43,18 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DiscussionListRecyclerAdapter
+import com.instructure.student.databinding.CourseDiscussionTopicBinding
 import com.instructure.student.events.DiscussionCreatedEvent
 import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.course_discussion_topic.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -64,6 +65,8 @@ import javax.inject.Inject
 @PageView(url = "{canvasContext}/discussion_topics")
 @AndroidEntryPoint
 open class DiscussionListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(CourseDiscussionTopicBinding::bind)
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
@@ -89,7 +92,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         checkForPermission()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = with(binding) {
         super.onCreateView(inflater, container, savedInstanceState)
         rootView = layoutInflater.inflate(R.layout.course_discussion_topic, container, false)
         recyclerAdapter = DiscussionListRecyclerAdapter(requireContext(), canvasContext, !isAnnouncement, object: DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback{
@@ -100,9 +103,9 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             override fun onRefreshFinished() {
                 setRefreshing(false)
                 // Show the FAB.
-                if(canPost) createNewDiscussion?.show()
+                if(canPost) createNewDiscussion.show()
                 if (recyclerAdapter.size() == 0) {
-                    emptyView?.let {
+                    emptyView.let {
                         if (isAnnouncement) {
                             setEmptyView(it, R.drawable.ic_panda_noannouncements, R.string.noAnnouncements, R.string.noAnnouncementsSubtext)
                         } else {
@@ -115,7 +118,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             override fun onRefreshStarted() {
                 setRefreshing(true)
                 // Hide the FAB.
-                if(canPost) createNewDiscussion?.hide()
+                if(canPost) binding.createNewDiscussion.hide()
             }
 
             override fun discussionOverflow(group: String?, discussionTopicHeader: DiscussionTopicHeader) {
@@ -139,7 +142,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             }
         })
 
-        discussionRecyclerView = configureRecyclerView(
+        this@DiscussionListFragment.discussionRecyclerView = configureRecyclerView(
                 rootView,
                 requireContext(),
                 recyclerAdapter,
@@ -154,9 +157,9 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 super.onScrolled(recyclerView, dx, dy)
                 if(canPost) {
                     if (dy > 0 && createNewDiscussion.visibility == View.VISIBLE) {
-                        createNewDiscussion?.hide()
+                        createNewDiscussion.hide()
                     } else if (dy < 0 && createNewDiscussion.visibility != View.VISIBLE) {
-                        createNewDiscussion?.show()
+                        createNewDiscussion.show()
                     }
                 }
             }
@@ -168,21 +171,24 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        createNewDiscussion.setGone()
-        createNewDiscussion.backgroundTintList = ViewStyler.makeColorStateListForButton()
-        createNewDiscussion.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewDiscussion.drawable))
-        createNewDiscussion.onClickWithRequireNetwork {
-            if(isAnnouncement) {
-                val route = CreateAnnouncementFragment.makeRoute(canvasContext, null)
-                RouteMatcher.route(requireActivity(), route)
-            } else {
-                val route = CreateDiscussionFragment.makeRoute(canvasContext)
-                RouteMatcher.route(requireActivity(), route)
+        binding.createNewDiscussion.apply {
+            setGone()
+            backgroundTintList = ViewStyler.makeColorStateListForButton()
+            setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, drawable))
+            onClickWithRequireNetwork {
+                if(isAnnouncement) {
+                    val route = CreateAnnouncementFragment.makeRoute(canvasContext, null)
+                    RouteMatcher.route(requireActivity(), route)
+                } else {
+                    val route = CreateDiscussionFragment.makeRoute(canvasContext)
+                    RouteMatcher.route(requireActivity(), route)
+                }
             }
         }
+
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
+    override fun onConfigurationChanged(newConfig: Configuration) = with(binding) {
         super.onConfigurationChanged(newConfig)
         if (recyclerAdapter.size() == 0) {
             emptyView.changeTextSize()
@@ -228,19 +234,21 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        setupToolbarMenu(discussionListToolbar)
-        discussionListToolbar.title = title()
-        discussionListToolbar.setupAsBackButton(this)
-        val searchHint = getString(if (isAnnouncement) R.string.searchAnnouncementsHint else R.string.searchDiscussionsHint)
-        discussionListToolbar.addSearch(searchHint) { query ->
-            if (query.isBlank()) {
-                emptyView?.emptyViewText(R.string.noItemsToDisplayShort)
-            } else {
-                emptyView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+        with (binding) {
+            setupToolbarMenu(discussionListToolbar)
+            discussionListToolbar.title = title()
+            discussionListToolbar.setupAsBackButton(this@DiscussionListFragment)
+            val searchHint = getString(if (isAnnouncement) R.string.searchAnnouncementsHint else R.string.searchDiscussionsHint)
+            discussionListToolbar.addSearch(searchHint) { query ->
+                if (query.isBlank()) {
+                    emptyView.emptyViewText(R.string.noItemsToDisplayShort)
+                } else {
+                    emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                }
+                recyclerAdapter.searchQuery = query
             }
-            recyclerAdapter.searchQuery = query
+            ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext)
         }
-        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext)
     }
 
     override fun title(): String = getString(R.string.discussion)
@@ -274,11 +282,11 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 permission?.canCreateDiscussionTopic ?: false
             }
             if(canPost) {
-                createNewDiscussion?.show()
+                binding.createNewDiscussion.show()
             }
         } catch {
             Logger.e("Error getting permissions for discussion permissions. " + it.message)
-            createNewDiscussion?.hide()
+            binding.createNewDiscussion.hide()
         }
     }
 
@@ -328,7 +336,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     }
     //endregion
 
-    override fun handleBackPressed() = discussionListToolbar.closeSearch()
+    override fun handleBackPressed() = binding.discussionListToolbar.closeSearch()
 
     companion object {
         fun newInstance(route: Route) =

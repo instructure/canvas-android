@@ -37,10 +37,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        >
+        android:layout_below="@+id/toolbar">
 
-        <include layout="@layout/panda_recycler_refresh_layout" />
+        <include
+            android:id="@+id/recyclerViewLayout" layout="@layout/panda_recycler_refresh_layout" />
 
     </FrameLayout>
 

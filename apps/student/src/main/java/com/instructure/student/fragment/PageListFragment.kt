@@ -32,20 +32,22 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.PageListRecyclerAdapter
+import com.instructure.student.databinding.FragmentCoursePagesBinding
 import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_course_pages.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 @ScreenView(SCREEN_VIEW_PAGE_LIST)
 @PageView(url = "{canvasContext}/pages")
 class PageListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(FragmentCoursePagesBinding::bind)
 
     private var rootView: View? = null
 
@@ -93,7 +95,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
 
             override fun onRefreshFinished() {
                 setRefreshing(false)
-                setEmptyView(emptyView, R.drawable.ic_panda_nofiles, R.string.noPages, R.string.noPagesSubtext)
+                setEmptyView(binding.pagesRecyclerView.emptyView, R.drawable.ic_panda_nofiles, R.string.noPages, R.string.noPagesSubtext)
             }
         }, defaultSelectedPageTitle)
 
@@ -113,19 +115,19 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(rootView!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
-        emptyView.changeTextSize()
+        binding.pagesRecyclerView.emptyView.changeTextSize()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (isTablet) {
-                emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                binding.pagesRecyclerView.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
             } else {
-                emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                binding.pagesRecyclerView.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
             }
         } else {
             if (isTablet) {
                 //change nothing, at least for now
             } else {
-                emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
+                binding.pagesRecyclerView.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
             }
         }
     }
@@ -137,21 +139,23 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        setupToolbarMenu(toolbar)
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        toolbar.addSearch(getString(R.string.searchPagesHint)) { query ->
-            if (query.isBlank()) {
-                emptyView?.emptyViewText(R.string.noItemsToDisplayShort)
-            } else {
-                emptyView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+        with (binding) {
+            setupToolbarMenu(toolbar)
+            toolbar.title = title()
+            toolbar.setupAsBackButton(this@PageListFragment)
+            toolbar.addSearch(getString(R.string.searchPagesHint)) { query ->
+                if (query.isBlank()) {
+                    pagesRecyclerView.emptyView.emptyViewText(R.string.noItemsToDisplayShort)
+                } else {
+                    pagesRecyclerView.emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                }
+                recyclerAdapter.searchQuery = query
             }
-            recyclerAdapter.searchQuery = query
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
-    override fun handleBackPressed() = toolbar.closeSearch()
+    override fun handleBackPressed() = binding.toolbar.closeSearch()
 
     override fun title(): String = getString(R.string.pages)
     //endregion

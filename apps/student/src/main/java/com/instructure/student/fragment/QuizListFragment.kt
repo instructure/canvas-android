@@ -31,18 +31,20 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
+import com.instructure.student.databinding.QuizListLayoutBinding
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
-import kotlinx.android.synthetic.main.quiz_list_layout.*
 
 @ScreenView(SCREEN_VIEW_QUIZ_LIST)
 @PageView(url = "{canvasContext}/quizzes")
 class QuizListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(QuizListLayoutBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -76,18 +78,20 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun applyTheme() {
-        setupToolbarMenu(toolbar)
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        toolbar.addSearch(getString(R.string.searchQuizzesHint)) { query ->
-            if (query.isBlank()) {
-                emptyView?.emptyViewText(R.string.noItemsToDisplayShort)
-            } else {
-                emptyView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+        with (binding) {
+            setupToolbarMenu(toolbar)
+            toolbar.title = title()
+            toolbar.setupAsBackButton(this@QuizListFragment)
+            toolbar.addSearch(getString(R.string.searchQuizzesHint)) { query ->
+                if (query.isBlank()) {
+                    quizRecyclerViewLayout.emptyView.emptyViewText(R.string.noItemsToDisplayShort)
+                } else {
+                    quizRecyclerViewLayout.emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                }
+                recyclerAdapter?.searchQuery = query
             }
-            recyclerAdapter?.searchQuery = query
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -102,19 +106,19 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
                 R.string.noQuizzes
         )
         if (recyclerAdapter!!.size() == 0) {
-            emptyView.changeTextSize()
+            binding.quizRecyclerViewLayout.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    emptyView.setGuidelines(.26f, .54f, .65f, .12f, .88f)
+                    binding.quizRecyclerViewLayout.emptyView.setGuidelines(.26f, .54f, .65f, .12f, .88f)
                 } else {
-                    emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    binding.quizRecyclerViewLayout.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     //change nothing, at least for now
                 } else {
-                    emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
+                    binding.quizRecyclerViewLayout.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
                 }
             }
         }
@@ -149,7 +153,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    override fun handleBackPressed() = toolbar.closeSearch()
+    override fun handleBackPressed() = binding.toolbar.closeSearch()
 
     companion object {
         fun makeRoute(canvasContext: CanvasContext): Route = Route(QuizListFragment::class.java, canvasContext, Bundle())

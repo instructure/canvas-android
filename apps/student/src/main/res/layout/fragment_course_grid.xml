@@ -39,7 +39,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar">
 
-        <include layout="@layout/course_grid_recycler_refresh_layout" />
+        <include android:id="@+id/dashboardRecyclerViewLayout" layout="@layout/course_grid_recycler_refresh_layout" />
     </FrameLayout>
 
     <com.instructure.student.view.EmptyCoursesView

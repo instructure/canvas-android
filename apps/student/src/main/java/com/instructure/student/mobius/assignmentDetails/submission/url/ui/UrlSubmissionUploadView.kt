@@ -20,15 +20,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.onChangeDebounce
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.submission.url.MalformedUrlError
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_url_submission_upload.*
-import kotlinx.android.synthetic.main.fragment_url_submission_upload.toolbar
 
 class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<UrlSubmissionUploadViewState, UrlSubmissionUploadEvent>(R.layout.fragment_url_submission_upload, inflater, parent) {
 

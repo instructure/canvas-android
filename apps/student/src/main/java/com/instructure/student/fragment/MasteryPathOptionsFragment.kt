@@ -29,15 +29,18 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MASTERY_PATH_OPTIONS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.MasteryPathOptionsRecyclerAdapter
+import com.instructure.student.databinding.FragmentMasteryPathsOptionsBinding
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_mastery_paths_options.*
 
 @ScreenView(SCREEN_VIEW_MASTERY_PATH_OPTIONS)
 class MasteryPathOptionsFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentMasteryPathsOptionsBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -80,9 +83,9 @@ class MasteryPathOptionsFragment : ParentFragment() {
         )
 
         // Disable the swipeRefreshLayout because we don't want to pull to refresh. It doesn't make an API call, so it wouldn't refresh anything
-        swipeRefreshLayout.isEnabled = false
+        binding.swipeRefreshLayout.isEnabled = false
 
-        selectButton.onClick { performSelection() }
+        binding.selectButton.onClick { performSelection() }
     }
 
     private fun performSelection() {

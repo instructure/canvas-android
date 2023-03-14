@@ -35,18 +35,17 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentWebviewBinding
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.FileDownloadJobIntentService
-import kotlinx.android.synthetic.main.fragment_webview.*
-import kotlinx.android.synthetic.main.fragment_webview.view.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -54,7 +53,12 @@ import org.greenrobot.eventbus.ThreadMode
 
 open class InternalWebviewFragment : ParentFragment() {
 
-    var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
+    val binding by viewBinding(FragmentWebviewBinding::bind)
+
+    var canvasContext: CanvasContext by ParcelableArg(
+        default = CanvasContext.emptyUserContext(),
+        key = Const.CANVAS_CONTEXT
+    )
     var assignmentLtiUrl: String? by NullableStringArg(key = Const.API_URL)    // If we're coming from an lti assignment we need the original assignment url, not the sessionless one
     var html: String? by NullableStringArg(key = Const.HTML)
     var isLTITool: Boolean by BooleanArg(key = Const.IS_EXTERNAL_TOOL)
@@ -62,7 +66,10 @@ open class InternalWebviewFragment : ParentFragment() {
     private var shouldAuthenticate: Boolean by BooleanArg(key = Const.AUTHENTICATE)
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
-    var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
+    var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(
+        default = true,
+        key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY
+    )
     var allowRoutingToLogin: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_TO_LOGIN)
     var allowEmbedRouting: Boolean by BooleanArg(default = true, key = ALLOW_EMBED_ROUTING)
 
@@ -97,47 +104,58 @@ open class InternalWebviewFragment : ParentFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_webview, container, false) ?: return null
+        return rootView
+    }
 
-        with(rootView) {
-            canvasWebViewWrapper.webView.settings.loadWithOverviewMode = true
-            originalUserAgentString = canvasWebViewWrapper.webView.settings.userAgentString
-            canvasWebViewWrapper.webView.settings.userAgentString = ApiPrefs.userAgent
-            canvasWebViewWrapper.webView.setInitialScale(100)
-            canvasWebViewWrapper.webView.setDarkModeSupport(webThemeDarkeningOnly = true)
-            webViewLoading?.setVisible(true)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        super.onViewCreated(view, savedInstanceState)
+        canvasWebViewWrapper.webView.settings.loadWithOverviewMode = true
+        originalUserAgentString = canvasWebViewWrapper.webView.settings.userAgentString
+        canvasWebViewWrapper.webView.settings.userAgentString = ApiPrefs.userAgent
+        canvasWebViewWrapper.webView.setInitialScale(100)
+        canvasWebViewWrapper.webView.setDarkModeSupport(webThemeDarkeningOnly = true)
+        webViewLoading.setVisible(true)
 
-            canvasWebViewWrapper.webView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
+        canvasWebViewWrapper.webView.canvasWebChromeClientCallback =
+            object : CanvasWebView.CanvasWebChromeClientCallback {
                 override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
                     if (newProgress == 100) {
-                        webViewLoading?.setGone()
+                        webViewLoading.setGone()
                     }
                 }
 
             }
 
-            // Open a new page to view some types of embedded video content
-            canvasWebViewWrapper.webView.addVideoClient(requireActivity())
-            canvasWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        // Open a new page to view some types of embedded video content
+        canvasWebViewWrapper.webView.addVideoClient(requireActivity())
+        canvasWebViewWrapper.webView.canvasWebViewClientCallback =
+            object : CanvasWebView.CanvasWebViewClientCallback {
                 override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                     openMedia(canvasContext, url, filename)
                 }
 
                 override fun onPageFinishedCallback(webView: WebView, url: String) {
-                    webViewLoading?.setGone()
+                    webViewLoading.setGone()
                 }
 
                 override fun onPageStartedCallback(webView: WebView, url: String) {
-                    webViewLoading?.setVisible()
+                    webViewLoading.setVisible()
                 }
 
                 override fun canRouteInternallyDelegate(url: String): Boolean {
                     if (activity == null) return false
                     return shouldRouteInternally
-                        && shouldRouteToLogin(url)
-                        && shouldRouteEmbedded(url)
-                        && shouldRouteIfUrlIsTheSame(url)
-                        && !isUnsupportedFeature
-                        && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false, allowUnsupportedRouting)
+                            && shouldRouteToLogin(url)
+                            && shouldRouteEmbedded(url)
+                            && shouldRouteIfUrlIsTheSame(url)
+                            && !isUnsupportedFeature
+                            && RouteMatcher.canRouteInternally(
+                        requireActivity(),
+                        url,
+                        ApiPrefs.domain,
+                        false,
+                        allowUnsupportedRouting
+                    )
                 }
 
                 // We currently have a flaw in our routing implementation what causes that the when the WebView loads an URL what can be routed internally
@@ -166,29 +184,35 @@ open class InternalWebviewFragment : ParentFragment() {
 
                 override fun routeInternallyCallback(url: String) {
                     if (activity == null) return
-                    RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true, allowUnsupportedRouting)
+                    RouteMatcher.canRouteInternally(
+                        requireActivity(),
+                        url,
+                        ApiPrefs.domain,
+                        true,
+                        allowUnsupportedRouting
+                    )
                 }
             }
-            canvasWebViewWrapper.webView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback{
-                override fun downloadMedia(mime: String?, url: String?, filename: String?) {
-                    downloadUrl = url
-                    downloadFilename = filename
+        canvasWebViewWrapper.webView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback {
+            override fun downloadMedia(mime: String?, url: String?, filename: String?) {
+                downloadUrl = url
+                downloadFilename = filename
 
-                    if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-                        downloadFile()
-                    } else {
-                        requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
-                    }
+                if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    downloadFile()
+                } else {
+                    requestPermissions(
+                        PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE),
+                        PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE
+                    )
                 }
-
-            })
-
-            if (savedInstanceState != null) {
-                canvasWebViewWrapper?.webView?.restoreState(savedInstanceState)
             }
+
+        })
+
+        if (savedInstanceState != null) {
+            canvasWebViewWrapper?.webView?.restoreState(savedInstanceState)
         }
-
-        return rootView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -198,10 +222,10 @@ open class InternalWebviewFragment : ParentFragment() {
             else if (html?.isNotBlank() == true) loadUrl(html)
         }
 
-        toolbar.setVisible(!hideToolbar)
+        binding.toolbar.setVisible(!hideToolbar)
 
         if (isLTITool) {
-            setupToolbarMenu(toolbar, R.menu.menu_internal_webview)
+            setupToolbarMenu(binding.toolbar, R.menu.menu_internal_webview)
         }
     }
 
@@ -227,12 +251,12 @@ open class InternalWebviewFragment : ParentFragment() {
 
     override fun onResume() {
         super.onResume()
-        canvasWebViewWrapper?.webView?.onResume()
+        binding.canvasWebViewWrapper.webView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        canvasWebViewWrapper?.webView?.onPause()
+        binding.canvasWebViewWrapper.webView.onPause()
     }
 
     override fun onStop() {
@@ -242,7 +266,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        canvasWebViewWrapper?.webView?.saveState(outState)
+        binding.canvasWebViewWrapper.webView.saveState(outState)
     }
 
     override fun onDestroyView() {
@@ -252,9 +276,9 @@ open class InternalWebviewFragment : ParentFragment() {
     //endregion
 
     //region Fragment Interaction Overrides
-    override fun applyTheme() {
+    override fun applyTheme() = with(binding) {
         toolbar.title = title()
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@InternalWebviewFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
@@ -263,20 +287,31 @@ open class InternalWebviewFragment : ParentFragment() {
     //endregion
 
     //region Parent Fragment Overrides
-    override fun handleBackPressed() = canvasWebViewWrapper?.webView?.handleGoBack() ?: false
+    override fun handleBackPressed() = binding.canvasWebViewWrapper.webView.handleGoBack() ?: false
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.launchExternalWeb) {
             if (externalLTIUrl.isValid() && !assignmentLtiUrl.isValid()) {
                 sessionAuthJob = tryWeave {
-                    val result = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(externalLTIUrl!!, it) }.sessionUrl
+                    val result = awaitApi<AuthenticatedSession> {
+                        OAuthManager.getAuthenticatedSession(
+                            externalLTIUrl!!,
+                            it
+                        )
+                    }.sessionUrl
                     launchIntent(result)
                 } catch {
                     toast(R.string.utils_unableToViewInBrowser)
                 }
             } else if (assignmentLtiUrl.isValid()) {
                 sessionAuthJob = tryWeave {
-                    val result = awaitApi<LTITool> { SubmissionManager.getLtiFromAuthenticationUrl(assignmentLtiUrl!!, it, true) }.url
+                    val result = awaitApi<LTITool> {
+                        SubmissionManager.getLtiFromAuthenticationUrl(
+                            assignmentLtiUrl!!,
+                            it,
+                            true
+                        )
+                    }.url
                     launchIntent(result!!)
                 } catch {
                     toast(R.string.utils_unableToViewInBrowser)
@@ -293,10 +328,11 @@ open class InternalWebviewFragment : ParentFragment() {
         event.get { clazz ->
             // We want to check for Modules as well, since the fragments within the viewpager won't show up as top level
             if (clazz != null && (InternalWebviewFragment::class.java.isAssignableFrom(clazz)
-                    || CourseModuleProgressionFragment::class.java.isAssignableFrom(clazz))) {
-                canvasWebViewWrapper.webView.onResume()
+                        || CourseModuleProgressionFragment::class.java.isAssignableFrom(clazz))
+            ) {
+                binding.canvasWebViewWrapper.webView.onResume()
             } else {
-                canvasWebViewWrapper.webView.onPause()
+                binding.canvasWebViewWrapper.webView.onPause()
             }
         }
     }
@@ -305,12 +341,12 @@ open class InternalWebviewFragment : ParentFragment() {
     //region Functionality
     fun canGoBack(): Boolean {
         return if (!shouldCloseFragment) {
-            canvasWebViewWrapper?.webView?.canGoBack() ?: false
+            binding.canvasWebViewWrapper.webView.canGoBack() ?: false
         } else false
     }
 
-    fun getCanvasLoading(): ProgressBar? = webViewLoading
-    fun getCanvasWebView(): CanvasWebView? = canvasWebViewWrapper?.webView
+    fun getCanvasLoading(): ProgressBar = binding.webViewLoading
+    fun getCanvasWebView(): CanvasWebView = binding.canvasWebViewWrapper.webView
     fun getIsUnsupportedFeature(): Boolean = isUnsupportedFeature
     private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
 
@@ -326,12 +362,18 @@ open class InternalWebviewFragment : ParentFragment() {
 
     fun loadHtml(data: String, mimeType: String, encoding: String, historyUrl: String?) {
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-        canvasWebViewWrapper?.webView?.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
+        binding.canvasWebViewWrapper.webView.loadDataWithBaseURL(
+            CanvasWebView.getReferrer(),
+            data,
+            mimeType,
+            encoding,
+            historyUrl
+        )
     }
 
     fun loadUrl(targetUrl: String?) {
         if (!html.isNullOrBlank()) {
-            canvasWebViewWrapper?.loadHtml(html!!, title ?: "")
+            binding.canvasWebViewWrapper.loadHtml(html!!, title ?: "")
             return
         }
 
@@ -345,30 +387,36 @@ open class InternalWebviewFragment : ParentFragment() {
                 if (ApiPrefs.domain in url!! && shouldAuthenticate) {
                     try {
                         // Get an authenticated session so the user doesn't have to log in
-                        url = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl
+                        url = awaitApi<AuthenticatedSession> {
+                            OAuthManager.getAuthenticatedSession(
+                                url!!,
+                                it
+                            )
+                        }.sessionUrl
                     } catch (e: StatusCallbackError) {
                         e.printStackTrace()
                     }
                 } else {
                     // External URL, use the non-Canvas specific user agent string
-                    canvasWebViewWrapper.webView.settings.userAgentString = originalUserAgentString
+                    binding.canvasWebViewWrapper.webView.settings.userAgentString = originalUserAgentString
                 }
 
                 if (getIsUnsupportedFeature()) {
                     // Add query param
                     url = Uri.parse(url).buildUpon()
-                            .appendQueryParameter("embedded", "1")
-                            .appendQueryParameter("display", "borderless")
-                            .build().toString()
+                        .appendQueryParameter("embedded", "1")
+                        .appendQueryParameter("display", "borderless")
+                        .build().toString()
                 }
 
-                canvasWebViewWrapper?.webView?.loadUrl(url!!, getReferer())
+                binding.canvasWebViewWrapper.webView.loadUrl(url!!, getReferer())
             }
         }
     }
 
     protected fun populateWebView(content: String) = populateWebView(content, null)
-    protected fun populateWebView(content: String, title: String?) = canvasWebViewWrapper?.loadHtml(content, title)
+    protected fun populateWebView(content: String, title: String?) =
+        binding.canvasWebViewWrapper.loadHtml(content, title)
 
     fun setShouldLoadUrl(shouldLoadUrl: Boolean) {
         this.shouldLoadUrl = shouldLoadUrl
@@ -391,36 +439,61 @@ open class InternalWebviewFragment : ParentFragment() {
      * Otherwise the canvasContext won't be saved and will cause issues with the dropdown navigation
      * -dw
      */
-        fun makeRoute(url: String, title: String, authenticate: Boolean, html: String, allowUnsupportedRouting: Boolean = true): Route =
-                Route(InternalWebviewFragment::class.java, CanvasContext.emptyUserContext(),
-                        CanvasContext.emptyUserContext().makeBundle().apply {
-                            putString(Const.INTERNAL_URL, url)
-                            putString(Const.ACTION_BAR_TITLE, title)
-                            putBoolean(Const.AUTHENTICATE, authenticate)
-                            putString(Const.HTML, html)
-                            putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
-                        })
+        fun makeRoute(
+            url: String,
+            title: String,
+            authenticate: Boolean,
+            html: String,
+            allowUnsupportedRouting: Boolean = true
+        ): Route =
+            Route(InternalWebviewFragment::class.java, CanvasContext.emptyUserContext(),
+                CanvasContext.emptyUserContext().makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putString(Const.ACTION_BAR_TITLE, title)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                    putString(Const.HTML, html)
+                    putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
+                })
 
-        fun makeRoute(canvasContext: CanvasContext, url: String?, title: String?, authenticate: Boolean, html: String): Route =
-                Route(InternalWebviewFragment::class.java, canvasContext,
-                        canvasContext.makeBundle().apply {
-                            putString(Const.INTERNAL_URL, url)
-                            putString(Const.ACTION_BAR_TITLE, title)
-                            putBoolean(Const.AUTHENTICATE, authenticate)
-                            putString(Const.HTML, html)
-                        })
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String?,
+            title: String?,
+            authenticate: Boolean,
+            html: String
+        ): Route =
+            Route(InternalWebviewFragment::class.java, canvasContext,
+                canvasContext.makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putString(Const.ACTION_BAR_TITLE, title)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                    putString(Const.HTML, html)
+                })
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean, isUnsupportedFeature: Boolean, isLTITool: Boolean): Route =
-                Route(InternalWebviewFragment::class.java, canvasContext,
-                        canvasContext.makeBundle().apply {
-                            putString(Const.INTERNAL_URL, url)
-                            putString(Const.ACTION_BAR_TITLE, title)
-                            putBoolean(Const.AUTHENTICATE, authenticate)
-                            putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
-                            putBoolean(Const.IS_EXTERNAL_TOOL, isLTITool)
-                        })
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String,
+            title: String,
+            authenticate: Boolean,
+            isUnsupportedFeature: Boolean,
+            isLTITool: Boolean
+        ): Route =
+            Route(InternalWebviewFragment::class.java, canvasContext,
+                canvasContext.makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putString(Const.ACTION_BAR_TITLE, title)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                    putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
+                    putBoolean(Const.IS_EXTERNAL_TOOL, isLTITool)
+                })
 
-        fun makeRoute(url: String, title: String, authenticate: Boolean, isUnsupportedFeature: Boolean, isLTITool: Boolean): Bundle {
+        fun makeRoute(
+            url: String,
+            title: String,
+            authenticate: Boolean,
+            isUnsupportedFeature: Boolean,
+            isLTITool: Boolean
+        ): Bundle {
             val extras = Bundle()
             extras.putString(Const.INTERNAL_URL, url)
             extras.putString(Const.ACTION_BAR_TITLE, title)
@@ -430,7 +503,14 @@ open class InternalWebviewFragment : ParentFragment() {
             return extras
         }
 
-        fun makeBundle(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean, isUnsupportedFeature: Boolean, isLTITool: Boolean): Bundle {
+        fun makeBundle(
+            canvasContext: CanvasContext,
+            url: String,
+            title: String,
+            authenticate: Boolean,
+            isUnsupportedFeature: Boolean,
+            isLTITool: Boolean
+        ): Bundle {
             return Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putString(Const.INTERNAL_URL, url)
@@ -441,31 +521,39 @@ open class InternalWebviewFragment : ParentFragment() {
             }
         }
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean, isUnsupportedFeature: Boolean, isLTITool: Boolean, ltiUrl: String): Route =
-                Route(InternalWebviewFragment::class.java, canvasContext,
-                        canvasContext.makeBundle().apply {
-                            putString(Const.INTERNAL_URL, url)
-                            putString(Const.ACTION_BAR_TITLE, title)
-                            putBoolean(Const.AUTHENTICATE, authenticate)
-                            putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
-                            putBoolean(Const.IS_EXTERNAL_TOOL, isLTITool)
-                            putString(Const.API_URL, ltiUrl)
-                        })
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String,
+            title: String,
+            authenticate: Boolean,
+            isUnsupportedFeature: Boolean,
+            isLTITool: Boolean,
+            ltiUrl: String
+        ): Route =
+            Route(InternalWebviewFragment::class.java, canvasContext,
+                canvasContext.makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putString(Const.ACTION_BAR_TITLE, title)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                    putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
+                    putBoolean(Const.IS_EXTERNAL_TOOL, isLTITool)
+                    putString(Const.API_URL, ltiUrl)
+                })
 
         fun makeRoute(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean): Route =
-                Route(InternalWebviewFragment::class.java, canvasContext,
-                        canvasContext.makeBundle().apply {
-                            putString(Const.INTERNAL_URL, url)
-                            putBoolean(Const.AUTHENTICATE, authenticate)
-                            putString(Const.ACTION_BAR_TITLE, title)
-                        })
+            Route(InternalWebviewFragment::class.java, canvasContext,
+                canvasContext.makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                    putString(Const.ACTION_BAR_TITLE, title)
+                })
 
         fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean): Route =
-                Route(InternalWebviewFragment::class.java, canvasContext,
-                        canvasContext.makeBundle().apply {
-                            putString(Const.INTERNAL_URL, url)
-                            putBoolean(Const.AUTHENTICATE, authenticate)
-                        })
+            Route(InternalWebviewFragment::class.java, canvasContext,
+                canvasContext.makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                })
 
         fun makeRoute(
             canvasContext: CanvasContext,
@@ -508,7 +596,8 @@ open class InternalWebviewFragment : ParentFragment() {
 
         fun makeRoute(bundle: Bundle) = Route(InternalWebviewFragment::class.java, null, bundle)
 
-        fun makeRouteHTML(canvasContext: CanvasContext, html: String): Route = makeRoute(canvasContext, null, null, false, html)
+        fun makeRouteHTML(canvasContext: CanvasContext, html: String): Route =
+            makeRoute(canvasContext, null, null, false, html)
 
         fun loadInternalWebView(context: Context?, route: Route) {
             if (context == null) {

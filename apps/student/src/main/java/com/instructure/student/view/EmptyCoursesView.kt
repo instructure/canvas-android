@@ -17,18 +17,17 @@ package com.instructure.student.view
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
-import com.instructure.student.R
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import kotlinx.android.synthetic.main.empty_courses_view.view.*
-
+import com.instructure.student.R
+import com.instructure.student.databinding.EmptyCoursesViewBinding
 
 class EmptyCoursesView @JvmOverloads constructor(
         context: Context,
@@ -36,14 +35,16 @@ class EmptyCoursesView @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), EmptyInterface {
 
+    private val binding: EmptyCoursesViewBinding
+
     private var noConnectionText: String? = null
     private var isDisplayNoConnection = false
 
     init {
-        View.inflate(context, R.layout.empty_courses_view, this)
+        binding = EmptyCoursesViewBinding.inflate(LayoutInflater.from(getContext()), this, true)
     }
 
-    override fun setLoading() {
+    override fun setLoading() = with(binding) {
         image.setGone()
         textViews.setGone()
         addCoursesButton.setGone()
@@ -57,13 +58,13 @@ class EmptyCoursesView @JvmOverloads constructor(
 
     override fun setListEmpty() {
         if (isDisplayNoConnection) {
-            noConnectionView.text = noConnectionText
+            binding.noConnectionView.text = noConnectionText
         }
 
-        loading.setGone()
-        image.setVisible()
-        textViews.setVisible()
-        addCoursesButton.setVisible()
+        binding.loading.setGone()
+        binding.image.setVisible()
+        binding.textViews.setVisible()
+        binding.addCoursesButton.setVisible()
     }
 
     override fun setTitleText(s: String) {}
@@ -76,7 +77,7 @@ class EmptyCoursesView @JvmOverloads constructor(
 
     override fun setNoConnectionText(s: String) {
         noConnectionText = s
-        noConnectionView.text = s
+        binding.noConnectionView.text = s
     }
 
     override fun getEmptyViewImage(): ImageView? {
@@ -98,11 +99,13 @@ class EmptyCoursesView @JvmOverloads constructor(
     }
 
     fun onClickAddCourses(onClick: () -> Unit) {
-        ViewStyler.themeButton(addCoursesButton)
-        addCoursesButton.setOnClickListener { onClick() }
+        binding.addCoursesButton.apply {
+            ViewStyler.themeButton(this)
+            setOnClickListener { onClick() }
+        }
     }
 
-    fun setGuidelines(imTop: Float, imBottom: Float, tiTop: Float, buTop: Float, txLeft: Float, txRight: Float) {
+    fun setGuidelines(imTop: Float, imBottom: Float, tiTop: Float, buTop: Float, txLeft: Float, txRight: Float) = with(binding) {
         val iTop = imageTop.layoutParams as ConstraintLayout.LayoutParams
         iTop.guidePercent = imTop
         imageTop.layoutParams = iTop

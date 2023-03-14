@@ -67,14 +67,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dueDateTextInput"
-            android:labelFor="@+id/dueDate"
+            android:labelFor="@+id/dueDateText"
             android:contentDescription="@string/utils_dueDate"
             style="@style/OverrideViewTextInputLayoutDate"
             android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/dueDate"
+                android:id="@+id/dueDateText"
                 style="@style/OverrideViewEditText"
                 android:hint="@string/utils_dueDate"
                 android:minHeight="48dp"/>

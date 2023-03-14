@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <include layout="@layout/loading_canvas_view"/>
+            <include android:id="@+id/canvasLoadingView" layout="@layout/loading_canvas_view"/>
 
         </FrameLayout>
 
