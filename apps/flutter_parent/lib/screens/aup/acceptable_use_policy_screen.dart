@@ -64,8 +64,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                           EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       child: Text(
                         L10n(context).acceptableUsePolicyDescription,
-                        style: TextStyle(
-                            color: ParentColors.licorice, fontSize: 16),
+                        style: TextStyle(fontSize: 16),
                       )),
                   Divider(),
                   FlatButton(
@@ -75,12 +74,11 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                       child: Row(
                         children: [
                           Text(L10n(context).acceptableUsePolicyTitle,
-                              style: TextStyle(
-                                  color: ParentColors.licorice, fontSize: 16)),
+                            style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16)),
                           Spacer(),
                           Icon(
                             CanvasIcons.arrow_open_right,
-                            color: ParentColors.licorice,
+                            color: Theme.of(context).iconTheme.color,
                             size: 12,
                           )
                         ],
@@ -92,8 +90,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                       children: [
                         Text(
                           L10n(context).acceptableUsePolicyAgree,
-                          style: TextStyle(
-                              color: ParentColors.licorice, fontSize: 16),
+                          style: TextStyle(fontSize: 16),
                         ),
                         Spacer(),
                         Switch(
