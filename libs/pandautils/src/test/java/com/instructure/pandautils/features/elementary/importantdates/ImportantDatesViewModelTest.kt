@@ -34,15 +34,20 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesHeaderItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -64,6 +69,7 @@ class ImportantDatesViewModelTest {
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val calendarEventManager: CalendarEventManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private val now = OffsetDateTime.now()
 
@@ -83,7 +89,14 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
+        every { colorKeeper.getOrGenerateColor(any()) } returns ThemedColor(123)
+
         setupString()
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -155,13 +168,13 @@ class ImportantDatesViewModelTest {
                         title = "Assignment 1",
                         courseName = "Course 1",
                         icon = R.drawable.ic_assignment,
-                        courseColor = "#394B58"
+                        courseColor = ThemedColor(123)
                 ),
                 ImportantDatesItemViewData(
                         scheduleItemId = 1L,
                         title = "Event 1",
                         courseName = "Course 1",
-                        courseColor = "#394B58",
+                        courseColor = ThemedColor(123),
                         icon = R.drawable.ic_calendar
                 )
         )
@@ -179,13 +192,13 @@ class ImportantDatesViewModelTest {
                         title = "Quiz 2",
                         courseName = "Course 2",
                         icon = R.drawable.ic_quiz,
-                        courseColor = "#394B58"
+                        courseColor = ThemedColor(123)
                 ),
                 ImportantDatesItemViewData(
                         scheduleItemId = 2L,
                         title = "Event 2",
                         courseName = "Course 2",
-                        courseColor = "#394B58",
+                        courseColor = ThemedColor(123),
                         icon = R.drawable.ic_calendar
                 )
         )
@@ -426,7 +439,8 @@ class ImportantDatesViewModelTest {
         return ImportantDatesViewModel(
                 courseManager,
                 calendarEventManager,
-                resources
+                resources,
+                colorKeeper
         )
     }
 

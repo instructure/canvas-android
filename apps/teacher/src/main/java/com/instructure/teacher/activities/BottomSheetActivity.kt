@@ -21,7 +21,6 @@ import android.animation.Animator
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -44,16 +43,16 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import com.instructure.teacher.events.AssignmentDescriptionEvent
 import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.utils.getColorCompat
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_bottom_sheet.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar
-import org.greenrobot.eventbus.EventBus
 import retrofit2.Response
 
+@AndroidEntryPoint
 class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
 
     private var mRoute: Route? = null

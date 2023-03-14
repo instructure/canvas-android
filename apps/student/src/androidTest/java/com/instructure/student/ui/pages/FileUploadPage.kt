@@ -25,6 +25,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher.waitForViewToBeClickable
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
@@ -64,8 +65,8 @@ class FileUploadPage : BasePage() {
     fun removeFile(filename: String) {
         val fileItemMatcher = withId(R.id.fileItem) + withDescendant(withId(R.id.fileName) + withText(filename))
 
-        onView(withId(R.id.removeFile) + ViewMatchers.isDescendantOfA(fileItemMatcher))
-            .click()
+        val removeMatcher = withId(R.id.removeFile) + ViewMatchers.isDescendantOfA(fileItemMatcher)
+        waitForViewToBeClickable(removeMatcher).scrollTo().click()
     }
 
     fun assertDialogTitle(title: String) {

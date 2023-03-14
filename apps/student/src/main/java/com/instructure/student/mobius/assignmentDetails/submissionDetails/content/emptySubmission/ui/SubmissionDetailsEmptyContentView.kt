@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setHidden
@@ -36,7 +37,6 @@ import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.DiscussionDetailsFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
@@ -46,7 +46,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextS
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
-import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
@@ -153,7 +153,7 @@ class SubmissionDetailsEmptyContentView(
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
-        RouteMatcher.route(context, DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeaderId))
+        RouteMatcher.route(context, DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeaderId))
     }
 
     fun showMediaRecordingView() {

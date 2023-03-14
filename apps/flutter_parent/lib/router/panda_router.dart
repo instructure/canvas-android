@@ -25,6 +25,7 @@ import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/screens/aup/acceptable_use_policy_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
@@ -148,6 +149,8 @@ class PandaRouter {
 
   static String rootSplash() => '/';
 
+  static String aup() => '/aup';
+
   static final String _simpleWebView = '/internal';
 
   static String simpleWebViewRoute(String url, String infoText) =>
@@ -205,6 +208,7 @@ class PandaRouter {
       router.define(settings(), handler: _settingsHandler);
       router.define(_simpleWebView, handler: _simpleWebViewHandler);
       router.define(termsOfUse(), handler: _termsOfUseHandler);
+      router.define(aup(), handler: _aupHandler);
 
       // EXTERNAL
       router.define(_rootWithExternalUrl, handler: _rootWithExternalUrlHandler);
@@ -389,6 +393,10 @@ class PandaRouter {
     } else {
       return TermsOfUseScreen();
     }
+  });
+
+  static Handler _aupHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return AcceptableUsePolicyScreen();
   });
 
   /// Used to handled external urls routed by the intent-filter -> MainActivity.kt

@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Vista de aluno</string>
 
 
+    <string name="rateOnThePlayStore">Taxa na Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Cabeça escolhida: %s</string>
     <string name="content_description_chosen_body">Corpo escolhido: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Podes abrir detalhes de Submissão a partir daqui</string>
 
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">Projeto disponível</string>
     <string name="errorLoadingSubmission">Ocorreu um erro durante a submissão do carregamento</string>
     <string name="loadFullContent">Toque para ver o conteúdo completo</string>
+    <string name="openLtiInExternalApp">Toque para abrir em aplicação externa</string>
     <string name="dashboardTabImportantDates">Datas importantes</string>
     <string name="importantDatesEmptyTitle">Não há datas importantes</string>
     <string name="important_dates">Datas importantes</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s mensagem não lida</item>
         <item quantity="other">%s mensagens não lidas</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notificação não lida</item>
+        <item quantity="other">%s notificações não lidas</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Nenhuma anotação selecionada</string>
     <string name="emailNotifications">Notificações de Email</string>
     <string name="emailNotificationsImmediately">Imediatamente</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">Semanalmente</string>
     <string name="emailNotificationsNever">Nunca</string>
     <string name="selectFrequency">Selecionar a frequência</string>
+    <string name="a11y_closeProgress">Fechar diálogo de progresso</string>
+    <string name="fileUploadProgress">%1$s de %2$s</string>
+    <string name="fileUploadProgressSubtitle">Carregamento para ficheiros</string>
+    <string name="submissionProgressSubtitle">A carregar o envio para \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">A carregar o envio</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Carregamento de ficheiros</string>
+    <string name="cancelSubmissionDialogTitle">Cancelar subscrição</string>
+    <string name="cancelSubmissionDialogMessage">Isto irá cancelar e eliminar a sua submissão.</string>
+    <string name="fileUploadError">Carregamento de ficheiros falhado</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Carregar em Canvas para %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Carregar para os Meus Ficheiros</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Enviar tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Escolha uma disciplina</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Escolher um curso, o curso selecionado é: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Escolha uma tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment"> Escolher um trabalho, o trabalho seleccionado é: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Cancelar carregamento?</string>
+    <string name="cancelFileUploadMessage">Isto irá cancelar o seu carregamento.</string>
+    <string name="menuTitleFilterAssignments">Atribuições do filtro</string>
+    <string name="filterAssignmentDialogTitle">Atribuições do filtro</string>
+    <string name="filterAssignmentsDialogCancel">Cancelar</string>
+    <string name="filterAssignmentAll">Todos</string>
+    <string name="filterAssignmentLate">Atrasado</string>
+    <string name="filterAssignmentMissing">Em falta</string>
+    <string name="filterAssignmentGraded">Classificado</string>
+    <string name="filterAssignmentUpcoming">Em breve</string>
+    <string name="createdByStudentView">Criado por Vista de aluno</string>
+    <string name="discussionErrorToast">Um erro ocorreu. O tópico pode já não estar disponível.</string>
+    <string name="cameraPermissionPermanentlyDenied">A permissão da câmara foi permanentemente negada. Ir para as definições da aplicação para a permitir.</string>
+    <string name="unpublish_assignment_error">Não é possível inutilizar o trabalho se houver candidaturas de alunos.</string>
+    <string name="subscribeToCalendar">Subscrever Feed de calendário</string>
+    <string name="subscribeToCalendarMessage">Pode sincronizar o seu calendário Canvas com a sua conta Google Calendar clicando no botão Subscrever neste diálogo. Depois, terá de ir para a aplicação Google Calendar no seu dispositivo e ativar a sincronização nas definições para o novo calendário.</string>
+    <string name="subscribeButton">Subscrever</string>
+    <string name="switchToLightMode">Mudar para o modo de luz</string>
+    <string name="switchToDarkMode">Mudar para o Modo Escuro</string>
+    <string name="acceptableUsePolicyDescription">Ou é um novo utilizador ou a Política de Utilização Aceitável mudou desde a última vez que concordou com ela. Por favor, aceite a Política de Utilização Aceitável antes de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política de Utilização Aceitável</string>
+    <string name="acceptableUsePolicyButton">Política de Utilização Aceitável</string>
+    <string name="acceptableUsePolicyAgree">Concordo com a Política de Utilização Aceitável.</string>
+    <string name="acceptableUsePolicySubmit">Submeter</string>
+    <string name="acceptFail">Falha em submeter a aceitação dos termos.</string>
+    <string name="attempt">Tentativa %d</string>
+    <string name="quizQuestions">Perguntas: %d</string>
+    <string name="quizTimeLimit">Limite de tempo: %s</string>
+    <string name="allowedAttempts">Tentativas permitidas: %s</string>
+    <string name="usedAttempts">Tentativas usadas: %d</string>
+    <string name="generalUnexpectedError">Ocorreu um erro inesperado.</string>
+
+    <string name="deleteSelected">Eliminar</string>
+    <string name="archiveSelected">Ficheiro</string>
+    <string name="unarchiveSelected">Desarquivar</string>
+    <string name="markAsReadSelected">Marcar como lida</string>
+    <string name="markAsUnreadSelected">Marcar como não lida</string>
+    <string name="starSelected">Marcar</string>
+    <string name="unstarSelected">Desmarcar</string>
+
+    <string name="inboxOperationFailed">Falha na execução da operação</string>
+    <string name="inboxDeletedConfirmation">%s eliminado</string>
+    <string name="inboxArchivedConfirmation">%s arquivado</string>
+    <string name="inboxUnarchivedConfirmation">%s desarquivado</string>
+    <string name="inboxMarkAsReadConfirmation">%s marcado como lido</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marcado como não lido</string>
+    <string name="inboxStarredConfirmation">%s estrelado</string>
+    <string name="inboxUnstarredConfirmation">%s não estrelado</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Esta conversa será eliminada da Caixa de Entrada em todos os teus dispositivos. Essa ação não pode ser desfeita.</item>
+        <item quantity="other">Estas conversas serão eliminadas da Caixa de Entrada em todos os teus dispositivos. Essa ação não pode ser desfeita.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Falha ao carregar a página seguinte. Verifica a tua ligação à Internet.</string>
+    <string name="conversationsRefreshFailed">Falha em atualizar as conversas. Verifica a tua ligação à Internet.</string>
+    <string name="inboxScopeInbox">Caixa de entrada</string>
+    <string name="inboxContextSelectorTitle">Selecionar Disciplina ou Grupo</string>
+    <string name="inboxClearFilter">Limpar</string>
+    <string name="a11y_courseFilterContentDescription">Filtro da disciplina: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">selecionar</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversação selecionada. Modo de selecção ativado. Navegar para ações.</string>
+    <string name="a11y_conversationSelected">Conversação selecionada.</string>
+    <string name="a11y_conversationDeselected">Conversação desmarcada</string>
+    <string name="a11y_exitSelectionMode">Sair do modo de seleção</string>
+    <string name="a11y_selectionModeDeactivated">Modo de seleção desativado.</string>
 </resources>

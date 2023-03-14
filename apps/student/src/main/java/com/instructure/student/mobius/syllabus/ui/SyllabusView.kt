@@ -24,13 +24,13 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.EmptyView
 import com.instructure.student.R
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.fragment.CalendarEventFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
-import com.instructure.pandautils.views.EmptyView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
 import kotlinx.android.synthetic.main.fragment_syllabus_events.*
@@ -46,7 +46,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
             if (tab?.position == 0) {
-                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusWebView)
+                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
             } else {
                 swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
             }
@@ -64,7 +64,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
     override fun applyTheme() {
         ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
-        syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
+        syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
     }
 
     override fun onConnect(output: Consumer<SyllabusEvent>) {
@@ -90,7 +90,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
                 syllabusPager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
 
-                if (state.syllabus != null) syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+                if (state.syllabus != null) syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
                 if (state.eventsState != null) renderEvents(state.eventsState)
             }
         }
@@ -104,7 +104,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         }
 
         if (syllabusPager.currentItem == 0) {
-            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusWebView)
+            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
         } else {
             swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
         }

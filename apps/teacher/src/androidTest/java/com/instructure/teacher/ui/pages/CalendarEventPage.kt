@@ -35,7 +35,7 @@ class CalendarEventPage : BasePage(R.id.fragmentCalendarEvent) {
     }
 
     fun verifyDescription(description: String) {
-        Web.onWebView(ViewMatchers.withId(R.id.calendarEventWebView))
+        Web.onWebView(ViewMatchers.withId(R.id.contentWebView))
             .withElement(DriverAtoms.findElement(Locator.ID, "content"))
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(description)))
     }

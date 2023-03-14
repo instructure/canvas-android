@@ -1070,6 +1070,7 @@
     <string name="tab_student_view">Просмотр студентом</string>
 
 
+    <string name="rateOnThePlayStore">Оценить в Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Выбранная голова: %s</string>
     <string name="content_description_chosen_body">Выбранное тело: %s</string>
@@ -1141,6 +1142,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Вы можете открыть информацию об отправке здесь</string>
 
     <plurals name="minutes">
         <item quantity="one">%s минута</item>
@@ -1261,6 +1264,7 @@
     <string name="submissionDraftAvailableTitle">Черновик доступен</string>
     <string name="errorLoadingSubmission">Возникла ошибка при загрузке отправки</string>
     <string name="loadFullContent">Нажмите, чтобы увидеть полное содержание</string>
+    <string name="openLtiInExternalApp">Прикоснитесь, чтобы открыть во внешнем приложении</string>
     <string name="dashboardTabImportantDates">Важные даты</string>
     <string name="importantDatesEmptyTitle">Нет важных дат</string>
     <string name="important_dates">Важные даты</string>
@@ -1305,6 +1309,13 @@
         <item quantity="many">%s непрочитанных сообщений(-я)</item>
         <item quantity="other">%s непрочитанных сообщений(-я)</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s непрочитанное уведомление</item>
+        <item quantity="few">%s непрочитанных уведомлений(-я)</item>
+        <item quantity="many">%s непрочитанных уведомлений(-я)</item>
+        <item quantity="other">%s непрочитанных уведомлений(-я)</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Аннотация не выбрана</string>
     <string name="emailNotifications">Уведомления по электронной почте</string>
     <string name="emailNotificationsImmediately">Немедленно</string>
@@ -1312,4 +1323,88 @@
     <string name="emailNotificationsWeekly">Еженедельно</string>
     <string name="emailNotificationsNever">Никогда</string>
     <string name="selectFrequency">Выбрать частоту</string>
+    <string name="a11y_closeProgress">Закрыть диалоговое окно выполнения</string>
+    <string name="fileUploadProgress">%1$s из %2$s</string>
+    <string name="fileUploadProgressSubtitle">Загрузка в файлы</string>
+    <string name="submissionProgressSubtitle">Загрузка отправки в \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Загрузка отправки</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Загрузка файлов</string>
+    <string name="cancelSubmissionDialogTitle">Отменить отправку</string>
+    <string name="cancelSubmissionDialogMessage">Данное действие отменит отправку данных и удалит отравляемые данные.</string>
+    <string name="fileUploadError">Не удалось загрузить файл</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Загрузить в Canvas для %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Загрузить в Мои файлы</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Отправить задание</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Выберите курс</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Выберите курс, выбранный курс: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Выбрать задание</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Выберите задание, выбранное задание: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Отменить загрузку?</string>
+    <string name="cancelFileUploadMessage">Это приведет к отмене вашей загрузки.</string>
+    <string name="menuTitleFilterAssignments">Фильтровать задания</string>
+    <string name="filterAssignmentDialogTitle">Фильтровать Задания</string>
+    <string name="filterAssignmentsDialogCancel">Отменить</string>
+    <string name="filterAssignmentAll">Все</string>
+    <string name="filterAssignmentLate">Поздно</string>
+    <string name="filterAssignmentMissing">Отсутствует</string>
+    <string name="filterAssignmentGraded">С оценкой</string>
+    <string name="filterAssignmentUpcoming">Предстоящий</string>
+    <string name="createdByStudentView">Создано с помощью Student View</string>
+    <string name="discussionErrorToast">Произошла ошибка. Тема более недоступна.</string>
+    <string name="cameraPermissionPermanentlyDenied">Разрешение для камеры в настоящее время отклонено. Перейдите к настройкам приложения, чтобы установить это разрешение.</string>
+    <string name="unpublish_assignment_error">Отмена публикации задания невозможна, если имеются отправки студентов.</string>
+    <string name="subscribeToCalendar">Подписаться на ленту новостей в календаре</string>
+    <string name="subscribeToCalendarMessage">Вы можете синхронизировать свой календарь Canvas со своей учетной записью Google Calendar, нажав кнопку Subscribe (Подписаться) в этом диалоговом окне. Затем нужно перейти в приложение Google Calendar на своем устройстве и включить синхронизацию в настройках для нового календаря.</string>
+    <string name="subscribeButton">Подписаться</string>
+    <string name="switchToLightMode">Перейти в светлый режим</string>
+    <string name="switchToDarkMode">Перейти в темный режим</string>
+    <string name="acceptableUsePolicyDescription">Вы либо новый пользователь, либо Политика допустимого использования изменились после того, как вы в последний раз приняли их. Согласитесь с Политикой допустимого использования, прежде чем продолжить.</string>
+    <string name="acceptableUsePolicyTitle">Приемлемая политика использования</string>
+    <string name="acceptableUsePolicyButton">Приемлемая политика использования</string>
+    <string name="acceptableUsePolicyAgree">Я соглашаюсь с Политикой допустимого использования.</string>
+    <string name="acceptableUsePolicySubmit">Отправить</string>
+    <string name="acceptFail">Не удалось отправить заявку на принятие условий.</string>
+    <string name="attempt">Попытка %d</string>
+    <string name="quizQuestions">Вопросы: %d</string>
+    <string name="quizTimeLimit">Ограничение по времени: %s</string>
+    <string name="allowedAttempts">Разрешенные попытки: %s</string>
+    <string name="usedAttempts">Использовано попыток: %d</string>
+    <string name="generalUnexpectedError">Произошла непредвиденная ошибка.</string>
+
+    <string name="deleteSelected">Удалить</string>
+    <string name="archiveSelected">Архив</string>
+    <string name="unarchiveSelected">Разархивировать</string>
+    <string name="markAsReadSelected">Отметить как прочитанное</string>
+    <string name="markAsUnreadSelected">Отметить как непрочитанное</string>
+    <string name="starSelected">Звезда</string>
+    <string name="unstarSelected">Снять метку</string>
+
+    <string name="inboxOperationFailed">Не удалось выполнить операцию</string>
+    <string name="inboxDeletedConfirmation">%s удалено</string>
+    <string name="inboxArchivedConfirmation">%s архивировано</string>
+    <string name="inboxUnarchivedConfirmation">%s разархивировано</string>
+    <string name="inboxMarkAsReadConfirmation">%s отмечено как прочитанное</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s отмечено как непрочитанное</string>
+    <string name="inboxStarredConfirmation">%s помечено звездочкой</string>
+    <string name="inboxUnstarredConfirmation">%s снята метка (звездочка)</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Это обсуждение будет удалено из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+        <item quantity="few">Эти обсуждения будут удалены из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+        <item quantity="many">Эти обсуждения будут удалены из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+        <item quantity="other">Эти обсуждения будут удалены из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Не удалось загрузить следующую страницу. Проверьте интернет-подключение.</string>
+    <string name="conversationsRefreshFailed">Не удалось обновить обсуждения. Проверьте интернет-подключение.</string>
+    <string name="inboxScopeInbox">Входящие</string>
+    <string name="inboxContextSelectorTitle">Выбрать курс или группу</string>
+    <string name="inboxClearFilter">Очистить</string>
+    <string name="a11y_courseFilterContentDescription">Фильтр по курсам: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">выбрать</string>
+    <string name="a11y_itemSelectedSwipeForActions">Обсуждение выбрано. Активирован режим выбора. Перейти к действиям.</string>
+    <string name="a11y_conversationSelected">Выбранное обсуждение</string>
+    <string name="a11y_conversationDeselected">Выбор обсуждения отменен</string>
+    <string name="a11y_exitSelectionMode">Выйти из режима выбора</string>
+    <string name="a11y_selectionModeDeactivated">Режим выбора деактивирован.</string>
 </resources>

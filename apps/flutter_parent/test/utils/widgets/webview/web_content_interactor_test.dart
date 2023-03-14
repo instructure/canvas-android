@@ -55,7 +55,10 @@ void main() {
       final target = '$domain/target_url';
       final expected = 'session_url';
       when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = expected));
+          .thenAnswer((_) async => AuthenticatedUrl((b) => {
+            b..sessionUrl = expected,
+            b..requiresTermsAcceptance = false
+          }));
       final actual = await WebContentInteractor().getAuthUrl(target);
 
       expect(actual, expected);
@@ -98,8 +101,11 @@ void main() {
       final content = _makeIframe(src: target);
       final expected = _makeIframe(src: authenticated, target: target, ltiButtonText: buttonText);
 
-      when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
+      when(oauthApi.getAuthenticatedUrl(target)).thenAnswer((_) async =>
+          AuthenticatedUrl((b) => {
+                b..sessionUrl = authenticated,
+                b..requiresTermsAcceptance = false
+              }));
 
       final actual = await WebContentInteractor().authContent(content, buttonText);
 
@@ -114,8 +120,11 @@ void main() {
       final content = _makeIframe(id: id, src: target);
       final expected = _makeIframe(id: id, src: authenticated);
 
-      when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
+      when(oauthApi.getAuthenticatedUrl(target)).thenAnswer((_) async =>
+          AuthenticatedUrl((b) => {
+                b..sessionUrl = authenticated,
+                b..requiresTermsAcceptance = false
+              }));
 
       final actual = await WebContentInteractor().authContent(content, null);
 
@@ -132,8 +141,11 @@ void main() {
       final expected = _makeIframe(src: authenticated, target: target, ltiButtonText: buttonText) +
           _makeIframe(id: id, src: authenticated, target: target);
 
-      when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
+      when(oauthApi.getAuthenticatedUrl(target)).thenAnswer((_) async =>
+          AuthenticatedUrl((b) => {
+                b..sessionUrl = authenticated,
+                b..requiresTermsAcceptance = false
+              }));
 
       final actual = await WebContentInteractor().authContent(content, buttonText);
 

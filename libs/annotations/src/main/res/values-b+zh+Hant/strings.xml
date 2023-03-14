@@ -38,6 +38,6 @@
     <string name="pspdf__annotation_type_stamp">注釋顏色</string>
 
     <string name="removedComment">%1$s 由 %2$s移除</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

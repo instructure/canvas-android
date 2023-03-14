@@ -46,6 +46,8 @@ data class CreateAssignment(
         val allowedExtensions: List<String>? = null,
         @SerializedName("important_dates") //Note that setting important date as true only possible for C4E (aka. K5) courses right now.
         val importantDate: Boolean? = null,
+        @SerializedName("assignment_group_id")
+        val assignmentGroupId: Long? = null
 )
 
 data class AssignmentApiModel (

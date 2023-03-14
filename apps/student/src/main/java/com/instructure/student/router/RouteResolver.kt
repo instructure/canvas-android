@@ -3,13 +3,16 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.dashboard.edit.EditDashboardFragment
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
@@ -20,7 +23,6 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextS
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
@@ -125,6 +127,7 @@ object RouteResolver {
             cls.isA<PushNotificationPreferencesFragment>() -> PushNotificationPreferencesFragment.newInstance()
             cls.isA<EmailNotificationPreferencesFragment>() -> EmailNotificationPreferencesFragment.newInstance()
             cls.isA<DiscussionDetailsWebViewFragment>() -> DiscussionDetailsWebViewFragment.newInstance(route)
+            cls.isA<DiscussionRouterFragment>() -> DiscussionRouterFragment.newInstance(route.canvasContext!!, route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

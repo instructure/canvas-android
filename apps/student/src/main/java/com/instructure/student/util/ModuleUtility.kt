@@ -21,26 +21,33 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.APIHelper.expandTildeId
 import com.instructure.canvasapi2.utils.findWithPrevious
+import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.*
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
-import com.instructure.student.fragment.MasteryPathLockedFragment.Companion.makeRoute
+import com.instructure.student.fragment.LockedModuleItemFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment.Companion.makeRoute
 import com.instructure.student.fragment.PageDetailsFragment.Companion.makeRoute
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment.Companion.makeRoute
 import java.util.*
 
 object ModuleUtility {
-    fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?): Fragment? = when (item.type) {
+    fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?, isDiscussionRedesignEnabled: Boolean): Fragment? = when (item.type) {
         "Page" -> PageDetailsFragment.newInstance(makeRoute(course, item.title, item.pageUrl))
         "Assignment" -> AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
-        "Discussion" -> DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
-        "Locked" -> MasteryPathLockedFragment.newInstance(makeRoute(item.title!!))
+        "Discussion" -> {
+            if (isDiscussionRedesignEnabled) {
+                DiscussionDetailsWebViewFragment.newInstance(getDiscussionRedesignRoute(item, course))
+            } else {
+                DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
+            }
+        }
+        "Locked" -> LockedModuleItemFragment.newInstance(makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
         "SubHeader" -> null // Don't do anything with headers, they're just dividers so we don't show them here.
         "Quiz" -> {
             val apiURL = removeDomain(item.url)
@@ -51,9 +58,13 @@ object ModuleUtility {
             MasteryPathSelectionFragment.newInstance(route)
         }
         "ExternalUrl", "ExternalTool" -> {
-            val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
-            val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
-            InternalWebviewFragment.newInstance(route)
+            if (item.isLocked()) {
+                LockedModuleItemFragment.newInstance(makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
+            } else {
+                val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
+                val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
+                InternalWebviewFragment.newInstance(route)
+            }
         }
         "File" -> {
             val url = removeDomain(item.url)
@@ -90,6 +101,15 @@ object ModuleUtility {
             ?.let { expandTildeId(it) }
             ?.toLongOrNull() ?: 0
         return makeRoute(course, topicId, null)
+    }
+
+    private fun getDiscussionRedesignRoute(moduleItem: ModuleItem, course: Course): Route {
+        // Get the topic id from the url
+        val topicId = Uri.parse(moduleItem.url).pathSegments
+            .findWithPrevious { previous, _ -> previous == "discussion_topics" }
+            ?.let { expandTildeId(it) }
+            ?.toLongOrNull() ?: 0
+        return DiscussionDetailsWebViewFragment.makeRoute(course, topicId)
     }
 
     /** Strips off the domain and protocol */

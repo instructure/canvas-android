@@ -26,14 +26,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_notification_preferences.*
+import javax.inject.Inject
 
+@PageView(url = "profile/communication")
+@ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @AndroidEntryPoint
 class EmailNotificationPreferencesFragment : Fragment() {
+
+    @Inject
+    lateinit var toolbarSetupBehavior: ToolbarSetupBehavior
 
     private val viewModel: EmailNotificationPreferencesViewModel by viewModels()
 
@@ -50,8 +59,7 @@ class EmailNotificationPreferencesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-
+        toolbarSetupBehavior.setupToolbar(toolbar)
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
@@ -71,7 +79,7 @@ class EmailNotificationPreferencesFragment : Fragment() {
         val selectedIndex = NotificationPreferencesFrequency.values().indexOf(selectedFrequency)
         AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
             .setTitle(R.string.selectFrequency)
-            .setSingleChoiceItems(items, selectedIndex, { dialog, index -> frequencySelected(dialog, index, categoryName)})
+            .setSingleChoiceItems(items, selectedIndex) { dialog, index -> frequencySelected(dialog, index, categoryName) }
             .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
             .show()
     }
@@ -80,11 +88,6 @@ class EmailNotificationPreferencesFragment : Fragment() {
         val selectedFrequency = NotificationPreferencesFrequency.values()[index]
         viewModel.updateFrequency(categoryName, selectedFrequency)
         dialog.dismiss()
-    }
-
-    private fun setupToolbar() {
-        binding.toolbar.setupAsBackButton { requireActivity().onBackPressed() }
-        ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
     }
 
     companion object {

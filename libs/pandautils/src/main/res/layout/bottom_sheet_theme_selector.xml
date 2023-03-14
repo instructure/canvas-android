@@ -14,128 +14,133 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_bottom_sheet"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/darkLightIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_dark_light_theme"
-        android:layout_marginTop="32dp"
-        app:tint="@color/textDarkest"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:tint="@color/textDarkest" />
-
-    <TextView
-        android:id="@+id/titleText"
-        style="@style/TextStyle.Primary"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="64dp"
-        android:text="@string/themeSelectorTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/darkLightIcon" />
-
-    <TextView
-        android:id="@+id/descriptionText"
-        style="@style/TextStyle.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/themeSelectorDescription"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
-
-    <TextView
-        android:id="@+id/changeLateText"
-        style="@style/TextStyle.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/themeSelectorChangeLater"
-        android:textSize="14sp"
-        android:textColor="@color/textDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descriptionText" />
-
-    <RadioGroup
-        android:id="@+id/themeSelectionGroup"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/changeLateText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:background="@drawable/bg_bottom_sheet">
 
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/buttonLightTheme"
+        <ImageView
+            android:id="@+id/darkLightIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/ic_dark_light_theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textDarkest"
+            tools:tint="@color/textDarkest" />
+
+        <TextView
+            android:id="@+id/titleText"
+            style="@style/TextStyle.Primary"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="64dp"
+            android:text="@string/themeSelectorTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/darkLightIcon" />
+
+        <TextView
+            android:id="@+id/descriptionText"
+            style="@style/TextStyle.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/themeSelectorDescription"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleText" />
+
+        <TextView
+            android:id="@+id/changeLateText"
+            style="@style/TextStyle.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/themeSelectorChangeLater"
+            android:textColor="@color/textDark"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descriptionText" />
+
+        <RadioGroup
+            android:id="@+id/themeSelectionGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/textDarkest"
-            android:text="@string/themeSelectorLightTheme"
-            android:buttonTint="@color/textInfo"
-            android:checked="true"
-            android:minHeight="?android:listPreferredItemHeightSmall"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/changeLateText">
 
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/buttonDarkTheme"
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/buttonLightTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/textInfo"
+                android:checked="true"
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/themeSelectorLightTheme"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/buttonDarkTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/textInfo"
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/themeSelectorDarkTheme"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/buttonDeviceTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/textInfo"
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/themeSelectorDeviceTheme"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/saveButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/bg_button_rounded_transparent"
+            android:text="@string/themeSelectorSave"
+            android:textColor="@color/textInfo"
             android:textSize="16sp"
-            android:textColor="@color/textDarkest"
-            android:text="@string/themeSelectorDarkTheme"
-            android:buttonTint="@color/textInfo"
-            android:minHeight="?android:listPreferredItemHeightSmall"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/themeSelectionGroup"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/buttonDeviceTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/textDarkest"
-            android:text="@string/themeSelectorDeviceTheme"
-            android:buttonTint="@color/textInfo"
-            android:minHeight="?android:listPreferredItemHeightSmall"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/bg_button_rounded_transparent"
-        android:text="@string/themeSelectorSave"
-        android:textColor="@color/textInfo"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/themeSelectionGroup"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.0"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

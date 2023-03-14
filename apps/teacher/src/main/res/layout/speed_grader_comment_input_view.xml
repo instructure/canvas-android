@@ -38,7 +38,7 @@
 
 
     <ImageButton
-        android:id="@+id/addMediaAttachment"
+        android:id="@+id/addAttachment"
         android:layout_width="56dp"
         android:layout_height="0dp"
         android:layout_alignBottom="@+id/commentEditText"
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@id/sendCommentButton"
-        android:layout_toEndOf="@id/addMediaAttachment"
+        android:layout_toEndOf="@id/addAttachment"
         android:background="@color/transparent"
         android:hint="@string/speedGraderCommentHint"
         android:inputType="textCapSentences|textMultiLine"

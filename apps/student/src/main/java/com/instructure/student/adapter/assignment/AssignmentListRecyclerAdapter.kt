@@ -32,7 +32,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.holders.AssignmentViewHolder
@@ -185,7 +185,7 @@ abstract class AssignmentListRecyclerAdapter (
             assignmentGroup: AssignmentGroup,
             assignment: Assignment
     ) {
-        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.color, adapterToAssignmentsCallback)
+        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.backgroundColor, adapterToAssignmentsCallback)
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup) {

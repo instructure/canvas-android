@@ -28,7 +28,7 @@ import instructure.androidblueprint.SyncRecyclerAdapter
 class PageListAdapter(
     context: Context,
     presenter: PageListPresenter,
-    private val mCourseColor: Int,
+    private val iconColor: Int,
     private val mCallback: (Page) -> Unit
 ) : SyncRecyclerAdapter<Page, PageViewHolder, PageListView>(context, presenter) {
 
@@ -37,6 +37,6 @@ class PageListAdapter(
     override fun itemLayoutResId(viewType: Int) = PageViewHolder.HOLDER_RES_ID
 
     override fun bindHolder(model: Page, holder: PageViewHolder, position: Int) {
-        context?.let { holder.bind(it, model, mCourseColor, mCallback) }
+        context?.let { holder.bind(it, model, iconColor, mCallback) }
     }
 }

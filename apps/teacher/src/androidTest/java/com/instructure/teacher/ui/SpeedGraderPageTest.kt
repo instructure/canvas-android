@@ -15,16 +15,9 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Assignment.SubmissionType.EXTERNAL_TOOL
-import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_TEXT_ENTRY
-import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_URL
-import com.instructure.canvasapi2.models.Assignment.SubmissionType.ON_PAPER
+import com.instructure.canvasapi2.models.Assignment.SubmissionType.*
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
@@ -45,13 +38,6 @@ class SpeedGraderPageTest : TeacherTest() {
     fun displaysSubmissionDropDown() {
         goToSpeedGraderPage(submissionType = ONLINE_TEXT_ENTRY, students = 1, submissions = listOf(2))
         speedGraderPage.assertHasSubmissionDropDown()
-    }
-
-    @Test
-    fun displaySubmissionPickerDialog() {
-        goToSpeedGraderPage(submissionType = ONLINE_TEXT_ENTRY, students = 1, submissions = listOf(2))
-        speedGraderPage.openSubmissionsDialog()
-        speedGraderPage.assertSubmissionDialogDisplayed()
     }
 
     @Test
@@ -162,7 +148,7 @@ class SpeedGraderPageTest : TeacherTest() {
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()

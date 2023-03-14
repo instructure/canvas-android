@@ -75,6 +75,11 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
+    }
+
+    hilt {
+        enableAggregatingTask = false
     }
 }
 
@@ -101,6 +106,9 @@ dependencies {
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
     implementation Libs.ANDROIDX_BROWSER
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT
@@ -153,6 +161,8 @@ dependencies {
     /* DI */
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    kapt Libs.HILT_ANDROIDX_COMPILER
 
     /* AAC */
     implementation Libs.VIEW_MODEL
@@ -160,6 +170,12 @@ dependencies {
     implementation Libs.VIEW_MODE_SAVED_STATE
     implementation Libs.FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
+
+    /* ROOM */
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+    implementation Libs.ROOM_COROUTINES
+    testImplementation Libs.ROOM_TEST
 
     implementation Libs.FLEXBOX_LAYOUT
 

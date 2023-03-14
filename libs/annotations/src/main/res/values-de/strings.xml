@@ -38,6 +38,6 @@
     <string name="pspdf__annotation_type_stamp">Hinweisfarbe</string>
 
     <string name="removedComment">%1$s entfernt von %2$s</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

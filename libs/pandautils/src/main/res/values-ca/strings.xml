@@ -486,4 +486,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s s’ha marcat com a no fet</string>
     <string name="a11y_markAsDoneWithName">%s Marca-ho com fet</string>
     <string name="a11y_markAsNotDoneWithName">%s Marca-ho com no fet</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

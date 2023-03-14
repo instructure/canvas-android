@@ -18,12 +18,12 @@
 
 package com.instructure.espresso
 
+import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
-import android.view.View
 import com.instructure.espresso.matchers.WaitForViewMatcher
 import com.instructure.espresso.page.BasePage
 import org.hamcrest.Matcher
@@ -61,6 +61,11 @@ abstract class ViewInteractionDelegate(val autoAssert: Boolean) : ReadOnlyProper
 class OnViewWithId(@IdRes private val viewId: Int, autoAssert: Boolean = true) : ViewInteractionDelegate(autoAssert) {
     override fun onProvide(matcher: Matcher<View>): ViewInteraction = Espresso.onView(matcher)
     override fun getMatcher(): Matcher<View> = ViewMatchers.withId(viewId)
+}
+
+class OnViewWithMatcher(private val viewMatcher: Matcher<View>, autoAssert: Boolean = true) : ViewInteractionDelegate(autoAssert) {
+    override fun onProvide(matcher: Matcher<View>): ViewInteraction = Espresso.onView(matcher)
+    override fun getMatcher(): Matcher<View> = viewMatcher
 }
 
 class OnViewWithContentDescription(@StringRes private val stringResId: Int, autoAssert: Boolean = true) : ViewInteractionDelegate(autoAssert) {

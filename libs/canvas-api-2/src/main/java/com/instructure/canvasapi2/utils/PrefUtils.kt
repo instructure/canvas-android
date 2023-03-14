@@ -511,6 +511,41 @@ class BooleanMapPref(
 }
 
 /**
+ * [Pref] delegate for a typed Map to be stored in SharedPreferences as a serialized
+ * string using Gson. May only be used in [PrefManager] implementations.
+ *
+ * @param defaultValue (Optional) A default value to use until this property has been set.
+ * @param keyName The optional key name under which the property value will be stored. Defaults
+ * to the property name. This is useful when converting other [SharedPreferences] implementations
+ * to [PrefManager] and the required key name does not match the desired property name.
+ */
+class GsonMapPref<K: Any, V : Any>(
+    private val keyClass: Class<K>,
+    private val valueClass: Class<V>,
+    defaultValue: Map<K, V> = hashMapOf(),
+    keyName: String? = null
+) : Pref<Map<K, V>>(defaultValue, keyName) {
+
+    private var cachedObject: Map<K, V>? = null
+
+    override fun onClear() { cachedObject = null }
+
+    override fun SharedPreferences.getValue(key: String, default: Map<K, V>): Map<K, V> {
+        if (cachedObject == null) {
+            val type = TypeToken.getParameterized(Map::class.java, keyClass, valueClass).type
+            cachedObject = Gson().fromJson<Map<K, V>>(getString(key, null), type)
+        }
+        return cachedObject ?: default
+    }
+
+    override fun Editor.setValue(key: String, value: Map<K, V>): Editor {
+        cachedObject = value
+        putString(key, Gson().toJson(value) ?: return this)
+        return this
+    }
+}
+
+/**
  * [Pref] delegate for holding a set of objects to be stored in SharedPreferences as serialized strings using Gson.
  * This class is only designed to be used with scalar types, and behavior when using other types is undefined. This
  * class may only be used in [PrefManager] implementations.

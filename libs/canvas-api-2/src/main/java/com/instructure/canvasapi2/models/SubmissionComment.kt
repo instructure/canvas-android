@@ -20,26 +20,28 @@ package com.instructure.canvasapi2.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.Date
+import java.util.*
 
 @JvmSuppressWildcards
 @Parcelize
 data class SubmissionComment(
-        override val id: Long = 0,
-        @SerializedName("author_id")
-        val authorId: Long = 0,
-        @SerializedName("author_name")
-        val authorName: String? = null,
-        @SerializedName("author_pronouns")
-        val authorPronouns: String? = null,
-        var comment: String? = null,
-        @SerializedName("created_at")
-        val createdAt: Date? = null,
-        @SerializedName("media_comment")
-        val mediaComment: MediaComment? = null,
-        val attachments: ArrayList<Attachment> = ArrayList(),
-        val author: Author? = null
+    override val id: Long = 0,
+    @SerializedName("author_id")
+    val authorId: Long = 0,
+    @SerializedName("author_name")
+    val authorName: String? = null,
+    @SerializedName("author_pronouns")
+    val authorPronouns: String? = null,
+    var comment: String? = null,
+    @SerializedName("created_at")
+    val createdAt: Date? = null,
+    @SerializedName("media_comment")
+    val mediaComment: MediaComment? = null,
+    val attachments: ArrayList<Attachment> = ArrayList(),
+    val author: Author? = null,
+    val attempt: Long? = null
 ) : CanvasComparable<SubmissionComment>(), Parcelable {
+
     override val comparisonDate get() = createdAt
     override val comparisonString get() = authorName
 }

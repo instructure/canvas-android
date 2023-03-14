@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.NetworkUtils
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
@@ -52,6 +53,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.*
 
+@PageView("courses/{canvasContext}/discussion_topics/new")
 @ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : ParentFragment() {
 
@@ -167,8 +169,8 @@ class CreateDiscussionFragment : ParentFragment() {
         }
         ViewStyler.themeToolbarLight(requireActivity(), createDiscussionToolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), createDiscussionToolbar)
-        sendButton?.setTextColor(ThemePrefs.buttonColor)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        sendButton?.setTextColor(ThemePrefs.textButtonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     fun setupViews() {
@@ -179,7 +181,7 @@ class CreateDiscussionFragment : ParentFragment() {
         descriptionRCEView.setHtml(description ?: discussionTopicHeader?.message,
                 getString(R.string.utils_discussionDetails),
                 getString(R.string.rce_empty_description),
-                ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                ThemePrefs.brandColor, ThemePrefs.textButtonColor)
 
         descriptionRCEView.hideEditorToolbar()
         discussionNameTextInput.setOnFocusChangeListener { _, hasFocus ->

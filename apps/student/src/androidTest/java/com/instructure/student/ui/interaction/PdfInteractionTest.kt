@@ -25,11 +25,7 @@ import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.SecondaryFeatureCategory
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.panda_annotations.*
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
@@ -150,7 +146,7 @@ class PdfInteractionTest : StudentTest() {
         val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD, description = assignmentDescriptionHtml)
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
 
         // Scroll to the description, as it will likely be offscreen for landscape tests
         assignmentDetailsPage.scrollToAssignmentDescription()

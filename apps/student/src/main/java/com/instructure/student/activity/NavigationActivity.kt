@@ -41,7 +41,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
@@ -58,14 +57,15 @@ import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
-import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -81,7 +81,6 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.navigation.AccountMenuItem
 import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.NavigationMenuItem
@@ -342,7 +341,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             requestCode == PICK_FILE_FROM_DEVICE ||
             requestCode == PICK_IMAGE_GALLERY ||
             PickerSubmissionUploadEffectHandler.isPickerRequest(requestCode) ||
-            AssignmentDetailsFragment.isFileRequest(requestCode) ||
             SubmissionDetailsEmptyContentFragment.isFileRequest(requestCode)
         ) {
             // UploadFilesFragment will not be notified of onActivityResult(), alert manually
@@ -403,7 +401,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         // Setup the actionbar but make sure we call super last so the fragments can override it as needed.
         mDrawerToggle?.onConfigurationChanged(newConfig)
         super.onConfigurationChanged(newConfig)
-}
+        applyThemeForAllFragments()
+    }
+
+    private fun applyThemeForAllFragments() {
+        supportFragmentManager.fragments.forEach {
+            (it as? FragmentInteractions)?.applyTheme()
+        }
+    }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -497,6 +502,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
+    }
+
+    fun attachNavigationIcon(toolbar: Toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+        toolbar.setNavigationOnClickListener {
+            openNavigationDrawer()
+        }
     }
 
     private fun setUpColorOverlaySwitch() {
@@ -769,16 +782,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun addFragment(fragment: Fragment?, route: Route) {
-        if (RouteType.DIALOG == route.routeType && fragment is DialogFragment && isTablet) {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.addToBackStack(fragment::class.java.name)
-            fragment.show(ft, fragment::class.java.name)
+        if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
+            selectBottomNavFragment(fragment::class.java)
         } else {
-            if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
-                selectBottomNavFragment(fragment::class.java)
-            } else {
-                addFullScreenFragment(fragment, route.removePreviousScreen)
-            }
+            addFullScreenFragment(fragment, route.removePreviousScreen)
         }
     }
 
@@ -851,8 +858,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         val topFragment = topFragment
-        if (topFragment is ParentFragment) {
-            if (!topFragment.handleBackPressed()) {
+        if (topFragment is NavigationCallbacks) {
+            if (!topFragment.onHandleBackPressed()) {
                 if (isBottomNavFragment(topFragment)) {
                     handleBottomNavBackStack()
                 } else {
@@ -1079,7 +1086,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         toast(R.string.errorOccurred)
     }
 
-    private fun createBottomNavFragment(name: String?): ParentFragment? {
+    private fun createBottomNavFragment(name: String?): Fragment? {
         return when (name) {
             navigationBehavior.homeFragmentClass.name -> {
                 val route = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)

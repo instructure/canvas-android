@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Tirohanga Ākonga</string>
 
 
+    <string name="rateOnThePlayStore">Reiti i runga i te Toa Play</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Ūpoko i tohua: %s</string>
     <string name="content_description_chosen_body">Tinana i tohua: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Mai i konei, ka kite koe i nga Taipitopito Tukunga.</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Meneti</item>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">Kei te wātea te tauira</string>
     <string name="errorLoadingSubmission">He hapa i puta i te wā o te uta ana i te tāpaetanga</string>
     <string name="loadFullContent">Pātō ki te kite i te ihirangi katoa</string>
+    <string name="openLtiInExternalApp">Tap ki te whakatuwhera i te taupānga waho</string>
     <string name="dashboardTabImportantDates">Ngā rā nui</string>
     <string name="importantDatesEmptyTitle">Kaore ngā rā nui</string>
     <string name="important_dates">Ngā rā nui</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s karere kāore i pānuitia</item>
         <item quantity="other">%s karere kāore i pānuitia</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s whakamōhiotanga kāore anō kia pānuitia</item>
+        <item quantity="other">%s nga whakamohiotanga kaore ano kia panuitia</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Karekau he tuhipoka i tohua</string>
     <string name="emailNotifications">Ngā Īmēra Whakamōhiotanga</string>
     <string name="emailNotificationsImmediately">Tonu</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">Wiki</string>
     <string name="emailNotificationsNever">Kaua rawa</string>
     <string name="selectFrequency">Tīpakohia te auau</string>
+    <string name="a11y_closeProgress">Katia te korero ahunga whakamua</string>
+    <string name="fileUploadProgress">%1$s ō %2$s</string>
+    <string name="fileUploadProgressSubtitle">Tukuake ki nga Kōnae</string>
+    <string name="submissionProgressSubtitle">Te tuku tukunga ki \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Tukuake ana tāpaetanga</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Tikiake ana ngā kōnae</string>
+    <string name="cancelSubmissionDialogTitle">Whakakore Tāpaetanga</string>
+    <string name="cancelSubmissionDialogMessage">Ka mukua me te whakakoretia to tāpaetanga.</string>
+    <string name="fileUploadError">I Rahua te Tukunga Kōnae</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Tukuatu ki Canvas mo %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Tukuake ki aku Kōnae</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Tuku taumahi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Kōwhirihia he akoranga</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Kōwhirihia he akoranga, ko te akoranga kua tohua ko: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Kōwhiria he taumahi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Kōwhiria he taumahi, ko te taumahi kua tohua ko: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Whakakore Tukuake?</string>
+    <string name="cancelFileUploadMessage">Ma tenei ka whakakore i to tukunga ake.</string>
+    <string name="menuTitleFilterAssignments">Tātari taumahi</string>
+    <string name="filterAssignmentDialogTitle">Tātari Taumahi</string>
+    <string name="filterAssignmentsDialogCancel">Whakakore</string>
+    <string name="filterAssignmentAll">Katoa</string>
+    <string name="filterAssignmentLate">Tūreiti</string>
+    <string name="filterAssignmentMissing">Ngaro</string>
+    <string name="filterAssignmentGraded">Kōekehia</string>
+    <string name="filterAssignmentUpcoming">E haere mai ana</string>
+    <string name="createdByStudentView">I hangaia e te Tirohanga Tauira</string>
+    <string name="discussionErrorToast">I puta he hapa. Kare pea te kaupapa i te waatea.</string>
+    <string name="cameraPermissionPermanentlyDenied">I whakahēngia te whakaaetanga kāmera. Haere ki nga tautuhinga taupānga kia whakaaetia.</string>
+    <string name="unpublish_assignment_error">Kaore e taea te whakaputa i te taumahi mena he tukunga a nga akonga.</string>
+    <string name="subscribeToCalendar">Ohauru ki te Maramataka Kai</string>
+    <string name="subscribeToCalendarMessage">Ka taea e koe te tukutahi i to maramataka Canvas ki to putea Maramataka Google ma te panui i te paatene Ohauru i tenei korero. Na, me haere koe ki te taupānga Maramataka Google i runga i to taputapu ka taea te tukutahi i nga tautuhinga mo te maramataka hou.</string>
+    <string name="subscribeButton">Ohauru</string>
+    <string name="switchToLightMode">Huri ki te Aratau Maama</string>
+    <string name="switchToDarkMode">Huri ki te Aratau pouri</string>
+    <string name="acceptableUsePolicyDescription">Kua rereke te Kaupapa Whakamahi Whakaaetanga mai i to whakaaetanga whakamutunga, he kaiwhakamahi hou ranei koe. I mua i te haere whakaae mai ki te Kaupapa Whakamahi Whakaae.</string>
+    <string name="acceptableUsePolicyTitle">Kaupapa Whakamahi e Whakāetia ana</string>
+    <string name="acceptableUsePolicyButton">Kaupapa Whakamahi e Whakāetia ana</string>
+    <string name="acceptableUsePolicyAgree">Ko te Kaupapa Whakamahi Whakaae he pai ki ahau.</string>
+    <string name="acceptableUsePolicySubmit">Tuku</string>
+    <string name="acceptFail">I rahua te tuku kupu whakaaetanga.</string>
+    <string name="attempt">Whakamātau %d</string>
+    <string name="quizQuestions">Ngā pātai: %d</string>
+    <string name="quizTimeLimit">Whaiti wā: %s</string>
+    <string name="allowedAttempts">Nganatanga whakaaetia: %s</string>
+    <string name="usedAttempts">Nganatanga i whakamahia: %d</string>
+    <string name="generalUnexpectedError">He hapa ohorere i puta.</string>
+
+    <string name="deleteSelected">Muku</string>
+    <string name="archiveSelected">Pūranga</string>
+    <string name="unarchiveSelected">Kore pūrangatia</string>
+    <string name="markAsReadSelected">Mākā kua pānuitia</string>
+    <string name="markAsUnreadSelected">Mākā kua Pānuitia</string>
+    <string name="starSelected">Whetū</string>
+    <string name="unstarSelected">Unstar</string>
+
+    <string name="inboxOperationFailed">Kaore e taea te mahi</string>
+    <string name="inboxDeletedConfirmation">%s kua mukua</string>
+    <string name="inboxArchivedConfirmation">%s pūrangatia</string>
+    <string name="inboxUnarchivedConfirmation">%s kāore i pūrangatia</string>
+    <string name="inboxMarkAsReadConfirmation">%s tohua hei panui</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s tohua hei kaore ano kia panuitia</string>
+    <string name="inboxStarredConfirmation">%s wheturangitia</string>
+    <string name="inboxUnstarredConfirmation">%s kore wheturangitia</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Ka whakawāteahia ngā Pouakauru katoa o ō taputapu i ēnei kōrero. Kaore e taea te wete i tēnei mahi.</item>
+        <item quantity="other">Ka whakawāteahia ngā Pouakauru katoa o ō taputapu i ēnei kōrero. Kaore e taea te wete i tēnei mahi.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">I rahua te uta i te wharangi panuku. Tirohia to hononga ipurangi.</string>
+    <string name="conversationsRefreshFailed">I rahua te whakahou i nga korerorero. Tirohia to hononga ipurangi.</string>
+    <string name="inboxScopeInbox">Pouakauru</string>
+    <string name="inboxContextSelectorTitle">Tīpako Akoranga rōpū ranei</string>
+    <string name="inboxClearFilter">Ūkui</string>
+    <string name="a11y_courseFilterContentDescription">Tātari akoranga: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">whiriwhiri</string>
+    <string name="a11y_itemSelectedSwipeForActions">Kua tohua te korerorero. Kua whakahohehia te aratau whiriwhiri. Whakatere mo nga mahi.</string>
+    <string name="a11y_conversationSelected">Kua tohua te korerorero</string>
+    <string name="a11y_conversationDeselected">Kua whakakorehia te korerorero</string>
+    <string name="a11y_exitSelectionMode">Putaatu i te aratau whiriwhiri</string>
+    <string name="a11y_selectionModeDeactivated">Kua whakakorehia te aratau whiriwhiri.</string>
 </resources>

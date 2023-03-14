@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.features.elementary.course.ElementaryCourseAction
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
 import com.instructure.student.features.elementary.course.ElementaryCourseViewData
@@ -38,7 +40,9 @@ import com.instructure.student.features.elementary.course.ElementaryCourseViewMo
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -86,6 +90,14 @@ class ElementaryCourseViewModelTest {
         setupStrings()
 
         viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager, courseManager)
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.darkTheme } returns false
+        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
+    }
+
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -105,7 +117,8 @@ class ElementaryCourseViewModelTest {
                 ElementaryCourseTab(Tab.MODULES_ID, resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
                 ElementaryCourseTab(Tab.GRADES_ID, resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
                 ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
-            )
+            ),
+            0
         )
 
         every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {
@@ -134,7 +147,8 @@ class ElementaryCourseViewModelTest {
                 ElementaryCourseTab(Tab.MODULES_ID, resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
                 ElementaryCourseTab(Tab.GRADES_ID, resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
                 ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
-            )
+            ),
+            0
         )
 
         every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {
@@ -161,7 +175,8 @@ class ElementaryCourseViewModelTest {
                 ElementaryCourseTab(Tab.HOME_ID, resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
                 ElementaryCourseTab(Tab.SCHEDULE_ID, resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
                 ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
-            )
+            ),
+            0
         )
 
         every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {
@@ -234,7 +249,8 @@ class ElementaryCourseViewModelTest {
                 ElementaryCourseTab(Tab.MODULES_ID, resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
                 ElementaryCourseTab(Tab.GRADES_ID, resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
                 ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
-            )
+            ),
+            0
         )
 
         every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {

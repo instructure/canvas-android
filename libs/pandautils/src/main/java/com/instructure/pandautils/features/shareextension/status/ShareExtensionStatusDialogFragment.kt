@@ -81,7 +81,7 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
             }
         }
 
-        binding.doneButton.setTextColor(ThemePrefs.buttonColor)
+        binding.doneButton.setTextColor(ThemePrefs.textButtonColor)
     }
 
     override fun onCancel(dialog: DialogInterface) {

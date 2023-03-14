@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Nemandasýn</string>
 
 
+    <string name="rateOnThePlayStore">Einkunn á Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valinn haus: %s</string>
     <string name="content_description_chosen_body">Valið meginmál: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Þú getur opnað upplýsingar um skil héðan</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Mínúta</item>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">Uppkast í boði</string>
     <string name="errorLoadingSubmission">Villa kom upp við að hlaða skilum</string>
     <string name="loadFullContent">Pikkaðu til að sjá allt efni</string>
+    <string name="openLtiInExternalApp">Ýttu á til að opna ytra smáforrit</string>
     <string name="dashboardTabImportantDates">Mikilvægar dagsetningar</string>
     <string name="importantDatesEmptyTitle">Engar mikilvægar dagsetningar</string>
     <string name="important_dates">Mikilvægar dagsetningar</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s ólesin skilaboð</item>
         <item quantity="other">%s ólesin skilaboð</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s ólesin tilkynning</item>
+        <item quantity="other">%s ólesnar tilkynningar</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Engin athugasemd valin</string>
     <string name="emailNotifications">Tilkynningar í tölvupósti</string>
     <string name="emailNotificationsImmediately">Tafarlaust</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">Vikulega</string>
     <string name="emailNotificationsNever">Aldrei</string>
     <string name="selectFrequency">Veldu tíðni</string>
+    <string name="a11y_closeProgress">Lokaðu framvinduglugganum</string>
+    <string name="fileUploadProgress">%1$s af %2$s</string>
+    <string name="fileUploadProgressSubtitle">Hleð upp í Skrár</string>
+    <string name="submissionProgressSubtitle">Hlaða upp skilum í \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Hlaða upp skilum</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Hleður upp skrám</string>
+    <string name="cancelSubmissionDialogTitle">Hætta við skil</string>
+    <string name="cancelSubmissionDialogMessage">Þetta hættir við og eyðir skilunum þínum.</string>
+    <string name="fileUploadError">Upphleðsla skrár mistókst</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Hlaða upp í Canvas fyrir %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Hlaða upp í Skrárnar mínar</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Skila verkefni</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Velja námskeið</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Veldu námskeið, valið námskeið er: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Velja verkefni</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Veldu námskeið, valið námskeið er: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Hætta við upphleðslu?</string>
+    <string name="cancelFileUploadMessage">Þetta hættir við upphleðsluna þína.</string>
+    <string name="menuTitleFilterAssignments">Sía verkefni</string>
+    <string name="filterAssignmentDialogTitle">Sía verkefni</string>
+    <string name="filterAssignmentsDialogCancel">Hætta við</string>
+    <string name="filterAssignmentAll">Allt</string>
+    <string name="filterAssignmentLate">Seint</string>
+    <string name="filterAssignmentMissing">Vantar</string>
+    <string name="filterAssignmentGraded">Metið</string>
+    <string name="filterAssignmentUpcoming">Væntanlegt</string>
+    <string name="createdByStudentView">Búið til af Student View</string>
+    <string name="discussionErrorToast">Villa kom upp. Ef til vill er efnið ekki lengur tiltækt.</string>
+    <string name="cameraPermissionPermanentlyDenied">Aðgangsheimild myndar var varanlega hafnað. Farðu í smáforritastillingar til að leyfa það.</string>
+    <string name="unpublish_assignment_error">Ekki hægt að fela ef skil nemenda eru til staðar.</string>
+    <string name="subscribeToCalendar">Gerast áskrifandi að dagatalsveitu</string>
+    <string name="subscribeToCalendarMessage">Þú getur samstillt Canvas-dagatalið þitt við Google Calendar-reikninginn þinn með því að smella á hnappinn Gerast áskrifandi í þessum glugga. Síðan þarftu að fara í Google Calendar-appið í tækinu þínu og virkja samstillingu í stillingum fyrir nýja dagatalið.</string>
+    <string name="subscribeButton">Gerast áskrifandi</string>
+    <string name="switchToLightMode">Skipta yfir í ljósan ham</string>
+    <string name="switchToDarkMode">Skipta yfir í ljósan ham</string>
+    <string name="acceptableUsePolicyDescription">Annað hvort ertu nýr notandi eða Stefna um ásættanlega notkun hefur breyst síðan þú samþykktir hana síðast. Vinsamlegast samþykktu Stefnu um ásættanlega notkun áður en þú heldur áfram.</string>
+    <string name="acceptableUsePolicyTitle">Stefna um ásættanlega notkun</string>
+    <string name="acceptableUsePolicyButton">Stefna um ásættanlega notkun</string>
+    <string name="acceptableUsePolicyAgree">Ég samþykki Stefnu um ásættanlega notkun.</string>
+    <string name="acceptableUsePolicySubmit">Skila</string>
+    <string name="acceptFail">Mistókst að senda inn samþykki anna.</string>
+    <string name="attempt">Tilraun %d</string>
+    <string name="quizQuestions">Spurningar: %d</string>
+    <string name="quizTimeLimit">Tímamörk: %s</string>
+    <string name="allowedAttempts">Heimilaðar tilraunir: %s</string>
+    <string name="usedAttempts">Tilraunir notaðar: %d</string>
+    <string name="generalUnexpectedError">Óvænt villa kom upp.</string>
+
+    <string name="deleteSelected">Eyða</string>
+    <string name="archiveSelected">Safn</string>
+    <string name="unarchiveSelected">Taka úr safni</string>
+    <string name="markAsReadSelected">Merkja sem lesið</string>
+    <string name="markAsUnreadSelected">Merkja sem ólesið</string>
+    <string name="starSelected">Stjörnumerkja</string>
+    <string name="unstarSelected">Eyða stjörnumerki</string>
+
+    <string name="inboxOperationFailed">Ekki tókst að framkvæma leit</string>
+    <string name="inboxDeletedConfirmation">%s eytt</string>
+    <string name="inboxArchivedConfirmation">%s sett í safn</string>
+    <string name="inboxUnarchivedConfirmation">%s tekið úr safni</string>
+    <string name="inboxMarkAsReadConfirmation">%s merkt sem lesið</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s merkt sem ólesið</string>
+    <string name="inboxStarredConfirmation">%s stjörnumerkt</string>
+    <string name="inboxUnstarredConfirmation">%s afstjörnumerkt</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Þessari samræðu verður eytt úr innhólfinu á öllum búnaðinum þínum. Þessi aðgerð er óafturkræf.</item>
+        <item quantity="other">Þessum samræðum verður eytt úr innhólfinu á öllum búnaðinum þínum. Þessi aðgerð er óafturkræf.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Mistókst að hlaða næstu síðu. Athugaðu nettenginguna þína.</string>
+    <string name="conversationsRefreshFailed">Ekki tókst að endurglæða samræðurnar. Athugaðu nettenginguna þína.</string>
+    <string name="inboxScopeInbox">Innhólf</string>
+    <string name="inboxContextSelectorTitle">Veldu námskeið eða hóp</string>
+    <string name="inboxClearFilter">Hreinsa</string>
+    <string name="a11y_courseFilterContentDescription">Námskeiðssía: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">velja</string>
+    <string name="a11y_itemSelectedSwipeForActions">Samræða valin. Valhamur virkjaður. Skoða fyrir aðgerðir.</string>
+    <string name="a11y_conversationSelected">Samræða valin</string>
+    <string name="a11y_conversationDeselected">Samræða afvalin</string>
+    <string name="a11y_exitSelectionMode">Fara úr valham</string>
+    <string name="a11y_selectionModeDeactivated">Valhamur afvirkjaður.</string>
 </resources>

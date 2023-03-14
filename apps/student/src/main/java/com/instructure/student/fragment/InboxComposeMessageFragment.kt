@@ -25,13 +25,13 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
@@ -39,8 +39,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.room.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
@@ -51,14 +50,17 @@ import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.view.AttachmentView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import kotlin.collections.ArrayList
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
+@AndroidEntryPoint
 class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)
@@ -77,6 +79,9 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private var coursesCall: WeaveJob? = null
     private var sendCall: WeaveJob? = null
+
+    @Inject
+    lateinit var attachmentDao: AttachmentDao
 
     override fun onStart() {
         super.onStart()
@@ -97,7 +102,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     override fun title(): String = getString(R.string.composeMessage)
 
     override fun applyTheme() {
-        ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
+        ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
         ViewStyler.themeSwitch(requireContext(), sendIndividualSwitch, ThemePrefs.brandColor)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))
@@ -154,12 +159,14 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         chips.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 if (isReply) {
-                    if(currentMessage == null && conversation?.participants != null && conversation!!.participants.size == 1) {
+                    if (currentMessage == null && conversation?.participants != null && conversation!!.participants.size == 1) {
                         // This is the result of replyAll to a monologue
                         addInitialRecipients(listOf(conversation!!.participants.first().id))
                     } else {
-                        addInitialRecipients(currentMessage?.participatingUserIds
-                                ?: conversation?.audience ?: emptyList())
+                        addInitialRecipients(
+                            currentMessage?.participatingUserIds
+                                ?: conversation?.audience ?: emptyList()
+                        )
                     }
                 } else if (participants.isNotEmpty()) {
                     addRecipients(participants)
@@ -200,7 +207,8 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
             if (selectedContext == null && conversation == null) {
                 toast(R.string.noCourseSelected)
             } else {
-                val canvasContext = selectedContext ?: CanvasContext.fromContextCode(conversation?.contextCode) ?: return@onClick
+                val canvasContext =
+                    selectedContext ?: CanvasContext.fromContextCode(conversation?.contextCode) ?: return@onClick
                 RouteMatcher.route(requireContext(), InboxRecipientsFragment.makeRoute(canvasContext, chips.recipients))
             }
         }
@@ -226,8 +234,8 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         coursesCall = weave {
             try {
                 val (courses, groups) = awaitApis<List<Course>, List<Group>>(
-                        { CourseManager.getAllFavoriteCourses(true, it) },
-                        { GroupManager.getAllGroups(it, true) }
+                    { CourseManager.getAllFavoriteCourses(true, it) },
+                    { GroupManager.getAllGroups(it, true) }
                 )
                 addCoursesAndGroups(courses, groups)
             } catch (ignore: Throwable) {
@@ -240,7 +248,10 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         courseSpinner.adapter = NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_nothing_selected, context)
         if (selectedContext != null) {
             courseSpinner.onItemSelectedListener = null // Prevent listener from firing the when selection is placed
-            courseSpinner.setSelection(adapter.getPosition(selectedContext) + 1, false) // + 1 is for the nothingSelected position
+            courseSpinner.setSelection(
+                adapter.getPosition(selectedContext) + 1,
+                false
+            ) // + 1 is for the nothingSelected position
             courseWasSelected()
         }
         courseSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -251,12 +262,13 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
                         chips.clearRecipients()
                         selectedContext = canvasContext
                         courseWasSelected()
-                        courseSpinner.contentDescription = getString(R.string.a11y_content_description_inbox_course_spinner, selectedContext?.name)
+                        courseSpinner.contentDescription =
+                            getString(R.string.a11y_content_description_inbox_course_spinner, selectedContext?.name)
                     }
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>)  = Unit
+            override fun onNothingSelected(parent: AdapterView<*>) = Unit
         }
     }
 
@@ -270,22 +282,25 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     private fun setupToolbar() {
-        toolbar.setTitle(when {
-            isNewMessage -> R.string.newMessage
-            isReply -> R.string.reply
-            else -> R.string.forwardMessage
-        })
+        toolbar.setTitle(
+            when {
+                isNewMessage -> R.string.newMessage
+                isReply -> R.string.reply
+                else -> R.string.forwardMessage
+            }
+        )
 
         if (toolbar.menu.size() == 0) toolbar.inflateMenu(R.menu.menu_add_message)
         toolbar.menu.findItem(R.id.menu_attachment).isVisible = true
         toolbar.setOnMenuItemClickListener { item ->
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.menu_send -> {
                     sendMessage()
                 }
                 R.id.menu_attachment -> {
                     val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
-                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle)
+                        .show(childFragmentManager, FileUploadDialogFragment.TAG)
                 }
                 else -> return@setOnMenuItemClickListener false
             }
@@ -348,7 +363,11 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
         // Ensure network is available
         if (!APIHelper.hasNetworkConnection()) {
-            Toast.makeText(requireContext(), this@InboxComposeMessageFragment.getString(R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                this@InboxComposeMessageFragment.getString(R.string.notAvailableOffline),
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -378,7 +397,15 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
             val attachmentIds = attachments.map { it.id }.toLongArray()
             val recipientIds = selectedRecipients.mapNotNull { it.stringId }
             val conversation = awaitApi<Conversation> {
-                InboxManager.addMessage(conversation?.id ?: 0, message, recipientIds, includedMessageIds, attachmentIds, conversation?.contextCode, it)
+                InboxManager.addMessage(
+                    conversation?.id ?: 0,
+                    message,
+                    recipientIds,
+                    includedMessageIds,
+                    attachmentIds,
+                    conversation?.contextCode,
+                    it
+                )
             }
             messageSuccess(conversation)
         } catch {
@@ -387,7 +414,13 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         }
     }
 
-    private fun createConversation(selectedRecipients: List<Recipient>, message: String, subject: String, contextId: String, isBulk: Boolean) {
+    private fun createConversation(
+        selectedRecipients: List<Recipient>,
+        message: String,
+        subject: String,
+        contextId: String,
+        isBulk: Boolean
+    ) {
         sendCall?.cancel()
         sendCall = tryWeave {
             val attachmentIds = attachments.map { it.id }.toLongArray()
@@ -408,14 +441,12 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
-        val isMonologue = initialRecipientIds.size == 1
         val recipients = initialRecipientIds
             .mapNotNull { longId ->
                 val id = longId.toString()
                 participants.find {
-                    // Map IDs to participants (excluding the current user if not monologue)
-                    it.stringId == id && (isMonologue || it.stringId != myId)
+                    // Map IDs to participants
+                    it.stringId == id
                 }
             }
             .minus(chips.recipients)
@@ -424,10 +455,9 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private fun addRecipients(newRecipients: List<Recipient>) {
         val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = newRecipients.filter { recipient ->
-            // Skip existing recipients and self
-            recipient.stringId != myId && selectedRecipients.none { it.stringId == recipient.stringId }
+            // Skip existing recipients
+            selectedRecipients.none { it.stringId == recipient.stringId }
         }
         chips.addRecipients(recipients)
     }
@@ -444,14 +474,19 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
-        workInfoLiveData.observe(viewLifecycleOwner) {
-            if (it.state == WorkInfo.State.SUCCEEDED) {
-                it.outputData.getStringArray(FileUploadWorker.RESULT_ATTACHMENTS)
-                    ?.map { it.fromJson<Attachment>() }
-                    ?.let {
-                        this.attachments.addAll(it)
-                        refreshAttachments()
+        workInfoLiveData.observe(viewLifecycleOwner) { workInfo ->
+            if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+                lifecycleScope.launch {
+                    uuid?.let { uuid ->
+                        val attachmentEntities = attachmentDao.findByParentId(uuid.toString())
+                        attachmentEntities?.let { attachmentList ->
+                            attachments.addAll(attachmentList.map { it.toApiModel() })
+                            refreshAttachments()
+                            attachmentDao.deleteAll(attachmentList)
+                        } ?: toast(R.string.errorUploadingFile)
                     } ?: toast(R.string.errorUploadingFile)
+
+                }
             }
         }
     }

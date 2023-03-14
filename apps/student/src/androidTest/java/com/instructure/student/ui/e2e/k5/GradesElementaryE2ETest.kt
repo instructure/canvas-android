@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2021 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.e2e.k5
 
+import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.toApiString
@@ -40,20 +41,16 @@ import java.util.*
 
 @HiltAndroidTest
 class GradesElementaryE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We dont want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun gradesE2ETest() {
 
-        // Seed data for K5 sub-account
+        Log.d(PREPARATION_TAG,"Seeding data for K5 sub-account.")
         val data = seedDataForK5(
             teachers = 1,
             students = 1,
@@ -69,6 +66,7 @@ class GradesElementaryE2ETest : StudentTest() {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         val testGradingPeriodListApiModel = GradingPeriodsApi.getGradingPeriodsOfCourse(nonHomeroomCourses[0].id)
 
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${nonHomeroomCourses[0].name} course.")
         val testAssignment = AssignmentsApi.createAssignment(
              AssignmentsApi.CreateAssignmentRequest(
                  courseId = nonHomeroomCourses[1].id,
@@ -80,7 +78,8 @@ class GradesElementaryE2ETest : StudentTest() {
              )
          )
 
-         val testAssignment2 = AssignmentsApi.createAssignment(
+        Log.d(PREPARATION_TAG,"Seeding another 'Text Entry' assignment for ${nonHomeroomCourses[0].name} course.")
+        val testAssignment2 = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
                 courseId = nonHomeroomCourses[0].id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -91,6 +90,7 @@ class GradesElementaryE2ETest : StudentTest() {
             )
         )
 
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${nonHomeroomCourses[1].name} assignment.")
         SubmissionsApi.gradeSubmission(
             teacherToken = teacher.token,
             courseId = nonHomeroomCourses[1].id,
@@ -99,6 +99,7 @@ class GradesElementaryE2ETest : StudentTest() {
             postedGrade="9",
             excused = false)
 
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${nonHomeroomCourses[0].name} assignment.")
         SubmissionsApi.gradeSubmission(
             teacherToken = teacher.token,
             courseId = nonHomeroomCourses[0].id,
@@ -107,15 +108,21 @@ class GradesElementaryE2ETest : StudentTest() {
             postedGrade="A-",
             excused = false)
 
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to K5 Grades Page and assert it is loaded.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
         gradesPage.assertPageObjects()
         Thread.sleep(3000)
+
+        Log.d(STEP_TAG, "Assert that the corresponding course grades are displayed.")
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "93%")
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
 
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${testAssignment2.name} assignment.")
         SubmissionsApi.gradeSubmission(
             teacherToken = teacher.token,
             courseId = nonHomeroomCourses[0].id,
@@ -125,21 +132,24 @@ class GradesElementaryE2ETest : StudentTest() {
             excused = false)
 
         Thread.sleep(5000) //This time is needed here to let the SubMissionApi does it's job.
+
+        Log.d(STEP_TAG, "Refresh Grades Elementary Page. Assert that the previously graded, ${testAssignment2.name} assignment's grade has been changed, but only that one.")
         gradesPage.refresh()
         Thread.sleep(5000) //We need to wait here because sometimes if we refresh the page fastly, the old grade will be seen.
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
 
-        //Changing grade period.
+        Log.d(STEP_TAG, "Change 'Current Grading Period' to '${testGradingPeriodListApiModel.gradingPeriods[0].title}'.")
         gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
         gradesPage.scrollToItem(R.id.gradingPeriodSelector, gradesPage.getStringFromResource(R.string.currentGradingPeriod))
         gradesPage.clickGradingPeriodSelector()
         gradesPage.selectGradingPeriod(testGradingPeriodListApiModel.gradingPeriods[0].title)
 
-        //Checking if a course's grades page is displayed after clicking on a course row on elementary grades page. Assert that we have left the grades elementary page. We are asserting this because in beta environment, subject page's not always available for k5 user.
+        Log.d(STEP_TAG, "Checking if a course's grades page is displayed after clicking on a course row on elementary grades page. Assert that we have left the grades elementary page. We are asserting this because in beta environment, subject page's not always available for k5 user.")
         gradesPage.clickGradeRow(nonHomeroomCourses[0].name)
         gradesPage.assertCourseNotDisplayed(nonHomeroomCourses[0].name)
 
+        Log.d(STEP_TAG, "Navigate back to Grades Elementary Page and assert it's displayed.")
         Espresso.pressBack()
         gradesPage.assertPageObjects()
 

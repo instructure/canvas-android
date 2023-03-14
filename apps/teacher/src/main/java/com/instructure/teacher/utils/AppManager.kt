@@ -16,7 +16,22 @@
 
 package com.instructure.teacher.utils
 
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import androidx.work.WorkerFactory
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
-class AppManager : BaseAppManager()
+class AppManager : BaseAppManager(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun getWorkManagerConfiguration(): Configuration =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+
+    override fun getWorkManagerFactory(): WorkerFactory = workerFactory
+}

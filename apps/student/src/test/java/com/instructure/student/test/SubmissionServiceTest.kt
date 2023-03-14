@@ -170,7 +170,8 @@ class SubmissionServiceTest : Assert() {
             lastActivityDate = Date.now(),
             isGroupMessage = false,
             message = "Test!",
-            mediaPath = null
+            mediaPath = null,
+            attemptId = 1
         )
 
         // Get inserted comment ID

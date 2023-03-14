@@ -67,6 +67,17 @@ object SubmissionAPI {
                 @Query("comment[file_ids][]") attachments: List<Long>
         ): Call<Submission>
 
+        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
+        fun postSubmissionComment(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Path("userId") userId: Long,
+            @Query("comment[text_comment]") comment: String,
+            @Query("comment[attempt]") attemptId: Long?,
+            @Query("comment[group_comment]") isGroupComment: Boolean,
+            @Query("comment[file_ids][]") attachments: List<Long>
+        ): Call<Submission>
+
         @POST("{contextId}/assignments/{assignmentId}/submissions")
         fun postTextSubmission(
                 @Path("contextId") contextId: Long,
@@ -86,6 +97,7 @@ object SubmissionAPI {
                 @Path("contextId") contextId: Long,
                 @Path("assignmentId") assignmentId: Long,
                 @Path("userId") userId: Long,
+                @Query("comment[attempt]") attemptId: Long?,
                 @Query("comment[media_comment_id]") mediaId: String,
                 @Query("comment[media_comment_type]") commentType: String,
                 @Query("comment[group_comment]") isGroupComment: Boolean): Call<Submission>
@@ -171,8 +183,33 @@ object SubmissionAPI {
         callback.addCall(adapter.build(SubmissionInterface::class.java, params).postSubmissionComment(courseId, assignmentID, userID, comment, isGroupMessage, attachmentsIds)).enqueue(callback)
     }
 
-    fun postMediaSubmissionComment(canvasContextId: Long, assignmentId: Long, studentId: Long, mediaId: String, mediaType: String, isGroupComment: Boolean, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postMediaSubmissionComment(canvasContextId, assignmentId, studentId, mediaId, mediaType, isGroupComment)).enqueue(callback)
+    fun postSubmissionComment(
+        courseId: Long,
+        assignmentID: Long,
+        userID: Long,
+        comment: String,
+        isGroupMessage: Boolean,
+        attachmentsIds: List<Long>,
+        attemptId: Long?,
+        adapter: RestBuilder,
+        callback: StatusCallback<Submission>,
+        params: RestParams
+    ) {
+        callback.addCall(
+            adapter.build(SubmissionInterface::class.java, params).postSubmissionComment(
+                courseId,
+                assignmentID,
+                userID,
+                comment,
+                attemptId,
+                isGroupMessage,
+                attachmentsIds
+            )
+        ).enqueue(callback)
+    }
+
+    fun postMediaSubmissionComment(canvasContextId: Long, assignmentId: Long, studentId: Long, mediaId: String, mediaType: String, attemptId: Long?, isGroupComment: Boolean, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
+        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postMediaSubmissionComment(canvasContextId, assignmentId, studentId, attemptId, mediaId, mediaType, isGroupComment)).enqueue(callback)
     }
 
     fun postMediaSubmission(canvasContextId: Long, assignmentId: Long, submissionType: String, mediaId: String, mediaType: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {

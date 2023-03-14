@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Studentens vy</string>
 
 
+    <string name="rateOnThePlayStore">Pris på Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Vald rubrik: %s</string>
     <string name="content_description_chosen_body">Vald brödtext: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Du kan öppna inlämningsinformationen härifrån</string>
 
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">Utkast tillgängligt</string>
     <string name="errorLoadingSubmission">Ett fel inträffade vid inläsning av inlämningen</string>
     <string name="loadFullContent">Tryck för att se hela innehållet</string>
+    <string name="openLtiInExternalApp">Tryck för att öppna i extern app</string>
     <string name="dashboardTabImportantDates">Viktiga datum</string>
     <string name="importantDatesEmptyTitle">Inga viktiga datum</string>
     <string name="important_dates">Viktiga datum</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s oläst meddelande</item>
         <item quantity="other">%s olästa meddelanden</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s oläst avisering</item>
+        <item quantity="other">%s olästa aviseringar</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Inga noteringar har valts</string>
     <string name="emailNotifications">E-postaviseringar</string>
     <string name="emailNotificationsImmediately">Omedelbart</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">Varje vecka</string>
     <string name="emailNotificationsNever">Aldrig</string>
     <string name="selectFrequency">Välj frekvens</string>
+    <string name="a11y_closeProgress">Stäng förloppsdialog</string>
+    <string name="fileUploadProgress">%1$s av %2$s</string>
+    <string name="fileUploadProgressSubtitle">Laddar upp till Filer</string>
+    <string name="submissionProgressSubtitle">Laddar upp inlämning till \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Laddar upp inlämning</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Laddar upp filer</string>
+    <string name="cancelSubmissionDialogTitle">Avbryt inlämningen</string>
+    <string name="cancelSubmissionDialogMessage">Detta avbryter och tar bort din inlämning.</string>
+    <string name="fileUploadError">Filuppladdningen misslyckades</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Ladda upp till Canvas %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Ladda upp till Mina filer</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lämna in uppgift</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Välj en kurs</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Välj en kurs, vald kurs är: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Välj en uppgift</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Välj en uppgift, vald uppgift är: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Vill du avbryta uppladdningen?</string>
+    <string name="cancelFileUploadMessage">Detta avbryter din uppladdning.</string>
+    <string name="menuTitleFilterAssignments">Filtrera uppgifter</string>
+    <string name="filterAssignmentDialogTitle">Filtrera uppgifter</string>
+    <string name="filterAssignmentsDialogCancel">Avbryt</string>
+    <string name="filterAssignmentAll">Alla</string>
+    <string name="filterAssignmentLate">Sen</string>
+    <string name="filterAssignmentMissing">Saknad</string>
+    <string name="filterAssignmentGraded">Har bedömts</string>
+    <string name="filterAssignmentUpcoming">Kommande</string>
+    <string name="createdByStudentView">Skapad av studentvy</string>
+    <string name="discussionErrorToast">Ett fel uppstod. Det här ämnet är kanske inte längre tillgängligt.</string>
+    <string name="cameraPermissionPermanentlyDenied">Kameraåtkomsten nekades permanent. Gå till appinställningarna för att tillåta den.</string>
+    <string name="unpublish_assignment_error">Det går inte att avpublicera uppgiften om studentinlämningar föreligger.</string>
+    <string name="subscribeToCalendar">Prenumerera på kalenderflöde</string>
+    <string name="subscribeToCalendarMessage">Du kan synkronisera din Canvas-kalender med ditt Google-kalenderkonto genom att klicka på knappen Prenumerera i den här dialogrutan. Du måste sedan gå till din Google-kalenderapp på din enhet och aktivera synkronisering i inställningarna för den nya kalendern.</string>
+    <string name="subscribeButton">Prenumerera</string>
+    <string name="switchToLightMode">Växla till ljust läge</string>
+    <string name="switchToDarkMode">Växla till mörkt läge</string>
+    <string name="acceptableUsePolicyDescription">Antingen är du en ny användare eller så har policyn för godkänd användning ändrats sedan du senast godkände den. Godkänn policyn för godkänd användning innan du fortsätter.</string>
+    <string name="acceptableUsePolicyTitle">Policy för godkänd användning</string>
+    <string name="acceptableUsePolicyButton">Policy för godkänd användning</string>
+    <string name="acceptableUsePolicyAgree">Jag godkänner policyn för godkänd användning.</string>
+    <string name="acceptableUsePolicySubmit">Lämna in</string>
+    <string name="acceptFail">Det gick inte att lämna in godkännande av terminer</string>
+    <string name="attempt">Försök %d</string>
+    <string name="quizQuestions">Frågor: %d</string>
+    <string name="quizTimeLimit">Tidsgräns: %s</string>
+    <string name="allowedAttempts">Tillåtna försök: %s</string>
+    <string name="usedAttempts">Genomförda försök: %d</string>
+    <string name="generalUnexpectedError">Ett oväntat fel uppstod.</string>
+
+    <string name="deleteSelected">Radera</string>
+    <string name="archiveSelected">Arkivera</string>
+    <string name="unarchiveSelected">Ta bort arkivering</string>
+    <string name="markAsReadSelected">Markera som läst</string>
+    <string name="markAsUnreadSelected">Markera som oläst</string>
+    <string name="starSelected">Stjärna</string>
+    <string name="unstarSelected">Ta bort stjärnmarkering</string>
+
+    <string name="inboxOperationFailed">Det gick inte att utföra åtgärden</string>
+    <string name="inboxDeletedConfirmation">%s raderade</string>
+    <string name="inboxArchivedConfirmation">%s arkiverade</string>
+    <string name="inboxUnarchivedConfirmation">%s framtagna från arkivet</string>
+    <string name="inboxMarkAsReadConfirmation">%s markerade som lästa</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s markerade som olästa</string>
+    <string name="inboxStarredConfirmation">%s stjärnmärkta</string>
+    <string name="inboxUnstarredConfirmation">%s med borttagen stjärnmärkning</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Den här konversationen kommer att raderas från inkorgen på alla dina enheter. Den här åtgärden kan inte ångras.</item>
+        <item quantity="other">De här konversationerna kommer att raderas från inkorgen på alla dina enheter. Den här åtgärden kan inte ångras.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Det gick inte att läsa in nästa sida. Kontrollera din anslutning till internet.</string>
+    <string name="conversationsRefreshFailed">Det gick inte att uppdatera konversationerna. Kontrollera din anslutning till internet.</string>
+    <string name="inboxScopeInbox">Inkorg</string>
+    <string name="inboxContextSelectorTitle">Välj kurs eller grupp</string>
+    <string name="inboxClearFilter">Rensa</string>
+    <string name="a11y_courseFilterContentDescription">Kursfilter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">välj</string>
+    <string name="a11y_itemSelectedSwipeForActions">Konversation markerad. Urvalsläget aktiverat. Navigera efter åtgärder.</string>
+    <string name="a11y_conversationSelected">Konversation markerad</string>
+    <string name="a11y_conversationDeselected">Konversation avmarkerad</string>
+    <string name="a11y_exitSelectionMode">Avsluta urvalsläget</string>
+    <string name="a11y_selectionModeDeactivated">Urvalsläget inaktiverat.</string>
 </resources>

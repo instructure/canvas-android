@@ -39,7 +39,7 @@
     <string name="noAssignmentDescriptionStudent">No Content</string>
     <string name="dueLabel">Due</string>
     <string name="submissionStatusSuccessTitle">Successfully submitted!</string>
-    <string name="submissionStatusSuccessSubtitle">Your submission is now waiting to be graded</string>
+    <string name="submissionStatusSuccessSubtitle">Your submission is now waiting to be marked</string>
     <string name="submissionStatusUploadingTitle">Submission Uploading&#8230;</string>
     <string name="submissionStatusUploadingSubtitle">Tap to view progress</string>
     <string name="submissionStatusFailedTitle">Submission Failed</string>
@@ -108,7 +108,7 @@
     <string name="outOfPointsFormatted">Out of %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
     <string name="gradeExcused">Excused</string>
-    <string name="finalGradeFormatted">Final Grade: %s</string>
+    <string name="finalGradeFormatted">Final Mark: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
     <string name="enterWhatIfScore">Enter what-if score</string>
@@ -243,7 +243,7 @@
     <string name="unread">Unread</string>
     <string name="archived">Archived</string>
     <string name="sent">Sent</string>
-    <string name="grade">Grade</string>
+    <string name="grade">Mark</string>
     <string name="clearFilter">Clear filter</string>
     <string name="addMessage">Add Message</string>
     <string name="monologue">Monologue</string>
@@ -263,8 +263,8 @@
     <string name="toDoDue">Due</string>
     <string name="due">Due %1$s</string>
     <plurals name="to_do_needs_grading">
-        <item quantity="one">%d needs grading</item>
-        <item quantity="other">%d need grading</item>
+        <item quantity="one">%d needs marking</item>
+        <item quantity="other">%d need marking</item>
     </plurals>
     <string name="createAFolder">Create A Folder</string>
     <string name="createFolder">Create Folder</string>
@@ -418,11 +418,11 @@
     <string name="defaultIcon">Default Icon</string>
     <string name="discussionIcon">Discussion Icon</string>
     <string name="gradesIcon">Marks Icon</string>
-    <string name="grades">Grades</string>
-    <string name="allGradingPeriods">All Grading Periods</string>
+    <string name="grades">Marks</string>
+    <string name="allGradingPeriods">All Marking Periods</string>
     <string name="calendar">Calendar</string>
     <string name="bookmarks">Bookmarks</string>
-    <string name="showGrades">Show Grades</string>
+    <string name="showGrades">Show Marks</string>
     <string name="colorOverlay">Colour Overlay</string>
     <string name="gradesAreHidden">Marks are not visible for this course.</string>
 
@@ -609,7 +609,7 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To Do</string>
-    <string name="gradesWidgetTitle">Grades</string>
+    <string name="gradesWidgetTitle">Marks</string>
     <string name="notificationWidgetTitle">Notifications</string>
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
     <string name="gradesWidgetTitleLong">Canvas - Marks</string>
@@ -728,7 +728,7 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-    <string name="content_description_speed_grader_slider">Grade slider</string>
+    <string name="content_description_speed_grader_slider">Mark slider</string>
 
     <string name="createNewCalendarEvent">Create New Event</string>
     <string name="enableFunMode">Turn off the pandas.</string>
@@ -754,15 +754,15 @@
     <string name="notification_cat_conferences">Conferences</string>
 
     <string name="notification_pref_due_date">Due Date</string>
-    <string name="notification_pref_grading_policies">Grading Policies</string>
+    <string name="notification_pref_grading_policies">Marking Policies</string>
     <string name="notification_pref_course_content">Course Content</string>
     <string name="notification_pref_files">Files</string>
     <string name="notification_pref_announcement">Announcement</string>
     <string name="notification_pref_announcement_created_by_you">Announcement Created By You</string>
-    <string name="notification_pref_grading">Grading</string>
+    <string name="notification_pref_grading">Marking</string>
     <string name="notification_pref_invitation">Invitation</string>
     <string name="notification_pref_all_submissions">All Submissions</string>
-    <string name="notification_pref_late_grading">Late Grading</string>
+    <string name="notification_pref_late_grading">Late Marking</string>
     <string name="notification_pref_submission_comment">Submission Comment</string>
 
     <string name="notification_pref_discussion">Discussion</string>
@@ -791,12 +791,12 @@
     <string name="notification_pref_toast_success">Notifications have been enabled.</string>
 
     <string name="notification_desc_due_date">Get notified when an assignment due date changes.</string>
-    <string name="notification_desc_grading_policies">Get notified when course grading policies change.</string>
+    <string name="notification_desc_grading_policies">Get notified when course marking policies change.</string>
     <string name="notification_desc_course_content">Get notified when course content changes on WikiPages, Quizzes, and Assignments.</string>
     <string name="notification_desc_files">Get notified when a new file is added to your course.</string>
     <string name="notification_desc_announcement">Get notified when there is a new announcement in your course.</string>
     <string name="notification_desc_announcement_created_by_you">Get notified when you create an announcement and when somebody replies to your announcement.</string>
-    <string name="notification_desc_grading">Get notified when an assignment/submission was graded/changed and when a grade weight was changed.</string>
+    <string name="notification_desc_grading">Get notified when an assignment/submission was marked/changed and when a mark weight was changed.</string>
     <string name="notification_desc_invitation">Get notified for invitations to web conferences, groups, collaborations, peer reviews, and reminders.</string>
     <string name="notification_desc_all_submissions">Instructor &amp; Admin only. Get notified when an assignment is submitted or resubmitted.</string>
     <string name="notification_desc_late_grading">Instructor &amp; Admin only. Get notified when a late assignment is submitted.</string>
@@ -905,7 +905,7 @@
     <string name="restartingCanvas">Restarting Canvas</string>
     <string name="languageDialogText">Changing the language will require the app to restart. Are you sure you want to do this?</string>
     <string name="defaultLanguageWarning">Your system default language is not guaranteed to be supported and will require a restart. Are you sure you want to do this?</string>
-    <string name="locked_mastery_paths">Locked until \"%s\" is graded</string>
+    <string name="locked_mastery_paths">Locked until \"%s\" is marked</string>
     <string name="locked_icon">Locked Icon</string>
     <string name="choose_assignment_group">Choose Assignment Group</string>
     <string name="chooseAssignmentPath">Choose Assignment Path</string>
@@ -956,7 +956,7 @@
     <string name="inviteAccepted">Invite accepted!</string>
     <string name="inviteDeclined">Invite declined.</string>
     <string name="latePenalty">Late penalty (-%s)</string>
-    <string name="finalGrade">Final Grade</string>
+    <string name="finalGrade">Final Mark</string>
 
     <string name="max_count">99+</string>
 
@@ -1015,12 +1015,12 @@
     <string name="postGradesTab">Post Marks</string>
     <string name="hideGradesTab">Hide Marks</string>
     <plurals name="gradesPostedCount">
-        <item quantity="one">%d grade currently posted</item>
-        <item quantity="other">%d grades currently posted</item>
+        <item quantity="one">%d mark currently posted</item>
+        <item quantity="other">%d marks currently posted</item>
     </plurals>
     <plurals name="gradesHiddenCount">
-        <item quantity="one">%d grade currently hidden</item>
-        <item quantity="other">%d grades currently hidden</item>
+        <item quantity="one">%d mark currently hidden</item>
+        <item quantity="other">%d marks currently hidden</item>
     </plurals>
     <string name="postPolicyPostTo">Post to&#8230;</string>
     <string name="postPolicySections">Specific Sections</string>
@@ -1029,21 +1029,22 @@
     <string name="postToGradedTitle">Marked</string>
     <string name="postToGradedMessage">Marks will be made visible to students with marked submissions</string>
     <string name="postPolicyAllHiddenTitle">All Hidden</string>
-    <string name="postPolicyAllHiddenMessage">All grades are currently hidden.</string>
+    <string name="postPolicyAllHiddenMessage">All marks are currently hidden.</string>
     <string name="postPolicyAllPostedTitle">All Posted</string>
-    <string name="postPolicyAllPostedMessage">All grades are currently posted.</string>
+    <string name="postPolicyAllPostedMessage">All marks are currently posted.</string>
     <string name="postPolicyPostedToast">Marks Posted</string>
-    <string name="postPolicyHiddenToast">Grades Hidden</string>
-    <string name="postPolicyPostFailedToast">Failed to post grades</string>
-    <string name="postPolicyHideFailedToast">Failed to hide grades</string>
-    <string name="gradeBeforePosting">Grade before posting</string>
-    <string name="gradeAfterPosting">Grade after posting</string>
-    <string name="gradeOverride">Grade override</string>
-    <string name="currentGrade">Current grade</string>
+    <string name="postPolicyHiddenToast">Marks Hidden</string>
+    <string name="postPolicyPostFailedToast">Failed to post marks</string>
+    <string name="postPolicyHideFailedToast">Failed to hide marks</string>
+    <string name="gradeBeforePosting">Mark before posting</string>
+    <string name="gradeAfterPosting">Mark after posting</string>
+    <string name="gradeOverride">Mark override</string>
+    <string name="currentGrade">Current mark</string>
     <string name="opensInCanvasStudent">Opens in Canvas Student</string>
     <string name="tab_student_view">Student View</string>
 
 
+    <string name="rateOnThePlayStore">Rate on the Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Chosen head: %s</string>
     <string name="content_description_chosen_body">Chosen body: %s</string>
@@ -1116,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
         <item quantity="other">%s Minutes</item>
@@ -1183,15 +1186,15 @@
     <string name="homeroomNoSubjects">You currently have no subjects.</string>
     <string name="settingsElementaryViewSubtitle">Requires app restart</string>
     <string name="gradesSelect">Select</string>
-    <string name="selectGradingPeriod">Select Grading Period</string>
-    <string name="currentGradingPeriod">Current Grading Period</string>
+    <string name="selectGradingPeriod">Select Marking Period</string>
+    <string name="currentGradingPeriod">Current Marking Period</string>
     <string name="failedToLoadGrades">Failed to load marks</string>
-    <string name="failedToLoadGradesForGradingPeriod">Failed to load grades for grading period</string>
-    <string name="failedToRefreshGrades">Failed to refresh grades</string>
-    <string name="noGradesToDisplay">No grades to display</string>
+    <string name="failedToLoadGradesForGradingPeriod">Failed to load marks for marking period</string>
+    <string name="failedToRefreshGrades">Failed to refresh marks</string>
+    <string name="noGradesToDisplay">No marks to display</string>
     <string name="notGraded">Not Marked</string>
-    <string name="a11y_gradingPeriodSelectorClickDescription">Change grading period</string>
-    <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Change marking period</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Marks not available</string>
     <string name="bottomBarHomeroom">Homeroom</string>
 
     <string name="settingsHomeroomView">Homeroom View</string>
@@ -1214,7 +1217,7 @@
     <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
 
     <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
-    <string name="error_saving_assignment_closed_grading_period">Cannot change the due date when due in a closed grading period.</string>
+    <string name="error_saving_assignment_closed_grading_period">Cannot change the due date when due in a closed marking period.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Jump to Today</string>
     <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
     <string name="a11y_contact_info_click_description">send message</string>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">Draft Available</string>
     <string name="errorLoadingSubmission">An error occurred while loading submission</string>
     <string name="loadFullContent">Tap to see full content</string>
+    <string name="openLtiInExternalApp">Tap to open in external app</string>
     <string name="dashboardTabImportantDates">Important Dates</string>
     <string name="importantDatesEmptyTitle">No important dates</string>
     <string name="important_dates">Important Dates</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s unread message</item>
         <item quantity="other">%s unread messages</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s unread notification</item>
+        <item quantity="other">%s unread notifications</item>
+    </plurals>
+
     <string name="noAnnotationSelected">No annotation selected</string>
     <string name="emailNotifications">Email Notifications</string>
     <string name="emailNotificationsImmediately">Immediately</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">Weekly</string>
     <string name="emailNotificationsNever">Never</string>
     <string name="selectFrequency">Select frequency</string>
+    <string name="a11y_closeProgress">Close progress dialogue</string>
+    <string name="fileUploadProgress">%1$s of %2$s</string>
+    <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
+    <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
+    <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
+    <string name="fileUploadError">File Upload Failed</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Upload to Canvas for %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Upload to My Files</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Submit assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choose a course</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choose a course, selected course is: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choose an assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choose an assignment, selected assignment is: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Cancel Upload?</string>
+    <string name="cancelFileUploadMessage">This will cancel your upload.</string>
+    <string name="menuTitleFilterAssignments">Filter assignments</string>
+    <string name="filterAssignmentDialogTitle">Filter Assignments</string>
+    <string name="filterAssignmentsDialogCancel">Cancel</string>
+    <string name="filterAssignmentAll">All</string>
+    <string name="filterAssignmentLate">Late</string>
+    <string name="filterAssignmentMissing">Missing</string>
+    <string name="filterAssignmentGraded">Marked</string>
+    <string name="filterAssignmentUpcoming">Upcoming</string>
+    <string name="createdByStudentView">Created by Student View</string>
+    <string name="discussionErrorToast">Error occurred. The topic may no longer be available.</string>
+    <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
+    <string name="unpublish_assignment_error">Can’t unpublish assignment if there are student submissions.</string>
+    <string name="subscribeToCalendar">Subscribe to Calendar Feed</string>
+    <string name="subscribeToCalendarMessage">You can sync your Canvas calendar to your Google Calendar account by clicking the Subscribe button in this dialog. Then, you’ll need to go to the Google Calendar app on your device and enable sync in the settings for the new calendar.</string>
+    <string name="subscribeButton">Subscribe</string>
+    <string name="switchToLightMode">Switch to Light Mode</string>
+    <string name="switchToDarkMode">Switch to Dark Mode</string>
+    <string name="acceptableUsePolicyDescription">Either you\'re a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.</string>
+    <string name="acceptableUsePolicyTitle">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyButton">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
+    <string name="acceptableUsePolicySubmit">Submit</string>
+    <string name="acceptFail">Failed to submit terms acceptance.</string>
+    <string name="attempt">Attempt %d</string>
+    <string name="quizQuestions">Questions: %d</string>
+    <string name="quizTimeLimit">Time limit: %s</string>
+    <string name="allowedAttempts">Allowed attempts: %s</string>
+    <string name="usedAttempts">Attempts used: %d</string>
+    <string name="generalUnexpectedError">An unexpected error occurred.</string>
+
+    <string name="deleteSelected">Delete</string>
+    <string name="archiveSelected">Archive</string>
+    <string name="unarchiveSelected">Unarchive</string>
+    <string name="markAsReadSelected">Mark as read</string>
+    <string name="markAsUnreadSelected">Mark as unread</string>
+    <string name="starSelected">Star</string>
+    <string name="unstarSelected">Unstar</string>
+
+    <string name="inboxOperationFailed">Failed to perform operation</string>
+    <string name="inboxDeletedConfirmation">%s deleted</string>
+    <string name="inboxArchivedConfirmation">%s archived</string>
+    <string name="inboxUnarchivedConfirmation">%s unarchived</string>
+    <string name="inboxMarkAsReadConfirmation">%s marked as read</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marked as unread</string>
+    <string name="inboxStarredConfirmation">%s starred</string>
+    <string name="inboxUnstarredConfirmation">%s unstarred</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">This conversation will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+        <item quantity="other">These conversations will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Failed to load next page. Check your internet connection.</string>
+    <string name="conversationsRefreshFailed">Failed to refresh conversations. Check your internet connection.</string>
+    <string name="inboxScopeInbox">Inbox</string>
+    <string name="inboxContextSelectorTitle">Select Course or Group</string>
+    <string name="inboxClearFilter">Clear</string>
+    <string name="a11y_courseFilterContentDescription">Course filter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">select</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversation selected. Selection mode activated. Navigate for actions.</string>
+    <string name="a11y_conversationSelected">Conversation selected</string>
+    <string name="a11y_conversationDeselected">Conversation deselected</string>
+    <string name="a11y_exitSelectionMode">Exit selection mode</string>
+    <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
 </resources>

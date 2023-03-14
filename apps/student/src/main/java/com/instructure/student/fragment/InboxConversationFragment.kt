@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -87,8 +86,8 @@ class InboxConversationFragment : ParentFragment() {
                         .create()
 
                 dialog.setOnShowListener {
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
                 }
 
                 dialog.show()
@@ -133,8 +132,8 @@ class InboxConversationFragment : ParentFragment() {
                             .create()
 
                     dialog.setOnShowListener {
-                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
                     }
 
                     dialog.show()
@@ -310,7 +309,7 @@ class InboxConversationFragment : ParentFragment() {
     private fun markConversationUnread() {
         unreadCall?.cancel()
         unreadCall = tryWeave {
-            awaitApi<Void> { InboxManager.markConversationAsUnread(conversation.id, InboxApi.CONVERSATION_MARK_UNREAD, it) }
+            awaitApi<Void> { InboxManager.markConversationAsUnread(conversation.id, it) }
             onConversationUpdated(true)
         } catch {
             toast(R.string.errorConversationGeneric)
@@ -334,10 +333,15 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun replyAllMessage() {
+        val users = if (adapter.participants.size == 1) {
+            adapter.participants.values
+        } else {
+            adapter.participants.values.filter { it.id != ApiPrefs.user?.id }
+        }
         val route = InboxComposeMessageFragment.makeRoute(
                 true,
                 conversation,
-                adapter.participants.values.map { Recipient.from(it) },
+                users.map { Recipient.from(it) },
                 longArrayOf(),
                 null)
         RouteMatcher.route(requireContext(), route)
@@ -365,19 +369,28 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun getMessageRecipientsForReplyAll(message: Message): List<BasicUser> {
-        return message.participatingUserIds
-                // Map the conversations participating users to the messages participating users
-                .mapNotNull { participatingUserId ->
-                    adapter.participants.values.find { basicUser ->
-                        basicUser.id == participatingUserId
-                    }
+        val userIds = if (message.participatingUserIds.size == 1) {
+            message.participatingUserIds
+        } else {
+            message.participatingUserIds.filter { it != ApiPrefs.user?.id }
+        }
+        return userIds
+            // Map the conversations participating users to the messages participating users
+            .mapNotNull { participatingUserId ->
+                adapter.participants.values.find { basicUser ->
+                    basicUser.id == participatingUserId
                 }
+            }
     }
 
     private fun getMessageRecipientsForReply(message: Message): List<BasicUser>  {
         // If the author is self, we default to all other participants
         return if (message.authorId == ApiPrefs.user!!.id) {
-            adapter.participants.values.toList()
+            if (adapter.participants.size == 1) {
+                adapter.participants.values.toList()
+            } else {
+                adapter.participants.values.filter { it.id != ApiPrefs.user?.id }
+            }
         } else {
             listOf(adapter.participants.values.first { it.id == message.authorId })
         }

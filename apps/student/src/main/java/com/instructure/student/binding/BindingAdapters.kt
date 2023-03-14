@@ -16,9 +16,11 @@
 
 package com.instructure.student.binding
 
+import androidx.annotation.ColorInt
 import androidx.databinding.BindingAdapter
 import com.google.android.material.tabs.TabLayout
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.DonutChartView
 
 @BindingAdapter("tabs")
 fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
@@ -29,4 +31,11 @@ fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
             text = tab.text
         })
     }
+}
+
+@BindingAdapter("progress", "color", "trackColor")
+fun DonutChartView.setProgress(progress: Float, @ColorInt color: Int, @ColorInt trackColor: Int) {
+    setColor(color)
+    setTrackColor(trackColor)
+    setPercentage(progress, true)
 }

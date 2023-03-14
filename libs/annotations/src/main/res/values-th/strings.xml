@@ -37,6 +37,6 @@
     <string name="sendingSimple">กำลังส่ง</string>
     <string name="pspdf__annotation_type_stamp">สีหมายเหตุ</string>
     <string name="removedComment">ลบ %1$s โดย %2$s</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

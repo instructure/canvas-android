@@ -20,7 +20,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.net.Uri
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -34,7 +33,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -45,6 +43,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
 import com.instructure.loginapi.login.adapter.SnickerDoodleAdapter
@@ -62,10 +61,10 @@ import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
-import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.activity_login_landing_page.*
 import java.util.*
+import javax.inject.Inject
 
 abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
 
@@ -87,13 +86,14 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     @StringRes
     protected abstract fun appTypeName(): Int
 
-    protected abstract fun launchApplicationMainActivityIntent(): Intent
-
     protected open fun appChangesLink(): String? = null
 
     protected open fun loginWithQRCodeEnabled(): Boolean = false
 
     protected abstract fun loginWithQRIntent(): Intent?
+
+    @Inject
+    lateinit var navigation: LoginNavigation
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -109,9 +109,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     }
 
     private fun bindViews() {
-        // Only show the what's new text if the app supports it
-        changesLayout.visibility = if (appChangesLink() != null) View.VISIBLE else View.GONE
-
         canvasNetwork.onClick {
             if (APIHelper.hasNetworkConnection()) {
                 val intent = beginCanvasNetworkFlow(URL_CANVAS_NETWORK)
@@ -121,15 +118,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                 NoInternetConnectionDialog.show(supportFragmentManager)
             }
         }
-
-        whatsNew.onClick {
-            val i = Intent(Intent.ACTION_VIEW)
-            i.data = Uri.parse(appChangesLink())
-            startActivity(i)
-        }
-
-        helpButton.setHidden(true) // hiding the help button until we make mobile login better
-        helpButton.onClickPopupMenu(getString(R.string.requestLoginHelp) to { requestLoginHelp() })
 
         if(loginWithQRCodeEnabled()) {
             qrLogin.setVisible()
@@ -180,7 +168,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                         ApiPrefs.token = user.token
                         ApiPrefs.canvasForElementary = user.canvasForElementary
 
-                        startApp()
+                        navigation.startLogin(viewModel, true)
                     }
 
                     override fun onRemovePreviousUserClick(user: SignedInUser, position: Int) {
@@ -202,26 +190,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                     }
                 })
         previousLoginWrapper.visibility = if (previousUsers.size > 0) View.VISIBLE else View.GONE
-        // Don't show the new changes view if there are previous users, it will clutter the view
-        if (appChangesLink() != null) {
-            changesLayout.visibility = if (previousUsers.size > 0) View.GONE else View.VISIBLE
-        }
 
-    }
-
-    /**
-     * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
-     */
-    protected open fun startApp() {
-        viewModel.checkCanvasForElementaryFeature().observe(this, Observer { event: Event<Boolean>? ->
-            event?.getContentIfNotHandled()?.let { result: Boolean ->
-                val intent = launchApplicationMainActivityIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                intent.putExtra("canvas_for_elementary", result)
-                startActivity(intent)
-                finish()
-            }
-        })
     }
 
     private fun resizePreviousUsersRecyclerView(previousUsers: ArrayList<SignedInUser>) {

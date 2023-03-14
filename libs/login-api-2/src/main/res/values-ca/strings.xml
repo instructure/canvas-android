@@ -64,7 +64,6 @@
     <string name="logout_no">No</string>
 
     <!--Smart Login-->
-
     <string name="loginNearYou">A prop vostre</string>
     <string name="loginCanvasNetwork">Xarxa Canvas</string>
     <string name="loginRightBehindYou">Just darrere vostre</string>
@@ -129,4 +128,5 @@
     <string name="stopActingAsMessage">Deixareu de fer de %s i tornareu al vostre usuari.</string>
     <string name="weMadeChanges">Hem introduït alguns canvis.</string>
     <string name="whatsNewText">Consulteu les novetats</string>
+    <string name="findAnotherSchool">Cerca una altra escola</string>
 </resources>

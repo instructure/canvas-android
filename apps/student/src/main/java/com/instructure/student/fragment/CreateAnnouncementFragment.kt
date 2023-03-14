@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.NetworkUtils
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -44,6 +45,7 @@ import com.instructure.student.events.post
 import kotlinx.android.synthetic.main.fragment_create_announcement.*
 import kotlinx.coroutines.Job
 
+@PageView("courses/{canvasContext}/discussion_topics/new?is_announcement=true")
 @ScreenView(SCREEN_VIEW_CREATE_ANNOUNCEMENT)
 class CreateAnnouncementFragment : ParentFragment() {
 
@@ -155,7 +157,7 @@ class CreateAnnouncementFragment : ParentFragment() {
             setIcon(0)
             setTitle(R.string.save)
         }
-        mSaveButtonTextView?.setTextColor(ThemePrefs.buttonColor)
+        mSaveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun setupViews() {
@@ -184,7 +186,7 @@ class CreateAnnouncementFragment : ParentFragment() {
                 announcement.message,
                 getString(R.string.utils_announcementDetails),
                 getString(R.string.rce_empty_description),
-                ThemePrefs.brandColor, ThemePrefs.buttonColor
+                ThemePrefs.brandColor, ThemePrefs.textButtonColor
         )
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
         announcementRCEView.setLabel(announcementDescLabel, R.color.textDarkest, R.color.textDark)

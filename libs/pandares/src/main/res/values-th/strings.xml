@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">มุมมองผู้เรียน</string>
 
 
+    <string name="rateOnThePlayStore">ให้คะแนนใน Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">หัวที่เลือก: %s</string>
     <string name="content_description_chosen_body">ลำดับที่เลือก: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">คุณสามารถเปิดรายละเอียดผลงานจัดส่ง (Submission details) ได้จากที่นี่</string>
 
     <plurals name="minutes">
         <item quantity="one">%s นาที</item>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">มีฉบับร่าง</string>
     <string name="errorLoadingSubmission">เกิดข้อผิดพลาดขณะโหลดผลงานจัดส่ง</string>
     <string name="loadFullContent">กดเลือกเพื่อดูเนื้อหาทั้งหมด</string>
+    <string name="openLtiInExternalApp">กดเลือกเพื่อเปิดแอพจากภายนอก</string>
     <string name="dashboardTabImportantDates">วันที่ที่สำคัญ</string>
     <string name="importantDatesEmptyTitle">ไม่มีวันที่ที่สำคัญ</string>
     <string name="important_dates">วันที่ที่สำคัญ</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s ข้อความที่ไม่ได้อ่าน</item>
         <item quantity="other">%s ข้อความที่ไม่ได้อ่าน</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s การแจ้งข้อมูลที่ไม่ได้อ่าน</item>
+        <item quantity="other">%s การแจ้งข้อมูลที่ไม่ได้อ่าน</item>
+    </plurals>
+
     <string name="noAnnotationSelected">ไม่ได้เลือกหมายเหตุกำกับใด ๆ</string>
     <string name="emailNotifications">การแจ้งข้อมูลทางอีเมล</string>
     <string name="emailNotificationsImmediately">ทันที</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">รายสัปดาห์</string>
     <string name="emailNotificationsNever">ไม่เลย</string>
     <string name="selectFrequency">เลือกความถี่</string>
+    <string name="a11y_closeProgress">ปิดกล่องโต้ตอบแสดงความคืบหน้า</string>
+    <string name="fileUploadProgress">%1$s จาก %2$s</string>
+    <string name="fileUploadProgressSubtitle">กำลังอัพโหลดไปที่ไฟล์ (Files)</string>
+    <string name="submissionProgressSubtitle">กำลังอัพโหลดผลงานจัดส่งไปยัง \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">กำลังอัพโหลดผลงานจัดส่ง</string>
+    <string name="dashboardNotificationUploadingFilesTitle">กำลังอัพโหลดไฟล์</string>
+    <string name="cancelSubmissionDialogTitle">ยกเลิกการจัดส่ง</string>
+    <string name="cancelSubmissionDialogMessage">นี่จะเป็นการยกเลิกและลบผลงานจัดส่งของคุณ</string>
+    <string name="fileUploadError">อัพโหลดไฟล์ล้มเหลว</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">อัพโหลดไปยัง Canvas สำหรับ %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">อัพโหลดไป ไฟล์ของฉัน (My Files)</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">จัดส่งภารกิจ</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">เลือกบทเรียน</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">เลือกบทเรียน บทเรียนที่เลือกคือ: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">เลือกภารกิจ</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">เลือกภารกิจ ภารกิจที่เลือกคือ: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">ยกเลิกการอัพโหลดหรือไม่</string>
+    <string name="cancelFileUploadMessage">นี่จะเป็นการยกเลิกการอัพโหลดของคุณ</string>
+    <string name="menuTitleFilterAssignments">กรองภารกิจ</string>
+    <string name="filterAssignmentDialogTitle">กรองภารกิจ</string>
+    <string name="filterAssignmentsDialogCancel">ยกเลิก</string>
+    <string name="filterAssignmentAll">ทั้งหมด</string>
+    <string name="filterAssignmentLate">ล่าช้า</string>
+    <string name="filterAssignmentMissing">ขาดหาย</string>
+    <string name="filterAssignmentGraded">ให้เกรดแล้ว</string>
+    <string name="filterAssignmentUpcoming">เร็ว ๆ นี้</string>
+    <string name="createdByStudentView">จัดทำผ่านมุมมองผู้เรียน (Student View)</string>
+    <string name="discussionErrorToast">เกิดข้อผิดพลาดขึ้น หัวข้อนี้อาจไม่พร้อมใช้งานอีกต่อไป</string>
+    <string name="cameraPermissionPermanentlyDenied">สิทธิ์อนุญาตกล้องถูกปฏิเสธเป็นการถาวร ไปที่การตั้งค่าแอพเพื่อให้อนุญาต</string>
+    <string name="unpublish_assignment_error">ไม่สามารถยกเลิกการเผยแพร่ภารกิจหากมีผลงานจัดส่งของผู้เรียน</string>
+    <string name="subscribeToCalendar">สมัครฟีดจากปฏิทิน</string>
+    <string name="subscribeToCalendarMessage">คุณสามารถซิงค์ปฏิทิน Canvas ของคุณกับบัญชี Google Calendar โดยคลิกที่ปุ่ม สมัครบริการ ที่กล่องโต้ตอบนี้ จากนั้นคุณจะต้องไปที่แอพ Google Calendar จากอุปกรณ์ของคุณและเปิดใช้การซิงค์ในค่าปรับตั้งของปฏิทินใหม่</string>
+    <string name="subscribeButton">สมัครบริการ</string>
+    <string name="switchToLightMode">สลับไปที่โหมดสว่าง</string>
+    <string name="switchToDarkMode">สลับไปที่โหมดแสงน้อย</string>
+    <string name="acceptableUsePolicyDescription">คุณเป็นผู้ใช้ใหม่หรือนโยบายการใช้งานที่ยอมรับได้ที่คุณตอบรับไว้ล่าสุดมีการเปลี่ยนแปลง กรุณาตอบรับนโยบายการใช้งานที่ยอมรับได้ก่อนดำเนินการต่อ</string>
+    <string name="acceptableUsePolicyTitle">นโยบายการใช้งานที่ยอมรับได้</string>
+    <string name="acceptableUsePolicyButton">นโยบายการใช้งานที่ยอมรับได้</string>
+    <string name="acceptableUsePolicyAgree">ฉันยอมรับนโยบายการใช้งานที่ยอมรับได้</string>
+    <string name="acceptableUsePolicySubmit">ส่ง</string>
+    <string name="acceptFail">ไม่สามารถส่งการตอบรับเงื่อนไข</string>
+    <string name="attempt">การดำเนินการ %d</string>
+    <string name="quizQuestions">คำถาม: %d</string>
+    <string name="quizTimeLimit">จำกัดเวลา: %s</string>
+    <string name="allowedAttempts">จำนวนครั้งที่อนุญาต: %s</string>
+    <string name="usedAttempts">จำนวนครั้งที่ใช้ไปแล้ว: %d</string>
+    <string name="generalUnexpectedError">เกิดข้อผิดพลาดที่ไม่คาดคิด</string>
+
+    <string name="deleteSelected">ลบ</string>
+    <string name="archiveSelected">จัดเก็บแยก</string>
+    <string name="unarchiveSelected">ยกเลิกการจัดเก็บแยก</string>
+    <string name="markAsReadSelected">กำกับว่าอ่านแล้ว</string>
+    <string name="markAsUnreadSelected">กำกับว่ายังไม่ได้อ่าน</string>
+    <string name="starSelected">Star</string>
+    <string name="unstarSelected">ลบดาว</string>
+
+    <string name="inboxOperationFailed">ไม่สามารถดำเนินการได้</string>
+    <string name="inboxDeletedConfirmation">%s ที่ถูกลบ</string>
+    <string name="inboxArchivedConfirmation">%s ที่จัดเก็บแยกไว้</string>
+    <string name="inboxUnarchivedConfirmation">%s ที่เลิกจัดเก็บแยก</string>
+    <string name="inboxMarkAsReadConfirmation">%s ที่กำกับว่าอ่านแล้ว</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s ที่กำกับว่าไม่ได้อ่าน</string>
+    <string name="inboxStarredConfirmation">%s ที่ติดดาวไว้</string>
+    <string name="inboxUnstarredConfirmation">%s ที่เลิกติดดาว</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">การพูดคุยนี้จะถูกลบจากกล่องจดหมายในอุปกรณ์ทั้งหมดของคุณ การดำเนินการนี้ไม่สามารถยกเลิกได้</item>
+        <item quantity="other">การพูดคุยเหล่านี้จะถูกลบทิ้งจากกล่องจดหมายในอุปกรณ์ทั้งหมดของคุณ การดำเนินการนี้ไม่สามารถยกเลิกได้</item>
+    </plurals>
+    <string name="failedToLoadNextPage">ไม่สามารถโหลดหน้าถัดไปได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ</string>
+    <string name="conversationsRefreshFailed">ไม่สามารถรีเฟรชการพูดคุยได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ</string>
+    <string name="inboxScopeInbox">กล่องจดหมาย</string>
+    <string name="inboxContextSelectorTitle">เลือกบทเรียนหรือกลุ่ม</string>
+    <string name="inboxClearFilter">ล้าง</string>
+    <string name="a11y_courseFilterContentDescription">ตัวกรองบทเรียน: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">เลือก</string>
+    <string name="a11y_itemSelectedSwipeForActions">การพูดคุยที่เลือก เปิดใช้งานโหมดเลือกรายการแล้ว ไปที่การดำเนินการ</string>
+    <string name="a11y_conversationSelected">เลือกการพูดคุยแล้ว</string>
+    <string name="a11y_conversationDeselected">เลิกการเลือกการพูดคุยแล้ว</string>
+    <string name="a11y_exitSelectionMode">ออกจากโหมดเลือก</string>
+    <string name="a11y_selectionModeDeactivated">ปิดใช้งานโหมดเลือกรายการแล้ว</string>
 </resources>

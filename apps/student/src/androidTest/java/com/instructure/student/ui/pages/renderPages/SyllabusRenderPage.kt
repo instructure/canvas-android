@@ -18,7 +18,6 @@ package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.action.ViewActions.swipeRight
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -36,7 +35,7 @@ import org.hamcrest.Matchers.allOf
 class SyllabusRenderPage : SyllabusPage() {
 
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
-    private val webView by WaitForViewWithId(R.id.syllabusWebView)
+    private val webView by WaitForViewWithId(R.id.contentWebView)
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecycler)
     private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)

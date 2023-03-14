@@ -16,20 +16,31 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.appcompat.widget.AppCompatButton
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matchers
 
 class InboxMessagePage: BasePage() {
 
     private val starImageButton by OnViewWithId(R.id.starred)
-    private val subjectTextView by OnViewWithId(R.id.subjectView)
     private val authorNameTextView by OnViewWithId(R.id.authorName)
+    private val subjectTextView by OnViewWithMatcher(allOf(withId(R.id.subjectView), withParent(R.id.header)))
     private val messageRecyclerView by WaitForViewWithId(R.id.recyclerView)
     private val replyTextView by OnViewWithId(R.id.reply)
 
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         starImageButton.assertDisplayed()
         subjectTextView.assertDisplayed()
         messageRecyclerView.assertDisplayed()
@@ -47,5 +58,21 @@ class InboxMessagePage: BasePage() {
 
     fun assertHasReply() {
         messageRecyclerView.check(RecyclerViewItemCountAssertion(2))
+    }
+
+    fun clickOnStarConversation() {
+        onView(withId(R.id.starred)).click()
+    }
+
+    fun openOptionMenuFor(itemName: String) {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        Espresso.onView(ViewMatchers.withText(itemName))
+            .perform(ViewActions.click());
+    }
+
+    fun deleteConversation() {
+        openOptionMenuFor("Delete")
+        Espresso.onView(Matchers.allOf(ViewMatchers.isAssignableFrom(AppCompatButton::class.java),
+                containsTextCaseInsensitive("DELETE"))).click()
     }
 }

@@ -30,17 +30,20 @@ object Versions {
     /* Others */
     const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
-    const val PSPDFKIT = "8.3.0"
+    const val PSPDFKIT = "8.4.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
-    const val HILT = "2.38.1"
+    const val HILT = "2.41"
+    const val HILT_ANDROIDX = "1.0.0"
     const val LIFECYCLE = "2.3.1"
     const val FRAGMENT = "1.3.6"
     const val WORK_MANAGER = "2.7.1"
     const val GLIDE_VERSION = "4.12.0"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.9.1"
+    const val HEAP = "1.10.5"
+    const val ROOM = "2.4.0"
 }
 
 object Libs {
@@ -111,6 +114,8 @@ object Libs {
     const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
     const val HILT_TESTING = "com.google.dagger:hilt-android-testing:${Versions.HILT}"
     const val HILT_TESTING_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
+    const val HILT_ANDROIDX_COMPILER = "androidx.hilt:hilt-compiler:${Versions.HILT_ANDROIDX}"
+    const val HILT_ANDROIDX_WORK = "androidx.hilt:hilt-work:${Versions.HILT_ANDROIDX}"
 
     /* Android Architecture Components */
     const val VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
@@ -152,6 +157,13 @@ object Libs {
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.6"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
+
+    const val HEAP = "com.heapanalytics.android:heap-android-client:${Versions.HEAP}"
+
+    const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
+    const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
+    const val ROOM_COROUTINES = "androidx.room:room-ktx:${Versions.ROOM}"
+    const val ROOM_TEST = "androidx.room:room-testing:${Versions.ROOM}"
 }
 
 object Plugins {
@@ -164,6 +176,7 @@ object Plugins {
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
+    const val HEAP = "com.heapanalytics.android:heap-android-gradle:${Versions.HEAP}"
 }
 
 object BuildScan {

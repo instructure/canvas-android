@@ -29,7 +29,7 @@ import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
 class QuizListAdapter(context: Context,
                       expandablePresenter: QuizListPresenter,
-                      private val mCourseColor: Int,
+                      private val iconColor: Int,
                       private val mCallback: (Quiz) -> Unit) :
         SyncExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder, QuizListView>(context, expandablePresenter) {
 
@@ -57,6 +57,6 @@ class QuizListAdapter(context: Context,
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, item: Quiz) {
-        context?.let { (holder as QuizViewHolder).bind(it, item, mCourseColor, mCallback) }
+        context?.let { (holder as QuizViewHolder).bind(it, item, iconColor, mCallback) }
     }
 }

@@ -22,7 +22,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.os.*
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -34,7 +37,6 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.utils.*
-import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
@@ -42,7 +44,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NotoriousUploader
 import org.greenrobot.eventbus.EventBus
-import java.util.*
 
 class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.simpleName) {
 
@@ -68,6 +69,10 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
     private var notificationId: Int = 0
 
+    private var mediaCommentId: Long = -1L
+
+    private var attemptId: Long? = null
+
     private val context: Context
         get() = applicationContext
 
@@ -77,6 +82,8 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
         val submissionId = if (intent.hasExtra(Const.SUBMISSION_ID)) intent.getLongExtra(Const.SUBMISSION_ID, 0) else null
         notificationId = submissionId?.toInt() ?: NOTIFICATION_ID
 
+        if (intent.hasExtra(Const.ID)) mediaCommentId = intent.extras?.getLong(Const.ID) ?: -1L
+
         action = intent.getSerializableExtra(Const.ACTION) as ACTION
 
         when (action) {
@@ -85,6 +92,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
                 studentId = intent.getLongExtra(Const.STUDENT_ID, ApiPrefs.user!!.id)
                 isGroupComment = intent.getBooleanExtra(Const.IS_GROUP, false)
                 pageId = intent.getStringExtra(Const.PAGE_ID)
+                attemptId = intent.getLongExtra(Const.SUBMISSION_ATTEMPT, -1L).takeIf { it != -1L }
             }
             ACTION.ASSIGNMENT_SUBMISSION -> assignment = intent.getParcelableExtra(Const.ASSIGNMENT)
             ACTION.DISCUSSION_COMMENT -> {
@@ -202,7 +210,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             when (action) {
                 ACTION.SUBMISSION_COMMENT -> broadcastSubmission(awaitApi {
                     SubmissionManager.postMediaSubmissionComment(
-                        course, assignment?.id ?: 0, studentId, result.id!!, mediaType, isGroupComment, it
+                        course, assignment?.id ?: 0, studentId, result.id!!, mediaType, attemptId, isGroupComment, it
                     )
                 })
                 ACTION.ASSIGNMENT_SUBMISSION -> broadcastSubmission(awaitApi {
@@ -262,6 +270,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
         val mediaUploadIntent = Intent(Const.ACTION_MEDIA_UPLOAD_SUCCESS)
         mediaUploadIntent.putExtra(Const.MEDIA_FILE_PATH, mediaPath)
         mediaUploadIntent.putExtra(Const.PAGE_ID, pageId)
+        mediaUploadIntent.putExtra(Const.ID, mediaCommentId)
         mediaUploadIntent.putParcelableArrayListExtra(
             Const.SUBMISSION_COMMENT_LIST,
             ArrayList(submission.submissionComments)
@@ -328,6 +337,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             putExtra(Const.MEDIA_FILE_PATH, mediaPath)
             putExtra(Const.PAGE_ID, pageId)
             putExtra(Const.ERROR, true)
+            putExtra(Const.ID, mediaCommentId)
         }
         LocalBroadcastManager.getInstance(context).sendBroadcast(errorIntent)
     }

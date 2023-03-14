@@ -506,7 +506,8 @@ fun MockCanvas.addCourse(
         isPublic = isPublic,
         homeroomCourse = isHomeroom,
         gradingPeriods = gradingPeriodList,
-        courseColor = "#008EE2"
+        courseColor = "#008EE2",
+        restrictEnrollmentsToCourseDate = concluded
     )
     courses += course.id to course
 
@@ -860,20 +861,20 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
  * account existing assignments. Use either addAssignment or addAssignmentsToGroups.
  */
 fun MockCanvas.addAssignment(
-        courseId: Long,
-        submissionType: Assignment.SubmissionType,
-        assignmentGroupId: Long = newItemId(),
-        isQuizzesNext: Boolean = false,
-        lockInfo : LockInfo? = null,
-        userSubmitted: Boolean = false,
-        dueAt: String? = null,
-        name: String = Randomizer.randomCourseName(),
-        pointsPossible: Int = 10,
-        description: String = "",
-        lockAt: String? = null,
-        unlockAt: String? = null,
-        withDescription: Boolean = false,
-        gradingType: String = "percent"
+    courseId: Long,
+    submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+    assignmentGroupId: Long = newItemId(),
+    isQuizzesNext: Boolean = false,
+    lockInfo : LockInfo? = null,
+    userSubmitted: Boolean = false,
+    dueAt: String? = null,
+    name: String = Randomizer.randomCourseName(),
+    pointsPossible: Int = 10,
+    description: String = "",
+    lockAt: String? = null,
+    unlockAt: String? = null,
+    withDescription: Boolean = false,
+    gradingType: String = "percent"
 ) : Assignment {
     val assignmentId = newItemId()
     var assignment = Assignment(

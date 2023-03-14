@@ -33,13 +33,9 @@ import org.junit.Test
 @HiltAndroidTest
 class CourseSettingsE2ETest : TeacherTest() {
 
-    override fun displaysPageObjects() {
-        TODO("not implemented")
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //Intentionally empty, because we don't check accessibility in E2E tests.
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -57,80 +53,59 @@ class CourseSettingsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Open ${firstCourse.name} course and click on Course Settings button.")
         dashboardPage.waitForRender()
-        coursesListPage.openCourse(firstCourse)
+        dashboardPage.openCourse(firstCourse)
         courseBrowserPage.clickSettingsButton()
 
-        Log.d(
-            STEP_TAG,
-            "Click on 'Set Home Page' menu and select another page as home page. Assert if home page has been changed."
-        )
+        Log.d(STEP_TAG, "Click on 'Set Home Page' menu and select another page as home page. Assert if home page has been changed.")
         courseSettingsPage.assertPageObjects()
         courseSettingsPage.clickSetHomePage()
         val newCourseHomePage: String = courseSettingsPage.selectNewHomePage()
         courseSettingsPage.assertHomePageChanged(newCourseHomePage)
 
         val newCourseName = "New Course Name"
-        Log.d(
-            STEP_TAG,
-            "Click on 'Course Name' menu and edit course's name to be $newCourseName. Assert that the course's name has been changed."
-        )
+        Log.d(STEP_TAG, "Click on 'Course Name' menu and edit course's name to be $newCourseName. Assert that the course's name has been changed.")
         courseSettingsPage.clickCourseName()
         courseSettingsPage.editCourseName(newCourseName)
         courseSettingsPage.assertCourseNameChanged(newCourseName)
 
-        Log.d(
-            STEP_TAG,
-            "Go back to course browser page and assert that the course's name has been changed there as well."
-        )
+        Log.d(STEP_TAG, "Go back to course browser page and assert that the course's name has been changed there as well.")
         Espresso.pressBack()
         courseBrowserPage.assertCourseBrowserPageDisplayed()
         courseBrowserPage.assertCourseTitle(newCourseName)
 
-        Log.d(
-            STEP_TAG,
-            "Navigate back to the courses list page and assert if the name of the first course's name has been changed there as well."
-        )
+        Log.d(STEP_TAG, "Navigate back to the courses list page and assert if the name of the first course's name has been changed there as well.")
         Espresso.pressBack()
         dashboardPage.waitForRender()
-        coursesListPage.assertDisplaysCourse(newCourseName)
+        dashboardPage.assertDisplaysCourse(newCourseName)
 
         Log.d(STEP_TAG, "Open ${secondCourse.name} course and click on Course Settings button.")
         dashboardPage.waitForRender()
-        coursesListPage.openCourse(secondCourse)
+        dashboardPage.openCourse(secondCourse)
         courseBrowserPage.clickSettingsButton()
 
-        Log.d(
-            STEP_TAG,
-            "Click on 'Set Home Page' menu and select another page as home page. Assert if home page has been changed."
-        )
+        Log.d(STEP_TAG, "Click on 'Set Home Page' menu and select another page as home page. Assert if home page has been changed.")
         courseSettingsPage.assertPageObjects()
         courseSettingsPage.clickSetHomePage()
         val secondCourseNewHomePage: String = courseSettingsPage.selectNewHomePage()
         courseSettingsPage.assertHomePageChanged(secondCourseNewHomePage)
 
-        Log.d(
-            STEP_TAG,
-            "Go back to course browser page and assert that the course's name has NOT been changed there."
-        )
+        Log.d(STEP_TAG, "Go back to course browser page and assert that" +
+                "the course's name has NOT been changed there.")
         Espresso.pressBack()
         courseBrowserPage.assertCourseBrowserPageDisplayed()
         courseBrowserPage.assertCourseTitle(secondCourse.name)
 
-        Log.d(
-            STEP_TAG,
-            "Navigate back to the courses list page and assert if the name of the second course's name has NOT been changed there as well."
-        )
+        Log.d(STEP_TAG, "Navigate back to the courses list page and assert if" +
+                "the name of the second course's name has NOT been changed there as well.")
         Espresso.pressBack()
         dashboardPage.waitForRender()
-        coursesListPage.assertDisplaysCourse(secondCourse.name)
+        dashboardPage.assertDisplaysCourse(secondCourse.name)
 
-        Log.d(
-            STEP_TAG,
-            "Refresh the courses list page and assert if the corresponding course names are displayed (new course name for first course and the original course name of the second course)."
-        )
+        Log.d(STEP_TAG, "Refresh the courses list page and assert if the corresponding course names are displayed" +
+                "(new course name for first course and the original course name of the second course).")
         refresh()
         dashboardPage.waitForRender()
-        coursesListPage.assertDisplaysCourse(newCourseName)
-        coursesListPage.assertDisplaysCourse(secondCourse.name)
+        dashboardPage.assertDisplaysCourse(newCourseName)
+        dashboardPage.assertDisplaysCourse(secondCourse.name)
     }
 }

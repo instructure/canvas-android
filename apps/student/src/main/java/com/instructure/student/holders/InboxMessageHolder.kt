@@ -97,7 +97,7 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             popup.show()
         }
 
-        reply.setTextColor(ThemePrefs.buttonColor)
+        reply.setTextColor(ThemePrefs.textButtonColor)
         reply.setVisible(position == 0)
         reply.onClick { callback.onMessageAction(MessageAdapterCallback.MessageClickAction.REPLY, message) }
     }

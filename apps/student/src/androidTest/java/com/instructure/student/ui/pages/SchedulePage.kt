@@ -70,7 +70,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         recyclerView.perform(RecyclerViewActions.scrollToPosition<BindableViewHolder>(position))
     }
 
-     fun verifyIfCourseHeaderAndScheduleItemDisplayed(courseName: String, assignmentName: String) {
+     fun assertIfCourseHeaderAndScheduleItemDisplayed(courseName: String, assignmentName: String) {
         scrollToItem(R.id.scheduleCourseItemLayout, courseName)
         assertCourseHeaderDisplayed(courseName)
         scrollToItem(R.id.title, assignmentName, withAncestor(R.id.plannerItems))
@@ -119,7 +119,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun swipeDown() {
-        swipeRefreshLayout.swipeUp()
+        swipeRefreshLayout.swipeDown()
     }
 
     fun previousWeekButtonClick() {
@@ -163,7 +163,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun assertMarkedAsDoneShown() {
-        onViewWithText(R.string.schedule_marked_as_done).assertDisplayed()
+        waitForViewWithText(R.string.schedule_marked_as_done).assertDisplayed()
     }
 
     fun assertMarkedAsDoneNotShown() {

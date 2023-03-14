@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,8 +37,6 @@ import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.pandautils.utils.FileFolderDeletedEvent
-import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
@@ -144,7 +141,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
     fun colorBackground(bitmap: Bitmap) {
         // Generate palette asynchronously
         Palette.from(bitmap).generate { palette ->
-            palette?.let { viewImageRootView.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
+            palette?.let { viewImageRootView?.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
         }
     }
 

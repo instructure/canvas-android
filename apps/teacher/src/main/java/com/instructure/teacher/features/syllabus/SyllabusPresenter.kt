@@ -23,9 +23,9 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandares.R
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getShortMonthAndDay
 import com.instructure.pandautils.utils.getTime
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.features.syllabus.ui.EventsViewState
 import com.instructure.teacher.features.syllabus.ui.ScheduleItemViewState
 import com.instructure.teacher.features.syllabus.ui.SyllabusViewState
@@ -46,9 +46,9 @@ class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
 
     private fun createSuccessLoadedState(model: SyllabusModel, context: Context): SyllabusViewState.Loaded {
         val course = model.course?.dataOrNull
-        val events = mapEventsResultToViewState(course?.color ?: 0, model.events, context)
+        val events = mapEventsResultToViewState(course?.textAndIconColor ?: 0, model.events, context)
         val body = model.syllabus?.description?.takeIf { it.isValid() }
-        val canEdit = model.permissions?.dataOrNull?.canManageContent == true
+        val canEdit = model.permissions?.dataOrNull?.canManageContent == true || model.permissions?.dataOrNull?.canEditCourseContent == true
 
         return SyllabusViewState.Loaded(
             syllabus = body,

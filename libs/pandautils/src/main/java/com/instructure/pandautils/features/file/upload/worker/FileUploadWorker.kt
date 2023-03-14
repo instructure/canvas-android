@@ -21,11 +21,13 @@ import android.app.NotificationManager
 import android.content.Context
 import android.net.Uri
 import androidx.core.app.NotificationCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
@@ -33,26 +35,41 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
+import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.entities.AuthorEntity
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.entities.MediaCommentEntity
+import com.instructure.pandautils.room.entities.SubmissionCommentEntity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import java.util.*
 
-class FileUploadWorker(private val context: Context, workerParameters: WorkerParameters) :
+@HiltWorker
+class FileUploadWorker @AssistedInject constructor(
+    @Assisted private val context: Context,
+    @Assisted workerParameters: WorkerParameters,
+    private val fileUploadInputDao: FileUploadInputDao,
+    private val attachmentDao: AttachmentDao,
+    private val submissionCommentDao: SubmissionCommentDao,
+    private val mediaCommentDao: MediaCommentDao,
+    private val authorDao: AuthorDao
+) :
     CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    private val courseId = inputData.getLong(Const.COURSE_ID, INVALID_ID)
-    private val assignmentId = inputData.getLong(Const.ASSIGNMENT_ID, INVALID_ID)
-    private val quizQuestionId = inputData.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
-    private val quizId = inputData.getLong(Const.QUIZ, INVALID_ID)
-    private val position = inputData.getInt(Const.POSITION, INVALID_ID.toInt())
-    private val parentFolderId = inputData.getLong(Const.PARENT_FOLDER_ID, INVALID_ID)
+    private var courseId: Long = INVALID_ID
+    private var assignmentId: Long = INVALID_ID
+    private var quizId: Long = INVALID_ID
+    private var parentFolderId: Long = INVALID_ID
+    private lateinit var action: String
+    private var userId: Long = INVALID_ID
+    private var attemptId: Long? = null
+
     private val notificationId = notificationId(inputData)
-    private val submissionId = inputData.getLong(Const.SUBMISSION_ID, INVALID_ID)
-    private val action = inputData.getString(FILE_SUBMIT_ACTION)
-    private val userId = inputData.getLong(Const.USER_ID, INVALID_ID)
 
     private var fullSize = 0L
     private var currentProgress = 0L
@@ -64,11 +81,10 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
 
     override suspend fun doWork(): Result {
         try {
-            val filePaths = inputData.getStringArray(FILE_PATHS)
+            val inputData = fileUploadInputDao.findByWorkerId(id.toString()) ?: throw IllegalArgumentException()
+            getArguments(inputData)
 
-            val fileSubmitObjects = filePaths?.let {
-                getFileSubmitObjects(it)
-            } ?: throw IllegalArgumentException()
+            val fileSubmitObjects = getFileSubmitObjects(inputData.filePaths)
             fullSize = fileSubmitObjects.sumOf { it.size }
             uploadCount = fileSubmitObjects.size
 
@@ -104,8 +120,7 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
             val attachmentsIds = attachments.map { it.id }.plus(
-                inputData.getLongArray(Const.ATTACHMENTS)?.toList()
-                    ?: emptyList()
+                inputData.attachments.toList()
             )
 
             val result = when (action) {
@@ -117,13 +132,21 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
                 }
                 ACTION_MESSAGE_ATTACHMENTS -> {
                     updateNotificationComplete(notificationId)
-                    val attachmentJsons = attachments.map { it.toJson() }.toTypedArray()
-                    Result.success(workDataOf(RESULT_ATTACHMENTS to attachmentJsons))
+                    val attachmentEntities =
+                        attachments.map { com.instructure.pandautils.room.entities.AttachmentEntity(it, id.toString()) }
+                    attachmentDao.insertAll(attachmentEntities)
+                    Result.success()
                 }
                 ACTION_TEACHER_SUBMISSION_COMMENT -> {
                     postSubmissionComment(attachmentsIds).let {
                         updateSubmissionComplete(notificationId)
-                        Result.success(workDataOf(RESULT_SUBMISSION_COMMENT to it.submissionComments.lastOrNull()?.toJson()))
+                        val submissionCommentId = insertSubmissionComment(it.submissionComments.last())
+
+                        Result.success(
+                            workDataOf(
+                                RESULT_SUBMISSION_COMMENT to submissionCommentId
+                            )
+                        )
                     }
                 }
                 else -> {
@@ -131,7 +154,7 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
                     Result.success()
                 }
             }
-
+            fileUploadInputDao.delete(inputData)
             FileUploadPreferences.removeWorkerId(id)
             return result
         } catch (e: Exception) {
@@ -141,7 +164,47 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
         }
     }
 
-    private fun getFileSubmitObjects(filePaths: Array<String>): List<FileSubmitObject> {
+    private suspend fun insertSubmissionComment(submissionComment: SubmissionComment): Long {
+        val submissionCommentId = submissionCommentDao.insert(
+            SubmissionCommentEntity(submissionComment)
+        )
+
+        submissionComment.mediaComment?.let {
+            mediaCommentDao.insert(
+                MediaCommentEntity(
+                    it
+                )
+            )
+        }
+
+        submissionComment.author?.let {
+            authorDao.insert(
+                AuthorEntity(it)
+            )
+        }
+
+        val attachmentEntities = submissionComment.attachments.map {
+            com.instructure.pandautils.room.entities.AttachmentEntity(
+                attachment = it,
+                submissionCommentId = submissionCommentId
+            )
+        }
+        attachmentDao.insertAll(attachmentEntities)
+
+        return submissionCommentId
+    }
+
+    private fun getArguments(inputData: FileUploadInputEntity) {
+        courseId = inputData.courseId ?: INVALID_ID
+        assignmentId = inputData.assignmentId ?: INVALID_ID
+        quizId = inputData.quizId ?: INVALID_ID
+        parentFolderId = inputData.parentFolderId ?: INVALID_ID
+        action = inputData.action
+        userId = inputData.userId ?: INVALID_ID
+        attemptId = inputData.attemptId
+    }
+
+    private fun getFileSubmitObjects(filePaths: List<String>): List<FileSubmitObject> {
         val fileSubmitObjects = filePaths.map {
             val uri = Uri.parse(it)
             val fileUploadUtilsHelper = FileUploadUtilsHelper(FileUploadUtils, context, context.contentResolver)
@@ -259,7 +322,8 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
             "",
             false,
             attachmentIds,
-            it
+            it,
+            attemptId
         )
     }
 
@@ -351,7 +415,6 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
         const val MESSAGE_ATTACHMENT_PATH = "conversation attachments"
         const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
 
-        const val RESULT_ATTACHMENTS = "attachments"
         const val RESULT_SUBMISSION_COMMENT = "submission-comment"
 
         const val PROGRESS_DATA_FILES_TO_UPLOAD = "filesToUpload"

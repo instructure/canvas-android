@@ -1031,6 +1031,7 @@
     <string name="tab_student_view">學生視圖</string>
 
 
+    <string name="rateOnThePlayStore">前往 Play Store 評分</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">選擇的頁首：%s</string>
     <string name="content_description_chosen_body">選擇的正文：%s</string>
@@ -1102,6 +1103,8 @@
     <string name="a11y_letterGrade">%s。</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">您可以從此處開啟提交項目詳細資料</string>
 
     <plurals name="minutes">
         <item quantity="other">%s 分鐘</item>
@@ -1219,6 +1222,7 @@
     <string name="submissionDraftAvailableTitle">可用草稿</string>
     <string name="errorLoadingSubmission">載入提交項目時發生錯誤</string>
     <string name="loadFullContent">點選以查看完整內容</string>
+    <string name="openLtiInExternalApp">點選以在外部應用程式中開啟</string>
     <string name="dashboardTabImportantDates">重要日期</string>
     <string name="importantDatesEmptyTitle">沒有重要日期</string>
     <string name="important_dates">重要日期</string>
@@ -1260,6 +1264,10 @@
     <plurals name="a11y_inboxUnreadCount">
         <item quantity="other">%s 條未讀訊息</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="other">%s 則未讀通知</item>
+    </plurals>
+
     <string name="noAnnotationSelected">未選擇任何註釋</string>
     <string name="emailNotifications">電子郵件通知</string>
     <string name="emailNotificationsImmediately">立即</string>
@@ -1267,4 +1275,85 @@
     <string name="emailNotificationsWeekly">每週</string>
     <string name="emailNotificationsNever">永不</string>
     <string name="selectFrequency">選擇頻率</string>
+    <string name="a11y_closeProgress">關閉進度對話</string>
+    <string name="fileUploadProgress">%2$s 的 %1$s</string>
+    <string name="fileUploadProgressSubtitle">上傳到檔案</string>
+    <string name="submissionProgressSubtitle">上傳提交項目到 \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">正在上傳提交項目</string>
+    <string name="dashboardNotificationUploadingFilesTitle">上傳檔案</string>
+    <string name="cancelSubmissionDialogTitle">取消提交項目</string>
+    <string name="cancelSubmissionDialogMessage">此動作將取消並刪除您的提交項目。</string>
+    <string name="fileUploadError">檔案上傳失敗</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">上傳到 Canvas 進行 %s。</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">上傳到「我的檔案」</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">提交作業</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">選擇課程</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">選擇課程，所選取的課程是：%s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">選擇作業</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">選擇作業，所選取的作業是：%s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s，%2$s</string>
+    <string name="cancelFileUploadTitle">取消上傳？</string>
+    <string name="cancelFileUploadMessage">這將取消您的上傳。</string>
+    <string name="menuTitleFilterAssignments">篩選作業列表</string>
+    <string name="filterAssignmentDialogTitle">篩選作業列表</string>
+    <string name="filterAssignmentsDialogCancel">取消</string>
+    <string name="filterAssignmentAll">全部</string>
+    <string name="filterAssignmentLate">逾期</string>
+    <string name="filterAssignmentMissing">缺少</string>
+    <string name="filterAssignmentGraded">已評分</string>
+    <string name="filterAssignmentUpcoming">即將進行的</string>
+    <string name="createdByStudentView">以學生視圖建立</string>
+    <string name="discussionErrorToast">發生錯誤。主題可能再也無法使用。</string>
+    <string name="cameraPermissionPermanentlyDenied">相機權限永久遭到拒絕。請前往應用程式設定以允許該權限。</string>
+    <string name="unpublish_assignment_error">如有學生提交項目，則無法取消發佈作業。</string>
+    <string name="subscribeToCalendar">訂閱 Calendar Feed</string>
+    <string name="subscribeToCalendarMessage">您可以在此對話中按一下「訂閱」按鈕將您的 Canvas 行事曆與您的 Google Calendar 帳戶同步。然後，您需要前往您裝置上的 Google Calendar 應用程式，並在針對新行事曆的設定中啟用同步。</string>
+    <string name="subscribeButton">訂閱</string>
+    <string name="switchToLightMode">轉換到明亮模式</string>
+    <string name="switchToDarkMode">轉換到黑暗模式</string>
+    <string name="acceptableUsePolicyDescription">無論您是新的使用者，或是自上次同意以來，「可接受使用政策」都已經變更。請在您繼續使用前同意「可接受使用政策」。</string>
+    <string name="acceptableUsePolicyTitle">可接受使用政策</string>
+    <string name="acceptableUsePolicyButton">可接受使用政策</string>
+    <string name="acceptableUsePolicyAgree">您必須同意「可接受使用政策」。</string>
+    <string name="acceptableUsePolicySubmit">提交</string>
+    <string name="acceptFail">無法提交條款接受。</string>
+    <string name="attempt">嘗試 %d</string>
+    <string name="quizQuestions">問題：%d</string>
+    <string name="quizTimeLimit">時間限制：%s</string>
+    <string name="allowedAttempts">允許的嘗試次數：%s</string>
+    <string name="usedAttempts">已使用的嘗試次數：%d</string>
+    <string name="generalUnexpectedError">出現意外錯誤。</string>
+
+    <string name="deleteSelected">刪除</string>
+    <string name="archiveSelected">存檔</string>
+    <string name="unarchiveSelected">取消存檔</string>
+    <string name="markAsReadSelected">標記為已讀</string>
+    <string name="markAsUnreadSelected">標記為未讀</string>
+    <string name="starSelected">星形</string>
+    <string name="unstarSelected">刪除星號</string>
+
+    <string name="inboxOperationFailed">無法執行操作</string>
+    <string name="inboxDeletedConfirmation">已刪除 %s</string>
+    <string name="inboxArchivedConfirmation">已存檔 %s</string>
+    <string name="inboxUnarchivedConfirmation">未存檔 %s</string>
+    <string name="inboxMarkAsReadConfirmation">已將 %s 標記為已讀</string>
+    <string name="inboxMarkAsUnreadConfirmation">已將 %s 標記為未讀</string>
+    <string name="inboxStarredConfirmation">已將 %s 加星號</string>
+    <string name="inboxUnstarredConfirmation">未將 %s 加星號</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="other">這些交談將從您所有裝置的收件匣中刪除。此操作無法撤消。</item>
+    </plurals>
+    <string name="failedToLoadNextPage">無法載入下一頁。請檢查您的網際網路連線。</string>
+    <string name="conversationsRefreshFailed">無法重新整理交談。請檢查您的網際網路連線。</string>
+    <string name="inboxScopeInbox">收件匣</string>
+    <string name="inboxContextSelectorTitle">選擇課程或群組</string>
+    <string name="inboxClearFilter">清除</string>
+    <string name="a11y_courseFilterContentDescription">課程篩選器：%s</string>
+    <string name="a11y_inboxEntryLongClickDescription">選擇</string>
+    <string name="a11y_itemSelectedSwipeForActions">已選擇的交談。選擇模式已啟用。導航操作。</string>
+    <string name="a11y_conversationSelected">已選擇的交談</string>
+    <string name="a11y_conversationDeselected">已取消選擇的交談</string>
+    <string name="a11y_exitSelectionMode">退出選擇模式</string>
+    <string name="a11y_selectionModeDeactivated">選擇模式停用</string>
 </resources>

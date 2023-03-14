@@ -231,7 +231,7 @@ class DashboardInteractionTest : StudentTest() {
     fun testDashboardCourses_gradeIsDisplayedWhenShowGradesIsSelected() {
         // [Student] Grade is displayed when 'Show Grades' (located in navigation drawer) is selected
         getToDashboard(courseCount = 1, favoriteCourseCount = 1)
-        dashboardPage.setShowGrades(true)
+        leftSideNavigationDrawerPage.setShowGrades(true)
         dashboardPage.assertShowsGrades()
     }
 
@@ -240,7 +240,7 @@ class DashboardInteractionTest : StudentTest() {
     fun testDashboardCourses_gradeIsNotDisplayedWhenShowGradesIsDeSelected() {
         // [Student] Grade is NOT displayed when 'Show Grades' (located in navigation drawer) is de-selected
         getToDashboard(courseCount = 1, favoriteCourseCount = 1)
-        dashboardPage.setShowGrades(false)
+        leftSideNavigationDrawerPage.setShowGrades(false)
         dashboardPage.assertHidesGrades()
     }
 

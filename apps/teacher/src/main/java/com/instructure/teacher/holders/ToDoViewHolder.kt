@@ -25,10 +25,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.utils.getAssignmentIcon
@@ -50,18 +50,18 @@ class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         toDoLayout.setOnClickListener { callback.onRowClicked(toDo, position) }
         toDoTitle.text = toDo.title
 
-        var courseColor =  ThemePrefs.brandColor
+        var textAndIconColor =  ThemePrefs.brandColor
 
         toDo.canvasContext?.let {
-            courseColor =  ColorKeeper.getOrGenerateColor(toDo.canvasContext)
+            textAndIconColor =  toDo.canvasContext.textAndIconColor
             toDoCourse.setVisible()
-            toDoCourse.setTextColor(courseColor)
+            toDoCourse.setTextColor(textAndIconColor)
             toDoCourse.text = toDo.canvasContext!!.name
         } ?: toDoCourse.setGone()
 
 
         toDoIcon.setImageDrawable(ContextCompat.getDrawable(context, toDo.assignment!!.getAssignmentIcon()))
-        toDoIcon.setColorFilter(courseColor)
+        toDoIcon.setColorFilter(textAndIconColor)
 
         // String to track if the assignment is closed. If it isn't, we'll prepend the due date string with an empty string and it will look the same
         // Otherwise, we want it to say "Closed" and the due date with a dot as a separator

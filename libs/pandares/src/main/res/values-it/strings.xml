@@ -397,13 +397,13 @@
     <string name="loading">Caricamento&#8230;</string>
     <string name="select_item_to_display">Seleziona dall’elenco</string>
 
-    <string name="syllabus">Piano di studio</string>
+    <string name="syllabus">Syllabus</string>
     <string name="summary">Riepilogo</string>
     <string name="coursePeople">Persone</string>
     <string name="teachersTas">Insegnanti e assistenti</string>
     <string name="students">Studenti</string>
     <string name="observers">Osservatori</string>
-    <string name="syllabusMissing">Non è stato aggiunto un piano di studio.</string>
+    <string name="syllabusMissing">Non è stato aggiunto un syllabus.</string>
     <string name="syllabusEventsError">Si è verificato un errore durante il caricamento dei tuoi moduli.</string>
 
     <string name="canvas">Canvas</string>
@@ -947,7 +947,7 @@
     <string name="homePageIdForNotifications">Attività recente</string>
     <string name="homePageIdForModules">Moduli</string>
     <string name="homePageIdForAssignments">Compiti</string>
-    <string name="homePageIdForSyllabus">Piano di studio</string>
+    <string name="homePageIdForSyllabus">Syllabus</string>
 
     <string name="contentDescriptionWidgetRefresh">Aggiorna widget</string>
 
@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Student View</string>
 
 
+    <string name="rateOnThePlayStore">Valuta su Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Testa scelta: %s</string>
     <string name="content_description_chosen_body">Corpo scelto: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Puoi aprire i dettagli consegna da qui</string>
 
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">Bozza disponibile</string>
     <string name="errorLoadingSubmission">Si è verificato un errore durante il caricamento della consegna</string>
     <string name="loadFullContent">Tocca per vedere tutto il contenuto</string>
+    <string name="openLtiInExternalApp">Tocca per aprire nell’app esterna</string>
     <string name="dashboardTabImportantDates">Date importanti</string>
     <string name="importantDatesEmptyTitle">Nessuna data importante</string>
     <string name="important_dates">Date importanti</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s messaggio non letto</item>
         <item quantity="other">%s messaggi non letti</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notifica non letta</item>
+        <item quantity="other">%s notifiche non lette</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Nessuna annotazione selezionata</string>
     <string name="emailNotifications">Notifiche email</string>
     <string name="emailNotificationsImmediately">Immediatamente</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">Ogni settimana</string>
     <string name="emailNotificationsNever">Mai</string>
     <string name="selectFrequency">Seleziona frequenza</string>
+    <string name="a11y_closeProgress">Chiudi finestra di dialogo avanzamento</string>
+    <string name="fileUploadProgress">%1$s di %2$s</string>
+    <string name="fileUploadProgressSubtitle">Caricamento nei file</string>
+    <string name="submissionProgressSubtitle">Caricamento consegna in \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Caricamento consegna</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Caricamento file</string>
+    <string name="cancelSubmissionDialogTitle">Annulla invio</string>
+    <string name="cancelSubmissionDialogMessage">Questa operazione annullerà ed eliminerà il tuo invio.</string>
+    <string name="fileUploadError">Errore di caricamento file</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Carica in Canvas per %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Carica in Miei file</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Invia compito</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Scegli un corso</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Scegliere un corso, il corso selezionato è: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Scegli un compito</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Scegliere un compito, il compito selezionato è: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Annullare caricamento?</string>
+    <string name="cancelFileUploadMessage">Questa operazione annullerà il caricamento.</string>
+    <string name="menuTitleFilterAssignments">Filtra compiti</string>
+    <string name="filterAssignmentDialogTitle">Filtra compiti</string>
+    <string name="filterAssignmentsDialogCancel">Annulla</string>
+    <string name="filterAssignmentAll">Tutto</string>
+    <string name="filterAssignmentLate">In ritardo</string>
+    <string name="filterAssignmentMissing">Mancante</string>
+    <string name="filterAssignmentGraded">Valutato</string>
+    <string name="filterAssignmentUpcoming">In programma</string>
+    <string name="createdByStudentView">Creato da Student View</string>
+    <string name="discussionErrorToast">Si è verificato un errore. L’argomento potrebbe non essere più disponibile.</string>
+    <string name="cameraPermissionPermanentlyDenied">L’autorizzazione videocamera è stata negata in modo permanente. Andare nelle impostazioni dell’app per consentirla.</string>
+    <string name="unpublish_assignment_error">Impossibile annullare la pubblicazione del compito se ci sono consegne degli studenti.</string>
+    <string name="subscribeToCalendar">Iscriviti a feed del calendario</string>
+    <string name="subscribeToCalendarMessage">È possibile sincronizzare il calendario Canvas con l’account Google Calendar facendo clic sul pulsante Iscriviti in questa finestra di dialogo. Dopodiché, sarà necessario andare nell’app Google Calendar sul dispositivo e abilitare la sincronizzazione nelle impostazioni per il nuovo calendario.</string>
+    <string name="subscribeButton">Iscriviti</string>
+    <string name="switchToLightMode">Passa a Modalità chiara</string>
+    <string name="switchToDarkMode">Passa a Modalità scura</string>
+    <string name="acceptableUsePolicyDescription">Sei un nuovo utente oppure le Norme di utilizzo accettabile sono cambiate dall\'ultima volta in cui le hai accettate. Accetta le Norme di utilizzo accettabile prima di continuare.</string>
+    <string name="acceptableUsePolicyTitle">Norme di utilizzo accettabile</string>
+    <string name="acceptableUsePolicyButton">Norme di utilizzo accettabile</string>
+    <string name="acceptableUsePolicyAgree">Accetto le Norme di utilizzo accettabile.</string>
+    <string name="acceptableUsePolicySubmit">Invia</string>
+    <string name="acceptFail">Impossibile inviare l’accettazione dei termini.</string>
+    <string name="attempt">Tentativo %d</string>
+    <string name="quizQuestions">Domande: %d</string>
+    <string name="quizTimeLimit">Limite di tempo: %s</string>
+    <string name="allowedAttempts">Tentativi consentiti: %s</string>
+    <string name="usedAttempts">Tentativi utilizzati: %d</string>
+    <string name="generalUnexpectedError">Si verificato un errore imprevisto.</string>
+
+    <string name="deleteSelected">Elimina</string>
+    <string name="archiveSelected">Archivia</string>
+    <string name="unarchiveSelected">Annulla archiviazione</string>
+    <string name="markAsReadSelected">Contrassegna come letto</string>
+    <string name="markAsUnreadSelected">Contrassegna come non letto</string>
+    <string name="starSelected">Aggiungi a Speciali</string>
+    <string name="unstarSelected">Rimuovi da Speciali</string>
+
+    <string name="inboxOperationFailed">Impossibile eseguire operazione</string>
+    <string name="inboxDeletedConfirmation">%s eliminato</string>
+    <string name="inboxArchivedConfirmation">%s archiviato</string>
+    <string name="inboxUnarchivedConfirmation">%s rimosso da archivio</string>
+    <string name="inboxMarkAsReadConfirmation">%s contrassegnato come letto</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s contrassegnato come non letto</string>
+    <string name="inboxStarredConfirmation">%s aggiunto a Speciali</string>
+    <string name="inboxUnstarredConfirmation">%s rimosso da Speciali</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Questa conversazione sarà eliminata dalla posta in arrivo in tutti i dispositivi. Questa azione non può essere annullata.</item>
+        <item quantity="other">Queste conversazioni saranno eliminate dalla posta in arrivo in tutti i dispositivi. Questa azione non può essere annullata.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Impossibile caricare la pagina successiva. Controlla la connessione Internet.</string>
+    <string name="conversationsRefreshFailed">Impossibile aggiornare le conversazioni. Controlla la connessione Internet.</string>
+    <string name="inboxScopeInbox">Posta in arrivo</string>
+    <string name="inboxContextSelectorTitle">Seleziona il corso o il gruppo</string>
+    <string name="inboxClearFilter">Cancella</string>
+    <string name="a11y_courseFilterContentDescription">Filtro corsi: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">seleziona</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversazione selezionata. Modalità selezione attivata. Naviga per azioni.</string>
+    <string name="a11y_conversationSelected">Conversazione selezionata</string>
+    <string name="a11y_conversationDeselected">Conversazione deselezionata</string>
+    <string name="a11y_exitSelectionMode">Esci da modalità selezione</string>
+    <string name="a11y_selectionModeDeactivated">Modalità selezione disattivata.</string>
 </resources>

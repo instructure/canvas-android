@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Góc Nhìn Của Sinh Viên</string>
 
 
+    <string name="rateOnThePlayStore">Đánh giá trên Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Đầu được chọn: %s</string>
     <string name="content_description_chosen_body">Thân được chọn: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">Bạn có thể mở chi tiết Bài Nộp từ đây</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Phút</item>
@@ -1234,6 +1237,7 @@
     <string name="submissionDraftAvailableTitle">Có Bản Nháp</string>
     <string name="errorLoadingSubmission">Đã xảy ra lỗi khi tải bài nộp</string>
     <string name="loadFullContent">Nhấn để xem nội dung đầy đủ</string>
+    <string name="openLtiInExternalApp">Bấm để mở trong ứng dụng bên ngoài</string>
     <string name="dashboardTabImportantDates">Những Ngày Quan Trọng</string>
     <string name="importantDatesEmptyTitle">Không có ngày quan trọng</string>
     <string name="important_dates">Những Ngày Quan Trọng</string>
@@ -1276,6 +1280,11 @@
         <item quantity="one">%s tin nhắn chưa đọc</item>
         <item quantity="other">%s tin nhắn chưa đọc</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s thông báo chưa đọc</item>
+        <item quantity="other">%s thông báo chưa đọc</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Không có chú thích nào được chọn</string>
     <string name="emailNotifications">Thông Báo Email</string>
     <string name="emailNotificationsImmediately">Ngay Lập Tức</string>
@@ -1283,4 +1292,86 @@
     <string name="emailNotificationsWeekly">Hằng Tuần</string>
     <string name="emailNotificationsNever">Không Bao Giờ</string>
     <string name="selectFrequency">Chọn tần số</string>
+    <string name="a11y_closeProgress">Đóng hộp thoại tiến trình</string>
+    <string name="fileUploadProgress">%1$s / %2$s</string>
+    <string name="fileUploadProgressSubtitle">Đang tải lên tới Các Tập Tin</string>
+    <string name="submissionProgressSubtitle">Đang tải bài nộp tới \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Tải Lên Bài Nộp</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Đang tải Các Tập Tin</string>
+    <string name="cancelSubmissionDialogTitle">Hủy Nộp</string>
+    <string name="cancelSubmissionDialogMessage">Thao tác này sẽ hủy và xóa bài nộp của bạn.</string>
+    <string name="fileUploadError">Tải Lên Các Tập Tin Không Thành Công</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Tải lên tới Canvas cho %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Tải lên tới Các Tập Tin Của Tôi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Nộp bài tập</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Lựa chọn một khóa học</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Lựa chọn một khóa học, khóa học đã chọn là: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Lựa chọn một bài tập</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Lựa chọn một bài tập, bài tập đã chọn là: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Hủy Tải Lên?</string>
+    <string name="cancelFileUploadMessage">Thao tác này sẽ hủy quá trình tải lên của bạn.</string>
+    <string name="menuTitleFilterAssignments">Lọc bài tập</string>
+    <string name="filterAssignmentDialogTitle">Lọc Bài Tập</string>
+    <string name="filterAssignmentsDialogCancel">Hủy</string>
+    <string name="filterAssignmentAll">Tất Cả</string>
+    <string name="filterAssignmentLate">Trễ</string>
+    <string name="filterAssignmentMissing">Bị Thiếu</string>
+    <string name="filterAssignmentGraded">Đã Chấm Điểm</string>
+    <string name="filterAssignmentUpcoming">Sắp Có</string>
+    <string name="createdByStudentView">Được Góc Nhìn Của Sinh Viên Tạo Ra</string>
+    <string name="discussionErrorToast">Đã xảy ra lỗi. Chủ đề có thể không còn nữa.</string>
+    <string name="cameraPermissionPermanentlyDenied">Quyền truy cập camera đã bị từ chối vĩnh viễn. Đi tới cài đặt ứng dụng để cho phép truy cập. </string>
+    <string name="unpublish_assignment_error">Không thể hủy phát hành bài tập nếu có bài nộp của sinh viên.</string>
+    <string name="subscribeToCalendar">Đăng Ký Nguồn Cấp Dữ Liệu Lịch</string>
+    <string name="subscribeToCalendarMessage">Bạn có thể đồng bộ lịch Canvas của mình với tài khoản Lịch Google bằng cách nhấp vào nút Đăng Ký trong hộp thoại này. Sau đó, bạn sẽ cần truy cập vào ứng dụng Lịch Google trên thiết bị của mình và bật chức năng đồng bộ trong phần cài đặt cho lịch mới.</string>
+    <string name="subscribeButton">Đăng Ký</string>
+    <string name="switchToLightMode">Chuyển sang Chế Độ Sáng</string>
+    <string name="switchToDarkMode">Chuyển sang Chế Độ Tối</string>
+    <string name="acceptableUsePolicyDescription">Bạn là người dùng mới hoặc Chính Sách Sử Dụng Có Thể Chấp Nhận Được đã thay đổi kể từ lần cuối cùng bạn đồng ý. Vui lòng đồng ý với Chính Sách Sử Dụng Có Thể Chấp Nhận Được trước khi bạn tiếp tục.</string>
+    <string name="acceptableUsePolicyTitle">Chính Sách Sử Dụng Có Thể Chấp Nhận Được</string>
+    <string name="acceptableUsePolicyButton">Chính Sách Sử Dụng Có Thể Chấp Nhận Được</string>
+    <string name="acceptableUsePolicyAgree">Tôi đồng ý với Chính Sách Sử Dụng Có Thể Chấp Nhận Được.</string>
+    <string name="acceptableUsePolicySubmit">Nộp</string>
+    <string name="acceptFail">Không thể gửi chấp nhận điều khoản.</string>
+    <string name="attempt">Lần Làm %d</string>
+    <string name="quizQuestions">Câu Hỏi: %d</string>
+    <string name="quizTimeLimit">Giới hạn thời gian: %s</string>
+    <string name="allowedAttempts">Lần làm được phép: %s</string>
+    <string name="usedAttempts">Lần làm đã sử dụng: %d</string>
+    <string name="generalUnexpectedError">Đã xảy ra lỗi không lường trước.</string>
+
+    <string name="deleteSelected">Xóa</string>
+    <string name="archiveSelected">Lưu Trữ</string>
+    <string name="unarchiveSelected">Bỏ Lưu Trữ</string>
+    <string name="markAsReadSelected">Đánh dấu là đã đọc</string>
+    <string name="markAsUnreadSelected">Đánh dấu là chưa đọc</string>
+    <string name="starSelected">Gắn dấu sao</string>
+    <string name="unstarSelected">Gỡ dấu sao</string>
+
+    <string name="inboxOperationFailed">Không thực hiện được thao tác</string>
+    <string name="inboxDeletedConfirmation">%s đã bị xóa</string>
+    <string name="inboxArchivedConfirmation">%s đã lưu trữ</string>
+    <string name="inboxUnarchivedConfirmation">%s đã bỏ lưu trữ</string>
+    <string name="inboxMarkAsReadConfirmation">%s đã đánh dấu là đã đọc</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s đã đánh dấu là chưa đọc</string>
+    <string name="inboxStarredConfirmation">%s đã gắn dấu sao</string>
+    <string name="inboxUnstarredConfirmation">%s đã bỏ dấu sao</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Cuộc trò chuyện này sẽ bị xóa khỏi Hộp Thư Đến trên mọi thiết bị của bạn. Không thể hoàn tác thao tác này.</item>
+        <item quantity="other">Các cuộc trò chuyện này sẽ bị xóa khỏi Hộp Thư Đến trên mọi thiết bị của bạn. Không thể hoàn tác thao tác này.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Không thể tải trang sau. Hãy kiểm tra kết nối internet của bạn.</string>
+    <string name="conversationsRefreshFailed">Không thể làm mới cuộc trò chuyện. Hãy kiểm tra kết nối internet của bạn.</string>
+    <string name="inboxScopeInbox">Hộp Thư Đến</string>
+    <string name="inboxContextSelectorTitle">Chọn Khóa Học hoặc Nhóm</string>
+    <string name="inboxClearFilter">Xóa bỏ</string>
+    <string name="a11y_courseFilterContentDescription">Bộ lọc khóa học: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">chọn</string>
+    <string name="a11y_itemSelectedSwipeForActions">Đã chọn cuộc trò chuyện. Đã kích hoạt chế độ lựa chọn. Điều hướng để thực hiện thao tác.</string>
+    <string name="a11y_conversationSelected">Đã chọn cuộc trò chuyện</string>
+    <string name="a11y_conversationDeselected">Đã bỏ chọn cuộc trò chuyện</string>
+    <string name="a11y_exitSelectionMode">Thoát chế độ lựa chọn</string>
+    <string name="a11y_selectionModeDeactivated">Đã hủy kích hoạt chế độ lựa chọn.</string>
 </resources>

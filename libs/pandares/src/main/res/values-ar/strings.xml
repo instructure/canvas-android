@@ -1095,6 +1095,7 @@
     <string name="tab_student_view">طريقة عرض الطالب</string>
 
 
+    <string name="rateOnThePlayStore">التقييم على Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">اختر الرأس: %s</string>
     <string name="content_description_chosen_body">اختر الجسم: %s</string>
@@ -1166,6 +1167,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s، %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">يمكنك فتح تفاصيل الإرسال من هنا</string>
 
     <plurals name="minutes">
         <item quantity="zero">%s من الدقائق</item>
@@ -1288,6 +1291,7 @@
     <string name="submissionDraftAvailableTitle">المسودة متوفرة</string>
     <string name="errorLoadingSubmission">حدث خطأ أثناء تحميل الإرسال</string>
     <string name="loadFullContent">اضغط للاطلاع على المحتوى الكامل</string>
+    <string name="openLtiInExternalApp">اضغط على فتح في التطبيق الخارجي</string>
     <string name="dashboardTabImportantDates">التواريخ الهامة</string>
     <string name="importantDatesEmptyTitle">لا توجد تواريخ هامة</string>
     <string name="important_dates">التواريخ الهامة</string>
@@ -1316,7 +1320,7 @@
     <string name="appThemeLight">فاتح</string>
     <string name="appThemeDark">داكن</string>
     <string name="appThemeSystem">مثل الجهاز</string>
-    <string name="themeSelectorTitle">Canvas متاح الآن في النسق الداكن</string>
+    <string name="themeSelectorTitle">Canvas متاح الآن بالنسق الداكن</string>
     <string name="themeSelectorDescription">اختر نسق التطبيق</string>
     <string name="themeSelectorLightTheme">النسق الفاتح</string>
     <string name="themeSelectorDarkTheme">النسق الداكن</string>
@@ -1334,6 +1338,15 @@
         <item quantity="many">%s من الرسائل غير المقروءة</item>
         <item quantity="other">%s من الرسائل غير المقروءة</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="zero">%s من الإشعارات غير المقروءة</item>
+        <item quantity="one">%s إشعار غير مقروء</item>
+        <item quantity="two">%s من الإشعارات غير المقروءة</item>
+        <item quantity="few">%s من الإشعارات غير المقروءة</item>
+        <item quantity="many">%s من الإشعارات غير المقروءة</item>
+        <item quantity="other">%s من الإشعارات غير المقروءة</item>
+    </plurals>
+
     <string name="noAnnotationSelected">لم يتم تحديد تعليق توضيحي</string>
     <string name="emailNotifications">إعلامات البريد الإلكتروني</string>
     <string name="emailNotificationsImmediately">فورًا</string>
@@ -1341,4 +1354,90 @@
     <string name="emailNotificationsWeekly">أسبوعيًا</string>
     <string name="emailNotificationsNever">أبدًا</string>
     <string name="selectFrequency">حدد التكرار</string>
+    <string name="a11y_closeProgress">إغلاق مربع حوار التقدم</string>
+    <string name="fileUploadProgress">%1$s من %2$s</string>
+    <string name="fileUploadProgressSubtitle">جارٍ التحميل إلى الملفات</string>
+    <string name="submissionProgressSubtitle">جارٍ تحميل الإرسال إلى \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">جارٍ تحميل الإرسال</string>
+    <string name="dashboardNotificationUploadingFilesTitle">جارٍ تحميل الملفات</string>
+    <string name="cancelSubmissionDialogTitle">إلغاء الإرسال</string>
+    <string name="cancelSubmissionDialogMessage">سيؤدي هذا إلى إلغاء وحذف إرسالك.</string>
+    <string name="fileUploadError">تعذر تحميل الملف</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">التحميل إلى Canvas لـ %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">التحميل إلى ملفاتي</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">إرسال المهمة</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">اختر مساقًا</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">اختر مساقًا، المساق المحدد هو: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">اختر مهمة</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">اختر مهمة، المهمة المحددة هي: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s، %2$s</string>
+    <string name="cancelFileUploadTitle">هل تريد إلغاء التحميل؟</string>
+    <string name="cancelFileUploadMessage">سيؤدي هذا إلى إلغاء تحميلك.</string>
+    <string name="menuTitleFilterAssignments">تصفية المهام</string>
+    <string name="filterAssignmentDialogTitle">تصفية المهام</string>
+    <string name="filterAssignmentsDialogCancel">إلغاء</string>
+    <string name="filterAssignmentAll">الكل</string>
+    <string name="filterAssignmentLate">متأخر</string>
+    <string name="filterAssignmentMissing">مفقود</string>
+    <string name="filterAssignmentGraded">تم تقييم الدرجة</string>
+    <string name="filterAssignmentUpcoming">القادمة</string>
+    <string name="createdByStudentView">تم الإنشاء في طريقة عرض الطالب</string>
+    <string name="discussionErrorToast">حدث خطأ ما. ربما لم يعد الموضوع متاحًا.</string>
+    <string name="cameraPermissionPermanentlyDenied">تم رفض إذن الكاميرا بشكل دائم. انتقل إلى إعدادات التطبيق للسماح به.</string>
+    <string name="unpublish_assignment_error">لا يمكن إلغاء نشر المهمة في حالة وجود إرسالات طلاب.</string>
+    <string name="subscribeToCalendar">الاشتراك في تغذية التقويم</string>
+    <string name="subscribeToCalendarMessage">يمكنك مزامنة تقويم Canvas إلى حسابك على Google Calendar بالنقر فوق زر اشتراك في مربع الحوار هذا. ستحتاج حينها للانتقال إلى تطبيق Google Calendar على جهازك وتمكين المزامنة في الإعدادات للتقويم الجديد.</string>
+    <string name="subscribeButton">اشتراك</string>
+    <string name="switchToLightMode">التبديل إلى الوضع الفاتح</string>
+    <string name="switchToDarkMode">التبديل إلى الوضع الداكن</string>
+    <string name="acceptableUsePolicyDescription">إما أنك مستخدم جديد أو أن سياسة الاستخدام المقبول قد تغيرت منذ أن وافقت عليها آخر مرة. الرجاء الموافقة على سياسة الاستخدام المقبول قبل المتابعة.</string>
+    <string name="acceptableUsePolicyTitle">سياسة الاستخدام المقبول</string>
+    <string name="acceptableUsePolicyButton">سياسة الاستخدام المقبول</string>
+    <string name="acceptableUsePolicyAgree">أوافق على سياسة الاستخدام المقبول</string>
+    <string name="acceptableUsePolicySubmit">إرسال</string>
+    <string name="acceptFail">تعذر إرسال قبول الشروط.</string>
+    <string name="attempt">محاولة %d</string>
+    <string name="quizQuestions">الأسئلة: %d</string>
+    <string name="quizTimeLimit">الحد الزمني: %s</string>
+    <string name="allowedAttempts">المحاولات المسموح بها: %s</string>
+    <string name="usedAttempts">المحاولات المستخدمة: %d</string>
+    <string name="generalUnexpectedError">حدث خطأ غير متوقع.</string>
+
+    <string name="deleteSelected">حذف</string>
+    <string name="archiveSelected">أرشفة</string>
+    <string name="unarchiveSelected">إلغاء الأرشفة</string>
+    <string name="markAsReadSelected">وضع علامة كمقروء</string>
+    <string name="markAsUnreadSelected">وضع علامة غير مقروء</string>
+    <string name="starSelected">نجمة</string>
+    <string name="unstarSelected">إلغاء النجمة</string>
+
+    <string name="inboxOperationFailed">تعذر تنفيذ العملية</string>
+    <string name="inboxDeletedConfirmation">تم حذف %s</string>
+    <string name="inboxArchivedConfirmation">تم أرشفة %s</string>
+    <string name="inboxUnarchivedConfirmation">تم إلغاء أرشفة %s</string>
+    <string name="inboxMarkAsReadConfirmation">تم وضع علامة مقروء على %s</string>
+    <string name="inboxMarkAsUnreadConfirmation">تم وضع علامة غير مقروء على %s</string>
+    <string name="inboxStarredConfirmation">تم وضع علامة نجمة على %s</string>
+    <string name="inboxUnstarredConfirmation">تم إلغاء النجمة على %s</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="zero">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="one">سيتم حذف هذا المحادثة من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="two">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="few">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="many">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="other">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">تعذر تحميل الصفحة التالية. تحقق من اتصالك بالإنترنت.</string>
+    <string name="conversationsRefreshFailed">تعذر تحديث المحادثات. تحقق من اتصالك بالإنترنت.</string>
+    <string name="inboxScopeInbox">علبة الوارد</string>
+    <string name="inboxContextSelectorTitle">حدد مساقًا أو مجموعة</string>
+    <string name="inboxClearFilter">مسح</string>
+    <string name="a11y_courseFilterContentDescription">عامل تصفية المساق: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">تحديد</string>
+    <string name="a11y_itemSelectedSwipeForActions">تم تحديد المحادثة. تم تنشيط وضع التحديد. تنقل للوصول إلى الإجراءات.</string>
+    <string name="a11y_conversationSelected">تم تحديد المحادثة</string>
+    <string name="a11y_conversationDeselected">تم إلغاء تحديد المحادثة</string>
+    <string name="a11y_exitSelectionMode">الخروج من وضع التحديد</string>
+    <string name="a11y_selectionModeDeactivated">تم إلغاء تنشيط وضع التحديد.</string>
 </resources>

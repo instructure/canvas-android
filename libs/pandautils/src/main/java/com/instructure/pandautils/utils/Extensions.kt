@@ -44,3 +44,11 @@ fun Long?.orDefault(default: Long = 0): Long {
 fun Int?.orDefault(default: Int = 0): Int {
     return this ?: default
 }
+
+fun Boolean?.orDefault(default: Boolean = false): Boolean {
+    return this ?: default
+}
+
+fun Double?.orDefault(default: Double = 0.0): Double {
+    return this ?: default
+}

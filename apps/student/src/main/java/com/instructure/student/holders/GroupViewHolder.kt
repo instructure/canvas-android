@@ -23,8 +23,8 @@ import com.instructure.student.R
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.textAndIconColor
 import kotlinx.android.synthetic.main.viewholder_group_card.view.*
 
 class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,8 +34,8 @@ class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun bind(group: Group, courseMap: Map<Long, Course>, callback: CourseAdapterToFragmentCallback) = with(itemView) {
-        accentBar.setBackgroundColor(group.color)
-        groupCourseView.setTextColor(group.color)
+        accentBar.setBackgroundColor(group.textAndIconColor)
+        groupCourseView.setTextColor(group.textAndIconColor)
         groupNameView.text = group.name
         courseMap[group.courseId]?.let {
             groupCourseView.text = it.name

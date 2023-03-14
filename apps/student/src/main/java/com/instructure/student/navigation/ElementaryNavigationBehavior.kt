@@ -16,6 +16,7 @@
  */
 package com.instructure.student.navigation
 
+import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
@@ -29,7 +30,7 @@ import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 
 class ElementaryNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
 
-    override val bottomNavBarFragments: List<Class<out ParentFragment>> = listOf(
+    override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
         ElementaryDashboardFragment::class.java,
         CalendarFragment::class.java,
         ToDoListFragment::class.java,

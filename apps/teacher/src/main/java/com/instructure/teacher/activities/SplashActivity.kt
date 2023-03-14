@@ -18,12 +18,13 @@ package com.instructure.teacher.activities
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
@@ -79,6 +80,8 @@ class SplashActivity : AppCompatActivity() {
                         LocaleUtils.restartApp(this@SplashActivity, LoginActivity::class.java)
                         return@weave
                     }
+
+                    setupHeapTracking()
 
                     // Determine if user is a Teacher, Ta, or Designer
                     // Use GlobalScope since this can continue executing after SplashActivity is destroyed
@@ -161,20 +164,20 @@ class SplashActivity : AppCompatActivity() {
                         try {
                             val canvasColor = awaitApi<CanvasColor> { UserManager.getColors(it, true) }
                             ColorKeeper.addToCache(canvasColor)
-                            ColorKeeper.hasPreviouslySynced = true
+                            ColorKeeper.previouslySynced = true
                         } catch (e: Throwable) {
                             LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load colorFetch")
                             Logger.e(e.message)
                         }
                     }
-                    if (!ColorKeeper.hasPreviouslySynced) colorFetch.await() else colorFetch.start()
+                    if (!ColorKeeper.previouslySynced) colorFetch.await() else colorFetch.start()
 
                     // Grab theme
                     // Use GlobalScope since this can continue executing after SplashActivity is destroyed
                     val themeFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
                         try {
                             val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
-                            ThemePrefs.applyCanvasTheme(theme)
+                            ThemePrefs.applyCanvasTheme(theme, this@SplashActivity)
                         } catch (e: Throwable) {
                             LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load themeFetch")
                             Logger.e(e.message)
@@ -203,6 +206,12 @@ class SplashActivity : AppCompatActivity() {
         val oldLocale = ApiPrefs.effectiveLocale
         ApiPrefs.user = user
         return ApiPrefs.effectiveLocale != oldLocale
+    }
+
+    private suspend fun setupHeapTracking() {
+        val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
+        val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
+        Heap.setTrackingEnabled(sendUsageMetrics)
     }
 
     override fun onStop() {

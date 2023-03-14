@@ -43,8 +43,8 @@ import com.instructure.student.R
 import com.instructure.student.adapter.GradesListRecyclerAdapter
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.dialog.WhatIfDialogStyled
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_course_grades.*
 import retrofit2.Response
@@ -86,7 +86,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerAdapter = GradesListRecyclerAdapter(requireContext(), course, adapterToFragmentCallback, adapterToGradesCallback, gradingPeriodsCallback, object : WhatIfDialogStyled.WhatIfDialogCallback {
             override fun onClick(assignment: Assignment, position: Int) {
-                WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.color) { whatIf, _ ->
+                WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.textAndIconColor) { whatIf, _ ->
                     //Create dummy submission for what if grade
                     //check to see if grade is empty for reset
                     if (whatIf == null) {
@@ -174,7 +174,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             // cached data, so fast.
             if (!showWhatIfCheckBox.isChecked) {
                 recyclerAdapter.whatIfGrade = null
-                recyclerAdapter.refresh()
+                recyclerAdapter.loadCachedData()
             } else {
                 // Only log when what if grades is checked on
                 Analytics.logEvent(AnalyticsEventConstants.WHAT_IF_GRADES)
@@ -252,7 +252,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                         recyclerAdapter.loadData()
                     } else {
                         if(termAdapter?.isEmpty == false) {
-                            recyclerAdapter.loadAssignmentsForGradingPeriod(termAdapter?.getItem(position)?.id ?: 0, true)
+                            recyclerAdapter.loadAssignmentsForGradingPeriod(termAdapter?.getItem(position)?.id ?: 0, true, true)
                             termSpinner.isEnabled = false
                             termAdapter?.isLoading = true
                             termAdapter?.notifyDataSetChanged()

@@ -19,6 +19,7 @@ package com.instructure.student.fragment
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.PageManager
@@ -36,7 +37,6 @@ import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
-import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
@@ -48,10 +48,10 @@ import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
 import kotlinx.android.synthetic.main.fragment_webview.*
+import kotlinx.android.synthetic.main.fragment_webview.view.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.Subscribe
 import retrofit2.Response
-import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
@@ -94,14 +94,14 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onPause() {
         super.onPause()
-        canvasWebView?.onPause()
+        canvasWebViewWrapper?.webView?.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         fetchDataJob?.cancel()
         loadHtmlJob?.cancel()
-        canvasWebView?.destroy()
+        canvasWebViewWrapper?.webView?.destroy()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -196,7 +196,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
         if (page.body != null && page.body != "null" && page.body != "") {
             // Add RTL support
-            if (canvasWebView.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+            if (canvasWebViewWrapper.webView.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
                 page.body = "<body dir=\"rtl\">${page.body}</body>"
             }
 
@@ -204,11 +204,11 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             val body = """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + page.body.orEmpty()
 
             // Load the html with the helper function to handle iframe cases
-            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, body, ::loadPageHtml, {
-                val args = LtiLaunchFragment.makeLTIBundle(
-                        URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-            }, page.title)
+            loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
+                canvasWebViewWrapper?.loadHtml(it, page.title, baseUrl = page.htmlUrl)
+            }) {
+                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+            }
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
         }
@@ -216,10 +216,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         toolbar.title = title()
 
         checkCanEdit()
-    }
-
-    private fun loadPageHtml(html: String, contentDescription: String?) {
-        canvasWebView.loadHtml(html, contentDescription, baseUrl = page.htmlUrl)
     }
 
     /**
@@ -289,7 +285,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
-            val route = EditPageDetailsFragment.makeRoute(canvasContext, page).apply { routeType = RouteType.DIALOG }
+            val route = EditPageDetailsFragment.makeRoute(canvasContext, page)
             RouteMatcher.route(requireContext(), route)
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
@@ -320,6 +316,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             getPageDetails()
         }
     }
+
+    override fun handleBackPressed() = false
 
     companion object {
         const val PAGE_NAME = "pageDetailsName"

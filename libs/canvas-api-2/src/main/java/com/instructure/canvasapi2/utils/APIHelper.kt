@@ -78,10 +78,12 @@ object APIHelper {
      * @return A LinkHeaders object
      */
     fun parseLinkHeaderResponse(headers: Headers): LinkHeaders {
-        val linkHeaders = LinkHeaders()
-
         val map = headers.toMultimap()
 
+        var nextUrl: String? = null
+        var prevUrl: String? = null
+        var firstUrl: String? = null
+        var lastUrl: String? = null
         for (name in map.keys) {
             if ("link".equals(name, ignoreCase = true)) {
                 for (value in map[name]!!) {
@@ -95,10 +97,10 @@ object APIHelper {
                         url = removeDomainFromUrl(url)
 
                         when {
-                            segment.contains("rel=\"next\"") -> linkHeaders.nextUrl = url
-                            segment.contains("rel=\"prev\"") -> linkHeaders.prevUrl = url
-                            segment.contains("rel=\"first\"") -> linkHeaders.firstUrl = url
-                            segment.contains("rel=\"last\"") -> linkHeaders.lastUrl = url
+                            segment.contains("rel=\"next\"") -> nextUrl = url
+                            segment.contains("rel=\"prev\"") -> prevUrl = url
+                            segment.contains("rel=\"first\"") -> firstUrl = url
+                            segment.contains("rel=\"last\"") -> lastUrl = url
                         }
                     }
                 }
@@ -106,16 +108,20 @@ object APIHelper {
             }
         }
 
-        return linkHeaders
+        return LinkHeaders(prevUrl, nextUrl, lastUrl, firstUrl)
     }
 
     internal fun parseLinkHeaderResponse(linkField: String?): LinkHeaders {
-        val linkHeaders = LinkHeaders()
         if (linkField.isNullOrEmpty()) {
-            return linkHeaders
+            return LinkHeaders()
         }
 
         val split = linkField.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+
+        var nextUrl: String? = null
+        var prevUrl: String? = null
+        var firstUrl: String? = null
+        var lastUrl: String? = null
         for (segment in split) {
             val index = segment.indexOf(">")
             var url: String? = segment.substring(0, index)
@@ -125,13 +131,13 @@ object APIHelper {
             url = removeDomainFromUrl(url)
 
             when {
-                segment.contains("rel=\"next\"") -> linkHeaders.nextUrl = url
-                segment.contains("rel=\"prev\"") -> linkHeaders.prevUrl = url
-                segment.contains("rel=\"first\"") -> linkHeaders.firstUrl = url
-                segment.contains("rel=\"last\"") -> linkHeaders.lastUrl = url
+                segment.contains("rel=\"next\"") -> nextUrl = url
+                segment.contains("rel=\"prev\"") -> prevUrl = url
+                segment.contains("rel=\"first\"") -> firstUrl = url
+                segment.contains("rel=\"last\"") -> lastUrl = url
             }
         }
-        return linkHeaders
+        return LinkHeaders(prevUrl, nextUrl, lastUrl, firstUrl)
     }
 
     /**

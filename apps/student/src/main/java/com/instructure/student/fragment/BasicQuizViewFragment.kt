@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
@@ -46,6 +48,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView(url = "courses/{canvasContext}/quizzes/{quizId}")
 @ScreenView(SCREEN_VIEW_BASIC_QUIZ)
 class BasicQuizViewFragment : InternalWebviewFragment() {
 
@@ -54,6 +57,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     private var baseURL: String? by NullableStringArg()
     private var apiURL: String? by NullableStringArg()
     private var quiz: Quiz? by NullableParcelableArg()
+    @get:PageViewUrlParam("quizId")
     private var quizId: Long by LongArg()
 
     override fun title(): String = getString(R.string.quizzes)
@@ -85,7 +89,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
         // Make sure we are prepared to handle file uploads for quizzes that allow them
         setupFilePicker()
-        canvasWebView?.setDarkModeSupport()
+        canvasWebViewWrapper?.webView?.setDarkModeSupport()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -30,7 +31,7 @@ import java.io.IOException
 
 object CourseAPI {
 
-    internal interface CoursesInterface {
+    interface CoursesInterface {
 
         @get:GET("users/self/favorites/courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites")
         val favoriteCourses: Call<List<Course>>
@@ -40,6 +41,12 @@ object CourseAPI {
 
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available")
         val firstPageCourses: Call<List<Course>>
+
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available")
+        suspend fun getFirstPageCourses(@Tag params: RestParams): DataResult<List<Course>>
+
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&state[]=unpublished")
+        suspend fun getFirstPageCoursesTeacher(@Tag params: RestParams): DataResult<List<Course>>
 
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=current_and_concluded")
         val firstPageCoursesWithConcluded: Call<List<Course>>
@@ -73,6 +80,9 @@ object CourseAPI {
 
         @GET
         fun next(@Url nextURL: String): Call<List<Course>>
+
+        @GET
+        suspend fun next(@Url nextURL: String, @Tag params: RestParams): DataResult<List<Course>>
 
         @GET("courses?state[]=completed&state[]=available&state[]=unpublished")
         fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String): Call<List<Course>>

@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -24,6 +25,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/utils/db/user_colors_db.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
@@ -75,6 +77,8 @@ class SplashScreenInteractor {
     SplashScreenData data = SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
 
     if (data.isObserver || data.canMasquerade) await updateUserColors();
+
+    await FeaturesUtils.checkUsageMetricFeatureFlag();
 
     return data;
   }
@@ -130,6 +134,19 @@ class SplashScreenInteractor {
     await DioConfig().clearCache();
 
     return Future.value(true);
+  }
+
+  Future<bool> _requiresTermsAcceptance(String targetUrl) async {
+    return (await locator.get<OAuthApi>().getAuthenticatedUrl(targetUrl))?.requiresTermsAcceptance ?? false;
+  }
+
+  Future<bool> isTermsAcceptanceRequired() async {
+    final targetUrl = '${ApiPrefs.getCurrentLogin().domain}/users/self';
+    if (targetUrl.contains(ApiPrefs.getDomain())) {
+      return _requiresTermsAcceptance(targetUrl);
+    } else {
+      return false;
+    }
   }
 }
 

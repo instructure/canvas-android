@@ -17,14 +17,15 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
 import android.content.Context
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.common.ui.Presenter
-import java.util.Date
+import java.util.*
 
 object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, SubmissionCommentsViewState> {
 
@@ -36,9 +37,9 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
     override fun present(model: SubmissionCommentsModel, context: Context): SubmissionCommentsViewState {
         val self = ApiPrefs.user ?: return SubmissionCommentsViewState(false, listOf(CommentItemState.Empty))
 
-        val tint = ColorKeeper.colorFromCourseId(model.assignment.courseId)
+        val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
 
-        val comments = model.comments.map { comment ->
+        val comments = model.comments.filter { it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }.map { comment ->
             val date = comment.createdAt ?: Date(0)
             CommentItemState.CommentItem(
                 id = comment.id,
@@ -56,6 +57,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
         }
 
         val submissions = model.submissionHistory
+            .filter { it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }
             .filter { it.workflowState != "unsubmitted" && it.submissionType != null }
             .map { submission ->
                 val date = submission.submittedAt ?: Date(0)
@@ -74,6 +76,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
             .pendingSubmissionCommentQueries
             .getCommentsByAccountAssignment(ApiPrefs.domain, model.assignment.id)
             .executeAsList()
+            .filter { it.attemptId == model.attemptId || !model.assignmentEnhancementsEnabled }
             .map { pendingComment ->
                 val date = Date(pendingComment.lastActivityDate.toInstant().toEpochMilli())
                 CommentItemState.PendingCommentItem(

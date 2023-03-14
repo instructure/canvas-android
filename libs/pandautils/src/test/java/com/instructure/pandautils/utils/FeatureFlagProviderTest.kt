@@ -20,8 +20,6 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -37,10 +35,9 @@ import org.junit.Test
 class FeatureFlagProviderTest {
 
     private val userManager: UserManager = mockk(relaxed = true)
-    private val remoteConfigUtils: RemoteConfigUtils = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
-    private val featureFlagProvider = FeatureFlagProvider(userManager, remoteConfigUtils, apiPrefs)
+    private val featureFlagProvider = FeatureFlagProvider(userManager, apiPrefs)
 
     @Before
     fun setUp() {

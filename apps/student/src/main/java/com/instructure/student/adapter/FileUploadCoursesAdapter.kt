@@ -28,7 +28,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.R
 
 class FileUploadCoursesAdapter(
@@ -72,7 +72,7 @@ class FileUploadCoursesAdapter(
         viewHolder.title.text = item.name
         if (!bold) viewHolder.title.setTypeface(null, Typeface.NORMAL)
         viewHolder.indicator.visibility = View.VISIBLE
-        viewHolder.indicator.background = ShapeDrawable(OvalShape()).apply { paint.color = item.color }
+        viewHolder.indicator.background = ShapeDrawable(OvalShape()).apply { paint.color = item.backgroundColor }
 
         return view
     }

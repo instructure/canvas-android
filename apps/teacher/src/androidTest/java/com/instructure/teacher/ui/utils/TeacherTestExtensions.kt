@@ -101,6 +101,7 @@ fun TeacherTest.seedData(
         teachers: Int = 0,
         courses: Int = 0,
         students: Int = 0,
+        parents: Int = 0,
         favoriteCourses: Int = 0,
         announcements: Int = 0,
         discussions: Int = 0,
@@ -112,6 +113,7 @@ fun TeacherTest.seedData(
             teachers = teachers,
             courses = courses,
             students = students,
+            parents = parents,
             favoriteCourses = favoriteCourses,
             announcements = announcements,
             discussions = discussions,
@@ -333,7 +335,7 @@ fun TeacherTest.tokenLogin(teacher: CanvasUserApiModel, skipSplash: Boolean = tr
                 skipSplash
         )
     }
-    coursesListPage.assertPageObjects()
+    dashboardPage.assertPageObjects()
 }
 
 fun TeacherTest.tokenLogin(domain: String, token: String, user: User) {
@@ -352,7 +354,7 @@ fun TeacherTest.tokenLogin(domain: String, token: String, user: User) {
                 allOf(withId(R.id.emptyCoursesView), isDisplayed())),
             20000)
             .check(matches(isDisplayed()))
-    coursesListPage.assertPageObjects()
+    dashboardPage.assertPageObjects()
 }
 
 fun TeacherTest.openOverflowMenu() {

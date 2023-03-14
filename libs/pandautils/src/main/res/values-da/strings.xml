@@ -485,4 +485,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s markeret som ikke færdig</string>
     <string name="a11y_markAsDoneWithName">%s Marker som udført</string>
     <string name="a11y_markAsNotDoneWithName">%s Marker som ikke udført</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

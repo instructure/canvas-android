@@ -17,11 +17,11 @@
 
 package com.instructure.espresso.page
 
-import androidx.test.platform.app.InstrumentationRegistry
+import android.view.View
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
-import android.view.View
+import androidx.test.platform.app.InstrumentationRegistry
 import com.adevinta.android.barista.interaction.BaristaScrollInteractions
 import com.adevinta.android.barista.interaction.BaristaSleepInteractions
 import com.instructure.espresso.actions.ViewCallOnClick
@@ -43,6 +43,8 @@ fun BasePage.withId(id: Int): Matcher<View> = ViewMatchers.withId(id)
 fun BasePage.withParent(id: Int): Matcher<View> = ViewMatchers.withParent(withId(id))
 
 fun BasePage.withAncestor(id: Int): Matcher<View> = ViewMatchers.isDescendantOfA(withId(id))
+
+fun BasePage.withAncestor(matcher: Matcher<View>): Matcher<View> = ViewMatchers.isDescendantOfA(matcher)
 
 fun BasePage.withDescendant(descendantMatcher: Matcher<View>): Matcher<View> = ViewMatchers.hasDescendant(descendantMatcher)
 

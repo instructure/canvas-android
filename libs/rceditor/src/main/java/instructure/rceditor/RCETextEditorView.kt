@@ -157,16 +157,18 @@ class RCETextEditorView @JvmOverloads constructor(
         }
 
         action_insert_link.setOnClickListener {
-            RCEInsertDialog.newInstance(context.getString(R.string.rce_insertLink), themeColor, buttonColor, true)
-                .setListener { url, alt ->
-                    if (URLUtil.isValidUrl(url)) { // Checks if the url contains any valid schema, etc
-                        editor.insertLink(url, alt)
-                    } else {
-                        // For now, we'll default to https always
-                        editor.insertLink("https://$url", alt)
+            editor.getSelectedText {
+                RCEInsertDialog.newInstance(context.getString(R.string.rce_insertLink), themeColor, buttonColor, true, it)
+                    .setListener { url, alt ->
+                        if (URLUtil.isValidUrl(url)) { // Checks if the url contains any valid schema, etc
+                            editor.insertLink(url, alt)
+                        } else {
+                            // For now, we'll default to https always
+                            editor.insertLink("https://$url", alt)
+                        }
                     }
-                }
-                .show(fragmentManager ?: return@setOnClickListener, RCEInsertDialog::class.java.simpleName)
+                    .show(fragmentManager ?: return@getSelectedText, RCEInsertDialog::class.java.simpleName)
+            }
         }
 
         editor.setOnDecorationChangeListener { state, _ ->
@@ -255,12 +257,12 @@ class RCETextEditorView @JvmOverloads constructor(
         accessibilityTitle: String,
         hint: String,
         @ColorInt themeColor: Int,
-        @ColorInt buttonColor: Int
+        @ColorInt dialogButtonsColor: Int
     ) {
         editor.applyHtml(html.orEmpty(), accessibilityTitle)
         editor.setPlaceholder(hint)
         this.themeColor = themeColor
-        this.buttonColor = buttonColor
+        this.buttonColor = dialogButtonsColor
     }
 
     fun setHint(hint: String) = editor.setPlaceholder(hint)

@@ -19,17 +19,13 @@ package com.instructure.teacher.features.dashboard.notifications
 import androidx.fragment.app.FragmentActivity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
-import com.instructure.teacher.fragments.InternalWebViewFragment
+import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherDashboardRouter(private val activity: FragmentActivity) : DashboardRouter {
     override fun routeToGlobalAnnouncement(subject: String, message: String) {
-        val args = InternalWebViewFragment.makeBundle(
-                url ="",
-                title = subject,
-                html = message
-        )
-        val route = Route(null, InternalWebViewFragment::class.java, null, args)
+        val args = HtmlContentFragment.makeBundle(title = subject, html = message)
+        val route = Route(HtmlContentFragment::class.java, null, args)
         RouteMatcher.route(activity, route)
     }
 }

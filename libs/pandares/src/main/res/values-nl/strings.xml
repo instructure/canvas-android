@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Weergave voor cursisten</string>
 
 
+    <string name="rateOnThePlayStore">Beoordelen in de Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Gekozen kop: %s</string>
     <string name="content_description_chosen_body">Gekozen hoofdtekst: %s</string>
@@ -1115,6 +1116,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <string name="a11y_gradeCellContentDescriptionHint">U kunt inleverdetails hier openen</string>
 
     <plurals name="minutes">
         <item quantity="one">%s minuut</item>
@@ -1233,6 +1236,7 @@
     <string name="submissionDraftAvailableTitle">Concept beschikbaar</string>
     <string name="errorLoadingSubmission">Er is een fout opgetreden bij het laden van de inlevering</string>
     <string name="loadFullContent">Tikken om volledige inhoud te zien</string>
+    <string name="openLtiInExternalApp">Tik om te openen in externe app</string>
     <string name="dashboardTabImportantDates">Belangrijke datums</string>
     <string name="importantDatesEmptyTitle">Geen belangrijke datums</string>
     <string name="important_dates">Belangrijke datums</string>
@@ -1261,7 +1265,7 @@
     <string name="appThemeLight">Licht</string>
     <string name="appThemeDark">Donker</string>
     <string name="appThemeSystem">Hetzelfde als apparaat</string>
-    <string name="themeSelectorTitle">Canvas is niet beschikbaar in donker thema</string>
+    <string name="themeSelectorTitle">Canvas is nu beschikbaar in donker thema</string>
     <string name="themeSelectorDescription">Kies app-thema</string>
     <string name="themeSelectorLightTheme">Licht thema</string>
     <string name="themeSelectorDarkTheme">Donker thema</string>
@@ -1275,6 +1279,11 @@
         <item quantity="one">%s ongelezen bericht</item>
         <item quantity="other">%s ongelezen berichten</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s ongelezen melding</item>
+        <item quantity="other">%s ongelezen meldingen</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Geen aantekening geselecteerd</string>
     <string name="emailNotifications">E-mail meldingen</string>
     <string name="emailNotificationsImmediately">Onmiddellijk</string>
@@ -1282,4 +1291,86 @@
     <string name="emailNotificationsWeekly">Wekelijks</string>
     <string name="emailNotificationsNever">Nooit</string>
     <string name="selectFrequency">Frequentie selecteren</string>
+    <string name="a11y_closeProgress">Voortgangsdialoogvenster sluiten</string>
+    <string name="fileUploadProgress">%1$s van %2$s</string>
+    <string name="fileUploadProgressSubtitle">Uploaden naar bestanden</string>
+    <string name="submissionProgressSubtitle">Inlevering uploaden naar \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Inlevering wordt geüpload</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Bestanden uploaden</string>
+    <string name="cancelSubmissionDialogTitle">Inlevering annuleren</string>
+    <string name="cancelSubmissionDialogMessage">Hiermee wordt je inlevering geannuleerd en verwijderd.</string>
+    <string name="fileUploadError">Bestand uploaden is mislukt</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Uploaden naar Canvas voor %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Uploaden naar Mijn bestanden</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Opdracht inleveren</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Kies een cursus</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Kies een cursus, de geselecteerde cursus is: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Kies een opdracht</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Kies een opdracht, de geselecteerde opdracht is: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Upload annuleren?</string>
+    <string name="cancelFileUploadMessage">Hiermee wordt je upload geannuleerd.</string>
+    <string name="menuTitleFilterAssignments">Filter opdrachten</string>
+    <string name="filterAssignmentDialogTitle">Opdrachten filteren</string>
+    <string name="filterAssignmentsDialogCancel">Annuleren</string>
+    <string name="filterAssignmentAll">Alles</string>
+    <string name="filterAssignmentLate">Te laat</string>
+    <string name="filterAssignmentMissing">Ontbrekend</string>
+    <string name="filterAssignmentGraded">Beoordeeld</string>
+    <string name="filterAssignmentUpcoming">Aankomend</string>
+    <string name="createdByStudentView">Gemaakt door Weergave voor cursisten</string>
+    <string name="discussionErrorToast">Er is een fout opgetreden. Het onderwerp is misschien niet meer beschikbaar.</string>
+    <string name="cameraPermissionPermanentlyDenied">Camerarechten zijn permanent geweigerd. Ga naar de app-instellingen om de rechten geldig te maken.</string>
+    <string name="unpublish_assignment_error">Kan publicatie van de opdracht niet ongedaan maken als er inleveringen van cursisten zijn.</string>
+    <string name="subscribeToCalendar">Abonneren op kalenderfeed</string>
+    <string name="subscribeToCalendarMessage">Je kunt de Canvas-kalender synchroniseren met je Google Agenda door op de knop Aanmelden in dit dialoogvenster te klikken. Open de app Google Agenda op je apparaat en schakel synchroniseren in de instellingen voor de nieuwe kalender in.</string>
+    <string name="subscribeButton">Aanmelden</string>
+    <string name="switchToLightMode">Naar Lichte modus</string>
+    <string name="switchToDarkMode">Naar Donkere modus</string>
+    <string name="acceptableUsePolicyDescription">Je bent een nieuwe gebruiker of het Beleid voor acceptabel gebruik is gewijzigd sinds je er de laatste keer mee akkoord bent gegaan. Ga akkoord met het Beleid voor acceptabel gebruik voordat je verdergaat.</string>
+    <string name="acceptableUsePolicyTitle">Beleid voor acceptabel gebruik</string>
+    <string name="acceptableUsePolicyButton">Beleid voor acceptabel gebruik</string>
+    <string name="acceptableUsePolicyAgree">Ik ga akkoord met het Beleid voor acceptabel gebruik.</string>
+    <string name="acceptableUsePolicySubmit">Indienen</string>
+    <string name="acceptFail">Indienen van het accepteren van de voorwaarden is mislukt.</string>
+    <string name="attempt">Poging %d</string>
+    <string name="quizQuestions">Vragen: %d</string>
+    <string name="quizTimeLimit">Tijdslimiet: %s</string>
+    <string name="allowedAttempts">Toegestane pogingen: %s</string>
+    <string name="usedAttempts">Gebruikte pogingen: %d</string>
+    <string name="generalUnexpectedError">Er is een onverwachte fout opgetreden.</string>
+
+    <string name="deleteSelected">Verwijderen</string>
+    <string name="archiveSelected">Archiveren</string>
+    <string name="unarchiveSelected">Archiveren ongedaan maken</string>
+    <string name="markAsReadSelected">Markeren als gelezen</string>
+    <string name="markAsUnreadSelected">Markeren als ongelezen</string>
+    <string name="starSelected">Ster</string>
+    <string name="unstarSelected">Geen ster</string>
+
+    <string name="inboxOperationFailed">Bewerking uitvoeren is mislukt</string>
+    <string name="inboxDeletedConfirmation">%s verwijderd</string>
+    <string name="inboxArchivedConfirmation">%s gearchiveerd</string>
+    <string name="inboxUnarchivedConfirmation">Archiveren van %s ongedaan gemaakt</string>
+    <string name="inboxMarkAsReadConfirmation">%s gemarkeerd als gelezen</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s gemarkeerd als ongelezen</string>
+    <string name="inboxStarredConfirmation">Sterren toegekend aan %s</string>
+    <string name="inboxUnstarredConfirmation">Sterren verwijderd van %s</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Dit gesprek wordt verwijderd uit de inbox op al je apparaten. Deze actie kan niet ongedaan worden gemaakt.</item>
+        <item quantity="other">Deze gesprekken worden verwijderd uit de inbox op al je apparaten. Deze actie kan niet ongedaan worden gemaakt.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Kan volgende pagina niet laden. Controleer je internetverbinding.</string>
+    <string name="conversationsRefreshFailed">Conversaties kunnen niet worden vernieuwd. Controleer je internetverbinding.</string>
+    <string name="inboxScopeInbox">Inbox</string>
+    <string name="inboxContextSelectorTitle">Cursus of groep selecteren</string>
+    <string name="inboxClearFilter">Wissen</string>
+    <string name="a11y_courseFilterContentDescription">Cursusfilter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">selecteer</string>
+    <string name="a11y_itemSelectedSwipeForActions">Gesprek geselecteerd. Selectiemodus is geactiveerd. voor acties</string>
+    <string name="a11y_conversationSelected">Gesprek geselecteerd.</string>
+    <string name="a11y_conversationDeselected">Gesprek gedeselecteerd</string>
+    <string name="a11y_exitSelectionMode">Selectiemodus afsluiten</string>
+    <string name="a11y_selectionModeDeactivated">Selectiemodus gedeactiveerd.</string>
 </resources>

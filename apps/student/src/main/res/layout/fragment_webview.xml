@@ -35,13 +35,11 @@
         app:theme="@style/ToolBarStyle"
         tools:targetApi="lollipop" />
 
-    <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/canvasWebView"
+    <com.instructure.pandautils.views.CanvasWebViewWrapper
+        android:id="@+id/canvasWebViewWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:clipToPadding="false"
-        android:scrollbarStyle="outsideOverlay"
+        android:layout_below="@id/toolbar"
         android:background="@color/backgroundLightest" />
 
     <ProgressBar

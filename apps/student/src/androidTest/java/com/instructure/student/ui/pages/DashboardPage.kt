@@ -30,13 +30,10 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
@@ -45,6 +42,7 @@ import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -52,7 +50,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
     private val selectFavorites by WaitForViewWithId(R.id.editDashboardTextView)
-    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
     // in the UI stack.  We want to choose the one that is displayed.
@@ -67,7 +64,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(course: CourseApiModel) {
-        val matcher = allOf(withText(course.name), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
+        assertDisplaysCourse(course.name)
+    }
+
+    fun assertDisplaysCourse(courseName: String) {
+        val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
         scrollAndAssertDisplayed(matcher)
     }
 
@@ -110,56 +111,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
-    fun logOut() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
-        onViewWithText(android.R.string.yes).click()
-        // It can potentially take a long time for the sign-out to take effect, especially on
-        // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
-        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(matches(isDisplayed()))
-
-    }
-
     fun assertCourseLabelTextColor(expectedTextColor: String) {
         onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
-    }
-
-    fun pressChangeUser() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
-    }
-
-    fun goToHelp() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
-    }
-
-    fun gotoGlobalFiles() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_files).click()
-    }
-
-    fun gotoBookmarks() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_bookmarks).click()
-    }
-
-    fun assertUserLoggedIn(user: CanvasUserApiModel) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(user: User) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName!!).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(userName: String) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(userName).assertDisplayed()
-        Espresso.pressBack()
     }
 
     fun assertUnreadEmails(count: Int) {
@@ -204,12 +157,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         selectFavorites.click()
     }
 
-    fun setShowGrades(showGrades: Boolean) {
-        hamburgerButton.click()
-        onViewWithId(R.id.navigationDrawerShowGradesSwitch).perform(SetSwitchCompat(showGrades))
-        Espresso.pressBack()
-    }
-
     // Assumes one course, which is favorited
     fun assertShowsGrades() {
         onView(withId(R.id.gradeTextView)).assertDisplayed()
@@ -230,11 +177,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(groupNameMatcher).scrollTo().click()
     }
 
-    fun launchSettingsPage() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerSettings).click()
-    }
-
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
@@ -251,7 +193,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     // Assumes that a single announcement is showing
     fun assertAnnouncementDetailsDisplayed(announcement: AccountNotification) {
-        WaitForViewWithId(R.id.canvasWebView)
+        WaitForViewWithId(R.id.contentWebView)
         // Include isDisplayed() in the matcher to differentiate from other views with this text
         onView(withText(announcement.subject) + isDisplayed()).assertDisplayed()
     }
@@ -296,6 +238,48 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertInviteGone(courseName: String) {
         onView(withText(courseName) + withAncestor(R.id.dashboardNotifications)).check(doesNotExist())
+    }
+
+    fun switchCourseView() {
+        onView(ViewMatchers.withId(R.id.menu_dashboard_cards)).click()
+    }
+
+    fun clickEditDashboard() {
+        onView(withId(R.id.editDashboardTextView)).click()
+    }
+
+    fun assertCourseNotDisplayed(course: CourseApiModel) {
+        val matcher = allOf(
+            withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
+    fun changeCourseNickname(changeTo: String) {
+        onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
+        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+    }
+
+    fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
+        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
+        onView(courseOverflowMatcher).click()
+        waitForView(withId(R.id.title) + withText(menuTitle)).click()
+    }
+
+    fun assertCourseGrade(courseName: String, courseGrade: String) {
+        val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
+        val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
+
+        onView(matcher).assertDisplayed()
+    }
+
+    fun assertCourseGradeNotDisplayed(courseName: String, courseGrade: String) {
+        val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
+        val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
+
+        onView(matcher).check(matches(Matchers.not(isDisplayed())))
     }
 }
 

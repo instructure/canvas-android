@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.elementary.resources
 
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +26,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_RESOURCES
@@ -43,6 +43,7 @@ import kotlinx.android.synthetic.main.fragment_resources.*
 import kotlinx.android.synthetic.main.item_important_links.view.*
 import javax.inject.Inject
 
+@PageView("#resources")
 @ScreenView(SCREEN_VIEW_K5_RESOURCES)
 @AndroidEntryPoint
 class ResourcesFragment : Fragment() {
@@ -99,9 +100,9 @@ class ResourcesFragment : Fragment() {
 
     private fun setupWebViews() {
         importantLinksContainer.children.forEach {
-            val webView = it.importantLinksWebView
+            val webView = it.importantLinksWebViewWrapper
             if (webView != null) {
-                setupWebView(webView)
+                setupWebView(webView.webView)
             }
         }
     }

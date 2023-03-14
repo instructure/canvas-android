@@ -179,8 +179,8 @@
     <string name="noNotificationsSubtext">Non c’è ancora nulla su cui ricevere delle notifiche.</string>
     <string name="noTodos">Ben fatto!</string>
     <string name="noTodosSubtext">Il tuo elenco di cose da fare è vuoto. Ricarica.</string>
-    <string name="noSyllabus">Nessun piano di studio</string>
-    <string name="noSyllabusSubtext">Non è ancora stato creato un piano di studio.</string>
+    <string name="noSyllabus">Nessun syllabus</string>
+    <string name="noSyllabusSubtext">Non è ancora stato creato un syllabus.</string>
     <string name="noBookmarks">Nessun preferito</string>
     <string name="noBookmarksSubtext">I preferiti sono delle scorciatoie per qualsiasi schermata nell’app. Aggiungili sulla schermata che vuoi segnare come preferita.</string>
     <string name="noModules">Nessun modulo</string>
@@ -485,4 +485,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s contrassegnato come non fatto</string>
     <string name="a11y_markAsDoneWithName">%s Contrassegna come fatto</string>
     <string name="a11y_markAsNotDoneWithName">%s Contrassegna come non fatto</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

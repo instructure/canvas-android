@@ -52,10 +52,10 @@ class RubricCriterionItemView @JvmOverloads constructor(
 
         if (!isInEditMode) {
             // Set 'long description' button color to theme button color
-            viewLongDescriptionButton.setTextColor(ThemePrefs.buttonColor)
+            viewLongDescriptionButton.setTextColor(ThemePrefs.textButtonColor)
 
             // Set 'add comment' button color to theme button color
-            addCommentButton.setTextColor(ThemePrefs.buttonColor)
+            addCommentButton.setTextColor(ThemePrefs.textButtonColor)
         }
     }
 

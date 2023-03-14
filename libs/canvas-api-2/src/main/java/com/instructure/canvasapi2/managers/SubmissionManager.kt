@@ -124,6 +124,32 @@ object SubmissionManager {
         )
     }
 
+    fun postSubmissionComment(
+        courseId: Long,
+        assignmentId: Long,
+        userId: Long,
+        commentText: String,
+        isGroupMessage: Boolean,
+        attachments: List<Long>,
+        callback: StatusCallback<Submission>,
+        attemptId: Long?
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        SubmissionAPI.postSubmissionComment(
+            courseId,
+            assignmentId,
+            userId,
+            commentText,
+            isGroupMessage,
+            attachments,
+            attemptId,
+            adapter,
+            callback,
+            params
+        )
+    }
+
     fun postSubmissionGrade(
         courseId: Long,
         assignmentId: Long,
@@ -207,6 +233,7 @@ object SubmissionManager {
         studentId: Long,
         mediaId: String,
         mediaType: String,
+        attemptId: Long?,
         isGroupComment: Boolean,
         callback: StatusCallback<Submission>
     ) {
@@ -219,6 +246,7 @@ object SubmissionManager {
             studentId,
             mediaId,
             mediaType,
+            attemptId,
             isGroupComment,
             adapter,
             params,
@@ -274,14 +302,13 @@ object SubmissionManager {
         postStudentAnnotationSubmission(canvasContext, assignmentId, annotatableAttachmentId, it)
     }
 
-    fun markSubmissionAsRead(
+    fun markSubmissionAsReadAsync(
         courseId: Long,
-        assignmentId: Long,
-        callback: StatusCallback<Void>
-    ) {
-        val adapter = RestBuilder(callback)
+        assignmentId: Long
+    ) = apiAsync<Void> {
+        val adapter = RestBuilder(it)
         val params = RestParams(isForceReadFromNetwork = true)
-        SubmissionAPI.markSubmissionAsRead(adapter, params, courseId, assignmentId, callback)
+        SubmissionAPI.markSubmissionAsRead(adapter, params, courseId, assignmentId, it)
     }
 
     private fun postStudentAnnotationSubmission(

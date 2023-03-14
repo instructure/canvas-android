@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.elementary.homeroom
 
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,11 +24,11 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_HOMEROOM
@@ -44,10 +43,10 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.SpacesItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_homeroom.*
-import kotlinx.android.synthetic.main.fragment_homeroom.view.*
 import kotlinx.android.synthetic.main.item_announcement.view.*
 import javax.inject.Inject
 
+@PageView("#homeroom")
 @ScreenView(SCREEN_VIEW_K5_HOMEROOM)
 @AndroidEntryPoint
 class HomeroomFragment : Fragment() {
@@ -130,9 +129,9 @@ class HomeroomFragment : Fragment() {
 
     private fun setupWebViews() {
         announcementsContainer.children.forEach {
-            val webView = it.announcementWebView
-            if (webView != null) {
-                setupWebView(webView)
+            val webViewWrapper = it.announcementWebViewWrapper
+            if (webViewWrapper != null) {
+                setupWebView(webViewWrapper.webView)
             }
         }
     }

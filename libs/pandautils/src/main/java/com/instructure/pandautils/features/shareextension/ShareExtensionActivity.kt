@@ -229,7 +229,7 @@ abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogPar
 
     private fun getColor(bundle: Bundle?): Int {
         return if (bundle != null && bundle.containsKey(Const.CANVAS_CONTEXT)) {
-            val color = ColorKeeper.getOrGenerateColor(bundle.getParcelable<Parcelable>(Const.CANVAS_CONTEXT) as CanvasContext)
+            val color = (bundle.getParcelable<Parcelable>(Const.CANVAS_CONTEXT) as CanvasContext).backgroundColor
             ViewStyler.setStatusBarDark(this, color)
             color
         } else {

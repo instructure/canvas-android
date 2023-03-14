@@ -43,51 +43,52 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
     /** The default color **/
     @JvmStatic var defaultColor: Int = 0
 
-    /** The currently cached colors **/
-    var cachedColors: Map<String, Int> by NonNullGsonPref(HashMap())
+    var cachedThemedColors: Map<String, ThemedColor> by GsonMapPref(String::class.java, ThemedColor::class.java)
 
     /** Whether or not colors have been synced from the API before **/
-    var hasPreviouslySynced by BooleanPref()
+    var previouslySynced by BooleanPref()
 
-    /** Gets the color associated with the given key if it exists, otherwise gets the [defaultColor] **/
-    @JvmStatic fun getColorOrDefault(keyName: String)
-            = cachedColors[keyName] ?: defaultColor
+    var darkTheme = false
 
-    /** Gets the color associated with the given [CanvasContext] if it exists, otherwise generates a new color **/
-    @JvmStatic @JvmOverloads
-    fun getOrGenerateColor(canvasContext: CanvasContext?, @ColorInt defaultColor: Int = ThemePrefs.primaryColor): Int {
+    /**
+     * Gets the themed color associated with the given [CanvasContext] if it exists, otherwise generates a new color
+     * This should be used directly  only in special cases where we need a [ThemedColor] object instead of a specific color.
+     * To get course color use [CanvasContext.textAndIconColor] or [CanvasContext.backgroundColor]
+     * Only direct usage is in widgets, because there we handle light/dark theme differently
+     * **/
+    fun getOrGenerateColor(canvasContext: CanvasContext?): ThemedColor {
         return when (canvasContext) {
-            is Course -> cachedColors.getOrElse(canvasContext.contextId) { generateColor(canvasContext) }
+            is Course -> cachedThemedColors.getOrElse(canvasContext.contextId) { generateColor(canvasContext) }
             is Group -> {
-                cachedColors.getOrElse(canvasContext.contextId) {
+                cachedThemedColors.getOrElse(canvasContext.contextId) {
                     val courseContextId = CanvasContext.makeContextId(CanvasContext.Type.COURSE, canvasContext.courseId)
-                    cachedColors.getOrElse(courseContextId) { ContextCompat.getColor(ContextKeeper.appContext, R.color.backgroundDark) }
+                    val groupDefaultColor = ContextCompat.getColor(ContextKeeper.appContext, R.color.backgroundDark)
+                    cachedThemedColors.getOrElse(courseContextId) { ThemedColor(groupDefaultColor) }
                 }
             }
-            else -> defaultColor
+            else -> ThemedColor(ThemePrefs.primaryColor) // defaultColor is already themed so we don't need 3 different colors
         }
     }
 
-    fun colorFromCourseId(courseId: Long) = getOrGenerateColor(CanvasContext.emptyCourseContext(courseId))
-
-    /** Gets the color associated with the given contextId if it exists, otherwise generates a new color **/
-    @JvmStatic fun getOrGenerateColor(contextId: String)
-            = cachedColors.getOrElse(contextId) { generateColor(Course()) }
-
     /** Adds all colors in the given [CanvasColor] object to the color cache **/
     @JvmStatic fun addToCache(canvasColor: CanvasColor?) {
-        canvasColor?.colors?.let { colors -> cachedColors += colors.mapValues { parseColor(it.value) } }
+        canvasColor?.colors?.let { colors ->
+            cachedThemedColors += colors.mapValues {
+                val color = parseColor(it.value)
+                createThemedColor(color)
+            }
+        }
     }
 
     /** Associates a new color with a contextId **/
-    @JvmStatic fun addToCache(contextId: String, color: Int) {
-        cachedColors += contextId to color
+    @JvmStatic fun addToCache(contextId: String, @ColorInt color: Int) {
+        cachedThemedColors += contextId to createThemedColor(color)
     }
 
     /** Associates a new color with a contextId **/
-    @JvmStatic fun addToCache(contextId: String, colorCode: String) {
+    fun addToCache(contextId: String, colorCode: String) {
         val color = parseColor(colorCode)
-        cachedColors += contextId to color
+        cachedThemedColors += contextId to createThemedColor(color)
     }
 
     /**
@@ -102,16 +103,6 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
             .getDrawable(context, resource)!!
             .mutate()
             .apply { setColorFilter(color, PorterDuff.Mode.SRC_ATOP) }
-
-    /**
-     * Generates a colored drawable
-     * @param context An Android Context
-     * @param resource The resource ID of the drawable to be colored
-     * @param canvasContext A CanvasContext whose associated color will be used to tint the drawable
-     * @return The colored drawable
-     */
-    @JvmStatic fun getColoredDrawable(context: Context, @DrawableRes resource: Int, canvasContext: CanvasContext?)
-            = getColoredDrawable(context, resource, getOrGenerateColor(canvasContext))
 
     /**
      * Returns a color string in hex format with no alpha
@@ -154,9 +145,9 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
      * @param canvasContext a valid canvas context
      * @return the generated colors
      */
-    private fun generateColor(canvasContext: CanvasContext): Int {
+    private fun generateColor(canvasContext: CanvasContext): ThemedColor {
         if (canvasContext.type == CanvasContext.Type.USER || canvasContext.name.isNullOrBlank()) {
-            return defaultColor
+            return ThemedColor(defaultColor) // defaultColor is already themed so we don't need 3 different colors
         }
 
         val colorRes = when (Math.abs((canvasContext.name?.hashCode() ?: "Null Name".hashCode()) % 13)) {
@@ -178,8 +169,9 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         }
 
         val color = ContextCompat.getColor(ContextKeeper.appContext, colorRes)
-        addToCache(canvasContext.contextId, color)
-        return color
+        val themedColor = createThemedColor(color)
+        cachedThemedColors += canvasContext.contextId to themedColor
+        return themedColor
     }
 
     override fun onClearPrefs() {}
@@ -189,20 +181,6 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
 object ColorApiHelper {
 
     const val K5_DEFAULT_COLOR = "#394B58"
-
-    /**
-     * Returns a color via a callback, if no color is in the cache it will pull from canvas via the api
-     * If nothing is found in the cache or api a color is generated
-     * @param canvasContext canvasContext
-     * @param gotColor
-     */
-    @JvmStatic fun getColor(canvasContext: CanvasContext, gotColor: (color: Int) -> Unit) {
-        if (canvasContext.contextId in ColorKeeper.cachedColors) {
-            gotColor(ColorKeeper.cachedColors[canvasContext.contextId]!!)
-        } else {
-            performSync { gotColor(ColorKeeper.getOrGenerateColor(canvasContext)) }
-        }
-    }
 
     /**
      * Sets a new color to the api and caches the result
@@ -239,4 +217,24 @@ object ColorApiHelper {
     }
 
     suspend fun awaitSync(): Boolean = suspendCancellableCoroutine { cr -> performSync { cr.resumeSafely(it) } }
+}
+
+private fun createThemedColor(@ColorInt color: Int): ThemedColor {
+    val light = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.white))
+    val darkBackgroundColor = ColorUtils.correctContrastForButtonBackground(color, ContextKeeper.appContext.getColor(R.color.backgroundDarkMode), ContextKeeper.appContext.getColor(R.color.white))
+    val darkTextAndIconColor = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.elevatedDarkColor))
+
+    return ThemedColor(light, darkBackgroundColor, darkTextAndIconColor)
+}
+
+data class ThemedColor(
+    @ColorInt val light: Int,
+    @ColorInt val darkBackgroundColor: Int = light,
+    @ColorInt val darkTextAndIconColor: Int = light
+) {
+    @ColorInt
+    fun textAndIconColor() = if (ColorKeeper.darkTheme) darkTextAndIconColor else light
+
+    @ColorInt
+    fun backgroundColor() = if (ColorKeeper.darkTheme) darkBackgroundColor else light
 }

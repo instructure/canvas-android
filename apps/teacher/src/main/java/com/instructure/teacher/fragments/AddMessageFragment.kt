@@ -24,19 +24,18 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.RESULT_ATTACHMENTS
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.room.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
@@ -49,14 +48,17 @@ import com.instructure.teacher.presenters.AddMessagePresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.viewinterface.AddMessageView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_message.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import kotlin.collections.ArrayList
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
+@AndroidEntryPoint
 class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView, FileUploadDialogParent {
 
     private var currentMessage: Message? by NullableParcelableArg(null, Const.MESSAGE_TO_USER)
@@ -68,6 +70,9 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     private var messageStudentsWhoContextId by NullableStringArg(MESSAGE_STUDENTS_WHO_CONTEXT_ID)
     private var shouldAllowExit = false
     private var participants: ArrayList<Recipient> by ParcelableArrayListArg(key = KEY_PARTICIPANTS)
+
+    @Inject
+    lateinit var attachmentDao: AttachmentDao
 
     private val isValidNewMessage: Boolean
         get() {
@@ -214,7 +219,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             courseWasSelected()
         }
 
-        ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
+        ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
 
         // Don't show the contacts button if there is no selected course and there is no context_code from the conversation (shouldn't happen, but it does)
         if (selectedCourse == null && presenter.course != null && presenter.course!!.id == 0L) {
@@ -413,12 +418,11 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
         val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = initialRecipientIds
             .map { it.toString() }
             .filter { id ->
-                // Skip existing recipients and self
-                id != myId && selectedRecipients.none { it.stringId == id }
+                // Skip existing recipients
+                selectedRecipients.none { it.stringId == id }
             }
             .mapNotNull { presenter.getParticipantById(it) }
         chips.addRecipients(recipients)
@@ -426,11 +430,10 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     private fun addRecipients(newRecipients: List<Recipient>) {
         val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = newRecipients.filter { recipient ->
-            // Skip existing recipients and self
+            // Skip existing recipients
             val stringId = recipient.stringId
-            stringId != myId && selectedRecipients.none { it.stringId == stringId }
+            selectedRecipients.none { it.stringId == stringId }
         }
         chips.addRecipients(recipients)
     }
@@ -462,14 +465,18 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     }
 
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
-        workInfoLiveData.observe(viewLifecycleOwner) {
-            if (it.state == WorkInfo.State.SUCCEEDED) {
-                it.outputData.getStringArray(RESULT_ATTACHMENTS)
-                    ?.map { it.fromJson<Attachment>() }
-                    ?.let {
-                        presenter.addAttachments(it)
-                        refreshAttachments()
+        workInfoLiveData.observe(viewLifecycleOwner) { workInfo ->
+            if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+                lifecycleScope.launch {
+                    uuid?.let { uuid ->
+                        attachmentDao.findByParentId(uuid.toString())?.let { attachmentEntities ->
+                            val attachments = attachmentEntities.map { it.toApiModel() }
+                            presenter.addAttachments(attachments)
+                            refreshAttachments()
+                            attachmentDao.deleteAll(attachmentEntities)
+                        } ?: toast(R.string.errorUploadingFile)
                     } ?: toast(R.string.errorUploadingFile)
+                }
             }
         }
     }

@@ -24,15 +24,15 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
-import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ConsumerQueueWrapper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import java.io.File
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -140,3 +140,9 @@ val chooseMediaIntent: Intent by lazy {
         addCategory(Intent.CATEGORY_OPENABLE)
     }
 }
+
+fun getFormattedAttemptDate(date: Date): String = DateFormat.getDateTimeInstance(
+    DateFormat.MEDIUM,
+    DateFormat.SHORT,
+    Locale.getDefault()
+).format(date)

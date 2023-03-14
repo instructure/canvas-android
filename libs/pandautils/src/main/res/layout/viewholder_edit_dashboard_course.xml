@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2021 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:contentDescription="@{itemViewModel.favorite ? @string/courseFavorited(itemViewModel.name) : @string/courseNotFavorited(itemViewModel.name)}"
+            android:onClick="@{() -> itemViewModel.onClick()}"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:id="@+id/favoriteButton"
+                android:layout_width="56dp"
+                android:layout_height="48dp"
+                android:alpha="@{itemViewModel.favoriteable ? 1.0f : 0.5f}"
+                android:contentDescription="@{itemViewModel.favorite ? @string/a11y_content_description_remove_from_dashboard : @string/a11y_content_description_add_to_dashboard}"
+                android:onClick="@{() -> itemViewModel.onFavoriteClick()}"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
+                android:tint="@{itemViewModel.favoriteable ? @color/textInfo : @color/textDarkest}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                android:text="@{itemViewModel.name}"
+                android:textColor="@color/textDarkest"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toTopOf="@+id/termTitle"
+                app:layout_constraintEnd_toStartOf="@+id/openButton"
+                app:layout_constraintStart_toEndOf="@id/favoriteButton"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Course name" />
+
+            <TextView
+                android:id="@+id/termTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                android:text="@{itemViewModel.termTitle}"
+                android:textAllCaps="true"
+                android:textColor="@color/textDark"
+                android:textSize="12sp"
+                android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/openButton"
+                app:layout_constraintStart_toEndOf="@id/favoriteButton"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                tools:text="DEFAULT TERM | STUDENT" />
+
+            <ImageView
+                android:id="@+id/openButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_open_arrow"
+                android:visibility="@{itemViewModel.openable ? View.VISIBLE : View.GONE}"
+                android:tint="@color/textDark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/backgroundMedium" />
+    </RelativeLayout>
+</layout>

@@ -19,6 +19,7 @@ package com.instructure.canvasapi2
 import android.net.http.HttpResponseCache
 import com.google.gson.GsonBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.calladapter.DataResultCallAdapterFactory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
@@ -97,7 +98,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         // Can make this check as we KNOW that the setter doesn't allow empty strings.
         if (params.domain == "") {
             Logger.d("The RestAdapter hasn't been set up yet. Call setupInstance(context,token,domain)")
-            return Retrofit.Builder().baseUrl("http://invalid.domain.com/").build()
+            return Retrofit.Builder().baseUrl("https://invalid.domain.com/").build()
         }
 
         var apiContext = ""
@@ -130,7 +131,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         // Can make this check as we KNOW that the setter doesn't allow empty strings.
         if (params.domain == "") {
             Logger.d("The RestAdapter hasn't been set up yet. Call setupInstance(context,token,domain)")
-            return Retrofit.Builder().baseUrl("http://invalid.domain.com/").build()
+            return Retrofit.Builder().baseUrl("https://invalid.domain.com/").build()
         }
 
         var apiContext = ""
@@ -187,7 +188,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         // Can make this check as we KNOW that the setter doesn't allow empty strings.
         if (params.domain == "") {
             Logger.d("The RestAdapter hasn't been set up yet. Call setupInstance(context,token,domain)")
-            return Retrofit.Builder().baseUrl("http://invalid.domain.com/").build()
+            return Retrofit.Builder().baseUrl("https://invalid.domain.com/").build()
         }
 
         var apiContext = ""
@@ -220,9 +221,10 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         if (params.domain == "") {
             Logger.d("The RestAdapter hasn't been set up yet. Call setupInstance(context,token,domain)")
             return Retrofit.Builder()
-                .baseUrl("http://invalid.domain.com/")
+                .baseUrl("https://invalid.domain.com/")
                 // Add a converter here so that unmocked tests will result in an API failure instead of a crash
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(DataResultCallAdapterFactory())
                 .build()
         }
 
@@ -250,6 +252,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         return Retrofit.Builder()
             .baseUrl(params.domain + params.apiVersion + apiContext)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(DataResultCallAdapterFactory())
             .callFactory { request ->
                 // Tag this request with the rest params so we can access them later in RequestInterceptor
                 okHttpClient.newCall(request.newBuilder().tag(params).build())

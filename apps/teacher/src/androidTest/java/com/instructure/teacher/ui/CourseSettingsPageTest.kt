@@ -60,9 +60,11 @@ class CourseSettingsPageTest : TeacherTest() {
                 courseCount = 1
         )
         val teacher = data.teachers[0]
+        val course = data.courses.values.first()
         val token = data.tokenFor(teacher)!!
+
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.openCourseAtPosition(0)
+        dashboardPage.openCourse(course!!)
         courseBrowserPage.clickSettingsButton()
     }
 }

@@ -48,7 +48,6 @@
                 app:popupTheme="@style/ToolBarPopupStyle"
                 app:theme="@style/ToolBarStyle"
                 app:title="@{title}"
-                app:titleTextColor="@color/textDarkest"
                 tools:ignore="UnusedAttribute" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

@@ -31,11 +31,12 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_list_todo.*
 import kotlinx.android.synthetic.main.fragment_list_todo.view.*
@@ -163,9 +164,9 @@ class ToDoListFragment : ParentFragment() {
                 if (toDo.assignment!!.discussionTopicHeader != null) {
                     val groupTopic = toDo.assignment!!.discussionTopicHeader!!.groupTopicChildren.firstOrNull()
                     if (groupTopic == null) { // Launch discussion details fragment
-                        RouteMatcher.route(requireContext(), DiscussionDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
+                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
                     } else { // Launch discussion details fragment with the group
-                        RouteMatcher.route(requireContext(), DiscussionDetailsFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
+                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
                     }
                 } else {
                     // Launch assignment details fragment.
@@ -194,8 +195,8 @@ class ToDoListFragment : ParentFragment() {
                 .create()
 
         dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             dialog.listView.children<AppCompatCheckedTextView>().forEach { checkbox ->
                 checkbox.compoundDrawableTintList = ColorStateList.valueOf(ThemePrefs.brandColor)
             }

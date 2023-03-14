@@ -64,7 +64,7 @@ class ColorPickerDialog: AppCompatDialogFragment() {
     }
 
     fun setupViews(view: View) {
-        val currentColor = course.color
+        val currentColor = course.backgroundColor
         listOf(
             view.colorCottonCandy to R.color.colorCottonCandy,
             view.colorBarbie to R.color.colorBarbie,

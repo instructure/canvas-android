@@ -23,22 +23,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
-import android.view.KeyEvent
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.View.OnTouchListener
-import android.view.ViewConfiguration
 import android.widget.Toast
-
-import com.instructure.student.R
-import com.instructure.student.util.LoggingUtility
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
+import com.instructure.student.R
+import com.instructure.student.util.LoggingUtility
 
 abstract class ParentActivity : BaseActionBarActivity(), OnTouchListener {
 
@@ -58,7 +53,7 @@ abstract class ParentActivity : BaseActionBarActivity(), OnTouchListener {
         get() = this
 
     val isTablet: Boolean
-        get() = resources.getBoolean(R.bool.is_device_tablet)
+        get() = resources.getBoolean(R.bool.isDeviceTablet)
     val isLandscape: Boolean
         get() = resources.getBoolean(R.bool.isLandscape)
 

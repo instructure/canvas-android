@@ -16,17 +16,22 @@
 
 package com.instructure.pandautils.features.discussion.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
@@ -35,8 +40,11 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_discussion_details_web_view.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
+@PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN)
 @AndroidEntryPoint
 class DiscussionDetailsWebViewFragment : Fragment() {
@@ -45,10 +53,13 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     lateinit var webViewRouter: WebViewRouter
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
-    private var discussionTopicHeader: DiscussionTopicHeader by ParcelableArg(default = DiscussionTopicHeader(), key = DISCUSSION_TOPIC_HEADER)
+    private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
 
     private val viewModel: DiscussionDetailsWebViewViewModel by viewModels()
+
+    @PageViewUrlParam("topicId")
+    private fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -56,13 +67,17 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.loadData(canvasContext, discussionTopicHeader)
+        viewModel.loadData(canvasContext, discussionTopicHeader, discussionTopicHeaderId)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applyTheme()
+        viewModel.data.observe(viewLifecycleOwner) {
+            applyTheme(it.title)
+        }
+        setupFilePicker()
+        discussionWebView.addVideoClient(requireActivity())
         discussionWebView.setDarkModeSupport()
         discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -94,8 +109,46 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         }
     }
 
-    private fun applyTheme() {
-        toolbar.title = discussionTopicHeader.title
+    private fun setupFilePicker() {
+        discussionWebView.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+            override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
+                startActivityForResult(intent, requestCode)
+            }
+
+            override fun permissionsGranted(): Boolean {
+                return if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    true
+                } else {
+                    requestFilePermissions()
+                    false
+                }
+            }
+        })
+    }
+
+    private fun requestFilePermissions() {
+        requestPermissions(
+            PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA),
+            PermissionUtils.PERMISSION_REQUEST_CODE
+        )
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRequestPermissionsResult(result: PermissionRequester.PermissionResult) {
+        if (PermissionUtils.allPermissionsGrantedResultSummary(result.grantResults)) {
+            discussionWebView.clearPickerCallback()
+            Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!discussionWebView.handleOnActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun applyTheme(title: String) {
+        toolbar.title = title
         toolbar.setupAsBackButton(this)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
@@ -109,6 +162,15 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
+                putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeader.id)
+            }
+
+            return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)
+        }
+
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long): Route {
+            val bundle = Bundle().apply {
+                putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
             }
 
             return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)

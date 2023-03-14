@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Helo dunia!</string>
+    <string name="action_settings">Tetapan</string>
+    <string name="mobileVerifyGeneral">Penggunaan apl ini tidak dibenarkan</string>
+    <string name="mobileVerifyDomainUnauthorized">Pelayan yang anda masukkan tidak dibenarkan untuk apl ini.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Agen Pengguna untuk apl ini tidak dibenarkan.</string>
+    <string name="mobileVerifyUnknownError">Kami tidak dapat menentusahkan pelayan untuk penggunaan apl ini.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Ralat tidak dijangka berlaku.</string>
+    <string name="pageNotFound">Halaman tidak ditemui.</string>
+    <string name="confirm">Sahkan</string>
+    <string name="cancel">Batal</string>
+    <string name="help">Bantu</string>
+    <string name="enterURL">Masukkan URL Canvas anda:</string>
+    <string name="signIntoCanvasNetwork">Mencuba daftar masuk ke Jaringan Canvas?</string>
+    <string name="remove">Alih Keluar</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID Pengguna</string>
+    <string name="domain">Domain</string>
+    <string name="actAsUser">Bertindak sebagai Pengguna</string>
+    <string name="stopActAsUser">Berhenti Bertindak sebagai Pengguna</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Alih keluar pengguna ini?</string>
+    <string name="removedForever">Anda perlu mendaftar masuk pengguna ini semula untuk mengakses kandungan mereka.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logo Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: HIDUP</string>
+    <string name="canvasLoginOff">Canvas_Login: MATI</string>
+    <string name="siteAdminLogin">Log Masuk Pentadbir Laman Web: HIDUP</string>
+
+    <string name="username">Nama Pengguna</string>
+    <string name="password">Kata Laluan</string>
+    <string name="authenticationRequired">Pengesahan Diperlukan</string>
+    <string name="invalidEmailPassword">E-mel atau kata laluan tidak sah</string>
+    <string name="login">Log Masuk</string>
+    <string name="logout">Log Keluar</string>
+    <string name="matchingSchools">Sekolah Sepadan</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Adakah anda pasti anda ingin log keluar?</string>
+    <string name="logout_yes">Ya</string>
+    <string name="logout_no">Tidak</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Berhampiran Anda</string>
+    <string name="loginCanvasNetwork">Jaringan Canvas</string>
+    <string name="loginRightBehindYou">Tepat di belakang anda</string>
+    <string name="loginCanvasHelp">Tidak menemui sekolah anda? Masukkan URL sekolah atau ketik di sini untuk mendapatkan bantuan.</string>
+    <string name="loginCanvasHelpWithUser">Masukkan URL sekolah atau ketik di sini untuk mendapatkan bantuan.</string>
+    <string name="loginHint">Cari sekolah atau daerah anda</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Laporkan Masalah</string>
+    <string name="errorReportSubject">Subjek</string>
+    <string name="errorReportDescription">Penerangan</string>
+    <string name="errorReportSend">Hantar</string>
+    <string name="errorReportThankyou">Terima kasih kerana melaporkan isu anda kepada Pasukan Sokongan kami.  Anda akan menerima pengesahan dan kemas kini melalui e-mel.</string>
+    <string name="errorReportSeverityText">Bagaimanakah hal ini mempengaruhi anda?</string>
+    <string name="errorSeverityCasualQuestion">Hanya soalan, komen, idea dan cadangan santai...</string>
+    <string name="errorSeverityNeedHelp">Saya perlukan sedikit bantuan tetapi ia tidak mendesak.</string>
+    <string name="errorSeveritySomethingsBroken">Sesuatu tidak kena tetapi saya masih boleh mengatasinya pada masa ini untuk melakukan perkara yang saya ingin lakukan.</string>
+    <string name="errorSeverityCantGetThingsDone">Saya tidak dapat menyelesaikan perkara ini sehingga saya menerima maklum balas daripada anda.</string>
+    <string name="errorSeverityExtremelyCritical">KECEMASAN KRITIKAL MELAMPAU!!</string>
+
+    <string name="errorReportEmailAddress">Alamat E-Mel</string>
+    <string name="errorReportUnknown">Tidak diketahui</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 batu (1.6 km)</string>
+    <string name="oneMile">1 batu (1.6 km)</string>
+    <string name="miles">batu</string>
+    <string name="kilometers">km</string>
+    <!-- String for submitting tickets -->
+    <string name="device">Peranti</string>
+    <string name="osVersion">Versi OS</string>
+
+    <string name="previousLoginTitle">Log Masuk Sebelumnya</string>
+    <string name="findMySchool">Cari sekolah anda</string>
+    <string name="loginWithQRCode">Kod QR</string>
+    <string name="locateQRCode">Kesan Kod QR</string>
+    <string name="qrCodeExplanation">Anda akan menemui kod QR di web dalam profil akaun anda. Klik \'QR untuk Log Masuk Mudah Alih\' dalam senarai.</string>
+    <string name="qrCodeScanningPrompt">Imbas kod QR daripada Canvas untuk log masuk</string>
+    <string name="loginWithQRCodeError">Terdapat ralat log masuk. Sila jana Kod QR lain dan cuba semula.</string>
+    <string name="invalidQRCodeError">Sila imbas kod QR yang dijana oleh Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Syot layar menunjukkan lokasi penjanaan kod QR dalam pelayar</string>
+    <string name="whatsYourSchoolName">Apakah nama sekolah anda?</string>
+    <string name="next">Seterusnya</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Alih Keluar Pengguna Sebelumnya</string>
+    <string name="accountDomainFooter">Tidak menemui sekolah anda? Cuba taip URL sekolah yang penuh.</string>
+    <string name="accountDomainFooterLink">Ketik di sini untuk mendapatkan bantuan.</string>
+
+    <string name="login_noInternetConnectionTitle">Tiada Sambungan Internet</string>
+    <string name="login_noInternetConnectionMessage">Tindakan ini memerlukan sambungan Internet</string>
+    <string name="empty_feedback">Subjek dan penerangan diperlukan untuk menyerahkan maklum balas.</string>
+    <string name="versionNum">Nombor Versi</string>
+    <string name="scrollInstructions">Tatal untuk melihat semua butiran</string>
+
+    <string name="masqueradeErrorUserId">Anda mesti memasukkan id pengguna.</string>
+    <string name="masqueradeErrorDomain">Anda mesti memasukkan domain.</string>
+    <string name="masqueradeError">Ralat semasa cuba bertindak sebagai pengguna.</string>
+    <string name="masqueradeInfo">\"Bertindak sebagai\" pada asasnya ialah log masuk sebagai pengguna tanpa kata laluan. Anda akan dapat mengambil tindakan seolah-olah anda pengguna ini, dan dari sudut pandang pengguna lain, akan menjadikan seolah-olah pengguna ini melaksanakan tindakan tersebut. Namun begitu, log audit merekodkan bahawa anda ialah orang yang melaksanakan tindakan bagi pihak pengguna ini.</string>
+    <string name="masqueradingAs">Anda bertindak sebagai %s</string>
+    <string name="stopActingAsTitle">Berhenti bertindak sebagai...</string>
+    <string name="stopActingAsMessage">Anda akan berhenti bertindak sebagai %s dan kembali ke akaun anda.</string>
+    <string name="weMadeChanges">Kami telah membuat beberapa perubahan.</string>
+    <string name="whatsNewText">Lihat apa yang baharu.</string>
+    <string name="findAnotherSchool">Cari sekolah lain</string>
+</resources>

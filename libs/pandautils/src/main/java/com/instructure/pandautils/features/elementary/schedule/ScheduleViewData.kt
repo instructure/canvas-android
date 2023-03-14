@@ -29,11 +29,11 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 data class ScheduleViewData(val itemViewModels: List<ScheduleDayGroupItemViewModel>)
 
 data class ScheduleCourseViewData(
-        val courseName: String,
-        val openable: Boolean,
-        val courseColor: String,
-        val imageUrl: String,
-        val plannerItems: List<SchedulePlannerItemViewModel>
+    val courseName: String,
+    val openable: Boolean,
+    @ColorInt val courseColor: Int,
+    val imageUrl: String,
+    val plannerItems: List<SchedulePlannerItemViewModel>
 )
 
 data class SchedulePlannerItemData(
@@ -56,13 +56,13 @@ data class SchedulePlannerItemTag(
 )
 
 data class ScheduleMissingItemData(
-        val title: String?,
-        val dueString: String?,
-        val points: String?,
-        val type: PlannerItemType,
-        val courseName: String?,
-        val courseColor: String,
-        val contentDescription: String
+    val title: String?,
+    val dueString: String?,
+    val points: String?,
+    val type: PlannerItemType,
+    val courseName: String?,
+    @ColorInt val courseColor: Int,
+    val contentDescription: String
 )
 
 enum class PlannerItemType(@DrawableRes val iconRes: Int) {

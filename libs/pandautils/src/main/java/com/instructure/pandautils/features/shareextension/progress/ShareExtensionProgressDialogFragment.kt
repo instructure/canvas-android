@@ -103,7 +103,7 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
 
         dialog.setOnShowListener {
             val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setTextColor(ThemePrefs.textButtonColor)
             negative.setOnClickListener {
                 viewModel.cancelClicked()
             }

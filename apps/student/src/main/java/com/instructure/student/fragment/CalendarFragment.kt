@@ -30,12 +30,13 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -86,7 +87,7 @@ class CalendarFragment : ParentFragment() {
                 AssignmentDetailsFragment.makeRoute(item.canvasContext, item.plannable.id)
             }
             PlannableType.DISCUSSION_TOPIC -> {
-                DiscussionDetailsFragment.makeRoute(item.canvasContext, item.plannable.id, title = item.plannable.title)
+                DiscussionRouterFragment.makeRoute(item.canvasContext, item.plannable.id)
             }
             PlannableType.QUIZ -> {
                 if (item.plannable.assignmentId != null) {

@@ -112,7 +112,7 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
     private fun setupAttachments() {
         for (attachment in submission.attachments) {
             val view = LayoutInflater.from(context).inflate(R.layout.comment_submission_attachment_view, this, false)
-            view.iconImageView.setColorFilter(ThemePrefs.accentColor)
+            view.iconImageView.setColorFilter(ThemePrefs.brandColor)
             view.iconImageView.setImageResource(attachment.iconRes)
             view.titleTextView.text = attachment.displayName
             view.subtitleTextView.text = Formatter.formatFileSize(context, attachment.size)

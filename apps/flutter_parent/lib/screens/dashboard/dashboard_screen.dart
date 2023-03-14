@@ -42,6 +42,7 @@ import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -564,12 +565,18 @@ class DashboardState extends State<DashboardScreen> {
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
-    await ParentTheme.of(context).setSelectedStudent(null);
-    await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
-    MasqueradeUI.of(context).refresh();
-    locator<Analytics>()
-        .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
-    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+    try {
+      await ParentTheme.of(context).setSelectedStudent(null);
+      await locator<Analytics>()
+          .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
+      await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
+      MasqueradeUI.of(context).refresh();
+      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+      await FeaturesUtils.performLogout();
+    } catch (e) {
+      // Just in case we experience any error we still need to go back to the login screen.
+      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+    }
   }
 
   _navDrawerHeader(User user) => Column(
