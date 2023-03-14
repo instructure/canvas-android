@@ -29,9 +29,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.zynksoftware.documentscanner.R
 import com.zynksoftware.documentscanner.ScanActivity
@@ -43,21 +41,11 @@ import com.zynksoftware.documentscanner.ui.base.BaseFragment
 import com.zynksoftware.documentscanner.ui.scan.InternalScanActivity
 import id.zelory.compressor.determineImageRotation
 
-internal class ImageCropFragment : BaseFragment() {
-
-    private var _binding: FragmentImageCropBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+internal class ImageCropFragment : BaseFragment<FragmentImageCropBinding>(FragmentImageCropBinding::inflate) {
 
     private val nativeClass = OpenCvNativeBridge()
 
     private var selectedImage: Bitmap? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentImageCropBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -77,11 +65,6 @@ internal class ImageCropFragment : BaseFragment() {
         }
 
         initListeners()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun initListeners() = with(binding) {

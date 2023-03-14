@@ -24,9 +24,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.tbruyelle.rxpermissions3.RxPermissions
 import com.zynksoftware.documentscanner.R
 import com.zynksoftware.documentscanner.common.extensions.hide
@@ -41,22 +39,7 @@ import java.io.File
 import java.io.FileNotFoundException
 
 
-internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
-
-    private var _binding: FragmentCameraScreenBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentCameraScreenBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+internal class CameraScreenFragment: BaseFragment<FragmentCameraScreenBinding>(FragmentCameraScreenBinding::inflate), ScanSurfaceListener  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)

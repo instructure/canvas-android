@@ -23,10 +23,7 @@ package com.zynksoftware.documentscanner.ui.imageprocessing
 import android.graphics.*
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import com.zynksoftware.documentscanner.R
 import com.zynksoftware.documentscanner.common.extensions.rotateBitmap
 import com.zynksoftware.documentscanner.databinding.FragmentImageProcessingBinding
 import com.zynksoftware.documentscanner.ui.base.BaseFragment
@@ -35,19 +32,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-internal class ImageProcessingFragment : BaseFragment() {
-
-    private var _binding: FragmentImageProcessingBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+internal class ImageProcessingFragment : BaseFragment<FragmentImageProcessingBinding>(FragmentImageProcessingBinding::inflate) {
 
     private var isInverted = false
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentImageProcessingBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,11 +42,6 @@ internal class ImageProcessingFragment : BaseFragment() {
         binding.imagePreview.setImageBitmap(getScanActivity().croppedImage)
 
         initListeners()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun initListeners() = with(binding) {
