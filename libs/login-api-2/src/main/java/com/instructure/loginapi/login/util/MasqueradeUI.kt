@@ -32,9 +32,9 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.loginapi.login.R
+import com.instructure.loginapi.login.databinding.LayoutMasqueradeNotificationBinding
 import com.instructure.pandautils.utils.lastAncestorOrNull
 import com.instructure.pandautils.utils.onClick
-import kotlinx.android.synthetic.main.layout_masquerade_notification.view.*
 
 /**
  * Adds a masquerade UI to this Activity if the user is currently masquerading.
@@ -71,14 +71,14 @@ private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = 
 
         // Add notification view
         rootView.findViewById<View>(android.R.id.content).lastAncestorOrNull<LinearLayout>()?.let {
-            val view = LayoutInflater.from(context).inflate(R.layout.layout_masquerade_notification, it, false)
-            view.masqueradeLabel.text = Pronouns.resource(
+            val binding = LayoutMasqueradeNotificationBinding.inflate(LayoutInflater.from(context), it, false)
+            binding.masqueradeLabel.text = Pronouns.resource(
                 context,
                 R.string.masqueradingAs,
                 ApiPrefs.user?.pronouns,
                 Pronouns.span(ApiPrefs.user?.name, ApiPrefs.user?.pronouns)
             )
-            view.cancelMasqueradeButton.onClick {
+            binding.cancelMasqueradeButton.onClick {
                 AlertDialog.Builder(context)
                     .setTitle(R.string.stopActingAsTitle)
                     .setMessage(context.getString(R.string.stopActingAsMessage, ApiPrefs.user?.name))
@@ -88,7 +88,7 @@ private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = 
                     }
                     .show()
             }
-            it.addView(view, 0)
+            it.addView(binding.root, 0)
         }
     }
 }

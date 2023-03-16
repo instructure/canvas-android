@@ -73,7 +73,6 @@ import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
-import kotlinx.android.synthetic.main.abc_search_view.view.*
 import kotlinx.coroutines.delay
 import java.util.*
 
@@ -652,7 +651,7 @@ fun Toolbar?.addSearch(hintText: String? = null, @ColorInt color: Int = Color.WH
     with(searchItem.actionView as SearchView) {
         maxWidth = Int.MAX_VALUE
         setIconifiedByDefault(false)
-        search_mag_icon.setImageDrawable(null)
+        findViewById<ImageView>(R.id.search_mag_icon)?.setImageDrawable(null)
         queryHint = hintText ?: context.getString(R.string.search)
         setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             var lastQuery = "" // Track the last sent query to reduce duplicates
@@ -671,7 +670,7 @@ fun Toolbar?.addSearch(hintText: String? = null, @ColorInt color: Int = Color.WH
                 return true
             }
         })
-        (search_src_text as? EditText)?.apply {
+        findViewById<EditText>(R.id.search_src_text)?.apply {
             setTextColor(color)
             setCursorColor(color)
             setHintTextColor(ColorUtils.setAlphaComponent(color, 0x66))

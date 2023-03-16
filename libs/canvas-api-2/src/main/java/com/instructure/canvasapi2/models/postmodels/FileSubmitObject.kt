@@ -17,7 +17,7 @@ package com.instructure.canvasapi2.models.postmodels
 
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Attachment
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FileSubmitObject(

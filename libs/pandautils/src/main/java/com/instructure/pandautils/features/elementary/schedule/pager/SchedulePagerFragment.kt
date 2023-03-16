@@ -31,7 +31,6 @@ import com.instructure.pandautils.databinding.FragmentSchedulePagerBinding
 import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_schedule_pager.*
 
 @AndroidEntryPoint
 class SchedulePagerFragment : Fragment() {
@@ -42,11 +41,13 @@ class SchedulePagerFragment : Fragment() {
 
     private var todayFragment: ScheduleFragment? = null
 
+    private lateinit var binding: FragmentSchedulePagerBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentSchedulePagerBinding.inflate(inflater, container, false)
+        binding = FragmentSchedulePagerBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         return binding.root
@@ -57,7 +58,7 @@ class SchedulePagerFragment : Fragment() {
 
         viewModel.data.observe(viewLifecycleOwner, { schedulePagerViewData ->
             schedulePagerViewData?.let {
-                schedulePager.adapter = object : FragmentStateAdapter(this) {
+                binding.schedulePager.adapter = object : FragmentStateAdapter(this@SchedulePagerFragment) {
                     override fun getItemCount(): Int = it.pageStartDates.size
 
                     override fun createFragment(position: Int): Fragment {
@@ -78,7 +79,7 @@ class SchedulePagerFragment : Fragment() {
             }
         })
 
-        schedulePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.schedulePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if (position != THIS_WEEKS_POSITION) {
@@ -86,12 +87,12 @@ class SchedulePagerFragment : Fragment() {
                 }
 
                 if (position == 0) {
-                    previousWeekButton.visibility = View.GONE
-                } else if (position == schedulePager.childCount - 1) {
-                    nextWeekButton.visibility = View.GONE
+                    binding.previousWeekButton.visibility = View.GONE
+                } else if (position == binding.schedulePager.childCount - 1) {
+                    binding.nextWeekButton.visibility = View.GONE
                 } else {
-                    previousWeekButton.visibility = View.VISIBLE
-                    nextWeekButton.visibility = View.VISIBLE
+                    binding.previousWeekButton.visibility = View.VISIBLE
+                    binding.nextWeekButton.visibility = View.VISIBLE
                 }
             }
         })
@@ -101,7 +102,7 @@ class SchedulePagerFragment : Fragment() {
         }
     }
 
-    private fun movePagerControlToTop() {
+    private fun movePagerControlToTop() = with(binding) {
         val constraintSet = ConstraintSet()
         constraintSet.clone(schedulePage)
         constraintSet.clear(controls.id, ConstraintSet.BOTTOM)
@@ -113,7 +114,7 @@ class SchedulePagerFragment : Fragment() {
         constraintSet.applyTo(schedulePage)
     }
 
-    private fun handleAction(action: SchedulePagerAction) {
+    private fun handleAction(action: SchedulePagerAction) = with(binding) {
         when (action) {
             is SchedulePagerAction.SelectPage -> schedulePager.setCurrentItem(action.position, false)
             is SchedulePagerAction.MoveToNext -> schedulePager.setCurrentItem(schedulePager.currentItem + 1, true)
@@ -130,7 +131,7 @@ class SchedulePagerFragment : Fragment() {
     }
 
     fun jumpToToday() {
-        schedulePager.setCurrentItem(THIS_WEEKS_POSITION, true)
+        binding.schedulePager.setCurrentItem(THIS_WEEKS_POSITION, true)
         todayFragment?.jumpToToday()
     }
 

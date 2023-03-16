@@ -38,9 +38,8 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.CanvasWebViewWrapper
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_resources.*
-import kotlinx.android.synthetic.main.item_important_links.view.*
 import javax.inject.Inject
 
 @PageView("#resources")
@@ -56,8 +55,10 @@ class ResourcesFragment : Fragment() {
 
     private val viewModel: ResourcesViewModel by viewModels()
 
+    private lateinit var binding: FragmentResourcesBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding = FragmentResourcesBinding.inflate(inflater, container, false)
+        binding = FragmentResourcesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -99,8 +100,8 @@ class ResourcesFragment : Fragment() {
     }
 
     private fun setupWebViews() {
-        importantLinksContainer.children.forEach {
-            val webView = it.importantLinksWebViewWrapper
+        binding.importantLinksContainer.children.forEach {
+            val webView = it.findViewById<CanvasWebViewWrapper>(R.id.importantLinksWebViewWrapper)
             if (webView != null) {
                 setupWebView(webView.webView)
             }
