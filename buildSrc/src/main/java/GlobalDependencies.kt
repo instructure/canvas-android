@@ -7,8 +7,8 @@ object Versions {
     const val TARGET_SDK = 31
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "3.5.1"
-    const val BUILD_TOOLS = "30.0.2"
+    const val ANDROID_GRADLE_TOOLS = "7.1.3"
+    const val BUILD_TOOLS = "30.0.3"
     const val BUILD_SCAN = "1.16"
 
     /* Testing */
@@ -22,7 +22,7 @@ object Versions {
     const val KOTLIN_COROUTINES = "1.5.2"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.3.10"
+    const val GOOGLE_SERVICES = "4.3.15"
     const val FIREBASE_CONFIG = "18.0.0"
     const val PLAY_CORE = "1.10.3"
     const val PLAY_CORE_KTX = "1.8.1"
@@ -167,7 +167,7 @@ object Libs {
 }
 
 object Plugins {
-    const val FIREBASE_CRASHLYTICS =  "com.google.firebase:firebase-crashlytics-gradle:2.1.0"
+    const val FIREBASE_CRASHLYTICS =  "com.google.firebase:firebase-crashlytics-gradle:2.9.4"
     const val ANDROID_GRADLE_TOOLS = "com.android.tools.build:gradle:${Versions.ANDROID_GRADLE_TOOLS}"
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"

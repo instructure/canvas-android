@@ -28,7 +28,7 @@ object FileCache {
     private val DEFAULT_DISK_CACHE_SIZE = DEFAULT_DISK_CACHE_MAX_SIZE_MB * MEGABYTE
 
     private val mSimpleDiskCache: SimpleDiskCache by lazy {
-        SimpleDiskCache.open(ContextKeeper.appContext.externalCacheDir!!, BuildConfig.VERSION_CODE, DEFAULT_DISK_CACHE_SIZE.toLong())
+        SimpleDiskCache.open(ContextKeeper.appContext.externalCacheDir!!, 1, DEFAULT_DISK_CACHE_SIZE.toLong()) // TODO Inject version
     }
 
     fun getInputStream(url: String, callback: FetchFileAsyncTask.FetchFileCallback) = FetchFileAsyncTask.download(mSimpleDiskCache, url, callback)
