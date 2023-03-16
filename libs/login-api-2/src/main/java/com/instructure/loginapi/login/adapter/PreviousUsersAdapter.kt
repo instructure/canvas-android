@@ -32,7 +32,7 @@ class PreviousUsersAdapter(
 ) : RecyclerView.Adapter<PreviousUserHolder>() {
     interface PreviousUsersEvents {
         fun onPreviousUserClick(user: SignedInUser)
-        fun onRemovePreviousUserClick(user: SignedInUser, position: Int)
+        fun onRemovePreviousUserClick(user: SignedInUser)
         fun onNowEmpty()
     }
 
@@ -47,10 +47,10 @@ class PreviousUsersAdapter(
             user = user,
             onUserClick = { callback.onPreviousUserClick(user) },
             onUserRemove = {
-                callback.onRemovePreviousUserClick(user, position)
-                previousUsers.removeAt(position)
+                callback.onRemovePreviousUserClick(user)
+                previousUsers.remove(user)
                 notifyItemRemoved(position)
-                if (previousUsers.size == 0) {
+                if (previousUsers.isEmpty()) {
                     callback.onNowEmpty()
                 }
             }

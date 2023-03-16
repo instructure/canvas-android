@@ -174,7 +174,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                         navigation.startLogin(viewModel, true)
                     }
 
-                    override fun onRemovePreviousUserClick(user: SignedInUser, position: Int) {
+                    override fun onRemovePreviousUserClick(user: SignedInUser) {
                         PreviousUsersUtils.remove(this@BaseLoginLandingPageActivity, user)
                     }
 
