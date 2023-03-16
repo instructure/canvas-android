@@ -223,8 +223,7 @@ android {
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
                     new LocaleTransformer(project),
-                    new FlutterA11yOffsetTransformer(),
-                    new FlutterTextureDisconnectFix()
+                    new FlutterA11yOffsetTransformer()
             )
     )
 
