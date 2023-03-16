@@ -22,9 +22,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.Pronouns.span
 import com.instructure.loginapi.login.R
+import com.instructure.loginapi.login.databinding.AdapterPreviousUsersBinding
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.pandautils.utils.ProfileUtils
-import kotlinx.android.synthetic.main.adapter_previous_users.view.*
 
 class PreviousUsersAdapter(
     private val previousUsers: ArrayList<SignedInUser>,
@@ -37,8 +37,8 @@ class PreviousUsersAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreviousUserHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_previous_users, parent, false)
-        return PreviousUserHolder(view)
+        val binding = AdapterPreviousUsersBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PreviousUserHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PreviousUserHolder, position: Int) {
@@ -60,12 +60,12 @@ class PreviousUsersAdapter(
     override fun getItemCount(): Int = previousUsers.size
 }
 
-class PreviousUserHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(user: SignedInUser, onUserClick: () -> Unit, onUserRemove: () -> Unit) = with(itemView) {
+class PreviousUserHolder(private val binding: AdapterPreviousUsersBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(user: SignedInUser, onUserClick: () -> Unit, onUserRemove: () -> Unit) = with(binding) {
         ProfileUtils.loadAvatarForUser(usersAvatar, user.user.name, user.user.avatarUrl, 0)
         userName.text = span(user.user.name, user.user.pronouns)
         schoolDomain.text = user.domain
-        setOnClickListener { onUserClick() }
+        root.setOnClickListener { onUserClick() }
         removePreviousUser.setOnClickListener { onUserRemove() }
     }
 }

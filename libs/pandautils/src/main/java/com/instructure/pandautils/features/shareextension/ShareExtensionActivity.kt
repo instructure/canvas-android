@@ -37,6 +37,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.databinding.ActivityShareFileBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.FileUploadType
@@ -46,8 +48,7 @@ import com.instructure.pandautils.features.shareextension.status.ShareExtensionS
 import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_share_file.*
+import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -70,6 +71,8 @@ abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogPar
     private var loadCoursesJob: Job? = null
     private var currentFragment: DialogFragment? = null
 
+    private val binding by viewBinding(ActivityShareFileBinding::inflate)
+
     private val submissionTarget: ShareFileSubmissionTarget? by lazy {
         intent?.extras?.getParcelable(Const.SUBMISSION_TARGET)
     }
@@ -80,7 +83,7 @@ abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogPar
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_share_file)
+        setContentView(binding.root)
         ViewStyler.setStatusBarDark(this, ContextCompat.getColor(this, R.color.studentDocumentSharingColor))
         if (shareExtensionViewModel.checkIfLoggedIn()) {
             revealBackground()
@@ -129,7 +132,7 @@ abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogPar
                 showConfetti()
             }
             is ShareExtensionAction.ShowSuccessDialog -> {
-                rootView?.postDelayed({
+                binding.rootView.postDelayed({
                     currentFragment = ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.SUCCEEDED, action.fileUploadType)
                     currentFragment?.show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
                 }, 250)
@@ -151,7 +154,7 @@ abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogPar
 
     private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit) {
         ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.studentDocumentSharingColor), getColor(bundle)).let {
-            it.addUpdateListener { animation -> rootView!!.setBackgroundColor(animation.animatedValue as Int) }
+            it.addUpdateListener { animation -> binding.rootView.setBackgroundColor(animation.animatedValue as Int) }
             it.duration = 500
             it.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
@@ -169,7 +172,7 @@ abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogPar
         }
     }
 
-    private fun revealBackground() {
+    private fun revealBackground() = with(binding) {
         rootView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 AnimationHelpers.removeGlobalLayoutListeners(rootView, this)

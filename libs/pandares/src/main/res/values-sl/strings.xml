@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Tukaj lahko odprete podrobnosti o oddaji</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minuta</item>
         <item quantity="other">%s minut</item>
@@ -1331,4 +1333,44 @@
     <string name="acceptableUsePolicyAgree">Strinjam se s Pravilnikom o sprejemljivi rabi.</string>
     <string name="acceptableUsePolicySubmit">Oddaj</string>
     <string name="acceptFail">Oddaja sprejetja pogojev ni uspela.</string>
+    <string name="attempt">Poskus %d</string>
+    <string name="quizQuestions">Vprašanja: %d</string>
+    <string name="quizTimeLimit">Časovna omejitev: %s</string>
+    <string name="allowedAttempts">Dovoljeni poskusi: %s</string>
+    <string name="usedAttempts">Porabljeni poskusi: %d</string>
+    <string name="generalUnexpectedError">Prišlo je do nepričakovane napake.</string>
+
+    <string name="deleteSelected">Odstrani</string>
+    <string name="archiveSelected">Arhiviraj</string>
+    <string name="unarchiveSelected">Razveljavi arhiviranje</string>
+    <string name="markAsReadSelected">Označi kot prebrano</string>
+    <string name="markAsUnreadSelected">Označi kot neprebrano</string>
+    <string name="starSelected">Zvezdica</string>
+    <string name="unstarSelected">Odstrani zvezdico</string>
+
+    <string name="inboxOperationFailed">Postopka ni bilo mogoče izvesti</string>
+    <string name="inboxDeletedConfirmation">%s izbrisano</string>
+    <string name="inboxArchivedConfirmation">%s arhivirano</string>
+    <string name="inboxUnarchivedConfirmation">%s vzeto iz arhiva</string>
+    <string name="inboxMarkAsReadConfirmation">%s označeno kot prebrano</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s označeno kot neprebrano</string>
+    <string name="inboxStarredConfirmation">%s označeno z zvezdico</string>
+    <string name="inboxUnstarredConfirmation">%s odstranjenih zvezdic</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Ta pogovor bo izbrisan iz mape »Prejeto« na vseh vaših napravah. Tega dejanja ni mogoče razveljaviti.</item>
+        <item quantity="other">Ti pogovori bodo izbrisani iz mape »Prejeto« na vseh vaših napravah. Tega dejanja ni mogoče razveljaviti.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Nalaganje naslednje strani ni uspelo. Preveritete internetno povezavo.</string>
+    <string name="conversationsRefreshFailed">Osveževanje pogovorov ni uspelo. Preveritete internetno povezavo.</string>
+    <string name="inboxScopeInbox">Pošta</string>
+    <string name="inboxContextSelectorTitle">Izberite predmet ali skupino</string>
+    <string name="inboxClearFilter">Počisti</string>
+    <string name="a11y_courseFilterContentDescription">Filter predmetov: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">izbira</string>
+    <string name="a11y_itemSelectedSwipeForActions">Pogovor je izbran. Aktiviran je način izbire. Pomaknite se za izbiro dejanja.</string>
+    <string name="a11y_conversationSelected">Pogovor je izbran</string>
+    <string name="a11y_conversationDeselected">Izbira pogovora je odstranjena</string>
+    <string name="a11y_exitSelectionMode">Izhod iz načina izbire</string>
+    <string name="a11y_selectionModeDeactivated">Način izbire je deaktiviran.</string>
 </resources>

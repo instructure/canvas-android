@@ -22,9 +22,9 @@ import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.APIHelper
-import kotlinx.android.parcel.Parceler
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.WriteWith
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.HashMap

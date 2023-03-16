@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Podes abrir detalhes de Submissão a partir daqui</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
         <item quantity="other">%s minutos</item>
@@ -1331,4 +1333,44 @@
     <string name="acceptableUsePolicyAgree">Concordo com a Política de Utilização Aceitável.</string>
     <string name="acceptableUsePolicySubmit">Submeter</string>
     <string name="acceptFail">Falha em submeter a aceitação dos termos.</string>
+    <string name="attempt">Tentativa %d</string>
+    <string name="quizQuestions">Perguntas: %d</string>
+    <string name="quizTimeLimit">Limite de tempo: %s</string>
+    <string name="allowedAttempts">Tentativas permitidas: %s</string>
+    <string name="usedAttempts">Tentativas usadas: %d</string>
+    <string name="generalUnexpectedError">Ocorreu um erro inesperado.</string>
+
+    <string name="deleteSelected">Eliminar</string>
+    <string name="archiveSelected">Ficheiro</string>
+    <string name="unarchiveSelected">Desarquivar</string>
+    <string name="markAsReadSelected">Marcar como lida</string>
+    <string name="markAsUnreadSelected">Marcar como não lida</string>
+    <string name="starSelected">Marcar</string>
+    <string name="unstarSelected">Desmarcar</string>
+
+    <string name="inboxOperationFailed">Falha na execução da operação</string>
+    <string name="inboxDeletedConfirmation">%s eliminado</string>
+    <string name="inboxArchivedConfirmation">%s arquivado</string>
+    <string name="inboxUnarchivedConfirmation">%s desarquivado</string>
+    <string name="inboxMarkAsReadConfirmation">%s marcado como lido</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marcado como não lido</string>
+    <string name="inboxStarredConfirmation">%s estrelado</string>
+    <string name="inboxUnstarredConfirmation">%s não estrelado</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Esta conversa será eliminada da Caixa de Entrada em todos os teus dispositivos. Essa ação não pode ser desfeita.</item>
+        <item quantity="other">Estas conversas serão eliminadas da Caixa de Entrada em todos os teus dispositivos. Essa ação não pode ser desfeita.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Falha ao carregar a página seguinte. Verifica a tua ligação à Internet.</string>
+    <string name="conversationsRefreshFailed">Falha em atualizar as conversas. Verifica a tua ligação à Internet.</string>
+    <string name="inboxScopeInbox">Caixa de entrada</string>
+    <string name="inboxContextSelectorTitle">Selecionar Disciplina ou Grupo</string>
+    <string name="inboxClearFilter">Limpar</string>
+    <string name="a11y_courseFilterContentDescription">Filtro da disciplina: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">selecionar</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversação selecionada. Modo de selecção ativado. Navegar para ações.</string>
+    <string name="a11y_conversationSelected">Conversação selecionada.</string>
+    <string name="a11y_conversationDeselected">Conversação desmarcada</string>
+    <string name="a11y_exitSelectionMode">Sair do modo de seleção</string>
+    <string name="a11y_selectionModeDeactivated">Modo de seleção desativado.</string>
 </resources>

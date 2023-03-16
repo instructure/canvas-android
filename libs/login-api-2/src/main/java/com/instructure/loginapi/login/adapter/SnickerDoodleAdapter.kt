@@ -18,10 +18,10 @@ package com.instructure.loginapi.login.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.snicker.SnickerDoodle
-import kotlinx.android.synthetic.main.adapter_snicker_doodle.view.*
 
 class SnickerDoodleAdapter(
     private val snickerDoodles: List<SnickerDoodle>,
@@ -35,8 +35,8 @@ class SnickerDoodleAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val snickerDoodle = snickerDoodles[position]
-        holder.itemView.title.text = snickerDoodle.title
-        holder.itemView.subtitle.text = snickerDoodle.subtitle
+        holder.itemView.findViewById<TextView>(R.id.title).text = snickerDoodle.title
+        holder.itemView.findViewById<TextView>(R.id.subtitle).text = snickerDoodle.subtitle
         holder.itemView.setOnClickListener { onSelected(snickerDoodles[holder.adapterPosition]) }
     }
 
