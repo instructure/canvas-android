@@ -41,13 +41,15 @@ class PostPolicyFragment : Fragment() {
     private var course: Course by ParcelableArg(Course(), Const.CANVAS_CONTEXT)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_post_policy_settings, container, false)
+        return inflater.inflate(R.layout.fragment_post_policy_settings, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val titles = listOf(getString(R.string.postGradesTab), getString(R.string.hideGradesTab))
         binding.postPolicyPager.adapter = PostPolicyPagerAdapter(course, assignment, childFragmentManager, titles)
         binding.postPolicyTabLayout.setupWithViewPager(binding.postPolicyPager, true)
-
-        return view
     }
 
     override fun onResume() {
