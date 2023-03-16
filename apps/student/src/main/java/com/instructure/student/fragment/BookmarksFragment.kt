@@ -45,6 +45,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.BookmarkShortcutActivity
 import com.instructure.student.adapter.BookmarkRecyclerAdapter
 import com.instructure.student.databinding.FragmentBookmarksFragmentBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.decorations.DividerDecoration
 import com.instructure.student.interfaces.BookmarkAdapterToFragmentCallback
 import com.instructure.student.util.Analytics
@@ -56,6 +57,7 @@ import kotlin.properties.Delegates
 class BookmarksFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentBookmarksFragmentBinding::bind)
+    private lateinit var pandaRecyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     private var bookmarkSelectedCallback: (Bookmark) -> Unit by Delegates.notNull()
     private var recyclerAdapter: BookmarkRecyclerAdapter? = null
@@ -72,6 +74,7 @@ class BookmarksFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pandaRecyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         configureRecyclerView()
         applyTheme()
     }
@@ -102,10 +105,10 @@ class BookmarksFragment : ParentFragment() {
     }
 
     private fun applyEmptyImage() {
-        binding.recyclerViewLayout.emptyView.getEmptyViewImage()?.setImageResource(R.drawable.ic_panda_nobookmarks)
-        binding.recyclerViewLayout.emptyView.setTitleText(R.string.noBookmarks)
-        binding.recyclerViewLayout.emptyView.setMessageText(R.string.noBookmarksSubtext)
-        binding.recyclerViewLayout.emptyView.setListEmpty()
+        pandaRecyclerBinding.emptyView.getEmptyViewImage()?.setImageResource(R.drawable.ic_panda_nobookmarks)
+        pandaRecyclerBinding.emptyView.setTitleText(R.string.noBookmarks)
+        pandaRecyclerBinding.emptyView.setMessageText(R.string.noBookmarksSubtext)
+        pandaRecyclerBinding.emptyView.setListEmpty()
     }
 
     override fun title(): String = getString(R.string.bookmarks)
@@ -117,8 +120,8 @@ class BookmarksFragment : ParentFragment() {
     private fun configureRecyclerView() {
         configureRecyclerAdapter()
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView, R.string.no_bookmarks)
-        binding.recyclerViewLayout.listView.addItemDecoration(DividerDecoration(requireContext()))
-        binding.recyclerViewLayout.listView.isSelectionEnabled = false
+        pandaRecyclerBinding.listView.addItemDecoration(DividerDecoration(requireContext()))
+        pandaRecyclerBinding.listView.isSelectionEnabled = false
     }
 
     private fun configureRecyclerAdapter() {

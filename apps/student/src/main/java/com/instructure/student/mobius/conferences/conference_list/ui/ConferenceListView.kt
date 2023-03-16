@@ -29,24 +29,28 @@ import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_conference_list.*
 
 class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<ConferenceListViewState, ConferenceListEvent>(R.layout.fragment_conference_list, inflater, parent) {
+    MobiusView<ConferenceListViewState, ConferenceListEvent, FragmentConferenceListBinding>(
+        R.layout.fragment_conference_list,
+        inflater,
+        FragmentConferenceListBinding::inflate,
+        parent) {
 
     lateinit var listAdapter: ConferenceListAdapter
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        toolbar.subtitle = canvasContext.name
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.subtitle = canvasContext.name
 
         // Set up menu
-        with(toolbar.menu.add(0, R.id.openExternallyButton, 0, R.string.openInBrowser)){
+        with(binding.toolbar.menu.add(0, R.id.openExternallyButton, 0, R.string.openInBrowser)){
             setIcon(R.drawable.ic_open_in_browser)
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener {
@@ -57,11 +61,11 @@ class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInfla
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
     }
 
     override fun onConnect(output: Consumer<ConferenceListEvent>) {
-        swipeRefreshLayout.setOnRefreshListener { output.accept(ConferenceListEvent.PullToRefresh) }
+        binding.swipeRefreshLayout.setOnRefreshListener { output.accept(ConferenceListEvent.PullToRefresh) }
         listAdapter =
             ConferenceListAdapter(
                 object :
@@ -77,17 +81,17 @@ class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInfla
                     override fun reload() =
                         output.accept(ConferenceListEvent.PullToRefresh)
                 })
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = listAdapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = listAdapter
     }
 
     override fun onDispose() = Unit
 
     override fun render(state: ConferenceListViewState) {
-        swipeRefreshLayout.isRefreshing = state is ConferenceListViewState.Loading
+        binding.swipeRefreshLayout.isRefreshing = state is ConferenceListViewState.Loading
 
-        launchInBrowserProgressBar.setVisible(state.isLaunchingInBrowser)
-        toolbar.menu.items.first().isVisible = !state.isLaunchingInBrowser
+        binding.launchInBrowserProgressBar.setVisible(state.isLaunchingInBrowser)
+        binding.toolbar.menu.items.first().isVisible = !state.isLaunchingInBrowser
 
         when (state) {
             is ConferenceListViewState.Loading -> Unit

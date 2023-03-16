@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxConversationAdapter
 import com.instructure.student.databinding.FragmentInboxConversationBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.interfaces.MessageAdapterCallback
@@ -56,6 +57,7 @@ import org.greenrobot.eventbus.ThreadMode
 class InboxConversationFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentInboxConversationBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     private var scope by NullableStringArg(Const.SCOPE)
     private var conversation by ParcelableArg<Conversation>(key = Const.CONVERSATION)
@@ -166,6 +168,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         when {
         // Setup from conversation ID
             conversationId != 0L -> {
@@ -209,11 +212,11 @@ class InboxConversationFragment : ParentFragment() {
     private fun initAdapter() {
         configureRecyclerView(requireView(), requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         val dividerItemDecoration = DividerItemDecoration(
-            binding.inboxConversationRecyclerViewLayout.listView.context,
+            recyclerBinding.listView.context,
             LinearLayoutManager.VERTICAL
         )
         dividerItemDecoration.setDrawable(requireContext().getDrawableCompat(R.drawable.item_decorator_gray))
-        binding.inboxConversationRecyclerViewLayout.listView.addItemDecoration(dividerItemDecoration)
+        recyclerBinding.listView.addItemDecoration(dividerItemDecoration)
     }
 
     private fun initToolbar() = with(binding) {

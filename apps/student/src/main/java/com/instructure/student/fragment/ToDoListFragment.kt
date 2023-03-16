@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListTodoBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
@@ -46,6 +47,7 @@ import com.instructure.student.router.RouteMatcher
 class ToDoListFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentListTodoBinding::bind)
+    private lateinit var recyclerViewBinding: PandaRecyclerRefreshLayoutBinding
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -62,7 +64,7 @@ class ToDoListFragment : ParentFragment() {
             setRefreshing(false)
             binding.editOptions.setGone()
             if (recyclerAdapter.size() == 0) {
-                setEmptyView(binding.todoRecyclerViewLayout.emptyView, R.drawable.ic_panda_sleeping, R.string.noTodos, R.string.noTodosSubtext)
+                setEmptyView(recyclerViewBinding.emptyView, R.drawable.ic_panda_sleeping, R.string.noTodos, R.string.noTodosSubtext)
             }
         }
 
@@ -76,7 +78,11 @@ class ToDoListFragment : ParentFragment() {
     override fun title(): String = getString(R.string.Todo)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = layoutInflater.inflate(R.layout.fragment_list_todo, container, false)
+        return layoutInflater.inflate(R.layout.fragment_list_todo, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerViewBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         with (binding.toolbar) {
             inflateMenu(R.menu.fragment_list_todo)
             menu.findItem(R.id.todoListFilter).setOnMenuItemClickListener {
@@ -84,10 +90,6 @@ class ToDoListFragment : ParentFragment() {
                 true
             }
         }
-        return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerAdapter = TodoListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
@@ -98,7 +100,7 @@ class ToDoListFragment : ParentFragment() {
             R.id.listView
         )
 
-        binding.todoRecyclerViewLayout.listView.isSelectionEnabled = false
+        recyclerViewBinding.listView.isSelectionEnabled = false
 
         binding.confirmButton.text = getString(R.string.markAsDone)
         binding.confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
@@ -140,19 +142,19 @@ class ToDoListFragment : ParentFragment() {
                 R.string.noTodos
         )
         if (recyclerAdapter.size() == 0) {
-            binding.todoRecyclerViewLayout.emptyView.changeTextSize()
+            recyclerViewBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    binding.todoRecyclerViewLayout.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                    recyclerViewBinding.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
                 } else {
-                    binding.todoRecyclerViewLayout.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    recyclerViewBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     //change nothing, at least for now
                 } else {
-                    binding.todoRecyclerViewLayout.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
+                    recyclerViewBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
                 }
             }
         }

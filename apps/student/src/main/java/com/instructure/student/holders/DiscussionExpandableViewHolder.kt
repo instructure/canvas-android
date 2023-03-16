@@ -23,31 +23,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.adapter.DiscussionListRecyclerAdapter
-import kotlinx.android.synthetic.main.viewholder_discussion_group_header.view.*
+import com.instructure.student.databinding.ViewholderDiscussionGroupHeaderBinding
 
 class DiscussionExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var isExpanded = true
 
-    fun bind(expanded: Boolean, isDiscussion: Boolean, group: String, callback: (String) -> Unit) = with(itemView) {
-
-        setVisible(isDiscussion)
+    fun bind(expanded: Boolean, isDiscussion: Boolean, group: String, callback: (String) -> Unit) = with(ViewholderDiscussionGroupHeaderBinding.bind(itemView)) {
+        root.setVisible(isDiscussion)
 
         isExpanded = expanded
 
         groupName.text = when (group) {
-            DiscussionListRecyclerAdapter.PINNED -> context.getString(R.string.utils_pinnedDiscussions)
-            DiscussionListRecyclerAdapter.UNPINNED -> context.getString(R.string.utils_discussionUnpinned)
-            DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS -> context.getString(R.string.closed_discussion)
+            DiscussionListRecyclerAdapter.PINNED -> root.context.getString(R.string.utils_pinnedDiscussions)
+            DiscussionListRecyclerAdapter.UNPINNED -> root.context.getString(R.string.utils_discussionUnpinned)
+            DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS -> root.context.getString(R.string.closed_discussion)
             else -> ""
         }
 
         collapseIcon.rotation = if (expanded) 180f else 0f
 
-        setOnClickListener {
+        root.setOnClickListener {
             val animRes = if (isExpanded) R.animator.rotation_from_neg90_to_0 else R.animator.rotation_from_0_to_neg90
             isExpanded = !isExpanded
-            val flipAnimator = AnimatorInflater.loadAnimator(context, animRes) as ObjectAnimator
+            val flipAnimator = AnimatorInflater.loadAnimator(root.context, animRes) as ObjectAnimator
             flipAnimator.target = collapseIcon
             flipAnimator.duration = 200
             flipAnimator.start()

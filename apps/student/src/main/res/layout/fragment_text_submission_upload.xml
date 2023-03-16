@@ -46,7 +46,7 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <include android:id="@+id/errorDivider" layout="@layout/divider" />
+    <include layout="@layout/divider" />
 
     <instructure.rceditor.RCETextEditorView
         android:id="@+id/rce"

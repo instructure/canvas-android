@@ -25,16 +25,18 @@ import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.DividerBinding
+import com.instructure.student.databinding.FragmentTextSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_text_submission_upload.*
 
 class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<TextSubmissionUploadViewState, TextSubmissionUploadEvent>(
+    MobiusView<TextSubmissionUploadViewState, TextSubmissionUploadEvent, FragmentTextSubmissionUploadBinding>(
         R.layout.fragment_text_submission_upload,
         inflater,
+        FragmentTextSubmissionUploadBinding::inflate,
         parent
     ) {
 
@@ -45,11 +47,11 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     private var canPressBack = false
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        toolbar.title = context.getString(R.string.textEntry)
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.title = context.getString(R.string.textEntry)
     }
 
-    override fun onConnect(output: Consumer<TextSubmissionUploadEvent>) {
+    override fun onConnect(output: Consumer<TextSubmissionUploadEvent>) = with(binding) {
         toolbar.setMenu(R.menu.menu_submit_generic) {
             when (it.itemId) {
                 R.id.menuSubmit -> {
@@ -87,21 +89,22 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     override fun render(state: TextSubmissionUploadViewState) {
-        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
-        errorMsg.setVisible(state.isFailure)
-        errorDivider.setVisible(state.isFailure)
+        val dividerBinding = DividerBinding.bind(binding.root)
+        binding.toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
+        binding.errorMsg.setVisible(state.isFailure)
+        dividerBinding.root.setVisible(state.isFailure)
     }
 
     override fun onDispose() { }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarLight(context as Activity, toolbar)
+        ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
     }
 
     fun setInitialSubmissionText(text: String?) {
         initialText = text
-        rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.textButtonColor)
-        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
+        binding.rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.textButtonColor)
+        binding.toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
     }
 
     fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
@@ -133,9 +136,9 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     private fun insertImage(imageUrl: String) {
         val activity = context as? Activity
         if (activity != null) {
-            rce?.insertImage(activity, imageUrl)
+            binding.rce.insertImage(activity, imageUrl)
         } else {
-            rce?.insertImage(imageUrl, "")
+            binding.rce.insertImage(imageUrl, "")
         }
     }
 
@@ -144,7 +147,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     fun onBackPressed(): Boolean {
-        return if (rce.html.isNotEmpty() && rce.html.isNotBlank() && initialText != rce.html && !canPressBack) {
+        return if (binding.rce.html.isNotEmpty() && binding.rce.html.isNotBlank() && initialText != binding.rce.html && !canPressBack) {
             confirmationDialog.show()
             true
         } else {

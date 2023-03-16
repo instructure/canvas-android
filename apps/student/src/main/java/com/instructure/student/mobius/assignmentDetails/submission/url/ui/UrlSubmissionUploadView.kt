@@ -25,25 +25,30 @@ import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
+import com.instructure.student.databinding.DividerBinding
+import com.instructure.student.databinding.FragmentUrlSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_url_submission_upload.*
 
-class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<UrlSubmissionUploadViewState, UrlSubmissionUploadEvent>(R.layout.fragment_url_submission_upload, inflater, parent) {
+class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<UrlSubmissionUploadViewState, UrlSubmissionUploadEvent, FragmentUrlSubmissionUploadBinding>(
+    R.layout.fragment_url_submission_upload,
+    inflater,
+    FragmentUrlSubmissionUploadBinding::inflate,
+    parent) {
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        toolbar.title = context.getString(R.string.websiteUrl)
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.title = context.getString(R.string.websiteUrl)
 
-        urlPreviewWebView.webViewClient = WebViewClient()
-        urlPreviewWebView.settings.javaScriptEnabled = true
-        urlPreviewWebView.setOnTouchListener { _, _ -> true } // Prevent the user from interacting with the WebView
-        urlPreviewWebView.isVerticalScrollBarEnabled = false
+        binding.urlPreviewWebView.webViewClient = WebViewClient()
+        binding.urlPreviewWebView.settings.javaScriptEnabled = true
+        binding.urlPreviewWebView.setOnTouchListener { _, _ -> true } // Prevent the user from interacting with the WebView
+        binding.urlPreviewWebView.isVerticalScrollBarEnabled = false
     }
 
-    override fun onConnect(output: Consumer<UrlSubmissionUploadEvent>) {
+    override fun onConnect(output: Consumer<UrlSubmissionUploadEvent>) = with(binding) {
         toolbar.setMenu(R.menu.menu_submit_generic) {
             when (it.itemId) {
                 R.id.menuSubmit -> {
@@ -60,22 +65,23 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
     }
 
     override fun render(state: UrlSubmissionUploadViewState) {
-        editUrl.hint = state.urlHint
-        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
-        errorMsg.setVisible(state.isFailure).text = state.failureText
-        errorDivider.setVisible(state.isFailure)
+        val dividerBinding = DividerBinding.bind(binding.root)
+        binding.editUrl.hint = state.urlHint
+        binding.toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
+        binding.errorMsg.setVisible(state.isFailure).text = state.failureText
+        dividerBinding.root.setVisible(state.isFailure)
     }
 
     override fun onDispose() {}
     override fun applyTheme() {}
 
     fun showPreviewUrl(url: String) {
-        urlPreviewWebView?.setVisible()
-        urlPreviewWebView.loadUrl(url)
+        binding.urlPreviewWebView.setVisible()
+        binding.urlPreviewWebView.loadUrl(url)
     }
 
     fun setInitialUrl(url: String?) {
-        editUrl.setText(url ?: "")
+        binding.editUrl.setText(url ?: "")
     }
 
     fun onSubmitUrl(course: CanvasContext, assignmentId: Long, assignmentName: String?, url: String) {

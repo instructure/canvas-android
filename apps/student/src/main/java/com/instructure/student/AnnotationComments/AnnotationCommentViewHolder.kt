@@ -33,24 +33,23 @@ class AnnotationCommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         const val holderRes = R.layout.viewholder_annotation_comment
     }
 
-    fun bind(annotation: CanvaDocAnnotation, canEdit: Boolean, canDelete: Boolean, editCallback: (CanvaDocAnnotation, Int) -> Unit, deleteCallback: (CanvaDocAnnotation, Int) -> Unit) = with(itemView) {
-        val binding = ViewholderAnnotationCommentBinding.bind(itemView)
-        binding.commentAuthorTextView.text = annotation.userName
-        binding.commentDateTextView.text = DateHelper.getMonthDayAtTime(context, DateHelper.stringToDateWithMillis(annotation.createdAt), context.getString(R.string.at))
-        binding.commentContentsTextView.text = annotation.contents
+    fun bind(annotation: CanvaDocAnnotation, canEdit: Boolean, canDelete: Boolean, editCallback: (CanvaDocAnnotation, Int) -> Unit, deleteCallback: (CanvaDocAnnotation, Int) -> Unit) = with(ViewholderAnnotationCommentBinding.bind(itemView)) {
+        commentAuthorTextView.text = annotation.userName
+        commentDateTextView.text = DateHelper.getMonthDayAtTime(root.context, DateHelper.stringToDateWithMillis(annotation.createdAt), root.context.getString(R.string.at))
+        commentContentsTextView.text = annotation.contents
 
-        binding.commentEditIcon.setVisible((canEdit || canDelete) && !annotation.deleted)
+        commentEditIcon.setVisible((canEdit || canDelete) && !annotation.deleted)
 
         if(annotation.deleted) {
-            binding.commentRemovedLabel.setVisible()
-            val date = DateHelper.getMonthDayAtTime(context, DateHelper.stringToDateWithMillis(annotation.deletedAt), context.getString(R.string.at))
-            binding.commentRemovedLabel.text = resources.getString(R.string.removedComment, date, annotation.deletedBy)
+            commentRemovedLabel.setVisible()
+            val date = DateHelper.getMonthDayAtTime(root.context, DateHelper.stringToDateWithMillis(annotation.deletedAt), root.context.getString(R.string.at))
+            commentRemovedLabel.text = root.resources.getString(R.string.removedComment, date, annotation.deletedBy)
         } else {
-            binding.commentRemovedLabel.setGone()
+            commentRemovedLabel.setGone()
         }
 
-        binding.commentEditIcon.onClick {
-            val popup = PopupMenu(context, it, Gravity.TOP, 0,
+        commentEditIcon.onClick {
+            val popup = PopupMenu(root.context, it, Gravity.TOP, 0,
                     R.style.Base_Widget_AppCompat_PopupMenu_Overflow)
             popup.inflate(R.menu.menu_edit_annotation_comment)
             if(!canEdit) popup.menu.removeItem(R.id.edit)

@@ -24,22 +24,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.pandautils.utils.*
-import com.instructure.student.R
 import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.student.R
+import com.instructure.student.databinding.FragmentUploadStatusSubmissionBinding
+import com.instructure.student.databinding.ViewholderFileUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_upload_status_submission.*
-import kotlinx.android.synthetic.main.fragment_upload_status_submission.toolbar
-import kotlinx.android.synthetic.main.viewholder_file_upload.view.*
 
 class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<UploadStatusSubmissionViewState, UploadStatusSubmissionEvent>(
+    MobiusView<UploadStatusSubmissionViewState, UploadStatusSubmissionEvent, FragmentUploadStatusSubmissionBinding>(
         R.layout.fragment_upload_status_submission,
         inflater,
+        FragmentUploadStatusSubmissionBinding::inflate,
         parent
     ) {
 
@@ -58,10 +61,10 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
     override fun onDispose() = Unit
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarLight(context as Activity, toolbar)
+        ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
     }
 
-    override fun onConnect(output: Consumer<UploadStatusSubmissionEvent>) {
+    override fun onConnect(output: Consumer<UploadStatusSubmissionEvent>) = with(binding) {
         toolbar.setupAsBackButton { backPress() }
         toolbar.title = context.getString(R.string.submission)
 
@@ -84,7 +87,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         }
     }
 
-    private fun setVisibilities(visibilities: UploadVisibilities) {
+    private fun setVisibilities(visibilities: UploadVisibilities) = with(binding) {
         // Set group visibilities
         statusGroup.setVisible(visibilities.failed || visibilities.succeeded)
         uploadStatusRecycler.setVisible(visibilities.failed || visibilities.inProgress)
@@ -98,7 +101,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         uploadStatusStateCancel.setVisible(visibilities.cancelable)
     }
 
-    private fun renderSucceeded(state: UploadStatusSubmissionViewState.Succeeded) {
+    private fun renderSucceeded(state: UploadStatusSubmissionViewState.Succeeded) = with(binding) {
         uploadStatusStateTitle.text = state.title
         uploadStatusStateMessage.text = state.message
 
@@ -106,7 +109,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         dialog = null
     }
 
-    private fun renderInProgress(state: UploadStatusSubmissionViewState.InProgress) {
+    private fun renderInProgress(state: UploadStatusSubmissionViewState.InProgress) = with(binding) {
         uploadStatusStateProgressLabel.text = state.title
         uploadStatusStateProgress.progress = state.percentage.toInt()
         uploadStatusStateProgressPercent.text = state.percentageString
@@ -115,7 +118,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         renderList(state.list)
     }
 
-    private fun renderFailed(state: UploadStatusSubmissionViewState.Failed) {
+    private fun renderFailed(state: UploadStatusSubmissionViewState.Failed) = with(binding) {
         uploadStatusStateTitle.text = state.title
         uploadStatusStateMessage.text = state.message
 
@@ -168,13 +171,14 @@ class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCall
     }
 
     override val bindBehavior = Item { state, pickerListCallback, _ ->
-        fileIcon.setImageResource(state.iconRes)
-        fileIcon.imageTintList = ColorStateList.valueOf(state.iconColor)
-        fileName.text = state.title
-        fileSize.text = state.size
+        val binding = ViewholderFileUploadBinding.bind(this)
+        binding.fileIcon.setImageResource(state.iconRes)
+        binding.fileIcon.imageTintList = ColorStateList.valueOf(state.iconColor)
+        binding.fileName.text = state.title
+        binding.fileSize.text = state.size
 
         // TODO: Error messages are useless right now, we aren't handling anything from the API right now and that has to change
-        fileError.setGone()
+        binding.fileError.setGone()
 //        if (state.errorMessage.isNullOrBlank()) {
 //            fileError.setGone()
 //        } else {
@@ -182,9 +186,9 @@ class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCall
 //        }
 
         if (state.canDelete) {
-            deleteButton.setVisible().setOnClickListener { pickerListCallback.deleteClicked(state.position) }
+            binding.deleteButton.setVisible().setOnClickListener { pickerListCallback.deleteClicked(state.position) }
         } else {
-            deleteButton.setGone().setOnClickListener(null)
+            binding.deleteButton.setGone().setOnClickListener(null)
         }
     }
 }

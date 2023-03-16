@@ -17,7 +17,6 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui
 
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableString

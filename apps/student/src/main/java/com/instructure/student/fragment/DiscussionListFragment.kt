@@ -77,7 +77,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var discussionRecyclerView: RecyclerView
-    private lateinit var rootView: View
     private var permissionJob: Job? = null
     private var canPost: Boolean = false
     private var groupsJob: WeaveJob? = null
@@ -92,100 +91,116 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         checkForPermission()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = with(binding) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        rootView = layoutInflater.inflate(R.layout.course_discussion_topic, container, false)
-        recyclerAdapter = DiscussionListRecyclerAdapter(requireContext(), canvasContext, !isAnnouncement, object: DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback{
-            override fun onRowClicked(model: DiscussionTopicHeader, position: Int, isOpenDetail: Boolean) {
-                RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(canvasContext, model, isAnnouncement))
-            }
+        return layoutInflater.inflate(R.layout.course_discussion_topic, container, false)
+    }
 
-            override fun onRefreshFinished() {
-                setRefreshing(false)
-                // Show the FAB.
-                if(canPost) createNewDiscussion.show()
-                if (recyclerAdapter.size() == 0) {
-                    emptyView.let {
-                        if (isAnnouncement) {
-                            setEmptyView(it, R.drawable.ic_panda_noannouncements, R.string.noAnnouncements, R.string.noAnnouncementsSubtext)
-                        } else {
-                            setEmptyView(it, R.drawable.ic_panda_nodiscussions, R.string.noDiscussions, R.string.noDiscussionsSubtext)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        with(binding) {
+            recyclerAdapter = DiscussionListRecyclerAdapter(
+                requireContext(),
+                canvasContext,
+                !isAnnouncement,
+                object : DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback {
+                    override fun onRowClicked(model: DiscussionTopicHeader, position: Int, isOpenDetail: Boolean) {
+                        RouteMatcher.route(
+                            requireActivity(),
+                            DiscussionRouterFragment.makeRoute(canvasContext, model, isAnnouncement)
+                        )
+                    }
+
+                    override fun onRefreshFinished() {
+                        setRefreshing(false)
+                        // Show the FAB.
+                        if (canPost) createNewDiscussion.show()
+                        if (recyclerAdapter.size() == 0) {
+                            emptyView.let {
+                                if (isAnnouncement) {
+                                    setEmptyView(
+                                        it,
+                                        R.drawable.ic_panda_noannouncements,
+                                        R.string.noAnnouncements,
+                                        R.string.noAnnouncementsSubtext
+                                    )
+                                } else {
+                                    setEmptyView(
+                                        it,
+                                        R.drawable.ic_panda_nodiscussions,
+                                        R.string.noDiscussions,
+                                        R.string.noDiscussionsSubtext
+                                    )
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            override fun onRefreshStarted() {
-                setRefreshing(true)
-                // Hide the FAB.
-                if(canPost) binding.createNewDiscussion.hide()
-            }
+                    override fun onRefreshStarted() {
+                        setRefreshing(true)
+                        // Hide the FAB.
+                        if (canPost) binding.createNewDiscussion.hide()
+                    }
 
-            override fun discussionOverflow(group: String?, discussionTopicHeader: DiscussionTopicHeader) {
-                if(group != null) {
-                    // TODO - Blocked by COMMS-868
+                    override fun discussionOverflow(group: String?, discussionTopicHeader: DiscussionTopicHeader) {
+                        if (group != null) {
+                            // TODO - Blocked by COMMS-868
 //                    DiscussionsMoveToDialog.show(requireFragmentManager(), group, discussionTopicHeader, { newGroup ->
 //                        recyclerAdapter.requestMoveDiscussionTopicToGroup(newGroup, group, discussionTopicHeader)
 //                    })
-                }
-            }
-
-            override fun askToDeleteDiscussion(discussionTopicHeader: DiscussionTopicHeader) {
-                AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.utils_discussionsDeleteTitle)
-                    .setMessage(R.string.utils_discussionsDeleteMessage)
-                    .setPositiveButton(R.string.delete) { _, _ ->
-                        recyclerAdapter.deleteDiscussionTopicHeader(discussionTopicHeader)
+                        }
                     }
-                    .setNegativeButton(R.string.cancel, null)
-                    .showThemed()
-            }
-        })
 
-        this@DiscussionListFragment.discussionRecyclerView = configureRecyclerView(
-                rootView,
+                    override fun askToDeleteDiscussion(discussionTopicHeader: DiscussionTopicHeader) {
+                        AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.utils_discussionsDeleteTitle)
+                            .setMessage(R.string.utils_discussionsDeleteMessage)
+                            .setPositiveButton(R.string.delete) { _, _ ->
+                                recyclerAdapter.deleteDiscussionTopicHeader(discussionTopicHeader)
+                            }
+                            .setNegativeButton(R.string.cancel, null)
+                            .showThemed()
+                    }
+                })
+
+            this@DiscussionListFragment.discussionRecyclerView = configureRecyclerView(
+                binding.root,
                 requireContext(),
                 recyclerAdapter,
                 R.id.swipeRefreshLayout,
                 R.id.emptyView,
                 R.id.discussionRecyclerView
-                )
-        linearLayoutManager.orientation = RecyclerView.VERTICAL
+            )
+            linearLayoutManager.orientation = RecyclerView.VERTICAL
 
-        discussionRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if(canPost) {
-                    if (dy > 0 && createNewDiscussion.visibility == View.VISIBLE) {
-                        createNewDiscussion.hide()
-                    } else if (dy < 0 && createNewDiscussion.visibility != View.VISIBLE) {
-                        createNewDiscussion.show()
+            discussionRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (canPost) {
+                        if (dy > 0 && createNewDiscussion.visibility == View.VISIBLE) {
+                            createNewDiscussion.hide()
+                        } else if (dy < 0 && createNewDiscussion.visibility != View.VISIBLE) {
+                            createNewDiscussion.show()
+                        }
+                    }
+                }
+            })
+
+            createNewDiscussion.apply {
+                setGone()
+                backgroundTintList = ViewStyler.makeColorStateListForButton()
+                setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, drawable))
+                onClickWithRequireNetwork {
+                    if (isAnnouncement) {
+                        val route = CreateAnnouncementFragment.makeRoute(canvasContext, null)
+                        RouteMatcher.route(requireActivity(), route)
+                    } else {
+                        val route = CreateDiscussionFragment.makeRoute(canvasContext)
+                        RouteMatcher.route(requireActivity(), route)
                     }
                 }
             }
-        })
-
-        return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.createNewDiscussion.apply {
-            setGone()
-            backgroundTintList = ViewStyler.makeColorStateListForButton()
-            setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, drawable))
-            onClickWithRequireNetwork {
-                if(isAnnouncement) {
-                    val route = CreateAnnouncementFragment.makeRoute(canvasContext, null)
-                    RouteMatcher.route(requireActivity(), route)
-                } else {
-                    val route = CreateDiscussionFragment.makeRoute(canvasContext)
-                    RouteMatcher.route(requireActivity(), route)
-                }
-            }
         }
-
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) = with(binding) {
@@ -234,11 +249,12 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        with (binding) {
+        with(binding) {
             setupToolbarMenu(discussionListToolbar)
             discussionListToolbar.title = title()
             discussionListToolbar.setupAsBackButton(this@DiscussionListFragment)
-            val searchHint = getString(if (isAnnouncement) R.string.searchAnnouncementsHint else R.string.searchDiscussionsHint)
+            val searchHint =
+                getString(if (isAnnouncement) R.string.searchAnnouncementsHint else R.string.searchDiscussionsHint)
             discussionListToolbar.addSearch(searchHint) { query ->
                 if (query.isBlank()) {
                     emptyView.emptyViewText(R.string.noItemsToDisplayShort)
@@ -261,27 +277,31 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     private fun checkForPermission() {
         permissionJob = tryWeave {
-            val permission = if(canvasContext.isCourse) {
-                awaitApi<Course> { CourseManager.getCourse(
+            val permission = if (canvasContext.isCourse) {
+                awaitApi<Course> {
+                    CourseManager.getCourse(
                         canvasContext.id,
                         it,
                         true
-                )}.permissions
+                    )
+                }.permissions
             } else {
-                awaitApi<Group> { GroupManager.getDetailedGroup(
+                awaitApi<Group> {
+                    GroupManager.getDetailedGroup(
                         canvasContext.id,
                         it,
                         true
-                )}.permissions
+                    )
+                }.permissions
             }
 
             this@DiscussionListFragment.canvasContext.permissions = permission
-            canPost = if(isAnnouncement) {
+            canPost = if (isAnnouncement) {
                 permission?.canCreateAnnouncement ?: false
             } else {
                 permission?.canCreateDiscussionTopic ?: false
             }
-            if(canPost) {
+            if (canPost) {
                 binding.createNewDiscussion.show()
             }
         } catch {
@@ -340,14 +360,14 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     companion object {
         fun newInstance(route: Route) =
-                if (validateRoute(route)) {
-                    DiscussionListFragment().apply {
-                        arguments = route.canvasContext!!.makeBundle(route.arguments)
-                    }
-                } else null
+            if (validateRoute(route)) {
+                DiscussionListFragment().apply {
+                    arguments = route.canvasContext!!.makeBundle(route.arguments)
+                }
+            } else null
 
         fun makeRoute(canvasContext: CanvasContext?) =
-                Route(DiscussionListFragment::class.java, canvasContext)
+            Route(DiscussionListFragment::class.java, canvasContext)
 
         private fun validateRoute(route: Route) = route.canvasContext != null
     }

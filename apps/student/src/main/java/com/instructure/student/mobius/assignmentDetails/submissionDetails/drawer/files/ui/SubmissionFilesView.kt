@@ -22,35 +22,39 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentSubmissionFilesBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesViewState
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_submission_files.*
 
 class SubmissionFilesView(
     inflater: LayoutInflater,
     parent: ViewGroup
-) : MobiusView<SubmissionFilesViewState, SubmissionFilesEvent>(R.layout.fragment_submission_files, inflater, parent) {
+) : MobiusView<SubmissionFilesViewState, SubmissionFilesEvent, FragmentSubmissionFilesBinding>(
+    R.layout.fragment_submission_files,
+    inflater,
+    FragmentSubmissionFilesBinding::inflate,
+    parent) {
 
     private val adapter = SubmissionFilesAdapter {
         consumer?.accept(SubmissionFilesEvent.FileClicked(it))
     }
 
     init {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
     }
 
     override fun render(state: SubmissionFilesViewState) {
         when (state) {
             SubmissionFilesViewState.Empty -> {
-                emptyView.setVisible()
-                recyclerView.setGone()
+                binding.emptyView.setVisible()
+                binding.recyclerView.setGone()
             }
             is SubmissionFilesViewState.FileList -> {
-                emptyView.setGone()
-                recyclerView.setVisible()
+                binding.emptyView.setGone()
+                binding.recyclerView.setVisible()
                 adapter.setData(state.files)
             }
         }

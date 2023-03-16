@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
@@ -38,11 +39,11 @@ import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentElementaryDashboardBinding
 import com.instructure.student.fragment.ParentFragment
-import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
-import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
 @ScreenView(SCREEN_VIEW_ELEMENTARY_DASHBOARD)
 class ElementaryDashboardFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentElementaryDashboardBinding::bind)
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -59,8 +60,8 @@ class ElementaryDashboardFragment : ParentFragment() {
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
 
     override fun applyTheme() {
-        toolbar.title = title()
-        navigation?.attachNavigationDrawer(this, toolbar)
+        binding.toolbar.title = title()
+        navigation?.attachNavigationDrawer(this, binding.toolbar)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -77,7 +78,7 @@ class ElementaryDashboardFragment : ParentFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
         dashboardPager.adapter = ElementaryDashboardPagerAdapter(fragments, childFragmentManager)
@@ -111,13 +112,13 @@ class ElementaryDashboardFragment : ParentFragment() {
 
     private fun addImportantDatesFragment() {
         fragments.add(importantDatesFragment)
-        dashboardPager.adapter?.notifyDataSetChanged()
+        binding.dashboardPager.adapter?.notifyDataSetChanged()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            (dashboardPager?.adapter as? ElementaryDashboardPagerAdapter)?.refreshHomeroomAssignments()
+            (binding.dashboardPager.adapter as? ElementaryDashboardPagerAdapter)?.refreshHomeroomAssignments()
         }
     }
 

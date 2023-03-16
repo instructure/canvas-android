@@ -17,19 +17,29 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/tiara"
     android:id="@+id/panda_create_layout">
 
-    <include layout="@layout/toolbar_layout" android:id="@+id/toolbar"/>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/textDarkest"
+        app:theme="@style/ToolBarStyle"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        android:layout_alignParentTop="true"
+        android:elevation="2dp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/editOptions"
         android:padding="4dp"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/toolbarWrapper">
         <LinearLayout
             android:id="@+id/pandaImages"
             android:layout_width="match_parent"

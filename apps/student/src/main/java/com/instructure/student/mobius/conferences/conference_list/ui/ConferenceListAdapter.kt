@@ -23,8 +23,10 @@ import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.adapter_conference_item.view.*
-import kotlinx.android.synthetic.main.adapter_conference_list_error.view.*
+import com.instructure.student.databinding.AdapterConferenceHeaderBinding
+import com.instructure.student.databinding.AdapterConferenceItemBinding
+import com.instructure.student.databinding.AdapterConferenceListEmptyBinding
+import com.instructure.student.databinding.AdapterConferenceListErrorBinding
 
 interface ConferenceListAdapterCallback : BasicItemCallback {
     fun onConferenceClicked(conferenceId: Long)
@@ -41,36 +43,48 @@ class ConferenceListAdapter(callback: ConferenceListAdapterCallback) :
     }
 }
 
-class ConferenceListEmptyBinder : BasicItemBinder<ConferenceListItemViewState.Empty, ConferenceListAdapterCallback>() {
+class ConferenceListEmptyBinder :
+    BasicItemBinder<ConferenceListItemViewState.Empty, ConferenceListAdapterCallback, AdapterConferenceListEmptyBinding>(
+        AdapterConferenceListEmptyBinding::inflate
+    ) {
     // TODO: Get correct image and messaging for empty view
     override val layoutResId = R.layout.adapter_conference_list_empty
     override val bindBehavior = NoBind()
 }
 
-class ConferenceListErrorBinder : BasicItemBinder<ConferenceListItemViewState.Error, ConferenceListAdapterCallback>() {
+class ConferenceListErrorBinder :
+    BasicItemBinder<ConferenceListItemViewState.Error, ConferenceListAdapterCallback, AdapterConferenceListErrorBinding>(
+        AdapterConferenceListErrorBinding::inflate
+    ) {
     // TODO: Get correct image and messaging for error view
     override val layoutResId = R.layout.adapter_conference_list_error
-    override val bindBehavior = Item {_, callback, _ ->
-        conferenceListRetry.onClick { callback.reload() }
+    override val bindBehavior = Item { _, callback, _ ->
+        binding.conferenceListRetry.onClick { callback.reload() }
     }
 }
 
-class ConferenceListHeaderBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceHeader, ConferenceListAdapterCallback>() {
+class ConferenceListHeaderBinder :
+    BasicItemBinder<ConferenceListItemViewState.ConferenceHeader, ConferenceListAdapterCallback, AdapterConferenceHeaderBinding>(
+        AdapterConferenceHeaderBinding::inflate
+    ) {
     override val layoutResId = R.layout.adapter_conference_header
-    override val bindBehavior = Item {data, _, _ ->
-        title.text = data.title
+    override val bindBehavior = Item { data, _, _ ->
+        binding.title.text = data.title
     }
 }
 
-class ConferenceListItemBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceItem, ConferenceListAdapterCallback>() {
+class ConferenceListItemBinder :
+    BasicItemBinder<ConferenceListItemViewState.ConferenceItem, ConferenceListAdapterCallback, AdapterConferenceItemBinding>(
+        AdapterConferenceItemBinding::inflate
+    ) {
     override val layoutResId = R.layout.adapter_conference_item
     override val bindBehavior = Item { data, callback, _ ->
-        icon.imageTintList = data.tint.asStateList()
-        title.text = data.title
-        subtitle.setTextForVisibility(data.subtitle)
+        binding.icon.imageTintList = data.tint.asStateList()
+        binding.title.text = data.title
+        binding.subtitle.setTextForVisibility(data.subtitle)
 
-        statusLabel.text = data.label
-        statusLabel.setTextColor(data.labelTint)
+        binding.statusLabel.text = data.label
+        binding.statusLabel.setTextColor(data.labelTint)
 
         onClick { callback.onConferenceClicked(data.conferenceId) }
     }

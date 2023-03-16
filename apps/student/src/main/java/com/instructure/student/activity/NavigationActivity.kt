@@ -77,6 +77,7 @@ import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityNavigationBinding
+import com.instructure.student.databinding.LoadingCanvasViewBinding
 import com.instructure.student.databinding.NavigationDrawerBinding
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.*
@@ -95,7 +96,6 @@ import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -114,6 +114,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
+    private lateinit var canvasLoadingBinding: LoadingCanvasViewBinding
 
     @Inject
     lateinit var navigationBehavior: NavigationBehavior
@@ -235,8 +236,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
+        canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
@@ -955,11 +958,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun existingFragmentCount(): Int = supportFragmentManager.backStackEntryCount
 
     override fun showLoadingIndicator() {
-        loadingRoute.setVisible()
+        canvasLoadingBinding.loadingRoute.setVisible()
     }
 
     override fun hideLoadingIndicator() {
-        loadingRoute.setGone()
+        canvasLoadingBinding.loadingRoute.setGone()
     }
 
     //endregion

@@ -41,7 +41,6 @@
         android:layout_below="@id/toolbar">
 
         <include
-            android:id="@+id/notificationRecyclerViewLayout"
             layout="@layout/panda_recycler_refresh_layout" />
 
     </FrameLayout>

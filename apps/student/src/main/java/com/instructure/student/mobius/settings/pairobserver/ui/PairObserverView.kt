@@ -27,25 +27,35 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentPairObserverBinding
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.settings.pairobserver.PairObserverEvent
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_pair_observer.*
 
 class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<PairObserverViewState, PairObserverEvent>(R.layout.fragment_pair_observer, inflater, parent) {
+    MobiusView<PairObserverViewState, PairObserverEvent, FragmentPairObserverBinding>(
+        R.layout.fragment_pair_observer,
+        inflater,
+        FragmentPairObserverBinding::inflate,
+        parent
+    ) {
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarColored(context as Activity, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(
+            context as Activity,
+            binding.toolbar,
+            ThemePrefs.primaryColor,
+            ThemePrefs.primaryTextColor
+        )
     }
 
     override fun onConnect(output: Consumer<PairObserverEvent>) {
-        pairObserverRefresh.setOnClickListener {
+        binding.pairObserverRefresh.setOnClickListener {
             if (APIHelper.hasNetworkConnection()) {
                 output.accept(PairObserverEvent.RefreshCode)
             } else {
@@ -65,31 +75,31 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
     override fun onDispose() {}
 
     private fun renderLoading() {
-        pairObserverLoading.setVisible()
-        pairObserverContent.setGone()
-        errorContainer.setGone()
+        binding.pairObserverLoading.setVisible()
+        binding.pairObserverContent.setGone()
+        binding.errorContainer.setGone()
     }
 
     private fun renderFailed() {
-        pairObserverLoading.setGone()
-        pairObserverContent.setGone()
-        errorContainer.setVisible()
+        binding.pairObserverLoading.setGone()
+        binding.pairObserverContent.setGone()
+        binding.errorContainer.setVisible()
     }
 
     private fun renderPairingCode(domain: String, pairingCode: String, accountId: Long) {
-        pairObserverLoading.setGone()
-        pairObserverContent.setVisible()
-        errorContainer.setGone()
-        pairObserverCode.text = pairingCode
+        binding.pairObserverLoading.setGone()
+        binding.pairObserverContent.setVisible()
+        binding.errorContainer.setGone()
+        binding.pairObserverCode.text = pairingCode
 
         try {
             // Open the Parent App with relevant data so it can pair the student
             val content = "canvas-parent://$domain/pair?code=$pairingCode&account_id=$accountId"
             val barcodeEncoder = BarcodeEncoder()
             val bitmap: Bitmap = barcodeEncoder.encodeBitmap(content, BarcodeFormat.QR_CODE, 100, 100)
-            pairObserverQrCode.setImageBitmap(bitmap)
+            binding.pairObserverQrCode.setImageBitmap(bitmap)
         } catch (e: Exception) {
-            pairObserverQrCode.setImageResource(R.drawable.ic_warning)
+            binding.pairObserverQrCode.setImageResource(R.drawable.ic_warning)
         }
     }
 }

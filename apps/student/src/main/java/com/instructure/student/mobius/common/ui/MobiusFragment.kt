@@ -16,12 +16,15 @@
  */
 package com.instructure.student.mobius.common.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.interactions.FragmentInteractions
@@ -38,7 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT>, VIEW_STATE> : ParentFragment(), FragmentInteractions {
+abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT, BINDING>, VIEW_STATE, BINDING: ViewBinding> : ParentFragment(), FragmentInteractions {
     var overrideInitModel: MODEL? = null
 
     var overrideInitViewState: VIEW_STATE? = null
@@ -128,6 +131,7 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
 
     override fun onDestroyView() {
         controller.disconnect()
+        view.releaseBinding()
         super.onDestroyView()
     }
 
@@ -155,18 +159,31 @@ abstract class UpdateInit<MODEL, EVENT, EFFECT> : Update<MODEL, EVENT, EFFECT>, 
     abstract fun performInit(model: MODEL): First<MODEL, EFFECT>
 }
 
-abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInflater, val parent: ViewGroup) :
+abstract class MobiusView<VIEW_STATE, EVENT, BINDING: ViewBinding>(layoutId: Int, inflater: LayoutInflater, bindingInflater: (layoutInflater: LayoutInflater) -> BINDING, val parent: ViewGroup) :
     Connectable<VIEW_STATE, EVENT>, LayoutContainer {
-    val rootView: View? = inflater.inflate(layoutId, parent, false)
+
+    private var _binding: BINDING? = bindingInflater(inflater)
+
+    val binding: BINDING
+        get() = _binding!!
 
     override val containerView: View?
-        get() = rootView
+        get() = binding.root
 
     var connection: Connection<VIEW_STATE>? = null
     var consumer: Consumer<EVENT>? = null
 
     protected val context: Context
         get() = parent.context
+
+    protected val activity: Activity
+        get() = getActivity(context)
+
+    private fun getActivity(context: Context): Activity {
+        if (context is Activity) return context
+        if (context is ContextWrapper) return getActivity(context.baseContext)
+        else throw IllegalStateException("Not activity context")
+    }
 
     abstract fun onConnect(output: Consumer<EVENT>)
 
@@ -203,6 +220,10 @@ abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInfl
 
     fun logEventWithOrigin(eventName: String) {
         Analytics.logEvent(eventName, Analytics.createOriginBundle(this::class.java.simpleName))
+    }
+
+    fun releaseBinding() {
+        _binding = null
     }
 }
 

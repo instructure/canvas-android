@@ -27,10 +27,10 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentSyllabusEventsBinding
+import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_syllabus_events.view.*
-import kotlinx.android.synthetic.main.fragment_syllabus_webview.view.*
 
 class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
     override fun isViewFromObject(view: View, `object`: Any) = view === `object`
@@ -43,9 +43,11 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
         container.addView(view)
 
         if (!isSyllabusPosition(position)) {
-            view.syllabusEventsRecycler.layoutManager = LinearLayoutManager(container.context)
+            val binding = FragmentSyllabusEventsBinding.bind(view)
+            binding.syllabusEventsRecycler.layoutManager = LinearLayoutManager(container.context)
         } else {
-            setupWebView(view.syllabusWebViewWrapper.webView)
+            val binding = FragmentSyllabusWebviewBinding.bind(view)
+            setupWebView(binding.syllabusWebViewWrapper.webView)
         }
 
         return view

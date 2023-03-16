@@ -27,6 +27,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.Submission
+import com.instructure.student.databinding.FragmentUploadStatusSubmissionBinding
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.file.*
@@ -36,7 +37,7 @@ import com.spotify.mobius.EventSource
 
 @ScreenView(SCREEN_VIEW_UPLOAD_STATUS_SUBMISSION)
 class UploadStatusSubmissionFragment :
-    MobiusFragment<UploadStatusSubmissionModel, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect, UploadStatusSubmissionView, UploadStatusSubmissionViewState>() {
+    MobiusFragment<UploadStatusSubmissionModel, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect, UploadStatusSubmissionView, UploadStatusSubmissionViewState, FragmentUploadStatusSubmissionBinding>() {
 
     private val submissionId by LongArg(key = Const.SUBMISSION_ID)
 

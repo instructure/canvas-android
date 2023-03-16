@@ -85,7 +85,7 @@
         android:layout_above="@+id/editOptions"
         android:layout_below="@+id/todoFilterContainer">
 
-        <include android:id="@+id/todoRecyclerViewLayout" layout="@layout/panda_recycler_refresh_layout" />
+        <include layout="@layout/panda_recycler_refresh_layout" />
 
     </FrameLayout>
 

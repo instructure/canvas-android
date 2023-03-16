@@ -42,6 +42,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.ParentActivity
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListNotificationBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
@@ -52,6 +53,7 @@ import com.instructure.student.router.RouteMatcher
 class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager.OnBackStackChangedListener {
 
     private val binding by viewBinding(FragmentListNotificationBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     @PageViewUrl
     @Suppress("unused")
@@ -76,11 +78,11 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 setRefreshing(false)
                 binding.editOptions.setGone()
                 if (recyclerAdapter.size() == 0) {
-                    setEmptyView(binding.notificationRecyclerViewLayout.emptyView, R.drawable.ic_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
+                    setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
                     if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        binding.notificationRecyclerViewLayout.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
+                        recyclerBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
                     } else {
-                        binding.notificationRecyclerViewLayout.emptyView.setGuidelines(.28f,.6f,.73f,.12f,.88f)
+                        recyclerBinding.emptyView.setGuidelines(.28f,.6f,.73f,.12f,.88f)
                     }
                 }
                 (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
@@ -108,6 +110,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
             = layoutInflater.inflate(R.layout.fragment_list_notification, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
@@ -118,7 +121,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
             R.id.listView
         )
 
-        binding.notificationRecyclerViewLayout.listView.isSelectionEnabled = false
+        recyclerBinding.listView.isSelectionEnabled = false
 
         binding.confirmButton.text = getString(R.string.delete)
         binding.confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
@@ -135,7 +138,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
     override fun onBackStackChanged() {
         if (activity?.supportFragmentManager?.fragments?.lastOrNull()?.javaClass == this.javaClass) {
             if (shouldRefreshOnResume) {
-                binding.notificationRecyclerViewLayout.swipeRefreshLayout.isRefreshing = true
+                recyclerBinding.swipeRefreshLayout.isRefreshing = true
                 recyclerAdapter.refresh()
                 shouldRefreshOnResume = false
             }
@@ -177,19 +180,19 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 R.string.noNotifications
         )
         if (recyclerAdapter.size() == 0) {
-            binding.notificationRecyclerViewLayout.emptyView.changeTextSize()
+            recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    binding.notificationRecyclerViewLayout.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
                 } else {
-                    binding.notificationRecyclerViewLayout.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     // Change nothing, at least for now
                 } else {
-                    binding.notificationRecyclerViewLayout.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
+                    recyclerBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
                 }
             }
         }

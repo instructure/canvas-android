@@ -18,14 +18,14 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.utils.asAttachment
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.view_comment_attachment.view.*
+import com.instructure.student.databinding.ViewCommentAttachmentBinding
 
 @SuppressLint("ViewConstructor")
 class CommentMediaAttachmentView(
@@ -36,22 +36,22 @@ class CommentMediaAttachmentView(
 ) : LinearLayout(context) {
     init {
         orientation = VERTICAL
-        val view = View.inflate(context, R.layout.view_comment_attachment, this)
+        val binding = ViewCommentAttachmentBinding.inflate(LayoutInflater.from(context), this, false)
         when (mediaComment.mediaType) {
             MediaComment.MediaType.AUDIO -> {
-                view.iconImageView.setImageResource(R.drawable.ic_audio)
-                view.attachmentNameTextView.text = context.getString(R.string.mediaUploadAudio)
+                binding.iconImageView.setImageResource(R.drawable.ic_audio)
+                binding.attachmentNameTextView.text = context.getString(R.string.mediaUploadAudio)
             }
             MediaComment.MediaType.VIDEO -> {
-                view.iconImageView.setImageResource(R.drawable.ic_media)
-                view.attachmentNameTextView.text = context.getString(R.string.mediaUploadVideo)
+                binding.iconImageView.setImageResource(R.drawable.ic_media)
+                binding.attachmentNameTextView.text = context.getString(R.string.mediaUploadVideo)
             }
             else -> {
-                view.iconImageView.setImageResource(R.drawable.ic_media)
-                view.attachmentNameTextView.text = context.getString(R.string.mediaUpload)
+                binding.iconImageView.setImageResource(R.drawable.ic_media)
+                binding.attachmentNameTextView.text = context.getString(R.string.mediaUpload)
             }
         }
-        view.iconImageView.setColorFilter(tint)
-        view.onClickWithRequireNetwork { onAttachmentClicked(mediaComment.asAttachment()) }
+        binding.iconImageView.setColorFilter(tint)
+        binding.root.onClickWithRequireNetwork { onAttachmentClicked(mediaComment.asAttachment()) }
     }
 }

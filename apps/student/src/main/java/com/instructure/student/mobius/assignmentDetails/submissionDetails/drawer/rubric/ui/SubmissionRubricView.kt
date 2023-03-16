@@ -19,9 +19,10 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.student.R
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
+import com.instructure.student.R
+import com.instructure.student.databinding.FragmentSubmissionRubricBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
@@ -31,14 +32,14 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_submission_rubric.*
 
 class SubmissionRubricView(
     inflater: LayoutInflater,
     parent: ViewGroup
-) : MobiusView<SubmissionRubricViewState, SubmissionRubricEvent>(
+) : MobiusView<SubmissionRubricViewState, SubmissionRubricEvent, FragmentSubmissionRubricBinding>(
     R.layout.fragment_submission_rubric,
     inflater,
+    FragmentSubmissionRubricBinding::inflate,
     parent
 ) {
 
@@ -53,8 +54,8 @@ class SubmissionRubricView(
     })
 
     init {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
     }
 
     override fun onConnect(output: Consumer<SubmissionRubricEvent>) = Unit

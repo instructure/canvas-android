@@ -25,22 +25,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.pandautils.utils.*
-import com.instructure.student.R
 import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
+import com.instructure.pandautils.utils.*
+import com.instructure.student.R
+import com.instructure.student.databinding.FragmentPickerSubmissionUploadBinding
+import com.instructure.student.databinding.ViewholderFileUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_picker_submission_upload.*
-import kotlinx.android.synthetic.main.viewholder_file_upload.view.*
 
 class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, val mode: PickerSubmissionMode) :
-    MobiusView<PickerSubmissionUploadViewState, PickerSubmissionUploadEvent>(
+    MobiusView<PickerSubmissionUploadViewState, PickerSubmissionUploadEvent, FragmentPickerSubmissionUploadBinding>(
         R.layout.fragment_picker_submission_upload,
         inflater,
+        FragmentPickerSubmissionUploadBinding::inflate,
         parent
     ) {
 
@@ -51,20 +52,20 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
     })
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        toolbar.title = context.getString(if (mode.isForComment) R.string.commentUpload else R.string.submission)
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.title = context.getString(if (mode.isForComment) R.string.commentUpload else R.string.submission)
 
-        filePickerRecycler.layoutManager = LinearLayoutManager(context)
-        filePickerRecycler.adapter = adapter
+        binding.filePickerRecycler.layoutManager = LinearLayoutManager(context)
+        binding.filePickerRecycler.adapter = adapter
+        binding.sourceCamera.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.CameraClicked) }
 
-        sourceCamera.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.CameraClicked) }
-        sourceDevice.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.SelectFileClicked) }
-        sourceGallery.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.GalleryClicked) }
-        sourceDocumentScanning.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.DocumentScanningClicked) }
+        binding.sourceDevice.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.SelectFileClicked) }
+        binding.sourceGallery.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.GalleryClicked) }
+        binding.sourceDocumentScanning.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.DocumentScanningClicked) }
     }
 
     override fun onConnect(output: Consumer<PickerSubmissionUploadEvent>) {
-        toolbar.setMenu(R.menu.menu_submit_generic) {
+        binding.toolbar.setMenu(R.menu.menu_submit_generic) {
             when (it.itemId) {
                 R.id.menuSubmit -> {
                     output.accept(PickerSubmissionUploadEvent.SubmitClicked)
@@ -72,16 +73,16 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
             }
         }
 
-        toolbar.menu.findItem(R.id.menuSubmit).isVisible = false
+        binding.toolbar.menu.findItem(R.id.menuSubmit).isVisible = false
     }
 
     override fun onDispose() = Unit
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarLight(context as Activity, toolbar)
+        ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
     }
 
-    override fun render(state: PickerSubmissionUploadViewState) {
+    override fun render(state: PickerSubmissionUploadViewState) = with(binding) {
         toolbar.menu.findItem(R.id.menuSubmit).isVisible = state.visibilities.submit
         fileLoading.setVisible(state.visibilities.loading)
         renderSourceOptions(state.visibilities)
@@ -100,7 +101,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         }
     }
 
-    private fun renderEmpty() {
+    private fun renderEmpty() = with(binding) {
         pickerEmptyView.setVisible(true)
         pickerEmptyView.setImageVisible(true)
         pickerEmptyView.setEmptyViewImage(context.getDrawableCompat(R.drawable.ic_panda_choosefile))
@@ -111,7 +112,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         )
     }
 
-    private fun renderSourceOptions(visibilities: PickerVisibilities) {
+    private fun renderSourceOptions(visibilities: PickerVisibilities) = with(binding) {
         sourcesContainer.setVisible(visibilities.sources)
         sourcesDivider.setVisible(visibilities.sources)
         sourceCamera.setVisible(visibilities.sourceCamera)
@@ -162,15 +163,16 @@ class PickerListBinder : BasicItemBinder<PickerListItemViewState, PickerListCall
     override fun getItemId(item: PickerListItemViewState) = item.position.toLong()
     override val layoutResId = R.layout.viewholder_file_upload
     override val bindBehavior = Item { state, pickerListCallback, _ ->
-        fileIcon.setImageResource(state.iconRes)
-        fileName.text = state.title
-        fileSize.text = state.size
+        val binding = ViewholderFileUploadBinding.bind(this)
+        binding.fileIcon.setImageResource(state.iconRes)
+        binding.fileName.text = state.title
+        binding.fileSize.text = state.size
         if (state.canDelete) {
-            deleteButton.setVisible().setOnClickListener {
+            binding.deleteButton.setVisible().setOnClickListener {
                 pickerListCallback.deleteClicked(state.position)
             }
         } else {
-            deleteButton.setGone().setOnClickListener(null)
+            binding.deleteButton.setGone().setOnClickListener(null)
         }
     }
 }

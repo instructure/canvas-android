@@ -48,6 +48,7 @@ import com.instructure.pandautils.features.dashboard.notifications.DashboardNoti
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
+import com.instructure.student.databinding.CourseGridRecyclerRefreshLayoutBinding
 import com.instructure.student.databinding.FragmentCourseGridBinding
 import com.instructure.student.decorations.VerticalGridSpacingDecoration
 import com.instructure.student.dialog.ColorPickerDialog
@@ -69,6 +70,7 @@ private const val LIST_SPAN_COUNT = 1
 class DashboardFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
+    private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
 
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -80,7 +82,7 @@ class DashboardFragment : ParentFragment() {
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             if (recyclerAdapter != null && intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
-                binding.dashboardRecyclerViewLayout.swipeRefreshLayout.isRefreshing = true
+                recyclerBinding.swipeRefreshLayout.isRefreshing = true
                 recyclerAdapter?.refresh()
             }
         }
@@ -93,7 +95,7 @@ class DashboardFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
         applyTheme()
     }
 
@@ -104,8 +106,8 @@ class DashboardFragment : ParentFragment() {
         recyclerAdapter = DashboardRecyclerAdapter(requireActivity(), object : CourseAdapterToFragmentCallback {
 
             override fun onRefreshFinished() {
-                binding.dashboardRecyclerViewLayout.swipeRefreshLayout.isRefreshing = false
-                binding.dashboardRecyclerViewLayout.notificationsFragment.setVisible()
+                recyclerBinding.swipeRefreshLayout.isRefreshing = false
+                recyclerBinding.notificationsFragment.setVisible()
             }
 
             override fun onSeeAllCourses() {
@@ -157,7 +159,7 @@ class DashboardFragment : ParentFragment() {
         })
 
         configureRecyclerView()
-        binding.dashboardRecyclerViewLayout.listView.isSelectionEnabled = false
+        recyclerBinding.listView.isSelectionEnabled = false
     }
 
     override fun applyTheme() {
@@ -196,10 +198,10 @@ class DashboardFragment : ParentFragment() {
             StudentPrefs.listDashboard = true
         }
 
-        binding.dashboardRecyclerViewLayout.listView.fadeAnimationWithAction {
+        recyclerBinding.listView.fadeAnimationWithAction {
             courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
             groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
-            (binding.dashboardRecyclerViewLayout.listView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
+            (recyclerBinding.listView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
             view?.post { recyclerAdapter?.notifyDataSetChanged() }
         }
     }
@@ -235,7 +237,7 @@ class DashboardFragment : ParentFragment() {
         )
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                val viewType = dashboardRecyclerViewLayout.listView.adapter!!.getItemViewType(position)
+                val viewType = recyclerBinding.listView.adapter!!.getItemViewType(position)
                 return when (DashboardRecyclerAdapter.ItemType.values()[viewType]) {
                     DashboardRecyclerAdapter.ItemType.COURSE -> groupColumns
                     DashboardRecyclerAdapter.ItemType.GROUP -> courseColumns
@@ -245,26 +247,26 @@ class DashboardFragment : ParentFragment() {
         }
 
         // Add decoration
-        dashboardRecyclerViewLayout.listView.removeAllItemDecorations()
-        dashboardRecyclerViewLayout.listView.addItemDecoration(VerticalGridSpacingDecoration(requireContext(), layoutManager))
-        dashboardRecyclerViewLayout.listView.layoutManager = layoutManager
-        dashboardRecyclerViewLayout.listView.itemAnimator = DefaultItemAnimator()
-        dashboardRecyclerViewLayout.listView.adapter = recyclerAdapter
-        dashboardRecyclerViewLayout.listView.setEmptyView(emptyCoursesView)
-        dashboardRecyclerViewLayout.swipeRefreshLayout.setOnRefreshListener {
+        recyclerBinding.listView.removeAllItemDecorations()
+        recyclerBinding.listView.addItemDecoration(VerticalGridSpacingDecoration(requireContext(), layoutManager))
+        recyclerBinding.listView.layoutManager = layoutManager
+        recyclerBinding.listView.itemAnimator = DefaultItemAnimator()
+        recyclerBinding.listView.adapter = recyclerAdapter
+        recyclerBinding.listView.setEmptyView(emptyCoursesView)
+        recyclerBinding.swipeRefreshLayout.setOnRefreshListener {
             if (!Utils.isNetworkAvailable(context)) {
-                dashboardRecyclerViewLayout.swipeRefreshLayout.isRefreshing = false
+                recyclerBinding.swipeRefreshLayout.isRefreshing = false
             } else {
                 recyclerAdapter?.refresh()
-                dashboardRecyclerViewLayout.notificationsFragment.setGone()
+                recyclerBinding.notificationsFragment.setGone()
                 (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
             }
         }
 
         // Set up RecyclerView padding
         val padding = resources.getDimensionPixelSize(R.dimen.courseListPadding)
-        dashboardRecyclerViewLayout.listView.setPaddingRelative(padding, padding, padding, padding)
-        dashboardRecyclerViewLayout.listView.clipToPadding = false
+        recyclerBinding.listView.setPaddingRelative(padding, padding, padding, padding)
+        recyclerBinding.listView.clipToPadding = false
 
         emptyCoursesView.onClickAddCourses {
             if (!APIHelper.hasNetworkConnection()) {

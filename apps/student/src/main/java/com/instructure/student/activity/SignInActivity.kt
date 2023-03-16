@@ -18,17 +18,12 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.webkit.CookieManager
-import com.instructure.student.BuildConfig
-import com.instructure.student.widget.WidgetUpdater
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SIGN_IN
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.services.PushNotificationRegistrationWorker
+import com.instructure.student.widget.WidgetUpdater
 import dagger.hilt.android.AndroidEntryPoint
 
 @ScreenView(SCREEN_VIEW_SIGN_IN)

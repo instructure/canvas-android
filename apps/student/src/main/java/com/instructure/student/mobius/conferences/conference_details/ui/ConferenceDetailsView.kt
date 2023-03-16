@@ -28,36 +28,37 @@ import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.AdapterConferenceRecordingItemBinding
+import com.instructure.student.databinding.FragmentConferenceDetailsBinding
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEvent
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.adapter_conference_recording_item.view.*
-import kotlinx.android.synthetic.main.fragment_conference_details.*
 
 class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<ConferenceDetailsViewState, ConferenceDetailsEvent>(
+    MobiusView<ConferenceDetailsViewState, ConferenceDetailsEvent, FragmentConferenceDetailsBinding>(
         R.layout.fragment_conference_details,
         inflater,
+        FragmentConferenceDetailsBinding::inflate,
         parent
     ) {
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        toolbar.subtitle = canvasContext.name
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.subtitle = canvasContext.name
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
     }
 
     override fun onConnect(output: Consumer<ConferenceDetailsEvent>) {
-        swipeRefreshLayout.setOnRefreshListener { output.accept(ConferenceDetailsEvent.PullToRefresh) }
-        joinButton.onClick { output.accept(ConferenceDetailsEvent.JoinConferenceClicked) }
+        binding.swipeRefreshLayout.setOnRefreshListener { output.accept(ConferenceDetailsEvent.PullToRefresh) }
+        binding.joinButton.onClick { output.accept(ConferenceDetailsEvent.JoinConferenceClicked) }
     }
 
     override fun onDispose() = Unit
 
-    override fun render(state: ConferenceDetailsViewState) {
+    override fun render(state: ConferenceDetailsViewState) = with(binding) {
         swipeRefreshLayout.isRefreshing = state.isLoading
 
         // Text details
@@ -78,27 +79,27 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
     }
 
     private fun populateRecordings(recordings: List<ConferenceRecordingViewState>) {
-        recordingsContainer.removeAllViews()
-        recordings.forEach { recordingsContainer.addView(makeRecordingListItem(it)) }
+        binding.recordingsContainer.removeAllViews()
+        recordings.forEach { binding.recordingsContainer.addView(makeRecordingListItem(it)) }
     }
 
     @SuppressLint("InflateParams")
     private fun makeRecordingListItem(state: ConferenceRecordingViewState): View {
-        val view = LayoutInflater.from(context).inflate(R.layout.adapter_conference_recording_item, null)
-        with(view) {
-            onClick { consumer?.accept(ConferenceDetailsEvent.RecordingClicked(state.recordingId)) }
+        val binding = AdapterConferenceRecordingItemBinding.inflate(LayoutInflater.from(context), null, false)
+        with(binding) {
+            binding.root.onClick { consumer?.accept(ConferenceDetailsEvent.RecordingClicked(state.recordingId)) }
             recordingTitle.text = state.title
             recordingDate.text = state.date
             recordingDuration.text = state.duration
-            isEnabled = !state.isLaunching
+            binding.root.isEnabled = !state.isLaunching
             recordingProgressBar.setVisible(state.isLaunching)
             recordingContent.alpha = if (state.isLaunching) 0.35f else 1.0f
         }
-        return view
+        return binding.root
     }
 
     fun displayRefreshError() {
-        rootView?.let { Snackbar.make(it, R.string.errorOccurred, Snackbar.LENGTH_SHORT) }
+        Snackbar.make(binding.root, R.string.errorOccurred, Snackbar.LENGTH_SHORT).show()
     }
 
     fun launchUrl(url: String) {

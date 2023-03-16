@@ -17,7 +17,6 @@
 package com.instructure.student.holders
 
 import android.content.Context
-import android.graphics.Typeface
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
@@ -27,9 +26,9 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
-import com.instructure.student.util.BinderUtils
+import com.instructure.student.databinding.ViewholderCardGenericBinding
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import kotlinx.android.synthetic.main.viewholder_card_generic.view.*
+import com.instructure.student.util.BinderUtils
 
 class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
@@ -37,10 +36,10 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         assignment: Assignment,
         courseColor: Int,
         adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>
-    ) = with(itemView) {
+    ) = with(ViewholderCardGenericBinding.bind(itemView)) {
         title.text = assignment.name
 
-        setOnClickListener { adapterToFragmentCallback.onRowClicked(assignment, adapterPosition, true) }
+        root.setOnClickListener { adapterToFragmentCallback.onRowClicked(assignment, adapterPosition, true) }
 
         val courseId = assignment.courseId
         val color = CanvasContext.emptyCourseContext(courseId).textAndIconColor

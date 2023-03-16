@@ -28,10 +28,10 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.util.BinderUtils
+import com.instructure.student.databinding.ViewholderModuleBinding
 import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
+import com.instructure.student.util.BinderUtils
 import com.instructure.student.util.ModuleUtility
-import kotlinx.android.synthetic.main.viewholder_module.view.*
 
 private const val MODULE_INDENT_IN_DP = 10
 
@@ -45,9 +45,10 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         courseColor: Int,
         isFirstItem: Boolean,
         isLastItem: Boolean
-    ) = with(itemView) {
+    ) = with(ViewholderModuleBinding.bind(itemView)) {
+
         val isLocked = ModuleUtility.isGroupLocked(moduleObject)
-        setOnClickListener {
+        root.setOnClickListener {
             adapterToFragmentCallback?.onRowClicked(moduleObject!!, moduleItem, adapterPosition, true)
         }
 
@@ -72,22 +73,23 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val complete = requirement.completed
             description.setVisible()
             description.setTextColor(ContextCompat.getColor(context, R.color.textDark))
-            val text: String? = when (ModuleObject.State.values().firstOrNull { it.apiString == requirement.type }) {
-                ModuleObject.State.MustSubmit -> {
-                    if (complete) description.setTextColor(courseColor)
-                    if (complete) context.getString(R.string.moduleItemSubmitted) else context.getString(R.string.moduleItemSubmit)
+            val text: String? =
+                when (ModuleObject.State.values().firstOrNull { it.apiString == requirement.type }) {
+                    ModuleObject.State.MustSubmit -> {
+                        if (complete) description.setTextColor(courseColor)
+                        if (complete) context.getString(R.string.moduleItemSubmitted) else context.getString(R.string.moduleItemSubmit)
+                    }
+                    ModuleObject.State.MustView -> {
+                        if (complete) context.getString(R.string.moduleItemViewed) else context.getString(R.string.moduleItemMustView)
+                    }
+                    ModuleObject.State.MustContribute -> {
+                        if (complete) context.getString(R.string.moduleItemContributed) else context.getString(R.string.moduleItemContribute)
+                    }
+                    ModuleObject.State.MinScore -> {
+                        if (complete) context.getString(R.string.moduleItemMinScoreMet) else context.getString(R.string.moduleItemMinScore) + " " + requirement.minScore
+                    }
+                    else -> null
                 }
-                ModuleObject.State.MustView -> {
-                    if (complete) context.getString(R.string.moduleItemViewed) else context.getString(R.string.moduleItemMustView)
-                }
-                ModuleObject.State.MustContribute -> {
-                    if (complete) context.getString(R.string.moduleItemContributed) else context.getString(R.string.moduleItemContribute)
-                }
-                ModuleObject.State.MinScore -> {
-                    if (complete) context.getString(R.string.moduleItemMinScoreMet) else context.getString(R.string.moduleItemMinScore) + " " + requirement.minScore
-                }
-                else -> null
-            }
             description.setTextForVisibility(text)
         } else {
             description.text = ""
@@ -109,8 +111,10 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         // Icon
         val drawableResource: Int = when {
-            ModuleItem.Type.Assignment.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_assignment
-            ModuleItem.Type.Discussion.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_discussion
+            ModuleItem.Type.Assignment.toString()
+                .equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_assignment
+            ModuleItem.Type.Discussion.toString()
+                .equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_discussion
             ModuleItem.Type.File.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_download
             ModuleItem.Type.Page.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_pages
             ModuleItem.Type.Quiz.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_quiz
