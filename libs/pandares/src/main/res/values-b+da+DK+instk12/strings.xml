@@ -897,7 +897,7 @@
     <string name="editDashboardDescriptor">Vælg, hvilke fag du vil se i oversigten</string>
     <string name="a11y_editYourCourseList">Rediger din fagliste</string>
 
-    <string name="dashboard">Oversigt yooooooooo</string>
+    <string name="dashboard">Oversigt</string>
     <string name="previous">Forrige</string>
     <string name="pageNum" formatted="false">Side %d af %d</string>
     <string name="language">Sprog</string>

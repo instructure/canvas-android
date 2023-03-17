@@ -897,7 +897,7 @@
     <string name="editDashboardDescriptor">Velg hvilke fag du vil se i oversikten</string>
     <string name="a11y_editYourCourseList">Rediger deltakerlisten</string>
 
-    <string name="dashboard">Oversikt nononoon</string>
+    <string name="dashboard">Oversikt</string>
     <string name="previous">Forrige</string>
     <string name="pageNum" formatted="false">Side %d av %d</string>
     <string name="language">Språk</string>

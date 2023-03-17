@@ -26,6 +26,7 @@ import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.heapanalytics.android.config.Options
+import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.AppTheme
@@ -47,6 +48,8 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configu
             return
         }
         super.onCreate()
+
+        FileCache.versionCode = BuildConfig.VERSION_CODE
 
         val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)

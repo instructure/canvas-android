@@ -897,7 +897,7 @@
     <string name="editDashboardDescriptor">Välj vilka kurser du skulle vilja se på översikten</string>
     <string name="a11y_editYourCourseList">Redigera din kurslista</string>
 
-    <string name="dashboard">Översikt sverigeeee</string>
+    <string name="dashboard">Översikt</string>
     <string name="previous">Föregående</string>
     <string name="pageNum" formatted="false">Sida %d av %d</string>
     <string name="language">Språk</string>
