@@ -16,11 +16,14 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui
 
-import com.instructure.student.R
 import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.student.R
+import com.instructure.student.databinding.AdapterSubmissionCommentsEmptyBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 
-class SubmissionCommentsEmptyBinder : BasicItemBinder<CommentItemState.Empty, SubmissionCommentsAdapterCallback>() {
+class SubmissionCommentsEmptyBinder : BasicItemBinder<CommentItemState.Empty, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentsEmptyBinding>(
+    AdapterSubmissionCommentsEmptyBinding::bind
+) {
     override val layoutResId = R.layout.adapter_submission_comments_empty
     override val bindBehavior = NoBind()
 }

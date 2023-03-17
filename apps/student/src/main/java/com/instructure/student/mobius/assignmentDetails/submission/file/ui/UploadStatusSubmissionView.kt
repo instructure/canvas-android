@@ -164,14 +164,15 @@ interface UploadListCallback : BasicItemCallback {
     fun deleteClicked(position: Int)
 }
 
-class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCallback>() {
+class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCallback, ViewholderFileUploadBinding>(
+    ViewholderFileUploadBinding::bind
+) {
     override val layoutResId = R.layout.viewholder_file_upload
     override fun getItemId(item: UploadListItemViewState): Long {
         return item.position.toLong()
     }
 
     override val bindBehavior = Item { state, pickerListCallback, _ ->
-        val binding = ViewholderFileUploadBinding.bind(this)
         binding.fileIcon.setImageResource(state.iconRes)
         binding.fileIcon.imageTintList = ColorStateList.valueOf(state.iconColor)
         binding.fileName.text = state.title

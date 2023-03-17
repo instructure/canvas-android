@@ -19,31 +19,34 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.student.R
+import com.instructure.student.databinding.AdapterSubmissionCommentBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentSubmissionView
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentView
 
 class SubmissionAsCommentBinder :
-    BasicItemBinder<CommentItemState.SubmissionItem, SubmissionCommentsAdapterCallback>() {
+    BasicItemBinder<CommentItemState.SubmissionItem, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentBinding>(
+        AdapterSubmissionCommentBinding::bind
+    ) {
     override val layoutResId = R.layout.adapter_submission_comment
     override val bindBehavior = Item { comment, callback, _ ->
-        val commentHolder = findViewById<CommentView>(R.id.commentHolder)
-        commentHolder.direction = CommentDirection.OUTGOING
-        commentHolder.usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
-        commentHolder.dateText = comment.dateText
-        commentHolder.commentText = null
-        commentHolder.setAvatar(comment.avatarUrl, comment.authorName)
-        commentHolder.setExtraView(
-            CommentSubmissionView(
-                context = context,
-                submission = comment.submission,
-                tint = comment.tint,
-                onSubmissionClicked = { submission -> callback.onSubmissionClicked(submission) },
-                onAttachmentClicked = { submission, attachment ->
-                    callback.onSubmissionAttachmentClicked(submission, attachment)
-                }
+        binding.commentHolder.apply {
+            direction = CommentDirection.OUTGOING
+            usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
+            dateText = comment.dateText
+            commentText = null
+            setAvatar(comment.avatarUrl, comment.authorName)
+            setExtraView(
+                CommentSubmissionView(
+                    context = context,
+                    submission = comment.submission,
+                    tint = comment.tint,
+                    onSubmissionClicked = { submission -> callback.onSubmissionClicked(submission) },
+                    onAttachmentClicked = { submission, attachment ->
+                        callback.onSubmissionAttachmentClicked(submission, attachment)
+                    }
+                )
             )
-        )
+        }
     }
 }

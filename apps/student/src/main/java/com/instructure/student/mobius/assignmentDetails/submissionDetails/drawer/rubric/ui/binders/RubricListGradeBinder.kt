@@ -16,15 +16,17 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders
 
-import com.instructure.student.R
 import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.student.R
+import com.instructure.student.databinding.AdapterRubricGradeBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
-import kotlinx.android.synthetic.main.adapter_rubric_grade.view.*
 
-class RubricListGradeBinder : BasicItemBinder<RubricListData.Grade, RubricListCallback>() {
+class RubricListGradeBinder : BasicItemBinder<RubricListData.Grade, RubricListCallback, AdapterRubricGradeBinding>(
+    AdapterRubricGradeBinding::bind
+) {
     override val layoutResId = R.layout.adapter_rubric_grade
     override val bindBehavior = Item { gradeData, _, _ ->
-        gradeCell.setState(gradeData.state)
+        binding.gradeCell.setState(gradeData.state)
     }
 }

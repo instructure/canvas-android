@@ -24,6 +24,7 @@ import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemCallback
+import com.instructure.teacher.databinding.AdapterPostPolicySectionBinding
 import com.instructure.teacher.features.postpolicies.PostSection
 
 interface PostGradeSectionCallback : BasicItemCallback, ListItemCallback {
@@ -36,7 +37,9 @@ class PostGradeSectionRecyclerAdapter(callback: PostGradeSectionCallback) : Basi
     }
 }
 
-private class PostGradeSectionBinder : BasicItemBinder<PostSection, PostGradeSectionCallback>() {
+private class PostGradeSectionBinder : BasicItemBinder<PostSection, PostGradeSectionCallback, AdapterPostPolicySectionBinding>(
+    AdapterPostPolicySectionBinding::bind
+) {
     override val layoutResId = R.layout.adapter_post_policy_section
     override fun getItemId(item: PostSection) = item.section.id
 

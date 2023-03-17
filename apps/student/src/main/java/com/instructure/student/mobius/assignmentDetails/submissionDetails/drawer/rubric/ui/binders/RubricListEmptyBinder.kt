@@ -16,12 +16,15 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders
 
-import com.instructure.student.R
 import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.student.R
+import com.instructure.student.databinding.AdapterRubricEmptyBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
 
-class RubricListEmptyBinder : BasicItemBinder<RubricListData.Empty, RubricListCallback>() {
+class RubricListEmptyBinder : BasicItemBinder<RubricListData.Empty, RubricListCallback, AdapterRubricEmptyBinding>(
+    AdapterRubricEmptyBinding::bind
+) {
     override val layoutResId = R.layout.adapter_rubric_empty
     override val bindBehavior = NoBind()
 }
