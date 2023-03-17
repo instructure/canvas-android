@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Fortryd</string>
+    <string name="rce_contentDescription_redo">Annuller fortryd</string>
+    <string name="rce_contentDescription_bold">Formater fed</string>
+    <string name="rce_contentDescription_italic">Formater kursiv</string>
+    <string name="rce_contentDescription_strikethrough">Gennemstreg</string>
+    <string name="rce_contentDescription_underline">Understreg</string>
+    <string name="rce_contentDescription_format_text_color">Formater tekstfarve</string>
+    <string name="rce_contentDescription_border_color">Formater tekstens kantfarve</string>
+    <string name="rce_contentDescription_indent_increase">Forøg indrykning</string>
+    <string name="rce_contentDescription_indent_decrease">Formindsk indrykning</string>
+    <string name="rce_contentDescription_align_left">Juster venstre</string>
+    <string name="rce_contentDescription_align_right">Juster højre</string>
+    <string name="rce_contentDescription_align_center">Juster center</string>
+    <string name="rce_contentDescription_insert_bullets">Indsæt punktliste</string>
+    <string name="rce_contentDescription_insert_numbers">Indsæt nummeret liste</string>
+    <string name="rce_contentDescription_insert_photo">Indsæt foto</string>
+    <string name="rce_contentDescription_upload_photo">Upload billede fra enhed</string>
+    <string name="rce_contentDescription_insert_link">Indsæt link</string>
+    <string name="rce_contentDescription_block_quote">Citatblok</string>
+
+    <string name="rce_contentDescription_color_none">Ingen farve</string>
+    <string name="rce_contentDescription_color_white">Hvid farve</string>
+    <string name="rce_contentDescription_color_black">Sort farve</string>
+    <string name="rce_contentDescription_color_blue">Blå farve</string>
+    <string name="rce_contentDescription_color_red">Rød farve</string>
+    <string name="rce_contentDescription_color_green">Grøn farve</string>
+    <string name="rce_contentDescription_color_gray">Grå farve</string>
+    <string name="rce_contentDescription_color_magenta">Magenta farve</string>
+    <string name="rce_contentDescription_color_cyan">Cyan farve</string>
+    <string name="rce_contentDescription_color_orange">Orange farve</string>
+    <string name="rce_contentDescription_color_yellow">Gul farve</string>
+    <string name="rce_contentDescription_color_purple">Lilla farve</string>
+
+    <string name="rce_editTextUrlHint">Link</string>
+    <string name="rce_editTextALTHint">Tekst</string>
+    <string name="rce_dialogDone">Udført</string>
+    <string name="rce_dialogCancel">Annullér</string>
+    <string name="rce_insertLink">Indsæt link</string>
+    <string name="rce_insertImage">Indsæt billede</string>
+    <string name="rce_uploadImage">Upload billede</string>
+
+    <string name="rce_done">Udført</string>
+    <string name="rce_cancel">Annullér</string>
+    <string name="rce_exit">Afslut</string>
+    <string name="rce_dialog_exit_title">Afslut redigering af opgave?</string>
+    <string name="rce_dialog_exit_message">Er du sikker på, at du vil afslutte? Alle ikke gemte data vil gå tabt.</string>
+    <string name="rce_empty_message">Besked</string>
+    <string name="rce_empty_description">Tilføj beskrivelse</string>
+    <string name="rce_scrollInstructions">Rul for alle redigeringsværktøjer</string>
+    <string name="rce_emptyUrlError">Url kan ikke være tom</string>
+    <string name="rce_httpNotAllowed">Kun https-webadresser accepteres</string>
+    <string name="rce_dialogAltText">Tilføj alternativ tekst til skærmlæsere</string>
+</resources>
