@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Samræða afvalin</string>
     <string name="a11y_exitSelectionMode">Fara úr valham</string>
     <string name="a11y_selectionModeDeactivated">Valhamur afvirkjaður.</string>
+    <string name="a11y_avatarContentDescription">Gengill %s</string>
+    <string name="inboxUndo">Hætta við</string>
 </resources>

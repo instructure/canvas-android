@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Konversation avmarkerad</string>
     <string name="a11y_exitSelectionMode">Avsluta urvalsläget</string>
     <string name="a11y_selectionModeDeactivated">Urvalsläget inaktiverat.</string>
+    <string name="a11y_avatarContentDescription">Avatar för %s</string>
+    <string name="inboxUndo">Ångra</string>
 </resources>

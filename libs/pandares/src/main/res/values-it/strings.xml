@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Conversazione deselezionata</string>
     <string name="a11y_exitSelectionMode">Esci da modalità selezione</string>
     <string name="a11y_selectionModeDeactivated">Modalità selezione disattivata.</string>
+    <string name="a11y_avatarContentDescription">Avatar di %s</string>
+    <string name="inboxUndo">Annulla</string>
 </resources>

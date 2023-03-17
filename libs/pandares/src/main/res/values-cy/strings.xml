@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Sgwrs wedi’i dad-ddewis</string>
     <string name="a11y_exitSelectionMode">Gadael y modd dewis</string>
     <string name="a11y_selectionModeDeactivated">Modd dewis ddim ar waith.</string>
+    <string name="a11y_avatarContentDescription">Afatar o %s</string>
+    <string name="inboxUndo">Dad-wneud</string>
 </resources>

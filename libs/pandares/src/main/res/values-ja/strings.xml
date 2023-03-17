@@ -1356,4 +1356,6 @@
     <string name="a11y_conversationDeselected">会話が選択解除されました</string>
     <string name="a11y_exitSelectionMode">選択モードを終了する</string>
     <string name="a11y_selectionModeDeactivated">選択モードが解除されました。</string>
+    <string name="a11y_avatarContentDescription">%sのアバター</string>
+    <string name="inboxUndo">アンドゥーする</string>
 </resources>

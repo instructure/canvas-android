@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Gespräch abgewählt</string>
     <string name="a11y_exitSelectionMode">Auswahlmodus verlassen</string>
     <string name="a11y_selectionModeDeactivated">Der Auswahlmodus ist deaktiviert.</string>
+    <string name="a11y_avatarContentDescription">Avatar von %s</string>
+    <string name="inboxUndo">Rückgängig machen</string>
 </resources>

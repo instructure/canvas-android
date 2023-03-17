@@ -1407,4 +1407,6 @@
     <string name="a11y_conversationDeselected">Выбор обсуждения отменен</string>
     <string name="a11y_exitSelectionMode">Выйти из режима выбора</string>
     <string name="a11y_selectionModeDeactivated">Режим выбора деактивирован.</string>
+    <string name="a11y_avatarContentDescription">Аватар %s</string>
+    <string name="inboxUndo">Отменить</string>
 </resources>
