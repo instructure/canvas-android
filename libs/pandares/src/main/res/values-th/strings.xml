@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">เลิกการเลือกการพูดคุยแล้ว</string>
     <string name="a11y_exitSelectionMode">ออกจากโหมดเลือก</string>
     <string name="a11y_selectionModeDeactivated">ปิดใช้งานโหมดเลือกรายการแล้ว</string>
+    <string name="a11y_avatarContentDescription">ภาพประจำตัวของ %s</string>
+    <string name="inboxUndo">เลิกทำ</string>
 </resources>

@@ -1379,4 +1379,6 @@
     <string name="a11y_conversationDeselected">Perbualan dinyahpilih</string>
     <string name="a11y_exitSelectionMode">Keluar mod pilihan</string>
     <string name="a11y_selectionModeDeactivated">Mod pilihan diaktifkan.</string>
+    <string name="a11y_avatarContentDescription">Avatar %s</string>
+    <string name="inboxUndo">Buat asal</string>
 </resources>

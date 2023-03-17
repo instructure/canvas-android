@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Keskustelun valinta poistettu.</string>
     <string name="a11y_exitSelectionMode">Poistu valintatilasta</string>
     <string name="a11y_selectionModeDeactivated">Valintatilan aktivointi poistettu.</string>
+    <string name="a11y_avatarContentDescription">Kohteen %s avatar</string>
+    <string name="inboxUndo">Peruuta</string>
 </resources>

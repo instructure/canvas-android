@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Gesprek gedeselecteerd</string>
     <string name="a11y_exitSelectionMode">Selectiemodus afsluiten</string>
     <string name="a11y_selectionModeDeactivated">Selectiemodus gedeactiveerd.</string>
+    <string name="a11y_avatarContentDescription">Avatar van %s</string>
+    <string name="inboxUndo">Ongedaan maken</string>
 </resources>

@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2022-01-28T12:37:40.360857",
+  "@@last_modified": "2023-02-17T11:03:20.619429",
   "alertsLabel": "Notiser",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -2663,6 +2663,34 @@
   "Message sent": "Meddelandet har skickats",
   "@Message sent": {
     "description": "confirmation message on the screen when the user succesfully sends a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Acceptable Use Policy": "Acceptable Use Policy (Policy för godkänd användning)",
+  "@Acceptable Use Policy": {
+    "description": "title for the acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submit": "Spara",
+  "@Submit": {
+    "description": "submit button title for acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": "Antingen är du en ny användare eller så har policyn för godkänd användning ändrats sedan du senast godkände den. Godkänn policyn för godkänd användning innan du fortsätter.",
+  "@Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": {
+    "description": "acceptable use policy screen description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I agree to the Acceptable Use Policy.": "Jag godkänner policyn för godkänd användning.",
+  "@I agree to the Acceptable Use Policy.": {
+    "description": "acceptable use policy switch title",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

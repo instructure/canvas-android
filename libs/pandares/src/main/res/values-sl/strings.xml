@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Izbira pogovora je odstranjena</string>
     <string name="a11y_exitSelectionMode">Izhod iz načina izbire</string>
     <string name="a11y_selectionModeDeactivated">Način izbire je deaktiviran.</string>
+    <string name="a11y_avatarContentDescription">Avatar osebe %s</string>
+    <string name="inboxUndo">Razveljavi</string>
 </resources>

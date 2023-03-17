@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Ångra</string>
+    <string name="rce_contentDescription_redo">Göra om</string>
+    <string name="rce_contentDescription_bold">Formatera fetstil</string>
+    <string name="rce_contentDescription_italic">Formatera kursiv</string>
+    <string name="rce_contentDescription_strikethrough">Genomstryka</string>
+    <string name="rce_contentDescription_underline">Stryka under</string>
+    <string name="rce_contentDescription_format_text_color">Formatera textfärg</string>
+    <string name="rce_contentDescription_border_color">Formatera kantlinjefärg</string>
+    <string name="rce_contentDescription_indent_increase">Öka indrag</string>
+    <string name="rce_contentDescription_indent_decrease">Minska indrag</string>
+    <string name="rce_contentDescription_align_left">Vänsterjustera</string>
+    <string name="rce_contentDescription_align_right">Högerjustera</string>
+    <string name="rce_contentDescription_align_center">Centrera</string>
+    <string name="rce_contentDescription_insert_bullets">Infoga punktlista</string>
+    <string name="rce_contentDescription_insert_numbers">Infoga numrerad lista</string>
+    <string name="rce_contentDescription_insert_photo">Infoga foto</string>
+    <string name="rce_contentDescription_upload_photo">Ladda upp foto från enhet</string>
+    <string name="rce_contentDescription_insert_link">Infoga länk</string>
+    <string name="rce_contentDescription_block_quote">Blockera citat</string>
+
+    <string name="rce_contentDescription_color_none">Ingen färg</string>
+    <string name="rce_contentDescription_color_white">Vit färg</string>
+    <string name="rce_contentDescription_color_black">Svart färg</string>
+    <string name="rce_contentDescription_color_blue">Blå färg</string>
+    <string name="rce_contentDescription_color_red">Röd färg</string>
+    <string name="rce_contentDescription_color_green">Grön färg</string>
+    <string name="rce_contentDescription_color_gray">Grå färg</string>
+    <string name="rce_contentDescription_color_magenta">Magentafärg</string>
+    <string name="rce_contentDescription_color_cyan">Cyanfärg</string>
+    <string name="rce_contentDescription_color_orange">Orange färg</string>
+    <string name="rce_contentDescription_color_yellow">Gul färg</string>
+    <string name="rce_contentDescription_color_purple">Lila färg</string>
+
+    <string name="rce_editTextUrlHint">Länk</string>
+    <string name="rce_editTextALTHint">Text</string>
+    <string name="rce_dialogDone">Klar</string>
+    <string name="rce_dialogCancel">Avbryt</string>
+    <string name="rce_insertLink">Infoga länk</string>
+    <string name="rce_insertImage">Infoga bild</string>
+    <string name="rce_uploadImage">Ladda upp bild</string>
+
+    <string name="rce_done">Klar</string>
+    <string name="rce_cancel">Avbryt</string>
+    <string name="rce_exit">Avsluta</string>
+    <string name="rce_dialog_exit_title">Avsluta uppgiftsredigering?</string>
+    <string name="rce_dialog_exit_message">Vill du avsluta? Du kommer att förlora data som inte har sparats.</string>
+    <string name="rce_empty_message">Meddelande</string>
+    <string name="rce_empty_description">Lägg till beskrivning</string>
+    <string name="rce_scrollInstructions">Rulla för alla redigeringsverktyg</string>
+    <string name="rce_emptyUrlError">URL får inte vara tom</string>
+    <string name="rce_httpNotAllowed">Endast HTTP-URL:er är godkända</string>
+    <string name="rce_dialogAltText">Lägg till alternativ text för skärmläsare</string>
+</resources>

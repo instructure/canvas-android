@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Kua whakakorehia te korerorero</string>
     <string name="a11y_exitSelectionMode">Putaatu i te aratau whiriwhiri</string>
     <string name="a11y_selectionModeDeactivated">Kua whakakorehia te aratau whiriwhiri.</string>
+    <string name="a11y_avatarContentDescription">Avatar o %s</string>
+    <string name="inboxUndo">Wete</string>
 </resources>

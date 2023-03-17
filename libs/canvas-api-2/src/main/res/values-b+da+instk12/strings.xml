@@ -1,0 +1,73 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Du skal først fuldføre:</string>
+    <string name="unlockedAt">Det vil blive låst op den:</string>
+    <string name="goToModules">Gå til forløb</string>
+    <!--Events-->
+    <string name="Starts">Starter</string>
+    <string name="Ends">Slutter</string>
+    <string name="allDayEvent">Heldagsbegivenhed</string>
+    <string name="at">ved</string>
+    <string name="to">til</string>
+    <!--StreamItems-->
+    <string name="Message">Besked</string>
+    <string name="Loading">Indlæser&#8230;</string>
+    <string name="Deleted">Slettet</string>
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Online</string>
+    <string name="canvasAPI_onPaper">På papir</string>
+    <string name="canvasAPI_discussion">Diskussion</string>
+    <string name="canvasAPI_quiz">Quiz</string>
+    <string name="canvasAPI_externalTool">Eksternt værktøj</string>
+    <string name="canvasAPI_none">Ingen aflevering</string>
+    <string name="canvasAPI_passFail">Bestået mislykket</string>
+    <string name="canvasAPI_percent">Procent</string>
+    <string name="canvasAPI_letterGrade">Bogstavvurderinger</string>
+    <string name="canvasAPI_points">Point</string>
+    <string name="canvasAPI_gpaScale">GPA-scala</string>
+    <string name="canvasAPI_notGraded">Ikke bedømt</string>
+    <string name="canvasAPI_onlineQuiz">Quiz</string>
+    <string name="canvasAPI_discussionTopic">Diskussionsemne</string>
+    <string name="canvasAPI_onlineUpload">Filoverførsel</string>
+    <string name="canvasAPI_onlineTextEntry">Tekstindlæg</string>
+    <string name="canvasAPI_onlineURL">Webside URL</string>
+    <string name="canvasAPI_mediaRecording">Medieoptagelse</string>
+    <string name="canvasAPI_attendance">Tilstedeværelse</string>
+    <string name="canvasAPI_studentAnnotation">Elevs anmærkning</string>
+    <string name="quiz_scoring_policy_highest">Højeste</string>
+    <string name="quiz_scoring_policy_average">Gennemsnitlig</string>
+    <string name="quiz_scoring_policy_latest">Seneste</string>
+    <string name="no">Nej</string>
+    <string name="always">Altid</string>
+    <string name="graded_quiz">Bedømt quiz</string>
+    <string name="practice_quiz">Øvelsesquiz</string>
+    <string name="graded_survey">Bedømt spørgeundersøgelse</string>
+    <string name="ungraded_survey">Ikke bedømt spørgeundersøgelse</string>
+    <string name="andMore">\u0020og %d flere</string>
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Elev</string>
+    <string name="enrollmentTypeTeacher">Lærer</string>
+    <string name="enrollmentTypeObserver">Observatør</string>
+    <string name="enrollmentTypeTeachingAssistant">Undervisningsassistent</string>
+    <string name="enrollmentTypeDesigner">Designer</string>
+    <string name="enrollmentTypeUnknown">Ukendt</string>
+</resources>

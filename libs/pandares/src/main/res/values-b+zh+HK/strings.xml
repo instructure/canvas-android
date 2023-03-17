@@ -1356,4 +1356,6 @@
     <string name="a11y_conversationDeselected">已取消選擇的交談</string>
     <string name="a11y_exitSelectionMode">退出選擇模式</string>
     <string name="a11y_selectionModeDeactivated">選擇模式停用</string>
+    <string name="a11y_avatarContentDescription">%s 的頭像</string>
+    <string name="inboxUndo">復原</string>
 </resources>
