@@ -24,6 +24,7 @@ import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandarecycler.util.Types
 import com.instructure.teacher.databinding.AdapterDiscussionBinding
+import com.instructure.teacher.databinding.AdapterEmptyBinding
 import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 import com.instructure.teacher.holders.DiscussionExpandableViewHolder
 import com.instructure.teacher.holders.DiscussionListHolder
@@ -52,7 +53,7 @@ class DiscussionListAdapter(
 
     override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
         Types.TYPE_ITEM -> AdapterDiscussionBinding::inflate
-        else -> ViewholderHeaderExpandableBinding::inflate
+        else -> if (mIsAnnouncement) AdapterEmptyBinding::inflate else ViewholderHeaderExpandableBinding::inflate
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: String, isExpanded: Boolean) {
