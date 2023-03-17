@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
+import androidx.work.WorkInfo.State
 import androidx.work.WorkManager
 import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -226,10 +227,32 @@ class DashboardNotificationsViewModel @Inject constructor(
     private suspend fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map { uuid ->
         val workInfo: WorkInfo? = workManager.getWorkInfoById(uuid).await()
         workInfo?.let {
+            val icon: Int
+            val background: Int
+
+            when (it.state) {
+                State.FAILED -> {
+                    icon = R.drawable.ic_upload
+                    background = R.color.backgroundDanger
+                }
+                State.SUCCEEDED -> {
+                    icon = R.drawable.ic_upload
+                    background = R.color.backgroundSuccess
+                }
+                else -> {
+                    icon = R.drawable.ic_upload
+                    background = R.color.backgroundInfo
+                }
+            }
+
             val uploadViewData = UploadViewData(
                 it.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
-                it.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty()
+                it.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
+                icon,
+                resources.getColor(background),
+                it.state == State.RUNNING
             )
+
             UploadItemViewModel(uuid, workManager, uploadViewData) { uuid ->
                 _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
             }

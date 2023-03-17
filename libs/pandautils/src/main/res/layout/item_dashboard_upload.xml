@@ -35,7 +35,7 @@
         android:contentDescription="@{@string/a11y_contentDescriptionUploadDashboardNotification(itemViewModel.data.title)}"
         android:minHeight="55dp"
         android:onClick="@{() -> itemViewModel.open()}"
-        app:borderColor="@{@color/backgroundInfo}"
+        app:borderColor="@{itemViewModel.data.backgroundColorTint}"
         tools:backgroundTint="#00ACEC">
 
         <FrameLayout
@@ -43,7 +43,7 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@color/backgroundInfo"
+            android:backgroundTint="@{itemViewModel.data.backgroundColorTint}"
             android:importantForAccessibility="noHideDescendants"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_upload"
+                app:imageRes="@{itemViewModel.data.icon}"
                 app:tint="@color/white" />
 
         </FrameLayout>
@@ -107,6 +107,7 @@
                 android:max="100"
                 android:progress="@{itemViewModel.progress}"
                 android:progressTint="@color/backgroundInfo"
+                android:visibility="@{itemViewModel.data.uploading ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/uploadSubtitle"
                 tools:progress="25" />
 
