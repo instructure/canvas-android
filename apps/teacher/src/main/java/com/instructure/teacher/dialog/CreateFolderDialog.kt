@@ -24,6 +24,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_FOLDER
 import com.instructure.pandautils.analytics.ScreenView
@@ -31,7 +32,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.dialog_create_folder.view.*
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_CREATE_FOLDER)
@@ -44,7 +44,7 @@ class CreateFolderDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = View.inflate(requireActivity(), R.layout.dialog_create_folder, null)
-        val folderNameEditText = view.newFolderName
+        val folderNameEditText = view.findViewById<AppCompatEditText>(R.id.newFolderName)
         ViewStyler.themeEditText(requireContext(), folderNameEditText, ThemePrefs.brandColor)
 
         val nameDialog = AlertDialog.Builder(requireActivity())

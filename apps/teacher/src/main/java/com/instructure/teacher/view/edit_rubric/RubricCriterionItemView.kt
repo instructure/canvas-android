@@ -18,6 +18,7 @@ package com.instructure.teacher.view.edit_rubric
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ScrollView
@@ -25,10 +26,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ViewRubricCriterionItemBinding
 import com.instructure.teacher.dialog.CriterionLongDescriptionDialog
 import com.instructure.teacher.dialog.EditRubricCommentDialog
-import kotlinx.android.synthetic.main.view_rubric_criterion_item.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,6 +36,8 @@ import org.greenrobot.eventbus.ThreadMode
 class RubricCriterionItemView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+    private val binding: ViewRubricCriterionItemBinding
 
     /** Criterion ID*/
     private var mCriterionId = ""
@@ -48,14 +50,14 @@ class RubricCriterionItemView @JvmOverloads constructor(
 
     init {
         // Inflate
-        View.inflate(context, R.layout.view_rubric_criterion_item, this)
+        binding = ViewRubricCriterionItemBinding.inflate(LayoutInflater.from(context), this, true)
 
         if (!isInEditMode) {
             // Set 'long description' button color to theme button color
-            viewLongDescriptionButton.setTextColor(ThemePrefs.textButtonColor)
+            binding.viewLongDescriptionButton.setTextColor(ThemePrefs.textButtonColor)
 
             // Set 'add comment' button color to theme button color
-            addCommentButton.setTextColor(ThemePrefs.textButtonColor)
+            binding.addCommentButton.setTextColor(ThemePrefs.textButtonColor)
         }
     }
 
@@ -67,7 +69,7 @@ class RubricCriterionItemView @JvmOverloads constructor(
         assigneePronouns: String?,
         criterionIdx: Int,
         isFreeForm: Boolean
-    ) {
+    ) = with(binding) {
         mCriterionId = criterion.id ?: ""
         mStudentId = studentId
         mAssigneeName = assigneeName
@@ -92,7 +94,7 @@ class RubricCriterionItemView @JvmOverloads constructor(
     }
 
     /** Sets the current/working criterion assessment */
-    fun setAssessment(assessment: RubricCriterionAssessment) {
+    fun setAssessment(assessment: RubricCriterionAssessment) = with(binding) {
         updateComment(assessment.comments)
         addCommentButton.onClick { editComment() }
         editCommentButton.onClick { editComment(commentTextView.text.toString()) }
@@ -114,12 +116,12 @@ class RubricCriterionItemView @JvmOverloads constructor(
 
             // Attempt to scroll to the criterion description
             firstAncestorOrNull<ScrollView>()?.let {
-                it.smoothScrollTo(0, criterionDescriptionTextView.topOffsetIn(it))
+                it.smoothScrollTo(0, binding.criterionDescriptionTextView.topOffsetIn(it))
             }
         }
     }
 
-    fun updateComment(comment: String?) {
+    fun updateComment(comment: String?) = with(binding) {
         if (comment.isNullOrBlank()) {
             criterionCommentContainer.setGone()
             addCommentButton.setVisible(mIsFreeForm)

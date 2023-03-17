@@ -30,27 +30,29 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.databinding.FragmentCommentLibraryBinding
 import com.instructure.teacher.utils.setupCloseButton
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_comment_library.*
-import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 
 @ScreenView(SCREEN_VIEW_COMMENT_LIBRARY)
 @AndroidEntryPoint
 class CommentLibraryFragment : Fragment() {
 
+    private lateinit var binding: FragmentCommentLibraryBinding
+
     private val commentLibraryViewModel: CommentLibraryViewModel by activityViewModels()
 
     private var submissionId by LongArg(key = Const.SUBMISSION_ID)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val binding = FragmentCommentLibraryBinding.inflate(inflater, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentCommentLibraryBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = commentLibraryViewModel
 
         commentLibraryViewModel.currentSubmissionId = submissionId
         commentLibraryViewModel.getCommentBySubmission(submissionId).observe(viewLifecycleOwner) {
-            if (commentEditText.text.toString() != it.comment) {
-                commentEditText.setText(it.comment)
+            if (binding.commentInputContainer.commentEditText.text.toString() != it.comment) {
+                binding.commentInputContainer.commentEditText.setText(it.comment)
             }
         }
 
@@ -63,8 +65,8 @@ class CommentLibraryFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        commentLibraryToolbar.setupCloseButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), commentLibraryToolbar)
+        binding.commentLibraryToolbar.setupCloseButton(this)
+        ViewStyler.themeToolbarLight(requireActivity(), binding.commentLibraryToolbar)
     }
 
     companion object {

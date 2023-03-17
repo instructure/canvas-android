@@ -19,7 +19,7 @@ package com.instructure.teacher.models
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.utils.toApiString
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize

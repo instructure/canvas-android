@@ -18,11 +18,5 @@ package com.instructure.teacher.holders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.teacher.R
 
-class EmptyViewHolder(view: View): RecyclerView.ViewHolder(view) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_empty
-    }
-}
+class EmptyViewHolder(view: View): RecyclerView.ViewHolder(view)

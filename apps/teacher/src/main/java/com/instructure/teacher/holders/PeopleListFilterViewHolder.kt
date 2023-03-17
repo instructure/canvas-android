@@ -25,20 +25,22 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.PeopleFilterAdapterItemBinding
 import com.instructure.teacher.utils.getColorCompat
-import kotlinx.android.synthetic.main.people_filter_adapter_item.view.*
 
 class PeopleListFilterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    fun bind(
+        canvasContext: CanvasContext,
+        canvasContextIdList: ArrayList<Long>,
+        callback: (canvasContext: CanvasContext, isChecked: Boolean) -> Unit,
+        binding: PeopleFilterAdapterItemBinding
+    ): Unit = with(binding) {
+        val context = binding.root.context
 
-    companion object {
-        const val HOLDER_RES_ID = R.layout.people_filter_adapter_item
-    }
-
-    fun bind(canvasContext: CanvasContext, canvasContextIdList: ArrayList<Long>, callback: (canvasContext: CanvasContext, isChecked: Boolean) -> Unit) = with(itemView) {
         title.text = canvasContext.name
         checkbox.setOnCheckedChangeListener { _, isChecked: Boolean ->
 
-            if(canvasContext.id != -1L) {
+            if (canvasContext.id != -1L) {
                 callback.invoke(canvasContext, isChecked)
             }
         }
@@ -46,7 +48,7 @@ class PeopleListFilterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         checkbox.isChecked = canvasContextIdList.contains(canvasContext.id)
         checkbox.setVisible(canvasContext.id != -1L)
         ViewStyler.themeCheckBox(context, checkbox, ThemePrefs.brandColor)
-        if(canvasContext.id == -1L) {
+        if (canvasContext.id == -1L) {
             title.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
             //this is a header, so we want it a gray color
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)

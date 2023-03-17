@@ -17,8 +17,11 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Course
+import com.instructure.teacher.databinding.AdapterCoursesBinding
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.DashboardPresenter
@@ -28,13 +31,14 @@ import instructure.androidblueprint.SyncRecyclerAdapter
 class CoursesAdapter(
     context: Context,
     presenter: DashboardPresenter,
-    private val mCourseCallback: DashboardFragment.CourseBrowserCallback?)
-    : SyncRecyclerAdapter<Course, CoursesViewHolder, CoursesView>(context, presenter) {
+    private val mCourseCallback: DashboardFragment.CourseBrowserCallback?
+) : SyncRecyclerAdapter<Course, CoursesViewHolder, CoursesView>(context, presenter) {
 
     override fun bindHolder(model: Course, holder: CoursesViewHolder, position: Int) {
         holder.bind(model, mCourseCallback)
     }
 
-    override fun createViewHolder(v: View, viewType: Int) = CoursesViewHolder(v)
-    override fun itemLayoutResId(viewType: Int) = CoursesViewHolder.HOLDER_RES_ID
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = CoursesViewHolder(binding as AdapterCoursesBinding)
+
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterCoursesBinding::inflate
 }

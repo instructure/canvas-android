@@ -28,12 +28,14 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentDiscussionsReplyBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.DiscussionEntryEvent
 import com.instructure.teacher.events.post
@@ -45,10 +47,11 @@ import com.instructure.teacher.presenters.DiscussionsReplyPresenter.Companion.RE
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsReplyView
-import kotlinx.android.synthetic.main.fragment_discussions_reply.*
 
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
 class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter, DiscussionsReplyView>(), DiscussionsReplyView, FileUploadDialogParent {
+
+    private val binding by viewBinding(FragmentDiscussionsReplyBinding::bind)
 
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
     private var mDiscussionTopicHeaderId: Long by LongArg(default = 0L) // The topic the discussion belongs too
@@ -69,11 +72,11 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
 
     override fun onPresenterPrepared(presenter: DiscussionsReplyPresenter) {}
 
-    override fun onReadySetGo(presenter: DiscussionsReplyPresenter) {
+    override fun onReadySetGo(presenter: DiscussionsReplyPresenter) = with(binding) {
         rceTextEditor.setHint(R.string.rce_empty_message)
         rceTextEditor.requestEditorFocus()
         rceTextEditor.showEditorToolbar()
-        rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@DiscussionsReplyFragment) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -116,20 +119,20 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         setupToolbar()
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         toolbar.title = getString(R.string.reply)
-        toolbar.setupCloseButton(this)
+        toolbar.setupCloseButton(this@DiscussionsReplyFragment)
         toolbar.setupMenu(R.menu.menu_discussion_reply, menuItemCallback)
 
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 
-    val menuItemCallback: (MenuItem) -> Unit = { item ->
+    private val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_send -> {
                 if (APIHelper.hasNetworkConnection()) {
-                    presenter.sendMessage(rceTextEditor.html)
+                    presenter.sendMessage(binding.rceTextEditor.html)
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }
@@ -159,7 +162,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
     private fun applyAttachment(file: FileSubmitObject?) {
         if (file != null) {
             presenter.setAttachment(file)
-            attachments.setAttachment(file.toAttachment()) { action, _ ->
+            binding.attachments.setAttachment(file.toAttachment()) { action, _ ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
                     presenter.setAttachment(null)
                 }
@@ -167,7 +170,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         }
     }
 
-    override fun insertImageIntoRCE(imageUrl: String) = rceTextEditor.insertImage(requireActivity(), imageUrl)
+    override fun insertImageIntoRCE(imageUrl: String) = binding.rceTextEditor.insertImage(requireActivity(), imageUrl)
 
     companion object {
         private const val DISCUSSION_TOPIC_HEADER_ID = "DISCUSSION_TOPIC_HEADER_ID"
