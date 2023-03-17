@@ -63,7 +63,6 @@ class SubmissionDetailsView(
     private val canvasContext: CanvasContext,
     private val fragmentManager: FragmentManager
 ) : MobiusView<SubmissionDetailsViewState, SubmissionDetailsEvent, FragmentSubmissionDetailsBinding>(
-    R.layout.fragment_submission_details,
     layoutInflater,
     FragmentSubmissionDetailsBinding::inflate,
     parent

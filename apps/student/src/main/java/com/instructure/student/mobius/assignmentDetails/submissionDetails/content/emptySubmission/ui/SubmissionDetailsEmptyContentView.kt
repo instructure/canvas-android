@@ -34,7 +34,6 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.RecordingMediaType
-import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.DialogSubmissionPickerBinding
 import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
@@ -59,7 +58,6 @@ class SubmissionDetailsEmptyContentView(
     inflater: LayoutInflater,
     parent: ViewGroup
 ) : MobiusView<SubmissionDetailsEmptyContentViewState, SubmissionDetailsEmptyContentEvent, FragmentSubmissionDetailsEmptyContentBinding>(
-    R.layout.fragment_submission_details_empty_content,
     inflater,
     FragmentSubmissionDetailsEmptyContentBinding::inflate,
     parent

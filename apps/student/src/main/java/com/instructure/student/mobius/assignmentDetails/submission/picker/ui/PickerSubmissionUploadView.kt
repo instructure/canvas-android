@@ -39,7 +39,6 @@ import com.spotify.mobius.functions.Consumer
 
 class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, val mode: PickerSubmissionMode) :
     MobiusView<PickerSubmissionUploadViewState, PickerSubmissionUploadEvent, FragmentPickerSubmissionUploadBinding>(
-        R.layout.fragment_picker_submission_upload,
         inflater,
         FragmentPickerSubmissionUploadBinding::inflate,
         parent

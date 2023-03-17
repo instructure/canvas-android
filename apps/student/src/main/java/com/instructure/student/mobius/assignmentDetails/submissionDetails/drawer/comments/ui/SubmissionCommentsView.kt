@@ -43,7 +43,6 @@ class SubmissionCommentsView(
     inflater: LayoutInflater,
     parent: ViewGroup
 ) : MobiusView<SubmissionCommentsViewState, SubmissionCommentsEvent, FragmentSubmissionCommentsBinding>(
-    R.layout.fragment_submission_comments,
     inflater,
     FragmentSubmissionCommentsBinding::inflate,
     parent

@@ -35,7 +35,6 @@ import com.spotify.mobius.functions.Consumer
 
 class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
     MobiusView<PairObserverViewState, PairObserverEvent, FragmentPairObserverBinding>(
-        R.layout.fragment_pair_observer,
         inflater,
         FragmentPairObserverBinding::inflate,
         parent

@@ -38,7 +38,6 @@ import com.spotify.mobius.functions.Consumer
 
 class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup) :
     MobiusView<ConferenceListViewState, ConferenceListEvent, FragmentConferenceListBinding>(
-        R.layout.fragment_conference_list,
         inflater,
         FragmentConferenceListBinding::inflate,
         parent) {

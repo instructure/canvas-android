@@ -34,7 +34,6 @@ import com.spotify.mobius.functions.Consumer
 
 class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     MobiusView<TextSubmissionUploadViewState, TextSubmissionUploadEvent, FragmentTextSubmissionUploadBinding>(
-        R.layout.fragment_text_submission_upload,
         inflater,
         FragmentTextSubmissionUploadBinding::inflate,
         parent

@@ -38,7 +38,6 @@ import com.spotify.mobius.functions.Consumer
 
 class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup) :
     MobiusView<SyllabusViewState, SyllabusEvent, FragmentSyllabusBinding>(
-        R.layout.fragment_syllabus,
         inflater,
         FragmentSyllabusBinding::inflate,
         parent) {

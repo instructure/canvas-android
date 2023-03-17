@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
-import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSubmissionRubricBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricEvent
@@ -37,7 +36,6 @@ class SubmissionRubricView(
     inflater: LayoutInflater,
     parent: ViewGroup
 ) : MobiusView<SubmissionRubricViewState, SubmissionRubricEvent, FragmentSubmissionRubricBinding>(
-    R.layout.fragment_submission_rubric,
     inflater,
     FragmentSubmissionRubricBinding::inflate,
     parent

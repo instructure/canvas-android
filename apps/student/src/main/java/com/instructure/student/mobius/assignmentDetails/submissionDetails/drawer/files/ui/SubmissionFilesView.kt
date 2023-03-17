@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSubmissionFilesBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesViewState
@@ -32,7 +31,6 @@ class SubmissionFilesView(
     inflater: LayoutInflater,
     parent: ViewGroup
 ) : MobiusView<SubmissionFilesViewState, SubmissionFilesEvent, FragmentSubmissionFilesBinding>(
-    R.layout.fragment_submission_files,
     inflater,
     FragmentSubmissionFilesBinding::inflate,
     parent) {

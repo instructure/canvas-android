@@ -36,7 +36,6 @@ import com.spotify.mobius.*
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.android.runners.MainThreadWorkRunner
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.extensions.LayoutContainer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -159,15 +158,15 @@ abstract class UpdateInit<MODEL, EVENT, EFFECT> : Update<MODEL, EVENT, EFFECT>, 
     abstract fun performInit(model: MODEL): First<MODEL, EFFECT>
 }
 
-abstract class MobiusView<VIEW_STATE, EVENT, BINDING: ViewBinding>(layoutId: Int, inflater: LayoutInflater, bindingInflater: (layoutInflater: LayoutInflater) -> BINDING, val parent: ViewGroup) :
-    Connectable<VIEW_STATE, EVENT>, LayoutContainer {
+abstract class MobiusView<VIEW_STATE, EVENT, BINDING: ViewBinding>(inflater: LayoutInflater, bindingInflater: (layoutInflater: LayoutInflater) -> BINDING, val parent: ViewGroup) :
+    Connectable<VIEW_STATE, EVENT> {
 
     private var _binding: BINDING? = bindingInflater(inflater)
 
     val binding: BINDING
         get() = _binding!!
 
-    override val containerView: View?
+    val containerView: View
         get() = binding.root
 
     var connection: Connection<VIEW_STATE>? = null

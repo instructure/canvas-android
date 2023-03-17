@@ -33,7 +33,6 @@ import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 
 class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<UrlSubmissionUploadViewState, UrlSubmissionUploadEvent, FragmentUrlSubmissionUploadBinding>(
-    R.layout.fragment_url_submission_upload,
     inflater,
     FragmentUrlSubmissionUploadBinding::inflate,
     parent) {

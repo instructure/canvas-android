@@ -40,7 +40,6 @@ import com.spotify.mobius.functions.Consumer
 
 class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
     MobiusView<UploadStatusSubmissionViewState, UploadStatusSubmissionEvent, FragmentUploadStatusSubmissionBinding>(
-        R.layout.fragment_upload_status_submission,
         inflater,
         FragmentUploadStatusSubmissionBinding::inflate,
         parent
