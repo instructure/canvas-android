@@ -53,7 +53,7 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
     }
 
     private fun setupSubmissionAsAttachment(type: SubmissionType) {
-        val binding = CommentSubmissionAttachmentViewBinding.inflate(LayoutInflater.from(context), this, false)
+        val binding = CommentSubmissionAttachmentViewBinding.inflate(LayoutInflater.from(context), this, true)
         binding.iconImageView.setColorFilter(ThemePrefs.brandColor)
 
         val (icon: Int, title: String, subtitle: String?) = when (type) {
@@ -112,7 +112,7 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
 
     private fun setupAttachments() {
         for (attachment in submission.attachments) {
-            val binding = CommentSubmissionAttachmentViewBinding.inflate(LayoutInflater.from(context), this, false)
+            val binding = CommentSubmissionAttachmentViewBinding.inflate(LayoutInflater.from(context), this, true)
             binding.iconImageView.setColorFilter(ThemePrefs.brandColor)
             binding.iconImageView.setImageResource(attachment.iconRes)
             binding.titleTextView.text = attachment.displayName

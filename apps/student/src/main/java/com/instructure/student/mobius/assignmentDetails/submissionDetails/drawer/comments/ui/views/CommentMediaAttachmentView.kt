@@ -36,7 +36,7 @@ class CommentMediaAttachmentView(
 ) : LinearLayout(context) {
     init {
         orientation = VERTICAL
-        val binding = ViewCommentAttachmentBinding.inflate(LayoutInflater.from(context), this, false)
+        val binding = ViewCommentAttachmentBinding.inflate(LayoutInflater.from(context), this, true)
         when (mediaComment.mediaType) {
             MediaComment.MediaType.AUDIO -> {
                 binding.iconImageView.setImageResource(R.drawable.ic_audio)

@@ -91,7 +91,7 @@ class CommentView @JvmOverloads constructor(
     }
 
     init {
-        binding = ViewCommentBinding.inflate(LayoutInflater.from(context), this, false)
+        binding = ViewCommentBinding.inflate(LayoutInflater.from(context), this, true)
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.CommentView)
             (0 until a.indexCount).map { a.getIndex(it) }.forEach {

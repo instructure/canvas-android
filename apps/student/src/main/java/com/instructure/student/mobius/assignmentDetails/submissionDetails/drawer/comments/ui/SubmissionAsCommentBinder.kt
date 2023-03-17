@@ -22,12 +22,13 @@ import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentSubmissionView
-import kotlinx.android.synthetic.main.adapter_submission_comment.view.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentView
 
 class SubmissionAsCommentBinder :
     BasicItemBinder<CommentItemState.SubmissionItem, SubmissionCommentsAdapterCallback>() {
     override val layoutResId = R.layout.adapter_submission_comment
     override val bindBehavior = Item { comment, callback, _ ->
+        val commentHolder = findViewById<CommentView>(R.id.commentHolder)
         commentHolder.direction = CommentDirection.OUTGOING
         commentHolder.usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
         commentHolder.dateText = comment.dateText

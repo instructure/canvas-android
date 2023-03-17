@@ -132,7 +132,7 @@ class PdfStudentSubmissionView(
             PSPDFKitPreferences.get(getContext()).setAnnotationCreator(ApiPrefs.user?.name)
         }
 
-        binding = ViewPdfStudentSubmissionBinding.inflate(LayoutInflater.from(context), this, false)
+        binding = ViewPdfStudentSubmissionBinding.inflate(LayoutInflater.from(context), this, true)
 
         setLoading(true)
     }

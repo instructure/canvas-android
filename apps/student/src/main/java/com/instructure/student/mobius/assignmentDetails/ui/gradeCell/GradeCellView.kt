@@ -33,7 +33,7 @@ class GradeCellView @JvmOverloads constructor(
     private val binding: ViewStudentGradeCellBinding
 
     init {
-        binding = ViewStudentGradeCellBinding.inflate(LayoutInflater.from(context), this, false)
+        binding = ViewStudentGradeCellBinding.inflate(LayoutInflater.from(context), this, true)
         if (isInEditMode) {
             setState(
                 GradeCellViewState.GradeData(
