@@ -17,7 +17,6 @@
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -27,13 +26,14 @@ import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
 import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentAnnotationCommentListBinding
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.setupBackButton
-import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*
-import java.util.Locale
+import java.util.*
 
 class AnnotationCommentListFragment : BaseListFragment<
         CanvaDocAnnotation,
@@ -41,6 +41,8 @@ class AnnotationCommentListFragment : BaseListFragment<
         AnnotationCommentListView,
         AnnotationCommentViewHolder,
         AnnotationCommentListAdapter>(), AnnotationCommentListView {
+
+    private val binding by viewBinding(FragmentAnnotationCommentListBinding::bind)
 
     private var mAnnotationList by ParcelableArrayListArg<CanvaDocAnnotation>()
     private var mAssigneeId by LongArg()
@@ -74,9 +76,8 @@ class AnnotationCommentListFragment : BaseListFragment<
         })
     }
 
-    override val recyclerView: RecyclerView get() = annotationCommentsRecyclerView
+    override val recyclerView: RecyclerView get() = binding.annotationCommentsRecyclerView
     override fun layoutResId() = R.layout.fragment_annotation_comment_list
-    override fun onCreateView(view: View) {}
     override fun checkIfEmpty() {} // we don't display this view if its empty, so no need to check
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
@@ -97,48 +98,48 @@ class AnnotationCommentListFragment : BaseListFragment<
     }
 
     fun setupToolbar() {
-        toolbar.title = getString(R.string.sg_tab_comments)
-        toolbar.setupBackButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
+        binding.toolbar.title = getString(R.string.sg_tab_comments)
+        binding.toolbar.setupBackButton(this)
+        ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
+        ViewStyler.setToolbarElevationSmall(requireContext(), binding.toolbar)
     }
 
     private fun setupCommentInput() {
         // We only want to enable comments if the user has write permissions or greater
         if(presenter.docSession.annotationMetadata?.canWrite() != true) {
-            commentInputContainer.setVisible(false)
+            binding.commentInputContainer.setVisible(false)
         } else {
-            commentInputContainer.setVisible(true)
-            sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
+            binding.commentInputContainer.setVisible(true)
+            binding.sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
                     intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.textDark),
                     intArrayOf() to ThemePrefs.textButtonColor
             )
 
-            sendCommentButton.isEnabled = false
-            commentEditText.onTextChanged { sendCommentButton.isEnabled = it.isNotBlank() }
-            sendCommentButton.onClickWithRequireNetwork {
-                presenter.sendComment(commentEditText.text.toString())
+            binding.sendCommentButton.isEnabled = false
+            binding.commentEditText.onTextChanged { binding.sendCommentButton.isEnabled = it.isNotBlank() }
+            binding.sendCommentButton.onClickWithRequireNetwork {
+                presenter.sendComment(binding.commentEditText.text.toString())
             }
         }
     }
 
     override fun showSendingStatus() {
-        sendCommentButton.setInvisible()
-        sendingProgressBar.setVisible()
-        sendingProgressBar.announceForAccessibility(getString(R.string.sendingSimple))
-        sendingErrorTextView.setGone()
-        commentEditText.isEnabled = false
+        binding.sendCommentButton.setInvisible()
+        binding.sendingProgressBar.setVisible()
+        binding.sendingProgressBar.announceForAccessibility(getString(R.string.sendingSimple))
+        binding.sendingErrorTextView.setGone()
+        binding.commentEditText.isEnabled = false
     }
 
     override fun hideSendingStatus(success: Boolean) {
-        sendingProgressBar.setGone()
-        sendCommentButton.setVisible()
-        commentEditText.isEnabled = true
+        binding.sendingProgressBar.setGone()
+        binding.sendCommentButton.setVisible()
+        binding.commentEditText.isEnabled = true
         if (success) {
-            commentEditText.setText("")
-            commentEditText.hideKeyboard()
+            binding.commentEditText.setText("")
+            binding.commentEditText.hideKeyboard()
         } else {
-            sendingErrorTextView.setVisible()
+            binding.sendingErrorTextView.setVisible()
         }
     }
 

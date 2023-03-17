@@ -17,26 +17,29 @@ package com.instructure.teacher.holders
 
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 import com.instructure.teacher.presenters.DiscussionListPresenter
-import kotlinx.android.synthetic.main.viewholder_header_expandable.view.*
 
-class DiscussionExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class DiscussionExpandableViewHolder(private val binding: ViewholderHeaderExpandableBinding) : RecyclerView.ViewHolder(binding.root) {
 
     var mIsExpanded = true
 
-    fun bind(isExpanded: Boolean,
-             holder: DiscussionExpandableViewHolder,
-             group: String,
-             callback: (String) -> Unit) = with(itemView) {
+    fun bind(
+        isExpanded: Boolean,
+        holder: DiscussionExpandableViewHolder,
+        group: String,
+        callback: (String) -> Unit
+    ) = with(binding) {
 
         mIsExpanded = isExpanded
 
         var title = ""
 
-        when(group) {
+        val context = binding.root.context
+
+        when (group) {
             DiscussionListPresenter.PINNED -> title = context.getString(R.string.discussions_pinned)
             DiscussionListPresenter.UNPINNED -> title = context.getString(R.string.discussions_unpinned)
             DiscussionListPresenter.CLOSED_FOR_COMMENTS -> title = context.getString(R.string.discussions_closed)
@@ -53,9 +56,5 @@ class DiscussionExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(i
             flipAnimator.start()
             callback(group)
         }
-    }
-
-    companion object {
-        const val HOLDER_RES_ID: Int = R.layout.viewholder_header_expandable
     }
 }

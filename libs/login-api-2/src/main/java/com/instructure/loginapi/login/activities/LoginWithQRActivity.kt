@@ -26,20 +26,23 @@ import androidx.core.content.ContextCompat
 import com.google.zxing.integration.android.IntentIntegrator
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.loginapi.login.R
+import com.instructure.loginapi.login.databinding.ActivityLoginWithQrBinding
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.QRLogin
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
-import kotlinx.android.synthetic.main.activity_login_with_qr.*
 
 abstract class LoginWithQRActivity : AppCompatActivity() {
 
     protected abstract fun launchApplicationWithQRLogin(loginUri: Uri)
 
+    private val binding by viewBinding(ActivityLoginWithQrBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login_with_qr)
+        setContentView(binding.root)
 
         bindViews()
     }
@@ -61,7 +64,7 @@ abstract class LoginWithQRActivity : AppCompatActivity() {
         }
     }
 
-    private fun bindViews() {
+    private fun bindViews() = with(binding) {
         toolbar.apply {
             title = getString(R.string.locateQRCode)
             setupAsBackButton { finish() }

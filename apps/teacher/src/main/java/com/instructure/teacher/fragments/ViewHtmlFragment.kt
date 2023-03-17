@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.annotations.awaitFileDownload
@@ -33,11 +32,8 @@ import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.pandautils.utils.FileFolderDeletedEvent
-import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupMenu
-import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -55,8 +51,8 @@ class ViewHtmlFragment : InternalWebViewFragment() {
         setShouldLoadUrl(!downloadUrl.isValid())
         super.onActivityCreated(savedInstanceState)
         if (downloadUrl.isValid()) job = weave {
-            loading.setVisible()
-            loading.announceForAccessibility(getString(R.string.loading))
+            binding.loading.setVisible()
+            binding.loading.announceForAccessibility(getString(R.string.loading))
             val tempFile: File? = FileCache.awaitFileDownload(downloadUrl!!)
             if (tempFile == null) {
                 toast(R.string.errorLoadingFiles)

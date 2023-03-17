@@ -31,19 +31,19 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNEE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssigneeListAdapter
+import com.instructure.teacher.databinding.FragmentAssigneeListBinding
 import com.instructure.teacher.factory.AssigneeListPresenterFactory
 import com.instructure.teacher.holders.AssigneeViewHolder
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.presenters.AssigneeListPresenter
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.AssigneeListView
-import kotlinx.android.synthetic.main.fragment_assignee_list.*
-import java.util.ArrayList
 
 @ScreenView(SCREEN_VIEW_ASSIGNEE_LIST)
 class AssigneeListFragment : BaseExpandableSyncFragment<
@@ -53,6 +53,8 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         AssigneeListPresenter,
         AssigneeViewHolder,
         AssigneeListAdapter>(), AssigneeListView {
+
+    private val binding by viewBinding(FragmentAssigneeListBinding::bind)
 
     private var mDateGroups: EditDateGroups by ParcelableArrayListArg(arrayListOf())
     private var mTargetIdx: Int by IntArg()
@@ -92,7 +94,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
             span.appendColored(name, nameColor)
             if (name !== assigneeNames.last()) span.appendColored(", ", separatorColor)
         }
-        selectedAssigneesTextView.setVisible(assigneeNames.isNotEmpty()).text = span
+        binding.selectedAssigneesTextView.setVisible(assigneeNames.isNotEmpty()).text = span
     }
 
     override fun onPresenterPrepared(presenter: AssigneeListPresenter) {
@@ -119,8 +121,8 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         setupToolbar()
     }
 
-    private fun setupToolbar() {
-        toolbar.setupCloseButton(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupCloseButton(this@AssigneeListFragment)
         toolbar.title = getString(R.string.page_title_add_assignees)
         toolbar.setupMenu(R.menu.menu_save_generic) { performSave() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)

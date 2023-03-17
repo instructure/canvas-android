@@ -18,7 +18,7 @@ package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
 import com.instructure.canvasapi2.apis.ErrorReportAPI
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 data class ErrorReport(

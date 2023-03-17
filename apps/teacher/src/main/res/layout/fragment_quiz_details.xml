@@ -327,7 +327,9 @@
                         android:layout_marginTop="16dp"
                         android:importantForAccessibility="no">
 
-                        <include layout="@layout/view_submissions_donut_group"/>
+                        <include
+                            android:id="@+id/donutGroup"
+                            layout="@layout/view_submissions_donut_group" />
 
                     </FrameLayout>
 
@@ -430,7 +432,9 @@
                     android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
-                <include layout="@layout/view_quiz_preview_button"/>
+                <include
+                    android:id="@+id/quizPreviewButton"
+                    layout="@layout/view_quiz_preview_button" />
 
             </LinearLayout>
 

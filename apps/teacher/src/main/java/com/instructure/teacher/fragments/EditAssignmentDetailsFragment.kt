@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.GroupCategoriesManager
@@ -51,6 +52,7 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.discussions.DiscussionUtils
@@ -58,6 +60,7 @@ import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentEditAssignmentDetailsBinding
 import com.instructure.teacher.dialog.ConfirmRemoveAssignmentOverrideDialog
 import com.instructure.teacher.events.AssigneesUpdatedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
@@ -66,8 +69,6 @@ import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
-import kotlinx.android.synthetic.main.fragment_edit_assignment_details.*
-import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -78,6 +79,8 @@ import java.util.*
 
 @ScreenView(SCREEN_VIEW_EDIT_ASSIGNMENT_DETAILS)
 class EditAssignmentDetailsFragment : BaseFragment() {
+
+    private val binding by viewBinding(FragmentEditAssignmentDetailsBinding::bind)
 
     private var mCourse: Course by ParcelableArg(Course())
     private var mAssignment: Assignment by ParcelableArg(key = ASSIGNMENT)
@@ -104,7 +107,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     private var mScrollHandler: Handler = Handler()
 
     private var mScrollToRunnable: Runnable = Runnable {
-        if(isAdded) scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+        if(isAdded) binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
     // We maintain a copy of the groupedDueDates to manipulate and use to display
@@ -173,13 +176,13 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 RequestCodes.CAMERA_PIC_REQUEST -> MediaUploadUtils.handleCameraPicResult(requireActivity(), null)
                 else -> null
             }?.let { imageUri ->
-                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl -> descriptionEditor.insertImage(requireActivity(), imageUrl) }
+                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl -> binding.descriptionEditor.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
 
-    private fun setupToolbar() {
-        toolbar.setupCloseButton(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupCloseButton(this@EditAssignmentDetailsFragment)
         toolbar.title = getString(R.string.edit_assignment)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveAssignment() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
@@ -191,6 +194,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     private fun setupPublishSwitch() = with(mAssignment) {
         // If a student has submitted something, we can't let the teacher unpublish the assignment
         // Publish status
+        val publishSwitch = binding.publishSwitch
         publishSwitch.applyTheme()
         publishSwitch.isChecked = published
         mIsPublished = published
@@ -204,7 +208,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun setupDisplayGradeAs() {
+    private fun setupDisplayGradeAs() = with(binding) {
         // Filters spinner
         val spinnerAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.display_grade_as_types, R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -239,7 +243,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun setupViews() = with(mAssignment) {
+    private fun setupViews() = with(binding) {
 
         descriptionEditor.hideEditorToolbar()
         descriptionEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@EditAssignmentDetailsFragment) }
@@ -249,7 +253,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
 
         // Assignment name
-        editAssignmentName.setText(name)
+        editAssignmentName.setText(mAssignment.name)
         editAssignmentName.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) descriptionEditor.hideEditorToolbar()
         }
@@ -263,7 +267,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             }
         }
         // Points possible
-        editGradePoints.setText(NumberHelper.formatDecimal(pointsPossible, 2, true))
+        editGradePoints.setText(NumberHelper.formatDecimal(mAssignment.pointsPossible, 2, true))
         // set the underline to be the brand color
         ViewStyler.themeEditText(requireContext(), editGradePoints, ThemePrefs.brandColor)
         editGradePoints.onTextChanged {
@@ -276,7 +280,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         setupPublishSwitch()
 
         if(mDisplayGradeAs == null) {
-            mDisplayGradeAs = gradingType
+            mDisplayGradeAs = mAssignment.gradingType
         }
         setupDisplayGradeAs()
 
@@ -292,8 +296,8 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         mDueDateApiCalls = weave {
             try {
                 if (groupsMapped.isEmpty() && sectionsMapped.isEmpty() && studentsMapped.isEmpty()) {
-                    val sections = awaitApi<List<Section>> { SectionManager.getAllSectionsForCourse(courseId, it, false) }
-                    val groups = if (groupCategoryId > 0L) awaitApi<List<Group>> { GroupCategoriesManager.getAllGroupsForCategory(groupCategoryId, it, false) } else emptyList()
+                    val sections = awaitApi<List<Section>> { SectionManager.getAllSectionsForCourse(mAssignment.courseId, it, false) }
+                    val groups = if (mAssignment.groupCategoryId > 0L) awaitApi<List<Group>> { GroupCategoriesManager.getAllGroupsForCategory(mAssignment.groupCategoryId, it, false) } else emptyList()
                     val students = awaitApi<List<User>> { UserManager.getAllPeopleList(mCourse, it, false) }
                     groupsMapped += groups.associateBy { it.id }
                     sectionsMapped += sections.associateBy { it.id }
@@ -323,7 +327,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun setupAddOverrideButton() {
+    private fun setupAddOverrideButton() = with(binding) {
         addOverride.setVisible(true)
 
         // Theme add button and plus image
@@ -337,11 +341,11 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 scrollView.fullScroll(ScrollView.FOCUS_DOWN)
             }
             // This opens the assignees page to save the user a click.
-            overrideContainer.descendants<AssignmentOverrideView>().last().assignTo.performClick()
+            overrideContainer.descendants<AssignmentOverrideView>().last().findViewById<AppCompatEditText>(R.id.assignTo).performClick()
         }
     }
 
-    private fun setupOverrides() {
+    private fun setupOverrides() = with(binding) {
         overrideContainer.removeAllViews()
         // Load in overrides
         mEditDateGroups.forEachIndexed { index, dueDateGroup ->
@@ -378,7 +382,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun setupDescription() {
+    private fun setupDescription() = with(binding) {
         // Show progress bar while loading description
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
@@ -406,7 +410,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         descriptionProgressBar.setGone()
     }
 
-    private fun saveAssignment() {
+    private fun saveAssignment() = with(binding) {
         // Both name and points are required
         if (editAssignmentName.text.isNullOrBlank() || editGradePoints.text.isNullOrBlank()) return
 
