@@ -1374,4 +1374,6 @@
     <string name="a11y_conversationDeselected">S’ha anul·lat la selecció de la conversa.</string>
     <string name="a11y_exitSelectionMode">Surt del mode de selecció</string>
     <string name="a11y_selectionModeDeactivated">S’ha desactivat el mode de selecció.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfés</string>
 </resources>

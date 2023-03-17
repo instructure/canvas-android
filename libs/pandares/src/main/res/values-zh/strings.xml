@@ -1356,4 +1356,6 @@
     <string name="a11y_conversationDeselected">已取消选择会话</string>
     <string name="a11y_exitSelectionMode">退出选择模式</string>
     <string name="a11y_selectionModeDeactivated">选择模式已被禁用。</string>
+    <string name="a11y_avatarContentDescription">%s头像</string>
+    <string name="inboxUndo">后退</string>
 </resources>

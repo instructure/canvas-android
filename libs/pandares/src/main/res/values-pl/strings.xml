@@ -1407,4 +1407,6 @@
     <string name="a11y_conversationDeselected">Anulowano wybór rozmowy.</string>
     <string name="a11y_exitSelectionMode">Zamknij tryb wyboru.</string>
     <string name="a11y_selectionModeDeactivated">Dezaktywowano tryb wyboru.</string>
+    <string name="a11y_avatarContentDescription">Awatar %s</string>
+    <string name="inboxUndo">Cofnij</string>
 </resources>

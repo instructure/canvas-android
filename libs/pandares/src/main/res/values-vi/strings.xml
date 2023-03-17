@@ -1374,4 +1374,6 @@
     <string name="a11y_conversationDeselected">Đã bỏ chọn cuộc trò chuyện</string>
     <string name="a11y_exitSelectionMode">Thoát chế độ lựa chọn</string>
     <string name="a11y_selectionModeDeactivated">Đã hủy kích hoạt chế độ lựa chọn.</string>
+    <string name="a11y_avatarContentDescription">Hình Đại Diện của %s</string>
+    <string name="inboxUndo">Hoàn tác</string>
 </resources>

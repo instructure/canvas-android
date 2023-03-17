@@ -1373,4 +1373,6 @@
     <string name="a11y_conversationDeselected">Konvèsasyon deseleksyone</string>
     <string name="a11y_exitSelectionMode">Sòti nan mòd seleksyon</string>
     <string name="a11y_selectionModeDeactivated">Mòd seleksyon dezaktive.</string>
+    <string name="a11y_avatarContentDescription">Avatar %s</string>
+    <string name="inboxUndo">Defèt</string>
 </resources>
