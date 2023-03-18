@@ -20,18 +20,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_RECIPIENTS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ChooseMessageRecipientRecyclerAdapter
+import com.instructure.teacher.databinding.FragmentChooseRecipientsBinding
+import com.instructure.teacher.databinding.RecyclerSwipeRefreshLayoutBinding
 import com.instructure.teacher.events.ChooseMessageEvent
 import com.instructure.teacher.factory.ChooseRecipientsPresenterFactory
 import com.instructure.teacher.holders.RecipientViewHolder
@@ -40,17 +44,19 @@ import com.instructure.teacher.presenters.ChooseRecipientsPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.ChooseRecipientsView
-import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
-import kotlinx.android.synthetic.main.toolbar_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_INBOX_RECIPIENTS)
 class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPresenter, ChooseRecipientsView, RecipientViewHolder, ChooseMessageRecipientRecyclerAdapter>(), ChooseRecipientsView {
 
+    private val binding by viewBinding(FragmentChooseRecipientsBinding::bind)
+
+    private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
+
     private var mRecyclerAdapter: ChooseMessageRecipientRecyclerAdapter? = null
 
-    internal var mRecyclerView: RecyclerView? = null
+    private var mRecyclerView: RecyclerView? = null
 
     private val mAdapterToFragmentCallback = object : RecipientAdapterCallback {
 
@@ -103,12 +109,17 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     override fun layoutResId(): Int = R.layout.fragment_choose_recipients
 
     override fun onCreateView(view: View) {}
 
     private fun setupToolbar(view: View) {
-        with(view.toolbar) {
+        with(view.findViewById<Toolbar>(R.id.toolbar)) {
             // Set 'close' button
             setupBackButton(this@ChooseRecipientsFragment)
 
@@ -160,16 +171,16 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
     override val recyclerView: RecyclerView? = mRecyclerView
 
     override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onRefreshStarted() {
-        emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
     }
 
     override fun withPagination(): Boolean = true
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(swipeRefreshLayoutContainerBinding) {
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 

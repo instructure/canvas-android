@@ -18,23 +18,27 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.ToDo
+import com.instructure.teacher.databinding.AdapterTodoBinding
 import com.instructure.teacher.holders.ToDoViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.ToDoPresenter
 import com.instructure.teacher.viewinterface.ToDoView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
-class ToDoAdapter(context: Context,
-                  presenter: ToDoPresenter,
-                  private val mCallback: AdapterToFragmentCallback<ToDo>) :
-        SyncRecyclerAdapter<ToDo, ToDoViewHolder, ToDoView>(context,presenter) {
+class ToDoAdapter(
+    context: Context,
+    presenter: ToDoPresenter,
+    private val mCallback: AdapterToFragmentCallback<ToDo>
+) :
+    SyncRecyclerAdapter<ToDo, ToDoViewHolder, ToDoView>(context, presenter) {
 
-    override fun createViewHolder(v: View, viewType: Int) = ToDoViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = ToDoViewHolder(binding as AdapterTodoBinding)
 
-    override fun itemLayoutResId(viewType: Int) = ToDoViewHolder.HOLDER_RES_ID
-
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterTodoBinding::inflate
 
     override fun bindHolder(model: ToDo, holder: ToDoViewHolder, position: Int) {
         context?.let { holder.bind(it, model, mCallback, position) }

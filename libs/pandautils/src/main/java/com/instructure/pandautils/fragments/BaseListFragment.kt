@@ -43,11 +43,8 @@ abstract class BaseListFragment<
 
     abstract fun layoutResId(): Int
 
-    abstract fun onCreateView(view: View)
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(layoutResId(), container, false)
-        onCreateView(rootView)
         return rootView
     }
 

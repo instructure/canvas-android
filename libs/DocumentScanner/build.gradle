@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 group="com.zynkware"
 
@@ -47,6 +46,10 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
         main.res.srcDirs = ['src/main/res']
         main.manifest.srcFile 'src/main/AndroidManifest.xml'
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 

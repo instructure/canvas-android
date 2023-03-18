@@ -23,20 +23,19 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_syllabus_events.view.*
-import kotlinx.android.synthetic.main.fragment_syllabus_webview.view.*
 
 private const val TAB_COUNT = 2
 private const val SYLLABUS_TAB_POSITION = 0
 
-class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
+class SyllabusTabAdapter(private val titles: List<String>) : PagerAdapter() {
 
     override fun isViewFromObject(view: View, any: Any) = view === any
 
@@ -47,7 +46,8 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
         container.addView(view)
 
         if (isSyllabusPosition(position)) {
-            setupWebView(view.syllabusWebViewWrapper.webView)
+            val syllabusWebViewWrapper = view.findViewById<CanvasWebViewWrapper>(R.id.syllabusWebViewWrapper)
+            setupWebView(syllabusWebViewWrapper.webView)
         } else {
             setupLayoutManager(view, container.context)
         }
@@ -77,20 +77,21 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
             }
         }
         webView.canvasEmbeddedWebViewCallback =
-                object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-                    override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
-                        return true
-                    }
-
-                    override fun launchInternalWebViewFragment(url: String) {
-                        activity?.startActivity(InternalWebViewActivity.createIntent(webView.context, url, "", true))
-                    }
+            object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
+                    return true
                 }
+
+                override fun launchInternalWebViewFragment(url: String) {
+                    activity?.startActivity(InternalWebViewActivity.createIntent(webView.context, url, "", true))
+                }
+            }
 
     }
 
     private fun setupLayoutManager(view: View, context: Context) {
-        view.syllabusEventsRecyclerView.layoutManager = LinearLayoutManager(context)
+        val syllabusEventsRecyclerView = view.findViewById<RecyclerView>(R.id.syllabusEventsRecyclerView)
+        syllabusEventsRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, any: Any) {

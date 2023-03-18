@@ -28,7 +28,6 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -75,6 +74,10 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 

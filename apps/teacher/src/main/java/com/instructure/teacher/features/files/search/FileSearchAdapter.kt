@@ -17,8 +17,11 @@
 package com.instructure.teacher.features.files.search
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.teacher.databinding.AdapterFileFolderBinding
 import com.instructure.teacher.holders.FileFolderViewHolder
 import instructure.androidblueprint.SyncRecyclerAdapter
 
@@ -29,12 +32,11 @@ class FileSearchAdapter(
     private val callback: (FileFolder) -> Unit
 ) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileSearchView>(context, presenter) {
 
-    override fun itemLayoutResId(viewType: Int) = FileFolderViewHolder.HOLDER_RES_ID
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterFileFolderBinding::inflate
 
-    override fun createViewHolder(v: View, viewType: Int) = FileFolderViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = FileFolderViewHolder(binding as AdapterFileFolderBinding)
 
     override fun bindHolder(model: FileFolder, holder: FileFolderViewHolder, position: Int) {
         holder.bind(model, courseTextColor, context!!, callback)
     }
-
 }

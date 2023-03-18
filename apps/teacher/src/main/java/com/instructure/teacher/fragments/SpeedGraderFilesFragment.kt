@@ -15,24 +15,25 @@
  */
 package com.instructure.teacher.fragments
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_FILES
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
+import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AttachmentAdapter
+import com.instructure.teacher.databinding.FragmentSpeedgraderFilesBinding
 import com.instructure.teacher.factory.SpeedGraderFilesPresenterFactory
 import com.instructure.teacher.holders.AttachmentViewHolder
 import com.instructure.teacher.presenters.SpeedGraderFilesPresenter
-import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.view.SubmissionFileSelectedEvent
 import com.instructure.teacher.view.SubmissionSelectedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderFilesView
-import kotlinx.android.synthetic.main.fragment_speedgrader_files.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -45,6 +46,8 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
         AttachmentViewHolder,
         AttachmentAdapter>(), SpeedGraderFilesView {
 
+    private val binding by viewBinding(FragmentSpeedgraderFilesBinding::bind)
+
     private var mSubmission: Submission? by NullableParcelableArg(default = Submission())
 
     companion object {
@@ -53,14 +56,14 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
         }
     }
 
-    override val recyclerView: RecyclerView get() = speedGraderFilesRecyclerView
+    override val recyclerView: RecyclerView get() = binding.speedGraderFilesRecyclerView
     override fun layoutResId() = R.layout.fragment_speedgrader_files
     override fun getPresenterFactory() = SpeedGraderFilesPresenterFactory(mSubmission)
     override fun onCreateView(view: View) = Unit
     override fun onPresenterPrepared(presenter: SpeedGraderFilesPresenter) {
         RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.speedGraderFilesRecyclerView, R.id.speedGraderFilesEmptyView, getString(R.string.no_items_to_display_short))
-        swipeRefreshLayout.isEnabled = false
+        binding.swipeRefreshLayout.isEnabled = false
     }
 
     override fun onReadySetGo(presenter: SpeedGraderFilesPresenter) {
@@ -75,7 +78,7 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
     }
 
     override fun checkIfEmpty() {
-        RecyclerViewUtils.checkIfEmpty(speedGraderFilesEmptyView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+        RecyclerViewUtils.checkIfEmpty(binding.speedGraderFilesEmptyView, recyclerView, binding.swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
     override fun onRefreshFinished() {}

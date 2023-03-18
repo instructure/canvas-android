@@ -17,7 +17,7 @@ package com.instructure.teacher.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
@@ -27,8 +27,8 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_COLOR_PICKER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.DialogColorPickerBinding
 import com.instructure.teacher.utils.getColorCompat
-import kotlinx.android.synthetic.main.dialog_color_picker.view.*
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_COLOR_PICKER)
@@ -55,32 +55,32 @@ class ColorPickerDialog: AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
-        val view = View.inflate(ContextThemeWrapper(requireActivity(), 0), R.layout.dialog_color_picker, null)
-        setupViews(view)
-        builder.setView(view)
+        val binding = DialogColorPickerBinding.inflate(LayoutInflater.from(ContextThemeWrapper(requireActivity(), 0)))
+        setupViews(binding)
+        builder.setView(binding.root)
         builder.setTitle(R.string.colorPickerDialogTitle)
         builder.setCancelable(true)
         return builder.create()
     }
 
-    fun setupViews(view: View) {
+    fun setupViews(binding: DialogColorPickerBinding) {
         val currentColor = course.backgroundColor
         listOf(
-            view.colorCottonCandy to R.color.colorCottonCandy,
-            view.colorBarbie to R.color.colorBarbie,
-            view.colorBarneyPurple to R.color.colorBarneyPurple,
-            view.colorEggplant to R.color.colorEggplant,
-            view.colorUltramarine to R.color.colorUltramarine,
-            view.colorOcean11 to R.color.colorOcean11,
-            view.colorCyan to R.color.colorCyan,
-            view.colorAquaMarine to R.color.colorAquaMarine,
-            view.colorEmeraldGreen to R.color.colorEmeraldGreen,
-            view.colorFreshCutLawn to R.color.colorFreshCutLawn,
-            view.colorChartreuse to R.color.colorChartreuse,
-            view.colorSunFlower to R.color.colorSunFlower,
-            view.colorTangerine to R.color.colorTangerine,
-            view.colorBloodOrange to R.color.colorBloodOrange,
-            view.colorSriracha to R.color.colorSriracha
+            binding.colorCottonCandy to R.color.colorCottonCandy,
+            binding.colorBarbie to R.color.colorBarbie,
+            binding.colorBarneyPurple to R.color.colorBarneyPurple,
+            binding.colorEggplant to R.color.colorEggplant,
+            binding.colorUltramarine to R.color.colorUltramarine,
+            binding.colorOcean11 to R.color.colorOcean11,
+            binding.colorCyan to R.color.colorCyan,
+            binding.colorAquaMarine to R.color.colorAquaMarine,
+            binding.colorEmeraldGreen to R.color.colorEmeraldGreen,
+            binding.colorFreshCutLawn to R.color.colorFreshCutLawn,
+            binding.colorChartreuse to R.color.colorChartreuse,
+            binding.colorSunFlower to R.color.colorSunFlower,
+            binding.colorTangerine to R.color.colorTangerine,
+            binding.colorBloodOrange to R.color.colorBloodOrange,
+            binding.colorSriracha to R.color.colorSriracha
         ).map { it.first to requireContext().getColorCompat(it.second) }
             .onEach { (view, color) ->
                 ColorUtils.colorIt(color, view.circle)

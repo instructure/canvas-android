@@ -18,7 +18,7 @@ package com.instructure.teacher.view
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.instructure.pandarecycler.interfaces.EmptyInterface
@@ -26,8 +26,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.empty_courses_view.view.*
-
+import com.instructure.teacher.databinding.EmptyCoursesViewBinding
 
 class EmptyCoursesView @JvmOverloads constructor(
         context: Context,
@@ -35,14 +34,16 @@ class EmptyCoursesView @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), EmptyInterface {
 
+    private val binding: EmptyCoursesViewBinding
+
     private var noConnectionText: String? = null
     private var isDisplayNoConnection = false
 
     init {
-        View.inflate(context, R.layout.empty_courses_view, this)
+        binding = EmptyCoursesViewBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    override fun setLoading() {
+    override fun setLoading() = with(binding) {
         image.setGone()
         textViews.setGone()
         addCoursesButton.setGone()
@@ -54,7 +55,7 @@ class EmptyCoursesView @JvmOverloads constructor(
         isDisplayNoConnection = isNoConnection
     }
 
-    override fun setListEmpty() {
+    override fun setListEmpty(): Unit = with(binding) {
         if (isDisplayNoConnection) {
             noConnectionView.text = noConnectionText
         }
@@ -75,7 +76,7 @@ class EmptyCoursesView @JvmOverloads constructor(
 
     override fun setNoConnectionText(s: String) {
         noConnectionText = s
-        noConnectionView.text = s
+        binding.noConnectionView.text = s
     }
 
     override fun getEmptyViewImage(): ImageView? {
@@ -97,7 +98,7 @@ class EmptyCoursesView @JvmOverloads constructor(
     }
 
     fun onClickAddCourses(onClick: () -> Unit) {
-        ViewStyler.themeButton(addCoursesButton)
-        addCoursesButton.setOnClickListener { onClick() }
+        ViewStyler.themeButton(binding.addCoursesButton)
+        binding.addCoursesButton.setOnClickListener { onClick() }
     }
 }

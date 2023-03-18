@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -43,6 +44,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentCreateOrEditAnnouncementBinding
 import com.instructure.teacher.dialog.SectionPickerDialog
 import com.instructure.teacher.events.SectionsUpdatedEvent
 import com.instructure.teacher.factory.CreateOrEditAnnouncementPresenterFactory
@@ -51,7 +53,6 @@ import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
-import kotlinx.android.synthetic.main.fragment_create_or_edit_announcement.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -64,6 +65,8 @@ class CreateOrEditAnnouncementFragment :
         Identity,
         FileUploadDialogParent {
 
+    private val binding by viewBinding(FragmentCreateOrEditAnnouncementBinding::bind)
+
     /* The course this announcement belongs to */
     private var mCanvasContext by ParcelableArg<CanvasContext>(Course())
 
@@ -71,8 +74,8 @@ class CreateOrEditAnnouncementFragment :
     private var mEditAnnouncement by NullableParcelableArg<DiscussionTopicHeader>()
 
     /* Menu buttons. We don't cache these because the toolbar is reconstructed on configuration change. */
-    private val mSaveMenuButton get() = toolbar.menu.findItem(R.id.menuSaveAnnouncement)
-    private val mAttachmentButton get() = toolbar.menu.findItem(R.id.menuAddAttachment)
+    private val mSaveMenuButton get() = binding.toolbar.menu.findItem(R.id.menuSaveAnnouncement)
+    private val mAttachmentButton get() = binding.toolbar.menu.findItem(R.id.menuAddAttachment)
     private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
 
     /* Formats for displaying the delayed post date */
@@ -137,9 +140,9 @@ class CreateOrEditAnnouncementFragment :
         setSectionText()
     }
 
-    fun setupToolbar() {
+    fun setupToolbar() = with(binding) {
         toolbar.setupCloseButton {
-            if(presenter.announcement.message == announcementRCEView?.html) {
+            if(presenter.announcement.message == announcementRCEView.html) {
                 activity?.onBackPressed()
             } else {
                 UnsavedChangesExitDialog.show(requireFragmentManager()) {
@@ -177,11 +180,11 @@ class CreateOrEditAnnouncementFragment :
         updateAttachmentUI()
         setSectionText()
 
-        announcementRCEView.hideEditorToolbar()
-        announcementRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        binding.announcementRCEView.hideEditorToolbar()
+        binding.announcementRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
     }
 
-    private fun setupTitle() {
+    private fun setupTitle() = with(binding) {
         ViewStyler.themeEditText(requireContext(), announcementNameEditText, ThemePrefs.brandColor)
         announcementNameTextInput.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         announcementNameEditText.setText(presenter.announcement.title)
@@ -191,7 +194,7 @@ class CreateOrEditAnnouncementFragment :
         }
     }
 
-    private fun setupDescription() {
+    private fun setupDescription() = with(binding) {
         if (CanvasWebView.containsLTI(presenter.announcement.message.orEmpty(), "UTF-8")) {
             announcementRCEView.setHtml(
                     DiscussionUtils.createLTIPlaceHolders(requireContext(), presenter.announcement.message.orEmpty()) { _, placeholder ->
@@ -215,7 +218,7 @@ class CreateOrEditAnnouncementFragment :
 
     private fun setupDeleteButton() {
         // Only show delete button in editing mode
-        deleteAnnouncementButton
+        binding.deleteAnnouncementButton
                 .setVisible(presenter.isEditing)
                 .onClickWithRequireNetwork {
                     AlertDialog.Builder(requireContext())
@@ -229,7 +232,7 @@ class CreateOrEditAnnouncementFragment :
                 }
     }
 
-    private fun setupDelaySwitch() {
+    private fun setupDelaySwitch() = with(binding) {
         delaySwitch.applyTheme()
         delaySwitch.isChecked = presenter.announcement.delayedPostDate != null
         updatePostDate()
@@ -267,7 +270,7 @@ class CreateOrEditAnnouncementFragment :
 
     private fun updateAttachmentUI() {
         updateAttachmentButton()
-        attachmentLayout.clearAttachmentViews()
+        binding.attachmentLayout.clearAttachmentViews()
 
         // Show attachment waiting to upload (if any)
         presenter.attachment?.let { attachment ->
@@ -279,7 +282,7 @@ class CreateOrEditAnnouncementFragment :
                     }
                 }
 
-            attachmentLayout.addView(attachmentView)
+            binding.attachmentLayout.addView(attachmentView)
         }
 
         // Show existing attachment (if any)
@@ -292,11 +295,11 @@ class CreateOrEditAnnouncementFragment :
                 }
             }
 
-            attachmentLayout.addView(attachmentView)
+            binding.attachmentLayout.addView(attachmentView)
         }
     }
 
-    private fun updatePostDate() {
+    private fun updatePostDate() = with(binding) {
         val date = presenter.announcement.delayedPostDate
         if (date == null) {
             postDateWrapper.setGone()
@@ -307,7 +310,7 @@ class CreateOrEditAnnouncementFragment :
         }
     }
 
-    private fun enableUsersMustPostSwitch(enabled: Boolean) {
+    private fun enableUsersMustPostSwitch(enabled: Boolean) = with(binding) {
         if (enabled) {
             usersMustPostWrapper.alpha = 1f
             usersMustPostSwitch.isEnabled = true
@@ -318,7 +321,7 @@ class CreateOrEditAnnouncementFragment :
         }
     }
 
-    private fun setupAllowCommentsSwitch() {
+    private fun setupAllowCommentsSwitch() = with(binding) {
         allowCommentsSwitch.applyTheme()
         allowCommentsSwitch.isChecked = !presenter.announcement.locked
         allowCommentsSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -328,7 +331,7 @@ class CreateOrEditAnnouncementFragment :
     }
 
     private fun setupUsersMustPostSwitch() {
-        with (usersMustPostSwitch) {
+        with (binding.usersMustPostSwitch) {
             applyTheme()
             isChecked = presenter.announcement.requireInitialPost
             enableUsersMustPostSwitch(!presenter.announcement.locked)
@@ -340,10 +343,10 @@ class CreateOrEditAnnouncementFragment :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter.announcement.message = announcementRCEView.html
+        presenter.announcement.message = binding.announcementRCEView.html
     }
 
-    private fun saveAnnouncement() {
+    private fun saveAnnouncement() = with(binding) {
         val description = announcementRCEView.html
         if (description.isBlank()) {
             toast(R.string.create_announcement_no_description)
@@ -363,8 +366,8 @@ class CreateOrEditAnnouncementFragment :
     override fun onSaveStarted() {
         mSaveMenuButton.isVisible = false
         updateAttachmentButton(show = false)
-        savingProgressBar.announceForAccessibility(getString(R.string.saving))
-        savingProgressBar.setVisible()
+        binding.savingProgressBar.announceForAccessibility(getString(R.string.saving))
+        binding.savingProgressBar.setVisible()
     }
 
     private fun updateAttachmentButton(show: Boolean = true) {
@@ -375,14 +378,14 @@ class CreateOrEditAnnouncementFragment :
     override fun onSaveError() {
         mSaveMenuButton.isVisible = true
         updateAttachmentButton()
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
         toast(R.string.errorSavingAnnouncement)
     }
 
     override fun onDeleteError() {
         mSaveMenuButton.isVisible = true
         updateAttachmentButton()
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
         toast(R.string.errorDeletingAnnouncement)
     }
 
@@ -393,13 +396,13 @@ class CreateOrEditAnnouncementFragment :
             toast(R.string.announcementSuccessfullyCreated)
         }
 
-        announcementNameEditText.hideKeyboard() // Close the keyboard
+        binding.announcementNameEditText.hideKeyboard() // Close the keyboard
         requireActivity().onBackPressed() // Close this fragment
     }
 
     override fun onDeleteSuccess() {
         toast(R.string.announcementDeleted)
-        announcementNameEditText.hideKeyboard() // Close the keyboard
+        binding.announcementNameEditText.hideKeyboard() // Close the keyboard
         requireActivity().onBackPressed() // Close this fragment
     }
 
@@ -417,7 +420,7 @@ class CreateOrEditAnnouncementFragment :
 
     override fun onSectionsLoaded() {
         setSectionText()
-        sections?.onClick { _ ->
+        binding.sections.onClick { _ ->
             SectionPickerDialog.show(requireFragmentManager(), presenter.courseSections, presenter.getSelectedSections()) {
                 presenter.announcement.specificSections = if (it.isNotEmpty()) it else "all"
                 EventBus.getDefault().post(SectionsUpdatedEvent())
@@ -426,13 +429,13 @@ class CreateOrEditAnnouncementFragment :
     }
 
     private fun setSectionText() {
-        sections.setText(
+        binding.sections.setText(
                 if (presenter.getSelectedSections().isNotEmpty())
                     presenter.getSelectedSections().joinToString(", ") { it.name }
                 else getString(R.string.allSections))
     }
 
-    override fun insertImageIntoRCE(imageUrl: String) = announcementRCEView.insertImage(requireActivity(), imageUrl)
+    override fun insertImageIntoRCE(imageUrl: String) = binding.announcementRCEView.insertImage(requireActivity(), imageUrl)
 
     companion object {
         fun newInstance(bundle: Bundle) =

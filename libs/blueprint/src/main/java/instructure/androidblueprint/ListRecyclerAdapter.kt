@@ -18,9 +18,9 @@ package instructure.androidblueprint
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.instructure.pandarecycler.util.UpdatableSortedList
 import java.lang.ref.WeakReference
 
@@ -60,15 +60,13 @@ abstract class ListRecyclerAdapter<MODEL, HOLDER : RecyclerView.ViewHolder, VIEW
 
     abstract fun bindHolder(model: MODEL, holder: HOLDER, position: Int)
 
-    abstract fun createViewHolder(v: View, viewType: Int): HOLDER
+    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
 
-    abstract fun itemLayoutResId(viewType: Int): Int
-
-    //protected open val presenter: ListPresenter<MODEL, *>?
+    abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HOLDER {
-        val v = LayoutInflater.from(parent.context).inflate(itemLayoutResId(viewType), parent, false)
-        return createViewHolder(v, viewType)
+        val binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
+        return createViewHolder(binding, viewType)
     }
 
     override fun onBindViewHolder(baseHolder: HOLDER, position: Int) {

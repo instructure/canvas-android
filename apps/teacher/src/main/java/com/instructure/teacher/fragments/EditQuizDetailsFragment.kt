@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -42,6 +43,7 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.discussions.DiscussionUtils
@@ -49,6 +51,7 @@ import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentEditQuizDetailsBinding
 import com.instructure.teacher.dialog.ConfirmRemoveAssignmentOverrideDialog
 import com.instructure.teacher.events.AssigneesUpdatedEvent
 import com.instructure.teacher.factory.EditQuizDetailsPresenterFactory
@@ -58,8 +61,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
-import kotlinx.android.synthetic.main.fragment_edit_quiz_details.*
-import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -69,6 +70,8 @@ import java.util.*
 class EditQuizDetailsFragment : BasePresenterFragment<
         EditQuizDetailsPresenter,
         EditQuizDetailsView>(), EditQuizDetailsView, Identity {
+
+    private val binding by viewBinding(FragmentEditQuizDetailsBinding::bind)
 
     private var mCourse: Course by ParcelableArg(Course())
 
@@ -93,7 +96,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
     private var mScrollHandler: Handler = Handler()
 
     private var mScrollToRunnable: Runnable = Runnable {
-        if (isAdded) scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+        if (isAdded) binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
     private val datePickerOnClick: (date: Date?, (Int, Int, Int) -> Unit) -> Unit = { date, callback ->
@@ -164,8 +167,8 @@ class EditQuizDetailsFragment : BasePresenterFragment<
             mScrollHandler.postDelayed(mScrollToRunnable, 300)
         } else {
             scrollBackToOverride?.let {
-                scrollView.post {
-                    scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+                binding.scrollView.post {
+                    binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN)
                 }
             }
 
@@ -173,8 +176,8 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun setupToolbar() {
-        toolbar.setupCloseButton(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupCloseButton(this@EditQuizDetailsFragment)
         toolbar.title = getString(R.string.editQuiz)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveQuiz() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
@@ -182,29 +185,29 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
-    private fun setupPublishSwitch() = with(presenter.mQuiz) {
+    private fun setupPublishSwitch() = with(binding) {
         //if a student has submitted something, we can't let the teacher unpublish the quiz
-        if (!unpublishable) {
+        if (!presenter.mQuiz.unpublishable) {
             publishWrapper.setGone()
             mIsPublished = true
             return
         }
         // Publish status
         publishSwitch.applyTheme()
-        publishSwitch.isChecked = published
-        mIsPublished = published
+        publishSwitch.isChecked = presenter.mQuiz.published
+        mIsPublished = presenter.mQuiz.published
 
         publishSwitch.setOnCheckedChangeListener { _, isChecked -> mIsPublished = isChecked }
     }
 
-    private fun setupAccessCodeSwitch() = with(mQuiz) {
-        accessCodeSwitch.isChecked = hasAccessCode
-        mHasAccessCode = hasAccessCode
-        accessCodeTextInput.setVisible(hasAccessCode)
+    private fun setupAccessCodeSwitch() = with(binding) {
+        accessCodeSwitch.isChecked = mQuiz.hasAccessCode
+        mHasAccessCode = mQuiz.hasAccessCode
+        accessCodeTextInput.setVisible(mQuiz.hasAccessCode)
         ViewStyler.themeEditText(requireContext(), editAccessCode, ThemePrefs.brandColor)
 
-        if (accessCode != null) {
-            editAccessCode.setText(accessCode)
+        if (mQuiz.accessCode != null) {
+            editAccessCode.setText(mQuiz.accessCode)
         }
 
         accessCodeSwitch.applyTheme()
@@ -215,7 +218,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun setupQuizTypeSpinner() {
+    private fun setupQuizTypeSpinner() = with(binding) {
         // Filters spinner
         val filtersAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.quizTypes, android.R.layout.simple_spinner_item)
         filtersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -251,7 +254,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
      * We can only support overrides for quizzes with an assignment.
      * If the quiz does not have an assignment, hide the override stuff.
      */
-    private fun updateOverridesForQuizType(setupOverrides: Boolean = false) {
+    private fun updateOverridesForQuizType(setupOverrides: Boolean = false) = with(binding) {
         when (mQuizType) {
             Quiz.TYPE_GRADED_SURVEY, Quiz.TYPE_ASSIGNMENT -> {
                 overrideContainer.setVisible()
@@ -266,13 +269,13 @@ class EditQuizDetailsFragment : BasePresenterFragment<
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun setupViews() = with(presenter.mQuiz) {
+    private fun setupViews() = with(binding) {
         (view as? ViewGroup)?.descendants<TextInputLayout>()?.forEach {
             it.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         }
 
         // Quiz name
-        editQuizTitle.setText(title)
+        editQuizTitle.setText(presenter.mQuiz.title)
         // set the underline to be the brand color
         ViewStyler.themeEditText(requireContext(), editQuizTitle, ThemePrefs.brandColor)
 
@@ -303,7 +306,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         })
 
         if(mQuizType == null) {
-            mQuizType = quizType
+            mQuizType = presenter.mQuiz.quizType
         }
 
         setupPublishSwitch()
@@ -314,13 +317,13 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         ViewStyler.setToolbarElevation(requireContext(), toolbar, R.dimen.toolbar_elevation_small)
 
         // Description
-        setupDescription(this)
+        setupDescription(presenter.mQuiz)
 
         with(presenter) {if (mEditDateGroups.isEmpty()) mEditDateGroups.addAll(mAssignment.groupedDueDates)}
         presenter.getStudentsGroupsAndSections()
     }
 
-    private fun setupDescription(quiz: Quiz) {
+    private fun setupDescription(quiz: Quiz) = with(binding) {
         // Show progress bar while loading description
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
@@ -345,7 +348,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
         descriptionWebView.setLabel(quizDescLabel, R.color.textDarkest, R.color.textDark)
 
-        descriptionWebView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        descriptionWebView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@EditQuizDetailsFragment) }
 
         // Dismiss the progress bar
         descriptionProgressBar.setGone()
@@ -359,13 +362,13 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                 RequestCodes.CAMERA_PIC_REQUEST -> MediaUploadUtils.handleCameraPicResult(requireActivity(), null)
                 else -> null
             }?.let { imageUri ->
-                MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl -> descriptionWebView.insertImage(requireActivity(), imageUrl) }
+                MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl -> binding.descriptionWebView.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
 
     override fun setupOverrides() {
-        overrideContainer.removeAllViews()
+        binding.overrideContainer.removeAllViews()
         // Load in overrides
         with(presenter) {
             mEditDateGroups.forEachIndexed { index, dueDateGroup ->
@@ -395,16 +398,16 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                     scrollBackToOverride = v
                 }
 
-                overrideContainer.addView(v)
+                binding.overrideContainer.addView(v)
             }
         }
 
-        overrideContainer.descendants<TextInputLayout>().forEach {
+        binding.overrideContainer.descendants<TextInputLayout>().forEach {
             it.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         }
     }
 
-    private fun saveQuiz() {
+    private fun saveQuiz() = with(binding) {
         // Title is required
         if (editQuizTitle.text.isNullOrBlank()) return
 
@@ -425,10 +428,10 @@ class EditQuizDetailsFragment : BasePresenterFragment<
     }
 
     private fun assembleQuizPostData(): QuizPostBody = QuizPostBody().apply {
-        title = editQuizTitle.text.toString()
-        description = handleLTIPlaceHolders(placeHolderList, descriptionWebView.html)
+        title = binding.editQuizTitle.text.toString()
+        description = handleLTIPlaceHolders(placeHolderList, binding.descriptionWebView.html)
         notifyOfUpdate = false
-        accessCode = if (mHasAccessCode) editAccessCode.text.toString() else null
+        accessCode = if (mHasAccessCode) binding.editAccessCode.text.toString() else null
         quizType = mQuizType
 
         // Only set the published flag if we can unpublish/publish the assignment
@@ -455,23 +458,23 @@ class EditQuizDetailsFragment : BasePresenterFragment<
 
     override fun startSavingQuiz() {
         saveButton?.setGone()
-        savingProgressBar.announceForAccessibility(getString(R.string.saving))
-        savingProgressBar.setVisible()
+        binding.savingProgressBar.announceForAccessibility(getString(R.string.saving))
+        binding.savingProgressBar.setVisible()
     }
 
     override fun quizSavedSuccessfully() {
         toast(R.string.successfully_updated_quiz) // Let the user know the quiz was saved
-        editQuizTitle.hideKeyboard() // Close the keyboard
+        binding.editQuizTitle.hideKeyboard() // Close the keyboard
         requireActivity().onBackPressed() // Close this fragment
     }
 
     override fun errorSavingQuiz() {
         saveButton?.setVisible()
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
         toast(R.string.error_saving_quiz)
     }
 
-    override fun setupAddOverridesButton() {
+    override fun setupAddOverridesButton() = with(binding) {
         updateOverridesForQuizType()
 
         // Theme add button and plus image
@@ -485,7 +488,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                 scrollView.fullScroll(ScrollView.FOCUS_DOWN)
             }
             // This opens the assignees page to save the user a click.
-            overrideContainer.descendants<AssignmentOverrideView>().last().assignTo.performClick()
+            overrideContainer.descendants<AssignmentOverrideView>().last().findViewById<AppCompatEditText>(R.id.assignTo).performClick()
         }
     }
 

@@ -25,26 +25,24 @@ import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.FileUtils
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.isValid
-import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentInternalWebviewBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
-import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import kotlinx.coroutines.Job
-import java.lang.NumberFormatException
 
 open class InternalWebViewFragment : BaseFragment() {
+
+    protected val binding by viewBinding(FragmentInternalWebviewBinding::bind)
 
     var toolbar: Toolbar? = null
 
@@ -70,12 +68,12 @@ open class InternalWebViewFragment : BaseFragment() {
 
     override fun onPause() {
         super.onPause()
-        canvasWebView.onPause()
+        binding.canvasWebView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        canvasWebView.onResume()
+        binding.canvasWebView.onResume()
     }
 
      override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +83,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        canvasWebView?.saveState(outState)
+        binding.canvasWebView?.saveState(outState)
     }
 
     override fun onCreateView(view: View) = Unit
@@ -95,7 +93,7 @@ open class InternalWebViewFragment : BaseFragment() {
         toolbar = view.findViewById(R.id.toolbar)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
 
         val courseId: String? = RouteMatcher.getCourseIdFromUrl(url)
@@ -182,10 +180,6 @@ open class InternalWebViewFragment : BaseFragment() {
         }
     }
 
-    fun getCanvasWebView(): CanvasWebView? {
-        return canvasWebView
-    }
-
     ///////////////////////////////////////////////////////////////////////////
     // Logic
     ///////////////////////////////////////////////////////////////////////////
@@ -194,9 +188,9 @@ open class InternalWebViewFragment : BaseFragment() {
         this.shouldLoadUrl = shouldLoadUrl
     }
 
-    fun loadUrl(targetUrl: String) {
+    fun loadUrl(targetUrl: String) = with(binding) {
         if (html.isNotEmpty()) {
-            canvasWebView?.loadHtml(html, title)
+            canvasWebView.loadHtml(html, title)
             return
         }
 
@@ -226,18 +220,18 @@ open class InternalWebViewFragment : BaseFragment() {
 
     fun loadHtml(data: String, mimeType: String, encoding: String, historyUrl: String) {
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-        canvasWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
+        binding.canvasWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
     }
 
     // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-    fun loadHtml(html: String) = canvasWebView.loadDataWithBaseURL(ApiPrefs.fullDomain,
+    fun loadHtml(html: String) = binding.canvasWebView.loadDataWithBaseURL(ApiPrefs.fullDomain,
             FileUtils.getAssetsFile(requireContext(), "html_wrapper.html").replace("{\$CONTENT$}", html, ignoreCase = false),
             "text/html", "UTF-8", null)
 
     private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
 
-    fun canGoBack() = if (!shouldCloseFragment) canvasWebView.canGoBack() else false
-    fun goBack() = canvasWebView.goBack()
+    fun canGoBack() = if (!shouldCloseFragment) binding.canvasWebView.canGoBack() else false
+    fun goBack() = binding.canvasWebView.goBack()
 
     fun setShouldAuthenticateUponLoad(shouldAuthenticate: Boolean) {
         this.shouldAuthenticate = shouldAuthenticate
