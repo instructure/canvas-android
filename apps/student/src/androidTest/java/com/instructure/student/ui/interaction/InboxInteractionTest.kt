@@ -528,9 +528,8 @@ class InboxInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_starMultipleConversations() {
-        val data = createInitialData()
-        data.addConversations(userId = student1.id, messageBody = "Short body")
-        val conversation1 = data.addConversation(
+       val data = createInitialData()
+       val conversation1 = data.addConversation(
             senderId = data.teachers.first().id,
             receiverIds = listOf(data.students.first().id),
             messageBody = "Body",
@@ -540,6 +539,7 @@ class InboxInteractionTest : StudentTest() {
             receiverIds = listOf(data.students.first().id),
             messageBody = "Body 2",
             messageSubject = "Subject 2")
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickStar()
@@ -579,9 +579,8 @@ class InboxInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_starMultipleConversationWithDifferentStates() {
-        val data = createInitialData()
-        data.addConversations(userId = student1.id, messageBody = "Short body")
-        val conversation1 = data.addConversation(
+       val data = createInitialData()
+       val conversation1 = data.addConversation(
             senderId = data.teachers.first().id,
             receiverIds = listOf(data.students.first().id),
             messageBody = "Body",
@@ -593,6 +592,7 @@ class InboxInteractionTest : StudentTest() {
             messageBody = "Body 2",
             messageSubject = "Subject 2")
         data.conversations[conversation2.id] = conversation2.copy(isStarred = false)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
 
         dashboardPage.clickInboxTab()
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
