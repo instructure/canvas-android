@@ -39,6 +39,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.ModuleListRecyclerAdapter
 import com.instructure.student.databinding.FragmentModuleListBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
@@ -54,6 +55,7 @@ import org.greenrobot.eventbus.ThreadMode
 class ModuleListFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(FragmentModuleListBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var recyclerAdapter: ModuleListRecyclerAdapter
@@ -86,6 +88,11 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = layoutInflater.inflate(R.layout.fragment_module_list, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -95,19 +102,19 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (recyclerAdapter.size() == 0) {
-            binding.moduleRecyclerViewLayout.emptyView.changeTextSize()
+            recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    binding.moduleRecyclerViewLayout.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
                 } else {
-                    binding.moduleRecyclerViewLayout.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     //change nothing, at least for now
                 } else {
-                    binding.moduleRecyclerViewLayout.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
+                    recyclerBinding.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
                 }
             }
         }
@@ -165,18 +172,18 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 setRefreshing(false)
                 if(isError) {
                     // We need to force the empty view to be visible to use it for errors on refresh
-                    binding.moduleRecyclerViewLayout.emptyView.setVisible()
-                    setEmptyView(binding.moduleRecyclerViewLayout.emptyView, R.drawable.ic_panda_nomodules, R.string.modulesLocked, R.string.modulesLockedSubtext)
+                    recyclerBinding.emptyView.setVisible()
+                    setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_nomodules, R.string.modulesLocked, R.string.modulesLockedSubtext)
                 } else if (recyclerAdapter.size() == 0) {
-                    setEmptyView(binding.moduleRecyclerViewLayout.emptyView, R.drawable.ic_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
+                    setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
                 } else if (!arguments?.getString(MODULE_ID).isNullOrEmpty()) {
                     // We need to delay scrolling until the expand animation has completed, otherwise modules
                     // that appear near the end of the list will not have the extra 'expanded' space needed
                     // to scroll as far as possible toward the top
-                    binding.moduleRecyclerViewLayout.listView.postDelayed({
+                    recyclerBinding.listView.postDelayed({
                         val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())
                         if (groupPosition >= 0) {
-                            val lm = binding.moduleRecyclerViewLayout.listView.layoutManager as? LinearLayoutManager
+                            val lm = recyclerBinding.listView.layoutManager as? LinearLayoutManager
                             lm?.scrollToPositionWithOffset(groupPosition, 0)
                             arguments?.remove(MODULE_ID)
                         }

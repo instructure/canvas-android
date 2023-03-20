@@ -44,6 +44,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
+import com.instructure.student.databinding.LoadingCanvasViewBinding
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
@@ -56,6 +57,7 @@ import javax.inject.Inject
 class InterwebsToApplication : AppCompatActivity() {
 
     private val binding by viewBinding(InterwebsToApplicationBinding::inflate)
+    private lateinit var loadingBinding: LoadingCanvasViewBinding
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
@@ -69,7 +71,8 @@ class InterwebsToApplication : AppCompatActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.interwebs_to_application)
-        binding.canvasLoadingView.loadingRoute.visibility = View.VISIBLE
+        loadingBinding = LoadingCanvasViewBinding.bind(binding.root)
+        loadingBinding.loadingRoute.visibility = View.VISIBLE
 
         val url = intent.dataString
 

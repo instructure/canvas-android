@@ -42,8 +42,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         FragmentSyllabusBinding::inflate,
         parent) {
 
-    private val eventsBinding: FragmentSyllabusEventsBinding
-    private val webviewBinding: FragmentSyllabusWebviewBinding
+    private val adapter: SyllabusTabAdapter
+
+    private lateinit var eventsBinding: FragmentSyllabusEventsBinding
+    private lateinit var webviewBinding: FragmentSyllabusWebviewBinding
 
     private val tabListener = object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -64,11 +66,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         binding.toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
         binding.toolbar.subtitle = canvasContext.name
 
-        binding.syllabusPager.adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
-        binding.syllabusTabLayout.setupWithViewPager(binding.syllabusPager, true)
+        adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
 
-        eventsBinding = FragmentSyllabusEventsBinding.bind(binding.root)
-        webviewBinding = FragmentSyllabusWebviewBinding.bind(binding.root)
+        binding.syllabusPager.adapter = adapter
+        binding.syllabusTabLayout.setupWithViewPager(binding.syllabusPager, true)
     }
 
     override fun applyTheme() {
@@ -86,6 +87,8 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     override fun render(state: SyllabusViewState) {
+        webviewBinding = adapter.webviewBinding
+        eventsBinding = adapter.eventsBinding
         when (state) {
             SyllabusViewState.Loading -> {
                 binding.swipeRefreshLayout.isRefreshing = true

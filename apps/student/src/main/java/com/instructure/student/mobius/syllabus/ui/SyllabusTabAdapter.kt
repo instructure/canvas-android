@@ -33,6 +33,10 @@ import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
 
 class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
+
+    lateinit var eventsBinding: FragmentSyllabusEventsBinding
+    lateinit var webviewBinding: FragmentSyllabusWebviewBinding
+
     override fun isViewFromObject(view: View, `object`: Any) = view === `object`
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -43,11 +47,11 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
         container.addView(view)
 
         if (!isSyllabusPosition(position)) {
-            val binding = FragmentSyllabusEventsBinding.bind(view)
-            binding.syllabusEventsRecycler.layoutManager = LinearLayoutManager(container.context)
+            eventsBinding = FragmentSyllabusEventsBinding.bind(view)
+            eventsBinding.syllabusEventsRecycler.layoutManager = LinearLayoutManager(container.context)
         } else {
-            val binding = FragmentSyllabusWebviewBinding.bind(view)
-            setupWebView(binding.syllabusWebViewWrapper.webView)
+            webviewBinding = FragmentSyllabusWebviewBinding.bind(view)
+            setupWebView(webviewBinding.syllabusWebViewWrapper.webView)
         }
 
         return view

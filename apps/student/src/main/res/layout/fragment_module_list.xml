@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar">
 
-        <include android:id="@+id/moduleRecyclerViewLayout" layout="@layout/panda_recycler_refresh_layout" />
+        <include layout="@layout/panda_recycler_refresh_layout" />
 
     </FrameLayout>
 
