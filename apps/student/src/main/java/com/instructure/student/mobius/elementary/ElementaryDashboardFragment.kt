@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
@@ -43,7 +42,7 @@ import com.instructure.student.fragment.ParentFragment
 @ScreenView(SCREEN_VIEW_ELEMENTARY_DASHBOARD)
 class ElementaryDashboardFragment : ParentFragment() {
 
-    private val binding by viewBinding(FragmentElementaryDashboardBinding::bind)
+    private lateinit var binding: FragmentElementaryDashboardBinding
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -65,7 +64,7 @@ class ElementaryDashboardFragment : ParentFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentElementaryDashboardBinding.inflate(inflater, container, false)
+        binding = FragmentElementaryDashboardBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.todayButtonVisibility = schedulePagerFragment.getTodayButtonVisibility()
 

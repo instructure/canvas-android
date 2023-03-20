@@ -31,7 +31,6 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.student.fragment.CourseBrowserFragment
@@ -50,13 +49,13 @@ class ElementaryCourseFragment : Fragment() {
 
     private val viewModel: ElementaryCourseViewModel by viewModels()
 
-    private val binding by viewBinding(FragmentElementaryCourseBinding::bind)
+    private lateinit var binding: FragmentElementaryCourseBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
+        binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         if (canvasContext.isCourse) {
