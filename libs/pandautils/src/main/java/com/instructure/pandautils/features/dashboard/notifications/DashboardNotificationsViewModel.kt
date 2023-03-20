@@ -23,7 +23,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
-import androidx.work.WorkInfo.State
 import androidx.work.WorkManager
 import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -37,13 +36,12 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
-import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_ASSIGNMENT_NAME
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_TITLE
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -63,7 +61,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
     private val apiPrefs: ApiPrefs,
     private val workManager: WorkManager,
-    private val fileUploadPreferences: FileUploadPreferences
+    private val dashboardFileUploadDao: DashboardFileUploadDao
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -81,21 +79,23 @@ class DashboardNotificationsViewModel @Inject constructor(
     private var coursesMap: Map<Long, Course> = emptyMap()
     private var groupMap: Map<Long, Group> = emptyMap()
 
-    private val runningWorkersObserver = Observer<List<UUID>> {
+    private val runningWorkersObserver = Observer<List<DashboardFileUploadEntity>> {
         viewModelScope.launch {
             _data.value?.uploadItems?.forEach { it.clear() }
-            _data.value?.uploadItems = getUploads(it).filterNotNull()
+            _data.value?.uploadItems = getUploads(it)
             _data.value?.notifyPropertyChanged(BR.concatenatedItems)
         }
     }
 
+    private val fileUploads = dashboardFileUploadDao.getAll()
+
     init {
-        fileUploadPreferences.getRunningWorkersLiveData().observeForever(runningWorkersObserver)
+        fileUploads.observeForever(runningWorkersObserver)
     }
 
     override fun onCleared() {
         _data.value?.uploadItems?.forEach { it.clear() }
-        fileUploadPreferences.getRunningWorkersLiveData().removeObserver(runningWorkersObserver)
+        fileUploads.removeObserver(runningWorkersObserver)
         super.onCleared()
     }
 
@@ -120,7 +120,7 @@ class DashboardNotificationsViewModel @Inject constructor(
             val conferenceViewModels = getConferences(forceNetwork)
             items.addAll(conferenceViewModels)
 
-            val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds()).filterNotNull()
+            val uploadViewModels = getUploads(fileUploads.value)
 
             _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
         }
@@ -224,19 +224,19 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map { uuid ->
-        val workInfo: WorkInfo? = workManager.getWorkInfoById(uuid).await()
-        workInfo?.let {
+    private suspend fun getUploads(fileUploadEntities: List<DashboardFileUploadEntity>?) = fileUploadEntities?.mapNotNull { fileUploadEntity ->
+        val workerId = UUID.fromString(fileUploadEntity.workerId)
+        workManager.getWorkInfoById(workerId).await()?.let {
             val icon: Int
             val background: Int
 
             when (it.state) {
-                State.FAILED -> {
-                    icon = R.drawable.ic_upload
+                WorkInfo.State.FAILED -> {
+                    icon = R.drawable.ic_exclamation_mark
                     background = R.color.backgroundDanger
                 }
-                State.SUCCEEDED -> {
-                    icon = R.drawable.ic_upload
+                WorkInfo.State.SUCCEEDED -> {
+                    icon = R.drawable.ic_check_white_24dp
                     background = R.color.backgroundSuccess
                 }
                 else -> {
@@ -245,19 +245,21 @@ class DashboardNotificationsViewModel @Inject constructor(
                 }
             }
 
+            @Suppress("DEPRECATION")
             val uploadViewData = UploadViewData(
-                it.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
-                it.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
-                icon,
-                resources.getColor(background),
-                it.state == State.RUNNING
+                fileUploadEntity.title.orEmpty(), fileUploadEntity.assignmentName.orEmpty(),
+                icon, resources.getColor(background), it.state == WorkInfo.State.RUNNING
             )
 
-            UploadItemViewModel(uuid, workManager, uploadViewData) { uuid ->
-                _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
-            }
+            UploadItemViewModel(
+                workerId = workerId,
+                workManager = workManager,
+                data = uploadViewData,
+                open = { uuid -> _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid))) },
+                remove = { viewModelScope.launch { dashboardFileUploadDao.delete(fileUploadEntity) } }
+            )
         }
-    }
+    }.orEmpty()
 
     private fun hasValidCourseForEnrollment(enrollment: Enrollment): Boolean {
         return coursesMap[enrollment.courseId]?.let { course ->
