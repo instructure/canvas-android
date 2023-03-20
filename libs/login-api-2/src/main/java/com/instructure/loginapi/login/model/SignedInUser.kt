@@ -19,7 +19,7 @@ package com.instructure.loginapi.login.model
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.User
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize

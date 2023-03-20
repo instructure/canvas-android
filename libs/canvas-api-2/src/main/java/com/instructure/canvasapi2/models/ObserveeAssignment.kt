@@ -17,7 +17,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.toDate
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * This assignment model is a copy of the Assignment.kt model, with one change. Its 'submission' property is a list,

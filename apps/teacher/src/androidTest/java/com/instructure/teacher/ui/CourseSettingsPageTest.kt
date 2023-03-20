@@ -64,7 +64,7 @@ class CourseSettingsPageTest : TeacherTest() {
         val token = data.tokenFor(teacher)!!
 
         tokenLogin(data.domain, token, teacher)
-        dashboardPage.openCourse(course!!)
+        dashboardPage.openCourse(course)
         courseBrowserPage.clickSettingsButton()
     }
 }

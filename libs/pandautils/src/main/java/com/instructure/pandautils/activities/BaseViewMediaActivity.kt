@@ -26,16 +26,22 @@ import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.databinding.ActivityViewMediaBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
-import kotlinx.android.synthetic.main.activity_view_media.*
-import kotlinx.android.synthetic.main.exo_player_control_view.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -44,6 +50,8 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
     abstract fun allowEditing(): Boolean
     abstract fun handleEditing(editableFile: EditableFile)
     abstract fun allowCopyingUrl() :Boolean
+
+    private val binding by viewBinding(ActivityViewMediaBinding::inflate)
 
     private val mUri: Uri by lazy { intent?.extras?.getParcelable(URI) ?: Uri.EMPTY }
     private val mContentType: String by lazy { intent?.extras?.getString(CONTENT_TYPE).orEmpty() }
@@ -56,11 +64,12 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_media)
-        fullscreenButton.setGone()
+        setContentView(binding.root)
+        binding.mediaPlayerView.findViewById<ImageButton>(R.id.fullscreenButton).setGone()
     }
 
     private fun setupToolbar() {
+        val toolbar = binding.mediaPlayerView.findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = mDisplayName
 
         mEditableFile?.let {
@@ -99,17 +108,17 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        fullscreenButton.setGone()
-        Glide.with(this).load(mThumbnailUrl).into(mediaThumbnailView)
-        prepareMediaButton.onClick {
+        binding.mediaPlayerView.findViewById<ImageButton>(R.id.fullscreenButton).setGone()
+        Glide.with(this).load(mThumbnailUrl).into(binding.mediaThumbnailView)
+        binding.prepareMediaButton.onClick {
             MobileDataWarningDialog.showIfNeeded(manager = supportFragmentManager, onProceed = this::prepare)
         }
-        ViewStyler.themeButton(tryAgainButton)
-        tryAgainButton.onClick { prepare() }
-        openExternallyButton.onClick { mUri.viewExternally(this, mContentType) }
+        ViewStyler.themeButton(binding.tryAgainButton)
+        binding.tryAgainButton.onClick { prepare() }
+        binding.openExternallyButton.onClick { mUri.viewExternally(this, mContentType) }
     }
 
-    override fun onResume() {
+    override fun onResume() = with(binding) {
         super.onResume()
 
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
@@ -179,6 +188,10 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
     }
 
     private fun updateImmersivePadding() {
+        val toolbar = binding.mediaPlayerView.findViewById<Toolbar>(R.id.toolbar)
+        val fullWindowFrame = binding.mediaPlayerView.findViewById<FrameLayout>(R.id.fullWindowFrame)
+        val controlsContainer = binding.mediaPlayerView.findViewById<LinearLayout>(R.id.controlsContainer)
+
         fullWindowFrame.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 if (fullWindowFrame.paddingTop == 0 && fullWindowFrame.paddingBottom == 0) return
@@ -189,7 +202,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
         })
     }
 
-    private fun prepare() = mExoAgent.prepare(mediaPlayerView)
+    private fun prepare() = mExoAgent.prepare(binding.mediaPlayerView)
 
     override fun onPause() {
         mExoAgent.flagForResume()

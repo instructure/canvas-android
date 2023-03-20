@@ -23,19 +23,18 @@ import android.widget.LinearLayout
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.onClick
-import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.comment_attachment_view.view.*
+import com.instructure.teacher.databinding.CommentAttachmentViewBinding
 
 @SuppressLint("ViewConstructor")
 class CommentAttachmentsView(context: Context, val attachments: List<Attachment>, val onClicked: (Attachment) -> Unit) : LinearLayout(context) {
     init {
         orientation = VERTICAL
         for (attachment in attachments) {
-            val view = LayoutInflater.from(context).inflate(R.layout.comment_attachment_view, this, false)
-            view.iconImageView.setImageResource(attachment.iconRes)
-            view.attachmentNameTextView.text = attachment.displayName
-            view.onClick { onClicked(attachment) }
-            addView(view)
+            val binding = CommentAttachmentViewBinding.inflate(LayoutInflater.from(context), this, false)
+            binding.iconImageView.setImageResource(attachment.iconRes)
+            binding.attachmentNameTextView.text = attachment.displayName
+            binding.root.onClick { onClicked(attachment) }
+            addView(binding.root)
         }
     }
 }

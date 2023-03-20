@@ -21,17 +21,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
-import com.instructure.pandautils.utils.FileFolderDeletedEvent
-import com.instructure.pandautils.utils.FileFolderUpdatedEvent
-import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
-import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_PDF
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.models.EditableFile
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
+import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentViewPdfBinding
+import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
+import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.ViewPdfFragmentView
@@ -39,11 +39,12 @@ import com.pspdfkit.configuration.PdfConfiguration
 import com.pspdfkit.configuration.page.PageScrollDirection
 import com.pspdfkit.ui.PdfFragment
 import instructure.androidblueprint.PresenterFragment
-import kotlinx.android.synthetic.main.fragment_view_pdf.*
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_PDF)
 class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragmentView>(), ViewPdfFragmentView {
+
+    private val binding by viewBinding(FragmentViewPdfBinding::bind)
 
     private var mUrl by StringArg()
     private var mToolbarColor by IntArg()
@@ -76,11 +77,11 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
             fileFolderUpdatedEvent?.let { event ->
                 editableFile.file = event.updatedFileFolder
             }
-            toolbar.title = editableFile.file.displayName
+            binding.toolbar.title = editableFile.file.displayName
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
         toolbar.title = mUrl
 
@@ -116,16 +117,18 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onReadySetGo(presenter: ViewPdfFragmentPresenter) { presenter.loadData(false) }
 
     override fun onLoadingStarted() {
-        pdfProgressBar.setVisible()
-        pdfProgressBar.announceForAccessibility(getString(R.string.loading))
+        binding.pdfProgressBar.apply {
+            setVisible()
+            announceForAccessibility(getString(R.string.loading))
+        }
     }
 
     override fun onLoadingProgress(progress: Float) {
-        pdfProgressBar.setVisible().setProgress(progress)
+        binding.pdfProgressBar.setVisible().setProgress(progress)
     }
 
     override fun onLoadingFinished(fileUri: Uri) {
-        pdfProgressBar.setGone()
+        binding.pdfProgressBar.setGone()
         val newPdfFragment = PdfFragment.newInstance(fileUri, mPdfConfiguration)
         childFragmentManager.beginTransaction().replace(R.id.pdfFragmentContainer, newPdfFragment).commit()
     }

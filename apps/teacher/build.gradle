@@ -21,7 +21,7 @@ import com.instructure.android.buildtools.transform.ScreenViewTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -203,15 +203,12 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 
     hilt {
         enableAggregatingTask = false
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 dependencies {
@@ -306,6 +303,8 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP
+
+    implementation Libs.CAMERA_VIEW
 
     /* ROOM */
     implementation Libs.ROOM

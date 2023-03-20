@@ -18,9 +18,9 @@ package instructure.androidblueprint
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.pandarecycler.util.UpdatableSortedList
 import java.lang.ref.WeakReference
@@ -39,9 +39,7 @@ abstract class SyncRecyclerAdapter<
 
     abstract fun bindHolder(model: MODEL, holder: HOLDER, position: Int)
 
-    abstract fun createViewHolder(v: View, viewType: Int): HOLDER
-
-    abstract fun itemLayoutResId(viewType: Int): Int
+    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
 
     private val contextReference: WeakReference<Context> = WeakReference(context)
 
@@ -66,9 +64,11 @@ abstract class SyncRecyclerAdapter<
         notifyDataSetChanged()
     }
 
+    abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HOLDER {
-        val v = LayoutInflater.from(parent.context).inflate(itemLayoutResId(viewType), parent, false)
-        return createViewHolder(v, viewType)
+        val binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
+        return createViewHolder(binding, viewType)
     }
 
     override fun onBindViewHolder(baseHolder: HOLDER, position: Int) {

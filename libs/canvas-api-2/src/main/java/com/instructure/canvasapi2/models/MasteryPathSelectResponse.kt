@@ -17,7 +17,7 @@
 
 package com.instructure.canvasapi2.models
 
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MasteryPathSelectResponse(
