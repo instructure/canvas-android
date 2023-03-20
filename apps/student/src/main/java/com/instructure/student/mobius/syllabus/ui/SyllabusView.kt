@@ -44,8 +44,8 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
     private val adapter: SyllabusTabAdapter
 
-    private lateinit var eventsBinding: FragmentSyllabusEventsBinding
-    private lateinit var webviewBinding: FragmentSyllabusWebviewBinding
+    private var eventsBinding: FragmentSyllabusEventsBinding? = null
+    private var webviewBinding: FragmentSyllabusWebviewBinding? = null
 
     private val tabListener = object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -102,7 +102,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
                 binding.syllabusPager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
 
-                if (state.syllabus != null) webviewBinding.syllabusWebViewWrapper.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+                if (state.syllabus != null) webviewBinding?.syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
                 if (state.eventsState != null) renderEvents(state.eventsState)
             }
         }
@@ -110,9 +110,9 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
     private fun renderEvents(eventsState: EventsViewState) {
         with (eventsState) {
-            eventsBinding.syllabusEmptyView.setVisible(visibility.empty)
-            eventsBinding.syllabusEventsError.setVisible(visibility.error)
-            eventsBinding.syllabusEventsRecycler.setVisible(visibility.list)
+            eventsBinding?.syllabusEmptyView?.setVisible(visibility.empty)
+            eventsBinding?.syllabusEventsError?.setVisible(visibility.error)
+            eventsBinding?.syllabusEventsRecycler?.setVisible(visibility.list)
         }
 
         if (binding.syllabusPager.currentItem == 0) {
@@ -123,14 +123,14 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         when (eventsState) {
             EventsViewState.Error -> {
-                eventsBinding.syllabusRetry.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) }
+                eventsBinding?.syllabusRetry?.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) }
             }
             EventsViewState.Empty -> {
-                setEmptyView(eventsBinding.syllabusEmptyView, R.drawable.ic_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
+                setEmptyView(eventsBinding?.syllabusEmptyView, R.drawable.ic_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
             }
             is EventsViewState.Loaded -> {
-                if (eventsBinding.syllabusEventsRecycler.adapter == null) eventsBinding.syllabusEventsRecycler.adapter = SyllabusEventsAdapter(consumer)
-                (eventsBinding.syllabusEventsRecycler.adapter as? SyllabusEventsAdapter)?.updateEvents(eventsState.events)
+                if (eventsBinding?.syllabusEventsRecycler?.adapter == null) eventsBinding?.syllabusEventsRecycler?.adapter = SyllabusEventsAdapter(consumer)
+                (eventsBinding?.syllabusEventsRecycler?.adapter as? SyllabusEventsAdapter)?.updateEvents(eventsState.events)
             }
         }
     }
