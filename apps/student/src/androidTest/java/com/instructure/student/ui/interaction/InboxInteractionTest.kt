@@ -516,13 +516,13 @@ class InboxInteractionTest : StudentTest() {
         dashboardPage.clickInboxTab()
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickArchive()
-        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: EMPTY_STRING)
-        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
 
         inboxPage.filterInbox("Archived")
-        inboxPage.assertConversationDisplayed(conversation1.subject ?: EMPTY_STRING)
-        inboxPage.assertConversationDisplayed(conversation2.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationDisplayed(conversation2.subject!!)
     }
 
     @Test
@@ -543,8 +543,8 @@ class InboxInteractionTest : StudentTest() {
         dashboardPage.clickInboxTab()
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickStar()
-        inboxPage.assertConversationStarred(conversation1.subject ?: EMPTY_STRING)
-        inboxPage.assertConversationStarred(conversation2.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationStarred(conversation1.subject!!)
+        inboxPage.assertConversationStarred(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.VISIBLE)
     }
 
@@ -571,8 +571,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.assertSelectedConversationNumber("2")
         inboxPage.clickUnstar()
-        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: EMPTY_STRING)
-        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
     }
 
@@ -635,27 +635,27 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertSelectedConversationNumber("2")
 
         inboxPage.clickMarkAsRead()
-        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
-        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.GONE)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.VISIBLE)
 
         inboxPage.clickMarkAsUnread()
-        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
-        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.VISIBLE)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.VISIBLE)
 
         inboxPage.selectConversation(conversation1)
         inboxPage.clickMarkAsRead()
 
-        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
-        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.GONE)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.VISIBLE)
 
         inboxPage.selectConversation(conversation1)
         inboxPage.clickMarkAsRead()
 
-        inboxPage.assertUnreadMarkerVisibility(conversation1.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
-        inboxPage.assertUnreadMarkerVisibility(conversation2.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation1.subject!!, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation2.subject!!, ViewMatchers.Visibility.GONE)
     }
 
     @Test
@@ -682,8 +682,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.clickDelete()
         inboxPage.confirmDelete()
 
-        inboxPage.assertConversationNotDisplayed(conversation1.subject ?: EMPTY_STRING)
-        inboxPage.assertConversationNotDisplayed(conversation2.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
+        inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
     }
 
@@ -700,10 +700,10 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.GONE)
 
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.VISIBLE)
     }
 
     @Test
@@ -721,13 +721,13 @@ class InboxInteractionTest : StudentTest() {
         dashboardPage.clickInboxTab()
         inboxPage.filterInbox("Unread")
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertConversationNotDisplayed(conversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
         inboxPage.swipeConversationLeft(unreadConversation)
-        inboxPage.assertConversationNotDisplayed(unreadConversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(unreadConversation.subject!!)
 
         inboxPage.filterInbox("Archived")
-        inboxPage.assertConversationDisplayed(unreadConversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationDisplayed(unreadConversation.subject!!)
     }
 
     @Test
@@ -745,13 +745,13 @@ class InboxInteractionTest : StudentTest() {
         dashboardPage.clickInboxTab()
         inboxPage.filterInbox("Sent")
         inboxPage.swipeConversationRight(sentConversation)
-        inboxPage.assertUnreadMarkerVisibility(sentConversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(sentConversation.subject!!, ViewMatchers.Visibility.GONE)
 
         inboxPage.swipeConversationRight(sentConversation)
-        inboxPage.assertUnreadMarkerVisibility(sentConversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(sentConversation.subject!!, ViewMatchers.Visibility.VISIBLE)
 
         inboxPage.filterInbox("Unread")
-        inboxPage.assertConversationDisplayed(sentConversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationDisplayed(sentConversation.subject!!)
     }
 
     @Test
@@ -766,10 +766,10 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.swipeConversationLeft(conversation)
-        inboxPage.assertConversationNotDisplayed(conversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
         inboxPage.filterInbox("Archived")
-        inboxPage.assertConversationDisplayed(conversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
     @Test
@@ -788,17 +788,17 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.swipeConversationLeft(conversation)
 
         inboxPage.filterInbox("Archived")
-        inboxPage.assertConversationDisplayed(conversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationDisplayed(conversation.subject!!)
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertConversationNotDisplayed(conversation.subject ?: EMPTY_STRING) //Because an Unread conversation cannot be Archived.
+        inboxPage.assertConversationNotDisplayed(conversation.subject!!) //Because an Unread conversation cannot be Archived.
 
         inboxPage.swipeConversationLeft(archivedConversation)
-        inboxPage.assertConversationNotDisplayed(archivedConversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(archivedConversation.subject!!)
 
         inboxPage.filterInbox("Inbox")
-        inboxPage.assertConversationDisplayed(conversation.subject ?: EMPTY_STRING)
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
-        inboxPage.assertConversationDisplayed(archivedConversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationDisplayed(conversation.subject!!)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertConversationDisplayed(archivedConversation.subject!!)
     }
 
     @Test
@@ -815,14 +815,14 @@ class InboxInteractionTest : StudentTest() {
 
         dashboardPage.clickInboxTab()
         inboxPage.filterInbox("Starred")
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.VISIBLE)
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.GONE)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.GONE)
         inboxPage.swipeConversationRight(conversation)
-        inboxPage.assertUnreadMarkerVisibility(conversation.subject ?: EMPTY_STRING, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.VISIBLE)
 
         inboxPage.swipeConversationLeft(conversation)
-        inboxPage.assertConversationNotDisplayed(conversation.subject ?: EMPTY_STRING)
+        inboxPage.assertConversationNotDisplayed(conversation.subject!!)
     }
 
     private fun getFirstConversation(data: MockCanvas, includeIsAuthor: Boolean = false): Conversation {
