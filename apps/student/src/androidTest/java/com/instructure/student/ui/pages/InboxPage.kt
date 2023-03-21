@@ -121,6 +121,18 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     }
 
+    fun assertConversationNotStarred(subject: String) {
+        val matcher = allOf(
+            withId(R.id.star),
+            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            hasSibling(withId(R.id.userName)),
+            hasSibling(withId(R.id.date)),
+            hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
+        waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
+        onView(matcher).check(doesNotExist())
+
+    }
+
     fun assertUnreadMarkerVisibility(conversation: Conversation, visibility: ViewMatchers.Visibility) {
         val matcher = allOf(
                 withId(R.id.unreadMark),
@@ -180,10 +192,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
         selectConversation(conversation.subject!!)
     }
 
-    fun assertEditToolbarDisplayed() {
-        editToolbar.assertDisplayed()
-    }
-
     fun clickArchive() {
         waitForViewWithId(R.id.inboxArchiveSelected).click()
     }
@@ -194,6 +202,14 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun clickStar() {
         waitForViewWithId(R.id.inboxStarSelected).click()
+    }
+
+    fun assertStarDisplayed() {
+        waitForViewWithId(R.id.inboxStarSelected).assertDisplayed()
+    }
+
+    fun assertUnStarDisplayed() {
+        waitForViewWithId(R.id.inboxUnstarSelected).assertDisplayed()
     }
 
     fun clickUnstar() {
@@ -255,6 +271,10 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun assertSelectedConversationNumber(selectedConversationNumber: String) {
         onView(withText(selectedConversationNumber) + withAncestor(R.id.editToolbar))
+    }
+
+    fun assertEditToolbarIs(visibility: ViewMatchers.Visibility) {
+        editToolbar.assertVisibility(visibility)
     }
 
 }
