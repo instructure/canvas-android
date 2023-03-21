@@ -114,12 +114,12 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:contentDescription="@string/dismiss"
                 android:onClick="@{() -> itemViewModel.remove()}"
                 android:src="@drawable/ic_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/textDarkest"
-                tools:ignore="ContentDescription" />
+                app:tint="@color/textDarkest" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
