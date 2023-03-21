@@ -30,7 +30,7 @@ class CommentAttachmentsView(context: Context, val attachments: List<Attachment>
     init {
         orientation = VERTICAL
         for (attachment in attachments) {
-            val binding = CommentAttachmentViewBinding.inflate(LayoutInflater.from(context), this, true)
+            val binding = CommentAttachmentViewBinding.inflate(LayoutInflater.from(context), this, false)
             binding.iconImageView.setImageResource(attachment.iconRes)
             binding.attachmentNameTextView.text = attachment.displayName
             binding.root.onClick { onClicked(attachment) }
