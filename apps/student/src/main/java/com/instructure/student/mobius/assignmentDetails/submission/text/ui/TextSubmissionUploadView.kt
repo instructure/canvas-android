@@ -25,7 +25,6 @@ import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.databinding.DividerBinding
 import com.instructure.student.databinding.FragmentTextSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
@@ -88,10 +87,9 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     override fun render(state: TextSubmissionUploadViewState) {
-        val dividerBinding = DividerBinding.bind(binding.root)
         binding.toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
         binding.errorMsg.setVisible(state.isFailure)
-        dividerBinding.root.setVisible(state.isFailure)
+        binding.divider.setVisible(state.isFailure)
     }
 
     override fun onDispose() { }

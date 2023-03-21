@@ -25,7 +25,6 @@ import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
-import com.instructure.student.databinding.DividerBinding
 import com.instructure.student.databinding.FragmentUrlSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
@@ -64,11 +63,10 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
     }
 
     override fun render(state: UrlSubmissionUploadViewState) {
-        val dividerBinding = DividerBinding.bind(binding.root)
         binding.editUrl.hint = state.urlHint
         binding.toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
         binding.errorMsg.setVisible(state.isFailure).text = state.failureText
-        dividerBinding.root.setVisible(state.isFailure)
+        binding.divider.setVisible(state.isFailure)
     }
 
     override fun onDispose() {}
