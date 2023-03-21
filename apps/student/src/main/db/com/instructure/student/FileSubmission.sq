@@ -27,7 +27,7 @@ CREATE TABLE fileSubmission (
     contentType TEXT,
     fullPath TEXT,
     error TEXT,
-    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
+    errorFlag INTEGER AS Boolean NOT NULL DEFAULT 0,
     FOREIGN KEY (dbSubmissionId) REFERENCES submission(id) ON DELETE CASCADE
 );
 

@@ -18,8 +18,8 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "1.5.30"
-    const val KOTLIN_COROUTINES = "1.5.2"
+    const val KOTLIN = "1.7.21"
+    const val KOTLIN_COROUTINES = "1.6.4"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.15"
@@ -28,16 +28,16 @@ object Versions {
     const val PLAY_CORE_KTX = "1.8.1"
 
     /* Others */
-    const val APOLLO = "2.5.9"
+    const val APOLLO = "2.5.14"
     const val CRASHLYTICS = "17.2.1"
     const val PSPDFKIT = "8.4.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
-    const val SQLDELIGHT = "1.4.3"
-    const val HILT = "2.41"
+    const val SQLDELIGHT = "1.5.4"
+    const val HILT = "2.45"
     const val HILT_ANDROIDX = "1.0.0"
     const val LIFECYCLE = "2.3.1"
-    const val FRAGMENT = "1.3.6"
+    const val FRAGMENT = "1.5.5"
     const val WORK_MANAGER = "2.7.1"
     const val GLIDE_VERSION = "4.12.0"
     const val RETROFIT = "2.9.0"

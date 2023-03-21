@@ -82,6 +82,7 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 title.text = item.title
                 todoDetails = item.scheduleItem!!.getStartToEndString(context)
             }
+            null -> {}
         }
 
         description.setTextForVisibility(todoDetails)
