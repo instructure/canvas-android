@@ -15,7 +15,7 @@ import com.instructure.pandautils.room.entities.*
         SubmissionCommentEntity::class,
         PendingSubmissionCommentEntity::class,
         DashboardFileUploadEntity::class
-    ], version = 2
+    ], version = 3
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

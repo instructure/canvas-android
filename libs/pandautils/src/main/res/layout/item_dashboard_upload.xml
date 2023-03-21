@@ -35,7 +35,7 @@
         android:contentDescription="@{@string/a11y_contentDescriptionUploadDashboardNotification(itemViewModel.data.title)}"
         android:minHeight="55dp"
         android:onClick="@{() -> itemViewModel.open()}"
-        app:borderColor="@{itemViewModel.data.backgroundColorTint}"
+        app:borderColor="@{context.getColor(itemViewModel.data.backgroundColorTint)}"
         tools:backgroundTint="#00ACEC">
 
         <FrameLayout
@@ -43,7 +43,7 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@{itemViewModel.data.backgroundColorTint}"
+            android:backgroundTint="@{context.getColor(itemViewModel.data.backgroundColorTint)}"
             android:importantForAccessibility="noHideDescendants"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

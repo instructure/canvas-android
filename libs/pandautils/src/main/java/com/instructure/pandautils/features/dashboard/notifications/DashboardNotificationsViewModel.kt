@@ -245,10 +245,9 @@ class DashboardNotificationsViewModel @Inject constructor(
                 }
             }
 
-            @Suppress("DEPRECATION")
             val uploadViewData = UploadViewData(
                 fileUploadEntity.title.orEmpty(), fileUploadEntity.assignmentName.orEmpty(),
-                icon, resources.getColor(background), it.state == WorkInfo.State.RUNNING
+                icon, background, it.state == WorkInfo.State.RUNNING
             )
 
             UploadItemViewModel(
