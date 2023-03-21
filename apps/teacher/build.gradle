@@ -146,6 +146,8 @@ android {
             force 'android.arch.lifecycle:runtime:1.0.3'
 
             force Libs.KOTLIN_COROUTINES_CORE
+
+            force Libs.KOTLIN_STD_LIB
         }
     }
 

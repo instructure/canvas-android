@@ -224,13 +224,13 @@ fun bindBitmap(imageView: ImageView, bitmap: Bitmap?) {
 @BindingAdapter(value = ["accessibilityClickDescription", "accessibilityLongClickDescription"], requireAll = false)
 fun bindAccesibilityDelegate(view: View, clickDescription: String?, longClickDescription: String?) {
     view.accessibilityDelegate = object : View.AccessibilityDelegate() {
-        override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+        override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
             super.onInitializeAccessibilityNodeInfo(host, info)
             clickDescription?.let {
-                info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, it))
+                info.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, it))
             }
             longClickDescription?.let {
-                info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_LONG_CLICK, it))
+                info.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_LONG_CLICK, it))
             }
         }
     }

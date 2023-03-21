@@ -86,6 +86,10 @@ android {
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+
+    all*.resolutionStrategy {
+        force Libs.KOTLIN_STD_LIB
+    }
 }
 
 dependencies {

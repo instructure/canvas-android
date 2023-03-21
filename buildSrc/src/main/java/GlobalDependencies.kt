@@ -2,14 +2,14 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 31
+    const val COMPILE_SDK = 33
     const val MIN_SDK = 26
     const val TARGET_SDK = 31
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "7.1.3"
     const val BUILD_TOOLS = "30.0.3"
-    const val BUILD_SCAN = "1.16"
+    const val BUILD_SCAN = "3.12.5"
 
     /* Testing */
     const val JACOCO = "0.8.7"
@@ -28,22 +28,21 @@ object Versions {
     const val PLAY_CORE_KTX = "1.8.1"
 
     /* Others */
-    const val APOLLO = "2.5.14"
-    const val CRASHLYTICS = "17.2.1"
+    const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
     const val PSPDFKIT = "8.4.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.5.4"
     const val HILT = "2.45"
     const val HILT_ANDROIDX = "1.0.0"
-    const val LIFECYCLE = "2.3.1"
+    const val LIFECYCLE = "2.6.0"
     const val FRAGMENT = "1.5.5"
     const val WORK_MANAGER = "2.7.1"
     const val GLIDE_VERSION = "4.12.0"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.9.1"
     const val HEAP = "1.10.5"
-    const val ROOM = "2.4.0"
+    const val ROOM = "2.5.0"
 }
 
 object Libs {
@@ -59,24 +58,24 @@ object Libs {
     const val APOLLO_HTTP_CACHE = "com.apollographql.apollo:apollo-http-cache:${Versions.APOLLO}"
 
     /* Support Libs */
-    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.2.0"
-    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.3.1"
-    const val ANDROIDX_BROWSER = "androidx.browser:browser:1.3.0"
+    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.6.0"
+    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.6.1"
+    const val ANDROIDX_BROWSER = "androidx.browser:browser:1.5.0"
     const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:1.0.0"
-    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.0"
-    const val ANDROIDX_DESIGN = "com.google.android.material:material:1.4.0"
-    const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.3"
+    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.4"
+    const val ANDROIDX_DESIGN = "com.google.android.material:material:1.4.0" // TODO
+    const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.6"
     const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.FRAGMENT}"
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val ANDROIDX_PALETTE = "androidx.palette:palette:1.0.0"
     const val ANDROIDX_PERCENT = "androidx.percentlayout:percentlayout:1.0.0"
-    const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.2.1"
+    const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.3.0"
     const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:1.1.0"
     const val ANDROIDX_SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-    const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.1.0"
+    const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.2.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
-    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.4.0"
+    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.6.0"
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:29.3.0"
@@ -172,7 +171,7 @@ object Plugins {
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
-    const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}"
+    const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}" // TODO Do we use this?
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"

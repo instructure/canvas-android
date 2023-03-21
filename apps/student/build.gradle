@@ -197,6 +197,7 @@ android {
         resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
 
         resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
+        resolutionStrategy.force Libs.KOTLIN_STD_LIB
     }
 
     /*
