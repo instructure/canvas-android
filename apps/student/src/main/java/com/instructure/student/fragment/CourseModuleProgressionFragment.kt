@@ -252,7 +252,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         adapter = CourseModuleProgressionAdapter(childFragmentManager)
 
         binding.viewPager.apply {
-            adapter = adapter
+            adapter = this@CourseModuleProgressionFragment.adapter
 
             // Set a custom page transformer for RTL
             if (Locale.getDefault().isRtl) setPageTransformer(true, pageTransformer)
