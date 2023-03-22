@@ -181,6 +181,10 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
         onView(withText(filterType.assignmentType) + withParent(withId(R.id.select_dialog_listview))).click()
     }
 
+    fun assertDisplayed() {
+        waitForView(withText(R.string.assignments))
+    }
+
     enum class AssignmentType(val assignmentType: Int) {
         ALL(R.string.filterAssignmentAll),
         LATE(R.string.filterAssignmentLate),

@@ -20,7 +20,6 @@ import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.panda_annotations.*
-import com.instructure.panda_annotations.*
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
@@ -54,6 +53,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         )
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
+        assignmentListPage.assertDisplayed()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
@@ -126,6 +126,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val expectedDueDate = "January 31, 2023 11:59 PM"
         val course = data.courses.values.first()
         val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString())
+        assignmentListPage.refresh()
         assignmentListPage.clickAssignment(assignmentWithNoDueDate)
 
         assignmentDetailsPage.assertDisplaysDate(expectedDueDate)
@@ -221,6 +222,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val assignmentGroups = data.addAssignmentsToGroups(course)
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
+        assignmentListPage.assertDisplayed()
 
         // Let's find and click an assignment with a submission, so that we get meaningful
         // data in the submission details.
