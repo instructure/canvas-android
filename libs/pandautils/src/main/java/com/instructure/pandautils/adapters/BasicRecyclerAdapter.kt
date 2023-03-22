@@ -181,11 +181,7 @@ class BasicDiffCallback<T: Any, C : BasicItemCallback>(
 
 }
 
-abstract class BasicItemBinder<T : Any, C : BasicItemCallback, B : ViewBinding>(
-    val binder: (View) -> B
-) {
-
-    lateinit var binding: B
+abstract class BasicItemBinder<T : Any, C : BasicItemCallback, B : ViewBinding>() {
 
     var viewType: Int = 0
 
@@ -204,9 +200,8 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback, B : ViewBinding>(
 
     fun createViewHolder(context: Context, parent: ViewGroup): ViewHolder {
         val view = LayoutInflater.from(context).inflate(layoutResId, parent, false)
-        binding = binder(view)
-        initView(binding.root)
-        return constructViewHolder(context, binding.root)
+        initView(view)
+        return constructViewHolder(context, view)
     }
 
     open fun constructViewHolder(context: Context, view: View): ViewHolder {

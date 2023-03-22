@@ -32,12 +32,11 @@ import com.instructure.student.databinding.AdapterRubricCriterionBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData.Criterion
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
 
-class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback, AdapterRubricCriterionBinding>(
-    AdapterRubricCriterionBinding::bind
-) {
+class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback, AdapterRubricCriterionBinding>() {
     override val layoutResId = R.layout.adapter_rubric_criterion
 
     override fun initView(view: View) {
+        val binding = AdapterRubricCriterionBinding.bind(view)
         val transition = LayoutTransition().apply {
             enableTransitionType(LayoutTransition.CHANGING)
             val interpolator = AccelerateDecelerateInterpolator()
@@ -53,6 +52,7 @@ class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback,
     }
 
     override val bindBehavior = Item { data, callback, diff ->
+        val binding = AdapterRubricCriterionBinding.bind(this)
         // If diff is not null, only perform partial bind with changes
         with (binding) {
             diff?.apply {

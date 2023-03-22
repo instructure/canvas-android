@@ -38,9 +38,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.squareup.sqldelight.Query
 
-class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentPendingBinding>(
-    AdapterSubmissionCommentPendingBinding::bind
-) {
+class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentPendingBinding>() {
 
     override val layoutResId = R.layout.adapter_submission_comment_pending
 
@@ -50,6 +48,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
 
     override val bindBehavior = ItemWithHolder { holder, item, callback, _ ->
         check(holder is PendingCommentHolder) { "Invalid holder type for PendingCommentBinder" }
+        val binding = AdapterSubmissionCommentPendingBinding.bind(this)
         with (binding) {
             commentHolder.direction = CommentDirection.OUTGOING
             commentHolder.usernameText = Pronouns.span(item.authorName, item.authorPronouns)

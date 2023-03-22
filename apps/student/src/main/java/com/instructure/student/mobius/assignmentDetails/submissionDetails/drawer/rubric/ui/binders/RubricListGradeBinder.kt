@@ -22,11 +22,10 @@ import com.instructure.student.databinding.AdapterRubricGradeBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
 
-class RubricListGradeBinder : BasicItemBinder<RubricListData.Grade, RubricListCallback, AdapterRubricGradeBinding>(
-    AdapterRubricGradeBinding::bind
-) {
+class RubricListGradeBinder : BasicItemBinder<RubricListData.Grade, RubricListCallback, AdapterRubricGradeBinding>() {
     override val layoutResId = R.layout.adapter_rubric_grade
     override val bindBehavior = Item { gradeData, _, _ ->
+        val binding = AdapterRubricGradeBinding.bind(this)
         binding.gradeCell.setState(gradeData.state)
     }
 }

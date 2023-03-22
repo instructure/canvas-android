@@ -25,11 +25,10 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentMediaAttachmentView
 
-class SubmissionCommentBinder : BasicItemBinder<CommentItemState.CommentItem, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentBinding>(
-    AdapterSubmissionCommentBinding::bind
-) {
+class SubmissionCommentBinder : BasicItemBinder<CommentItemState.CommentItem, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentBinding>() {
     override val layoutResId = R.layout.adapter_submission_comment
     override val bindBehavior = Item { comment, callback, _ ->
+        val binding = AdapterSubmissionCommentBinding.bind(this)
         binding.commentHolder.apply {
             usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
             dateText = comment.dateText

@@ -43,6 +43,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testRubrics_showCriterionDescription() {
+        Thread.sleep(10000)
 
         val data = getToCourse()
         val assignment = data.addAssignment(
@@ -76,6 +77,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openRubric()
+        Thread.sleep(1000)
 
         // Asserts that all ratings show up and behave as expected
         submissionDetailsPage.assertRubricCriterionDisplayed(rubricCriterion)

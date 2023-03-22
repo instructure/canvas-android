@@ -43,38 +43,33 @@ class ConferenceListAdapter(callback: ConferenceListAdapterCallback) :
     }
 }
 
-class ConferenceListEmptyBinder : BasicItemBinder<ConferenceListItemViewState.Empty, ConferenceListAdapterCallback, AdapterConferenceListEmptyBinding>(
-    AdapterConferenceListEmptyBinding::bind
-) {
+class ConferenceListEmptyBinder : BasicItemBinder<ConferenceListItemViewState.Empty, ConferenceListAdapterCallback, AdapterConferenceListEmptyBinding>() {
     // TODO: Get correct image and messaging for empty view
     override val layoutResId = R.layout.adapter_conference_list_empty
     override val bindBehavior = NoBind()
 }
 
-class ConferenceListErrorBinder : BasicItemBinder<ConferenceListItemViewState.Error, ConferenceListAdapterCallback, AdapterConferenceListErrorBinding>(
-    AdapterConferenceListErrorBinding::bind
-) {
+class ConferenceListErrorBinder : BasicItemBinder<ConferenceListItemViewState.Error, ConferenceListAdapterCallback, AdapterConferenceListErrorBinding>() {
     // TODO: Get correct image and messaging for error view
     override val layoutResId = R.layout.adapter_conference_list_error
     override val bindBehavior = Item {_, callback, _ ->
+        val binding = AdapterConferenceListErrorBinding.bind(this)
         binding.conferenceListRetry.onClick { callback.reload() }
     }
 }
 
-class ConferenceListHeaderBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceHeader, ConferenceListAdapterCallback, AdapterConferenceHeaderBinding>(
-    AdapterConferenceHeaderBinding::bind
-) {
+class ConferenceListHeaderBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceHeader, ConferenceListAdapterCallback, AdapterConferenceHeaderBinding>() {
     override val layoutResId = R.layout.adapter_conference_header
     override val bindBehavior = Item {data, _, _ ->
+        val binding = AdapterConferenceHeaderBinding.bind(this)
         binding.title.text = data.title
     }
 }
 
-class ConferenceListItemBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceItem, ConferenceListAdapterCallback, AdapterConferenceItemBinding>(
-    AdapterConferenceItemBinding::bind
-) {
+class ConferenceListItemBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceItem, ConferenceListAdapterCallback, AdapterConferenceItemBinding>() {
     override val layoutResId = R.layout.adapter_conference_item
     override val bindBehavior = Item { data, callback, _ ->
+        val binding = AdapterConferenceItemBinding.bind(this)
         with (binding) {
             icon.imageTintList = data.tint.asStateList()
             title.text = data.title

@@ -61,6 +61,8 @@ class PandaAvatarActivity : ParentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         setupViews()
         setupListeners()
         Analytics.logEvent(AnalyticsEventConstants.PANDA_AVATAR_EDITOR_OPENED)
@@ -69,7 +71,7 @@ class PandaAvatarActivity : ParentActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.panda_avatar_create, menu)
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     override fun contentResId(): Int = R.layout.panda_image
@@ -128,6 +130,7 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun setupViews() {
+
         binding.toolbar.setTitle(R.string.pandaAvatar)
         binding.toolbar.setupAsBackButton { finish() }
         ViewStyler.themeToolbarColored(this, binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)

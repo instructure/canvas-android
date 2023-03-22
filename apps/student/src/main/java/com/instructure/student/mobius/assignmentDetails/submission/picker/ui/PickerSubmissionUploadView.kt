@@ -158,12 +158,11 @@ interface PickerListCallback : BasicItemCallback {
     fun deleteClicked(position: Int)
 }
 
-class PickerListBinder : BasicItemBinder<PickerListItemViewState, PickerListCallback, ViewholderFileUploadBinding>(
-    ViewholderFileUploadBinding::bind
-) {
+class PickerListBinder : BasicItemBinder<PickerListItemViewState, PickerListCallback, ViewholderFileUploadBinding>() {
     override fun getItemId(item: PickerListItemViewState) = item.position.toLong()
     override val layoutResId = R.layout.viewholder_file_upload
     override val bindBehavior = Item { state, pickerListCallback, _ ->
+        val binding = ViewholderFileUploadBinding.bind(this)
         binding.fileIcon.setImageResource(state.iconRes)
         binding.fileName.text = state.title
         binding.fileSize.text = state.size

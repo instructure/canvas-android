@@ -18,7 +18,6 @@ package com.instructure.student.ui.pages
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -28,10 +27,7 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -99,6 +95,10 @@ class PeopleListPage: BasePage(R.id.peopleListPage) {
                 allOf(withId(R.id.rootView),
                     hasDescendant(withText(R.string.students)))))
         onView(matcher).click()
+    }
+
+    fun waitForPage() {
+        waitForView(withText(R.string.coursePeople))
     }
 
 }
