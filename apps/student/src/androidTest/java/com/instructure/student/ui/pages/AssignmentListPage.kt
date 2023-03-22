@@ -181,7 +181,7 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
         onView(withText(filterType.assignmentType) + withParent(withId(R.id.select_dialog_listview))).click()
     }
 
-    fun assertDisplayed() {
+    fun waitForPage() {
         waitForView(withText(R.string.assignments))
     }
 
