@@ -278,7 +278,6 @@ dependencies {
     testImplementation Libs.MOCKK
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
-    testImplementation Libs.FIREBASE_CORE
     testImplementation Libs.THREETEN_BP
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
@@ -320,7 +319,7 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
-    implementation Libs.PLAY_CORE
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Database */
     implementation Libs.SQLDELIGHT

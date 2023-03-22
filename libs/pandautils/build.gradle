@@ -151,8 +151,8 @@ dependencies {
     implementation Libs.ANDROIDX_EXIF
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.PLAY_CORE_KTX
     implementation Libs.ANDROIDX_WEBKIT
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Work Manager */
     implementation Libs.ANDROIDX_WORK_MANAGER

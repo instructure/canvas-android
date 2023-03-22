@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
-import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.heapanalytics.android.config.Options
@@ -51,10 +50,6 @@ import io.flutter.embedding.engine.dart.DartExecutor
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling, Configuration.Provider {
 
     override fun onCreate() {
-        if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
-            // Skip app initialization.
-            return
-        }
         super.onCreate()
 
         FileCache.versionCode = BuildConfig.VERSION_CODE

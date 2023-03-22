@@ -269,8 +269,7 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
-    implementation Libs.PLAY_CORE
-    implementation Libs.PLAY_CORE_KTX
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Firebase */
     implementation platform(Libs.FIREBASE_BOM) {
