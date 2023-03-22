@@ -58,7 +58,7 @@ data class UploadViewData(
     val title: String,
     val subTitle: String,
     val icon: Int,
-    val backgroundColorTint: Int,
+    @ColorRes val backgroundColorTint: Int,
     val isUploading: Boolean
 )
 
