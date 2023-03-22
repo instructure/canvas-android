@@ -35,6 +35,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.databinding.QuizListLayoutBinding
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
@@ -45,6 +46,7 @@ import com.instructure.student.router.RouteMatcher
 class QuizListFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(QuizListLayoutBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -58,7 +60,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
         override fun onRefreshFinished() {
             setRefreshing(false)
             if (recyclerAdapter?.size() == 0) {
-                setEmptyView(binding.quizRecyclerViewLayout.emptyView, R.drawable.ic_panda_quizzes_rocket, R.string.noQuizzes, R.string.noQuizzesSubtext)
+                setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_quizzes_rocket, R.string.noQuizzes, R.string.noQuizzesSubtext)
             }
         }
     }
@@ -66,6 +68,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.quiz_list_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = QuizListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
@@ -84,9 +87,9 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
             toolbar.setupAsBackButton(this@QuizListFragment)
             toolbar.addSearch(getString(R.string.searchQuizzesHint)) { query ->
                 if (query.isBlank()) {
-                    quizRecyclerViewLayout.emptyView.emptyViewText(R.string.noItemsToDisplayShort)
+                    recyclerBinding.emptyView.emptyViewText(R.string.noItemsToDisplayShort)
                 } else {
-                    quizRecyclerViewLayout.emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                    recyclerBinding.emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
                 }
                 recyclerAdapter?.searchQuery = query
             }
@@ -106,19 +109,19 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
                 R.string.noQuizzes
         )
         if (recyclerAdapter!!.size() == 0) {
-            binding.quizRecyclerViewLayout.emptyView.changeTextSize()
+            recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    binding.quizRecyclerViewLayout.emptyView.setGuidelines(.26f, .54f, .65f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.26f, .54f, .65f, .12f, .88f)
                 } else {
-                    binding.quizRecyclerViewLayout.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     //change nothing, at least for now
                 } else {
-                    binding.quizRecyclerViewLayout.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
+                    recyclerBinding.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
                 }
             }
         }
