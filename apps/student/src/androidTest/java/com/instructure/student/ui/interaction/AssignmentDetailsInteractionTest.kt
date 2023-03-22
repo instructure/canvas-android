@@ -53,7 +53,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         )
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.assertDisplayed()
+        assignmentListPage.waitForPage()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
@@ -222,7 +222,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val assignmentGroups = data.addAssignmentsToGroups(course)
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.assertDisplayed()
+        assignmentListPage.waitForPage()
 
         // Let's find and click an assignment with a submission, so that we get meaningful
         // data in the submission details.
