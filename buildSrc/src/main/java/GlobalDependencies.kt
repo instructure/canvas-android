@@ -9,10 +9,8 @@ object Versions {
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "7.1.3"
     const val BUILD_TOOLS = "30.0.3"
-    const val BUILD_SCAN = "3.12.5"
 
     /* Testing */
-    const val JACOCO = "0.8.7"
     const val JUNIT = "4.13.2"
     const val ROBOLECTRIC = "4.3.1"
     const val JACOCO_ANDROID = "0.1.5"
@@ -23,7 +21,6 @@ object Versions {
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.15"
-    const val FIREBASE_CONFIG = "18.0.0"
     const val PLAY_CORE = "1.10.3"
     const val PLAY_CORE_KTX = "1.8.1"
 
@@ -171,14 +168,8 @@ object Plugins {
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
-    const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}" // TODO Do we use this?
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
     const val HEAP = "com.heapanalytics.android:heap-android-gradle:${Versions.HEAP}"
-}
-
-object BuildScan {
-    const val SERVER = "https://hab4legp72thxyba43fm5jueym-trial.gradle.com"
-    const val PLUGIN_ID = "com.gradle.build-scan"
 }
