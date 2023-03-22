@@ -18,11 +18,11 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import com.instructure.canvas.espresso.checked
+import com.instructure.canvas.espresso.matchToolbarText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
-import com.instructure.canvas.espresso.checked
-import com.instructure.canvas.espresso.matchToolbarText
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
@@ -33,8 +33,8 @@ import org.hamcrest.Matchers.`is`
 class CourseSettingsPage : BasePage() {
 
     private val courseImage by OnViewWithId(R.id.courseImage)
-    private val editCourseNameRootView by OnViewWithId(R.id.editCourseNameRoot)
-    private val editHomeRootView by OnViewWithId(R.id.editHomeRoot)
+    private val editCourseNameRootView by OnViewWithId(R.id.renameCourse)
+    private val editHomeRootView by OnViewWithId(R.id.editCourseHomepage)
     private val courseNameLabel by OnViewWithId(R.id.courseNameLabel)
     private val courseHomePageText by OnViewWithId(R.id.courseHomePage)
     private val courseNameText by OnViewWithId(R.id.courseName)

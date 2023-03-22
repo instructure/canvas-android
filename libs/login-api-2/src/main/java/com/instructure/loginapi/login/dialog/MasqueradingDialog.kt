@@ -30,12 +30,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.loginapi.login.R
+import com.instructure.loginapi.login.databinding.DialogMasqueradingBinding
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
-import kotlinx.android.synthetic.main.dialog_masquerading.*
 import java.util.Locale
 
 
 class MasqueradingDialog : DialogFragment() {
+
+    private val binding by viewBinding(DialogMasqueradingBinding::bind)
 
     private var callback: OnMasqueradingSet? = null
     private var preFillDomain by StringArg()
@@ -57,7 +60,7 @@ class MasqueradingDialog : DialogFragment() {
         return inflater.inflate(R.layout.dialog_masquerading, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
         toolbar.setupAsCloseButton { dismiss() }

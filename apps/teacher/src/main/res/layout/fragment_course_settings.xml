@@ -34,8 +34,12 @@
         android:importantForAccessibility="no"
         android:src="@color/backgroundDarkest"/>
 
-    <include layout="@layout/view_rename_course"/>
+    <include
+        android:id="@+id/renameCourse"
+        layout="@layout/view_rename_course" />
 
-    <include layout="@layout/view_edit_course_homepage"/>
+    <include
+        android:id="@+id/editCourseHomepage"
+        layout="@layout/view_edit_course_homepage" />
 
 </LinearLayout>

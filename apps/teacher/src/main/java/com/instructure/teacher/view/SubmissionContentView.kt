@@ -26,10 +26,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.FrameLayout
-import android.widget.ImageView
+import android.widget.*
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.app.ActivityCompat
@@ -67,6 +64,7 @@ import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentList
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.ViewSubmissionContentBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.RationedBusEvent
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
@@ -80,8 +78,6 @@ import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
 import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import kotlinx.android.synthetic.main.adapter_speed_grader_group_member.view.*
-import kotlinx.android.synthetic.main.view_submission_content.view.*
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
@@ -99,6 +95,8 @@ class SubmissionContentView(
         private val mCourse: Course,
         var initialTabIndex: Int = 0
 ) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+
+    private val binding: ViewSubmissionContentBinding
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
         get() = findViewById(R.id.annotationToolbarLayout)
@@ -166,9 +164,9 @@ class SubmissionContentView(
         if (!mIsCleanedUp && isAttachedToWindow) supportFragmentManager.beginTransaction().replace(mContainerId, fragment).commitNowAllowingStateLoss()
 
         //if we can share the content with another app, show the share icon
-        speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
+        binding.speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
 
-        ViewStyler.themeToolbarLight(context as Activity, speedGraderToolbar)
+        ViewStyler.themeToolbarLight(context as Activity, binding.speedGraderToolbar)
     }
 
     override fun removeContentFragment() {
@@ -180,7 +178,7 @@ class SubmissionContentView(
 
     //region view lifecycle
     init {
-        View.inflate(context, R.layout.view_submission_content, this)
+        binding = ViewSubmissionContentBinding.inflate(LayoutInflater.from(context), this, true)
 
         setLoading(true)
 
@@ -191,13 +189,13 @@ class SubmissionContentView(
         }
 
         mContainerId = View.generateViewId()
-        content.id = mContainerId
-        mBottomViewPager = bottomViewPager.apply { id = View.generateViewId() }
+        binding.content.id = mContainerId
+        mBottomViewPager = binding.bottomViewPager.apply { id = View.generateViewId() }
 
         initializeSubmissionView()
 
         if (isAccessibilityEnabled(context)) {
-            slidingUpPanelLayout?.anchorPoint = 1.0f
+            binding.slidingUpPanelLayout?.anchorPoint = 1.0f
         }
     }
 
@@ -207,12 +205,12 @@ class SubmissionContentView(
         obtainSubmissionData()
     }
 
-    private fun setLoading(isLoading: Boolean) {
+    private fun setLoading(isLoading: Boolean) = with(binding) {
         retryLoadingContainer.setGone()
-        loadingView?.setVisible(isLoading)
+        loadingView.setVisible(isLoading)
         slidingUpPanelLayout?.setVisible(!isLoading)
         panelContent?.setVisible(!isLoading)
-        contentRoot?.setVisible(!isLoading)
+        contentRoot.setVisible(!isLoading)
         divider?.setVisible(!isLoading)
     }
 
@@ -245,11 +243,13 @@ class SubmissionContentView(
             }
             setup()
         } catch {
-            loadingView.setGone()
-            retryLoadingContainer.setVisible()
-            retryLoadingButton.onClick {
-                setLoading(true)
-                obtainSubmissionData()
+            with(binding) {
+                loadingView.setGone()
+                retryLoadingContainer.setVisible()
+                retryLoadingButton.onClick {
+                    setLoading(true)
+                    obtainSubmissionData()
+                }
             }
         }
     }
@@ -274,7 +274,7 @@ class SubmissionContentView(
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) = with(binding) {
         // Resize sliding panel and content, don't if keyboard based annotations are active or selected
         if (oldh > 0 && oldh != h && !activity.isCurrentlyAnnotating && pdfFragment?.selectedAnnotations?.isEmpty() != false) {
             val newState = when {
@@ -419,6 +419,7 @@ class SubmissionContentView(
     }
 
     private fun setupSubmissionVersions(unsortedSubmissions: List<Submission>?) {
+        val submissionVersionsSpinner = binding.submissionVersionsSpinner
         if (unsortedSubmissions.isNullOrEmpty()) {
             submissionVersionsSpinner.setGone()
         } else {
@@ -451,7 +452,7 @@ class SubmissionContentView(
         Locale.getDefault()
     ).format(date)
 
-    private fun setupToolbar(assignee: Assignee) {
+    private fun setupToolbar(assignee: Assignee) = with(binding) {
         speedGraderToolbar.setupBackButton {
             // Use back button for WebView if applicable
             (getCurrentFragment() as? SpeedGraderWebNavigator)?.let {
@@ -509,7 +510,7 @@ class SubmissionContentView(
         if (assignee is GroupAssignee && !mAssignment.anonymousGrading) setupGroupMemberList(assignee)
     }
 
-    val menuItemCallback: (MenuItem) -> Unit = { item ->
+    private val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_share -> {
                 (getCurrentFragment() as? ShareableFile)?.viewExternally()
@@ -525,18 +526,18 @@ class SubmissionContentView(
         }
     }
 
-
-    private fun setupGroupMemberList(assignee: GroupAssignee) {
+    private fun setupGroupMemberList(assignee: GroupAssignee) = with(binding) {
         assigneeWrapperView.onClick {
             val popup = ListPopupWindow(context)
             popup.anchorView = it
             popup.setAdapter(object : ArrayAdapter<User>(context, 0, assignee.students) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     val user = getItem(position)
-                    val view = convertView
-                            ?: LayoutInflater.from(context).inflate(R.layout.adapter_speed_grader_group_member, parent, false)
-                    ProfileUtils.loadAvatarForUser(view.memberAvatarView, user?.name, user?.avatarUrl)
-                    view.memberNameView.text = Pronouns.span(user?.name, user?.pronouns)
+                    val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.adapter_speed_grader_group_member, parent, false)
+                    val memberAvatarView = view.findViewById<ImageView>(R.id.memberAvatarView)
+                    ProfileUtils.loadAvatarForUser(memberAvatarView, user?.name, user?.avatarUrl)
+                    val memberNameView = view.findViewById<TextView>(R.id.memberNameView)
+                    memberNameView.text = Pronouns.span(user?.name, user?.pronouns)
                     return view
                 }
             })
@@ -552,7 +553,7 @@ class SubmissionContentView(
         }
     }
 
-    private fun setGradeableContent(content: GradeableContent) {
+    private fun setGradeableContent(content: GradeableContent) = with(binding) {
         // Handle the existing PdfFragment if there is one
         val currentFragment = getCurrentFragment()
         if (currentFragment is PdfFragment) {
@@ -567,7 +568,7 @@ class SubmissionContentView(
                 if(content.url.contains("canvadoc")) {
                     if(slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.ANCHORED) {
                         // Attempt to reset the sliding panel to collapsed, so we don't render the pdf at anchored size
-                        slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+                        slidingUpPanelLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
                     }
                     handlePdfContent(content.url)
                 } else {
@@ -646,7 +647,7 @@ class SubmissionContentView(
         }
     }
 
-    private fun setupSlidingPanel() {
+    private fun setupSlidingPanel() = with(binding) {
 
         slidingUpPanelLayout?.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
 
@@ -661,17 +662,17 @@ class SubmissionContentView(
                     @Suppress("NON_EXHAUSTIVE_WHEN") //we don't want to update for all states, just these three
                     when (newState) {
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
-                            submissionVersionsSpinner?.isClickable = true
+                            submissionVersionsSpinner.isClickable = true
                             postPanelEvent(newState, 0.5f)
                             contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                         }
                         SlidingUpPanelLayout.PanelState.EXPANDED -> {
-                            submissionVersionsSpinner?.isClickable = false
+                            submissionVersionsSpinner.isClickable = false
                             postPanelEvent(newState, 1.0f)
                             contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                         }
                         SlidingUpPanelLayout.PanelState.COLLAPSED -> {
-                            submissionVersionsSpinner?.isClickable = true
+                            submissionVersionsSpinner.isClickable = true
                             //fix for rotating when the panel is collapsed
                             pdfFragment?.notifyLayoutChanged()
                             postPanelEvent(newState, 0.0f)
@@ -690,7 +691,7 @@ class SubmissionContentView(
 
     private fun adjustPanelHeights(offset: Float) {
         //Adjusts the panel content sizes based on the position of the sliding portion of the view
-        val maxHeight = contentRoot.height
+        val maxHeight = binding.contentRoot.height
         if (offset < 0 || maxHeight == 0) return
 
         val adjustedHeight = Math.abs(maxHeight * offset)
@@ -701,7 +702,7 @@ class SubmissionContentView(
         }
     }
 
-    private fun setupBottomSheetViewPager(course: Course) {
+    private fun setupBottomSheetViewPager(course: Course) = with(binding) {
         mBottomViewPager.offscreenPageLimit = 2
         mBottomViewPager.adapter = BottomSheetPagerAdapter.Holder(supportFragmentManager)
                 .add(mGradeFragment)
@@ -736,7 +737,7 @@ class SubmissionContentView(
         bottomTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
+                    slidingUpPanelLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
                 }
             }
 
@@ -744,7 +745,7 @@ class SubmissionContentView(
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 EventBus.getDefault().post(TabSelectedEvent(tab?.position ?: 0))
                 if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
+                    slidingUpPanelLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
                 }
             }
         })
@@ -761,7 +762,7 @@ class SubmissionContentView(
         mBottomViewPager.currentItem = initialTabIndex
     }
 
-    private fun showVideoCommentDialog() {
+    private fun showVideoCommentDialog() = with(binding) {
         activity.disableViewPager()
         floatingRecordingView.setContentType(RecordingMediaType.Video)
         floatingRecordingView.startVideoView()
@@ -780,7 +781,7 @@ class SubmissionContentView(
         }
     }
 
-    private fun showAudioCommentDialog() {
+    private fun showAudioCommentDialog() = with(binding) {
         activity.disableViewPager()
         floatingRecordingView.setContentType(RecordingMediaType.Audio)
         floatingRecordingView.setVisible()
@@ -876,10 +877,10 @@ class SubmissionContentView(
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onAnchorChanged(event: SlidingPanelAnchorEvent) {
-        slidingUpPanelLayout?.panelState = event.anchorPosition
+        binding.slidingUpPanelLayout?.panelState = event.anchorPosition
         //If we try to adjust the panels before contentRoot's height is determined, things don't work
         //This post works because we setup the panel before registering to the event
-        contentRoot.post { adjustPanelHeights(event.offset) }
+        binding.contentRoot.post { adjustPanelHeights(event.offset) }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

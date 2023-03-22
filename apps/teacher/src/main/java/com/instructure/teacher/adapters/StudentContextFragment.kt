@@ -30,9 +30,11 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
+import com.instructure.teacher.databinding.FragmentStudentContextBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.StudentContextPresenterFactory
 import com.instructure.teacher.fragments.AddMessageFragment
@@ -45,13 +47,14 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.StudentContextView
 import instructure.androidblueprint.PresenterFragment
-import kotlinx.android.synthetic.main.fragment_student_context.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
 class StudentContextFragment : PresenterFragment<StudentContextPresenter, StudentContextView>(), StudentContextView {
+
+    private val binding by viewBinding(FragmentStudentContextBinding::bind)
 
     private var mStudentId by LongArg()
     private var mCourseId by LongArg()
@@ -86,14 +89,14 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
 
     override fun getPresenterFactory() = StudentContextPresenterFactory(mStudentId, mCourseId)
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted() = with(binding) {
         toolbar.setGone()
         contentContainer.setGone()
         loadingView.setVisible()
         loadingView.announceForAccessibility(getString(R.string.Loading))
     }
 
-    override fun onRefreshFinished() {
+    override fun onRefreshFinished(): Unit = with(binding) {
         loadingView.setGone()
         toolbar.setVisible()
         contentContainer.setVisible()
@@ -109,23 +112,23 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     override fun clear() {
-        submissionListContainer.removeAllViewsInLayout()
+        binding.submissionListContainer.removeAllViewsInLayout()
     }
 
-    override fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean) {
+    override fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean) = with(binding) {
         val courseBackgroundColor = CanvasContext.emptyCourseContext(course.id.toLong()).backgroundColor
 
         setupScrollListener()
 
         // Toolbar setup
         if (activity is MasterDetailInteractions) {
-            toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
-                toolbar.updateToolbarExpandCollapseIcon(this)
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@StudentContextFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@StudentContextFragment)
                 ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
-            toolbar.setupBackButton(this)
+            toolbar.setupBackButton(this@StudentContextFragment)
         }
         toolbar.title = Pronouns.span(student.shortName, student.pronouns)
         toolbar.subtitle = course.name
@@ -236,7 +239,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     private fun setupScrollListener() {
-        contentContainer.viewTreeObserver.addOnScrollChangedListener(scrollListener)
+        binding.contentContainer.viewTreeObserver.addOnScrollChangedListener(scrollListener)
     }
 
     private val scrollListener = object : ViewTreeObserver.OnScrollChangedListener {
@@ -244,7 +247,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         private var triggered = false
         private val touchSlop by lazy { ViewConfiguration.get(requireContext()).scaledTouchSlop }
 
-        override fun onScrollChanged() {
+        override fun onScrollChanged() = with(binding) {
             if (!isAdded || contentContainer.height == 0 || scrollContent.height == 0 || loadMoreContainer.height == 0) return
             val threshold = scrollContent.height - loadMoreContainer.top
             val bottomOffset = contentContainer.height + contentContainer.scrollY - scrollContent.bottom
@@ -281,13 +284,13 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                     listOf(studentSubmission), 0)
                 RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
             }
-            submissionListContainer.addView(view)
+            binding.submissionListContainer.addView(view)
         }
-        contentContainer.post { scrollListener.onScrollChanged() }
+        binding.contentContainer.post { scrollListener.onScrollChanged() }
     }
 
     override fun showLoadMoreIndicator(show: Boolean) {
-        loadMoreIndicator.setVisible(show)
+        binding.loadMoreIndicator.setVisible(show)
     }
 
     override fun onErrorLoading(isDesigner: Boolean) {

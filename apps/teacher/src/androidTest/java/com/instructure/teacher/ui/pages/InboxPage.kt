@@ -16,7 +16,6 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
-import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
 
 class InboxPage: BasePage() {
@@ -70,6 +69,8 @@ class InboxPage: BasePage() {
     }
 
     fun filterInbox(filterFor: String) {
+        refresh()
+        waitForView(withId(R.id.scopeFilterText))
         onView(withId(R.id.scopeFilter)).click()
         waitForViewWithText(filterFor).click()
     }
@@ -79,14 +80,34 @@ class InboxPage: BasePage() {
         else onView(withId(R.id.unreadMark) + ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE))
     }
 
-    fun assertConversationStarred(recipients: String) {
-        onView(allOf(withId(R.id.star) + hasSibling(withId(R.id.userName) + withText(recipients))))
+    fun assertConversationStarred(subject: String) {
+        val matcher = Matchers.allOf(
+            withId(R.id.star),
+            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            hasSibling(withId(R.id.userName)),
+            hasSibling(withId(R.id.date)),
+            hasSibling(Matchers.allOf(withId(R.id.subjectView), withText(subject)))
+        )
+        waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
+        onView(matcher).assertDisplayed()
+    }
+
+    fun assertConversationNotStarred(subject: String) {
+        val matcher = Matchers.allOf(
+            withId(R.id.star),
+            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            hasSibling(withId(R.id.userName)),
+            hasSibling(withId(R.id.date)),
+            hasSibling(Matchers.allOf(withId(R.id.subjectView), withText(subject)))
+        )
+        waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
+        onView(matcher).check(ViewAssertions.doesNotExist())
+
     }
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).assertDisplayed()
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertConversationNotDisplayed(subject: String) {
@@ -111,19 +132,26 @@ class InboxPage: BasePage() {
         }
     }
 
-    fun selectConversation(conversation: Conversation) {
+    fun selectConversation(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
-        val matcher = ViewMatchers.withText(conversation.subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).longClick()
+        val matcher = withText(conversationSubject)
+        onView(matcher).scrollTo().longClick()
     }
 
-    fun assertEditToolbarDisplayed() {
-        editToolbar.assertDisplayed()
+    fun selectConversation(conversation: Conversation) {
+        selectConversation(conversation.subject!!)
+    }
+
+    fun selectConversation(conversation: ConversationApiModel) {
+        selectConversation(conversation.subject!!)
     }
 
     fun clickArchive() {
         waitForViewWithId(R.id.inboxArchiveSelected).click()
+    }
+
+    fun clickUnArchive() {
+        waitForViewWithId(R.id.inboxUnarchiveSelected).click()
     }
 
     fun clickStar() {
@@ -151,20 +179,58 @@ class InboxPage: BasePage() {
     }
 
     fun confirmDelete() {
-        waitForViewWithText("DELETE")
+        waitForView(withText("DELETE") + withAncestor(R.id.buttonPanel)).click()
+    }
+
+    fun swipeConversationRight(conversationSubject: String) {
+        waitForView(withId(R.id.inboxRecyclerView))
+        val matcher = withText(conversationSubject)
+        onView(matcher).scrollTo().swipeRight()
+    }
+
+    fun swipeConversationRight(conversation: ConversationApiModel) {
+        swipeConversationRight(conversation.subject!!)
     }
 
     fun swipeConversationRight(conversation: Conversation) {
+        swipeConversationRight(conversation.subject!!)
+    }
+
+    fun swipeConversationLeft(conversationSubject: String) {
         waitForView(withId(R.id.inboxRecyclerView))
-        val matcher = ViewMatchers.withText(conversation.subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).swipeRight()
+        val matcher = withText(conversationSubject)
+        onView(matcher).scrollTo()
+        onView(matcher).swipeLeft()
     }
 
     fun swipeConversationLeft(conversation: Conversation) {
-        waitForView(withId(R.id.inboxRecyclerView))
-        val matcher = ViewMatchers.withText(conversation.subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).swipeLeft()
+        swipeConversationLeft(conversation.subject!!)
+    }
+
+    fun swipeConversationLeft(conversation: ConversationApiModel) {
+        swipeConversationLeft(conversation.subject!!)
+    }
+
+    fun selectConversations(conversations: List<String>) {
+        refresh()
+        for(conversation in conversations) {
+            selectConversation(conversation)
+        }
+    }
+
+    fun assertSelectedConversationNumber(selectedConversationNumber: String) {
+        onView(withText(selectedConversationNumber) + withAncestor(R.id.editToolbar))
+    }
+
+    fun assertEditToolbarIs(visibility: ViewMatchers.Visibility) {
+        editToolbar.assertVisibility(visibility)
+    }
+
+    fun assertStarDisplayed() {
+        waitForViewWithId(R.id.inboxStarSelected).assertDisplayed()
+    }
+
+    fun assertUnStarDisplayed() {
+        waitForViewWithId(R.id.inboxUnstarSelected).assertDisplayed()
     }
 }

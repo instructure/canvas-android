@@ -21,26 +21,25 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.teacher.databinding.PeopleFilterAdapterItemBinding
 import com.instructure.teacher.holders.PeopleListFilterViewHolder
 
 class PeopleFilterAdapter(
-        private val canvasContexts: ArrayList<CanvasContext>,
-        private val canvasContextIdList: ArrayList<Long>,
-        private val mCanvasContextCallback: (canvasContext: CanvasContext, isChecked: Boolean) -> Unit)
-    : RecyclerView.Adapter<PeopleListFilterViewHolder>() {
+    private val canvasContexts: ArrayList<CanvasContext>,
+    private val canvasContextIdList: ArrayList<Long>,
+    private val mCanvasContextCallback: (canvasContext: CanvasContext, isChecked: Boolean) -> Unit
+) : RecyclerView.Adapter<PeopleListFilterViewHolder>() {
 
-
+    private lateinit var binding: PeopleFilterAdapterItemBinding
 
     override fun onBindViewHolder(holder: PeopleListFilterViewHolder, position: Int) {
-        holder.bind(canvasContexts[position], canvasContextIdList, mCanvasContextCallback)
+        holder.bind(canvasContexts[position], canvasContextIdList, mCanvasContextCallback, binding)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeopleListFilterViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(PeopleListFilterViewHolder.HOLDER_RES_ID, parent, false)
-
-        return PeopleListFilterViewHolder(itemView)
+        binding = PeopleFilterAdapterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PeopleListFilterViewHolder(binding.root)
     }
 
     override fun getItemCount(): Int = canvasContexts.size
-
 }

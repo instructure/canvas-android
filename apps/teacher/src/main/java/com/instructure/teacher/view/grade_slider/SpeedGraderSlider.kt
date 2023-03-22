@@ -19,7 +19,7 @@ package com.instructure.teacher.view.grade_slider
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.SeekBar
 import com.instructure.canvasapi2.models.Assignee
@@ -30,7 +30,7 @@ import com.instructure.pandautils.utils.accessibleTouchTarget
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.view_speed_grader_slider.view.*
+import com.instructure.teacher.databinding.ViewSpeedGraderSliderBinding
 import org.greenrobot.eventbus.EventBus
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
@@ -38,6 +38,8 @@ import kotlin.properties.Delegates
 class SpeedGraderSlider @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+    private val binding: ViewSpeedGraderSliderBinding
 
     var onGradeChanged: (String, Boolean) -> Unit by Delegates.notNull()
 
@@ -51,9 +53,9 @@ class SpeedGraderSlider @JvmOverloads constructor(
     private var isOverGraded: Boolean = false
 
     init {
-        View.inflate(context, R.layout.view_speed_grader_slider, this)
+        binding = ViewSpeedGraderSliderBinding.inflate(LayoutInflater.from(context), this, true)
 
-        noGradeButton.apply {
+        binding.noGradeButton.apply {
             setOnClickListener {
                 notGraded = true
                 updateGrade(null)
@@ -61,7 +63,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
             accessibleTouchTarget()
         }
 
-        excuseButton.apply {
+        binding.excuseButton.apply {
             setOnClickListener {
                 isExcused = true
                 updateGrade(null)
@@ -69,7 +71,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
             accessibleTouchTarget()
         }
 
-        minGrade.apply {
+        binding.minGrade.apply {
             setOnClickListener {
                 updateGrade(0)
                 notGraded = false
@@ -78,7 +80,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
             accessibleTouchTarget()
         }
 
-        maxGrade.apply {
+        binding.maxGrade.apply {
             setOnClickListener {
                 updateGrade(maxGradeValue)
                 notGraded = false
@@ -87,36 +89,36 @@ class SpeedGraderSlider @JvmOverloads constructor(
             accessibleTouchTarget()
         }
 
-        slider.max = maxGradeValue
+        binding.slider.max = maxGradeValue
     }
 
-    fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) {
-        this.assignment = assignment
-        this.submission = submission
-        this.assignee = assignee
+    fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) = with(binding) {
+        this@SpeedGraderSlider.assignment = assignment
+        this@SpeedGraderSlider.submission = submission
+        this@SpeedGraderSlider.assignee = assignee
 
-        tooltipView.assigneeId = this.assignee.id
+        tooltipView.assigneeId = this@SpeedGraderSlider.assignee.id
 
-        isOverGraded = this.assignment.pointsPossible < this.submission?.score?.toInt() ?: 0
+        isOverGraded = this@SpeedGraderSlider.assignment.pointsPossible < this@SpeedGraderSlider.submission?.score?.toInt() ?: 0
 
-        this.submission?.let {
+        this@SpeedGraderSlider.submission?.let {
             enableExcuseButton(!it.excused)
             enableNoGradeButton(it.isGraded || it.excused)
         }
 
         if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
             if (isOverGraded) {
-                if (slider.max < this.submission!!.score.toInt()) {
-                    slider.max = this.submission!!.score.toInt()
-                    maxGrade.text = NumberHelper.formatDecimal(this.submission!!.score, 0, true)
+                if (slider.max < this@SpeedGraderSlider.submission!!.score.toInt()) {
+                    slider.max = this@SpeedGraderSlider.submission!!.score.toInt()
+                    maxGrade.text = NumberHelper.formatDecimal(this@SpeedGraderSlider.submission!!.score, 0, true)
                 }
                 showPointsPossibleView()
             } else {
-                slider.max = this.assignment.pointsPossible.toInt()
-                maxGrade.text = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
+                slider.max = this@SpeedGraderSlider.assignment.pointsPossible.toInt()
+                maxGrade.text = NumberHelper.formatDecimal(this@SpeedGraderSlider.assignment.pointsPossible, 0, true)
                 pointsPossibleView.setGone()
             }
-            slider.progress = this.submission?.score?.toInt() ?: 0
+            slider.progress = this@SpeedGraderSlider.submission?.score?.toInt() ?: 0
             minGrade.text = 0.toString()
 
         } else if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
@@ -129,7 +131,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
                 maxGrade.text = "100%"
                 pointsPossibleView.setGone()
             }
-            slider.progress = this.submission?.score?.div(this.assignment.pointsPossible)?.times(100)?.toInt()
+            slider.progress = this@SpeedGraderSlider.submission?.score?.div(this@SpeedGraderSlider.assignment.pointsPossible)?.times(100)?.toInt()
                 ?: 0
             minGrade.text = "0%"
         }
@@ -195,16 +197,20 @@ class SpeedGraderSlider @JvmOverloads constructor(
     }
 
     private fun enableExcuseButton(isEnabled: Boolean) {
-        excuseButton.isEnabled = isEnabled
-        excuseButton.alpha = if (isEnabled) 1.0F else 0.6F
+        binding.excuseButton.apply {
+            this.isEnabled = isEnabled
+            alpha = if (isEnabled) 1.0F else 0.6F
+        }
     }
 
     private fun enableNoGradeButton(isEnabled: Boolean) {
-        noGradeButton.isEnabled = isEnabled
-        noGradeButton.alpha = if (isEnabled) 1.0F else 0.6F
+        binding.noGradeButton.apply {
+            this.isEnabled = isEnabled
+            alpha = if (isEnabled) 1.0F else 0.6F
+        }
     }
 
-    private fun showPointsPossibleView() {
+    private fun showPointsPossibleView() = with(binding) {
         pointsPossibleView.setVisible(true)
         slider.viewTreeObserver.addOnGlobalLayoutListener {
             val anchorRect = Rect()
@@ -217,8 +223,8 @@ class SpeedGraderSlider @JvmOverloads constructor(
             val label: String
             if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
                 anchorRect.left =
-                    anchorRect.left + slider.paddingLeft + (this.assignment.pointsPossible.toInt() * stepWidth).roundToInt()
-                label = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
+                    anchorRect.left + slider.paddingLeft + (this@SpeedGraderSlider.assignment.pointsPossible.toInt() * stepWidth).roundToInt()
+                label = NumberHelper.formatDecimal(this@SpeedGraderSlider.assignment.pointsPossible, 0, true)
             } else {
                 anchorRect.left = anchorRect.left + slider.paddingLeft + width / 2
                 label = "100%"
@@ -229,7 +235,5 @@ class SpeedGraderSlider @JvmOverloads constructor(
             anchorRect.bottom = localRect.bottom
             pointsPossibleView.showPossiblePoint(anchorRect, label)
         }
-
     }
-
 }

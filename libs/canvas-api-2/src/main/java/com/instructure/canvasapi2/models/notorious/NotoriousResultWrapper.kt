@@ -18,7 +18,7 @@
 package com.instructure.canvasapi2.models.notorious
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 

@@ -33,16 +33,19 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentLtiLaunchBinding
 import com.instructure.teacher.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 class LtiLaunchFragment : BaseFragment() {
+
+    private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
 
     private var title: String? by NullableStringArg(key = Const.TITLE)
     private var ltiUrl: String by StringArg(key = LTI_URL)
@@ -74,8 +77,8 @@ class LtiLaunchFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val color = canvasContext?.backgroundColor ?: ThemePrefs.primaryColor
         ViewStyler.setStatusBarDark(requireActivity(), color)
-        loadingView.setOverrideColor(color)
-        toolName.setTextForVisibility(title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull())
+        binding.loadingView.setOverrideColor(color)
+        binding.toolName.setTextForVisibility(title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull())
     }
 
     override fun onResume() {

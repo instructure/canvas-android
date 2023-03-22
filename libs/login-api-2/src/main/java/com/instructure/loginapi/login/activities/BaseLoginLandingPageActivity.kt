@@ -47,6 +47,7 @@ import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
 import com.instructure.loginapi.login.adapter.SnickerDoodleAdapter
+import com.instructure.loginapi.login.databinding.ActivityLoginLandingPageBinding
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.model.SignedInUser
@@ -61,12 +62,14 @@ import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
-import kotlinx.android.synthetic.main.activity_login_landing_page.*
 import java.util.*
 import javax.inject.Inject
 
 abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
+
+    private val binding by viewBinding(ActivityLoginLandingPageBinding::inflate)
 
     private lateinit var gestureDetector: GestureDetector
     private var gestureFirstFree = true
@@ -99,7 +102,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login_landing_page)
+        setContentView(binding.root)
         bindViews()
         applyTheme()
         loadPreviousUsers()
@@ -108,7 +111,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         setupButtons()
     }
 
-    private fun bindViews() {
+    private fun bindViews() = with(binding) {
         canvasNetwork.onClick {
             if (APIHelper.hasNetworkConnection()) {
                 val intent = beginCanvasNetworkFlow(URL_CANVAS_NETWORK)
@@ -147,11 +150,11 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         }.show(supportFragmentManager, ErrorReportDialog.TAG)
     }
 
-    private fun loadPreviousUsers() {
-        val previousUsers = PreviousUsersUtils.get(this)
+    private fun loadPreviousUsers() = with(binding) {
+        val previousUsers = PreviousUsersUtils.get(this@BaseLoginLandingPageActivity)
         resizePreviousUsersRecyclerView(previousUsers)
 
-        previousLoginRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        previousLoginRecyclerView.layoutManager = LinearLayoutManager(this@BaseLoginLandingPageActivity, RecyclerView.VERTICAL, false)
         previousLoginRecyclerView.adapter =
                 PreviousUsersAdapter(previousUsers, object : PreviousUsersAdapter.PreviousUsersEvents {
                     override fun onPreviousUserClick(user: SignedInUser) {
@@ -171,7 +174,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                         navigation.startLogin(viewModel, true)
                     }
 
-                    override fun onRemovePreviousUserClick(user: SignedInUser, position: Int) {
+                    override fun onRemovePreviousUserClick(user: SignedInUser) {
                         PreviousUsersUtils.remove(this@BaseLoginLandingPageActivity, user)
                     }
 
@@ -193,7 +196,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
     }
 
-    private fun resizePreviousUsersRecyclerView(previousUsers: ArrayList<SignedInUser>) {
+    private fun resizePreviousUsersRecyclerView(previousUsers: ArrayList<SignedInUser>) = with(binding) {
         val maxUsersToShow = resources.getInteger(R.integer.login_previousMaxVisible)
         if (previousUsers.size == 1 && maxUsersToShow > 1) {
             //Resize the view to only show one previous user
@@ -203,10 +206,10 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         }
     }
 
-    private fun applyTheme() {
+    private fun applyTheme() = with(binding) {
         // Colors
         val color = themeColor()
-        val buttonColor = ContextCompat.getColor(this, R.color.textInfo)
+        val buttonColor = ContextCompat.getColor(this@BaseLoginLandingPageActivity, R.color.textInfo)
 
         // Button
         val wrapDrawable = DrawableCompat.wrap(findMySchool.background)
@@ -217,17 +220,17 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         ColorUtils.colorIt(color, canvasLogo)
 
         // App Name/Type. Will not be present in all layout versions
-        appDescriptionType?.setTextColor(color)
-        appDescriptionType?.setText(appTypeName())
+        appDescriptionType.setTextColor(color)
+        appDescriptionType.setText(appTypeName())
 
-        ViewStyler.themeStatusBar(this)
+        ViewStyler.themeStatusBar(this@BaseLoginLandingPageActivity)
     }
 
     private fun setupGesture() {
         gestureDetector = GestureDetector(applicationContext, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDown(event: MotionEvent): Boolean = true
         })
-        rootView.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
+        binding.rootView.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -304,7 +307,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
      * ]
      * ```
      */
-    private fun setupSnickerDoodles() {
+    private fun setupSnickerDoodles() = with(binding) {
         val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
         drawerLayout.setDrawerLockMode(if (isDebuggable) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         if (isDebuggable) try {
@@ -318,7 +321,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                 return
             }
 
-            drawerRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, true)
+            drawerRecyclerView.layoutManager = LinearLayoutManager(this@BaseLoginLandingPageActivity, RecyclerView.VERTICAL, true)
             drawerRecyclerView.adapter = SnickerDoodleAdapter(snickerDoodles) { snickerDoodle ->
                 drawerLayout.closeDrawers()
                 val intent = signInActivityIntent(AccountDomain(snickerDoodle.domain))
@@ -332,27 +335,27 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         }
     }
 
-    private fun setupButtons() {
+    private fun setupButtons() = with(binding) {
         val lastSavedLogin = LoginPrefs.lastSavedLogin
         if (lastSavedLogin != null) {
-            openRecentSchool?.visibility = View.VISIBLE
-            findAnotherSchool?.visibility = View.VISIBLE
-            findMySchool?.visibility = View.GONE
+            openRecentSchool.visibility = View.VISIBLE
+            findAnotherSchool.visibility = View.VISIBLE
+            findMySchool.visibility = View.GONE
 
-            openRecentSchool?.text = if (lastSavedLogin.accountDomain.name.isNullOrEmpty()) {
+            openRecentSchool.text = if (lastSavedLogin.accountDomain.name.isNullOrEmpty()) {
                 lastSavedLogin.accountDomain.domain
             } else {
                 lastSavedLogin.accountDomain.name
             }
-            openRecentSchool?.onClick { openRecentSchool(lastSavedLogin) }
+            openRecentSchool.onClick { openRecentSchool(lastSavedLogin) }
 
-            findAnotherSchool?.onClick { findSchool() }
+            findAnotherSchool.onClick { findSchool() }
         } else {
-            openRecentSchool?.visibility = View.GONE
-            findAnotherSchool?.visibility = View.GONE
-            findMySchool?.visibility = View.VISIBLE
+            openRecentSchool.visibility = View.GONE
+            findAnotherSchool.visibility = View.GONE
+            findMySchool.visibility = View.VISIBLE
 
-            findMySchool?.onClick { findSchool() }
+            findMySchool.onClick { findSchool() }
         }
     }
 

@@ -18,8 +18,11 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Page
+import com.instructure.teacher.databinding.AdapterPageBinding
 import com.instructure.teacher.holders.PageViewHolder
 import com.instructure.teacher.presenters.PageListPresenter
 import com.instructure.teacher.viewinterface.PageListView
@@ -32,9 +35,9 @@ class PageListAdapter(
     private val mCallback: (Page) -> Unit
 ) : SyncRecyclerAdapter<Page, PageViewHolder, PageListView>(context, presenter) {
 
-    override fun createViewHolder(v: View, viewType: Int) = PageViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = PageViewHolder(binding as AdapterPageBinding)
 
-    override fun itemLayoutResId(viewType: Int) = PageViewHolder.HOLDER_RES_ID
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterPageBinding::inflate
 
     override fun bindHolder(model: Page, holder: PageViewHolder, position: Int) {
         context?.let { holder.bind(it, model, iconColor, mCallback) }

@@ -19,9 +19,9 @@ package com.instructure.teacher.features.modules.list.ui.binders
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
+import com.instructure.teacher.databinding.AdapterModuleBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
-import kotlinx.android.synthetic.main.adapter_module.view.*
 
 class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, ModuleListCallback>() {
 
@@ -32,7 +32,8 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
     override val bindBehavior = Header(
         onExpand = { item, isExpanded, callback -> callback.markModuleExpanded(item.id, isExpanded) },
         onBind = { item, view, isCollapsed, _ ->
-            with(view) {
+            val binding = AdapterModuleBinding.bind(view)
+            with(binding) {
                 moduleName.text = item.name
                 publishedIcon.setVisible(item.isPublished == true)
                 unpublishedIcon.setVisible(item.isPublished == false)
@@ -40,5 +41,4 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
             }
         }
     )
-
 }

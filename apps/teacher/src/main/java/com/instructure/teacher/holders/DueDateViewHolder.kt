@@ -18,7 +18,6 @@ package com.instructure.teacher.holders
 
 import android.content.Context
 import android.text.SpannableStringBuilder
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
@@ -26,18 +25,20 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterAssignmentDueDateBinding
 import com.instructure.teacher.models.DueDateGroup
-import kotlinx.android.synthetic.main.adapter_assignment_due_date.view.*
-import java.util.Date
+import java.util.*
 
 
-class DueDateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_assignment_due_date
-    }
-
-    fun bind(date: DueDateGroup, allDatesCount: Int, sections: Map<Long, Section>, groups: Map<Long, Group>, students: Map<Long, User>) = with(itemView) {
+class DueDateViewHolder(private val binding: AdapterAssignmentDueDateBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(
+        date: DueDateGroup,
+        allDatesCount: Int,
+        sections: Map<Long, Section>,
+        groups: Map<Long, Group>,
+        students: Map<Long, User>
+    ) = with(binding) {
+        val context = binding.root.context
         val atSeparator = context.getString(R.string.at)
         val noDateFiller = context.getString(R.string.no_date_filler)
 
@@ -61,11 +62,9 @@ class DueDateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         availableToTextView.text = if (date.coreDates.lockDate != null) DateHelper.getMonthDayAtTime(context, date.coreDates.lockDate, atSeparator) else noDateFiller
     }
 
-
-    fun getFormattedDueDate(context: Context, date: Date?): String {
+    private fun getFormattedDueDate(context: Context, date: Date?): String {
         val dueDate = DateHelper.dayMonthDateFormatUniversal.format(date)
         val dueTime = DateHelper.getPreferredTimeFormat(context).format(date)
         return context.getString(R.string.due_date_at_time).format(dueDate, dueTime)
     }
-
 }

@@ -17,14 +17,6 @@
 package com.instructure.teacher.holders
 
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
-import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterUsersBinding
 
-
-class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    companion object {
-        fun holderResId(): Int {
-            return R.layout.adapter_users
-        }
-    }
-}
+class UserViewHolder(val binding: AdapterUsersBinding) : RecyclerView.ViewHolder(binding.root)

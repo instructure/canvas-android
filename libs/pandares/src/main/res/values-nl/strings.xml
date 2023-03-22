@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">U kunt inleverdetails hier openen</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minuut</item>
         <item quantity="other">%s minuten</item>
@@ -1331,4 +1333,44 @@
     <string name="acceptableUsePolicyAgree">Ik ga akkoord met het Beleid voor acceptabel gebruik.</string>
     <string name="acceptableUsePolicySubmit">Indienen</string>
     <string name="acceptFail">Indienen van het accepteren van de voorwaarden is mislukt.</string>
+    <string name="attempt">Poging %d</string>
+    <string name="quizQuestions">Vragen: %d</string>
+    <string name="quizTimeLimit">Tijdslimiet: %s</string>
+    <string name="allowedAttempts">Toegestane pogingen: %s</string>
+    <string name="usedAttempts">Gebruikte pogingen: %d</string>
+    <string name="generalUnexpectedError">Er is een onverwachte fout opgetreden.</string>
+
+    <string name="deleteSelected">Verwijderen</string>
+    <string name="archiveSelected">Archiveren</string>
+    <string name="unarchiveSelected">Archiveren ongedaan maken</string>
+    <string name="markAsReadSelected">Markeren als gelezen</string>
+    <string name="markAsUnreadSelected">Markeren als ongelezen</string>
+    <string name="starSelected">Ster</string>
+    <string name="unstarSelected">Geen ster</string>
+
+    <string name="inboxOperationFailed">Bewerking uitvoeren is mislukt</string>
+    <string name="inboxDeletedConfirmation">%s verwijderd</string>
+    <string name="inboxArchivedConfirmation">%s gearchiveerd</string>
+    <string name="inboxUnarchivedConfirmation">Archiveren van %s ongedaan gemaakt</string>
+    <string name="inboxMarkAsReadConfirmation">%s gemarkeerd als gelezen</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s gemarkeerd als ongelezen</string>
+    <string name="inboxStarredConfirmation">Sterren toegekend aan %s</string>
+    <string name="inboxUnstarredConfirmation">Sterren verwijderd van %s</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Dit gesprek wordt verwijderd uit de inbox op al je apparaten. Deze actie kan niet ongedaan worden gemaakt.</item>
+        <item quantity="other">Deze gesprekken worden verwijderd uit de inbox op al je apparaten. Deze actie kan niet ongedaan worden gemaakt.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Kan volgende pagina niet laden. Controleer je internetverbinding.</string>
+    <string name="conversationsRefreshFailed">Conversaties kunnen niet worden vernieuwd. Controleer je internetverbinding.</string>
+    <string name="inboxScopeInbox">Inbox</string>
+    <string name="inboxContextSelectorTitle">Cursus of groep selecteren</string>
+    <string name="inboxClearFilter">Wissen</string>
+    <string name="a11y_courseFilterContentDescription">Cursusfilter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">selecteer</string>
+    <string name="a11y_itemSelectedSwipeForActions">Gesprek geselecteerd. Selectiemodus is geactiveerd. voor acties</string>
+    <string name="a11y_conversationSelected">Gesprek geselecteerd.</string>
+    <string name="a11y_conversationDeselected">Gesprek gedeselecteerd</string>
+    <string name="a11y_exitSelectionMode">Selectiemodus afsluiten</string>
+    <string name="a11y_selectionModeDeactivated">Selectiemodus gedeactiveerd.</string>
 </resources>
