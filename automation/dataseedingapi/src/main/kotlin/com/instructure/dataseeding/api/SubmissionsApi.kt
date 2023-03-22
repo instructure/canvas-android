@@ -197,7 +197,8 @@ object SubmissionsApi {
                                         url = null,
                                         body = null,
                                         userId = 0,
-                                        grade = null
+                                        grade = null,
+                                        attempt = assignment.attempt!!
 
                                 )
                             }
