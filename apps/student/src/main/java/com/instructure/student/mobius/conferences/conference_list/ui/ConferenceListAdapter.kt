@@ -25,7 +25,6 @@ import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.student.R
 import com.instructure.student.databinding.AdapterConferenceHeaderBinding
 import com.instructure.student.databinding.AdapterConferenceItemBinding
-import com.instructure.student.databinding.AdapterConferenceListEmptyBinding
 import com.instructure.student.databinding.AdapterConferenceListErrorBinding
 
 interface ConferenceListAdapterCallback : BasicItemCallback {
@@ -43,13 +42,13 @@ class ConferenceListAdapter(callback: ConferenceListAdapterCallback) :
     }
 }
 
-class ConferenceListEmptyBinder : BasicItemBinder<ConferenceListItemViewState.Empty, ConferenceListAdapterCallback, AdapterConferenceListEmptyBinding>() {
+class ConferenceListEmptyBinder : BasicItemBinder<ConferenceListItemViewState.Empty, ConferenceListAdapterCallback>() {
     // TODO: Get correct image and messaging for empty view
     override val layoutResId = R.layout.adapter_conference_list_empty
     override val bindBehavior = NoBind()
 }
 
-class ConferenceListErrorBinder : BasicItemBinder<ConferenceListItemViewState.Error, ConferenceListAdapterCallback, AdapterConferenceListErrorBinding>() {
+class ConferenceListErrorBinder : BasicItemBinder<ConferenceListItemViewState.Error, ConferenceListAdapterCallback>() {
     // TODO: Get correct image and messaging for error view
     override val layoutResId = R.layout.adapter_conference_list_error
     override val bindBehavior = Item {_, callback, _ ->
@@ -58,7 +57,7 @@ class ConferenceListErrorBinder : BasicItemBinder<ConferenceListItemViewState.Er
     }
 }
 
-class ConferenceListHeaderBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceHeader, ConferenceListAdapterCallback, AdapterConferenceHeaderBinding>() {
+class ConferenceListHeaderBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceHeader, ConferenceListAdapterCallback>() {
     override val layoutResId = R.layout.adapter_conference_header
     override val bindBehavior = Item {data, _, _ ->
         val binding = AdapterConferenceHeaderBinding.bind(this)
@@ -66,7 +65,7 @@ class ConferenceListHeaderBinder : BasicItemBinder<ConferenceListItemViewState.C
     }
 }
 
-class ConferenceListItemBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceItem, ConferenceListAdapterCallback, AdapterConferenceItemBinding>() {
+class ConferenceListItemBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceItem, ConferenceListAdapterCallback>() {
     override val layoutResId = R.layout.adapter_conference_item
     override val bindBehavior = Item { data, callback, _ ->
         val binding = AdapterConferenceItemBinding.bind(this)

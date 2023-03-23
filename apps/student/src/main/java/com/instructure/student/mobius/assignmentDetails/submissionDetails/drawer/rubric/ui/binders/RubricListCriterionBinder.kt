@@ -32,7 +32,7 @@ import com.instructure.student.databinding.AdapterRubricCriterionBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData.Criterion
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
 
-class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback, AdapterRubricCriterionBinding>() {
+class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback>() {
     override val layoutResId = R.layout.adapter_rubric_criterion
 
     override fun initView(view: View) {

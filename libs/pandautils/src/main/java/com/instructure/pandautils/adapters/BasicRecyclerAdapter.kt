@@ -26,16 +26,15 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import androidx.viewbinding.ViewBinding
 import kotlin.reflect.KProperty1
 
 
 abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback: C) :
     RecyclerView.Adapter<ViewHolder>() {
 
-    val registeredBinders: MutableMap<Class<out T>, BasicItemBinder<out T, C, *>> = mutableMapOf()
+    val registeredBinders: MutableMap<Class<out T>, BasicItemBinder<out T, C>> = mutableMapOf()
 
-    inline fun <reified I : T, reified B : BasicItemBinder<I, C, *>> register(binder: B) {
+    inline fun <reified I : T, reified B : BasicItemBinder<I, C>> register(binder: B) {
         binder.viewType = registeredBinders[I::class.java]?.viewType ?: registeredBinders.size
         registeredBinders[I::class.java] = binder
     }
@@ -97,12 +96,12 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
     }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun <I : T> getBinder(item: I): BasicItemBinder<I, C, *> =
-        registeredBinders[item::class.java] as? BasicItemBinder<I, C, *>
+    internal fun <I : T> getBinder(item: I): BasicItemBinder<I, C> =
+        registeredBinders[item::class.java] as? BasicItemBinder<I, C>
                 ?: throw IllegalStateException("No binder registered for ${item::class.java.name}")
 
     @Suppress("UNCHECKED_CAST")
-    internal fun getBinderByType(viewType: Int): BasicItemBinder<*, C, *> =
+    internal fun getBinderByType(viewType: Int): BasicItemBinder<*, C> =
         registeredBinders.values.find { it.viewType == viewType }
                 ?: throw IllegalStateException("No binder registered for view type '$viewType'")
 
@@ -181,7 +180,7 @@ class BasicDiffCallback<T: Any, C : BasicItemCallback>(
 
 }
 
-abstract class BasicItemBinder<T : Any, C : BasicItemCallback, B : ViewBinding>() {
+abstract class BasicItemBinder<T : Any, C : BasicItemCallback>() {
 
     var viewType: Int = 0
 
@@ -212,7 +211,7 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback, B : ViewBinding>(
 
     open val comparator: Comparator<T> = Comparator { _, _ -> -1 }
 
-    abstract val bindBehavior: BindBehavior<T, C, B>
+    abstract val bindBehavior: BindBehavior<T, C>
 
     open fun onRecycle(holder: ViewHolder) {}
 
@@ -222,23 +221,23 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback, B : ViewBinding>(
      * A base class for defining bind behavior. Ideally this would be a sealed class, but due to generics we instead use
      * inner classes to aid in type inference.
      */
-    open class BindBehavior<T, C, B> internal constructor()
+    open class BindBehavior<T, C> internal constructor()
 
-    inner class NoBind : BindBehavior<T, C, B>()
+    inner class NoBind : BindBehavior<T, C>()
 
     inner class Item(
         val onBind: View.(item: T, callback: C, diff: ItemDiff<T>?) -> Unit
-    ) : BindBehavior<T, C, B>()
+    ) : BindBehavior<T, C>()
 
     inner class ItemWithHolder(
         val onBind: View.(holder: ViewHolder, item: T, callback: C, diff: ItemDiff<T>?) -> Unit
-    ) : BindBehavior<T, C, B>()
+    ) : BindBehavior<T, C>()
 
     inner class Header(
         val collapsible: Boolean = true,
         val onExpand: (item: T, isExpanded: Boolean, callback: C) -> Unit = { _, _, _ -> },
         val onBind: View.(item: T, isCollapsed: Boolean, callback: C, diff: ItemDiff<T>?) -> Unit
-    ) : BindBehavior<T, C, B>()
+    ) : BindBehavior<T, C>()
 
     // endregion
 

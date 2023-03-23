@@ -38,7 +38,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.squareup.sqldelight.Query
 
-class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentPendingBinding>() {
+class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem, SubmissionCommentsAdapterCallback>() {
 
     override val layoutResId = R.layout.adapter_submission_comment_pending
 

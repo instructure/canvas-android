@@ -35,7 +35,7 @@ class PostGradeSectionRecyclerAdapter(callback: PostGradeSectionCallback) : Basi
     }
 }
 
-private class PostGradeSectionBinder : BasicItemBinder<PostSection, PostGradeSectionCallback, AdapterPostPolicySectionBinding>() {
+private class PostGradeSectionBinder : BasicItemBinder<PostSection, PostGradeSectionCallback>() {
     override val layoutResId = R.layout.adapter_post_policy_section
     override fun getItemId(item: PostSection) = item.section.id
 

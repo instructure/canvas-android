@@ -25,7 +25,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentSubmissionView
 
 class SubmissionAsCommentBinder :
-    BasicItemBinder<CommentItemState.SubmissionItem, SubmissionCommentsAdapterCallback, AdapterSubmissionCommentBinding>() {
+    BasicItemBinder<CommentItemState.SubmissionItem, SubmissionCommentsAdapterCallback>() {
     override val layoutResId = R.layout.adapter_submission_comment
     override val bindBehavior = Item { comment, callback, _ ->
         val binding = AdapterSubmissionCommentBinding.bind(this)

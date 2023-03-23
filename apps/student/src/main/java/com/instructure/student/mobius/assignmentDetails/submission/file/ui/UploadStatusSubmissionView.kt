@@ -163,7 +163,7 @@ interface UploadListCallback : BasicItemCallback {
     fun deleteClicked(position: Int)
 }
 
-class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCallback, ViewholderFileUploadBinding>() {
+class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCallback>() {
     override val layoutResId = R.layout.viewholder_file_upload
     override fun getItemId(item: UploadListItemViewState): Long {
         return item.position.toLong()
