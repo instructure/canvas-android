@@ -17,9 +17,9 @@
 package com.instructure.student.service
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.student.BuildConfig
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import com.instructure.student.BuildConfig
 
 /**
  * A [PageViewUploadService] specific to the Student application.
@@ -31,6 +31,8 @@ class StudentPageViewService : PageViewUploadService() {
 
     override val appKey = pandataAppKey
 
+    override val tokenAppKey = pandataTokenKey
+
     override fun onException(e: Throwable) = FirebaseCrashlytics.getInstance().recordException(e)
 
 
@@ -39,6 +41,8 @@ class StudentPageViewService : PageViewUploadService() {
             "CANVAS_STUDENT_ANDROID",
             "Canvas Student for Android - ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         )
+
+        val pandataTokenKey = "CANVAS_STUDENT_ANDROID"
     }
 
 }

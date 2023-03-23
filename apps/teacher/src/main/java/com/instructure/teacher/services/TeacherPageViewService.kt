@@ -8,6 +8,7 @@ import com.instructure.teacher.BuildConfig
 class TeacherPageViewService : PageViewUploadService() {
 
     override val appKey = pandataAppKey
+    override val tokenAppKey = pandataTokenKey
 
     override fun onException(e: Throwable) = FirebaseCrashlytics.getInstance().recordException(e)
 
@@ -17,5 +18,8 @@ class TeacherPageViewService : PageViewUploadService() {
             "CANVAS_TEACHER_ANDROID",
             "Canvas Teacher for Android - ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         )
+
+        val pandataTokenKey = "CANVAS_STUDENT_ANDROID"
+
     }
 }
