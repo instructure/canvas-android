@@ -71,6 +71,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
     }
 
     buildFeatures {
@@ -81,6 +82,10 @@ android {
     hilt {
         enableAggregatingTask = false
     }
+}
+
+tasks.withType(Test) {
+    android.sourceSets.main.res.srcDirs += 'src/test/res'
 }
 
 configurations {
@@ -182,4 +187,6 @@ dependencies {
     // We need to add this dependency if we update ExoPlayer to 2.12.0
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905
     implementation 'com.google.guava:guava:29.0-android'
+
+    kaptTest Libs.ANDROIDX_DATABINDING_COMPILER
 }
