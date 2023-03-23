@@ -19,20 +19,21 @@ package com.instructure.student.mobius.assignmentDetails.ui.gradeCell
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.student.R
-import kotlinx.android.synthetic.main.view_student_grade_cell.view.*
+import com.instructure.student.databinding.ViewStudentGradeCellBinding
 
 class GradeCellView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private val binding: ViewStudentGradeCellBinding
+
     init {
-        View.inflate(context, R.layout.view_student_grade_cell, this)
+        binding = ViewStudentGradeCellBinding.inflate(LayoutInflater.from(context), this, true)
         if (isInEditMode) {
             setState(
                 GradeCellViewState.GradeData(
@@ -47,7 +48,7 @@ class GradeCellView @JvmOverloads constructor(
         }
     }
 
-    fun setState(state: GradeCellViewState) {
+    fun setState(state: GradeCellViewState) = with(binding) {
         setVisible()
         when (state) {
             GradeCellViewState.Empty -> setGone()

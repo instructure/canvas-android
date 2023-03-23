@@ -23,6 +23,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_URL_SUBMISSION_UPLOAD
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
+import com.instructure.student.databinding.FragmentUrlSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.url.*
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.MobiusFragment
@@ -30,7 +31,7 @@ import com.instructure.student.mobius.common.ui.Presenter
 import com.instructure.student.mobius.common.ui.UpdateInit
 
 @ScreenView(SCREEN_VIEW_URL_SUBMISSION_UPLOAD)
-class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect, UrlSubmissionUploadView, UrlSubmissionUploadViewState>() {
+class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect, UrlSubmissionUploadView, UrlSubmissionUploadViewState, FragmentUrlSubmissionUploadBinding>() {
 
     private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
     private val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)

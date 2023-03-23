@@ -35,20 +35,23 @@ import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentDiscussionsReplyBinding
 import com.instructure.student.util.Const
-import kotlinx.android.synthetic.main.fragment_discussions_reply.*
 import kotlinx.coroutines.Job
 import retrofit2.Response
 import java.io.File
 
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
 class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
+
+    private val binding by viewBinding(FragmentDiscussionsReplyBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -67,7 +70,7 @@ class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
         when (item.itemId) {
             R.id.menu_send -> {
                 if (APIHelper.hasNetworkConnection()) {
-                    sendMessage(rceTextEditor.html)
+                    sendMessage(binding.rceTextEditor.html)
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }
@@ -103,8 +106,8 @@ class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rceTextEditor.setHint(R.string.rce_empty_message)
-        rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        binding.rceTextEditor.setHint(R.string.rce_empty_message)
+        binding.rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
     }
 
     override fun onDestroyView() {
@@ -122,7 +125,7 @@ class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> rceTextEditor.insertImage(requireActivity(), imageUrl) }
+                MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> binding.rceTextEditor.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
@@ -133,15 +136,17 @@ class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
     override fun title(): String = getString(R.string.reply)
 
     override fun applyTheme() {
-        toolbar.title = getString(R.string.reply)
-        toolbar.setupAsCloseButton(this)
-        if (canAttach) {
-            toolbar.setMenu(R.menu.menu_discussion_reply, menuItemCallback)
-        } else {
-            toolbar.setMenu(R.menu.menu_discussion_reply_no_attach, menuItemCallback)
+        with (binding) {
+            toolbar.title = getString(R.string.reply)
+            toolbar.setupAsCloseButton(this@DiscussionsReplyFragment)
+            if (canAttach) {
+                toolbar.setMenu(R.menu.menu_discussion_reply, menuItemCallback)
+            } else {
+                toolbar.setMenu(R.menu.menu_discussion_reply_no_attach, menuItemCallback)
+            }
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+            ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         }
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
     //endregion
 
@@ -149,14 +154,14 @@ class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
     private fun handleAttachment(file: FileSubmitObject?) {
         if (file != null) {
             this@DiscussionsReplyFragment.attachment = file
-            attachments.setPendingAttachments(listOf(file.toAttachment()), true) { action, _ ->
+            binding.attachments.setPendingAttachments(listOf(file.toAttachment()), true) { action, _ ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
                     this@DiscussionsReplyFragment.attachment = null
                 }
             }
         } else {
             this@DiscussionsReplyFragment.attachment = null
-            attachments.clearAttachmentViews()
+            binding.attachments.clearAttachmentViews()
         }
     }
 
@@ -164,10 +169,10 @@ class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
         if (postDiscussionJob?.isActive == true) return
 
         // Make the progress bar visible and the other buttons not there so they can't try to re-send the message multiple times
-        toolbar.menu.findItem(R.id.menu_send).isVisible = false
-        toolbar.menu.findItem(R.id.menu_attachment)?.isVisible = false
-        savingProgressBar.announceForAccessibility(getString(R.string.sending))
-        savingProgressBar.setVisible()
+        binding.toolbar.menu.findItem(R.id.menu_send).isVisible = false
+        binding.toolbar.menu.findItem(R.id.menu_attachment)?.isVisible = false
+        binding.savingProgressBar.announceForAccessibility(getString(R.string.sending))
+        binding.savingProgressBar.setVisible()
 
         postDiscussionJob = tryWeave {
             if (attachment == null) {
@@ -223,9 +228,9 @@ class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     private fun messageFailure() {
-        toolbar.menu.findItem(R.id.menu_send)?.isVisible = true
-        toolbar.menu.findItem(R.id.menu_attachment)?.isVisible = true
-        savingProgressBar?.visibility = View.GONE
+        binding.toolbar.menu.findItem(R.id.menu_send)?.isVisible = true
+        binding.toolbar.menu.findItem(R.id.menu_attachment)?.isVisible = true
+        binding.savingProgressBar.visibility = View.GONE
         toast(R.string.utils_discussionSentFailure)
     }
     //endregion

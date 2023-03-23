@@ -22,19 +22,22 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.pandautils.analytics.SCREEN_VIEW_STUDENT_VIEW
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.activity_student_view_starter.*
+import com.instructure.student.databinding.ActivityStudentViewStarterBinding
 
 // The sole purpose of this activity is to capture the intent from the Teacher app that signals the Student app
 // to start the Student view
 @ScreenView(SCREEN_VIEW_STUDENT_VIEW)
 class StudentViewStarterActivity : AppCompatActivity() {
 
+    private val binding by viewBinding(ActivityStudentViewStarterBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_student_view_starter)
-        loadingView.setOverrideColor(ContextCompat.getColor(this, R.color.login_studentAppTheme))
+        binding.loadingView.setOverrideColor(ContextCompat.getColor(this, R.color.login_studentAppTheme))
 
         val extras = intent.extras!!
 

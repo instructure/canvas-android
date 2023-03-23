@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandautils.utils.hasSpokenFeedback
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.viewholder_header_expandable.view.*
+import com.instructure.student.databinding.ViewholderHeaderExpandableBinding
 
 class ExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var isExpanded = false
@@ -36,14 +36,14 @@ class ExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         headerText: String?,
         expanded: Boolean,
         viewHolderHeaderClicked: ViewHolderHeaderClicked<MODEL>
-    ) = with(itemView) {
+    ) = with(ViewholderHeaderExpandableBinding.bind(itemView)) {
         title.text = headerText
         isExpanded = expanded
-        expand_collapse.rotation = if (expanded) 180f else 0f
+        expandCollapse.rotation = if (expanded) 180f else 0f
         val a11yManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         // Expand/collapse is disabled when TalkBack is enabled, so we prevent TalkBack announcing that functionality by not adding a click listener
         if (!a11yManager.hasSpokenFeedback) {
-            setOnClickListener { v ->
+            root.setOnClickListener { v ->
                 viewHolderHeaderClicked.viewClicked(v, genericHeader)
                 val animationType: Int = if (isExpanded) {
                     R.animator.rotation_from_neg90_to_0
@@ -52,7 +52,7 @@ class ExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 }
                 isExpanded = !isExpanded
                 val flipAnimator = AnimatorInflater.loadAnimator(v.context, animationType) as ObjectAnimator
-                flipAnimator.target = expand_collapse
+                flipAnimator.target = expandCollapse
                 flipAnimator.duration = 200
                 flipAnimator.start()
             }

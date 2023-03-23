@@ -25,13 +25,16 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_UNSUPPORTED_FEATURE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentUnsupportedFeatureBinding
 import com.instructure.student.util.Analytics
-import kotlinx.android.synthetic.main.fragment_unsupported_feature.*
 
 @ScreenView(SCREEN_VIEW_UNSUPPORTED_FEATURE)
 open class UnsupportedFeatureFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentUnsupportedFeatureBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var featureName by NullableStringArg(key = Const.FEATURE_NAME)
@@ -45,13 +48,15 @@ open class UnsupportedFeatureFragment : ParentFragment() {
     }
 
     override fun applyTheme() {
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
-        initViews()
+        with (binding) {
+            toolbar.title = title()
+            toolbar.setupAsBackButton(this@UnsupportedFeatureFragment)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+            initViews()
+        }
     }
 
-    private fun initViews() {
+    private fun initViews() = with(binding) {
         // Set the text
         when {
             unsupportedDescription != null -> featureText.text = unsupportedDescription

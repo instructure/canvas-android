@@ -26,18 +26,26 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentSyllabusBinding
+import com.instructure.student.databinding.FragmentSyllabusEventsBinding
+import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_syllabus.*
-import kotlinx.android.synthetic.main.fragment_syllabus_events.*
-import kotlinx.android.synthetic.main.fragment_syllabus_webview.*
 
 class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<SyllabusViewState, SyllabusEvent>(R.layout.fragment_syllabus, inflater, parent) {
+    MobiusView<SyllabusViewState, SyllabusEvent, FragmentSyllabusBinding>(
+        inflater,
+        FragmentSyllabusBinding::inflate,
+        parent) {
+
+    private val adapter: SyllabusTabAdapter
+
+    private var eventsBinding: FragmentSyllabusEventsBinding? = null
+    private var webviewBinding: FragmentSyllabusWebviewBinding? = null
 
     private val tabListener = object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -46,51 +54,55 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
             if (tab?.position == 0) {
-                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
+                binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
             } else {
-                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
+                binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
             }
         }
     }
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
-        toolbar.subtitle = canvasContext.name
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
+        binding.toolbar.subtitle = canvasContext.name
 
-        syllabusPager.adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
-        syllabusTabLayout.setupWithViewPager(syllabusPager, true)
+        adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
+
+        binding.syllabusPager.adapter = adapter
+        binding.syllabusTabLayout.setupWithViewPager(binding.syllabusPager, true)
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
-        syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
+        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
+        binding.syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
     }
 
     override fun onConnect(output: Consumer<SyllabusEvent>) {
-        swipeRefreshLayout.setOnRefreshListener { output.accept(SyllabusEvent.PullToRefresh) }
-        syllabusTabLayout.addOnTabSelectedListener(tabListener)
+        binding.swipeRefreshLayout.setOnRefreshListener { output.accept(SyllabusEvent.PullToRefresh) }
+        binding.syllabusTabLayout.addOnTabSelectedListener(tabListener)
     }
 
     override fun onDispose() {
-        syllabusTabLayout.removeOnTabSelectedListener(tabListener)
+        binding.syllabusTabLayout.removeOnTabSelectedListener(tabListener)
     }
 
     override fun render(state: SyllabusViewState) {
+        webviewBinding = adapter.webviewBinding
+        eventsBinding = adapter.eventsBinding
         when (state) {
             SyllabusViewState.Loading -> {
-                swipeRefreshLayout.isRefreshing = true
+                binding.swipeRefreshLayout.isRefreshing = true
             }
             is SyllabusViewState.Loaded -> {
-                swipeRefreshLayout.isRefreshing = false
+                binding.swipeRefreshLayout.isRefreshing = false
 
                 val hasBoth = state.eventsState != null && state.syllabus != null
-                syllabusTabLayout.setVisible(hasBoth)
-                syllabusPager.canSwipe = hasBoth
+                binding.syllabusTabLayout.setVisible(hasBoth)
+                binding.syllabusPager.canSwipe = hasBoth
 
-                syllabusPager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
+                binding.syllabusPager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
 
-                if (state.syllabus != null) syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+                if (state.syllabus != null) webviewBinding?.syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
                 if (state.eventsState != null) renderEvents(state.eventsState)
             }
         }
@@ -98,27 +110,27 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
     private fun renderEvents(eventsState: EventsViewState) {
         with (eventsState) {
-            syllabusEmptyView?.setVisible(visibility.empty)
-            syllabusEventsError?.setVisible(visibility.error)
-            syllabusEventsRecycler?.setVisible(visibility.list)
+            eventsBinding?.syllabusEmptyView?.setVisible(visibility.empty)
+            eventsBinding?.syllabusEventsError?.setVisible(visibility.error)
+            eventsBinding?.syllabusEventsRecycler?.setVisible(visibility.list)
         }
 
-        if (syllabusPager.currentItem == 0) {
-            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
+        if (binding.syllabusPager.currentItem == 0) {
+            binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
         } else {
-            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
+            binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
         }
 
         when (eventsState) {
             EventsViewState.Error -> {
-                syllabusRetry?.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) }
+                eventsBinding?.syllabusRetry?.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) }
             }
             EventsViewState.Empty -> {
-                setEmptyView(syllabusEmptyView, R.drawable.ic_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
+                setEmptyView(eventsBinding?.syllabusEmptyView, R.drawable.ic_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
             }
             is EventsViewState.Loaded -> {
-                if (syllabusEventsRecycler?.adapter == null) syllabusEventsRecycler?.adapter = SyllabusEventsAdapter(consumer)
-                (syllabusEventsRecycler?.adapter as? SyllabusEventsAdapter)?.updateEvents(eventsState.events)
+                if (eventsBinding?.syllabusEventsRecycler?.adapter == null) eventsBinding?.syllabusEventsRecycler?.adapter = SyllabusEventsAdapter(consumer)
+                (eventsBinding?.syllabusEventsRecycler?.adapter as? SyllabusEventsAdapter)?.updateEvents(eventsState.events)
             }
         }
     }

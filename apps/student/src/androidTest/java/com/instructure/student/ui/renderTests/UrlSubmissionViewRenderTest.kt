@@ -39,9 +39,10 @@ class UrlSubmissionViewRenderTest : StudentRenderTest() {
         urlSubmissionViewRenderPage.url.assertHasText(testUrl)
     }
 
-    private fun loadPageWithData(url: String, previewUrl: String) {
-        val fragment = UrlSubmissionViewFragment.newInstance(url, previewUrl)
-        activityRule.activity.loadFragment(fragment)
+    private fun loadPageWithData(url: String, previewUrl: String) = with(activityRule.activity) {
+        runOnUiThread {
+            val fragment = UrlSubmissionViewFragment.newInstance(url, previewUrl)
+            loadFragment(fragment)
+        }
     }
-
 }

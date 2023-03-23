@@ -16,14 +16,13 @@
  */
 package com.instructure.teacher.features.postpolicies.ui
 
-import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemCallback
+import com.instructure.teacher.databinding.AdapterPostPolicySectionBinding
 import com.instructure.teacher.features.postpolicies.PostSection
 
 interface PostGradeSectionCallback : BasicItemCallback, ListItemCallback {
@@ -41,14 +40,12 @@ private class PostGradeSectionBinder : BasicItemBinder<PostSection, PostGradeSec
     override fun getItemId(item: PostSection) = item.section.id
 
     override val bindBehavior = Item { item, callback, _ ->
-        val postPolicySectionTitle = findViewById<TextView>(R.id.postPolicySectionTitle)
-        val postPolicySectionToggle = findViewById<SwitchCompat>(R.id.postPolicySectionToggle)
-
-        postPolicySectionTitle.text = item.section.name
-        postPolicySectionToggle.applyTheme(item.courseColor)
-        postPolicySectionToggle.setOnCheckedChangeListener(null)
-        postPolicySectionToggle.isChecked = item.selected
-        postPolicySectionToggle.setOnCheckedChangeListener { _, _ ->
+        val binding = AdapterPostPolicySectionBinding.bind(this)
+        binding.postPolicySectionTitle.text = item.section.name
+        binding.postPolicySectionToggle.applyTheme(item.courseColor)
+        binding.postPolicySectionToggle.setOnCheckedChangeListener(null)
+        binding.postPolicySectionToggle.isChecked = item.selected
+        binding.postPolicySectionToggle.setOnCheckedChangeListener { _, _ ->
             callback.sectionToggled(item.section.id)
         }
     }

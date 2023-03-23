@@ -34,7 +34,7 @@ import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.view_comment_submission_attachment.view.*
+import com.instructure.student.databinding.ViewCommentSubmissionAttachmentBinding
 
 @SuppressLint("ViewConstructor")
 class CommentSubmissionView(
@@ -60,8 +60,8 @@ class CommentSubmissionView(
     }
 
     private fun setupSubmissionAsAttachment(type: SubmissionType) {
-        val view = LayoutInflater.from(context).inflate(R.layout.view_comment_submission_attachment, this, false)
-        view.iconImageView.setColorFilter(tint)
+        val binding = ViewCommentSubmissionAttachmentBinding.inflate(LayoutInflater.from(context), this, false)
+        binding.iconImageView.setColorFilter(tint)
 
         val (icon: Int, title: String, subtitle: String?) = when (type) {
             SubmissionType.ONLINE_TEXT_ENTRY -> {
@@ -107,16 +107,16 @@ class CommentSubmissionView(
             else -> Triple(R.drawable.ic_attachment, type.prettyPrint(context), "")
         }
 
-        view.iconImageView.setImageResource(icon)
-        view.titleTextView.text = title
+        binding.iconImageView.setImageResource(icon)
+        binding.titleTextView.text = title
         if (subtitle.isNullOrBlank()) {
-            view.subtitleTextView.setGone()
+            binding.subtitleTextView.setGone()
         } else {
-            view.subtitleTextView.text = subtitle
+            binding.subtitleTextView.text = subtitle
         }
 
-        view.onClick { onSubmissionClicked(submission) }
-        addView(view)
+        binding.root.onClick { onSubmissionClicked(submission) }
+        addView(binding.root)
     }
 
     @Suppress("DEPRECATION")
@@ -127,16 +127,16 @@ class CommentSubmissionView(
 
     private fun setupAttachments() {
         submission.attachments.forEachIndexed { index, attachment ->
-            val view = LayoutInflater.from(context).inflate(R.layout.view_comment_submission_attachment, this, false)
-            view.iconImageView.setColorFilter(tint)
-            view.iconImageView.setImageResource(attachment.iconRes)
-            view.titleTextView.text = attachment.displayName
-            view.subtitleTextView.text = Formatter.formatFileSize(context, attachment.size)
-            view.onClick { onAttachmentClicked(submission, attachment) }
+            val binding = ViewCommentSubmissionAttachmentBinding.inflate(LayoutInflater.from(context), this, false)
+            binding.iconImageView.setColorFilter(tint)
+            binding.iconImageView.setImageResource(attachment.iconRes)
+            binding.titleTextView.text = attachment.displayName
+            binding.subtitleTextView.text = Formatter.formatFileSize(context, attachment.size)
+            binding.root.onClick { onAttachmentClicked(submission, attachment) }
             if (index > 0) {
-                (view.layoutParams as LayoutParams).topMargin = context.DP(4).toInt()
+                (binding.root.layoutParams as LayoutParams).topMargin = context.DP(4).toInt()
             }
-            addView(view)
+            addView(binding.root)
         }
     }
 }

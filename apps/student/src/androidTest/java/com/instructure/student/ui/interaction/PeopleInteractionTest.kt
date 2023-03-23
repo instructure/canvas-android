@@ -56,6 +56,7 @@ class PeopleInteractionTest : StudentTest() {
 
         tokenLogin(data.domain, data.tokenFor(student)!!, student)
         routeTo("courses/${course.id}/users", data.domain)
+        peopleListPage.waitForPage()
     }
 
 }

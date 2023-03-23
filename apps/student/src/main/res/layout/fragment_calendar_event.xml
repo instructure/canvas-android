@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -17,11 +16,11 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendarEventFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/calendarEventFragment"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundLightest">
 
     <androidx.appcompat.widget.Toolbar
@@ -41,7 +40,9 @@
         android:layout_below="@id/toolbar"
         android:fillViewport="true">
 
-        <include layout="@layout/calendar_event_layout" />
+        <include
+            android:id="@+id/calendarEventLayout"
+            layout="@layout/calendar_event_layout" />
 
     </FrameLayout>
 

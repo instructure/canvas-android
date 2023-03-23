@@ -16,11 +16,9 @@
  */
 package com.instructure.student.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.annotations.awaitFileDownload
-import com.instructure.student.R
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
@@ -28,7 +26,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_HTML
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
-import kotlinx.android.synthetic.main.fragment_webview.*
+import com.instructure.student.R
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -46,8 +44,11 @@ class ViewHtmlFragment : InternalWebviewFragment() {
         setShouldLoadUrl(false)
         super.onActivityCreated(savedInstanceState)
         mJob = weave {
-            webViewLoading.setVisible()
-            webViewLoading.announceForAccessibility(getString(R.string.loading))
+            binding.webViewLoading.apply {
+                setVisible()
+                announceForAccessibility(getString(R.string.loading))
+            }
+
             val tempFile: File? = FileCache.awaitFileDownload(mHtmlUrl)
             if (tempFile == null) {
                 toast(R.string.errorLoadingFiles)
@@ -77,10 +78,10 @@ class ViewHtmlFragment : InternalWebviewFragment() {
                 it.file = event.updatedFileFolder
             }
 
-            toolbar?.title = it.file.displayName
+            binding.toolbar.title = it.file.displayName
         }
 
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, mToolbarColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, mToolbarColor, requireContext().getColor(R.color.white))
     }
 
     override fun onDestroy() {

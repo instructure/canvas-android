@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2019 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/textSubmissionUpload"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,24 +35,28 @@
         android:id="@+id/errorMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/textDanger"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:text="@string/textSubmissionFailureMessage"
+        android:textColor="@color/textDanger"
         android:textSize="16sp"
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <include android:id="@+id/errorDivider" layout="@layout/divider" />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/backgroundMedium" />
 
     <instructure.rceditor.RCETextEditorView
         android:id="@+id/rce"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="true"
         android:contentDescription="@string/a11y_textSubmissionEditor"
-        app:rce_editor_padding="12dp"/>
+        android:focusable="true"
+        app:rce_editor_padding="12dp" />
 
 </LinearLayout>

@@ -18,12 +18,12 @@
 package com.instructure.student.holders
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import com.instructure.student.R
-import com.instructure.student.interfaces.AdapterToFragmentCallback
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Page
-import kotlinx.android.synthetic.main.adapter_course_browser_home.view.*
+import com.instructure.student.R
+import com.instructure.student.databinding.AdapterCourseBrowserHomeBinding
+import com.instructure.student.interfaces.AdapterToFragmentCallback
 
 class FrontPageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -32,8 +32,9 @@ class FrontPageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         const val HOLDER_RES_ID = R.layout.adapter_course_browser_home
 
         fun bind(context: Context, holder: FrontPageViewHolder, page: Page, adapterToFragmentCallback: AdapterToFragmentCallback<Page>) {
-            holder.itemView.homeLabel.text = context.getString(R.string.frontPage)
-            holder.itemView.homeSubLabel.text = page.title
+            val binding = AdapterCourseBrowserHomeBinding.bind(holder.itemView)
+            binding.homeLabel.text = context.getString(R.string.frontPage)
+            binding.homeSubLabel.text = page.title
             holder.itemView.setOnClickListener {
                 adapterToFragmentCallback.onRowClicked(page, holder.adapterPosition, true)
             }

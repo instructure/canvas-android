@@ -37,16 +37,19 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentLtiLaunchBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 @PageView
 class LtiLaunchFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
 
     var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
@@ -76,8 +79,8 @@ class LtiLaunchFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadingView.setOverrideColor(canvasContext.backgroundColor)
-        toolName.setTextForVisibility(title().validOrNull())
+        binding.loadingView.setOverrideColor(canvasContext.backgroundColor)
+        binding.toolName.setTextForVisibility(title().validOrNull())
     }
 
     override fun applyTheme() = Unit

@@ -25,17 +25,19 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_RECIPIENTS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxRecipientAdapter
+import com.instructure.student.databinding.FragmentInboxRecipientsBinding
 import com.instructure.student.events.ChooseRecipientsEvent
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import kotlinx.android.synthetic.main.toolbar_layout.*
 import org.greenrobot.eventbus.EventBus
-import java.util.*
 
 @ScreenView(SCREEN_VIEW_INBOX_RECIPIENTS)
 class InboxRecipientsFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentInboxRecipientsBinding::bind)
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -45,7 +47,7 @@ class InboxRecipientsFragment : ParentFragment() {
 
     override fun applyTheme() {
         (view?.findViewById<View>(R.id.menu_done) as? TextView)?.setTextColor(ThemePrefs.textButtonColor)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
     }
 
     private val adapter: InboxRecipientAdapter by lazy {
@@ -74,10 +76,10 @@ class InboxRecipientsFragment : ParentFragment() {
     }
 
     private fun setupToolbar() {
-        toolbar.setupAsBackButton(this)
-        toolbar.title = title()
-        toolbar.inflateMenu(R.menu.menu_done_text)
-        toolbar.setOnMenuItemClickListener { item ->
+        binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.title = title()
+        binding.toolbar.inflateMenu(R.menu.menu_done_text)
+        binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_done -> {
                     // Send the recipient list back to the message

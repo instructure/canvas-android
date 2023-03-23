@@ -26,7 +26,10 @@ import android.view.ViewGroup
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.displayType
@@ -40,15 +43,18 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.databinding.FragmentPeopleDetailsBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_people_details.*
 
 @ScreenView(SCREEN_VIEW_PEOPLE_DETAILS)
 @PageView(url = "{canvasContext}/users/{userId}")
 class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(FragmentPeopleDetailsBinding::bind)
 
     @Suppress("unused")
     @PageViewUrlParam(name = "userId")
@@ -72,9 +78,9 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val color = canvasContext.textAndIconColor
-        compose.backgroundTintList = ColorStateList.valueOf(color)
-        compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, Color.WHITE))
-        compose.setOnClickListener {
+        binding.compose.backgroundTintList = ColorStateList.valueOf(color)
+        binding.compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, Color.WHITE))
+        binding.compose.setOnClickListener {
             // Messaging other users is not available in Student view
             val route = if (ApiPrefs.isStudentView) NothingToSeeHereFragment.makeRoute() else {
                 InboxComposeMessageFragment.makeRoute(canvasContext, arrayListOf(Recipient.from(user!!)))
@@ -114,7 +120,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
         ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
     }
 
-    private fun setupUserViews() {
+    private fun setupUserViews() = with(binding) {
         user?.let { u ->
             ProfileUtils.loadAvatarForUser(avatar, u.name, u.avatarUrl)
             userName.text = Pronouns.span(u.name, u.pronouns)
@@ -136,9 +142,9 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
                 }
                 else -> false
             }
-            compose.setVisible(canMessageUser)
+            binding.compose.setVisible(canMessageUser)
         } catch {
-            compose.setVisible(false)
+            binding.compose.setVisible(false)
         }
     }
 

@@ -27,12 +27,16 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentSyllabusEventsBinding
+import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_syllabus_events.view.*
-import kotlinx.android.synthetic.main.fragment_syllabus_webview.view.*
 
 class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
+
+    var eventsBinding: FragmentSyllabusEventsBinding? = null
+    var webviewBinding: FragmentSyllabusWebviewBinding? = null
+
     override fun isViewFromObject(view: View, `object`: Any) = view === `object`
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -43,9 +47,11 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
         container.addView(view)
 
         if (!isSyllabusPosition(position)) {
-            view.syllabusEventsRecycler.layoutManager = LinearLayoutManager(container.context)
+            eventsBinding = FragmentSyllabusEventsBinding.bind(view)
+            eventsBinding?.syllabusEventsRecycler?.layoutManager = LinearLayoutManager(container.context)
         } else {
-            setupWebView(view.syllabusWebViewWrapper.webView)
+            webviewBinding = FragmentSyllabusWebviewBinding.bind(view)
+            setupWebView(webviewBinding!!.syllabusWebViewWrapper.webView)
         }
 
         return view

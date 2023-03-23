@@ -33,9 +33,9 @@ import com.instructure.canvasapi2.utils.localized
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderMessageBinding
 import com.instructure.student.interfaces.MessageAdapterCallback
 import com.instructure.student.view.ViewUtils
-import kotlinx.android.synthetic.main.viewholder_message.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,7 +47,7 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         author: BasicUser?,
         position: Int,
         callback: MessageAdapterCallback
-    ) = with(itemView) {
+    ) = with(ViewholderMessageBinding.bind(itemView)) {
 
         // Set author info
         if (author != null) {
