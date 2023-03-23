@@ -27,4 +27,6 @@ interface InboxRouter {
     fun attachNavigationIcon(toolbar: Toolbar)
 
     fun routeToNewMessage()
+
+    fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope)
 }

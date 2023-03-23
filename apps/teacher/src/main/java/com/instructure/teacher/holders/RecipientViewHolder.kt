@@ -18,36 +18,39 @@ package com.instructure.teacher.holders
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ViewholderRecipientBinding
 import com.instructure.teacher.interfaces.RecipientAdapterCallback
-import kotlinx.android.synthetic.main.viewholder_recipient.view.*
 
-class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class RecipientViewHolder(private val binding: ViewholderRecipientBinding) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
-        const val HOLDER_RES_ID = R.layout.viewholder_recipient
         private const val SELECTION_TRANSPARENCY_MASK = 0x08FFFFFF
     }
 
-    fun bind(context: Context, holder: RecipientViewHolder, recipient: Recipient, adapterCallback: RecipientAdapterCallback, isSelected: Boolean) = with(itemView) {
-
+    fun bind(
+        context: Context,
+        holder: RecipientViewHolder,
+        recipient: Recipient,
+        adapterCallback: RecipientAdapterCallback,
+        isSelected: Boolean
+    ) = with(binding) {
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
                 val selectionColor = context.getColor(R.color.backgroundInfo)
-                setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
+                root.setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
                 avatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_circle)?.apply {
                     mutate().setTintList(ColorStateList.valueOf(selectionColor))
                 })
                 checkMarkImageView.setVisible()
                 ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
             } else {
-                setBackgroundColor(Color.TRANSPARENT)
+                root.setBackgroundColor(Color.TRANSPARENT)
                 checkMarkImageView.setGone()
             }
         }
@@ -63,7 +66,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         // Show user count if group, load avatars
         if (recipient.recipientType == Recipient.Type.Group) {
             checkBox.setVisible()
-            if(isSelected) {
+            if (isSelected) {
                 setChecked(true)
             } else {
                 ProfileUtils.loadAvatarForUser(avatar, recipient.name, recipient.avatarURL)
@@ -81,7 +84,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         } else {
             checkBox.setGone()
             userCount.setGone()
-            if(isSelected) {
+            if (isSelected) {
                 setChecked(true)
             } else {
                 userCount.text = ""

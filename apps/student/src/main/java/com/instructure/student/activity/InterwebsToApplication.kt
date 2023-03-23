@@ -27,30 +27,37 @@ import android.view.View
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
+import com.instructure.student.databinding.InterwebsToApplicationBinding
+import com.instructure.student.databinding.LoadingCanvasViewBinding
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class InterwebsToApplication : AppCompatActivity() {
+
+    private val binding by viewBinding(InterwebsToApplicationBinding::inflate)
+    private lateinit var loadingBinding: LoadingCanvasViewBinding
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
@@ -64,7 +71,8 @@ class InterwebsToApplication : AppCompatActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.interwebs_to_application)
-        loadingRoute.visibility = View.VISIBLE
+        loadingBinding = LoadingCanvasViewBinding.bind(binding.root)
+        loadingBinding.loadingRoute.visibility = View.VISIBLE
 
         val url = intent.dataString
 

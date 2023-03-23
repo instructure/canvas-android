@@ -19,7 +19,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.util.TypedValue
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.StudentContextCardQuery
@@ -28,12 +28,12 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterStudentContextSubmissionBinding
 import com.instructure.teacher.utils.getAssignmentIcon
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getDisplayGrade
 import com.instructure.teacher.utils.getResForSubmission
-import kotlinx.android.synthetic.main.adapter_student_context_submission.view.*
-import java.util.Locale
+import java.util.*
 
 
 @SuppressLint("ViewConstructor")
@@ -42,20 +42,20 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
     val assignment = requireNotNull(submission.assignment)
 
     init {
-        View.inflate(context, R.layout.adapter_student_context_submission, this)
+        val binding = AdapterStudentContextSubmissionBinding.inflate(LayoutInflater.from(context), this, true)
 
         // Title, icon, and publish status
-        assignmentTitle.text = assignment.name
-        assignmentIcon.setImageResource(assignment.submissionTypes.getAssignmentIcon())
-        assignmentIcon.setColorFilter(courseColor)
+        binding.assignmentTitle.text = assignment.name
+        binding.assignmentIcon.setImageResource(assignment.submissionTypes.getAssignmentIcon())
+        binding.assignmentIcon.setColorFilter(courseColor)
 
         // Submission status
         val (stringRes, colorRes) = getResForSubmission(submission.submissionStatus)
         if (stringRes == -1 || colorRes == -1) {
-            submissionStatus.setGone()
+            binding.submissionStatus.setGone()
         } else {
-            submissionStatus.setText(stringRes)
-            submissionStatus.setTextColor(context.getColorCompat(colorRes))
+            binding.submissionStatus.setText(stringRes)
+            binding.submissionStatus.setTextColor(context.getColorCompat(colorRes))
         }
 
         // Submission grade
@@ -74,21 +74,19 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
                 includePointsPossible = false,
                 includeLatePenalty = false
             )
-            submissionGradeView.text = displayGrade.text
-            submissionGradeView.contentDescription = displayGrade.contentDescription
-            scoreBar.progress = ((submission.score ?: 0.0) / pointsPossible).toFloat()
+            binding.submissionGradeView.text = displayGrade.text
+            binding.submissionGradeView.contentDescription = displayGrade.contentDescription
+            binding.scoreBar.progress = ((submission.score ?: 0.0) / pointsPossible).toFloat()
         } else {
-            submissionGradeContainer.setGone()
+            binding.submissionGradeContainer.setGone()
             if (submission.gradingStatus == SubmissionGradingStatus.NEEDS_GRADING) {
                 val submissionGradeDrawable = ContextCompat.getDrawable(context, R.drawable.bg_generic_pill)
                 val strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics)
                 (submissionGradeDrawable as GradientDrawable).setStroke(strokeWidth.toInt(), ThemePrefs.brandColor)
-                needsGradingPill.background = submissionGradeDrawable
-                needsGradingPill.setTextColor(ThemePrefs.brandColor)
-                needsGradingPill.setVisible()
+                binding.needsGradingPill.background = submissionGradeDrawable
+                binding.needsGradingPill.setTextColor(ThemePrefs.brandColor)
+                binding.needsGradingPill.setVisible()
             }
         }
-
     }
-
 }

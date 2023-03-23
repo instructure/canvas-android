@@ -40,10 +40,9 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.pandautils.views.SpacesItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_homeroom.*
-import kotlinx.android.synthetic.main.item_announcement.view.*
 import javax.inject.Inject
 
 @PageView("#homeroom")
@@ -61,8 +60,10 @@ class HomeroomFragment : Fragment() {
 
     private var updateAssignments = false
 
+    private lateinit var binding: FragmentHomeroomBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentHomeroomBinding.inflate(inflater, container, false)
+        binding = FragmentHomeroomBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -80,10 +81,10 @@ class HomeroomFragment : Fragment() {
 
         val spacing = resources.getDimension(R.dimen.homeroomCardSpacing)
         val decoration = SpacesItemDecoration(spacing.toInt())
-        coursesRecyclerView.addItemDecoration(decoration)
+        binding.coursesRecyclerView.addItemDecoration(decoration)
         setUpRecyclerViewSpan()
 
-        homeroomSwipeRefreshLayout.setOnRefreshListener {
+        binding.homeroomSwipeRefreshLayout.setOnRefreshListener {
             viewModel.refresh()
             (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment).refresh()
         }
@@ -103,7 +104,7 @@ class HomeroomFragment : Fragment() {
 
                 val span = if (calculatedSpan < 2) 1 else 2
 
-                (coursesRecyclerView.layoutManager as GridLayoutManager).spanCount = span
+                (binding.coursesRecyclerView.layoutManager as GridLayoutManager).spanCount = span
             }
 
         })
@@ -128,8 +129,8 @@ class HomeroomFragment : Fragment() {
     }
 
     private fun setupWebViews() {
-        announcementsContainer.children.forEach {
-            val webViewWrapper = it.announcementWebViewWrapper
+        binding.announcementsContainer.children.forEach {
+            val webViewWrapper = it.findViewById<CanvasWebViewWrapper>(R.id.announcementWebViewWrapper)
             if (webViewWrapper != null) {
                 setupWebView(webViewWrapper.webView)
             }

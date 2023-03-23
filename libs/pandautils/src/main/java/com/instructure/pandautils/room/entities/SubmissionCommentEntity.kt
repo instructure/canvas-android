@@ -13,7 +13,8 @@ data class SubmissionCommentEntity(
     val authorPronouns: String? = null,
     val comment: String? = null,
     val createdAt: Date? = null,
-    val mediaCommentId: String? = null
+    val mediaCommentId: String? = null,
+    val attemptId: Long? = null
 ) {
     constructor(submissionComment: SubmissionComment): this(
         submissionComment.id,
@@ -22,6 +23,7 @@ data class SubmissionCommentEntity(
         submissionComment.authorPronouns,
         submissionComment.comment,
         submissionComment.createdAt,
-        submissionComment.mediaComment?.mediaId
+        submissionComment.mediaComment?.mediaId,
+        submissionComment.attempt
     )
 }

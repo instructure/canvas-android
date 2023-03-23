@@ -67,6 +67,7 @@ class FileUploadWorker @AssistedInject constructor(
     private var parentFolderId: Long = INVALID_ID
     private lateinit var action: String
     private var userId: Long = INVALID_ID
+    private var attemptId: Long? = null
 
     private val notificationId = notificationId(inputData)
 
@@ -200,6 +201,7 @@ class FileUploadWorker @AssistedInject constructor(
         parentFolderId = inputData.parentFolderId ?: INVALID_ID
         action = inputData.action
         userId = inputData.userId ?: INVALID_ID
+        attemptId = inputData.attemptId
     }
 
     private fun getFileSubmitObjects(filePaths: List<String>): List<FileSubmitObject> {
@@ -320,7 +322,8 @@ class FileUploadWorker @AssistedInject constructor(
             "",
             false,
             attachmentIds,
-            it
+            it,
+            attemptId
         )
     }
 

@@ -88,7 +88,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         assignmentResult = event.assignment,
                         rootSubmissionResult = event.rootSubmissionResult,
                         selectedSubmissionAttempt = selectedSubmission?.attempt,
-                        quizResult = event.quizResult
+                        quizResult = event.quizResult,
+                        assignmentEnhancementsEnabled = event.assignmentEnhancementsEnabled
                     ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }
@@ -146,6 +147,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             SubmissionDetailsEvent.SubmissionUploadFinished ->  Next.next(
                 model.copy(isLoading = true),
                 setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId)))
+            is SubmissionDetailsEvent.SubmissionCommentsUpdated -> Next.next(model.copy(submissionComments = event.submissionComments))
         }
     }
 

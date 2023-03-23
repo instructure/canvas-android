@@ -27,10 +27,12 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.QuizListAdapter
+import com.instructure.teacher.databinding.FragmentQuizListBinding
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.factory.QuizListPresenterFactory
 import com.instructure.teacher.presenters.QuizListPresenter
@@ -39,7 +41,6 @@ import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.QuizListView
-import kotlinx.android.synthetic.main.fragment_quiz_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -53,6 +54,8 @@ class QuizListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         QuizListAdapter>(), QuizListView {
 
+    private val binding by viewBinding(FragmentQuizListBinding::bind)
+
     private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
@@ -63,7 +66,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
     private var needToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_quiz_list
-    override val recyclerView: RecyclerView get() = quizRecyclerView
+    override val recyclerView: RecyclerView get() = binding.quizRecyclerView
     override fun getPresenterFactory() = QuizListPresenterFactory(canvasContext)
     override fun onPresenterPrepared(presenter: QuizListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
@@ -123,7 +126,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
     }
 
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted() = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.visibility  = View.VISIBLE
@@ -132,10 +135,10 @@ class QuizListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_quizzes_rocket))
         emptyPandaView.setMessageText(R.string.noQuizzesTeacher)
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
@@ -143,15 +146,15 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     override fun perPageCount() = ApiPrefs.perPageCount
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         quizListToolbar.title = getString(R.string.tab_quizzes)
         quizListToolbar.subtitle = canvasContext.name
-        quizListToolbar.setupBackButton(this)
+        quizListToolbar.setupBackButton(this@QuizListFragment)
         quizListToolbar.addSearch(getString(R.string.searchQuizzesHint)) { query ->
             if (query.isBlank()) {
-                emptyPandaView?.emptyViewText(R.string.no_items_to_display_short)
+                emptyPandaView.emptyViewText(R.string.no_items_to_display_short)
             } else {
-                emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                emptyPandaView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
             presenter.searchQuery = query
         }
@@ -177,7 +180,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
         event.once(javaClass.simpleName) { needToForceNetwork = true }
     }
 
-    override fun onHandleBackPressed() = quizListToolbar.closeSearch()
+    override fun onHandleBackPressed() = binding.quizListToolbar.closeSearch()
 
     companion object {
 

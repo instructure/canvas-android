@@ -18,7 +18,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'au.com.dius.pact'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -60,10 +60,6 @@ android {
     hilt {
         enableAggregatingTask = false
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 apollo {

@@ -32,8 +32,9 @@ class InboxEntryItemCreator(private val context: Context, private val apiPrefs: 
 
     fun createInboxEntryItem(
         conversation: Conversation,
-        openConversationCallback: (Boolean) -> Unit,
-        selectionModeCallback: (View, Boolean) -> Unit
+        openConversationCallback: (Boolean, Boolean) -> Unit,
+        selectionModeCallback: (View, Boolean) -> Unit,
+        avatarClickedCallback: (Boolean) -> Unit
     ): InboxEntryItemViewModel {
         val viewData = InboxEntryViewData(
             conversation.id,
@@ -47,7 +48,7 @@ class InboxEntryItemCreator(private val context: Context, private val apiPrefs: 
             conversation.hasAttachments() || conversation.hasMedia()
         )
 
-        return InboxEntryItemViewModel(viewData, openConversationCallback, selectionModeCallback)
+        return InboxEntryItemViewModel(viewData, openConversationCallback, selectionModeCallback, avatarClickedCallback)
     }
 
     private fun createAvatarData(conversation: Conversation): AvatarViewData {

@@ -36,14 +36,17 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_QUIZ_DECIDER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentModuleQuizDeciderBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_module_quiz_decider.*
 
 @ScreenView(SCREEN_VIEW_MODULE_QUIZ_DECIDER)
 class ModuleQuizDecider : ParentFragment() {
+
+    private val binding by viewBinding(FragmentModuleQuizDeciderBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var baseURL by StringArg(key = Const.URL)
@@ -99,12 +102,14 @@ class ModuleQuizDecider : ParentFragment() {
     }
 
     override fun applyTheme() {
-        toolbar.title = if (this::quiz.isInitialized) quiz.title else getString(R.string.quizzes)
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        with (binding) {
+            toolbar.title = if (this@ModuleQuizDecider::quiz.isInitialized) quiz.title else getString(R.string.quizzes)
+            toolbar.setupAsBackButton(this@ModuleQuizDecider)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        }
     }
 
-    private fun obtainQuiz() {
+    private fun obtainQuiz() = with(binding) {
         tryWeave {
             quizInfoContainer.setGone()
             progressBar.setVisible()
@@ -133,10 +138,10 @@ class ModuleQuizDecider : ParentFragment() {
     }
 
     private fun setupViews() {
-        toolbar.title = quiz.title.validOrNull() ?: getString(R.string.quizzes)
+        binding.toolbar.title = quiz.title.validOrNull() ?: getString(R.string.quizzes)
 
-        ViewStyler.themeButton(goToQuiz)
-        goToQuiz.onClick {
+        ViewStyler.themeButton(binding.goToQuiz)
+        binding.goToQuiz.onClick {
             val route = BasicQuizViewFragment.makeRoute(canvasContext, quiz, baseURL)
             route.ignoreDebounce = true
             RouteMatcher.route(requireContext(), route)

@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.utils.toDate
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 
 @Parcelize

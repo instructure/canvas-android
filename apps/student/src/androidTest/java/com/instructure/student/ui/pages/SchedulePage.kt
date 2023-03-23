@@ -119,7 +119,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun swipeDown() {
-        swipeRefreshLayout.swipeUp()
+        swipeRefreshLayout.swipeDown()
     }
 
     fun previousWeekButtonClick() {

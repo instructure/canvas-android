@@ -26,12 +26,13 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.withArgs
+import com.instructure.teacher.databinding.FragmentSyllabusBinding
 import com.instructure.teacher.features.syllabus.*
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 
 @PageView("{canvasContext}/assignments/syllabus")
 @ScreenView(SCREEN_VIEW_SYLLABUS)
-class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState>() {
+class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState, FragmentSyllabusBinding>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 

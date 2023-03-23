@@ -31,12 +31,14 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentDeletedEvent
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -51,8 +53,6 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.AssignmentDetailsView
-import kotlinx.android.synthetic.main.fragment_assignment_details.*
-import kotlinx.android.synthetic.main.view_submissions_donut_group.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -64,6 +64,8 @@ import java.util.*
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
         AssignmentDetailsView>(), AssignmentDetailsView, Identity {
+
+    private val binding by viewBinding(FragmentAssignmentDetailsBinding::bind)
 
     private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var course: Course by ParcelableArg(Course())
@@ -82,7 +84,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     override fun onRefreshFinished() {}
 
     override fun onRefreshStarted() {
-        toolbar.menu.clear()
+        binding.toolbar.menu.clear()
         clearListeners()
     }
 
@@ -100,8 +102,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun populateAssignmentDetails(assignment: Assignment) {
-        this.assignment = assignment
+    override fun populateAssignmentDetails(assignment: Assignment) = with(binding) {
+        this@AssignmentDetailsFragment.assignment = assignment
         toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(assignment) }
         swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
@@ -113,9 +115,9 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
 
-    private fun setupToolbar() {
-        toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
-            toolbar.updateToolbarExpandCollapseIcon(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupBackButtonWithExpandCollapseAndBack(this@AssignmentDetailsFragment) {
+            toolbar.updateToolbarExpandCollapseIcon(this@AssignmentDetailsFragment)
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
@@ -127,7 +129,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    private fun setupViews(assignment: Assignment) {
+    private fun setupViews(assignment: Assignment) = with(binding) {
         swipeRefreshLayout.setOnRefreshListener {
             presenter.loadData(true)
 
@@ -159,19 +161,19 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     // region Configure Assignment
     private fun configurePointsPossible(assignment: Assignment) = with(assignment) {
-        pointsTextView.text = resources.getQuantityString(
+        binding.pointsTextView.text = resources.getQuantityString(
                 R.plurals.quantityPointsAbbreviated,
                 pointsPossible.toInt(),
                 NumberHelper.formatDecimal(pointsPossible, 1, true)
         )
-        pointsTextView.contentDescription = resources.getQuantityString(
+        binding.pointsTextView.contentDescription = resources.getQuantityString(
                 R.plurals.quantityPointsFull,
                 pointsPossible.toInt(),
                 NumberHelper.formatDecimal(pointsPossible, 1, true))
     }
 
-    private fun configurePublishStatus(assignment: Assignment) = with(assignment) {
-        if (published) {
+    private fun configurePublishStatus(assignment: Assignment) = with(binding) {
+        if (assignment.published) {
             publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
             publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
             publishStatusTextView.setText(R.string.published)
@@ -188,21 +190,22 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         val atSeparator = getString(R.string.at)
 
         if (lockDate?.before(Date()) == true) {
-            availabilityLayout.setVisible()
-            availabilityTextView.setText(R.string.closed)
+            binding.availabilityLayout.setVisible()
+            binding.availabilityTextView.setText(R.string.closed)
         } else {
-            availableFromLayout.setVisible()
-            availableToLayout.setVisible()
-            availableFromTextView.text = if (unlockAt != null)
+            binding.availableFromLayout.setVisible()
+            binding.availableToLayout.setVisible()
+            binding.availableFromTextView.text = if (unlockAt != null)
                 DateHelper.getMonthDayAtTime(requireContext(), unlockDate, atSeparator) else getString(R.string.no_date_filler)
-            availableToTextView.text = if (lockAt!= null)
+            binding.availableToTextView.text = if (lockAt!= null)
                 DateHelper.getMonthDayAtTime(requireContext(), lockDate, atSeparator) else getString(R.string.no_date_filler)
         }
     }
 
-    private fun configureDueDates(assignment: Assignment) = with(assignment) {
+    private fun configureDueDates(assignment: Assignment) = with(binding) {
         val atSeparator = getString(R.string.at)
 
+        val allDates = assignment.allDates
         if (allDates.size > 1) {
             otherDueDateTextView.setVisible()
             otherDueDateTextView.setText(R.string.multiple_due_dates)
@@ -224,11 +227,11 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun configureSubmissionTypes(assignment: Assignment) = with(assignment) {
-        submissionTypesTextView.text = submissionTypesRaw.map {
+    private fun configureSubmissionTypes(assignment: Assignment) = with(binding) {
+        submissionTypesTextView.text = assignment.submissionTypesRaw.map {
             submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext()) }.joinToString("\n")
 
-        if(submissionTypesRaw.contains(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)) {
+        if(assignment.submissionTypesRaw.contains(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)) {
             // External tool
             submissionTypesArrowIcon.setVisible()
             submissionTypesLayout.onClickWithRequireNetwork {
@@ -249,7 +252,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     }
 
     @Suppress("UsePropertyAccessSyntax")
-    private fun configureDescription(assignment: Assignment): Unit = with(assignment) {
+    private fun configureDescription(assignment: Assignment): Unit = with(binding) {
         noDescriptionTextView.setVisible(assignment.description.isNullOrBlank())
 
         // Show progress bar while loading description
@@ -259,7 +262,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
-                    descriptionProgressBar?.setGone()
+                    descriptionProgressBar.setGone()
                 }
             }
         })
@@ -284,27 +287,27 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
 
         // Load description
-        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
-            descriptionWebViewWrapper.loadHtml(it, name, baseUrl = this@AssignmentDetailsFragment.assignment.htmlUrl)
+        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), assignment.description, {
+            descriptionWebViewWrapper.loadHtml(it, assignment.name, baseUrl = assignment.htmlUrl)
         }) {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), course, it)
         }
     }
 
-    private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(assignment) {
+    private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(binding) {
         if(Assignment.getGradingTypeFromString(assignment.gradingType!!, requireContext()) == Assignment.GradingType.NOT_GRADED) {
             // If the grading type is NOT_GRADED we don't want to show anything for the grading dials
             submissionsLayout.setGone()
             submissionsLayoutDivider.setGone()
-        } else if(!isOnlineSubmissionType) {
+        } else if(!assignment.isOnlineSubmissionType) {
             // Only show graded dial if the assignment submission type is not online
-            notSubmittedWrapper.setGone()
-            ungradedWrapper.setGone()
-            assigneesWithoutGradesTextView.setVisible()
+            donutGroup.notSubmittedWrapper.setGone()
+            donutGroup.ungradedWrapper.setGone()
+            donutGroup.assigneesWithoutGradesTextView.setVisible()
         }
     }
 
-    private fun configureViewDiscussionButton(assignment: Assignment) {
+    private fun configureViewDiscussionButton(assignment: Assignment) = with(binding) {
         if (assignment.discussionTopicHeader != null) {
             viewDiscussionButton.setBackgroundColor(ThemePrefs.buttonColor)
             viewDiscussionButton.setTextColor(ThemePrefs.buttonTextColor)
@@ -315,7 +318,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     }
     //endregion
 
-    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) {
+    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)
@@ -351,18 +354,18 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun clearListeners() {
+    private fun clearListeners() = with(binding) {
         dueLayout.setOnClickListener {}
         submissionsLayout.setOnClickListener {}
-        gradedWrapper.setOnClickListener {}
-        ungradedWrapper.setOnClickListener {}
-        notSubmittedWrapper.setOnClickListener {}
+        donutGroup.gradedWrapper.setOnClickListener {}
+        donutGroup.ungradedWrapper.setOnClickListener {}
+        donutGroup.notSubmittedWrapper.setOnClickListener {}
         noDescriptionTextView.setOnClickListener {}
-        assigneesWithoutGradesTextView.setOnClickListener {}
+        donutGroup.assigneesWithoutGradesTextView.setOnClickListener {}
         viewDiscussionButton.setOnClickListener {}
     }
 
-    private fun setupListeners(assignment: Assignment) {
+    private fun setupListeners(assignment: Assignment) = with(binding) {
         dueLayout.setOnClickListener {
             val args = DueDatesFragment.makeBundle(assignment)
             RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, course, args))
@@ -371,19 +374,19 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         submissionsLayout.setOnClickListener {
             navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
         }
-        viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
-        gradedWrapper.setOnClickListener {
+        donutGroup.viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
+        donutGroup.gradedWrapper.setOnClickListener {
             navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
         }
-        ungradedWrapper.setOnClickListener {
+        donutGroup.ungradedWrapper.setOnClickListener {
             navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
         }
-        notSubmittedWrapper.setOnClickListener {
+        donutGroup.notSubmittedWrapper.setOnClickListener {
             navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
         }
         noDescriptionTextView.setOnClickListener { openEditPage(assignment) }
 
-        assigneesWithoutGradesTextView.setOnClickListener {
+        donutGroup.assigneesWithoutGradesTextView.setOnClickListener {
             submissionsLayout.performClick()
         }
 

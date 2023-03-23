@@ -27,10 +27,12 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.PageListAdapter
+import com.instructure.teacher.databinding.FragmentPageListBinding
 import com.instructure.teacher.events.PageCreatedEvent
 import com.instructure.teacher.events.PageDeletedEvent
 import com.instructure.teacher.events.PageUpdatedEvent
@@ -41,7 +43,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.PageListView
-import kotlinx.android.synthetic.main.fragment_page_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -49,6 +50,8 @@ import org.greenrobot.eventbus.ThreadMode
 @PageView(url = "{canvasContext}/pages")
 @ScreenView(SCREEN_VIEW_PAGE_LIST)
 class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView, PageViewHolder, PageListAdapter>(), PageListView {
+
+    private val binding by viewBinding(FragmentPageListBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
@@ -58,9 +61,9 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     private var needToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_page_list
-    override val recyclerView: RecyclerView get() = pageRecyclerView
+    override val recyclerView: RecyclerView get() = binding.pageRecyclerView
     override fun getPresenterFactory() = PageListPresenterFactory(canvasContext)
-    override fun onPresenterPrepared(presenter: PageListPresenter) {
+    override fun onPresenterPrepared(presenter: PageListPresenter) = with(binding) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
             rootView = rootView,
             context = requireContext(),
@@ -120,7 +123,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted() = with(binding) {
         createNewPage.setGone()
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
@@ -130,11 +133,11 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
     override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
-        createNewPage.setVisible()
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.createNewPage.setVisible()
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         // We don't want to leave the fab hidden if the list is empty
         if(presenter.isEmpty) {
             createNewPage.show()
@@ -146,22 +149,22 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
 
     override fun perPageCount() = ApiPrefs.perPageCount
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         pageListToolbar.title = getString(R.string.tab_pages)
         pageListToolbar.subtitle = canvasContext.name
-        pageListToolbar.setupBackButton(this)
+        pageListToolbar.setupBackButton(this@PageListFragment)
         pageListToolbar.addSearch(getString(R.string.searchPagesHint)) { query ->
             if (query.isBlank()) {
-                emptyPandaView?.emptyViewText(R.string.no_items_to_display_short)
+                emptyPandaView.emptyViewText(R.string.no_items_to_display_short)
             } else {
-                emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                emptyPandaView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
             presenter.searchQuery = query
         }
         ViewStyler.themeToolbarColored(requireActivity(), pageListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         createNewPage.setGone()
         createNewPage.backgroundTintList = ViewStyler.makeColorStateListForButton()
         createNewPage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewPage.drawable))
@@ -201,7 +204,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
         }
     }
 
-    override fun onHandleBackPressed() = pageListToolbar.closeSearch()
+    override fun onHandleBackPressed() = binding.pageListToolbar.closeSearch()
 
     companion object {
 

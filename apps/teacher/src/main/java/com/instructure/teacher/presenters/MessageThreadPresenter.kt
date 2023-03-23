@@ -34,7 +34,6 @@ import java.util.*
 
 class MessageThreadPresenter(
     conversation: Conversation? = null,
-    private var position: Int = 0,
     private var conversationId: Long
 ) : SyncPresenter<Message, MessageThreadView>(Message::class.java) {
 
@@ -61,7 +60,7 @@ class MessageThreadPresenter(
                 // Mark as read if it is unread and forceNetwork is true (it's always true for the initial call to loadData)
                 if (workflowState == Conversation.WorkflowState.UNREAD && forceNetwork) {
                     conversation.workflowState = Conversation.WorkflowState.READ
-                    viewCallback?.onConversationRead(position)
+                    viewCallback?.onConversationRead()
                 }
 
                 // Update conversation details in the view
@@ -101,7 +100,7 @@ class MessageThreadPresenter(
                 } else {
                     conversation.workflowState = Conversation.WorkflowState.ARCHIVED
                 }
-                viewCallback?.onConversationArchived(position)
+                viewCallback?.onConversationArchived()
                 viewCallback?.refreshConversationData()
             }
         } catch {
@@ -115,7 +114,7 @@ class MessageThreadPresenter(
                 starConversation(conversation.id, !conversation.isStarred, conversation.workflowState!!, it)
             }
             conversation.isStarred = !conversation.isStarred
-            viewCallback?.onConversationStarred(position)
+            viewCallback?.onConversationStarred()
             viewCallback?.refreshConversationData()
         } catch {
             viewCallback?.showUserMessage(R.string.error_conversation_generic)
@@ -125,7 +124,7 @@ class MessageThreadPresenter(
     fun deleteConversation() {
         tryWeave {
             awaitApi<Conversation> { deleteConversation(conversation.id, it) }
-            viewCallback?.onConversationDeleted(position)
+            viewCallback?.onConversationDeleted()
         } catch {
             viewCallback?.showUserMessage(R.string.error_conversation_generic)
         }
@@ -139,7 +138,7 @@ class MessageThreadPresenter(
             data.remove(message)
             if (data.size() == 0) {
                 // If there are no more messages, we have effectively deleted the conversation for this user
-                viewCallback?.onConversationDeleted(position)
+                viewCallback?.onConversationDeleted()
             } else {
                 viewCallback?.showUserMessage(R.string.message_deleted)
                 if (needsUpdate) viewCallback?.onMessageDeleted()
@@ -153,7 +152,7 @@ class MessageThreadPresenter(
         tryWeave {
             awaitApi<Void> { markConversationAsUnread(conversation.id, it) }
             conversation.workflowState = Conversation.WorkflowState.UNREAD
-            viewCallback?.onConversationMarkedAsUnread(position)
+            viewCallback?.onConversationMarkedAsUnread()
         } catch {
             viewCallback?.showUserMessage(R.string.error_conversation_generic)
         }

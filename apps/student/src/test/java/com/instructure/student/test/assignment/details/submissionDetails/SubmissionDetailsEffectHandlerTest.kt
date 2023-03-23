@@ -50,6 +50,10 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     @Before
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
+        mockkObject(FeaturesManager)
+        every { FeaturesManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf("assignments_2_student"))
+        }
     }
 
     @Test
@@ -88,7 +92,8 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     ltiUrlResult = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = null,
-                    studioLTIToolResult = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null),
+                    assignmentEnhancementsEnabled = true
                 )
             )
         }
@@ -127,7 +132,8 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     ltiUrlResult = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = null,
-                    studioLTIToolResult = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null),
+                    assignmentEnhancementsEnabled = true
                 )
             )
         }
@@ -186,7 +192,8 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     ltiUrlResult = DataResult.Success(ltiTool),
                     isStudioEnabled = false,
                     quizResult = null,
-                    studioLTIToolResult = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null),
+                    assignmentEnhancementsEnabled = true
                 )
             )
         }
@@ -244,7 +251,8 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                             ltiUrlResult = DataResult.Success(ltiTool),
                             isStudioEnabled = false,
                             quizResult = null,
-                            studioLTIToolResult = DataResult.Fail(null)
+                            studioLTIToolResult = DataResult.Fail(null),
+                            assignmentEnhancementsEnabled = true
                     )
             )
         }
@@ -295,7 +303,8 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     ltiUrlResult = DataResult.Success(ltiTool),
                     isStudioEnabled = false,
                     quizResult = null,
-                    studioLTIToolResult = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null),
+                    assignmentEnhancementsEnabled = true
                 )
             )
         }
@@ -348,7 +357,8 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     ltiUrlResult = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = DataResult.Success(quiz),
-                    studioLTIToolResult = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null),
+                    assignmentEnhancementsEnabled = true
                 )
             )
         }
@@ -397,7 +407,8 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     ltiUrlResult = DataResult.Fail(null),
                     isStudioEnabled = true,
                     quizResult = null,
-                    studioLTIToolResult = DataResult.Success(studioLTITool)
+                    studioLTIToolResult = DataResult.Success(studioLTITool),
+                    assignmentEnhancementsEnabled = true
                 )
             )
         }

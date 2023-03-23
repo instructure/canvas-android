@@ -8,6 +8,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
@@ -117,7 +118,7 @@ object RouteResolver {
         } else if(DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = DiscussionDetailsWebViewFragment.newInstance(route)
         } else if (InboxFragment::class.java.isAssignableFrom(cls)) {
-            fragment = InboxFragment()
+            fragment = InboxFragment.newInstance(route)
         } else if (AddMessageFragment::class.java.isAssignableFrom(cls)) {
             fragment = AddMessageFragment.newInstance(route.arguments)
         } else if (MessageThreadFragment::class.java.isAssignableFrom(cls)) {

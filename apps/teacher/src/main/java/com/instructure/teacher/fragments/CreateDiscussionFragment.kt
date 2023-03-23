@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
@@ -42,6 +43,7 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -53,6 +55,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentCreateDiscussionBinding
 import com.instructure.teacher.dialog.ConfirmRemoveAssignmentOverrideDialog
 import com.instructure.teacher.events.AssigneesUpdatedEvent
 import com.instructure.teacher.events.DiscussionCreatedEvent
@@ -65,8 +68,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.CreateDiscussionView
-import kotlinx.android.synthetic.main.fragment_create_discussion.*
-import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -78,11 +79,13 @@ class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
         CreateDiscussionView>(), CreateDiscussionView, Identity, FileUploadDialogParent {
 
+    private val binding by viewBinding(FragmentCreateDiscussionBinding::bind)
+
     private var canvasContext: CanvasContext by ParcelableArg(Course(), CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(null, DISCUSSION_TOPIC_HEADER)
     private val sendButton: TextView? get() = view?.findViewById(R.id.menuSaveDiscussion)
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
-    private val attachmentButton get() = toolbar.menu.findItem(R.id.menuAddAttachment)
+    private val attachmentButton get() = binding.toolbar.menu.findItem(R.id.menuAddAttachment)
     private var isPublished: Boolean by BooleanArg(false)
     private var isSubscribed: Boolean by BooleanArg(true)
     private var allowThreaded: Boolean by BooleanArg(false)
@@ -112,7 +115,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
     private var scrollHandler: Handler = Handler()
 
     private var scrollToRunnable: Runnable = Runnable {
-        if(isAdded) scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+        if(isAdded) binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
     //endregion
@@ -181,7 +184,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         }
     }
 
-    override fun insertImageIntoRCE(imageUrl: String) = descriptionRCEView.insertImage(requireActivity(), imageUrl)
+    override fun insertImageIntoRCE(imageUrl: String) = binding.descriptionRCEView.insertImage(requireActivity(), imageUrl)
 
     override fun onReadySetGo(presenter: CreateDiscussionPresenter) {
         // If we already have something in the edit date groups we already have the full assignment and don't need to get it again.
@@ -194,7 +197,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         setupViews()
 
         if(rceHasFocus) {
-            descriptionRCEView.requestEditorFocus()
+            binding.descriptionRCEView.requestEditorFocus()
             activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
     }
@@ -220,8 +223,8 @@ class CreateDiscussionFragment : BasePresenterFragment<
 
         scrollBackToOverride?.let {
             if (!scrollToDates)
-                scrollView.post {
-                    scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+                binding.scrollView.post {
+                    binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN)
                 }
             scrollBackToOverride = null
         }
@@ -236,12 +239,12 @@ class CreateDiscussionFragment : BasePresenterFragment<
         setupViews()
     }
 
-    fun setupToolbar() {
+    fun setupToolbar() = with(binding) {
         toolbar.setupCloseButton {
             if(discussionTopicHeader == null) {
                 activity?.onBackPressed()
             } else {
-                if (discussionTopicHeader?.message == descriptionRCEView?.html) {
+                if (discussionTopicHeader?.message == descriptionRCEView.html) {
                     activity?.onBackPressed()
                 } else {
                     UnsavedChangesExitDialog.show(requireFragmentManager()) {
@@ -266,7 +269,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
-    fun setupViews() {
+    fun setupViews() = with(binding) {
         (view as? ViewGroup)?.descendants<TextInputLayout>()?.forEach {
             it.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         }
@@ -351,14 +354,14 @@ class CreateDiscussionFragment : BasePresenterFragment<
                     scrollView.fullScroll(ScrollView.FOCUS_DOWN)
                 }
                 // This opens the assignees page to save the user a click.
-                overrideContainer.descendants<AssignmentOverrideView>().last().assignTo.performClick()
+                overrideContainer.descendants<AssignmentOverrideView>().last().findViewById<AppCompatEditText>(R.id.assignTo).performClick()
             }
         }
         setupOverrides()
         setupDelete()
 
         descriptionRCEView.hideEditorToolbar()
-        descriptionRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        descriptionRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@CreateDiscussionFragment) }
 
         editDiscussionName.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) descriptionRCEView.hideEditorToolbar()
@@ -368,13 +371,13 @@ class CreateDiscussionFragment : BasePresenterFragment<
     private fun setupPublishSwitch()  {
         // If a student has submitted something, we can't let the teacher unpublish the discussion
         if (presenter.getAssignment()?.unpublishable == true) {
-            publishWrapper.setGone()
+            binding.publishWrapper.setGone()
             isPublished = true
             return
         }
 
         // Publish status
-        with(publishSwitch) {
+        with(binding.publishSwitch) {
             applyTheme()
             isChecked = isPublished
             setOnCheckedChangeListener { _, isChecked -> isPublished = isChecked }
@@ -382,7 +385,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     private fun setupSubscribeSwitch()  {
-        with(subscribeSwitch) {
+        with(binding.subscribeSwitch) {
             applyTheme()
             isChecked = isSubscribed
             setOnCheckedChangeListener { _, isChecked -> isSubscribed = isChecked }
@@ -390,7 +393,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     private fun setupAllowThreadedSwitch()  {
-        with (threadedSwitch) {
+        with (binding.threadedSwitch) {
             applyTheme()
             isChecked = allowThreaded
             setOnCheckedChangeListener { _, isChecked -> allowThreaded = isChecked }
@@ -398,7 +401,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     private fun setupUsersMustPostSwitch()  {
-        with(usersMustPostSwitch) {
+        with(binding.usersMustPostSwitch) {
             applyTheme()
             isChecked = usersMustPost
             setOnCheckedChangeListener { _, isChecked -> usersMustPost = isChecked }
@@ -406,7 +409,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     private fun setupOverrides() {
-        overrideContainer.removeAllViews()
+        binding.overrideContainer.removeAllViews()
 
         if(presenter.getAssignment() == null) {
             // Load in overrides
@@ -420,7 +423,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
                     setupOverrides()
                 }) { }
 
-                overrideContainer.addView(v)
+                binding.overrideContainer.addView(v)
             }
         } else {
             // Load in overrides
@@ -449,17 +452,17 @@ class CreateDiscussionFragment : BasePresenterFragment<
                         scrollBackToOverride = v
                     }
 
-                    overrideContainer.addView(v)
+                    binding.overrideContainer.addView(v)
                 }
             }
         }
 
-        overrideContainer.descendants<TextInputLayout>().forEach {
+        binding.overrideContainer.descendants<TextInputLayout>().forEach {
             it.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         }
     }
 
-    private fun setupDisplayGradeAs() {
+    private fun setupDisplayGradeAs() = with(binding) {
         // Filters spinner
         val spinnerAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.display_grade_as_types_discussion, R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -492,8 +495,8 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     private fun setupDelete() {
-        deleteWrapper.setVisible(discussionTopicHeader != null)
-        deleteWrapper.onClickWithRequireNetwork {
+        binding.deleteWrapper.setVisible(discussionTopicHeader != null)
+        binding.deleteWrapper.onClickWithRequireNetwork {
             AlertDialog.Builder(requireContext())
                 .setTitle(R.string.discussions_delete_title)
                 .setMessage(R.string.discussions_delete_message)
@@ -507,7 +510,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         }
     }
 
-    private fun updateAttachmentUI() {
+    private fun updateAttachmentUI() = with(binding) {
         updateAttachmentButton()
         attachmentLayout.clearAttachmentViews()
 
@@ -545,7 +548,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
 
     private fun addAttachment() {
         // set the description here. When we ask for permission to use the camera the app can call readySetGo and reset the description
-        description = descriptionRCEView.html
+        description = binding.descriptionRCEView.html
 
         val bundle = FileUploadDialogFragment.createDiscussionsBundle(ArrayList())
         FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
@@ -560,13 +563,13 @@ class CreateDiscussionFragment : BasePresenterFragment<
 
     override fun startSavingDiscussion() {
         sendButton?.setGone()
-        savingProgressBar.announceForAccessibility(getString(R.string.saving))
-        savingProgressBar.setVisible()
+        binding.savingProgressBar.announceForAccessibility(getString(R.string.saving))
+        binding.savingProgressBar.setVisible()
     }
 
     override fun errorSavingDiscussion() {
         sendButton?.setVisible()
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
     }
 
     override fun discussionSavedSuccessfully(discussionTopic: DiscussionTopicHeader?) {
@@ -579,11 +582,11 @@ class CreateDiscussionFragment : BasePresenterFragment<
             toast(R.string.discussionSuccessfullyUpdated)
         }
 
-        editDiscussionName.hideKeyboard() // Close the keyboard
+        binding.editDiscussionName.hideKeyboard() // Close the keyboard
         requireActivity().onBackPressed() // Close this fragment
     }
 
-    private fun saveDiscussion() {
+    private fun saveDiscussion() = with(binding) {
         if(discussionTopicHeader != null) {
             val postData = DiscussionTopicPostBody()
 
@@ -644,9 +647,9 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(EDIT_DATE_GROUPS, ArrayList<DueDateGroup>(editDateGroups))
-        outState.putBoolean(RCE_HAS_FOCUS, descriptionRCEView.hasFocus())
-        description = descriptionRCEView.html
+        outState.putSerializable(EDIT_DATE_GROUPS, ArrayList(editDateGroups))
+        outState.putBoolean(RCE_HAS_FOCUS, binding.descriptionRCEView.hasFocus())
+        description = binding.descriptionRCEView.html
         super.onSaveInstanceState(outState)
     }
 

@@ -15,12 +15,12 @@
  *
  */
 
-package com.instructure.student.features.assignmentdetails
+package com.instructure.pandautils.features.assignmentdetails
 
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class AssignmentDetailsAttemptItemViewModel(
-    val data: AssignmentDetailAttemptViewData
+    val data: AssignmentDetailsAttemptViewData
 ) : ItemViewModel {
     //Don't care
     override val layoutId: Int

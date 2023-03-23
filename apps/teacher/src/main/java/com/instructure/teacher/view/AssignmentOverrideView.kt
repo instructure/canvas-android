@@ -27,17 +27,17 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setGone
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ViewAssignmentOverrideBinding
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.utils.formatOrDoubleDash
-import kotlinx.android.synthetic.main.view_assignment_override.view.*
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 import kotlin.properties.Delegates
-import kotlinx.android.synthetic.main.view_assignment_override.view.dueDate as dueDateText
 
 class AssignmentOverrideView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
+
+    private val binding: ViewAssignmentOverrideBinding
 
     private var mDueDateGroup: DueDateGroup by Delegates.notNull()
     private val mDateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
@@ -52,14 +52,14 @@ class AssignmentOverrideView @JvmOverloads constructor(
     private var mShowRemove = true
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_assignment_override, this, true)
+        binding = ViewAssignmentOverrideBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     /**
      * If we just want the Available From and To Fields (Currently used when creating discussions)
      *
      */
-    fun toAndFromDatesOnly() {
+    fun toAndFromDatesOnly() = with(binding) {
         dueDateTextInput.setGone()
         dueTimeTextInput.setGone()
         assignToTextInput.setGone()
@@ -84,7 +84,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
             timePickerClickListener: (date: Date?, (Int, Int) -> Unit) -> Unit,
             removeOverrideClickListener: (DueDateGroup) -> Unit,
             assigneeClickListener: () -> Unit
-    ) {
+    ) = with(binding) {
 
         mDueDateGroup = dueDateGroup
         mShowRemove = showRemove
@@ -92,15 +92,13 @@ class AssignmentOverrideView @JvmOverloads constructor(
         // Setup views
         assignTo.setText(if (assigneesList.isNotEmpty()) assigneesList.joinTo(SpannableStringBuilder()) else " ")
 
-        dueDateGroup.let {
-            with(it.coreDates) {
-                dueDateText.setText(mDateFormat.formatOrDoubleDash(dueDate))
-                dueTime.setText(mTimeFormat.formatOrDoubleDash(dueDate))
-                toDate.setText(mDateFormat.formatOrDoubleDash(lockDate))
-                toTime.setText(mTimeFormat.formatOrDoubleDash(lockDate))
-                fromDate.setText(mDateFormat.formatOrDoubleDash(unlockDate))
-                fromTime.setText(mTimeFormat.formatOrDoubleDash(unlockDate))
-            }
+        with(dueDateGroup.coreDates) {
+            binding.dueDate.setText(mDateFormat.formatOrDoubleDash(dueDate))
+            dueTime.setText(mTimeFormat.formatOrDoubleDash(dueDate))
+            toDate.setText(mDateFormat.formatOrDoubleDash(lockDate))
+            toTime.setText(mTimeFormat.formatOrDoubleDash(lockDate))
+            fromDate.setText(mDateFormat.formatOrDoubleDash(unlockDate))
+            fromTime.setText(mTimeFormat.formatOrDoubleDash(unlockDate))
         }
 
         assignTo.setOnClickListener {
@@ -109,7 +107,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         }
 
         // Apply theming
-        val textList = arrayOf(dueDateText, dueTime, toDate, toTime, fromDate, fromTime, assignTo)
+        val textList = arrayOf(dueDate, dueTime, toDate, toTime, fromDate, fromTime, assignTo)
         textList.forEach {
             ViewStyler.themeEditText(context, it, ThemePrefs.brandColor)
             // Prevent user from long clicking
@@ -118,11 +116,11 @@ class AssignmentOverrideView @JvmOverloads constructor(
             it.isCursorVisible = false
         }
 
-        dueDateText.setOnClickListener {
+        dueDate.setOnClickListener {
             datePickerClickListener(dueDateGroup.coreDates.dueDate) { year, month, dayOfMonth ->
                 with(dueDateGroup.coreDates) {
                     val updatedDate = setupDateCalendar(year, month, dayOfMonth, dueDate)
-                    dueDateText.setText(mDateFormat.formatOrDoubleDash(updatedDate))
+                    binding.dueDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
                     dueTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
                     dueDate = updatedDate
                 }
@@ -135,7 +133,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
                 with(dueDateGroup.coreDates) {
                     val updatedDate = setupTimeCalendar(hour, min, dueDate)
                     dueTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
-                    dueDateText.setText(mDateFormat.formatOrDoubleDash(updatedDate))
+                    binding.dueDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
                     dueDate = updatedDate
                 }
             }
@@ -200,7 +198,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         }
     }
 
-    fun validateInput(): Boolean {
+    fun validateInput(): Boolean = with(binding) {
         var saveError = false
         // Check
         // unlock date <= due date <= lock date
@@ -210,7 +208,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         with(mDueDateGroup.coreDates) {
             //            unlockDate ?: 0 + ?: 0
             dueDate?.let {
-                if (unlockDate?.after(it) ?: false) {
+                if (unlockDate?.after(it) == true) {
                     // Error: Unlock date cannot be after due date
                     saveError = true
                     // Set error on textview
@@ -218,7 +216,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
                     fromDateTextInput.error = context.getString(R.string.unlock_after_due_date_error)
                 }
 
-                if (lockDate?.before(it) ?: false) {
+                if (lockDate?.before(it) == true) {
                     // Error: Lock date cannot be before due date
                     saveError = true
                     toDateTextInput.isErrorEnabled = true
@@ -226,7 +224,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
                 }
             }
             unlockDate?.let {
-                if (lockDate?.before(it) ?: false) {
+                if (lockDate?.before(it) == true) {
                     // Error: Lock date cannot be before unlock date
                     saveError = true
                     toDateTextInput.isErrorEnabled = true
@@ -244,7 +242,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         return saveError
     }
 
-    private fun clearDateTimeErrors() {
+    private fun clearDateTimeErrors() = with(binding) {
         val textInputList = arrayOf(toDateTextInput, toTimeTextInput, fromDateTextInput, fromTimeTextInput, dueDateTextInput, dueTimeTextInput)
         textInputList.forEach {
             it.error = null
@@ -253,8 +251,10 @@ class AssignmentOverrideView @JvmOverloads constructor(
     }
 
     private fun clearAssigneeError() {
-        assignToTextInput.error = null
-        assignToTextInput.isErrorEnabled = false
+        binding.assignToTextInput.apply {
+            error = null
+            isErrorEnabled = false
+        }
     }
 
     /**

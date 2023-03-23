@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
@@ -39,8 +38,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.io.File
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class SubmissionDetailsUpdateTest : Assert() {
 
@@ -60,7 +57,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         course = Course()
         assignment = Assignment(id = 1234L, courseId = course.id)
         submission = Submission(id = 30L, attempt = 1L, assignmentId = assignment.id)
-        initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isStudioEnabled = isStudioEnabled)
+        initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isStudioEnabled = isStudioEnabled, assignmentEnhancementsEnabled = true)
         ltiTool = LTITool(url = "https://www.instructure.com")
     }
 
@@ -251,7 +248,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         )
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiTool, isStudioEnabled, null, null))
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiTool, isStudioEnabled, null, null, assignmentEnhancementsEnabled = true))
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
@@ -731,7 +728,8 @@ class SubmissionDetailsUpdateTest : Assert() {
                     ltiToolResult,
                     isStudioEnabled,
                     null,
-                    null
+                    null,
+                    assignmentEnhancementsEnabled = true
                 )
             )
             .then(

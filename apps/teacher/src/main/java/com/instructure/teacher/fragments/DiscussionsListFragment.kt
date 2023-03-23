@@ -27,10 +27,12 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DiscussionListAdapter
+import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
@@ -39,7 +41,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
-import kotlinx.android.synthetic.main.fragment_discussion_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -54,6 +55,8 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
 
+    private val binding by viewBinding(FragmentDiscussionListBinding::bind)
+
     protected var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
@@ -64,11 +67,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     protected var isAnnouncements by BooleanArg()
 
     override fun layoutResId(): Int = R.layout.fragment_discussion_list
-    override val recyclerView: RecyclerView get() = discussionRecyclerView
+    override val recyclerView: RecyclerView get() = binding.discussionRecyclerView
 
     override fun getPresenterFactory() = DiscussionListPresenterFactory(canvasContext, isAnnouncements)
 
-    override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
+    override fun onPresenterPrepared(presenter: DiscussionListPresenter) = with(binding) {
         val emptyTitle = getString(if (isAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
             rootView = rootView,
@@ -149,7 +152,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     override fun perPageCount() = ApiPrefs.perPageCount
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted(): Unit = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.setVisible()
@@ -158,7 +161,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.setGone()
     }
 
-    override fun onRefreshFinished() {
+    override fun onRefreshFinished(): Unit = with(binding) {
         emptyPandaView.setGone()
         swipeRefreshLayout.isRefreshing = false
 
@@ -172,7 +175,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.setVisible()
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         // We don't want to leave the fab hidden if the list is empty
         if(presenter.isEmpty) {
             createNewDiscussion.show()
@@ -187,23 +190,23 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         discussionListToolbar.title = if(isAnnouncements) getString(R.string.tab_announcements) else getString(R.string.tab_discussions)
         discussionListToolbar.subtitle = canvasContext.name
-        discussionListToolbar.setupBackButton(this)
+        discussionListToolbar.setupBackButton(this@DiscussionsListFragment)
         val searchHint = getString(if (isAnnouncements) R.string.searchAnnouncementsHint else R.string.searchDiscussionsHint)
         discussionListToolbar.addSearch(searchHint) { query ->
             if (query.isBlank()) {
-                emptyPandaView?.emptyViewText(R.string.no_items_to_display_short)
+                emptyPandaView.emptyViewText(R.string.no_items_to_display_short)
             } else {
-                emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                emptyPandaView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
             presenter.searchQuery = query
         }
         ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         createNewDiscussion.setGone()
         createNewDiscussion.backgroundTintList = ViewStyler.makeColorStateListForButton()
         createNewDiscussion.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewDiscussion.drawable))
@@ -283,7 +286,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         }
     }
 
-    override fun onHandleBackPressed() = discussionListToolbar.closeSearch()
+    override fun onHandleBackPressed() = binding.discussionListToolbar.closeSearch()
 
     companion object {
         fun newInstance(canvasContext: CanvasContext) = DiscussionsListFragment().apply {

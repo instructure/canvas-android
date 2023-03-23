@@ -35,13 +35,14 @@ import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ActivitySplashBinding
 import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
-import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -49,6 +50,8 @@ import kotlinx.coroutines.async
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class SplashActivity : AppCompatActivity() {
+
+    private val binding by viewBinding(ActivitySplashBinding::inflate)
 
     private var startUp: Job? = null
 
@@ -65,7 +68,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(ColorDrawable(getColor(R.color.backgroundLightest)))
-        setContentView(R.layout.activity_splash)
+        setContentView(binding.root)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
 
@@ -142,7 +145,7 @@ class SplashActivity : AppCompatActivity() {
 
                     if (!TeacherPrefs.isConfirmedTeacher && ApiPrefs.canBecomeUser != true && masqueradingUserId == 0L) {
                         // The user is not a teacher in any course and cannot masquerade; Show them the door
-                        canvasLoadingView.setGone()
+                        binding.canvasLoadingView.setGone()
                         supportFragmentManager.beginTransaction()
                             .add(
                                 R.id.splashActivityRootView,
@@ -193,7 +196,7 @@ class SplashActivity : AppCompatActivity() {
                 crashlytics.setUserId("")
 
                 startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
-                canvasLoadingView.announceForAccessibility(getString(R.string.loading))
+                binding.canvasLoadingView.announceForAccessibility(getString(R.string.loading))
                 finish()
             }
         } catch (e: Throwable) {

@@ -42,7 +42,7 @@ abstract class ExhaustiveCallback<MODEL, out ITEM>(
         response.body()?.let {
             val items = extractItems(it)
             extractedItems.addAll(items)
-            if (items.isNotEmpty() && moreCallsExist(linkHeaders)) {
+            if (moreCallsExist(linkHeaders)) {
                 getNextPage(this, getNextUrl(linkHeaders), type.isCache)
             } else {
                 finished = true

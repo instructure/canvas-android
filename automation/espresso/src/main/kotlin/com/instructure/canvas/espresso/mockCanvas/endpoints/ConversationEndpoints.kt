@@ -17,6 +17,7 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Conversation
@@ -24,6 +25,8 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.utils.APIHelper
 import okhttp3.FormBody
+import okhttp3.Request
+import okhttp3.Response
 import java.util.*
 
 /**
@@ -70,8 +73,9 @@ object ConversationListEndpoint : Endpoint(
                     }
                     else -> { // We need to filter out "sent" messages for "ALL"
                         data.conversations.values.toList().filter {
-                            // Filter out "sent" messages for "ALL"
-                            it.messages.first().authorId != request.user!!.id
+                            // Filter out "sent and archived" messages for "ALL"
+                            it.messages.first().authorId != request.user!!.id &&
+                                it.workflowState != Conversation.WorkflowState.ARCHIVED
                         }
                     }
                 }
@@ -98,23 +102,43 @@ object ConversationListEndpoint : Endpoint(
 
         PUT {
             // Assumes a single conversationId
-            val conversationId = request.url.queryParameter("conversation_ids[]")?.toLongOrNull()
+            val conversationIds = request.url.queryParameterValues("conversation_ids[]").map { it?.toLongOrNull() }
+                .filterNotNull()
             val event = request.url.queryParameter("event")
-            if(event == "mark_as_unread" && conversationId != null && data.conversations.containsKey(conversationId)) {
-                val conversation = data.conversations[conversationId]!!
-                val updatedConversation = conversation.copy(workflowState = Conversation.WorkflowState.UNREAD)
-                data.conversations[conversationId] = updatedConversation
-                println("okhttp: PUT conversations: updatedConversation = $updatedConversation")
-                request.successResponse(updatedConversation)
-            }
-            else {
-                // We only know how to handle a single conversation id and event = "mark as unread".
-                // Everything else gets bounced.
-                request.unauthorizedResponse()
+
+            when (event) {
+                "mark_as_unread" -> successfulRequestWithModifiedConversation(request, data) { it.copy(workflowState = Conversation.WorkflowState.UNREAD) }
+                "mark_as_read" -> successfulRequestWithModifiedConversation(request, data) { it.copy(workflowState = Conversation.WorkflowState.READ) }
+                "archive" -> successfulRequestWithModifiedConversation(request, data) { it.copy(workflowState = Conversation.WorkflowState.ARCHIVED) }
+                "star" -> successfulRequestWithModifiedConversation(request, data) { it.copy(isStarred = true) }
+                "unstar" -> successfulRequestWithModifiedConversation(request, data) { it.copy(isStarred = false) }
+                "destroy" -> {
+                    conversationIds.forEach {
+                        data.conversations.remove(it)
+                    }
+                    request.successResponse(Any())
+                }
+                else -> {
+                    // We only know how to handle a single conversation id and event = "mark as unread".
+                    // Everything else gets bounced.
+                    request.unauthorizedResponse()
+                }
             }
         }
     }
 )
+
+private fun successfulRequestWithModifiedConversation(request: Request, data: MockCanvas, action: (Conversation) -> Conversation): Response {
+    val conversationIds = request.url.queryParameterValues("conversation_ids[]").map { it?.toLongOrNull() }
+        .filterNotNull()
+
+    conversationIds.forEach {
+        val conversation = data.conversations[it]!!
+        val updatedConversation = action(conversation)
+        data.conversations[it] = updatedConversation
+    }
+    return request.successResponse(Any())
+}
 
 /**
  * Endpoint that can return a count of unread conversation messages
@@ -229,7 +253,7 @@ object ConversationEndpoint : Endpoint(
             val newStarred = request.url.queryParameter("conversation[starred]")?.equals("true")
             val newStateRaw = request.url.queryParameter("conversation[workflow_state]")
             val newState = when(newStateRaw) {
-                "read" -> Conversation.WorkflowState.UNREAD
+                "read" -> Conversation.WorkflowState.READ
                 "unread" -> Conversation.WorkflowState.UNREAD
                 "archived" -> Conversation.WorkflowState.ARCHIVED
                 else -> null

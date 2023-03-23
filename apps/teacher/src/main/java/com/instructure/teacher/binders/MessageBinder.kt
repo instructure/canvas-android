@@ -37,24 +37,28 @@ import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.utils.linkifyTextView
-import kotlinx.android.synthetic.main.adapter_message.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 object MessageBinder {
-
-    fun bind(message: Message, conversation: Conversation, author: BasicUser?, holder: MessageHolder, position: Int, callback: MessageAdapterCallback) {
-
+    fun bind(
+        message: Message,
+        conversation: Conversation,
+        author: BasicUser?,
+        position: Int,
+        callback: MessageAdapterCallback,
+        holder: MessageHolder
+    ): Unit = with(holder.binding) {
         // Set author info
-        with(holder.itemView.authorName) {
+        with(authorName) {
             if (author != null) {
                 text = getAuthorTitle(author.id, conversation, message)
-                ProfileUtils.loadAvatarForUser(holder.itemView.authorAvatar, author.name, author.avatarUrl)
+                ProfileUtils.loadAvatarForUser(authorAvatar, author.name, author.avatarUrl)
                 setupAvatarA11y(author.name)
                 setOnClickListener { callback.onAvatarClicked(author) }
             } else {
                 text = ""
-                with(holder.itemView.authorAvatar) {
+                with(authorAvatar) {
                     setImageDrawable(null)
                     setOnClickListener(null)
                 }
@@ -62,7 +66,7 @@ object MessageBinder {
         }
 
         // Set attachments
-        with(holder.itemView.attachmentContainer) {
+        with(attachmentContainer) {
             val attachments: MutableList<Attachment> = message.attachments.toMutableList()
             message.mediaComment?.let { attachments.add(it.asAttachment()) }
             setVisible(attachments.isNotEmpty()).setAttachments(attachments) { action, attachment ->
@@ -72,15 +76,15 @@ object MessageBinder {
 
 
         // Set body
-        holder.itemView.messageBody.setText(message.body, TextView.BufferType.SPANNABLE)
-        holder.itemView.messageBody.linkifyTextView()
+        messageBody.setText(message.body, TextView.BufferType.SPANNABLE)
+        messageBody.linkifyTextView()
 
         // Set message date/time
         val messageDate = message.createdAt.toDate()
-        holder.itemView.dateTime.text = dateFormat.format(messageDate)
+        dateTime.text = dateFormat.format(messageDate)
 
         // Set up message options
-        holder.itemView.messageOptions.setOnClickListener { v ->
+        messageOptions.setOnClickListener { v ->
             // Set up popup menu
             val actions = MessageAdapterCallback.MessageClickAction.values()
             val popup = PopupMenu(v.context, v, Gravity.START)
@@ -99,7 +103,7 @@ object MessageBinder {
             popup.show()
         }
 
-        with(holder.itemView.reply) {
+        with(reply) {
             setTextColor(ThemePrefs.textButtonColor)
             setVisible(position == 0)
             setOnClickListener { callback.onMessageAction(MessageAdapterCallback.MessageClickAction.REPLY, message) }

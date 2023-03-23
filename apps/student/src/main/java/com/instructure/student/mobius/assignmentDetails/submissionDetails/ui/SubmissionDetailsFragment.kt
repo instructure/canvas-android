@@ -30,6 +30,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.Submission
+import com.instructure.student.databinding.FragmentSubmissionDetailsBinding
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
@@ -40,7 +41,7 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 @ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
 class SubmissionDetailsFragment :
-    MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState>() {
+    MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState, FragmentSubmissionDetailsBinding>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
@@ -77,22 +78,23 @@ class SubmissionDetailsFragment :
                 is SubmissionDetailsSharedEvent.SubmissionAttachmentClicked -> {
                     SubmissionDetailsEvent.SubmissionAndAttachmentClicked(it.submission.attempt, it.attachment)
                 }
+                is SubmissionDetailsSharedEvent.SubmissionCommentsUpdated -> SubmissionDetailsEvent.SubmissionCommentsUpdated(it.submissionComments)
             }
         },
         DBSource.ofSingle<Submission, SubmissionDetailsEvent>(
             Db.getInstance(ContextKeeper.appContext)
                 .submissionQueries
                 .getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id ?: -1)
-                ) { submission ->
-                    if (submission?.progress == 100.0) {
-                        // A submission for this assignment was finished - we'll want to reload data
-                        SubmissionDetailsEvent.SubmissionUploadFinished
-                    } else {
-                        // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
-                        null
-                    }
-                }
-        )
+        ) { submission ->
+            if (submission?.progress == 100.0) {
+                // A submission for this assignment was finished - we'll want to reload data
+                SubmissionDetailsEvent.SubmissionUploadFinished
+            } else {
+                // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
+                null
+            }
+        }
+    )
 
     companion object {
         fun makeRoute(course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null): Route {

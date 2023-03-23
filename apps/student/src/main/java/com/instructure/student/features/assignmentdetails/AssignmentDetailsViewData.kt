@@ -5,6 +5,7 @@ import androidx.annotation.ColorRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 
@@ -36,14 +37,6 @@ data class AssignmentDetailsViewData(
     val firstAttemptOrNull = attempts.firstOrNull()
     val noDescriptionVisible = description.isEmpty() && !fullLocked
 }
-
-data class AssignmentDetailAttemptViewData(
-    val title: String,
-    val date: String,
-    val submission: Submission? = null,
-    val isUploading: Boolean = false,
-    val isFailed: Boolean = false
-)
 
 data class QuizViewViewData(val questionCount: String, val timeLimit: String, val allowedAttempts: String)
 

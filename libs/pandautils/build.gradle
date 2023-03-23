@@ -17,7 +17,7 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -86,10 +86,6 @@ android {
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-}
-
-androidExtensions {
-    experimental = true
 }
 
 dependencies {

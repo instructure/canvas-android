@@ -27,14 +27,15 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NLongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.withArgs
+import com.instructure.teacher.databinding.FragmentModuleListBinding
 import com.instructure.teacher.features.modules.list.*
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 import com.instructure.teacher.mobius.common.ui.Presenter
 
 @PageView(url = "{canvasContext}/modules")
 @ScreenView(SCREEN_VIEW_MODULE_LIST)
-class ModuleListFragment :
-    MobiusFragment<ModuleListModel, ModuleListEvent, ModuleListEffect, ModuleListView, ModuleListViewState>() {
+class ModuleListFragment : MobiusFragment<ModuleListModel, ModuleListEvent, ModuleListEffect,
+        ModuleListView, ModuleListViewState, FragmentModuleListBinding>() {
 
     val canvasContext by ParcelableArg<CanvasContext>(key = Const.COURSE)
 

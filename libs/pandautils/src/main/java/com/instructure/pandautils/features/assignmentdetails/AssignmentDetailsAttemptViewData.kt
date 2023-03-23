@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present  Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -12,13 +12,17 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-package com.instructure.teacher.factory
 
-import com.instructure.teacher.presenters.InboxPresenter
-import com.instructure.teacher.viewinterface.InboxView
-import instructure.androidblueprint.PresenterFactory
+package com.instructure.pandautils.features.assignmentdetails
 
-class InboxPresenterFactory : PresenterFactory<InboxView, InboxPresenter> {
-    override fun create() = InboxPresenter()
-}
+import com.instructure.canvasapi2.models.Submission
+
+data class AssignmentDetailsAttemptViewData(
+    val title: String,
+    val date: String,
+    val submission: Submission? = null,
+    val isUploading: Boolean = false,
+    val isFailed: Boolean = false
+)

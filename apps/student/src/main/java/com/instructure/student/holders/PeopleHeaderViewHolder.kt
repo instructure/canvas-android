@@ -25,7 +25,7 @@ import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.viewholder_header_people.view.*
+import com.instructure.student.databinding.ViewholderHeaderPeopleBinding
 
 class PeopleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var isExpanded = false
@@ -35,10 +35,10 @@ class PeopleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         headerText: String?,
         expanded: Boolean,
         viewHolderHeaderClicked: ViewHolderHeaderClicked<MODEL>
-    ) = with(itemView) {
+    ) = with(ViewholderHeaderPeopleBinding.bind(itemView)) {
         title.text = headerText
         isExpanded = expanded
-        expand_collapse.rotation = if (isExpanded) 180f else 0f
+        expandCollapse.rotation = if (isExpanded) 180f else 0f
         divider.setVisible(!isExpanded)
         rootView.setOnClickListener { v ->
             viewHolderHeaderClicked.viewClicked(v, genericHeader)
@@ -52,7 +52,7 @@ class PeopleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
             isExpanded = !isExpanded
 
             val flipAnimator = AnimatorInflater.loadAnimator(v.context, animationType) as ObjectAnimator
-            flipAnimator.target = expand_collapse
+            flipAnimator.target = expandCollapse
             flipAnimator.duration = 200
             flipAnimator.start()
 

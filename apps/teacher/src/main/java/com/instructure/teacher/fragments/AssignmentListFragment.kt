@@ -32,10 +32,12 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssignmentAdapter
+import com.instructure.teacher.databinding.FragmentAssignmentListBinding
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.factory.AssignmentListPresenterFactory
 import com.instructure.teacher.presenters.AssignmentListPresenter
@@ -45,7 +47,6 @@ import com.instructure.teacher.utils.setHeaderVisibilityListener
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AssignmentListView
-import kotlinx.android.synthetic.main.fragment_assignment_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -59,6 +60,8 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         AssignmentAdapter>(), AssignmentListView {
 
+    private val binding by viewBinding(FragmentAssignmentListBinding::bind)
+
     private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
     private var pairedWithSubmissions: Boolean = false
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
@@ -68,7 +71,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     private var needToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_list
-    override val recyclerView: RecyclerView get() = assignmentRecyclerView
+    override val recyclerView: RecyclerView get() = binding.assignmentRecyclerView
     override fun getPresenterFactory() = AssignmentListPresenterFactory(canvasContext)
     override fun onPresenterPrepared(presenter: AssignmentListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
@@ -81,7 +84,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
             emptyViewResId = R.id.emptyPandaView,
             emptyViewText = getString(R.string.noAssignments)
         )
-        mRecyclerView.setHeaderVisibilityListener(divider)
+        mRecyclerView.setHeaderVisibilityListener(binding.divider)
     }
 
     override fun onCreateView(view: View) {
@@ -134,8 +137,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         }
     }
 
-
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted() = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.visibility  = View.VISIBLE
@@ -144,10 +146,10 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         emptyPandaView.setMessageText(R.string.noAssignmentsTeacher)
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_space))
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
@@ -163,9 +165,9 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         }
 
         //setup toolbar icon to access this menu
-        assignmentListToolbar.setupMenu(R.menu.menu_assignment_list, menuItemCallback)
+        binding.assignmentListToolbar.setupMenu(R.menu.menu_assignment_list, menuItemCallback)
         addSearch()
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, requireContext().getColor(R.color.white))
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), binding.assignmentListToolbar, requireContext().getColor(R.color.white))
 
         //setup popup menu
         val menuItemView = rootView.findViewById<View>(R.id.menu_grading_periods_filter)
@@ -188,12 +190,12 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         configureGradingPeriodState(selectedGradingPeriod.title ?: getDefaultGradingPeriodTitle(), true, isFilterVisible)
     }
 
-    private fun addSearch() {
+    private fun addSearch() = with(binding) {
         assignmentListToolbar.addSearch(getString(R.string.searchAssignmentsHint)) { query ->
             if (query.isBlank()) {
-                emptyPandaView?.emptyViewText(R.string.no_items_to_display_short)
+                emptyPandaView.emptyViewText(R.string.no_items_to_display_short)
             } else {
-                emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                emptyPandaView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
             presenter.searchQuery = query
         }
@@ -201,10 +203,10 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
 
     override fun perPageCount() = ApiPrefs.perPageCount
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         assignmentListToolbar.title = getString(R.string.assignments)
         assignmentListToolbar.subtitle = canvasContext.name
-        assignmentListToolbar.setupBackButton(this)
+        assignmentListToolbar.setupBackButton(this@AssignmentListFragment)
 
         ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
@@ -213,7 +215,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         configureGradingPeriodState(gradingPeriod, isVisible, isFilterVisible)
     }
 
-    private fun configureGradingPeriodState(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {
+    private fun configureGradingPeriodState(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) = with(binding) {
         if(isVisible) {
             gradingPeriodContainer.visibility = View.VISIBLE
 
@@ -252,7 +254,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         }
     }
 
-    override fun onHandleBackPressed() = assignmentListToolbar.closeSearch()
+    override fun onHandleBackPressed() = binding.assignmentListToolbar.closeSearch()
 
     companion object {
         @JvmStatic val PAIRED_WITH_SUBMISSIONS = "pairedWithSubmissions"

@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -38,9 +37,13 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.binding.BindableSpinnerAdapter
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentSubmissionDetailsBinding
 import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
@@ -52,7 +55,6 @@ import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_submission_details.*
 import java.io.File
 
 class SubmissionDetailsView(
@@ -60,9 +62,9 @@ class SubmissionDetailsView(
     parent: ViewGroup,
     private val canvasContext: CanvasContext,
     private val fragmentManager: FragmentManager
-) : MobiusView<SubmissionDetailsViewState, SubmissionDetailsEvent>(
-    R.layout.fragment_submission_details,
+) : MobiusView<SubmissionDetailsViewState, SubmissionDetailsEvent, FragmentSubmissionDetailsBinding>(
     layoutInflater,
+    FragmentSubmissionDetailsBinding::inflate,
     parent
 ) {
 
@@ -73,10 +75,10 @@ class SubmissionDetailsView(
         override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
         override fun onTabReselected(tab: TabLayout.Tab?) = onTabSelected(tab)
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
+            if (binding.slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                binding.slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
             }
-            drawerViewPager.hideKeyboard()
+            binding.drawerViewPager.hideKeyboard()
             logTabSelected(tab?.position)
         }
     }
@@ -90,19 +92,19 @@ class SubmissionDetailsView(
     }
 
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        retryButton.onClick { consumer?.accept(SubmissionDetailsEvent.RefreshRequested) }
-        drawerViewPager.offscreenPageLimit = 3
-        drawerViewPager.adapter = drawerPagerAdapter
+        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.retryButton.onClick { consumer?.accept(SubmissionDetailsEvent.RefreshRequested) }
+        binding.drawerViewPager.offscreenPageLimit = 3
+        binding.drawerViewPager.adapter = drawerPagerAdapter
         configureDrawerTabLayout()
         configureSlidingPanelHeight()
 
         if (isAccessibilityEnabled(context)) {
-            slidingUpPanelLayout?.anchorPoint = 1.0f
+            binding.slidingUpPanelLayout.anchorPoint = 1.0f
         }
     }
 
-    private fun configureDrawerTabLayout() {
+    private fun configureDrawerTabLayout() = with(binding) {
         drawerTabLayout.setupWithViewPager(drawerViewPager)
 
         // Tint the tab with the course color
@@ -115,7 +117,7 @@ class SubmissionDetailsView(
         drawerTabLayout.tabRippleColor =  rippleTint
     }
 
-    private fun configureSlidingPanelHeight() {
+    private fun configureSlidingPanelHeight() = with(binding) {
         /* Adjusts the panel content height based on the position of the sliding portion of the view, but only if
          * it is at (or has passed) the anchor point. */
         slidingUpPanelLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
@@ -165,7 +167,7 @@ class SubmissionDetailsView(
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
     }
 
     override fun onConnect(output: Consumer<SubmissionDetailsEvent>) {
@@ -178,20 +180,20 @@ class SubmissionDetailsView(
 
     override fun render(state: SubmissionDetailsViewState) {
         // Reset visibilities
-        errorContainer.setGone()
-        slidingUpPanelLayout.setGone()
-        loadingView.setGone()
+        binding.errorContainer.setGone()
+        binding.slidingUpPanelLayout.setGone()
+        binding.loadingView.setGone()
 
         when (state) {
-            SubmissionDetailsViewState.Error -> errorContainer.setVisible()
-            SubmissionDetailsViewState.Loading -> loadingView.setVisible()
+            SubmissionDetailsViewState.Error -> binding.errorContainer.setVisible()
+            SubmissionDetailsViewState.Loading -> binding.loadingView.setVisible()
             is SubmissionDetailsViewState.Loaded -> renderLoadedState(state)
         }
     }
 
     private fun renderLoadedState(state: SubmissionDetailsViewState.Loaded) {
-        slidingUpPanelLayout.setVisible()
-        submissionVersionsSpinner.setVisible(state.showVersionsSpinner)
+        binding.slidingUpPanelLayout.setVisible()
+        binding.submissionVersionsSpinner.setVisible(state.showVersionsSpinner)
         setupSubmissionVersionSpinner(state.submissionVersions, state.selectedVersionSpinnerIndex)
         updateDrawerPager(state.tabData)
     }
@@ -200,24 +202,28 @@ class SubmissionDetailsView(
         /* Updating the pager adapter's data can cause the current tab to be reselected, erroneously causing the drawer
         to open up to the anchor point if it was previously closed. As a workaround we remove the tab selection
         listener temporarily, and then restore it after updating the adapter */
-        drawerTabLayout.removeOnTabSelectedListener(drawerTabLayoutListener)
+        binding.drawerTabLayout.removeOnTabSelectedListener(drawerTabLayoutListener)
 
         // Update adapter data
         drawerPagerAdapter.tabData = tabData
         drawerPagerAdapter.notifyDataSetChanged()
 
         // Restore tab selection listener
-        drawerTabLayout.addOnTabSelectedListener(drawerTabLayoutListener)
+        binding.drawerTabLayout.addOnTabSelectedListener(drawerTabLayoutListener)
     }
 
-
     private fun setupSubmissionVersionSpinner(submissions: List<Pair<Long, String>>, selectedIdx: Int) {
-        submissionVersionsSpinner.adapter =
-            ArrayAdapter(context, R.layout.spinner_submission_versions, submissions.map { it.second }).apply {
-                setDropDownViewResource(R.layout.spinner_submission_versions_dropdown)
-            }
-        submissionVersionsSpinner.setSelection(selectedIdx, false)
-        submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        val itemViewModels = submissions.mapIndexed { index, submission ->
+            AssignmentDetailsAttemptItemViewModel(
+                AssignmentDetailsAttemptViewData(
+                    context.getString(R.string.attempt, submissions.size - index),
+                    submission.second
+                )
+            )
+        }
+        binding.submissionVersionsSpinner.adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
+        binding.submissionVersionsSpinner.setSelection(selectedIdx, false)
+        binding.submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val submissionAttempt = submissions[position].first
@@ -234,27 +240,31 @@ class SubmissionDetailsView(
     }
 
     fun showAudioRecordingView() {
-        floatingRecordingView.setContentType(RecordingMediaType.Audio)
-        floatingRecordingView.setVisible()
-        floatingRecordingView.stoppedCallback = {
-            consumer?.accept(SubmissionDetailsEvent.StopMediaRecordingClicked)
-        }
-        floatingRecordingView.recordingCallback = { file ->
-            consumer?.accept(SubmissionDetailsEvent.SendMediaCommentClicked(file))
+        binding.floatingRecordingView.apply {
+            setContentType(RecordingMediaType.Audio)
+            setVisible()
+            stoppedCallback = {
+                consumer?.accept(SubmissionDetailsEvent.StopMediaRecordingClicked)
+            }
+            recordingCallback = { file ->
+                consumer?.accept(SubmissionDetailsEvent.SendMediaCommentClicked(file))
+            }
         }
     }
 
     fun showVideoRecordingView() {
-        floatingRecordingView.setContentType(RecordingMediaType.Video)
-        floatingRecordingView.startVideoView()
-        floatingRecordingView.recordingCallback = { file ->
-            consumer?.accept(SubmissionDetailsEvent.SendMediaCommentClicked(file))
-        }
-        floatingRecordingView.stoppedCallback = {
-            consumer?.accept(SubmissionDetailsEvent.StopMediaRecordingClicked)
-        }
-        floatingRecordingView.replayCallback = { file ->
-            consumer?.accept(SubmissionDetailsEvent.VideoRecordingReplayClicked(file))
+        binding.floatingRecordingView.apply {
+            setContentType(RecordingMediaType.Video)
+            startVideoView()
+            recordingCallback = { file ->
+                consumer?.accept(SubmissionDetailsEvent.SendMediaCommentClicked(file))
+            }
+            stoppedCallback = {
+                consumer?.accept(SubmissionDetailsEvent.StopMediaRecordingClicked)
+            }
+            replayCallback = { file ->
+                consumer?.accept(SubmissionDetailsEvent.VideoRecordingReplayClicked(file))
+            }
         }
     }
 

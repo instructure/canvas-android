@@ -48,6 +48,10 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
         RouteMatcher.route(activity, route)
     }
 
+    override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {
+        openConversation(conversation, scope)
+    }
+
     // We need to keep this update mechanism until the other Inbox components will be rewritten
     @Suppress("unused")
     @Subscribe(sticky = true)

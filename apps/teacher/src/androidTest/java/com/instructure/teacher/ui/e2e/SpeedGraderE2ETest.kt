@@ -26,6 +26,9 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -90,14 +93,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         )
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
-        SubmissionsApi.gradeSubmission(
-                teacherToken = teacher.token,
-                courseId = course.id,
-                assignmentId = assignment[0].id,
-                studentId = gradedStudent.id,
-                postedGrade = "15",
-                excused = false
-        )
+        gradeSubmission(teacher, course, assignment, gradedStudent)
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -186,5 +182,21 @@ class SpeedGraderE2ETest : TeacherTest() {
         postSettingsPage.clickOnHideGradesButton()
         assignmentSubmissionListPage.assertGradesHidden(gradedStudent.name)
         assignmentSubmissionListPage.assertGradesHidden(student.name)
+    }
+
+    private fun gradeSubmission(
+        teacher: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: List<AssignmentApiModel>,
+        gradedStudent: CanvasUserApiModel
+    ) {
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = assignment[0].id,
+            studentId = gradedStudent.id,
+            postedGrade = "15",
+            excused = false
+        )
     }
 }

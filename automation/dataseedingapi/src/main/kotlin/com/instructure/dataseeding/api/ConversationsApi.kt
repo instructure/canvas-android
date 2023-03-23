@@ -34,8 +34,8 @@ object ConversationsApi {
     private fun conversationsService(token: String): ConversationsService
             = CanvasNetworkAdapter.retrofitWithToken(token).create(ConversationsApi.ConversationsService::class.java)
 
-    fun createConversation(token: String, recipients: List<String>): List<ConversationApiModel> {
-        val conversation = CreateConversation(recipients, Randomizer.randomConversationSubject(), Randomizer.randomConversationBody())
+    fun createConversation(token: String, recipients: List<String>, subject: String = Randomizer.randomConversationSubject(), body: String = Randomizer.randomConversationBody()): List<ConversationApiModel> {
+        val conversation = CreateConversation(recipients, subject, body)
         return conversationsService(token)
                 .createConversation(conversation)
                 .execute()

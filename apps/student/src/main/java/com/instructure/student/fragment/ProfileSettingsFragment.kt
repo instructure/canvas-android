@@ -44,20 +44,23 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.PandaAvatarActivity
+import com.instructure.student.databinding.DialogPhotoSourceBinding
+import com.instructure.student.databinding.FragmentProfileSettingsBinding
 import com.instructure.student.dialog.EditTextDialog
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.util.StudentPrefs
-import kotlinx.android.synthetic.main.dialog_photo_source.*
-import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 @ScreenView(SCREEN_VIEW_PROFILE_SETTINGS)
 @PageView(url = "profile")
 class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<AvatarWrapper> {
+
+    private val binding by viewBinding(FragmentProfileSettingsBinding::bind)
 
     private var loaderBundle: Bundle? = null
     private var mCapturedImageUri: Uri? = null
@@ -83,11 +86,11 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
     }
 
     override fun applyTheme() {
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        binding.toolbar.setupAsBackButton(this)
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         editPhoto.onClickWithRequireNetwork { pickAvatar() }
         editUsername.onClickWithRequireNetwork {
             EditTextDialog.show(requireFragmentManager(), getString(R.string.editUserName), ApiPrefs.user?.shortName.orEmpty()) { name ->
@@ -104,7 +107,7 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
         view.alpha = if (isEnabled) 1f else 0.35f
     }
 
-    private fun getUserPermissions() {
+    private fun getUserPermissions() = with(binding) {
         mPermissionCall = tryWeave {
             val user = awaitApi<User> { UserManager.getSelfWithPermissions(true, it) }
             editUsername.setVisible()
@@ -155,10 +158,10 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
                 toast(R.string.uploadAvatarFailMsg)
             } finally {
                 if(this@ProfileSettingsFragment.isAdded) {
-                    photoProgressBar.setGone()
-                    createPandaProgressBar.setGone()
-                    setEnabled(editPhoto, true)
-                    setEnabled(createPandaAvatar, true)
+                    binding.photoProgressBar.setGone()
+                    binding.createPandaProgressBar.setGone()
+                    setEnabled(binding.editPhoto, true)
+                    setEnabled(binding.createPandaAvatar, true)
                 }
             }
         }
@@ -166,15 +169,16 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
 
     @SuppressLint("InflateParams")
     private fun pickAvatar() {
+        val dialogBinding = DialogPhotoSourceBinding.inflate(layoutInflater)
         AlertDialog.Builder(requireContext())
-                .setView(R.layout.dialog_photo_source)
+                .setView(dialogBinding.root)
                 .show()
                 .apply {
-                    takePhotoItem.onClick {
+                    dialogBinding.takePhotoItem.onClick {
                         newPhoto()
                         dismiss()
                     }
-                    chooseFromGalleryItem.onClick {
+                    dialogBinding.chooseFromGalleryItem.onClick {
                         chooseFromGallery()
                         dismiss()
                     }
@@ -280,9 +284,9 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
             val croppedFile = File(croppedPath)
             loaderBundle = createLoaderBundle("profilePic.jpg", "image/jpeg", croppedPath, croppedFile.length(), true)
             LoaderUtils.restartLoaderWithBundle(loaderManager, loaderBundle, this, R.id.avatarLoaderID)
-            photoProgressBar.setVisible()
-            setEnabled(editPhoto, false)
-            setEnabled(createPandaAvatar, false)
+            binding.photoProgressBar.setVisible()
+            setEnabled(binding.editPhoto, false)
+            setEnabled(binding.createPandaAvatar, false)
 
         } else if (requestCode == RequestCodes.CAMERA_PIC_REQUEST && resultCode != Activity.RESULT_CANCELED) {
             if (mCapturedImageUri == null) {
@@ -317,9 +321,9 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
                 // The api will rename the avatar automatically for us
                 loaderBundle = createLoaderBundle("pandaAvatar.png", "image/png", pandaPath, size, false)
                 LoaderUtils.restartLoaderWithBundle(loaderManager, loaderBundle, this, R.id.avatarLoaderID)
-                createPandaProgressBar.setVisible()
-                setEnabled(editPhoto, false)
-                setEnabled(createPandaAvatar, false)
+                binding.createPandaProgressBar.setVisible()
+                setEnabled(binding.editPhoto, false)
+                setEnabled(binding.createPandaAvatar, false)
             }
         }
     }

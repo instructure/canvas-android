@@ -27,8 +27,9 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 class InboxEntryItemViewModel(
     @get:Bindable
     var data: InboxEntryViewData,
-    val openConversationCallback: (Boolean) -> Unit,
+    val openConversationCallback: (Boolean, Boolean) -> Unit,
     val selectionModeCallback: (View, Boolean) -> Unit,
+    val avatarClickedCallback: (Boolean) -> Unit,
     var selectionModeActive: Boolean = false,
     @get:Bindable
     var selected: Boolean = false
@@ -40,7 +41,15 @@ class InboxEntryItemViewModel(
         if (selectionModeActive) {
             changeSelection(view)
         } else {
-            openConversationCallback(data.starred)
+            openConversationCallback(data.starred, data.unread)
+        }
+    }
+
+    fun onAvatarClick(view: View) {
+        if (selectionModeActive) {
+            changeSelection(view)
+        } else {
+            avatarClickedCallback(data.starred)
         }
     }
 
