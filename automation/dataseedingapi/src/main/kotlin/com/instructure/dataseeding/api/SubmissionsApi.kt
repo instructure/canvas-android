@@ -76,9 +76,10 @@ object SubmissionsApi {
     fun commentOnSubmission(studentToken: String,
                             courseId: Long,
                             assignmentId: Long,
-                            fileIds: MutableList<Long>): AssignmentApiModel {
+                            fileIds: MutableList<Long>,
+                            attempt: Int = 1): AssignmentApiModel {
 
-        val comment = Randomizer.randomSubmissionComment(fileIds)
+        val comment = Randomizer.randomSubmissionComment(fileIds, attempt)
 
         return submissionsService(studentToken)
                 .commentOnSubmission(courseId, assignmentId, CreateSubmissionCommentWrapper(comment))

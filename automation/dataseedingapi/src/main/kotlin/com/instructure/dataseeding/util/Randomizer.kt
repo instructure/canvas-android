@@ -110,7 +110,7 @@ object Randomizer {
                     published = published
             )
 
-    fun randomSubmissionComment(fileIds: MutableList<Long>, attemptId: Int = 1): CreateSubmissionComment =
+    fun randomSubmissionComment(fileIds: MutableList<Long>, attemptId: Int): CreateSubmissionComment =
             CreateSubmissionComment(
                     comment = faker.lorem().paragraph(),
                     fileIds = if (fileIds.isNotEmpty()) fileIds else null,
