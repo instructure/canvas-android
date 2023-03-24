@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
@@ -31,11 +30,13 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.pandautils.utils.onClick
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.dialog_color_picker.view.*
+import com.instructure.student.databinding.DialogColorPickerBinding
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_COLOR_PICKER)
 class ColorPickerDialog : AppCompatDialogFragment() {
+
+    private lateinit var binding: DialogColorPickerBinding
 
     init {
         retainInstance = true
@@ -57,9 +58,9 @@ class ColorPickerDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
-        val view = View.inflate(ContextThemeWrapper(activity, 0), R.layout.dialog_color_picker, null)
-        setupViews(view)
-        builder.setView(view)
+        binding = DialogColorPickerBinding.inflate(layoutInflater, null, false)
+        setupViews(binding.root)
+        builder.setView(binding.root)
         builder.setTitle(R.string.colorPickerDialogTitle)
         builder.setCancelable(true)
         return builder.create()
@@ -67,21 +68,21 @@ class ColorPickerDialog : AppCompatDialogFragment() {
 
     fun setupViews(view: View) = with(view) {
         listOf(
-                colorCottonCandy to R.color.colorCottonCandy,
-                colorBarbie to R.color.colorBarbie,
-                colorBarneyPurple to R.color.colorBarneyPurple,
-                colorEggplant to R.color.colorEggplant,
-                colorUltramarine to R.color.colorUltramarine,
-                colorOcean11 to R.color.colorOcean11,
-                colorCyan to R.color.colorCyan,
-                colorAquaMarine to R.color.colorAquaMarine,
-                colorEmeraldGreen to R.color.colorEmeraldGreen,
-                colorFreshCutLawn to R.color.colorFreshCutLawn,
-                colorChartreuse to R.color.colorChartreuse,
-                colorSunFlower to R.color.colorSunFlower,
-                colorTangerine to R.color.colorTangerine,
-                colorBloodOrange to R.color.colorBloodOrange,
-                colorSriracha to R.color.colorSriracha
+                binding.colorCottonCandy to R.color.colorCottonCandy,
+                binding.colorBarbie to R.color.colorBarbie,
+                binding.colorBarneyPurple to R.color.colorBarneyPurple,
+                binding.colorEggplant to R.color.colorEggplant,
+                binding.colorUltramarine to R.color.colorUltramarine,
+                binding.colorOcean11 to R.color.colorOcean11,
+                binding.colorCyan to R.color.colorCyan,
+                binding.colorAquaMarine to R.color.colorAquaMarine,
+                binding.colorEmeraldGreen to R.color.colorEmeraldGreen,
+                binding.colorFreshCutLawn to R.color.colorFreshCutLawn,
+                binding.colorChartreuse to R.color.colorChartreuse,
+                binding.colorSunFlower to R.color.colorSunFlower,
+                binding.colorTangerine to R.color.colorTangerine,
+                binding.colorBloodOrange to R.color.colorBloodOrange,
+                binding.colorSriracha to R.color.colorSriracha
         ).forEach { (view, res) ->
             val color = ContextCompat.getColor(context, res)
             ColorUtils.colorIt(color, view)

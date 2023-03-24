@@ -30,17 +30,20 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_UPDATE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentDiscussionsUpdateBinding
 import com.instructure.student.util.Const
-import kotlinx.android.synthetic.main.fragment_discussions_update.*
 import kotlinx.coroutines.Job
 
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_UPDATE)
 class DiscussionsUpdateFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentDiscussionsUpdateBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -64,8 +67,8 @@ class DiscussionsUpdateFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rceTextEditor.setHint(R.string.rce_empty_description)
-        rceTextEditor.setHtml(discussionEntry.message, "", "", ThemePrefs.brandColor, ThemePrefs.textButtonColor)
+        binding.rceTextEditor.setHint(R.string.rce_empty_description)
+        binding.rceTextEditor.setHtml(discussionEntry.message, "", "", ThemePrefs.brandColor, ThemePrefs.textButtonColor)
 
         discussionEntry.attachments?.firstOrNull()?.let {
             val attachmentView = AttachmentView(requireContext())
@@ -75,7 +78,7 @@ class DiscussionsUpdateFragment : ParentFragment() {
                     discussionEntry.attachments!!.remove(attachment)
                 }
             }
-            attachmentLayout.addView(attachmentView)
+            binding.attachmentLayout.addView(attachmentView)
         }
     }
 
@@ -89,19 +92,21 @@ class DiscussionsUpdateFragment : ParentFragment() {
     override fun title(): String = getString(R.string.edit)
 
     override fun applyTheme() {
-        toolbar.title = getString(R.string.edit)
-        toolbar.setupAsCloseButton {
-            if (discussionEntry.message == rceTextEditor?.html) {
-                activity?.onBackPressed()
-            } else {
-                UnsavedChangesExitDialog.show(requireFragmentManager()) {
+        with (binding) {
+            toolbar.title = getString(R.string.edit)
+            toolbar.setupAsCloseButton {
+                if (discussionEntry.message == rceTextEditor.html) {
                     activity?.onBackPressed()
+                } else {
+                    UnsavedChangesExitDialog.show(requireFragmentManager()) {
+                        activity?.onBackPressed()
+                    }
                 }
             }
+            toolbar.setMenu(R.menu.menu_discussion_update, menuItemCallback)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+            ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         }
-        toolbar.setMenu(R.menu.menu_discussion_update, menuItemCallback)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
     //endregion
 
@@ -140,7 +145,7 @@ class DiscussionsUpdateFragment : ParentFragment() {
         when (item.itemId) {
             R.id.menu_save -> {
                 if (APIHelper.hasNetworkConnection()) {
-                    editMessage(rceTextEditor.html)
+                    editMessage(binding.rceTextEditor.html)
                 } else {
                     Toast.makeText(requireContext(), R.string.noInternetConnectionMessage, Toast.LENGTH_LONG).show()
                 }

@@ -39,21 +39,25 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARKS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.BookmarkShortcutActivity
 import com.instructure.student.adapter.BookmarkRecyclerAdapter
+import com.instructure.student.databinding.FragmentBookmarksFragmentBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.decorations.DividerDecoration
 import com.instructure.student.interfaces.BookmarkAdapterToFragmentCallback
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.CacheControlFlags
 import com.instructure.student.util.ShortcutUtils
-import kotlinx.android.synthetic.main.fragment_bookmarks_fragment.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_BOOKMARKS)
 class BookmarksFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentBookmarksFragmentBinding::bind)
+    private lateinit var pandaRecyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     private var bookmarkSelectedCallback: (Bookmark) -> Unit by Delegates.notNull()
     private var recyclerAdapter: BookmarkRecyclerAdapter? = null
@@ -68,8 +72,9 @@ class BookmarksFragment : ParentFragment() {
         return inflater.inflate(R.layout.fragment_bookmarks_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        pandaRecyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         configureRecyclerView()
         applyTheme()
     }
@@ -84,7 +89,7 @@ class BookmarksFragment : ParentFragment() {
     //endregions
 
     //region Fragment Interaction Overrides
-    override fun applyTheme() {
+    override fun applyTheme() = with(binding) {
         when (requireActivity()) {
             is BookmarkShortcutActivity -> {
                 toolbar.title = getString(R.string.bookmarkShortcut)
@@ -92,7 +97,7 @@ class BookmarksFragment : ParentFragment() {
             }
             else -> {
                 title()
-                toolbar.setupAsBackButton(this)
+                toolbar.setupAsBackButton(this@BookmarksFragment)
             }
         }
 
@@ -100,10 +105,10 @@ class BookmarksFragment : ParentFragment() {
     }
 
     private fun applyEmptyImage() {
-        emptyView.getEmptyViewImage()?.setImageResource(R.drawable.ic_panda_nobookmarks)
-        emptyView.setTitleText(R.string.noBookmarks)
-        emptyView.setMessageText(R.string.noBookmarksSubtext)
-        emptyView.setListEmpty()
+        pandaRecyclerBinding.emptyView.getEmptyViewImage()?.setImageResource(R.drawable.ic_panda_nobookmarks)
+        pandaRecyclerBinding.emptyView.setTitleText(R.string.noBookmarks)
+        pandaRecyclerBinding.emptyView.setMessageText(R.string.noBookmarksSubtext)
+        pandaRecyclerBinding.emptyView.setListEmpty()
     }
 
     override fun title(): String = getString(R.string.bookmarks)
@@ -115,8 +120,8 @@ class BookmarksFragment : ParentFragment() {
     private fun configureRecyclerView() {
         configureRecyclerAdapter()
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView, R.string.no_bookmarks)
-        listView.addItemDecoration(DividerDecoration(requireContext()))
-        listView.isSelectionEnabled = false
+        pandaRecyclerBinding.listView.addItemDecoration(DividerDecoration(requireContext()))
+        pandaRecyclerBinding.listView.isSelectionEnabled = false
     }
 
     private fun configureRecyclerAdapter() {

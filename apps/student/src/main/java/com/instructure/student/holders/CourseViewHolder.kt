@@ -30,9 +30,9 @@ import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderCourseCardBinding
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.util.StudentPrefs
-import kotlinx.android.synthetic.main.viewholder_course_card.view.*
 
 class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -41,7 +41,7 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(course: Course, callback: CourseAdapterToFragmentCallback): Unit = with(itemView) {
+    fun bind(course: Course, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
@@ -76,7 +76,7 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
             popup.show()
         }
-        overflow.contentDescription = context.getString(R.string.courseOptionsFormatted, course.name)
+        overflow.contentDescription = root.context.getString(R.string.courseOptionsFormatted, course.name)
 
         val courseGrade = course.getCourseGrade(false)
 
@@ -85,11 +85,11 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if(courseGrade.isLocked) {
                 gradeTextView.setGone()
                 lockedGradeImage.setVisible()
-                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_lock, course.textAndIconColor))
+                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(root.context, R.drawable.ic_lock, course.textAndIconColor))
             } else {
                 gradeTextView.setVisible()
                 lockedGradeImage.setGone()
-                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, context)
+                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, root.context)
             }
         } else {
             gradeLayout.setGone()

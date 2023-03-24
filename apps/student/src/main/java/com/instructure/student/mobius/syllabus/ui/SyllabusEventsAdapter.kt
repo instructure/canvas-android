@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.setGone
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderCardGenericBinding
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.viewholder_card_generic.view.*
 
 class SyllabusEventsAdapter(val consumer: Consumer<SyllabusEvent>?) : RecyclerView.Adapter<SyllabusEventViewHolder>() {
 
@@ -58,15 +58,16 @@ class SyllabusEventsAdapter(val consumer: Consumer<SyllabusEvent>?) : RecyclerVi
 class SyllabusEventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun onBind(consumer: Consumer<SyllabusEvent>?, event: ScheduleItemViewState) {
-        with (itemView) {
+        val binding = ViewholderCardGenericBinding.bind(itemView)
+        with (binding) {
             description.setGone()
             points.setGone()
 
             title.text = event.title
             date.text = event.date
-            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, event.iconRes, event.color))
+            icon.setImageDrawable(ColorKeeper.getColoredDrawable(binding.root.context, event.iconRes, event.color))
 
-            setOnClickListener { consumer?.accept(SyllabusEvent.SyllabusItemClicked(event.id)) }
+            binding.root.setOnClickListener { consumer?.accept(SyllabusEvent.SyllabusItemClicked(event.id)) }
         }
     }
 

@@ -16,8 +16,8 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui
 
-import com.instructure.student.R
 import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 
 class SubmissionCommentsEmptyBinder : BasicItemBinder<CommentItemState.Empty, SubmissionCommentsAdapterCallback>() {

@@ -18,7 +18,6 @@
 package com.instructure.student.fragment
 
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.LayoutInflater
@@ -34,14 +33,17 @@ import com.instructure.canvasapi2.models.MasteryPath
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MASTERY_PATH_SELECTION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_assignment.*
+import com.instructure.student.databinding.FragmentAssignmentBinding
 import java.lang.ref.WeakReference
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_MASTERY_PATH_SELECTION)
 class MasteryPathSelectionFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentAssignmentBinding::bind)
 
     // Bundle Args
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -58,7 +60,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab) {
-            viewPager.setCurrentItem(tab.position, true)
+            binding.viewPager.setCurrentItem(tab.position, true)
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -78,8 +80,8 @@ class MasteryPathSelectionFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewPager.offscreenPageLimit = 2
-        viewPager.isSaveFromParentEnabled = false // Prevents a crash with FragmentStatePagerAdapter
+        binding.viewPager.offscreenPageLimit = 2
+        binding.viewPager.isSaveFromParentEnabled = false // Prevents a crash with FragmentStatePagerAdapter
         fragmentPagerAdapter = FragmentPagerDetailAdapter(childFragmentManager)
     }
 
@@ -88,15 +90,15 @@ class MasteryPathSelectionFragment : ParentFragment() {
 
         setupTabLayoutColors()
 
-        with(viewPager) {
+        with(binding.viewPager) {
             adapter = fragmentPagerAdapter
-            addOnPageChangeListener(com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+            addOnPageChangeListener(com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout))
         }
 
-        with(tabLayout) {
+        with(binding.tabLayout) {
             tabMode = if (!isTablet && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
                 com.google.android.material.tabs.TabLayout.MODE_SCROLLABLE else com.google.android.material.tabs.TabLayout.MODE_FIXED
-            setupWithViewPager(viewPager)
+            setupWithViewPager(binding.viewPager)
             addOnTabSelectedListener(tabSelectedListener)
         }
 
@@ -105,12 +107,12 @@ class MasteryPathSelectionFragment : ParentFragment() {
         }
 
         // currentTab can either be save on orientation change or handleIntentExtras (when someone opens a link from an email)
-        viewPager.currentItem = currentTab
+        binding.viewPager.currentItem = currentTab
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        tabLayout.tabMode = if (!isTablet && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        binding.tabLayout.tabMode = if (!isTablet && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
             TabLayout.MODE_SCROLLABLE else TabLayout.MODE_FIXED
     }
 
@@ -119,10 +121,8 @@ class MasteryPathSelectionFragment : ParentFragment() {
         outState.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
         outState.putParcelable(Const.MASTERY_PATH, masteryPath)
 
-        if (viewPager != null) {
-            outState.putInt(Const.TAB_ID, viewPager.currentItem)
-            currentTab = viewPager!!.currentItem
-        }
+        outState.putInt(Const.TAB_ID, binding.viewPager.currentItem)
+        currentTab = binding.viewPager.currentItem
     }
     //endregion
 
@@ -130,7 +130,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
     override fun title(): String = getString(R.string.choose_assignment_group)
 
     override fun applyTheme() {
-        toolbar.let {
+        binding.toolbar.let {
             it.title = getString(R.string.chooseAssignmentPath)
             it.setupAsBackButton(this)
             ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
@@ -142,8 +142,8 @@ class MasteryPathSelectionFragment : ParentFragment() {
     //region Setup
     private fun setupTabLayoutColors() {
         val color = canvasContext.backgroundColor
-        tabLayout.setBackgroundColor(color)
-        tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.white))
+        binding.tabLayout.setBackgroundColor(color)
+        binding.tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.white))
     }
     //endregion
 

@@ -30,6 +30,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.Submission
+import com.instructure.student.databinding.FragmentSubmissionDetailsBinding
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
@@ -40,7 +41,7 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 @ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
 class SubmissionDetailsFragment :
-    MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState>() {
+    MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState, FragmentSubmissionDetailsBinding>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 

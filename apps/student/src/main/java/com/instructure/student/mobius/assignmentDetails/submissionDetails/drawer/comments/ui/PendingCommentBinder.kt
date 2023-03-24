@@ -17,7 +17,6 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui
 
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableString
@@ -33,11 +32,11 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
+import com.instructure.student.databinding.AdapterSubmissionCommentPendingBinding
 import com.instructure.student.db.Db
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.squareup.sqldelight.Query
-import kotlinx.android.synthetic.main.adapter_submission_comment_pending.view.*
 
 class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem, SubmissionCommentsAdapterCallback>() {
 
@@ -49,32 +48,34 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
 
     override val bindBehavior = ItemWithHolder { holder, item, callback, _ ->
         check(holder is PendingCommentHolder) { "Invalid holder type for PendingCommentBinder" }
+        val binding = AdapterSubmissionCommentPendingBinding.bind(this)
+        with (binding) {
+            commentHolder.direction = CommentDirection.OUTGOING
+            commentHolder.usernameText = Pronouns.span(item.authorName, item.authorPronouns)
+            commentHolder.setAvatar(item.avatarUrl, item.authorName)
 
-        commentHolder.direction = CommentDirection.OUTGOING
-        commentHolder.usernameText = Pronouns.span(item.authorName, item.authorPronouns)
-        commentHolder.setAvatar(item.avatarUrl, item.authorName)
-
-        holder.setListenerForItem(item.pendingComment.id) { comment ->
-            commentHolder.commentText = comment.message
-            if (comment.errorFlag) {
-                onClick { displayRetryOptions(errorLayout, comment.id, callback) }
-                commentHolder.dateText = context.getString(R.string.error)
-                errorLayout.setVisible()
-                sendingLayout.setGone()
-            } else {
-                setOnClickListener(null)
-                commentHolder.dateText = context.getString(R.string.sending)
-                errorLayout.setGone()
-                sendingLayout.setVisible()
-                if (comment.fileCount == 0L) {
-                    indeterminateProgressBar.setVisible()
-                    progressBar.setGone()
+            holder.setListenerForItem(item.pendingComment.id) { comment ->
+                commentHolder.commentText = comment.message
+                if (comment.errorFlag) {
+                    onClick { displayRetryOptions(errorLayout, comment.id, callback) }
+                    commentHolder.dateText = context.getString(R.string.error)
+                    errorLayout.setVisible()
+                    sendingLayout.setGone()
                 } else {
-                    indeterminateProgressBar.setGone()
-                    progressBar.setVisible()
-                    progressBar.max = 1000
-                    val progress = 1000 * (comment.progress ?: 0.0)
-                    progressBar.setProgress(progress.toInt(), true)
+                    setOnClickListener(null)
+                    commentHolder.dateText = context.getString(R.string.sending)
+                    errorLayout.setGone()
+                    sendingLayout.setVisible()
+                    if (comment.fileCount == 0L) {
+                        indeterminateProgressBar.setVisible()
+                        progressBar.setGone()
+                    } else {
+                        indeterminateProgressBar.setGone()
+                        progressBar.setVisible()
+                        progressBar.max = 1000
+                        val progress = 1000 * (comment.progress ?: 0.0)
+                        progressBar.setProgress(progress.toInt(), true)
+                    }
                 }
             }
         }

@@ -17,7 +17,6 @@
 package com.instructure.student.fragment
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -33,14 +32,17 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_view_image.*
+import com.instructure.student.databinding.FragmentViewImageBinding
 import org.greenrobot.eventbus.EventBus
 
 class ViewImageFragment : Fragment(), ShareableFile {
+
+    private val binding by viewBinding(FragmentViewImageBinding::bind)
 
     private var mUri by ParcelableArg(Uri.EMPTY)
     private var mContentType by StringArg()
@@ -60,10 +62,10 @@ class ViewImageFragment : Fragment(), ShareableFile {
         if (fileFolderDeletedEvent != null)
             requireActivity().finish()
 
-        if (mShowToolbar) setupToolbar() else toolbar.setGone()
+        if (mShowToolbar) setupToolbar() else binding.toolbar.setGone()
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
 
         mEditableFile?.let {
 
@@ -90,16 +92,16 @@ class ViewImageFragment : Fragment(), ShareableFile {
     private val requestListener = object : RequestListener<Drawable> {
 
         override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<Drawable>?, p3: Boolean): Boolean {
-            photoView.setGone()
-            progressBar.setGone()
-            errorContainer.setVisible()
-            ViewStyler.themeButton(openExternallyButton)
-            openExternallyButton.onClick { mUri.viewExternally(requireContext(), mContentType) }
+            binding.photoView.setGone()
+            binding.progressBar.setGone()
+            binding.errorContainer.setVisible()
+            ViewStyler.themeButton(binding.openExternallyButton)
+            binding.openExternallyButton.onClick { mUri.viewExternally(requireContext(), mContentType) }
             return false
         }
 
         override fun onResourceReady(drawable: Drawable?, p1: Any?, p2: Target<Drawable>?, p3: DataSource?, p4: Boolean): Boolean {
-            progressBar.setGone()
+            binding.progressBar.setGone()
 
             // Try to set the background color using palette if we can
             (drawable as? BitmapDrawable)?.bitmap?.let { colorBackground(it) }
@@ -109,11 +111,11 @@ class ViewImageFragment : Fragment(), ShareableFile {
 
     override fun onStart() {
         super.onStart()
-        progressBar.announceForAccessibility(getString(R.string.loading))
+        binding.progressBar.announceForAccessibility(getString(R.string.loading))
         Glide.with(this)
                 .load(mUri)
                 .listener(requestListener)
-                .into(photoView)
+                .into(binding.photoView)
     }
 
     override fun viewExternally() {
@@ -123,7 +125,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
     fun colorBackground(bitmap: Bitmap) {
         // Generate palette asynchronously
         Palette.from(bitmap).generate { palette ->
-            palette?.let { viewImageRootView.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
+            palette?.let { binding.viewImageRootView.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
         }
     }
 
