@@ -16,7 +16,7 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "1.7.21"
+    const val KOTLIN = "1.8.10"
     const val KOTLIN_COROUTINES = "1.6.4"
 
     /* Google, Play Services */
@@ -136,7 +136,7 @@ object Libs {
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
-    const val OKIO = "com.squareup.okio:okio:3.2.0"
+    const val OKIO = "com.squareup.okio:okio:3.3.0"
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:6.0.0"
