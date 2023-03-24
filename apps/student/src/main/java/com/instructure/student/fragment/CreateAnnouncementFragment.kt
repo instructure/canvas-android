@@ -36,18 +36,21 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_ANNOUNCEMENT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentCreateAnnouncementBinding
 import com.instructure.student.events.DiscussionCreatedEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.post
-import kotlinx.android.synthetic.main.fragment_create_announcement.*
 import kotlinx.coroutines.Job
 
 @PageView("courses/{canvasContext}/discussion_topics/new?is_announcement=true")
 @ScreenView(SCREEN_VIEW_CREATE_ANNOUNCEMENT)
 class CreateAnnouncementFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentCreateAnnouncementBinding::bind)
 
     /* The announcement to be edited. This will be null if we're creating a new announcement */
     private var editAnnouncement by NullableParcelableArg<DiscussionTopicHeader>(key = DISCUSSION_TOPIC_HEADER)
@@ -55,7 +58,7 @@ class CreateAnnouncementFragment : ParentFragment() {
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     /* Menu buttons. We don't cache these because the toolbar is reconstructed on configuration change. */
-    private val mSaveMenuButton get() = createAnnouncementToolbar.menu.findItem(R.id.menuSaveAnnouncement)
+    private val mSaveMenuButton get() = binding.createAnnouncementToolbar.menu.findItem(R.id.menuSaveAnnouncement)
     private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
 
     private var apiJob: Job? = null
@@ -108,7 +111,7 @@ class CreateAnnouncementFragment : ParentFragment() {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> announcementRCEView.insertImage(requireActivity(), imageUrl) }
+                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> binding.announcementRCEView.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
@@ -125,22 +128,22 @@ class CreateAnnouncementFragment : ParentFragment() {
     //region Parent Fragment Overrides
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        announcement.message = announcementRCEView.html
+        announcement.message = binding.announcementRCEView.html
     }
 
     //endregion
 
     //region Setup
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         createAnnouncementToolbar.setupAsCloseButton {
-            if (announcement.message == announcementRCEView?.html) {
+            if (announcement.message == announcementRCEView.html) {
                 skipUnsavedCheck = true
                 activity?.onBackPressed()
             } else {
-                UnsavedChangesExitDialog.show(requireFragmentManager(), {
+                UnsavedChangesExitDialog.show(requireFragmentManager()) {
                     skipUnsavedCheck = true
                     activity?.onBackPressed()
-                })
+                }
             }
         }
         createAnnouncementToolbar.title = getString(if (isEditing) R.string.utils_editAnnouncementTitle else R.string.utils_createAnnouncementTitle)
@@ -167,11 +170,13 @@ class CreateAnnouncementFragment : ParentFragment() {
         setupUsersMustPostSwitch()
 
         // Attempting to upload an image before description gets focus does nothing - hide the RCE toolbar initially -
-        announcementRCEView.hideEditorToolbar()
-        announcementRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        binding.announcementRCEView.apply {
+            hideEditorToolbar()
+            actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@CreateAnnouncementFragment) }
+        }
     }
 
-    private fun setupTitle() {
+    private fun setupTitle() = with(binding) {
         ViewStyler.themeEditText(requireContext(), announcementNameEditText, ThemePrefs.brandColor)
         announcementNameTextInput.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL))
         announcementNameEditText.setText(announcement.title)
@@ -181,7 +186,7 @@ class CreateAnnouncementFragment : ParentFragment() {
         }
     }
 
-    private fun setupDescription() {
+    private fun setupDescription() = with(binding) {
         announcementRCEView.setHtml(
                 announcement.message,
                 getString(R.string.utils_announcementDetails),
@@ -192,7 +197,7 @@ class CreateAnnouncementFragment : ParentFragment() {
         announcementRCEView.setLabel(announcementDescLabel, R.color.textDarkest, R.color.textDark)
     }
 
-    private fun enableUsersMustPostSwitch(enabled: Boolean) {
+    private fun enableUsersMustPostSwitch(enabled: Boolean) = with(binding) {
         if (enabled) {
             usersMustPostWrapper.alpha = 1f
             usersMustPostSwitch.isEnabled = true
@@ -203,7 +208,7 @@ class CreateAnnouncementFragment : ParentFragment() {
         }
     }
 
-    private fun setupAllowCommentsSwitch() {
+    private fun setupAllowCommentsSwitch() = with(binding) {
         allowCommentsSwitch.applyTheme()
         allowCommentsSwitch.isChecked = !announcement.locked
         allowCommentsSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -213,7 +218,7 @@ class CreateAnnouncementFragment : ParentFragment() {
     }
 
     private fun setupUsersMustPostSwitch() {
-        with (usersMustPostSwitch) {
+        with (binding.usersMustPostSwitch) {
             applyTheme()
             isChecked = announcement.requireInitialPost
             enableUsersMustPostSwitch(!announcement.locked)
@@ -225,7 +230,7 @@ class CreateAnnouncementFragment : ParentFragment() {
     //endregion
 
     //region Save Related
-    private fun saveAnnouncement() {
+    private fun saveAnnouncement() = with(binding) {
         val description = announcementRCEView.html
         if (description.isBlank()) {
             toast(R.string.utils_createAnnouncementNoDescription)
@@ -242,7 +247,7 @@ class CreateAnnouncementFragment : ParentFragment() {
         saveAnnouncementAPI()
     }
 
-    private fun onSaveStarted() {
+    private fun onSaveStarted() = with(binding) {
         mSaveMenuButton.isVisible = false
         savingProgressBar.announceForAccessibility(getString(R.string.utils_saving))
         savingProgressBar.setVisible()
@@ -250,7 +255,7 @@ class CreateAnnouncementFragment : ParentFragment() {
 
     private fun onSaveError() {
         mSaveMenuButton.isVisible = true
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
         toast(R.string.utils_errorSavingAnnouncement)
     }
 
@@ -260,7 +265,7 @@ class CreateAnnouncementFragment : ParentFragment() {
         } else {
             toast(R.string.utils_announcementSuccessfullyCreated)
         }
-        announcementNameEditText.hideKeyboard() // close the keyboard
+        binding.announcementNameEditText.hideKeyboard() // close the keyboard
         requireActivity().onBackPressed() // close this fragment
     }
 
@@ -287,7 +292,7 @@ class CreateAnnouncementFragment : ParentFragment() {
     }
 
     override fun handleBackPressed(): Boolean {
-        return if (!skipUnsavedCheck && announcement.message != announcementRCEView?.html) {
+        return if (!skipUnsavedCheck && announcement.message != binding.announcementRCEView?.html) {
             UnsavedChangesExitDialog.show(requireFragmentManager()) {
                 skipUnsavedCheck = true
                 activity?.onBackPressed()

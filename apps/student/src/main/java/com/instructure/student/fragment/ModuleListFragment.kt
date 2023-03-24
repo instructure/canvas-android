@@ -34,25 +34,28 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.ModuleListRecyclerAdapter
+import com.instructure.student.databinding.FragmentModuleListBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.CourseModulesStore
 import com.instructure.student.util.ModuleProgressionUtility
 import com.instructure.student.util.ModuleUtility
-import kotlinx.android.synthetic.main.fragment_module_list.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
 
 @ScreenView(SCREEN_VIEW_MODULE_LIST)
 @PageView(url = "modules")
 class ModuleListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(FragmentModuleListBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var recyclerAdapter: ModuleListRecyclerAdapter
@@ -85,6 +88,11 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = layoutInflater.inflate(R.layout.fragment_module_list, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -94,19 +102,19 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (recyclerAdapter.size() == 0) {
-            emptyView.changeTextSize()
+            recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
                 } else {
-                    emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     //change nothing, at least for now
                 } else {
-                    emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
+                    recyclerBinding.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
                 }
             }
         }
@@ -118,10 +126,12 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun title(): String = getString(R.string.modules)
 
     override fun applyTheme() {
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        setupToolbarMenu(toolbar)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        with(binding) {
+            toolbar.title = title()
+            toolbar.setupAsBackButton(this@ModuleListFragment)
+            setupToolbarMenu(toolbar)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        }
     }
 
     //endregion
@@ -162,18 +172,18 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 setRefreshing(false)
                 if(isError) {
                     // We need to force the empty view to be visible to use it for errors on refresh
-                    emptyView?.setVisible()
-                    setEmptyView(emptyView, R.drawable.ic_panda_nomodules, R.string.modulesLocked, R.string.modulesLockedSubtext)
+                    recyclerBinding.emptyView.setVisible()
+                    setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_nomodules, R.string.modulesLocked, R.string.modulesLockedSubtext)
                 } else if (recyclerAdapter.size() == 0) {
-                    setEmptyView(emptyView, R.drawable.ic_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
+                    setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
                 } else if (!arguments?.getString(MODULE_ID).isNullOrEmpty()) {
                     // We need to delay scrolling until the expand animation has completed, otherwise modules
                     // that appear near the end of the list will not have the extra 'expanded' space needed
                     // to scroll as far as possible toward the top
-                    listView?.postDelayed({
+                    recyclerBinding.listView.postDelayed({
                         val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())
                         if (groupPosition >= 0) {
-                            val lm = listView?.layoutManager as? LinearLayoutManager
+                            val lm = recyclerBinding.listView.layoutManager as? LinearLayoutManager
                             lm?.scrollToPositionWithOffset(groupPosition, 0)
                             arguments?.remove(MODULE_ID)
                         }

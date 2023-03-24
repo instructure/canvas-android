@@ -20,11 +20,11 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderSubHeaderModuleBinding
 import com.instructure.student.util.BinderUtils
-import kotlinx.android.synthetic.main.viewholder_sub_header_module.view.*
 
 class ModuleSubHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(moduleItem: ModuleItem, isFirstItem: Boolean, isLastItem: Boolean) = with(itemView) {
+    fun bind(moduleItem: ModuleItem, isFirstItem: Boolean, isLastItem: Boolean) = with(ViewholderSubHeaderModuleBinding.bind(itemView)) {
         if (ModuleItem.Type.SubHeader.toString().equals(moduleItem.type, ignoreCase = true)) {
             subTitle.text = moduleItem.title
         }

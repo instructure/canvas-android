@@ -16,7 +16,6 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
-import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
 
 class InboxPage: BasePage() {
@@ -81,8 +80,29 @@ class InboxPage: BasePage() {
         else onView(withId(R.id.unreadMark) + ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE))
     }
 
-    fun assertConversationStarred(recipients: String) {
-        onView(allOf(withId(R.id.star) + hasSibling(withId(R.id.userName) + withText(recipients))))
+    fun assertConversationStarred(subject: String) {
+        val matcher = Matchers.allOf(
+            withId(R.id.star),
+            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            hasSibling(withId(R.id.userName)),
+            hasSibling(withId(R.id.date)),
+            hasSibling(Matchers.allOf(withId(R.id.subjectView), withText(subject)))
+        )
+        waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
+        onView(matcher).assertDisplayed()
+    }
+
+    fun assertConversationNotStarred(subject: String) {
+        val matcher = Matchers.allOf(
+            withId(R.id.star),
+            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            hasSibling(withId(R.id.userName)),
+            hasSibling(withId(R.id.date)),
+            hasSibling(Matchers.allOf(withId(R.id.subjectView), withText(subject)))
+        )
+        waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
+        onView(matcher).check(ViewAssertions.doesNotExist())
+
     }
 
     fun assertConversationDisplayed(subject: String) {
@@ -124,10 +144,6 @@ class InboxPage: BasePage() {
 
     fun selectConversation(conversation: ConversationApiModel) {
         selectConversation(conversation.subject!!)
-    }
-
-    fun assertEditToolbarDisplayed() {
-        editToolbar.assertDisplayed()
     }
 
     fun clickArchive() {
@@ -204,5 +220,17 @@ class InboxPage: BasePage() {
 
     fun assertSelectedConversationNumber(selectedConversationNumber: String) {
         onView(withText(selectedConversationNumber) + withAncestor(R.id.editToolbar))
+    }
+
+    fun assertEditToolbarIs(visibility: ViewMatchers.Visibility) {
+        editToolbar.assertVisibility(visibility)
+    }
+
+    fun assertStarDisplayed() {
+        waitForViewWithId(R.id.inboxStarSelected).assertDisplayed()
+    }
+
+    fun assertUnStarDisplayed() {
+        waitForViewWithId(R.id.inboxUnstarSelected).assertDisplayed()
     }
 }

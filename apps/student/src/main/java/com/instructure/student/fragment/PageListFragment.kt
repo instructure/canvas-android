@@ -32,20 +32,24 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.PageListRecyclerAdapter
+import com.instructure.student.databinding.FragmentCoursePagesBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_course_pages.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 @ScreenView(SCREEN_VIEW_PAGE_LIST)
 @PageView(url = "{canvasContext}/pages")
 class PageListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(FragmentCoursePagesBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     private var rootView: View? = null
 
@@ -86,6 +90,13 @@ class PageListFragment : ParentFragment(), Bookmarkable {
         super.onCreateView(inflater, container, savedInstanceState)
 
         rootView = layoutInflater.inflate(R.layout.fragment_course_pages, container, false)
+        
+        return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = PageListRecyclerAdapter(requireContext(), canvasContext, object : AdapterToFragmentCallback<Page> {
             override fun onRowClicked(page: Page, position: Int, isOpenDetail: Boolean) {
                 RouteMatcher.route(requireContext(), PageDetailsFragment.makeRoute(canvasContext, page))
@@ -93,12 +104,11 @@ class PageListFragment : ParentFragment(), Bookmarkable {
 
             override fun onRefreshFinished() {
                 setRefreshing(false)
-                setEmptyView(emptyView, R.drawable.ic_panda_nofiles, R.string.noPages, R.string.noPagesSubtext)
+                setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_nofiles, R.string.noPages, R.string.noPagesSubtext)
             }
         }, defaultSelectedPageTitle)
 
         configureRecyclerView(rootView!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
-        return rootView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -113,19 +123,19 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(rootView!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
-        emptyView.changeTextSize()
+        recyclerBinding.emptyView.changeTextSize()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (isTablet) {
-                emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                recyclerBinding.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
             } else {
-                emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                recyclerBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
             }
         } else {
             if (isTablet) {
                 //change nothing, at least for now
             } else {
-                emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
+                recyclerBinding.emptyView.setGuidelines(.25f, .7f, .74f, .15f, .85f)
             }
         }
     }
@@ -137,21 +147,23 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        setupToolbarMenu(toolbar)
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        toolbar.addSearch(getString(R.string.searchPagesHint)) { query ->
-            if (query.isBlank()) {
-                emptyView?.emptyViewText(R.string.noItemsToDisplayShort)
-            } else {
-                emptyView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+        with (binding) {
+            setupToolbarMenu(toolbar)
+            toolbar.title = title()
+            toolbar.setupAsBackButton(this@PageListFragment)
+            toolbar.addSearch(getString(R.string.searchPagesHint)) { query ->
+                if (query.isBlank()) {
+                    recyclerBinding.emptyView.emptyViewText(R.string.noItemsToDisplayShort)
+                } else {
+                    recyclerBinding.emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                }
+                recyclerAdapter.searchQuery = query
             }
-            recyclerAdapter.searchQuery = query
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
-    override fun handleBackPressed() = toolbar.closeSearch()
+    override fun handleBackPressed() = binding.toolbar.closeSearch()
 
     override fun title(): String = getString(R.string.pages)
     //endregion

@@ -19,28 +19,31 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.student.R
+import com.instructure.student.databinding.AdapterSubmissionCommentBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentAttachmentsView
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentMediaAttachmentView
-import kotlinx.android.synthetic.main.adapter_submission_comment.view.*
 
 class SubmissionCommentBinder : BasicItemBinder<CommentItemState.CommentItem, SubmissionCommentsAdapterCallback>() {
     override val layoutResId = R.layout.adapter_submission_comment
     override val bindBehavior = Item { comment, callback, _ ->
-        commentHolder.usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
-        commentHolder.dateText = comment.dateText
-        commentHolder.commentText = comment.message
-        commentHolder.setAvatar(comment.avatarUrl, comment.authorName)
-        commentHolder.direction = if (comment.isAudience) CommentDirection.INCOMING else CommentDirection.OUTGOING
-        if (comment.media != null) {
-            commentHolder.setExtraView(
-                CommentMediaAttachmentView(context, comment.media, comment.tint) { callback.onCommentAttachmentClicked(it) }
-            )
-        } else {
-            commentHolder.setExtraView(
-                CommentAttachmentsView(context, comment.attachments, comment.tint) { callback.onCommentAttachmentClicked(it) }
-            )
+        val binding = AdapterSubmissionCommentBinding.bind(this)
+        binding.commentHolder.apply {
+            usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
+            dateText = comment.dateText
+            commentText = comment.message
+            setAvatar(comment.avatarUrl, comment.authorName)
+            direction = if (comment.isAudience) CommentDirection.INCOMING else CommentDirection.OUTGOING
+            if (comment.media != null) {
+                setExtraView(
+                    CommentMediaAttachmentView(context, comment.media, comment.tint) { callback.onCommentAttachmentClicked(it) }
+                )
+            } else {
+                setExtraView(
+                    CommentAttachmentsView(context, comment.attachments, comment.tint) { callback.onCommentAttachmentClicked(it) }
+                )
+            }
         }
     }
 }

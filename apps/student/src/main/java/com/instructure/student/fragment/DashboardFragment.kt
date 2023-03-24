@@ -42,11 +42,14 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
+import com.instructure.student.databinding.CourseGridRecyclerRefreshLayoutBinding
+import com.instructure.student.databinding.FragmentCourseGridBinding
 import com.instructure.student.decorations.VerticalGridSpacingDecoration
 import com.instructure.student.dialog.ColorPickerDialog
 import com.instructure.student.dialog.EditCourseNicknameDialog
@@ -57,18 +60,17 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
-import kotlinx.android.synthetic.main.course_grid_recycler_refresh_layout.*
-import kotlinx.android.synthetic.main.fragment_course_grid.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.swipeRefreshLayout
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
 
 private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
 class DashboardFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentCourseGridBinding::bind)
+    private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
 
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -80,7 +82,7 @@ class DashboardFragment : ParentFragment() {
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             if (recyclerAdapter != null && intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
-                swipeRefreshLayout?.isRefreshing = true
+                recyclerBinding.swipeRefreshLayout.isRefreshing = true
                 recyclerAdapter?.refresh()
             }
         }
@@ -93,7 +95,7 @@ class DashboardFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
         applyTheme()
     }
 
@@ -104,8 +106,8 @@ class DashboardFragment : ParentFragment() {
         recyclerAdapter = DashboardRecyclerAdapter(requireActivity(), object : CourseAdapterToFragmentCallback {
 
             override fun onRefreshFinished() {
-                swipeRefreshLayout?.isRefreshing = false
-                notificationsFragment?.setVisible()
+                recyclerBinding.swipeRefreshLayout.isRefreshing = false
+                recyclerBinding.notificationsFragment.setVisible()
             }
 
             override fun onSeeAllCourses() {
@@ -157,28 +159,32 @@ class DashboardFragment : ParentFragment() {
         })
 
         configureRecyclerView()
-        recyclerView.isSelectionEnabled = false
+        recyclerBinding.listView.isSelectionEnabled = false
     }
 
     override fun applyTheme() {
-        toolbar.title = title()
-        // Styling done in attachNavigationDrawer
-        navigation?.attachNavigationDrawer(this, toolbar)
+        with (binding) {
+            toolbar.title = title()
+            // Styling done in attachNavigationDrawer
+            navigation?.attachNavigationDrawer(this@DashboardFragment, toolbar)
 
-        toolbar.setMenu(R.menu.menu_dashboard) { item ->
-            when (item.itemId) {
-                R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+            toolbar.setMenu(R.menu.menu_dashboard) { item ->
+                when (item.itemId) {
+                    R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+                }
             }
+
+            val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+            val menuIconRes =
+                if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+            dashboardLayoutMenuItem.setIcon(menuIconRes)
+
+            val menuTitleRes =
+                if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+            dashboardLayoutMenuItem.setTitle(menuTitleRes)
+
+            recyclerAdapter?.notifyDataSetChanged()
         }
-
-        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
-        val menuIconRes = if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
-        dashboardLayoutMenuItem.setIcon(menuIconRes)
-
-        val menuTitleRes = if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
-        dashboardLayoutMenuItem.setTitle(menuTitleRes)
-
-        recyclerAdapter?.notifyDataSetChanged()
     }
 
     private fun changeDashboardLayout(item: MenuItem) {
@@ -192,10 +198,10 @@ class DashboardFragment : ParentFragment() {
             StudentPrefs.listDashboard = true
         }
 
-        recyclerView.fadeAnimationWithAction {
+        recyclerBinding.listView.fadeAnimationWithAction {
             courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
             groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
-            (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
+            (recyclerBinding.listView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
             view?.post { recyclerAdapter?.notifyDataSetChanged() }
         }
     }
@@ -205,21 +211,21 @@ class DashboardFragment : ParentFragment() {
         configureRecyclerView()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (isTablet) {
-                emptyCoursesView.setGuidelines(.37f, .49f, .6f, .7f, .12f, .88f)
+                binding.emptyCoursesView.setGuidelines(.37f, .49f, .6f, .7f, .12f, .88f)
             } else {
-                emptyCoursesView.setGuidelines(.36f, .54f, .64f,.77f, .12f, .88f)
+                binding.emptyCoursesView.setGuidelines(.36f, .54f, .64f,.77f, .12f, .88f)
 
             }
         } else {
             if (isTablet) {
                 // Change nothing, at least for now
             } else {
-                emptyCoursesView.setGuidelines(.27f, .52f, .58f,.73f, .15f, .85f)
+                binding.emptyCoursesView.setGuidelines(.27f, .52f, .58f,.73f, .15f, .85f)
             }
         }
     }
 
-    private fun configureRecyclerView() {
+    private fun configureRecyclerView() = with(binding) {
         // Set up GridLayoutManager
         courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
         groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
@@ -231,7 +237,7 @@ class DashboardFragment : ParentFragment() {
         )
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                val viewType = recyclerView.adapter!!.getItemViewType(position)
+                val viewType = recyclerBinding.listView.adapter!!.getItemViewType(position)
                 return when (DashboardRecyclerAdapter.ItemType.values()[viewType]) {
                     DashboardRecyclerAdapter.ItemType.COURSE -> groupColumns
                     DashboardRecyclerAdapter.ItemType.GROUP -> courseColumns
@@ -241,27 +247,26 @@ class DashboardFragment : ParentFragment() {
         }
 
         // Add decoration
-        recyclerView.removeAllItemDecorations()
-        recyclerView.addItemDecoration(VerticalGridSpacingDecoration(requireContext(), layoutManager))
-
-        recyclerView.layoutManager = layoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = recyclerAdapter
-        recyclerView.setEmptyView(emptyCoursesView)
-        swipeRefreshLayout.setOnRefreshListener {
+        recyclerBinding.listView.removeAllItemDecorations()
+        recyclerBinding.listView.addItemDecoration(VerticalGridSpacingDecoration(requireContext(), layoutManager))
+        recyclerBinding.listView.layoutManager = layoutManager
+        recyclerBinding.listView.itemAnimator = DefaultItemAnimator()
+        recyclerBinding.listView.adapter = recyclerAdapter
+        recyclerBinding.listView.setEmptyView(emptyCoursesView)
+        recyclerBinding.swipeRefreshLayout.setOnRefreshListener {
             if (!Utils.isNetworkAvailable(context)) {
-                swipeRefreshLayout.isRefreshing = false
+                recyclerBinding.swipeRefreshLayout.isRefreshing = false
             } else {
                 recyclerAdapter?.refresh()
-                notificationsFragment?.setGone()
+                recyclerBinding.notificationsFragment.setGone()
                 (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
             }
         }
 
         // Set up RecyclerView padding
         val padding = resources.getDimensionPixelSize(R.dimen.courseListPadding)
-        recyclerView.setPaddingRelative(padding, padding, padding, padding)
-        recyclerView.clipToPadding = false
+        recyclerBinding.listView.setPaddingRelative(padding, padding, padding, padding)
+        recyclerBinding.listView.clipToPadding = false
 
         emptyCoursesView.onClickAddCourses {
             if (!APIHelper.hasNetworkConnection()) {

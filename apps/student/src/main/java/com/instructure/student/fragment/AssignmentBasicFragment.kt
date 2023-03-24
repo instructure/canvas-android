@@ -29,11 +29,12 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_BASIC
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentAssignmentBasicBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_assignment_basic.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -42,6 +43,8 @@ import java.util.*
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_BASIC)
 class AssignmentBasicFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentAssignmentBasicBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var assignment: Assignment by ParcelableArg()
@@ -63,12 +66,12 @@ class AssignmentBasicFragment : ParentFragment() {
 
     override fun onResume() {
         super.onResume()
-        assignmentWebViewWrapper?.webView?.onResume()
+        binding.assignmentWebViewWrapper.webView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        assignmentWebViewWrapper?.webView?.onPause()
+        binding.assignmentWebViewWrapper.webView.onPause()
     }
 
     override fun onStop() {
@@ -84,7 +87,7 @@ class AssignmentBasicFragment : ParentFragment() {
     //endregion
 
     //region Setup
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         if (assignment.dueAt != null) {
             dueDate.text = getString(R.string.dueAtTime, DateHelper.getDateTimeString(activity, assignment.dueDate))
         } else {
@@ -137,7 +140,7 @@ class AssignmentBasicFragment : ParentFragment() {
         }
 
         loadHtmlJob = assignmentWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
-            assignmentWebViewWrapper?.loadHtml(it, assignment.name)
+            assignmentWebViewWrapper.loadHtml(it, assignment.name)
         }, {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         })
@@ -151,9 +154,9 @@ class AssignmentBasicFragment : ParentFragment() {
     fun onBackStackChangedEvent(event: OnBackStackChangedEvent) {
         event.get { clazz ->
             if (clazz?.isAssignableFrom(AssignmentBasicFragment::class.java) == true) {
-                assignmentWebViewWrapper?.webView?.onResume()
+                binding.assignmentWebViewWrapper.webView.onResume()
             } else {
-                assignmentWebViewWrapper?.webView?.onPause()
+                binding.assignmentWebViewWrapper.webView.onPause()
             }
         }
     }
@@ -162,7 +165,7 @@ class AssignmentBasicFragment : ParentFragment() {
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        toolbar.let {
+        binding.toolbar.let {
             it.title = assignment.name ?: ""
             it.setupAsBackButton(this)
             ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
@@ -173,7 +176,7 @@ class AssignmentBasicFragment : ParentFragment() {
     //endregion
 
     //region Parent Fragment Overrides
-    override fun handleBackPressed(): Boolean = assignmentWebViewWrapper?.webView?.handleGoBack() ?: super.handleBackPressed()
+    override fun handleBackPressed(): Boolean = binding.assignmentWebViewWrapper.webView.handleGoBack() ?: super.handleBackPressed()
     //endregion
 
     private fun getLockedInfoHTML(lockInfo: LockInfo, explanationFirstLine: Int): String {

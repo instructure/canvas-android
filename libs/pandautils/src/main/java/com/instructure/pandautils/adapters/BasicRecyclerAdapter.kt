@@ -180,7 +180,7 @@ class BasicDiffCallback<T: Any, C : BasicItemCallback>(
 
 }
 
-abstract class BasicItemBinder<T : Any, C : BasicItemCallback> {
+abstract class BasicItemBinder<T : Any, C : BasicItemCallback>() {
 
     var viewType: Int = 0
 

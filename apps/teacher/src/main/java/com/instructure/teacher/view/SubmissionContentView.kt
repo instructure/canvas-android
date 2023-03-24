@@ -99,15 +99,15 @@ class SubmissionContentView(
     private val binding: ViewSubmissionContentBinding
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
-        get() = findViewById(R.id.annotationToolbarLayout)
+        get() = binding.annotationToolbarLayout
     override val inspectorCoordinatorLayout: PropertyInspectorCoordinatorLayout
-        get() = findViewById(R.id.inspectorCoordinatorLayout)
+        get() = binding.inspectorCoordinatorLayout
     override val commentsButton: ImageView
-        get() = findViewById(R.id.commentsButton)
+        get() = binding.commentsButton
     override val loadingContainer: FrameLayout
-        get() = findViewById(R.id.loadingContainer)
+        get() = binding.loadingContainer
     override val progressBar: ProgressiveCanvasLoadingView
-        get() = findViewById(R.id.speedGraderProgressBar)
+        get() = binding.speedGraderProgressBar
     override val progressColor: Int
         get() = R.color.login_teacherAppTheme
 

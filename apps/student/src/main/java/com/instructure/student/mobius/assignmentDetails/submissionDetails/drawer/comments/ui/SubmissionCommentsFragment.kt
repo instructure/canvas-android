@@ -25,8 +25,12 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NLongArg
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.PendingSubmissionComment
+import com.instructure.student.databinding.FragmentSubmissionCommentsBinding
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.*
@@ -37,7 +41,7 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @ScreenView(SCREEN_VIEW_SUBMISSION_COMMENTS)
 class SubmissionCommentsFragment :
-        MobiusFragment<SubmissionCommentsModel, SubmissionCommentsEvent, SubmissionCommentsEffect, SubmissionCommentsView, SubmissionCommentsViewState>() {
+        MobiusFragment<SubmissionCommentsModel, SubmissionCommentsEvent, SubmissionCommentsEffect, SubmissionCommentsView, SubmissionCommentsViewState, FragmentSubmissionCommentsBinding>() {
 
     private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
     private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)

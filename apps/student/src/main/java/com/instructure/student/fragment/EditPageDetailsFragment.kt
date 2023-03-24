@@ -38,15 +38,18 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentEditPageBinding
 import com.instructure.student.dialog.UnsavedChangesExitDialog
 import com.instructure.student.events.PageUpdatedEvent
-import kotlinx.android.synthetic.main.fragment_edit_page.*
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_EDIT_PAGE_DETAILS)
 class EditPageDetailsFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentEditPageBinding::bind)
 
     private var apiJob: WeaveJob? = null
     private var rceImageJob: WeaveJob? = null
@@ -55,7 +58,7 @@ class EditPageDetailsFragment : ParentFragment() {
     private var page: Page by ParcelableArg(key = Const.PAGE)
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
-    private val saveMenuButton get() = toolbar.menu.findItem(R.id.menuSavePage)
+    private val saveMenuButton get() = binding.toolbar.menu.findItem(R.id.menuSavePage)
     private val saveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSavePage)
 
     @PageViewUrl
@@ -80,10 +83,10 @@ class EditPageDetailsFragment : ParentFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        pageRCEView.actionUploadImageCallback = {
+        binding.pageRCEView.actionUploadImageCallback = {
             MediaUploadUtils.showPickImageDialog(this)
         }
-        pageRCEView.requestEditorFocus()
+        binding.pageRCEView.requestEditorFocus()
     }
 
     override fun onDestroyView() {
@@ -108,7 +111,7 @@ class EditPageDetailsFragment : ParentFragment() {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                rceImageJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> pageRCEView.insertImage(requireActivity(), imageUrl) }
+                rceImageJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> binding.pageRCEView.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
@@ -124,10 +127,10 @@ class EditPageDetailsFragment : ParentFragment() {
 
     private fun shouldAllowExit(): Boolean {
         // Check if edited page has changes
-        return page.id != 0L && page.body ?: "" == pageRCEView?.html
+        return page.id != 0L && (page.body ?: "") == binding.pageRCEView.html
     }
 
-    private fun setupDescription() {
+    private fun setupDescription() = with(binding) {
         pageRCEView.setHtml(
                 page.body,
                 getString(R.string.pageDetails),
@@ -142,7 +145,7 @@ class EditPageDetailsFragment : ParentFragment() {
         onSaveStarted()
         apiJob = tryWeave {
             val postBody = PagePostBody(
-                    pageRCEView.html,
+                    binding.pageRCEView.html,
                     page.title,
                     page.frontPage == true,
                     page.editingRoles,
@@ -160,13 +163,13 @@ class EditPageDetailsFragment : ParentFragment() {
 
     private fun onSaveStarted() {
         saveMenuButton.isVisible = false
-        savingProgressBar.announceForAccessibility(getString(R.string.saving))
-        savingProgressBar.setVisible()
+        binding.savingProgressBar.announceForAccessibility(getString(R.string.saving))
+        binding.savingProgressBar.setVisible()
     }
 
     private fun onSaveError() {
         saveMenuButton.isVisible = true
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
         toast(R.string.errorSavingPage)
     }
 
@@ -177,7 +180,7 @@ class EditPageDetailsFragment : ParentFragment() {
     //endregion
 
     //region Setup
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         toolbar.setupAsCloseButton {
             if (shouldAllowExit()) {
                 activity?.onBackPressed()

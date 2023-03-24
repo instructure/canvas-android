@@ -40,12 +40,9 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.router.RouteMatcher
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import kotlinx.android.extensions.CacheImplementation
-import kotlinx.android.extensions.ContainerOptions
 
 @ScreenView(SCREEN_VIEW_CALENDAR)
 @PageView(url = "calendar")
-@ContainerOptions(cache = CacheImplementation.NO_CACHE)
 class CalendarFragment : ParentFragment() {
     override fun title() = getString(R.string.calendar)
 
