@@ -34,12 +34,8 @@ import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
-import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
 import com.instructure.pandautils.room.daos.*
-import com.instructure.pandautils.room.entities.AuthorEntity
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
-import com.instructure.pandautils.room.entities.MediaCommentEntity
-import com.instructure.pandautils.room.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.entities.*
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
@@ -55,9 +51,9 @@ class FileUploadWorker @AssistedInject constructor(
     private val attachmentDao: AttachmentDao,
     private val submissionCommentDao: SubmissionCommentDao,
     private val mediaCommentDao: MediaCommentDao,
-    private val authorDao: AuthorDao
-) :
-    CoroutineWorker(context, workerParameters) {
+    private val authorDao: AuthorDao,
+    private val dashboardFileUploadDao: DashboardFileUploadDao
+) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -80,6 +76,7 @@ class FileUploadWorker @AssistedInject constructor(
     private val workDataBuilder = Data.Builder()
 
     override suspend fun doWork(): Result {
+        var assignmentName = ""
         try {
             val inputData = fileUploadInputDao.findByWorkerId(id.toString()) ?: throw IllegalArgumentException()
             getArguments(inputData)
@@ -96,7 +93,6 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             )
 
-            var assignmentName = ""
             var groupId: Long? = null
             if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
                 val assignment = getAssignment(assignmentId, courseId)
@@ -115,7 +111,7 @@ class FileUploadWorker @AssistedInject constructor(
                     .build()
             )
 
-            FileUploadPreferences.addWorkerId(id)
+            insertDashboardUpload(title, assignmentName)
 
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
@@ -132,8 +128,7 @@ class FileUploadWorker @AssistedInject constructor(
                 }
                 ACTION_MESSAGE_ATTACHMENTS -> {
                     updateNotificationComplete(notificationId)
-                    val attachmentEntities =
-                        attachments.map { com.instructure.pandautils.room.entities.AttachmentEntity(it, id.toString()) }
+                    val attachmentEntities = attachments.map { AttachmentEntity(it, id.toString()) }
                     attachmentDao.insertAll(attachmentEntities)
                     Result.success()
                 }
@@ -155,13 +150,23 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             }
             fileUploadInputDao.delete(inputData)
-            FileUploadPreferences.removeWorkerId(id)
+            insertDashboardUpload(context.getString(R.string.dashboardNotificationSubmissionUploadSuccessTitle), assignmentName)
             return result
         } catch (e: Exception) {
-            FileUploadPreferences.removeWorkerId(id)
+            insertDashboardUpload(context.getString(R.string.dashboardNotificationSubmissionUploadFailedTitle), assignmentName)
             e.printStackTrace()
             return Result.failure()
         }
+    }
+
+    private suspend fun insertDashboardUpload(title: String, assignmentName: String) {
+        dashboardFileUploadDao.insert(
+            DashboardFileUploadEntity(
+                workerId = id.toString(),
+                title = title,
+                assignmentName = assignmentName
+            )
+        )
     }
 
     private suspend fun insertSubmissionComment(submissionComment: SubmissionComment): Long {
@@ -184,7 +189,7 @@ class FileUploadWorker @AssistedInject constructor(
         }
 
         val attachmentEntities = submissionComment.attachments.map {
-            com.instructure.pandautils.room.entities.AttachmentEntity(
+            AttachmentEntity(
                 attachment = it,
                 submissionCommentId = submissionCommentId
             )
