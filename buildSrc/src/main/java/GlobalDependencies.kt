@@ -35,7 +35,7 @@ object Versions {
     const val WORK_MANAGER = "2.7.1"
     const val GLIDE_VERSION = "4.15.1"
     const val RETROFIT = "2.9.0"
-    const val OKHTTP = "4.9.1"
+    const val OKHTTP = "4.10.0"
     const val HEAP = "1.10.5"
     const val ROOM = "2.5.0"
 }
@@ -129,14 +129,14 @@ object Libs {
 
     /* Network */
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
-    const val GSON = "com.google.code.gson:gson:2.8.8"
+    const val GSON = "com.google.code.gson:gson:2.10.1"
     const val RETROFIT_GSON_ADAPTER = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
     const val RETROFIT_XML_ADAPTER = "com.squareup.retrofit2:converter-simplexml:${Versions.RETROFIT}"
     const val RETROFIT_SCALAR_CONVERTER = "com.squareup.retrofit2:converter-scalars:${Versions.RETROFIT}"
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
-    const val OKIO = "com.squareup.okio:okio:2.10.0"
+    const val OKIO = "com.squareup.okio:okio:3.2.0"
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:6.0.0"
