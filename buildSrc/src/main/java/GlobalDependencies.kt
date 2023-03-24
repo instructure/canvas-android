@@ -33,7 +33,7 @@ object Versions {
     const val LIFECYCLE = "2.6.0"
     const val FRAGMENT = "1.5.5"
     const val WORK_MANAGER = "2.7.1"
-    const val GLIDE_VERSION = "4.12.0"
+    const val GLIDE_VERSION = "4.15.1"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.9.1"
     const val HEAP = "1.10.5"
@@ -117,7 +117,7 @@ object Libs {
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
 
     /* Media and content handling */
-    const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
+    const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}" // TODO
     const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.18.5"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
@@ -139,16 +139,16 @@ object Libs {
     const val OKIO = "com.squareup.okio:okio:2.10.0"
 
     /* Other */
-    const val LOTTIE = "com.airbnb.android:lottie:4.1.0"
+    const val LOTTIE = "com.airbnb.android:lottie:6.0.0"
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
-    const val SQLDELIGHT = "com.squareup.sqldelight:android-driver:1.4.3"
+    const val SQLDELIGHT = "com.squareup.sqldelight:android-driver:${Versions.SQLDELIGHT}"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
-    const val EVENTBUS = "org.greenrobot:eventbus:3.2.0"
-    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.1.2"
-    const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.0.0"
-    const val PAPERDB = "io.github.pilgr:paperdb:2.7.1"
+    const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"
+    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.4"
+    const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.1.2"
+    const val PAPERDB = "io.github.pilgr:paperdb:2.7.2"
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
-    const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.6"
+    const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.10.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
     const val HEAP = "com.heapanalytics.android:heap-android-client:${Versions.HEAP}"
