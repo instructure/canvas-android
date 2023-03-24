@@ -94,10 +94,10 @@ object Libs {
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
     const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.5"
-    const val MOCKK = "io.mockk:mockk:1.12.3"
+    const val MOCKK = "io.mockk:mockk:1.12.3" // TODO
     const val THREETEN_BP = "org.threeten:threetenbp:1.6.5"
     const val UI_AUTOMATOR = "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
-    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.4.2" // Newer version needs AGP 4.2+
+    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.4.2"
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
@@ -118,7 +118,7 @@ object Libs {
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.17.1"
+    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.18.5"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
