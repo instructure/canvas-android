@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val agpVersion = "3.5.4"
+val agpVersion = "4.1.0"
 
 dependencies {
     implementation("com.android.tools.build:gradle:$agpVersion")
