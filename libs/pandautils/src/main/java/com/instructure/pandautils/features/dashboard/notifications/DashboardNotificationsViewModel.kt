@@ -42,6 +42,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -87,7 +88,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private val fileUploads = dashboardFileUploadDao.getAll()
+    private val fileUploads = dashboardFileUploadDao.getAll(ApiPrefs.user?.id.orDefault())
 
     init {
         fileUploads.observeForever(runningWorkersObserver)

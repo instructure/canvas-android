@@ -39,10 +39,7 @@ import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.room.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
+import io.mockk.*
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -115,7 +112,10 @@ class DashboardNotificationsViewModelTest {
         }
 
         uploadsLiveData = MutableLiveData(emptyList())
-        every { dashboardFileUploadDao.getAll() } returns uploadsLiveData
+        every { dashboardFileUploadDao.getAll(1) } returns uploadsLiveData
+
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.user } returns User(id = 1)
 
         viewModel = DashboardNotificationsViewModel(
             resources,
@@ -136,7 +136,9 @@ class DashboardNotificationsViewModelTest {
     }
 
     @After
-    fun tearDown() {}
+    fun tearDown() {
+        unmockkObject(ApiPrefs)
+    }
 
     private fun setupResources() {
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"
@@ -453,9 +455,9 @@ class DashboardNotificationsViewModelTest {
         val subTitle3 = "SubTitle"
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), title, subTitle),
-            DashboardFileUploadEntity(workerId2.toString(), title2, subTitle2),
-            DashboardFileUploadEntity(workerId3.toString(), title3, subTitle3)
+            DashboardFileUploadEntity(workerId.toString(), 1, title, subTitle),
+            DashboardFileUploadEntity(workerId2.toString(), 1, title2, subTitle2),
+            DashboardFileUploadEntity(workerId3.toString(), 1, title3, subTitle3)
         )
 
         every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
@@ -532,7 +534,7 @@ class DashboardNotificationsViewModelTest {
         val expectedFinished = UploadViewData(title2, subTitle, R.drawable.ic_check_white_24dp, R.color.backgroundSuccess, false)
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), title, subTitle)
+            DashboardFileUploadEntity(workerId.toString(), 1, title, subTitle)
         )
 
         every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(WorkInfo(
@@ -559,7 +561,7 @@ class DashboardNotificationsViewModelTest {
         ))
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), title2, subTitle)
+            DashboardFileUploadEntity(workerId.toString(), 1, title2, subTitle)
         )
 
         assertEquals(1, viewModel.data.value?.uploadItems?.size)
@@ -571,7 +573,7 @@ class DashboardNotificationsViewModelTest {
         val workerId = UUID.randomUUID()
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), "", "")
+            DashboardFileUploadEntity(workerId.toString(), 1, "", "")
         )
 
         every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(

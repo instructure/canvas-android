@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -160,9 +161,11 @@ class FileUploadWorker @AssistedInject constructor(
     }
 
     private suspend fun insertDashboardUpload(title: String, assignmentName: String) {
+        val userId = ApiPrefs.user?.id ?: return
         dashboardFileUploadDao.insert(
             DashboardFileUploadEntity(
                 workerId = id.toString(),
+                userId = userId,
                 title = title,
                 assignmentName = assignmentName
             )

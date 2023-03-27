@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class DashboardFileUploadEntity(
     @PrimaryKey
     val workerId: String,
+    val userId: Long,
     val title: String?,
     val assignmentName: String?
 )
