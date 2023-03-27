@@ -118,7 +118,6 @@ dependencies {
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
-    testImplementation Libs.MOCKK_AGENT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.ANDROIDX_CORE_TESTING
     testImplementation Libs.THREETEN_BP

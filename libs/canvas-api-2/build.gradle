@@ -122,7 +122,6 @@ dependencies {
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
-    testImplementation Libs.MOCKK_AGENT
     testImplementation "org.mockito:mockito-inline:2.25.0"
     testImplementation "au.com.dius:pact-jvm-consumer-junit:4.0.7"
     testImplementation "au.com.dius:pact-jvm-consumer-java8:4.0.7"
