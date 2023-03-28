@@ -48,7 +48,7 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
     private val emptyText by WaitForViewWithText(R.string.noItemsToDisplayShort, autoAssert = false)
 
     fun clickAssignment(assignment: AssignmentApiModel) {
-        waitForViewWithText(assignment.name).click()
+        waitForView(withText(assignment.name) + withAncestor(R.id.assignmentListPage)).click()
     }
 
     fun clickAssignment(assignment: Assignment) {
@@ -179,6 +179,10 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     fun filterAssignments(filterType: AssignmentType) {
         onView(withText(filterType.assignmentType) + withParent(withId(R.id.select_dialog_listview))).click()
+    }
+
+    fun waitForPage() {
+        waitForView(withText(R.string.assignments))
     }
 
     enum class AssignmentType(val assignmentType: Int) {

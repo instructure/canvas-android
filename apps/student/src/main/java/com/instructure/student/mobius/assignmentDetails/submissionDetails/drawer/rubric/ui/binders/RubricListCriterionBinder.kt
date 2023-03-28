@@ -22,20 +22,21 @@ import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.student.databinding.AdapterRubricCriterionBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData.Criterion
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
-import kotlinx.android.synthetic.main.adapter_rubric_criterion.view.*
 
 class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback>() {
     override val layoutResId = R.layout.adapter_rubric_criterion
 
     override fun initView(view: View) {
+        val binding = AdapterRubricCriterionBinding.bind(view)
         val transition = LayoutTransition().apply {
             enableTransitionType(LayoutTransition.CHANGING)
             val interpolator = AccelerateDecelerateInterpolator()
@@ -46,41 +47,48 @@ class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback>
             setInterpolator(LayoutTransition.CHANGING, interpolator)
             setDuration(250)
         }
-        view.ratingInfoContainer.layoutTransition = transition
-        view.rubricCriterion.layoutTransition = transition
+        binding.ratingInfoContainer.layoutTransition = transition
+        binding.rubricCriterion.layoutTransition = transition
     }
 
     override val bindBehavior = Item { data, callback, diff ->
+        val binding = AdapterRubricCriterionBinding.bind(this)
         // If diff is not null, only perform partial bind with changes
-        diff?.apply {
-            ratingTitle.setTextForVisibility(newItem.ratingTitle)
-            ratingDescription.setTextForVisibility(newItem.ratingDescription)
-            ratingInfoContainer.setVisible(newItem.ratingTitle.isValid() || newItem.ratingDescription.isValid())
-            ratingLayout.updateRatingData(newItem.ratings)
-            ratingInfoContainer.contentDescription = context.getString(R.string.a11y_criterion_description_content_description, newItem.ratingTitle, newItem.ratingDescription)
+        with (binding) {
+            diff?.apply {
+                ratingTitle.setTextForVisibility(newItem.ratingTitle)
+                ratingDescription.setTextForVisibility(newItem.ratingDescription)
+                ratingInfoContainer.setVisible(newItem.ratingTitle.isValid() || newItem.ratingDescription.isValid())
+                ratingLayout.updateRatingData(newItem.ratings)
+                ratingInfoContainer.contentDescription = context.getString(
+                    R.string.a11y_criterion_description_content_description,
+                    newItem.ratingTitle,
+                    newItem.ratingDescription
+                )
 
-            //We need this delay to allow TalkBack to focus on the view.
-            Handler().apply {
-                postDelayed( {
-                    ratingInfoContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-                }, 1000)
+                //We need this delay to allow TalkBack to focus on the view.
+                Handler().apply {
+                    postDelayed({
+                        ratingInfoContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                    }, 1000)
+                }
+                return@Item
             }
-            return@Item
-        }
 
-        // Otherwise, perform full bind
-        criterionTitle.text = data.title
-        ratingLayout.setVisible(data.ratings.isNotEmpty())
-        ratingLayout.setRatingData(data.ratings, data.tint) { callback.ratingClicked(data.criterionId, it) }
-        ratingTitle.setTextForVisibility(data.ratingTitle)
-        ratingDescription.setTextForVisibility(data.ratingDescription)
-        ratingInfoContainer
-            .setVisible(data.ratingTitle.isValid() || data.ratingDescription.isValid())
-            .backgroundTintList = data.tint.asStateList()
-        commentContainer.setVisible(data.comment != null)
-        comment.text = data.comment
-        descriptionButton.setVisible(data.showDescriptionButton).onClick {
-            callback.longDescriptionClicked(data.criterionId)
+            // Otherwise, perform full bind
+            criterionTitle.text = data.title
+            ratingLayout.setVisible(data.ratings.isNotEmpty())
+            ratingLayout.setRatingData(data.ratings, data.tint) { callback.ratingClicked(data.criterionId, it) }
+            ratingTitle.setTextForVisibility(data.ratingTitle)
+            ratingDescription.setTextForVisibility(data.ratingDescription)
+            ratingInfoContainer
+                .setVisible(data.ratingTitle.isValid() || data.ratingDescription.isValid())
+                .backgroundTintList = data.tint.asStateList()
+            commentContainer.setVisible(data.comment != null)
+            comment.text = data.comment
+            descriptionButton.setVisible(data.showDescriptionButton).onClick {
+                callback.longDescriptionClicked(data.criterionId)
+            }
         }
     }
 

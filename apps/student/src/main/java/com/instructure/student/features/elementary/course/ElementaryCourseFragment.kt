@@ -38,7 +38,6 @@ import com.instructure.student.fragment.GradesListFragment
 import com.instructure.student.fragment.ModuleListFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_elementary_course.*
 
 @PageView(url = "{canvasContext}")
 @ScreenView(SCREEN_VIEW_ELEMENTARY_COURSE)
@@ -50,11 +49,13 @@ class ElementaryCourseFragment : Fragment() {
 
     private val viewModel: ElementaryCourseViewModel by viewModels()
 
+    private lateinit var binding: FragmentElementaryCourseBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
+        binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         if (canvasContext.isCourse) {
@@ -65,10 +66,10 @@ class ElementaryCourseFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
-        viewModel.getData(canvasContext, tabId)
+        this@ElementaryCourseFragment.viewModel.getData(canvasContext, tabId)
 
         courseTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
@@ -82,7 +83,7 @@ class ElementaryCourseFragment : Fragment() {
             }
         })
 
-        viewModel.data.observe(viewLifecycleOwner, { data ->
+        this@ElementaryCourseFragment.viewModel.data.observe(viewLifecycleOwner) { data ->
             data?.let {
                 courseTabPager.offscreenPageLimit = it.tabs.size
                 courseTabPager.adapter = ElementaryCoursePagerAdapter(it.tabs)
@@ -97,18 +98,18 @@ class ElementaryCourseFragment : Fragment() {
                 }
 
             }
-        })
+        }
 
-        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+        this@ElementaryCourseFragment.viewModel.events.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
         })
     }
 
-    private fun applyTheme() {
+    private fun applyTheme() = with(binding) {
         toolbar.title = canvasContext.name
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@ElementaryCourseFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 

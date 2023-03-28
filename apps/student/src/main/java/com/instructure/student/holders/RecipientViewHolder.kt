@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.viewholder_recipient.view.*
+import com.instructure.student.databinding.ViewholderRecipientBinding
 
 class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -42,19 +42,19 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         adapterCallback: (Recipient, Int, Boolean) -> Unit,
         isSelected: Boolean,
         canMessageAll: Boolean
-    ) = with(itemView) {
+    ) = with(ViewholderRecipientBinding.bind(itemView)) {
 
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
                 val selectionColor = context.getColor(R.color.backgroundInfo)
-                setBackgroundColor(selectionColor and selectionTransparencyMask)
+                root.setBackgroundColor(selectionColor and selectionTransparencyMask)
                 avatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_circle)?.apply {
                     mutate().setTintList(ColorStateList.valueOf(selectionColor))
                 })
                 checkMarkImageView.setVisible()
                 ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
             } else {
-                setBackgroundColor(Color.TRANSPARENT)
+                root.setBackgroundColor(Color.TRANSPARENT)
                 checkMarkImageView.setGone()
             }
         }

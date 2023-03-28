@@ -18,17 +18,12 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.content.ContextCompat
-import android.webkit.CookieManager
-import com.instructure.student.R
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
-import com.instructure.loginapi.login.snicker.SnickerDoodle
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LOGIN_LANDING
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.services.PushNotificationRegistrationWorker
+import com.instructure.student.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @ScreenView(SCREEN_VIEW_LOGIN_LANDING)

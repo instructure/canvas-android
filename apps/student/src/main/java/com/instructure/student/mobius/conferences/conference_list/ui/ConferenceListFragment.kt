@@ -27,13 +27,14 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
+import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.conferences.conference_list.*
 
 @PageView(url = "courses/{canvasContext}/conferences")
 @ScreenView(SCREEN_VIEW_CONFERENCE_LIST)
 class ConferenceListFragment :
-    MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect, ConferenceListView, ConferenceListViewState>() {
+    MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect, ConferenceListView, ConferenceListViewState, FragmentConferenceListBinding>() {
 
     val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 

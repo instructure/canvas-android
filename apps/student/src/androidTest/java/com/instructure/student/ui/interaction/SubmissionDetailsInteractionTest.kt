@@ -43,7 +43,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testRubrics_showCriterionDescription() {
-
         val data = getToCourse()
         val assignment = data.addAssignment(
                 courseId = course.id,

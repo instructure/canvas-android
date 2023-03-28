@@ -27,3 +27,9 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("ALTER TABLE SubmissionCommentEntity ADD COLUMN attemptId INTEGER")
     }
 }
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE IF NOT EXISTS DashboardFileUploadEntity (workerId TEXT NOT NULL, title TEXT, assignmentName TEXT, PRIMARY KEY(workerId))")
+    }
+}

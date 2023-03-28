@@ -150,7 +150,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 //                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
 
         // Now make sure that it is displayed
-        Espresso.onView(matcher).assertDisplayed()
+        Espresso.onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun editFavorites() {

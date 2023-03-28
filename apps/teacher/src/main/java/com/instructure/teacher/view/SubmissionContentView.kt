@@ -99,15 +99,15 @@ class SubmissionContentView(
     private val binding: ViewSubmissionContentBinding
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
-        get() = findViewById(R.id.annotationToolbarLayout)
+        get() = binding.annotationToolbarLayout
     override val inspectorCoordinatorLayout: PropertyInspectorCoordinatorLayout
-        get() = findViewById(R.id.inspectorCoordinatorLayout)
+        get() = binding.inspectorCoordinatorLayout
     override val commentsButton: ImageView
-        get() = findViewById(R.id.commentsButton)
+        get() = binding.commentsButton
     override val loadingContainer: FrameLayout
-        get() = findViewById(R.id.loadingContainer)
+        get() = binding.loadingContainer
     override val progressBar: ProgressiveCanvasLoadingView
-        get() = findViewById(R.id.speedGraderProgressBar)
+        get() = binding.speedGraderProgressBar
     override val progressColor: Int
         get() = R.color.login_teacherAppTheme
 
@@ -418,10 +418,9 @@ class SubmissionContentView(
         setGradeableContent(getAttachmentContent(attachment))
     }
 
-    private fun setupSubmissionVersions(unsortedSubmissions: List<Submission>?) {
-        val submissionVersionsSpinner = binding.submissionVersionsSpinner
+    private fun setupSubmissionVersions(unsortedSubmissions: List<Submission>?) = with(binding.submissionVersionsSpinner) {
         if (unsortedSubmissions.isNullOrEmpty()) {
-            submissionVersionsSpinner.setGone()
+            setGone()
         } else {
             unsortedSubmissions.sortedByDescending { it.submittedAt }.let { submissions ->
                 val itemViewModels = submissions.mapIndexed { index, submission ->
@@ -432,16 +431,24 @@ class SubmissionContentView(
                         )
                     )
                 }
-                submissionVersionsSpinner.adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
-                submissionVersionsSpinner.setSelection(0, false)
-                submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
+                setSelection(0, false)
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         EventBus.getDefault().post(SubmissionSelectedEvent(submissions[position]))
                     }
                 }
-                submissionVersionsSpinner.setVisible()
-                submissionVersionsSpinner.isEnabled = submissions.size > 1
+
+                if (submissions.size > 1) {
+                    setVisible()
+                } else {
+                    setGone()
+                    binding.attemptView?.apply {
+                        itemViewModel = itemViewModels.firstOrNull()
+                        root.setVisible()
+                    }
+                }
             }
         }
     }

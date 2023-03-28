@@ -40,9 +40,7 @@ import com.instructure.espresso.page.*
 import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.anyOf
-import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.*
 import java.lang.Thread.sleep
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
@@ -216,7 +214,7 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
             val matcher = allOf(withParent(withId(R.id.ratingLayout)), withText(rating.points.toInt().toString()))
             scrollRecyclerView(R.id.recyclerView, matcher)
             onView(matcher).assertDisplayed()
-            onView(matcher).perform(withCustomConstraints(click(), isDisplayingAtLeast(10))) // click on rating
+            onView(matcher).click()
 
             val descriptionMatcher = allOf(withId(R.id.ratingTitle), withText(rating.description))
             scrollRecyclerView(R.id.recyclerView, descriptionMatcher)

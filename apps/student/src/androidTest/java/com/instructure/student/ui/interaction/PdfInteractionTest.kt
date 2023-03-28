@@ -145,6 +145,8 @@ class PdfInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD, description = assignmentDescriptionHtml)
 
+        assignmentListPage.waitForPage()
+        assignmentListPage.refresh()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.assertAssignmentDetails(assignment)
 
@@ -227,6 +229,7 @@ class PdfInteractionTest : StudentTest() {
 
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
+        assignmentListPage.waitForPage()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.goToSubmissionDetails()

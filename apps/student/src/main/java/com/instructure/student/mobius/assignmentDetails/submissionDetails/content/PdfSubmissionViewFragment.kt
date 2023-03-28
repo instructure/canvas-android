@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.StringArg
 
 class PdfSubmissionViewFragment : Fragment() {
