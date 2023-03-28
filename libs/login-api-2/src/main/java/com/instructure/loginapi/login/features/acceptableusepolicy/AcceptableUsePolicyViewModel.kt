@@ -28,7 +28,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AcceptableUsePolicyViewModel @Inject constructor(private val userManager: UserManager) : ViewModel() {
+class AcceptableUsePolicyViewModel @Inject constructor(
+    private val userManager: UserManager,
+    private val cookieManager: CookieManager
+) : ViewModel() {
 
     val data: LiveData<AcceptableUsePolicyViewData>
         get() = _data
@@ -79,7 +82,8 @@ class AcceptableUsePolicyViewModel @Inject constructor(private val userManager: 
                 val result = userManager.acceptUserTermsAsync().await()
                 _data.value = _data.value?.copy(loading = false)
                 if (result.isSuccess) {
-                    CookieManager.getInstance().apply { removeAllCookies {} }
+                    // Need to clear cookies, because on login, it is stored that the user has not accepted the Use Policy
+                    cookieManager.apply { removeAllCookies {} }
                     _events.value = Event(AcceptableUsePolicyAction.PolicyAccepted)
                 } else {
                     _events.value = Event(AcceptableUsePolicyAction.AcceptFailure)
