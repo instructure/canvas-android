@@ -83,7 +83,7 @@ class AcceptableUsePolicyViewModel @Inject constructor(
                 _data.value = _data.value?.copy(loading = false)
                 if (result.isSuccess) {
                     // Need to clear cookies, because on login, it is stored that the user has not accepted the Use Policy
-                    cookieManager.apply { removeAllCookies {} }
+                    cookieManager.removeAllCookies {}
                     _events.value = Event(AcceptableUsePolicyAction.PolicyAccepted)
                 } else {
                     _events.value = Event(AcceptableUsePolicyAction.AcceptFailure)
