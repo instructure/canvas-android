@@ -16,6 +16,7 @@
  */
 package com.instructure.loginapi.login.features.acceptableusepolicy
 
+import android.webkit.CookieManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -78,6 +79,7 @@ class AcceptableUsePolicyViewModel @Inject constructor(private val userManager: 
                 val result = userManager.acceptUserTermsAsync().await()
                 _data.value = _data.value?.copy(loading = false)
                 if (result.isSuccess) {
+                    CookieManager.getInstance().apply { removeAllCookies {} }
                     _events.value = Event(AcceptableUsePolicyAction.PolicyAccepted)
                 } else {
                     _events.value = Event(AcceptableUsePolicyAction.AcceptFailure)
