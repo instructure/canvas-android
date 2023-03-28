@@ -47,7 +47,7 @@ void main() {
     )));
     await tester.pump();
 
-    expect(find.bySemanticsLabel('Saturday, January 1'), findsOneWidget);
+    expect(find.bySemanticsLabel('Saturday, January 1, 0 events'), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Uses dark text color for week days', (tester) async {
