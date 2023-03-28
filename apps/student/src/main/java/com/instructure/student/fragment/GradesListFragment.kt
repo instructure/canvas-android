@@ -216,7 +216,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
 
         // showWhatIfCheckBox is accessed a little too early when this fragment is loaded, so we add an elvis operator here
-        override val isEdit: Boolean get() = binding.showWhatIfCheckBox?.isChecked ?: false
+        override val isEdit: Boolean get() = binding.showWhatIfCheckBox.isChecked
 
         override fun setIsWhatIfGrading(isWhatIfGrading: Boolean) {
             binding.whatIfView.setVisible(isWhatIfGrading)
@@ -360,12 +360,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             var totalPoints = 0.0
             val weight = g.groupWeight
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty()) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
                     earnedPoints += tempSub.score
                 }
-                if(tempAssignment != null) totalPoints += tempAssignment.pointsPossible
+                if (tempAssignment != null) totalPoints += tempAssignment.pointsPossible
             }
 
             if (totalPoints != 0.0 && earnedPoints != 0.0) {
@@ -395,9 +395,9 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             val weight = g.groupWeight
             var assignCount = 0
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
                     assignCount++ // Determines if a group contains assignments
                     totalPoints += tempAssignment.pointsPossible
                     earnedPoints += tempSub.score
@@ -444,12 +444,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         var totalPoints = 0.0
         for (g in groups) {
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
                     earnedPoints += tempSub.score
                 }
-                if(tempAssignment != null) totalPoints += tempAssignment.pointsPossible
+                if (tempAssignment != null) totalPoints += tempAssignment.pointsPossible
             }
         }
         if (totalPoints != 0.0 && earnedPoints != 0.0) {
@@ -478,9 +478,9 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         var earnedPoints = 0.0
         for (g in groups) {
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty()) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
                     totalPoints += tempAssignment.pointsPossible
                     earnedPoints += tempSub.score
                 }
