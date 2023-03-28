@@ -1304,9 +1304,15 @@
     <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
 
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submission Success</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submission Successful</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Submission Failed</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Uploading File</item>
+        <item quantity="other">Uploading Files</item>
+    </plurals>
     <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">File Upload Successful</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">File Upload Failed</string>
     <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
     <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
     <string name="fileUploadError">File Upload Failed</string>

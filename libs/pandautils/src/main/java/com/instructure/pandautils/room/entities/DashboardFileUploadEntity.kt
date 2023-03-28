@@ -9,5 +9,5 @@ data class DashboardFileUploadEntity(
     val workerId: String,
     val userId: Long,
     val title: String?,
-    val assignmentName: String?
+    val subtitle: String?
 )

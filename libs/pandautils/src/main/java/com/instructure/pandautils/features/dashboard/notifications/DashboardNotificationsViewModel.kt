@@ -247,7 +247,7 @@ class DashboardNotificationsViewModel @Inject constructor(
             }
 
             val uploadViewData = UploadViewData(
-                fileUploadEntity.title.orEmpty(), fileUploadEntity.assignmentName.orEmpty(),
+                fileUploadEntity.title.orEmpty(), fileUploadEntity.subtitle.orEmpty(),
                 icon, background, it.state == WorkInfo.State.RUNNING
             )
 
