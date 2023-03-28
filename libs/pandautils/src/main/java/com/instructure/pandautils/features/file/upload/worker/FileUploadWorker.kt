@@ -53,7 +53,8 @@ class FileUploadWorker @AssistedInject constructor(
     private val submissionCommentDao: SubmissionCommentDao,
     private val mediaCommentDao: MediaCommentDao,
     private val authorDao: AuthorDao,
-    private val dashboardFileUploadDao: DashboardFileUploadDao
+    private val dashboardFileUploadDao: DashboardFileUploadDao,
+    private val apiPrefs: ApiPrefs
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -161,7 +162,7 @@ class FileUploadWorker @AssistedInject constructor(
     }
 
     private suspend fun insertDashboardUpload(title: String, assignmentName: String) {
-        val userId = ApiPrefs.user?.id ?: return
+        val userId = apiPrefs.user?.id ?: return
         dashboardFileUploadDao.insert(
             DashboardFileUploadEntity(
                 workerId = id.toString(),

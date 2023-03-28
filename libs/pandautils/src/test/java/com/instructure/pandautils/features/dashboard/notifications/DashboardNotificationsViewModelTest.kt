@@ -39,7 +39,10 @@ import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.room.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -111,11 +114,10 @@ class DashboardNotificationsViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        every { apiPrefs.user } returns User(id = 1)
+
         uploadsLiveData = MutableLiveData(emptyList())
         every { dashboardFileUploadDao.getAll(1) } returns uploadsLiveData
-
-        mockkObject(ApiPrefs)
-        every { ApiPrefs.user } returns User(id = 1)
 
         viewModel = DashboardNotificationsViewModel(
             resources,
@@ -136,9 +138,7 @@ class DashboardNotificationsViewModelTest {
     }
 
     @After
-    fun tearDown() {
-        unmockkObject(ApiPrefs)
-    }
+    fun tearDown() {}
 
     private fun setupResources() {
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"
