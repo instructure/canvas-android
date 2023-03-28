@@ -14,8 +14,16 @@ import com.instructure.pandautils.room.entities.*
         MediaCommentEntity::class,
         SubmissionCommentEntity::class,
         PendingSubmissionCommentEntity::class,
-        DashboardFileUploadEntity::class
-    ], version = 3
+        DashboardFileUploadEntity::class,
+        CourseEntity::class,
+        EnrollmentEntity::class,
+        GradesEntity::class,
+        GradingPeriodEntity::class,
+        SectionEntity::class,
+        TermEntity::class,
+        UserCalendarEntity::class,
+        UserEntity::class
+    ], version = 4
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
