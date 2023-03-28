@@ -1310,7 +1310,6 @@
         <item quantity="one">Uploading File</item>
         <item quantity="other">Uploading Files</item>
     </plurals>
-    <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
     <string name="dashboardNotificationUploadingFilesSuccessTitle">File Upload Successful</string>
     <string name="dashboardNotificationUploadingFilesFailedTitle">File Upload Failed</string>
     <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
