@@ -40,7 +40,9 @@ import com.instructure.espresso.page.*
 import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
+import org.hamcrest.Matchers.containsString
 import java.lang.Thread.sleep
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
@@ -108,10 +110,22 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
     }
 
+    fun assertTextSubmissionDisplayedAsComment() {
+        onView(allOf(withId(R.id.subtitleTextView), withParent(withId(R.id.commentSubmissionAttachmentView)), hasSibling(withId(R.id.titleTextView) + withText("Text Submission")))).assertDisplayed()
+    }
+
     fun assertCommentNotDisplayed(comment: String, user: User) {
+        assertCommentNotDisplayed(comment, user.shortName!!)
+    }
+
+    fun assertCommentNotDisplayed(comment: String, user: CanvasUserApiModel) {
+        assertCommentNotDisplayed(comment, user.shortName)
+    }
+
+    fun assertCommentNotDisplayed(comment: String, userShortName: String) {
         val commentMatcher = allOf(
             withId(R.id.commentHolder),
-            hasDescendant(allOf(withText(user.shortName), withId(R.id.userNameTextView))),
+            hasDescendant(allOf(withText(userShortName), withId(R.id.userNameTextView))),
             hasDescendant(allOf(withText(containsString(comment)), anyOf(withId(R.id.titleTextView), withId(R.id.commentTextView))))
         )
 
