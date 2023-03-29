@@ -19,27 +19,46 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.User
 
 @Entity
 data class UserEntity(
     @PrimaryKey
     val id: Long,
-    val name: String = "",
-    val shortName: String? = null,
-    val loginId: String? = null,
-    var avatarUrl: String? = null,
-    val primaryEmail: String? = null,
-    val email: String? = null,
-    val sortableName: String? = null,
-    val bio: String? = null,
-    val enrollmentIndex: Int = 0,
-    val lastLogin: String? = null,
-    val locale: String? = null,
-    val effective_locale: String? = null,
-    val pronouns: String? = null,
-    val k5User: Boolean = false,
-    val rootAccount: String? = null,
-    val isFakeStudent: Boolean = false,
-    val calendarId: Long? = null,
-    val sectionId: Long? = null,
-)
+    val name: String,
+    val shortName: String?,
+    val loginId: String?,
+    var avatarUrl: String?,
+    val primaryEmail: String?,
+    val email: String?,
+    val sortableName: String?,
+    val bio: String?,
+    val enrollmentIndex: Int,
+    val lastLogin: String?,
+    val locale: String?,
+    val effective_locale: String?,
+    val pronouns: String?,
+    val k5User: Boolean,
+    val rootAccount: String?,
+    val isFakeStudent: Boolean
+) {
+    constructor(user: User): this(
+        user.id,
+        user.name,
+        user.shortName,
+        user.loginId,
+        user.avatarUrl,
+        user.primaryEmail,
+        user.email,
+        user.sortableName,
+        user.bio,
+        user.enrollmentIndex,
+        user.lastLogin,
+        user.locale,
+        user.effective_locale,
+        user.pronouns,
+        user.k5User,
+        user.rootAccount,
+        user.isFakeStudent
+    )
+}

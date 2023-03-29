@@ -371,4 +371,12 @@ object CourseManager {
         CourseAPI.getFirstPageCoursesWithGrades(adapter, callback, params)
     }
 
+    fun getFullCourseContent(courseId: Long, forceNetwork: Boolean, callback: StatusCallback<Course>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        CourseAPI.getFullCourseContent(courseId, adapter, callback, params)
+    }
+
+    fun getFullCourseContentAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<Course> { getFullCourseContent(courseId, forceNetwork, it) }
+
 }

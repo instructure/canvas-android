@@ -19,10 +19,16 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.UserCalendar
 
 @Entity
 data class UserCalendarEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val ics: String,
-)
+) {
+    constructor(userCalendar: UserCalendar): this(
+        0,
+        userCalendar.ics
+    )
+}

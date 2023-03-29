@@ -43,7 +43,7 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
         database.execSQL("CREATE TABLE IF NOT EXISTS `SectionEntity` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `startAt` TEXT, `endAt` TEXT, `totalStudents` INTEGER NOT NULL, `restrictEnrollmentsToSectionDates` INTEGER NOT NULL, PRIMARY KEY(`id`))")
         database.execSQL("CREATE TABLE IF NOT EXISTS `TermEntity` (`id` INTEGER NOT NULL, `name` TEXT, `startAt` TEXT, `endAt` TEXT, `isGroupTerm` INTEGER NOT NULL, PRIMARY KEY(`id`))")
         database.execSQL("CREATE TABLE IF NOT EXISTS `UserCalendarEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ics` TEXT NOT NULL)")
-        database.execSQL("CREATE TABLE IF NOT EXISTS `UserEntity` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `shortName` TEXT, `loginId` TEXT, `avatarUrl` TEXT, `primaryEmail` TEXT, `email` TEXT, `sortableName` TEXT, `bio` TEXT, `enrollmentIndex` INTEGER NOT NULL, `lastLogin` TEXT, `locale` TEXT, `effective_locale` TEXT, `pronouns` TEXT, `k5User` INTEGER NOT NULL, `rootAccount` TEXT, `isFakeStudent` INTEGER NOT NULL, `calendarId` INTEGER, `sectionId` INTEGER, PRIMARY KEY(`id`))")
-        database.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)")
+        database.execSQL("CREATE TABLE IF NOT EXISTS `UserEntity` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `shortName` TEXT, `loginId` TEXT, `avatarUrl` TEXT, `primaryEmail` TEXT, `email` TEXT, `sortableName` TEXT, `bio` TEXT, `enrollmentIndex` INTEGER NOT NULL, `lastLogin` TEXT, `locale` TEXT, `effective_locale` TEXT, `pronouns` TEXT, `k5User` INTEGER NOT NULL, `rootAccount` TEXT, `isFakeStudent` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+        database.execSQL("CREATE TABLE IF NOT EXISTS `CourseGradingPeriodEntity` (`courseId` INTEGER NOT NULL, `gradingPeriodId` INTEGER NOT NULL, PRIMARY KEY(`courseId`, `gradingPeriodId`))")
     }
 }

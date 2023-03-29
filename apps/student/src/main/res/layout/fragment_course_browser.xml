@@ -16,18 +16,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/courseBrowserPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundLightest"
-    android:orientation="vertical"
-    android:id="@+id/courseBrowserPage">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/noOverlayToolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         app:popupTheme="@style/ToolBarPopupStyle"
-        app:theme="@style/ToolBarStyle"/>
+        app:theme="@style/ToolBarStyle" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:importantForAccessibility="no"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop" />
 
                     <LinearLayout
                         android:id="@+id/courseHeader"
@@ -82,7 +82,7 @@
                             android:maxLines="3"
                             android:textColor="@color/white"
                             android:textSize="24sp"
-                            tools:text="Title of Course"/>
+                            tools:text="Title of Course" />
 
                         <!-- Subtitle -->
                         <TextView
@@ -97,7 +97,7 @@
                             android:maxLines="1"
                             android:textColor="@color/white"
                             android:textSize="16sp"
-                            tools:text="Subtitle"/>
+                            tools:text="Subtitle" />
 
                     </LinearLayout>
 
@@ -116,7 +116,7 @@
                         android:id="@+id/courseBrowserHeader"
                         layout="@layout/view_course_browser_header"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
 
                 </androidx.appcompat.widget.Toolbar>
 
@@ -129,10 +129,17 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <Button
+                android:id="@+id/downloadButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/download" />
+
             <com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/downloadButton"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -141,7 +148,7 @@
                     android:layout_height="match_parent"
                     android:cacheColorHint="@android:color/transparent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             </com.instructure.pandautils.views.SwipeRefreshLayoutAppBar>
 
@@ -149,7 +156,7 @@
                 android:id="@+id/emptyView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 

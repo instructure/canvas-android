@@ -15,30 +15,23 @@
  *
  */
 
-package com.instructure.pandautils.room.entities
+package com.instructure.pandautils.room.daos
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.instructure.canvasapi2.models.Section
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Update
+import com.instructure.pandautils.room.entities.UserCalendarEntity
 
-@Entity
-data class SectionEntity(
-    @PrimaryKey
-    val id: Long,
-    var name: String,
-    val courseId: Long,
-    val startAt: String?,
-    val endAt: String?,
-    val totalStudents: Int,
-    val restrictEnrollmentsToSectionDates: Boolean
-) {
-    constructor(section: Section): this(
-        section.id,
-        section.name,
-        section.courseId,
-        section.startAt,
-        section.endAt,
-        section.totalStudents,
-        section.restrictEnrollmentsToSectionDates
-    )
+@Dao
+interface UserCalendarDao {
+
+    @Insert
+    suspend fun insert(entity: UserCalendarEntity)
+
+    @Delete
+    suspend fun delete(entity: UserCalendarEntity)
+
+    @Update
+    suspend fun update(entity: UserCalendarEntity)
 }

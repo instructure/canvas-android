@@ -19,13 +19,22 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Term
 
 @Entity
 data class TermEntity(
     @PrimaryKey
     val id: Long,
-    val name: String? = null,
-    val startAt: String? = null,
-    val endAt: String? = null,
-    val isGroupTerm: Boolean = false
-)
+    val name: String?,
+    val startAt: String?,
+    val endAt: String?,
+    val isGroupTerm: Boolean
+) {
+    constructor(term: Term): this(
+        term.id,
+        term.name,
+        term.startAt,
+        term.endAt,
+        term.isGroupTerm
+    )
+}

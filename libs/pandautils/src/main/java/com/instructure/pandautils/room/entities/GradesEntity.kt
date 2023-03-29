@@ -19,15 +19,26 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Grades
 
 @Entity
 class GradesEntity (
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long,
     val enrollmentId: Long,
-    val htmlUrl: String? = null,
-    val currentScore: Double? = null,
-    val finalScore: Double? = null,
-    val currentGrade: String? = null,
-    val finalGrade: String? = null
-)
+    val htmlUrl: String?,
+    val currentScore: Double?,
+    val finalScore: Double?,
+    val currentGrade: String?,
+    val finalGrade: String?
+) {
+    constructor(grades: Grades, enrollmentId: Long): this(
+        grades.id,
+        enrollmentId,
+        grades.htmlUrl,
+        grades.currentScore,
+        grades.finalScore,
+        grades.currentGrade,
+        grades.finalGrade
+    )
+}

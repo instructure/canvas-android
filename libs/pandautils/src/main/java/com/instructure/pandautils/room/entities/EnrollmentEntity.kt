@@ -19,32 +19,59 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Enrollment
 import java.util.*
 
 @Entity
 data class EnrollmentEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val role: String,
     val type: String,
-    val courseId: Long = 0,
-    val courseSectionId: Long = 0,
-    val enrollmentState: String? = null,
-    val userId: Long = 0,
-    val computedCurrentScore: Double? = null,
-    val computedFinalScore: Double? = null,
-    val computedCurrentGrade: String? = null,
-    val computedFinalGrade: String? = null,
-    val multipleGradingPeriodsEnabled: Boolean = false,
-    val totalsForAllGradingPeriodsOption: Boolean = false,
-    val currentPeriodComputedCurrentScore: Double? = null,
-    val currentPeriodComputedFinalScore: Double? = null,
-    val currentPeriodComputedCurrentGrade: String? = null,
-    val currentPeriodComputedFinalGrade: String? = null,
-    val currentGradingPeriodId: Long = 0,
-    val currentGradingPeriodTitle: String? = null,
-    val associatedUserId: Long = 0,
-    val lastActivityAt: Date? = null,
-    val limitPrivilegesToCourseSection: Boolean = false,
-    val observedUserId: Long? = null
-)
+    val courseId: Long,
+    val courseSectionId: Long,
+    val enrollmentState: String?,
+    val userId: Long,
+    val computedCurrentScore: Double?,
+    val computedFinalScore: Double?,
+    val computedCurrentGrade: String?,
+    val computedFinalGrade: String?,
+    val multipleGradingPeriodsEnabled: Boolean,
+    val totalsForAllGradingPeriodsOption: Boolean,
+    val currentPeriodComputedCurrentScore: Double?,
+    val currentPeriodComputedFinalScore: Double?,
+    val currentPeriodComputedCurrentGrade: String?,
+    val currentPeriodComputedFinalGrade: String?,
+    val currentGradingPeriodId: Long,
+    val currentGradingPeriodTitle: String?,
+    val associatedUserId: Long,
+    val lastActivityAt: Date?,
+    val limitPrivilegesToCourseSection: Boolean,
+    val observedUserId: Long?
+) {
+    constructor(enrollment: Enrollment, observedUserId: Long?): this(
+        enrollment.id,
+        enrollment.role?.apiRoleString ?: Enrollment.EnrollmentType.NoEnrollment.apiRoleString,
+        enrollment.type?.apiTypeString ?: Enrollment.EnrollmentType.NoEnrollment.apiTypeString,
+        enrollment.courseId,
+        enrollment.courseSectionId,
+        enrollment.enrollmentState,
+        enrollment.userId,
+        enrollment.computedCurrentScore,
+        enrollment.computedFinalScore,
+        enrollment.computedCurrentGrade,
+        enrollment.computedFinalGrade,
+        enrollment.multipleGradingPeriodsEnabled,
+        enrollment.totalsForAllGradingPeriodsOption,
+        enrollment.currentPeriodComputedCurrentScore,
+        enrollment.currentPeriodComputedFinalScore,
+        enrollment.currentPeriodComputedCurrentGrade,
+        enrollment.currentPeriodComputedFinalGrade,
+        enrollment.currentGradingPeriodId,
+        enrollment.currentGradingPeriodTitle,
+        enrollment.associatedUserId,
+        enrollment.lastActivityAt,
+        enrollment.limitPrivilegesToCourseSection,
+        observedUserId
+    )
+}

@@ -19,36 +19,68 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Course
 
 @Entity
 data class CourseEntity(
     @PrimaryKey
     val id: Long,
     val name: String,
-    var originalName: String? = null,
-    val courseCode: String? = null,
-    val startAt: String? = null,
-    val endAt: String? = null,
-    var syllabusBody: String? = null,
-    val hideFinalGrades: Boolean = false,
-    val isPublic: Boolean = false,
+    var originalName: String?,
+    val courseCode: String?,
+    val startAt: String?,
+    val endAt: String?,
+    var syllabusBody: String?,
+    val hideFinalGrades: Boolean,
+    val isPublic: Boolean,
     val license: String,
-    val termId: Long? = null,
-    val needsGradingCount: Long = 0,
-    val isApplyAssignmentGroupWeights: Boolean = false,
-    val currentScore: Double? = null, // Helper variable
-    val finalScore: Double? = null, // Helper variable
-    val currentGrade: String? = null, // Helper variable
-    val finalGrade: String? = null, // Helper variable
-    var isFavorite: Boolean = false,
-    val accessRestrictedByDate: Boolean = false,
-    val imageUrl: String? = null,
-    val bannerImageUrl: String? = null,
-    val isWeightedGradingPeriods: Boolean = false,
-    val hasGradingPeriods: Boolean = false,
-    val homePage: String? = null,
-    val restrictEnrollmentsToCourseDate: Boolean = false,
-    val workflowState: String? = null,
-    val homeroomCourse: Boolean = false,
-    val courseColor: String? = null
-)
+    val termId: Long?,
+    val needsGradingCount: Long,
+    val isApplyAssignmentGroupWeights: Boolean,
+    val currentScore: Double?,
+    val finalScore: Double?,
+    val currentGrade: String?,
+    val finalGrade: String?,
+    var isFavorite: Boolean,
+    val accessRestrictedByDate: Boolean,
+    val imageUrl: String?,
+    val bannerImageUrl: String?,
+    val isWeightedGradingPeriods: Boolean,
+    val hasGradingPeriods: Boolean,
+    val homePage: String?,
+    val restrictEnrollmentsToCourseDate: Boolean,
+    val workflowState: String?,
+    val homeroomCourse: Boolean,
+    val courseColor: String?
+) {
+    constructor(course: Course): this(
+        course.id,
+        course.name,
+        course.originalName,
+        course.courseCode,
+        course.startAt,
+        course.endAt,
+        course.syllabusBody,
+        course.hideFinalGrades,
+        course.isPublic,
+        course.license?.apiString ?: Course.License.PRIVATE_COPYRIGHTED.apiString,
+        course.term?.id,
+        course.needsGradingCount,
+        course.isApplyAssignmentGroupWeights,
+        course.currentScore,
+        course.finalScore,
+        course.currentGrade,
+        course.finalGrade,
+        course.isFavorite,
+        course.accessRestrictedByDate,
+        course.imageUrl,
+        course.bannerImageUrl,
+        course.isWeightedGradingPeriods,
+        course.hasGradingPeriods,
+        course.homePage?.apiString,
+        course.restrictEnrollmentsToCourseDate,
+        course.workflowState?.apiString,
+        course.homeroomCourse,
+        course.courseColor
+    )
+}

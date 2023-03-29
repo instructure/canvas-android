@@ -75,6 +75,9 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image")
         fun getCourseWithGrade(@Path("courseId") courseId: Long): Call<Course>
 
+        @GET("courses/{courseId}?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=public_description&include[]=grading_periods&include[]=account&include[]=course_progress&include[]=storage_quota_used_mb&include[]=total_students&include[]=passback_status&include[]=teachers&include[]=tabs&include[]=banner_image&include[]=concluded&include[]=observed_users")
+        fun getFullCourseContent(@Path("courseId") courseId: Long): Call<Course>
+
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=current_and_concluded")
         fun firstPageCoursesByEnrollmentState(@Query("enrollment_state") enrollmentState: String): Call<List<Course>>
 
@@ -271,5 +274,9 @@ object CourseAPI {
 
     fun getFirstPageCoursesByEnrollmentState(enrollmentState: String, adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesByEnrollmentState(enrollmentState)).enqueue(callback)
+    }
+
+    fun getFullCourseContent(courseId: Long, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).getFullCourseContent(courseId)).enqueue(callback)
     }
 }

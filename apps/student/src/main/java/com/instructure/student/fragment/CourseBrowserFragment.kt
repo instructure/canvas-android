@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.managers.TabManager
@@ -41,6 +42,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.offline.SyncManager
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
@@ -51,13 +53,20 @@ import com.instructure.student.util.Const
 import com.instructure.student.util.DisableableAppBarLayoutBehavior
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.util.TabHelper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_COURSE_BROWSER)
 @PageView(url = "{canvasContext}")
+@AndroidEntryPoint
 class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnOffsetChangedListener  {
+
+    @Inject
+    lateinit var syncManager: SyncManager
 
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
@@ -116,6 +125,12 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         swipeRefreshLayout.setOnRefreshListener { loadTabs(true) }
 
         loadTabs()
+
+        binding.downloadButton.setOnClickListener {
+            lifecycleScope.launch {
+                syncManager.fetchCourseContent(canvasContext.id)
+            }
+        }
     }
 
     override fun onStart() {

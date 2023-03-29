@@ -19,14 +19,22 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.GradingPeriod
 
 @Entity
 data class GradingPeriodEntity(
     @PrimaryKey
     val id: Long,
-    val title: String? = null,
-    val startDate: String? = null,
-    val endDate: String? = null,
-    val weight: Double = 0.0,
-    val courseId: Long? = null
-)
+    val title: String?,
+    val startDate: String?,
+    val endDate: String?,
+    val weight: Double,
+) {
+    constructor(gradingPeriod: GradingPeriod): this(
+        gradingPeriod.id,
+        gradingPeriod.title,
+        gradingPeriod.startDate,
+        gradingPeriod.endDate,
+        gradingPeriod.weight,
+    )
+}

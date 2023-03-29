@@ -53,4 +53,58 @@ class DatabaseModule {
     fun provideDashboardFileUploadDao(appDatabase: AppDatabase): DashboardFileUploadDao {
         return appDatabase.dashboardFileUploadDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideCourseDao(appDatabase: AppDatabase): CourseDao {
+        return appDatabase.courseDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEnrollmentDao(appDatabase: AppDatabase): EnrollmentDao {
+        return appDatabase.enrollmentDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGradesDao(appDatabase: AppDatabase): GradesDao {
+        return appDatabase.gradesDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGradingPeriodDao(appDatabase: AppDatabase): GradingPeriodDao {
+        return appDatabase.gradingPeriodDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSectionDao(appDatabase: AppDatabase): SectionDao {
+        return appDatabase.sectionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTermDao(appDatabase: AppDatabase): TermDao {
+        return appDatabase.termDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserCalendarDao(appDatabase: AppDatabase): UserCalendarDao {
+        return appDatabase.userCalendarDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(appDatabase: AppDatabase): UserDao {
+        return appDatabase.userDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCourseGradingPeriodDao(appDatabase: AppDatabase): CourseGradingPeriodDao {
+        return appDatabase.courseGradingPeriodDao()
+    }
 }
