@@ -941,7 +941,8 @@ fun MockCanvas.addSubmissionForAssignment(
         attachment: Attachment? = null,
         comment: SubmissionComment? = null,
         state: String = "submitted",
-        grade: String? = null
+        grade: String? = null,
+        attempt: Long = 1
 ) : Submission {
     val assignment = assignments[assignmentId]!!
     val assignmentDueDate = assignment.dueAt?.toDate()
@@ -951,7 +952,7 @@ fun MockCanvas.addSubmissionForAssignment(
     val submission = Submission(
             id = newItemId(),
             submittedAt = Date(),
-            attempt = 1,
+            attempt = attempt,
             body = body,
             url = url,
             previewUrl = url,
@@ -960,16 +961,16 @@ fun MockCanvas.addSubmissionForAssignment(
             assignmentId = assignmentId,
             userId = userId,
             late = isLate,
-            attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
-            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
-            mediaContentType = if(attachment != null) attachment.contentType else null,
+            attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
+            submissionComments = if(comment != null) listOf(comment) else listOf(),
+            mediaContentType = attachment?.contentType,
             grade = grade
     )
 
     // Get the submission list for the assignment, creating it if necessary
     var submissionList = submissions[assignmentId]
     if(submissionList == null) {
-        submissionList = mutableListOf<Submission>()
+        submissionList = mutableListOf()
         submissions[assignmentId] = submissionList
     }
 
@@ -988,10 +989,9 @@ fun MockCanvas.addSubmissionForAssignment(
                 assignmentId = assignmentId,
                 userId = userId,
                 late = isLate,
-                submissionHistory = mutableListOf(submission),
-                attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
-                submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
-                mediaContentType = if(attachment != null) attachment.contentType else null,
+                attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
+                submissionComments = if(comment != null) listOf(comment) else listOf(),
+                mediaContentType = attachment?.contentType,
                 grade = grade
         )
         submissionList.add(userRootSubmission)

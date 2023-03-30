@@ -123,13 +123,30 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         urlSubmissionUploadPage.submitText("https://google.com")
         sleep(1000) // Allow some time for the submission to propagate
         assignmentDetailsPage.assertAssignmentSubmitted()
+        assignmentDetailsPage.assertNoAttemptSpinner()
+
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+
         assignmentDetailsPage.goToSubmissionDetails()
+
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+
+        submissionDetailsPage.selectAttempt("Attempt 2")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 2")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentNotDisplayed("Hey!", data.users.values.first())
+
         submissionDetailsPage.selectAttempt("Attempt 1")
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
-        submissionDetailsPage.assertCommentNotDisplayed("Hey!", data.users.values.first())
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+
+
     }
 
     // Student can preview an assignment comment attachment
