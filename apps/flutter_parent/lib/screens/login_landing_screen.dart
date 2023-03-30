@@ -121,8 +121,9 @@ class LoginLandingScreen extends StatelessWidget {
             _outlineButton(context, L10n(context).findAnotherSchool, () {
               onFindSchoolPressed(context);
             }),
-          SizedBox(height: 8),
+          SizedBox(height: 32),
           if (_hasCameras()) _qrLogin(context),
+          SizedBox(height: 32),
           _previousLogins(context),
           SizedBox(height: 32)
         ],
@@ -177,9 +178,9 @@ class LoginLandingScreen extends StatelessWidget {
                         () {
                       onFindSchoolPressed(context);
                     }),
-                  SizedBox(height: 8),
+                  SizedBox(height: 16),
                   if (_hasCameras()) _qrLogin(context),
-                  SizedBox(height: 8),
+                  SizedBox(height: 16),
                   _previousLogins(context),
                   Spacer()
                 ],
@@ -262,7 +263,7 @@ class LoginLandingScreen extends StatelessWidget {
                 SizedBox(width: 8),
                 Text(
                   L10n(context).loginWithQRCode,
-                  style: TextStyle(fontSize: 16, color: ParentColors.ash),
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
               ]),
         ));
@@ -283,7 +284,7 @@ class LoginLandingScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 48),
                 child: Text(L10n(context).previousLogins,
-                    style: Theme.of(context).textTheme.caption),
+                    style: Theme.of(context).textTheme.subtitle1),
               ),
               SizedBox(height: 6),
               Padding(
@@ -301,6 +302,7 @@ class LoginLandingScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     Login login = logins[index];
                     return ListTile(
+                      contentPadding: EdgeInsets.zero,
                       onTap: () {
                         ApiPrefs.switchLogins(login);
                         locator<QuickNav>().pushRouteAndClearStack(
@@ -330,7 +332,7 @@ class LoginLandingScreen extends StatelessWidget {
                         ],
                       ),
                       title: UserName.fromUser(login.currentUser),
-                      subtitle: Text(login.currentDomain),
+                      subtitle: Text(login.currentDomain, overflow: TextOverflow.ellipsis),
                       trailing: IconButton(
                         tooltip: L10n(context).delete,
                         onPressed: () async {
