@@ -49,56 +49,46 @@ class LoginLandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultParentTheme(
-      builder: (context) => Scaffold(
-        key: _scaffoldKey,
-        endDrawer: !DebugFlags.isDebug
-            ? null // Don't show snickers in release mode
-            : Drawer(
-                child: SafeArea(
-                  child: Center(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: SNICKERS.length,
-                      itemBuilder: (context, index) {
-                        var snicker = SNICKERS[index];
-                        return ListTile(
-                          title: Text(snicker.title),
-                          subtitle: Text(snicker.subtitle),
-                          onTap: () {
-                            // TODO: needs test
-                            locator<QuickNav>().push(
-                              context,
-                              WebLoginScreen(snicker.domain, user: snicker.username, pass: snicker.password),
+        builder: (context) => Scaffold(
+            key: _scaffoldKey,
+            endDrawer: !DebugFlags.isDebug
+                ? null // Don't show snickers in release mode
+                : Drawer(
+                    child: SafeArea(
+                      child: Center(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: SNICKERS.length,
+                          itemBuilder: (context, index) {
+                            var snicker = SNICKERS[index];
+                            return ListTile(
+                              title: Text(snicker.title),
+                              subtitle: Text(snicker.subtitle),
+                              onTap: () {
+                                // TODO: needs test
+                                locator<QuickNav>().push(
+                                  context,
+                                  WebLoginScreen(snicker.domain,
+                                      user: snicker.username,
+                                      pass: snicker.password),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-        body: TwoFingerDoubleTapGestureDetector(
-          onDoubleTap: () => _changeLoginFlow(context),
-          child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: FullScreenScrollContainer(
-                    horizontalPadding: 0,
-                    children: <Widget>[
-                      // _helpRequestButton(context), // add back after we make mobile login better
-                      Expanded(child: _body(context)),
-                      SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
-                    ],
+            body: TwoFingerDoubleTapGestureDetector(
+                onDoubleTap: () => _changeLoginFlow(context),
+                child: SafeArea(
+                  child: OrientationBuilder(
+                    builder: (context, orientation) =>
+                        orientation == Orientation.portrait
+                            ? _body(context)
+                            : _bodyLandscape(context),
                   ),
-                ),
-                _previousLogins(context),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                ))));
   }
 
   Widget _body(BuildContext context) {
@@ -107,11 +97,12 @@ class LoginLandingScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Spacer(),
           SvgPicture.asset(
             'assets/svg/canvas-parent-login-logo.svg',
             semanticsLabel: L10n(context).canvasLogoLabel,
           ),
-          SizedBox(height: 64),
+          Spacer(),
           if (lastLoginAccount == null)
             _filledButton(context, L10n(context).findSchool, () {
               onFindSchoolPressed(context);
@@ -119,7 +110,8 @@ class LoginLandingScreen extends StatelessWidget {
           if (lastLoginAccount != null)
             _filledButton(
                 context,
-                lastLoginAccount.item1.name == null || lastLoginAccount.item1.name.isEmpty
+                lastLoginAccount.item1.name == null ||
+                        lastLoginAccount.item1.name.isEmpty
                     ? lastLoginAccount.item1.domain
                     : lastLoginAccount.item1.name, () {
               onSavedSchoolPressed(context, lastLoginAccount);
@@ -131,52 +123,120 @@ class LoginLandingScreen extends StatelessWidget {
             }),
           SizedBox(height: 8),
           if (_hasCameras()) _qrLogin(context),
+          _previousLogins(context),
+          SizedBox(height: 32)
         ],
       ),
     );
   }
 
+  Widget _bodyLandscape(BuildContext context) {
+    final lastLoginAccount = ApiPrefs.getLastAccount();
+    return LayoutBuilder(builder: (context, constraints) {
+      final parentWidth = constraints.maxWidth;
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+              width: parentWidth * 0.5,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Spacer(),
+                    SvgPicture.asset(
+                      'assets/svg/canvas-parent-login-logo.svg',
+                      semanticsLabel: L10n(context).canvasLogoLabel,
+                    ),
+                    Spacer()
+                  ],
+                ),
+              )),
+          Container(
+              width: min(parentWidth * 0.5, 400),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(),
+                  if (lastLoginAccount == null)
+                    _filledButton(context, L10n(context).findSchool, () {
+                      onFindSchoolPressed(context);
+                    }),
+                  if (lastLoginAccount != null)
+                    _filledButton(
+                        context,
+                        lastLoginAccount.item1.name == null ||
+                                lastLoginAccount.item1.name.isEmpty
+                            ? lastLoginAccount.item1.domain
+                            : lastLoginAccount.item1.name, () {
+                      onSavedSchoolPressed(context, lastLoginAccount);
+                    }),
+                  SizedBox(height: 16),
+                  if (lastLoginAccount != null)
+                    _outlineButton(context, L10n(context).findAnotherSchool,
+                        () {
+                      onFindSchoolPressed(context);
+                    }),
+                  SizedBox(height: 8),
+                  if (_hasCameras()) _qrLogin(context),
+                  SizedBox(height: 8),
+                  _previousLogins(context),
+                  Spacer()
+                ],
+              )),
+          Spacer()
+        ],
+      );
+    });
+  }
+
   Widget _filledButton(
       BuildContext context, String title, VoidCallback onPressed) {
-    return ButtonTheme(
-      minWidth: 260,
-      child: RaisedButton(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48.0),
+      child: ButtonTheme(
+        minWidth: double.infinity,
+        child: FlatButton(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 16),
+            ),
           ),
+          color: Theme.of(context).accentColor,
+          textColor: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4))),
+          onPressed: onPressed,
         ),
-        color: Theme.of(context).accentColor,
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4))),
-        onPressed: onPressed,
       ),
     );
   }
 
   Widget _outlineButton(
       BuildContext context, String title, VoidCallback onPressed) {
-    return ButtonTheme(
-      minWidth: 260,
-      child: OutlinedButton(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.subtitle1,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48.0),
+      child: ButtonTheme(
+        child: OutlinedButton(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
           ),
-        ),
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
+          style: OutlinedButton.styleFrom(
+            minimumSize: Size(double.infinity, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            side: BorderSide(
+                width: 1, color: ParentTheme.of(context).onSurfaceColor),
           ),
-          side: BorderSide(
-              width: 1, color: ParentTheme.of(context).onSurfaceColor),
+          onPressed: onPressed,
         ),
-        onPressed: onPressed,
       ),
     );
   }
@@ -214,67 +274,77 @@ class LoginLandingScreen extends StatelessWidget {
       builder: (context, setState) {
         var logins = ApiPrefs.getLogins();
         if (logins.isEmpty) return Container();
-        return Column(
-          key: Key('previous-logins'),
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(L10n(context).previousLogins, style: Theme.of(context).textTheme.caption),
-            ),
-            SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(height: 1),
-            ),
-            AnimatedContainer(
-              curve: Curves.easeInOutBack,
-              duration: Duration(milliseconds: 400),
-              height: min(itemHeight * 2, itemHeight * logins.length),
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: 0),
-                itemCount: logins.length,
-                itemBuilder: (context, index) {
-                  Login login = logins[index];
-                  return ListTile(
-                    onTap: () {
-                      ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
-                    },
-                    leading: Stack(
-                      overflow: Overflow.visible,
-                      children: <Widget>[
-                        Avatar.fromUser(login.currentUser),
-                        if (login.isMasquerading)
-                          Positioned(
-                            right: -6,
-                            top: -6,
-                            child: Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ParentColors.masquerade,
-                                  border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2)),
-                              child: Icon(CanvasIconsSolid.masquerade, color: Colors.white, size: 10),
-                            ),
-                          ),
-                      ],
-                    ),
-                    title: UserName.fromUser(login.currentUser),
-                    subtitle: Text(login.currentDomain),
-                    trailing: IconButton(
-                      tooltip: L10n(context).delete,
-                      onPressed: () async {
-                        await ApiPrefs.removeLogin(login);
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.clear),
-                    ),
-                  );
-                },
+        return Container(
+          width: double.infinity,
+          child: Column(
+            key: Key('previous-logins'),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: Text(L10n(context).previousLogins,
+                    style: Theme.of(context).textTheme.caption),
               ),
-            ),
-          ],
+              SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: Divider(height: 1),
+              ),
+              AnimatedContainer(
+                curve: Curves.easeInOutBack,
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                duration: Duration(milliseconds: 400),
+                height: min(itemHeight * 2, itemHeight * logins.length),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  itemCount: logins.length,
+                  itemBuilder: (context, index) {
+                    Login login = logins[index];
+                    return ListTile(
+                      onTap: () {
+                        ApiPrefs.switchLogins(login);
+                        locator<QuickNav>().pushRouteAndClearStack(
+                            context, PandaRouter.rootSplash());
+                      },
+                      leading: Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          Avatar.fromUser(login.currentUser),
+                          if (login.isMasquerading)
+                            Positioned(
+                              right: -6,
+                              top: -6,
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: ParentColors.masquerade,
+                                    border: Border.all(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        width: 2)),
+                                child: Icon(CanvasIconsSolid.masquerade,
+                                    color: Colors.white, size: 10),
+                              ),
+                            ),
+                        ],
+                      ),
+                      title: UserName.fromUser(login.currentUser),
+                      subtitle: Text(login.currentDomain),
+                      trailing: IconButton(
+                        tooltip: L10n(context).delete,
+                        onPressed: () async {
+                          await ApiPrefs.removeLogin(login);
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.clear),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -286,12 +356,12 @@ class LoginLandingScreen extends StatelessWidget {
         .pushRoute(context, PandaRouter.domainSearch(loginFlow: flow));
   }
 
-  onSavedSchoolPressed(BuildContext context, Tuple2<SchoolDomain, LoginFlow> lastAccount) {
+  onSavedSchoolPressed(
+      BuildContext context, Tuple2<SchoolDomain, LoginFlow> lastAccount) {
     locator<QuickNav>().pushRoute(
         context,
         PandaRouter.loginWeb(lastAccount.item1.domain,
-            accountName: lastAccount.item1.name,
-        loginFlow: lastAccount.item2));
+            accountName: lastAccount.item1.name, loginFlow: lastAccount.item2));
   }
 
   void _changeLoginFlow(BuildContext context) {
@@ -314,6 +384,7 @@ class LoginLandingScreen extends StatelessWidget {
     }
 
     _scaffoldKey.currentState.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(flowDescription)));
+    _scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(flowDescription)));
   }
 }
