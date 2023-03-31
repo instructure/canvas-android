@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-02-17T11:03:20.619429",
+  "@@last_modified": "2023-03-31T11:03:36.613144",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -180,6 +180,19 @@
     ],
     "placeholders": {
       "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}, {eventCount} event}other{{date}, {eventCount} events}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
     }
   },
   "No Events Today!": "No Events Today!",
