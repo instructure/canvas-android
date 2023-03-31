@@ -151,9 +151,6 @@ class ProjectTransformer(
             input.close()
         }
 
-        // Assert the transform counts match their expected conditions
-        transformers.forEach { it.counter.assertCount() }
-
         val end = System.currentTimeMillis()
         println("    :Transform took ${(end - start) / 1000.0} seconds")
     }

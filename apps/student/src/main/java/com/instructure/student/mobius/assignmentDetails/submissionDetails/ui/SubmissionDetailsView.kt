@@ -136,6 +136,7 @@ class SubmissionDetailsView(
                     SlidingUpPanelLayout.PanelState.COLLAPSED -> {
                         submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                     }
+                    else -> {}
                 }
             }
 

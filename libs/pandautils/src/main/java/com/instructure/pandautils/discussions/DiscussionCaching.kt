@@ -31,9 +31,11 @@ class DiscussionCaching(discussionTopicHeaderId: Long) {
         val keys = book.allKeys
         val entries: ArrayList<DiscussionEntry> = ArrayList(keys.size)
         if(keys.isNotEmpty()) keys.forEach { key ->
-            val entry = book.read(key) as DiscussionEntry
-            entry.id = key.toLong()
-            entries.add(entry)
+            val entry = book.read(key) as DiscussionEntry?
+            entry?.let {
+                it.id = key.toLong()
+                entries.add(it)
+            }
         }
         return entries.toMutableList()
     }

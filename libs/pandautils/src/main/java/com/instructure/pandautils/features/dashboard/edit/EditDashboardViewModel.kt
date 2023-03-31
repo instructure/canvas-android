@@ -179,6 +179,7 @@ class EditDashboardViewModel @Inject constructor(
             is EditDashboardItemAction.ShowSnackBar -> {
                 _events.postValue(Event(action))
             }
+            is EditDashboardItemAction.OpenItem -> {}
         }
     }
 

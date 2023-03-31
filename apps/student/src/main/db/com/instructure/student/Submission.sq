@@ -20,12 +20,12 @@ import com.instructure.student.db.sqlColAdapters.Date;
 CREATE TABLE submission (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     submissionEntry TEXT, -- Text, URL, or a URI pointing to a file
-    lastActivityDate TEXT as Date, -- Uploaded on, or day/time the upload failed
+    lastActivityDate TEXT AS Date, -- Uploaded on, or day/time the upload failed
     assignmentName TEXT,
     assignmentId INTEGER NOT NULL,
-    canvasContext TEXT as CanvasContext NOT NULL,
+    canvasContext TEXT AS CanvasContext NOT NULL,
     submissionType TEXT NOT NULL,
-    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
+    errorFlag INTEGER AS Boolean NOT NULL DEFAULT 0,
     assignmentGroupCategoryId INTEGER,
     userId INTEGER NOT NULL,
     -- Used for progress
@@ -33,7 +33,7 @@ CREATE TABLE submission (
     fileCount INTEGER NOT NULL DEFAULT 0,
     progress REAL,
     annotatableAttachmentId INTEGER,
-    isDraft INTEGER as Boolean DEFAULT 0
+    isDraft INTEGER AS Boolean DEFAULT 0
 );
 
 insertOnlineTextSubmission:

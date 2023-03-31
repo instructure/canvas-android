@@ -117,7 +117,6 @@ fun getSubmissionTypesVisibilities(assignment: Assignment, isStudioEnabled: Bool
     val submissionTypes = assignment.getSubmissionTypes()
 
     for (submissionType in submissionTypes) {
-        @Suppress("NON_EXHAUSTIVE_WHEN")
         when (submissionType) {
             Assignment.SubmissionType.ONLINE_UPLOAD -> {
                 visibilities.fileUpload = true
@@ -127,6 +126,7 @@ fun getSubmissionTypesVisibilities(assignment: Assignment, isStudioEnabled: Bool
             Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true
             Assignment.SubmissionType.MEDIA_RECORDING -> visibilities.mediaRecording = true
             Assignment.SubmissionType.STUDENT_ANNOTATION -> visibilities.studentAnnotation = true
+            else -> {}
         }
     }
 
