@@ -30,7 +30,8 @@ class SyncManager(
     private val sectionDao: SectionDao,
     private val termDao: TermDao,
     private val userDao: UserDao,
-    private val courseGradingPeriodDao: CourseGradingPeriodDao
+    private val courseGradingPeriodDao: CourseGradingPeriodDao,
+    private val tabDao: TabDao
 ) {
 
     suspend fun fetchCourseContent(courseId: Long) {
@@ -55,6 +56,10 @@ class SyncManager(
 
         course.term?.let { term ->
             termDao.insert(TermEntity(term))
+        }
+
+        course.tabs?.forEach { tab ->
+            tabDao.insert(TabEntity(tab, course.id))
         }
 
     }

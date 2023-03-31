@@ -28,7 +28,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.managers.PageManager
-import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -48,6 +47,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
 import com.instructure.student.events.CourseColorOverlayToggledEvent
+import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.DisableableAppBarLayoutBehavior
@@ -67,6 +67,9 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
     @Inject
     lateinit var syncManager: SyncManager
+
+    @Inject
+    lateinit var repository: CourseBrowserRepository
 
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
@@ -198,7 +201,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
                 homePageTitle = homePage.title
             }
 
-            val tabs = awaitApi<List<Tab>> { TabManager.getTabs(canvasContext, it, isRefresh) }.filter { !(it.isExternal && it.isHidden) }
+            val tabs = repository.getTabs(canvasContext, isRefresh)
 
             // Finds the home tab so we can reorder them if necessary
             val sortedTabs = tabs.toMutableList()

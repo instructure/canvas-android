@@ -10,21 +10,12 @@ import com.instructure.pandautils.room.entities.*
     entities = [
         AttachmentEntity::class,
         AuthorEntity::class,
-        CourseEntity::class,
-        CourseGradingPeriodEntity::class,
         DashboardFileUploadEntity::class,
-        EnrollmentEntity::class,
         FileUploadInputEntity::class,
-        GradesEntity::class,
-        GradingPeriodEntity::class,
         MediaCommentEntity::class,
         PendingSubmissionCommentEntity::class,
-        SectionEntity::class,
         SubmissionCommentEntity::class,
-        TermEntity::class,
-        UserCalendarEntity::class,
-        UserEntity::class
-    ], version = 4
+    ], version = 3
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -42,22 +33,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun pendingSubmissionCommentDao(): PendingSubmissionCommentDao
 
     abstract fun dashboardFileUploadDao(): DashboardFileUploadDao
-
-    abstract fun courseDao(): CourseDao
-
-    abstract fun enrollmentDao(): EnrollmentDao
-
-    abstract fun gradesDao(): GradesDao
-
-    abstract fun gradingPeriodDao(): GradingPeriodDao
-
-    abstract fun sectionDao(): SectionDao
-
-    abstract fun termDao(): TermDao
-
-    abstract fun userCalendarDao(): UserCalendarDao
-
-    abstract fun userDao(): UserDao
-
-    abstract fun courseGradingPeriodDao(): CourseGradingPeriodDao
 }
