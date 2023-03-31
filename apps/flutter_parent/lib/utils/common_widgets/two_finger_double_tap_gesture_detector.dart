@@ -30,6 +30,7 @@ class TwoFingerDoubleTapGestureDetector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RawGestureDetector(
+      behavior: HitTestBehavior.opaque,
       child: child,
       excludeFromSemantics: excludeFromSemantics,
       gestures: {
