@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.offline
+package com.instructure.student.features.offline
 
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.pandautils.room.daos.*

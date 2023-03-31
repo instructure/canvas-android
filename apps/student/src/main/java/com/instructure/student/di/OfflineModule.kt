@@ -18,13 +18,13 @@
 package com.instructure.student.di
 
 import android.content.Context
-import android.net.ConnectivityManager
 import androidx.room.Room
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.offline.SyncManager
 import com.instructure.pandautils.room.daos.*
+import com.instructure.student.features.offline.NetworkStateProvider
+import com.instructure.student.features.offline.SyncManager
 import com.instructure.student.features.offline.db.OfflineDatabase
 import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
 import dagger.Module
@@ -43,14 +43,13 @@ class OfflineModule {
     }
 
     @Provides
-    fun provideCourseBrowserRepository(tabApi: TabAPI.TabsInterface, tabDao: TabDao): CourseBrowserRepository {
-        return CourseBrowserRepository(tabApi, tabDao)
+    fun provideCourseBrowserRepository(tabApi: TabAPI.TabsInterface, tabDao: TabDao, networkStateProvider: NetworkStateProvider): CourseBrowserRepository {
+        return CourseBrowserRepository(tabApi, tabDao, networkStateProvider)
     }
 
-    private fun isOnline(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo?.isConnected == true
+    @Provides
+    fun provideNetworkStateProvider(@ApplicationContext context: Context): NetworkStateProvider {
+        return NetworkStateProvider(context)
     }
 
     @Provides
