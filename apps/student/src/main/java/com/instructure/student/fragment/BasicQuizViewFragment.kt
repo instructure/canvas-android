@@ -88,7 +88,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
         // Make sure we are prepared to handle file uploads for quizzes that allow them
         setupFilePicker()
-        binding.canvasWebViewWrapper.webView.setDarkModeSupport()
+        binding.canvasWebViewWrapper.webView.enableAlgorithmicDarkening()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -113,7 +113,6 @@ open class InternalWebviewFragment : ParentFragment() {
         originalUserAgentString = canvasWebViewWrapper.webView.settings.userAgentString
         canvasWebViewWrapper.webView.settings.userAgentString = ApiPrefs.userAgent
         canvasWebViewWrapper.webView.setInitialScale(100)
-        canvasWebViewWrapper.webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webViewLoading.setVisible(true)
 
         canvasWebViewWrapper.webView.canvasWebChromeClientCallback =
