@@ -214,6 +214,18 @@ object FileUploadUtils {
         } else FileSubmitObject(fileName, 0, mimeType!!, "", errorMessage, FileSubmitObject.STATE.NORMAL)
     }
 
+    fun getFileSubmitObjectByFileUri(uri: Uri?, filename: String, mimeType: String?): FileSubmitObject? {
+        return uri?.path?.let {
+            val file = File(it)
+            FileSubmitObject(
+                name = filename,
+                size = file.length(),
+                contentType = mimeType.orEmpty(),
+                fullPath = file.absolutePath
+            )
+        }
+    }
+
     fun getFileNameWithDefault(resolver: ContentResolver, uri: Uri): String {
         var fileName: String? = ""
         val scheme = uri.scheme

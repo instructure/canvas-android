@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 import javax.inject.Inject
 
@@ -275,7 +276,7 @@ class FileUploadDialogViewModel @Inject constructor(
                 }
             }
 
-            val uris = filesToUpload.map { it.uri }
+            val uris = filesToUpload.map { Uri.fromFile(File(it.fileSubmitObject.fullPath)) }
 
             startUpload(uris)
         }
@@ -290,8 +291,7 @@ class FileUploadDialogViewModel @Inject constructor(
             if (uploadType == FileUploadType.DISCUSSION) {
                 _events.value = Event(FileUploadAction.AttachmentSelectedAction(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri()))
             } else {
-                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-                    .build()
+                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>().build()
 
                 val input = getInputData(worker.id, uris)
                 fileUploadInputDao.insert(input)

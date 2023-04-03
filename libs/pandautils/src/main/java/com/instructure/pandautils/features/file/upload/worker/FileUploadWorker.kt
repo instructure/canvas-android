@@ -42,6 +42,7 @@ import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.io.File
 import java.util.*
 
 @HiltWorker
@@ -150,7 +151,7 @@ class FileUploadWorker @AssistedInject constructor(
                     Result.success()
                 }
             }
-            fileUploadInputDao.delete(inputData)
+
             val successTitle = context.getString(
                 if (action == ACTION_ASSIGNMENT_SUBMISSION) {
                     R.string.dashboardNotificationSubmissionUploadSuccessTitle
@@ -158,7 +159,10 @@ class FileUploadWorker @AssistedInject constructor(
                     R.string.dashboardNotificationUploadingFilesSuccessTitle
                 }
             )
+
             insertDashboardUpload(successTitle, subtitle)
+            fileUploadInputDao.delete(inputData)
+            deleteCachedFiles(inputData.filePaths)
             return result
         } catch (e: Exception) {
             val failedTitle = context.getString(
@@ -170,7 +174,7 @@ class FileUploadWorker @AssistedInject constructor(
             )
             insertDashboardUpload(failedTitle, subtitle)
             e.printStackTrace()
-            return Result.failure()
+            return Result.failure(workDataBuilder.build())
         }
     }
 
@@ -184,6 +188,14 @@ class FileUploadWorker @AssistedInject constructor(
                 subtitle = subtitle
             )
         )
+    }
+
+    private fun deleteCachedFiles(uriStrings: List<String>) {
+        uriStrings.forEach { uriString ->
+            Uri.parse(uriString).path?.let {
+                File(it).delete()
+            }
+        }
     }
 
     private suspend fun insertSubmissionComment(submissionComment: SubmissionComment): Long {
@@ -233,8 +245,9 @@ class FileUploadWorker @AssistedInject constructor(
             val mimeType = fileUploadUtilsHelper.getFileMimeType(uri)
             val fileName = fileUploadUtilsHelper.getFileNameWithDefault(uri)
 
-            fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(uri, fileName, mimeType)
+            fileUploadUtilsHelper.getFileSubmitObjectByFileUri(uri, fileName, mimeType)
         }
+
         if (fileSubmitObjects.contains(null)) throw IllegalArgumentException("Could not parse file.")
 
         return fileSubmitObjects.filterNotNull()
@@ -315,10 +328,13 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             }).dataOrThrow
 
-            val updatedList =
-                workDataBuilder.build().getStringArray(PROGRESS_DATA_UPLOADED_FILES).orEmpty().toMutableList().apply {
-                    add(fileSubmitObject.toJson())
-                }.toTypedArray()
+            val updatedList = workDataBuilder.build()
+                .getStringArray(PROGRESS_DATA_UPLOADED_FILES)
+                .orEmpty()
+                .toMutableList()
+                .apply { add(fileSubmitObject.toJson()) }
+                .toTypedArray()
+
             uploaded += fileSubmitObject.size
             currentProgress = uploaded
 

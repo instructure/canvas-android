@@ -14,6 +14,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.daos.FileUploadInputDao
 import com.instructure.pandautils.utils.toJson
 import io.mockk.every
 import io.mockk.mockk
@@ -40,6 +42,8 @@ class ShareExtensionProgressViewModelTest {
 
     private val workManager: WorkManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
+    private val fileUploadInputDao: FileUploadInputDao = mockk(relaxed = true)
+    private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
 
     private lateinit var mockLiveData: MutableLiveData<WorkInfo>
     private lateinit var viewModel: ShareExtensionProgressDialogViewModel
@@ -70,12 +74,19 @@ class ShareExtensionProgressViewModelTest {
     }
 
     @Test
-    fun `Show error dialog when upload failed`() {
-        viewModel.setUUID(uuid)
-        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, Data.EMPTY, emptyList(), Data.EMPTY, 1))
+    fun `Show error on progress dialog when upload failed`() {
+        every { resources.getString(R.string.fileUploadFailedSubtitle) } returns "Error"
 
-        viewModel.events.observe(lifecycleOwner) {}
-        assertEquals(ShareExtensionProgressAction.ShowErrorDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
+        viewModel.setUUID(uuid)
+
+        val outputData = Data.Builder()
+            .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+            .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, emptyArray())
+            .build()
+
+        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, outputData, emptyList(), Data.EMPTY, 1))
+
+        assertEquals("Error", viewModel.data.value?.subtitle)
     }
 
     @Test
@@ -154,13 +165,13 @@ class ShareExtensionProgressViewModelTest {
                 "Test 1",
                 "1 B",
                 R.drawable.ic_attachment,
-                false
+                FileProgressStatus.IN_PROGRESS
             ),
             FileProgressViewData(
                 "Test 2",
                 "1 B",
                 R.drawable.ic_attachment,
-                false
+                FileProgressStatus.IN_PROGRESS
             )
         )
 
@@ -210,13 +221,13 @@ class ShareExtensionProgressViewModelTest {
                 "Test 1",
                 "1 B",
                 R.drawable.ic_attachment,
-                true
+                FileProgressStatus.UPLOADED
             ),
             FileProgressViewData(
                 "Test 2",
                 "1 B",
                 R.drawable.ic_attachment,
-                false
+                FileProgressStatus.IN_PROGRESS
             )
         )
 
@@ -258,6 +269,6 @@ class ShareExtensionProgressViewModelTest {
     }
 
     private fun createViewModel(): ShareExtensionProgressDialogViewModel {
-        return ShareExtensionProgressDialogViewModel(workManager, resources)
+        return ShareExtensionProgressDialogViewModel(workManager, resources, fileUploadInputDao, dashboardFileUploadDao)
     }
 }
