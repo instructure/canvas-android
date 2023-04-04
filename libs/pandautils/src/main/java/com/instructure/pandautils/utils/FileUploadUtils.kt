@@ -184,6 +184,15 @@ object FileUploadUtils {
                 fileName = "$fileName.$extension"
             }
 
+            // add file version if needed
+            var version = 1
+            var fileNameFile = File(getTempFilePath(context, fileName))
+            val ext = fileName.substring(fileName.lastIndexOf("."))
+            while (fileNameFile.exists()) {
+                fileName = "${filename.dropLast(ext.length)}(${version++})$ext"
+                fileNameFile = File(getTempFilePath(context, fileName))
+            }
+
             // create a temp file to copy the uri contents into
             val tempFilePath = getTempFilePath(context, fileName)
             output = FileOutputStream(tempFilePath)
