@@ -18,9 +18,19 @@
 package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import com.instructure.canvasapi2.models.Tab
 
-@Entity(primaryKeys = ["id", "courseId"])
+@Entity(
+    primaryKeys = ["id", "courseId"],
+    foreignKeys = [ForeignKey(
+        entity = CourseEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["courseId"],
+        onDelete = CASCADE
+    )]
+)
 data class TabEntity(
     val id: String,
     val label: String?,

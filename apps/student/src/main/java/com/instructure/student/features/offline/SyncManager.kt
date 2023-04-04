@@ -17,6 +17,8 @@
 
 package com.instructure.student.features.offline
 
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.room.entities.*
@@ -31,17 +33,38 @@ class SyncManager(
     private val termDao: TermDao,
     private val userDao: UserDao,
     private val courseGradingPeriodDao: CourseGradingPeriodDao,
-    private val tabDao: TabDao
+    private val tabDao: TabDao,
+    private val userApi: UserAPI.UsersInterface
 ) {
 
     suspend fun fetchCourseContent(courseId: Long) {
         val course = courseManager.getFullCourseContentAsync(courseId, true).await().dataOrThrow
 
+        course.term?.let { term ->
+            termDao.insert(TermEntity(term))
+        }
+
         courseDao.insert(CourseEntity(course))
 
         course.enrollments?.forEach { enrollment ->
+            if (enrollment.userId != 0L) {
+                val user = enrollment.user ?: userApi.getUser(
+                    enrollment.userId,
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrThrow
+                userDao.insert(UserEntity(user))
+            }
+
+            if (enrollment.associatedUserId != 0L) {
+                val associatedUser = enrollment.user ?: userApi.getUser(
+                    enrollment.associatedUserId,
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrThrow
+                userDao.insert(UserEntity(associatedUser))
+            }
+
             enrollment.observedUser?.let { userDao.insert(UserEntity(it)) }
-            val enrollmentId = enrollmentDao.insert(EnrollmentEntity(enrollment, enrollment.observedUser?.id))
+            val enrollmentId = enrollmentDao.insert(EnrollmentEntity(enrollment, courseId = courseId, observedUserId = enrollment.observedUser?.id))
             enrollment.grades?.let { gradesDao.insert(GradesEntity(it, enrollmentId)) }
         }
 
@@ -51,11 +74,7 @@ class SyncManager(
         }
 
         course.sections.forEach { section ->
-            sectionDao.insert(SectionEntity(section))
-        }
-
-        course.term?.let { term ->
-            termDao.insert(TermEntity(term))
+            sectionDao.insert(SectionEntity(section, courseId))
         }
 
         course.tabs?.forEach { tab ->

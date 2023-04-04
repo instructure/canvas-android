@@ -18,11 +18,20 @@
 package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Grades
 
-@Entity
-class GradesEntity (
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = EnrollmentEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["enrollmentId"],
+        onDelete = CASCADE
+    )]
+)
+class GradesEntity(
     @PrimaryKey
     val id: Long,
     val enrollmentId: Long,
@@ -32,7 +41,7 @@ class GradesEntity (
     val currentGrade: String?,
     val finalGrade: String?
 ) {
-    constructor(grades: Grades, enrollmentId: Long): this(
+    constructor(grades: Grades, enrollmentId: Long) : this(
         grades.id,
         enrollmentId,
         grades.htmlUrl,

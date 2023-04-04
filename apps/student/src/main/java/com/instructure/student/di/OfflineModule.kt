@@ -20,6 +20,7 @@ package com.instructure.student.di
 import android.content.Context
 import androidx.room.Room
 import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.daos.*
@@ -63,7 +64,8 @@ class OfflineModule {
         termDao: TermDao,
         userDao: UserDao,
         courseGradingPeriodDao: CourseGradingPeriodDao,
-        tabDao: TabDao
+        tabDao: TabDao,
+        userApi: UserAPI.UsersInterface
     ): SyncManager {
         return SyncManager(
             courseManager,
@@ -75,7 +77,8 @@ class OfflineModule {
             termDao,
             userDao,
             courseGradingPeriodDao,
-            tabDao
+            tabDao,
+            userApi
         )
     }
 

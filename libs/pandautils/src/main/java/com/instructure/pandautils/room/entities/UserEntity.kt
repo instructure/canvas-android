@@ -28,7 +28,7 @@ data class UserEntity(
     val name: String,
     val shortName: String?,
     val loginId: String?,
-    var avatarUrl: String?,
+    val avatarUrl: String?,
     val primaryEmail: String?,
     val email: String?,
     val sortableName: String?,

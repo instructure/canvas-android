@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -33,7 +33,7 @@ object UserAPI {
         STUDENT, TEACHER, TA, OBSERVER, DESIGNER
     }
 
-    internal interface UsersInterface {
+    interface UsersInterface {
 
         @GET("users/self/colors")
         fun getColors(): Call<CanvasColor>
@@ -73,6 +73,9 @@ object UserAPI {
 
         @GET("users/{userId}/profile")
         fun getUser(@Path("userId") userId: Long?): Call<User>
+
+        @GET("users/{userId}/profile")
+        suspend fun getUser(@Path("userId") userId: Long, @Tag params: RestParams): DataResult<User>
 
         @GET("{contextType}/{contextId}/users/{userId}?include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&include[]=enrollments")
         fun getUserForContextId(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("userId") userId: Long): Call<User>

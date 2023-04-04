@@ -18,24 +18,35 @@
 package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Section
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = CASCADE
+        )
+    ]
+)
 data class SectionEntity(
     @PrimaryKey
     val id: Long,
     var name: String,
-    val courseId: Long,
+    val courseId: Long?,
     val startAt: String?,
     val endAt: String?,
     val totalStudents: Int,
     val restrictEnrollmentsToSectionDates: Boolean
 ) {
-    constructor(section: Section): this(
+    constructor(section: Section, courseId: Long? = null) : this(
         section.id,
         section.name,
-        section.courseId,
+        if (section.courseId != 0L) section.courseId else courseId,
         section.startAt,
         section.endAt,
         section.totalStudents,

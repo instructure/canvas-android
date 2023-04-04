@@ -18,15 +18,26 @@
 package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.SET_NULL
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Course
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = TermEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["termId"],
+            onDelete = SET_NULL
+        )
+    ]
+)
 data class CourseEntity(
     @PrimaryKey
     val id: Long,
     val name: String,
-    var originalName: String?,
+    val originalName: String?,
     val courseCode: String?,
     val startAt: String?,
     val endAt: String?,
@@ -41,7 +52,7 @@ data class CourseEntity(
     val finalScore: Double?,
     val currentGrade: String?,
     val finalGrade: String?,
-    var isFavorite: Boolean,
+    val isFavorite: Boolean,
     val accessRestrictedByDate: Boolean,
     val imageUrl: String?,
     val bannerImageUrl: String?,
@@ -53,7 +64,7 @@ data class CourseEntity(
     val homeroomCourse: Boolean,
     val courseColor: String?
 ) {
-    constructor(course: Course): this(
+    constructor(course: Course) : this(
         course.id,
         course.name,
         course.originalName,

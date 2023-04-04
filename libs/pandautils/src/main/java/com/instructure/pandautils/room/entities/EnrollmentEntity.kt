@@ -18,18 +18,48 @@
 package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
+import androidx.room.ForeignKey.NO_ACTION
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Enrollment
 import java.util.*
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["observedUserId"],
+            onDelete = NO_ACTION
+        ),
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["userId"],
+            onDelete = NO_ACTION
+        ),
+        ForeignKey(
+            entity = SectionEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseSectionId"],
+            onDelete = CASCADE
+        ),
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = CASCADE
+        )
+    ]
+)
 data class EnrollmentEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val role: String,
     val type: String,
-    val courseId: Long,
-    val courseSectionId: Long,
+    val courseId: Long?,
+    val courseSectionId: Long?,
     val enrollmentState: String?,
     val userId: Long,
     val computedCurrentScore: Double?,
@@ -49,12 +79,12 @@ data class EnrollmentEntity(
     val limitPrivilegesToCourseSection: Boolean,
     val observedUserId: Long?
 ) {
-    constructor(enrollment: Enrollment, observedUserId: Long?): this(
+    constructor(enrollment: Enrollment, courseId: Long? = null, courseSectionId: Long? = null, observedUserId: Long?) : this(
         enrollment.id,
         enrollment.role?.apiRoleString ?: Enrollment.EnrollmentType.NoEnrollment.apiRoleString,
         enrollment.type?.apiTypeString ?: Enrollment.EnrollmentType.NoEnrollment.apiTypeString,
-        enrollment.courseId,
-        enrollment.courseSectionId,
+        if (enrollment.courseId != 0L) enrollment.courseId else courseId,
+        if (enrollment.courseSectionId != 0L) enrollment.courseSectionId else courseSectionId,
         enrollment.enrollmentState,
         enrollment.userId,
         enrollment.computedCurrentScore,
