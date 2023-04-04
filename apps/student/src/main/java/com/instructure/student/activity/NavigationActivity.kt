@@ -282,16 +282,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun requestNotificationsPermission() {
         if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.allowNotificationsMessageStudent, getString(R.string.student_app_name)))
-                    .setTitle(R.string.allowNotificationsTitle)
-                    .setPositiveButton(R.string.ok, { _, _ -> })
-                    .setOnDismissListener { notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS) }
-                    .showThemed()
-            } else {
-                notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
+            notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 

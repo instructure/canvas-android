@@ -194,16 +194,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private fun requestNotificationsPermission() {
         if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.allowNotificationsMessageTeacher, getString(R.string.app_name)))
-                    .setTitle(R.string.allowNotificationsTitle)
-                    .setPositiveButton(R.string.ok, { _, _ -> })
-                    .setOnDismissListener { notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS) }
-                    .showThemed()
-            } else {
-                notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
+            notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 

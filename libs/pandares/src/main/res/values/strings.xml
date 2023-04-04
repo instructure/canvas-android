@@ -1391,7 +1391,4 @@
     <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
     <string name="a11y_avatarContentDescription">Avatar of %s</string>
     <string name="inboxUndo">Undo</string>
-    <string name="allowNotificationsTitle">Allow Notifications</string>
-    <string name="allowNotificationsMessageStudent">%s wants to send you notifications about important updates regarding your assignments, inbox, submissions, file uploads. You can allow or deny notifications after clicking OK.</string>
-    <string name="allowNotificationsMessageTeacher">%s wants to send you notifications about important updates regarding your inbox, file uploads, etc. You can allow or deny notifications after clicking OK.</string>
 </resources>
