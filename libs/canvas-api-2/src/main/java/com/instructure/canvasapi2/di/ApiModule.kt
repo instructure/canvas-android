@@ -167,9 +167,4 @@ class ApiModule {
     fun provideTabApi(): TabAPI.TabsInterface {
         return RestBuilder().build(TabAPI.TabsInterface::class.java, RestParams())
     }
-
-    @Provides
-    fun provideUserApi(): UserAPI.UsersInterface {
-        return RestBuilder().build(UserAPI.UsersInterface::class.java, RestParams())
-    }
 }

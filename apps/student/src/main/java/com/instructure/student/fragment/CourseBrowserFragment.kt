@@ -41,7 +41,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.student.features.offline.SyncManager
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
@@ -64,9 +63,6 @@ import javax.inject.Inject
 @PageView(url = "{canvasContext}")
 @AndroidEntryPoint
 class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnOffsetChangedListener  {
-
-    @Inject
-    lateinit var syncManager: SyncManager
 
     @Inject
     lateinit var repository: CourseBrowserRepository
@@ -128,12 +124,6 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         swipeRefreshLayout.setOnRefreshListener { loadTabs(true) }
 
         loadTabs()
-
-        binding.downloadButton.setOnClickListener {
-            lifecycleScope.launch {
-                syncManager.fetchCourseContent(canvasContext.id)
-            }
-        }
     }
 
     override fun onStart() {

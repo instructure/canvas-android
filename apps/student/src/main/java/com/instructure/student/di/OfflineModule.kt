@@ -20,12 +20,9 @@ package com.instructure.student.di
 import android.content.Context
 import androidx.room.Room
 import com.instructure.canvasapi2.apis.TabAPI
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.daos.*
 import com.instructure.student.features.offline.NetworkStateProvider
-import com.instructure.student.features.offline.SyncManager
 import com.instructure.student.features.offline.db.OfflineDatabase
 import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
 import dagger.Module
@@ -51,35 +48,6 @@ class OfflineModule {
     @Provides
     fun provideNetworkStateProvider(@ApplicationContext context: Context): NetworkStateProvider {
         return NetworkStateProvider(context)
-    }
-
-    @Provides
-    fun provideSyncManager(
-        courseManager: CourseManager,
-        courseDao: CourseDao,
-        enrollmentDao: EnrollmentDao,
-        gradesDao: GradesDao,
-        gradingPeriodDao: GradingPeriodDao,
-        sectionDao: SectionDao,
-        termDao: TermDao,
-        userDao: UserDao,
-        courseGradingPeriodDao: CourseGradingPeriodDao,
-        tabDao: TabDao,
-        userApi: UserAPI.UsersInterface
-    ): SyncManager {
-        return SyncManager(
-            courseManager,
-            courseDao,
-            enrollmentDao,
-            gradesDao,
-            gradingPeriodDao,
-            sectionDao,
-            termDao,
-            userDao,
-            courseGradingPeriodDao,
-            tabDao,
-            userApi
-        )
     }
 
     @Provides
