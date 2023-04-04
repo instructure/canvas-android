@@ -25,8 +25,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -43,6 +42,7 @@ import java.io.File
 class ShareExtensionE2ETest: StudentTest() {
 
     override fun displaysPageObjects() = Unit
+
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
@@ -60,25 +60,10 @@ class ShareExtensionE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val testAssignmentOne = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-            courseId = course.id,
-            submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-            gradingType = GradingType.POINTS,
-            teacherToken = teacher.token,
-            pointsPossible = 15.0,
-            dueAt = 1.days.fromNow.iso8601
-        ))
+        val testAssignmentOne = createAssignment(course, teacher, 1.days.fromNow.iso8601, 15.0)
 
-        AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 30.0,
-                dueAt = 1.days.fromNow.iso8601
-            ))
+        Log.d(PREPARATION_TAG,"Seeding another 'Text Entry' assignment for ${course.name} course.")
+        createAssignment(course, teacher, 1.days.fromNow.iso8601, 30.0)
 
         Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -199,7 +184,24 @@ class ShareExtensionE2ETest: StudentTest() {
         fileListPage.assertItemDisplayed("unfiled")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(jpgTestFileName)
+    }
 
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel,
+        dueAt: String,
+        pointsPossible: Double
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacher.token,
+                pointsPossible = pointsPossible,
+                dueAt = dueAt
+            )
+        )
     }
 
     private fun setupFileOnDevice(fileName: String): Uri {

@@ -39,13 +39,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class LoginE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -229,20 +225,10 @@ class LoginE2ETest : StudentTest() {
         val course = CoursesApi.createCourse(coursesService = coursesService)
 
         Log.d(PREPARATION_TAG,"Enroll ${student.name} student to ${course.name} course.")
-        EnrollmentsApi.enrollUser(
-                courseId = course.id,
-                userId = student.id,
-                enrollmentType = STUDENT_ENROLLMENT,
-                enrollmentService = enrollmentsService
-        )
+        enrollUser(course, student, STUDENT_ENROLLMENT, enrollmentsService)
 
         Log.d(PREPARATION_TAG,"Enroll ${teacher.name} teacher to ${course.name} course.")
-        EnrollmentsApi.enrollUser(
-                courseId = course.id,
-                userId = teacher.id,
-                enrollmentType = TEACHER_ENROLLMENT,
-                enrollmentService = enrollmentsService
-        )
+        enrollUser(course, teacher, TEACHER_ENROLLMENT, enrollmentsService)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         loginWithUser(student)
@@ -255,6 +241,20 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Log out with ${student.name} student.")
         leftSideNavigationDrawerPage.logout()
+    }
+
+    private fun enrollUser(
+        course: CourseApiModel,
+        student: CanvasUserApiModel,
+        enrollmentType: String,
+        enrollmentsService: EnrollmentsApi.EnrollmentsService
+    ) {
+        EnrollmentsApi.enrollUser(
+            courseId = course.id,
+            userId = student.id,
+            enrollmentType = enrollmentType,
+            enrollmentService = enrollmentsService
+        )
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
