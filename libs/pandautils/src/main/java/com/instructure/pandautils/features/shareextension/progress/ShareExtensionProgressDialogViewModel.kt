@@ -105,7 +105,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                     FileProgressViewData(
                         it.name,
                         it.size.humanReadableByteCount(),
-                        getIconDrawableRes(it.contentType, !uploadedFilesMap.containsKey(it.name)),
+                        getIconDrawableRes(it.contentType, (failed && !uploadedFilesMap.containsKey(it.name))),
                         getFileUploadStatus(uploadedFilesMap, it, failed)
                     )
                 }
@@ -134,7 +134,10 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                         this.items.find { it.data.name == fileToUpload.name }.apply {
                             if (this?.data?.status != status) {
                                 this?.data?.status = status
-                                this?.data?.icon = getIconDrawableRes(fileToUpload.contentType, !uploadedFilesMap.containsKey(this?.data?.name))
+                                this?.data?.icon = getIconDrawableRes(
+                                    fileToUpload.contentType,
+                                    (failed && !uploadedFilesMap.containsKey(this?.data?.name))
+                                )
                                 this?.data?.notifyPropertyChanged(BR.status)
                                 this?.data?.notifyPropertyChanged(BR.icon)
                                 this?.data?.notifyPropertyChanged(BR.iconTint)
