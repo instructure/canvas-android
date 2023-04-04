@@ -16,7 +16,9 @@ import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.daos.FileUploadInputDao
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.pandautils.utils.toJson
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -260,6 +262,144 @@ class ShareExtensionProgressViewModelTest {
         assertEquals("1 B", viewData?.currentSize)
         assertEquals("2 B", viewData?.maxSize)
         assertEquals("50.0%", viewData?.percentage)
+    }
+
+    @Test
+    fun `Failed upload maps correctly`() {
+        every { resources.getString(R.string.fileUploadFailedSubtitle) } returns "Error"
+
+        val filesToUpload = listOf(
+            FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
+            FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
+        ).map { it.toJson() }.toTypedArray()
+
+        val uploadedFiles = listOf(
+            FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = "")
+        ).map { it.toJson() }.toTypedArray()
+
+        val progressData = Data.Builder()
+            .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 2L)
+            .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, filesToUpload)
+            .putStringArray(FileUploadWorker.PROGRESS_DATA_UPLOADED_FILES, uploadedFiles)
+            .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, "Assignment")
+            .build()
+
+        mockLiveData.postValue(
+            WorkInfo(
+                uuid,
+                WorkInfo.State.FAILED,
+                progressData,
+                emptyList(),
+                Data.EMPTY,
+                1
+            )
+        )
+
+        val expectedItemData = listOf(
+            FileProgressViewData(
+                "Test 1",
+                "1 B",
+                R.drawable.ic_attachment,
+                FileProgressStatus.UPLOADED
+            ),
+            FileProgressViewData(
+                "Test 2",
+                "1 B",
+                R.drawable.ic_warning,
+                FileProgressStatus.FAILED
+            )
+        )
+
+        viewModel.setUUID(uuid)
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val viewData = viewModel.data.value
+
+        viewData?.items?.forEachIndexed { index, fileProgressItemViewModel ->
+            assertEquals(expectedItemData[index], fileProgressItemViewModel.data)
+        }
+
+        assertEquals("Submission", viewData?.dialogTitle)
+        assertEquals("Error", viewData?.subtitle)
+        assertEquals(true, viewData?.retryVisible)
+    }
+
+    @Test
+    fun `Failed upload retry`() {
+        every { resources.getString(R.string.fileUploadFailedSubtitle) } returns "Error"
+
+        val filesToUpload = listOf(
+            FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = "")
+        ).map { it.toJson() }.toTypedArray()
+
+        val failedOutputData = Data.Builder()
+            .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+            .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, filesToUpload)
+            .build()
+
+        mockLiveData.postValue(
+            WorkInfo(
+                uuid,
+                WorkInfo.State.FAILED,
+                failedOutputData,
+                emptyList(),
+                Data.EMPTY,
+                1
+            )
+        )
+
+        viewModel.setUUID(uuid)
+
+        val viewData = viewModel.data.value
+        assertEquals("File Upload", viewData?.dialogTitle)
+        assertEquals("Error", viewData?.subtitle)
+        assertEquals(true, viewData?.retryVisible)
+
+        viewModel.onRetryClick()
+
+        coEvery { fileUploadInputDao.findByWorkerId(uuid.toString()) } returns FileUploadInputEntity(
+            workerId = uuid.toString(),
+            action = "",
+            filePaths = emptyList()
+        )
+
+        every { workManager.getWorkInfoByIdLiveData(any()) } returns mockLiveData
+
+        every { resources.getString(R.string.fileUploadProgressSubtitle) } returns "Uploading files"
+
+        val successProgressData = Data.Builder()
+            .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+            .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, filesToUpload)
+            .putStringArray(FileUploadWorker.PROGRESS_DATA_UPLOADED_FILES, filesToUpload)
+            .build()
+
+        mockLiveData.postValue(
+            WorkInfo(
+                uuid,
+                WorkInfo.State.RUNNING,
+                Data.EMPTY,
+                emptyList(),
+                successProgressData,
+                1
+            )
+        )
+
+        val successViewData = viewModel.data.value
+        assertEquals("Uploading files", successViewData?.subtitle)
+        assertEquals(false, successViewData?.retryVisible)
+
+        mockLiveData.postValue(
+            WorkInfo(
+                uuid,
+                WorkInfo.State.SUCCEEDED,
+                Data.EMPTY,
+                emptyList(),
+                successProgressData,
+                1
+            )
+        )
+
+        assertEquals(ShareExtensionProgressAction.ShowSuccessDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
     }
 
     private fun setupStrings() {
