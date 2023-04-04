@@ -112,7 +112,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
 
                 viewData = ShareExtensionProgressViewData(
                     items = itemViewData.map { FileProgressItemViewModel(it) },
-                    dialogTitle = if (assignmentName.isNullOrEmpty()) resources.getString(R.string.fileUpload) else resources.getString(R.string.submission),
+                    dialogTitle = resources.getString(if (assignmentName.isNullOrEmpty()) R.string.fileUpload else R.string.submission),
                     subtitle = subtitle,
                     maxSize = maxSize.humanReadableByteCount(),
                     currentSize = currentSize.humanReadableByteCount(),
