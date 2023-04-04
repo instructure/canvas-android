@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.offline
+package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

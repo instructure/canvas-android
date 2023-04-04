@@ -32,8 +32,6 @@ object TabManager {
         TabAPI.getTabs(canvasContext.id, adapter, callback, params)
     }
 
-    fun getTabsAsync(canvasContext: CanvasContext, forceNetwork: Boolean) = apiAsync<List<Tab>> { getTabs(canvasContext, it, forceNetwork) }
-
     fun getTabsForElementary(canvasContext: CanvasContext, callback: StatusCallback<List<Tab>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(canvasContext = canvasContext, isForceReadFromNetwork = forceNetwork)

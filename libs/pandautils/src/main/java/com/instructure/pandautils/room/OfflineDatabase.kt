@@ -15,12 +15,11 @@
  *
  */
 
-package com.instructure.student.features.offline.db
+package com.instructure.pandautils.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.instructure.pandautils.room.Converters
 import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.room.entities.*
 

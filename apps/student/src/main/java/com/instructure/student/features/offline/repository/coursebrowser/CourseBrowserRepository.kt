@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.room.daos.TabDao
-import com.instructure.student.features.offline.NetworkStateProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 
 
 class CourseBrowserRepository(

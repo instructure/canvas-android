@@ -17,86 +17,21 @@
 
 package com.instructure.student.di
 
-import android.content.Context
-import androidx.room.Room
 import com.instructure.canvasapi2.apis.TabAPI
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.daos.*
-import com.instructure.student.features.offline.NetworkStateProvider
-import com.instructure.student.features.offline.db.OfflineDatabase
+import com.instructure.pandautils.room.daos.TabDao
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(FragmentComponent::class)
 class OfflineModule {
-
-    @Provides
-    fun provideOfflineDatabase(@ApplicationContext context: Context, apiPrefs: ApiPrefs): OfflineDatabase {
-        return Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-${apiPrefs.user?.id}").build()
-    }
 
     @Provides
     fun provideCourseBrowserRepository(tabApi: TabAPI.TabsInterface, tabDao: TabDao, networkStateProvider: NetworkStateProvider): CourseBrowserRepository {
         return CourseBrowserRepository(tabApi, tabDao, networkStateProvider)
-    }
-
-    @Provides
-    fun provideNetworkStateProvider(@ApplicationContext context: Context): NetworkStateProvider {
-        return NetworkStateProvider(context)
-    }
-
-    @Provides
-    fun provideCourseDao(appDatabase: OfflineDatabase): CourseDao {
-        return appDatabase.courseDao()
-    }
-
-    @Provides
-    fun provideEnrollmentDao(appDatabase: OfflineDatabase): EnrollmentDao {
-        return appDatabase.enrollmentDao()
-    }
-
-    @Provides
-    fun provideGradesDao(appDatabase: OfflineDatabase): GradesDao {
-        return appDatabase.gradesDao()
-    }
-
-    @Provides
-    fun provideGradingPeriodDao(appDatabase: OfflineDatabase): GradingPeriodDao {
-        return appDatabase.gradingPeriodDao()
-    }
-
-    @Provides
-    fun provideSectionDao(appDatabase: OfflineDatabase): SectionDao {
-        return appDatabase.sectionDao()
-    }
-
-    @Provides
-    fun provideTermDao(appDatabase: OfflineDatabase): TermDao {
-        return appDatabase.termDao()
-    }
-
-    @Provides
-    fun provideUserCalendarDao(appDatabase: OfflineDatabase): UserCalendarDao {
-        return appDatabase.userCalendarDao()
-    }
-
-    @Provides
-    fun provideUserDao(appDatabase: OfflineDatabase): UserDao {
-        return appDatabase.userDao()
-    }
-
-    @Provides
-    fun provideCourseGradingPeriodDao(appDatabase: OfflineDatabase): CourseGradingPeriodDao {
-        return appDatabase.courseGradingPeriodDao()
-    }
-
-    @Provides
-    fun provideTabDao(appDatabase: OfflineDatabase): TabDao {
-        return appDatabase.tabDao()
     }
 }
