@@ -79,8 +79,6 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Show error on progress dialog when upload failed`() {
-        every { resources.getString(R.string.fileUploadFailedSubtitle) } returns "Error"
-
         viewModel.setUUID(uuid)
 
         val outputData = Data.Builder()
@@ -268,8 +266,6 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Failed upload maps correctly`() {
-        every { resources.getString(R.string.fileUploadFailedSubtitle) } returns "Error"
-
         val filesToUpload = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
             FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
@@ -328,8 +324,6 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Failed upload retry`() {
-        every { resources.getString(R.string.fileUploadFailedSubtitle) } returns "Error"
-
         val filesToUpload = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
@@ -408,6 +402,7 @@ class ShareExtensionProgressViewModelTest {
         every { resources.getString(R.string.fileUpload) } returns "File Upload"
         every { resources.getString(R.string.submission) } returns "Submission"
         every { resources.getString(R.string.fileUploadProgressSubtitle) } returns "Uploading to Files"
+        every { resources.getString(R.string.fileUploadFailedSubtitle) } returns "Error"
     }
 
     private fun createViewModel(): ShareExtensionProgressDialogViewModel {
