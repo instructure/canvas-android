@@ -666,7 +666,7 @@ class SubmissionContentView(
                                              previousState: SlidingUpPanelLayout.PanelState?,
                                              newState: SlidingUpPanelLayout.PanelState?) {
                 if (newState != previousState) {
-                    @Suppress("NON_EXHAUSTIVE_WHEN") //we don't want to update for all states, just these three
+                    // We don't want to update for all states, just these three
                     when (newState) {
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
                             submissionVersionsSpinner.isClickable = true
@@ -685,6 +685,7 @@ class SubmissionContentView(
                             postPanelEvent(newState, 0.0f)
                             contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                         }
+                        else -> {}
                     }
                 }
             }

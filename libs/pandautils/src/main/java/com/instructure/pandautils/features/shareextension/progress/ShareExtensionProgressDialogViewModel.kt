@@ -60,6 +60,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
             WorkInfo.State.FAILED -> {
                 _events.postValue(Event(ShareExtensionProgressAction.ShowErrorDialog(fileUploadType)))
             }
+            else -> {}
         }
     }
 

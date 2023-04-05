@@ -19,6 +19,7 @@ package com.instructure.pandautils.utils
 import android.net.Uri
 import android.view.SurfaceView
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -144,8 +145,8 @@ class ExoAgent private constructor(val uri: Uri) {
 
             override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {}
 
-            override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-                mIsAudioOnly = trackSelections.all.none { (it as? ExoTrackSelection)?.selectedFormat?.sampleMimeType?.startsWith("video") == true }
+            override fun onTracksChanged(tracks: Tracks) {
+                mIsAudioOnly = !tracks.containsType(TRACK_TYPE_VIDEO)
                 if (mIsAudioOnly) mInfoListener?.setAudioOnly()
             }
 

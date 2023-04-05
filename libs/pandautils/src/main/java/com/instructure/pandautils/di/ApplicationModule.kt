@@ -20,6 +20,7 @@ import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
+import android.webkit.CookieManager
 import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -83,5 +84,11 @@ class ApplicationModule {
     @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCookieManager(): CookieManager {
+        return CookieManager.getInstance()
     }
 }

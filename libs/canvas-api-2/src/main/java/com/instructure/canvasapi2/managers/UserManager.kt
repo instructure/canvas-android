@@ -271,7 +271,7 @@ object UserManager {
 
     private fun getSystemAcceptLanguage(): String {
         val systemLocale = ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
-        return "${systemLocale.toLanguageTag()},${systemLocale.language}"
+        return "${systemLocale?.toLanguageTag()},${systemLocale?.language}"
     }
 
     fun getAllMissingSubmissionsAsync(forceNetwork: Boolean) = apiAsync<List<Assignment>> { getAllMissingSubmissions(forceNetwork, it) }

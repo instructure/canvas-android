@@ -93,6 +93,7 @@ class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
                             setupWithCanvasContext(group)
                         } catch {}
                     }
+                    else -> {}
                 }
             }
         }

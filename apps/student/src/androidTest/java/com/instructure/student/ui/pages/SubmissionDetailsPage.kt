@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -39,7 +40,9 @@ import com.instructure.espresso.page.*
 import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
+import org.hamcrest.Matchers.containsString
 import java.lang.Thread.sleep
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
@@ -105,6 +108,28 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
         submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
 
+    }
+
+    fun assertTextSubmissionDisplayedAsComment() {
+        onView(allOf(withId(R.id.subtitleTextView), withParent(withId(R.id.commentSubmissionAttachmentView)), hasSibling(withId(R.id.titleTextView) + withText("Text Submission")))).assertDisplayed()
+    }
+
+    fun assertCommentNotDisplayed(comment: String, user: User) {
+        assertCommentNotDisplayed(comment, user.shortName!!)
+    }
+
+    fun assertCommentNotDisplayed(comment: String, user: CanvasUserApiModel) {
+        assertCommentNotDisplayed(comment, user.shortName)
+    }
+
+    fun assertCommentNotDisplayed(comment: String, userShortName: String) {
+        val commentMatcher = allOf(
+            withId(R.id.commentHolder),
+            hasDescendant(allOf(withText(userShortName), withId(R.id.userNameTextView))),
+            hasDescendant(allOf(withText(containsString(comment)), anyOf(withId(R.id.titleTextView), withId(R.id.commentTextView))))
+        )
+
+        onView(commentMatcher).check(doesNotExist())
     }
 
     /**
@@ -236,6 +261,15 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
     fun assertNoSubmissionEmptyView() {
         onView(allOf(withId(R.id.title), withText(R.string.submissionDetailsNoSubmissionYet), withAncestor(withId(R.id.submissionDetailsEmptyContent)))).assertDisplayed()
+    }
+
+    fun selectAttempt(attemptName: String) {
+        onView(withId(R.id.submissionVersionsSpinner)).click()
+        waitForView(withId(R.id.attemptTitle) + withText(attemptName)).click()
+    }
+
+    fun assertSelectedAttempt(attemptName: String) {
+        onView(withId(R.id.attemptTitle) + withText(attemptName) + withAncestor(withId(R.id.slidingUpPanelLayout))).assertDisplayed()
     }
 
 }

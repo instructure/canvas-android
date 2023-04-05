@@ -138,7 +138,6 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         @Suppress("DEPRECATION")
         webView.settings.saveFormData = false
         webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-        webView.settings.setAppCacheEnabled(false)
         webView.settings.domStorageEnabled = true
         webView.settings.userAgentString = Utils.generateUserAgent(this, userAgent())
         webView.setDarkModeSupport(webThemeDarkeningOnly = true)
