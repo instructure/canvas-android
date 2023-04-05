@@ -42,7 +42,6 @@ import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.io.File
 import java.util.*
 
 @HiltWorker
@@ -55,7 +54,8 @@ class FileUploadWorker @AssistedInject constructor(
     private val mediaCommentDao: MediaCommentDao,
     private val authorDao: AuthorDao,
     private val dashboardFileUploadDao: DashboardFileUploadDao,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -162,7 +162,7 @@ class FileUploadWorker @AssistedInject constructor(
 
             insertDashboardUpload(successTitle, subtitle)
             fileUploadInputDao.delete(inputData)
-            deleteCachedFiles(inputData.filePaths)
+            fileUploadUtilsHelper.deleteCachedFiles(inputData.filePaths)
             return result
         } catch (e: Exception) {
             val failedTitle = context.getString(
@@ -188,14 +188,6 @@ class FileUploadWorker @AssistedInject constructor(
                 subtitle = subtitle
             )
         )
-    }
-
-    private fun deleteCachedFiles(uriStrings: List<String>) {
-        uriStrings.forEach { uriString ->
-            Uri.parse(uriString).path?.let {
-                File(it).delete()
-            }
-        }
     }
 
     private suspend fun insertSubmissionComment(submissionComment: SubmissionComment): Long {

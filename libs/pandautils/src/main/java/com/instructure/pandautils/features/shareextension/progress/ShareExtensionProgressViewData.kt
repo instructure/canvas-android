@@ -9,14 +9,14 @@ import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
 
 data class ShareExtensionProgressViewData(
-    val items: List<FileProgressItemViewModel>,
+    @get:Bindable var items: List<FileProgressItemViewModel>,
     val dialogTitle: String,
     @get:Bindable var subtitle: String?,
-    val maxSize: String,
+    @get:Bindable var maxSize: String,
     @get:Bindable var progressInt: Int,
     @get:Bindable var percentage: String,
     @get:Bindable var currentSize: String,
-    @get:Bindable var retryVisible: Boolean
+    @get:Bindable var failed: Boolean
 ) : BaseObservable()
 
 enum class FileProgressStatus(@ColorRes val tint: Int, @DrawableRes val drawable: Int) {
@@ -29,7 +29,8 @@ data class FileProgressViewData(
     val name: String,
     val size: String,
     @get:Bindable @DrawableRes var icon: Int,
-    @get:Bindable var status: FileProgressStatus
+    @get:Bindable var status: FileProgressStatus,
+    val onStatusIconClick: (FileProgressViewData) -> Unit
 ) : BaseObservable() {
     @Bindable
     @ColorRes

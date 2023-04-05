@@ -77,8 +77,9 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:imageRes="@{itemViewModel.data.status.drawable}"
+                android:onClick="@{() -> itemViewModel.data.onStatusIconClick.invoke(itemViewModel.data)}"
                 android:visibility="@{itemViewModel.data.status == FileProgressStatus.IN_PROGRESS ? View.GONE : View.VISIBLE}"
+                app:imageRes="@{itemViewModel.data.status.drawable}"
                 app:imageTint="@{context.getColor(itemViewModel.data.status.tint)}"
                 tools:visibility="gone" />
         </FrameLayout>

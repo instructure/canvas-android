@@ -90,7 +90,7 @@
                 android:max="100"
                 android:progress="@{viewModel.data.progressInt}"
                 android:progressTint="@color/backgroundInfo"
-                android:visibility="@{viewModel.data.retryVisible ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.data.failed ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toBottomOf="@id/subtitle"
                 tools:progress="25" />
 
@@ -102,7 +102,7 @@
                 android:text="@{viewModel.data.percentage}"
                 android:textColor="@color/textDarkest"
                 android:textSize="12sp"
-                android:visibility="@{viewModel.data.retryVisible ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.data.failed ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="@id/progressBar"
                 app:layout_constraintTop_toBottomOf="@id/progressBar"
                 tools:text="32.7%" />
@@ -115,7 +115,7 @@
                 android:text="@{@string/fileUploadProgress(viewModel.data.currentSize, viewModel.data.maxSize)}"
                 android:textColor="@color/textDark"
                 android:textSize="12sp"
-                android:visibility="@{viewModel.data.retryVisible ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.data.failed ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toEndOf="@id/percentage"
                 app:layout_constraintTop_toTopOf="@id/percentage"
                 tools:text="16 MB of 49.3 MB" />
@@ -140,7 +140,7 @@
                 android:textColor="@{ThemePrefs.INSTANCE.textButtonColor}"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:visibility="@{viewModel.data.retryVisible ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.data.failed ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonBarrier" />
 

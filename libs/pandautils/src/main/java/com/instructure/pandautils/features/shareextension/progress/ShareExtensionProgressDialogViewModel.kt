@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.shareextension.progress
 
 import android.content.res.Resources
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +13,7 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadType
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
@@ -20,8 +22,10 @@ import com.instructure.pandautils.room.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.daos.FileUploadInputDao
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.humanReadableByteCount
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 import javax.inject.Inject
 
@@ -30,7 +34,8 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val resources: Resources,
     private val fileUploadInputDao: FileUploadInputDao,
-    private val dashboardFileUploadDao: DashboardFileUploadDao
+    private val dashboardFileUploadDao: DashboardFileUploadDao,
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -58,10 +63,10 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                 _events.postValue(Event((ShareExtensionProgressAction.ShowSuccessDialog(fileUploadType))))
             }
             WorkInfo.State.RUNNING -> {
-                updateViewData(it.progress, false)
+                viewModelScope.launch { updateViewData(it.progress, false) }
             }
             WorkInfo.State.FAILED -> {
-                updateViewData(it.outputData, true)
+                viewModelScope.launch { updateViewData(it.outputData, true) }
             }
             else -> {}
         }
@@ -78,8 +83,9 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
         workerId?.let { workManager.getWorkInfoByIdLiveData(it).removeObserver(observer) }
     }
 
-    private fun updateViewData(progress: Data, failed: Boolean) {
+    private suspend fun updateViewData(progress: Data, failed: Boolean) {
         if (allDataPresent(progress)) {
+            val inputData = fileUploadInputDao.findByWorkerId(workerId.toString())
             _state.postValue(ViewState.Success)
 
             val maxSize = progress.getLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
@@ -96,6 +102,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
 
             val filesToUpload = progress.getStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD)
                 .orEmpty().map { it.fromJson<FileSubmitObject>() }
+                .filter { fso -> inputData?.filePaths?.any { it.contains(Uri.fromFile(File(fso.fullPath)).toString()) }.orDefault() }
 
             val uploadedFilesMap = progress.getStringArray(FileUploadWorker.PROGRESS_DATA_UPLOADED_FILES)
                 .orEmpty().map { it.fromJson<FileSubmitObject>() }.associateBy { it.name }
@@ -107,7 +114,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                         it.size.humanReadableByteCount(),
                         getIconDrawableRes(it.contentType, (failed && !uploadedFilesMap.containsKey(it.name))),
                         getFileUploadStatus(uploadedFilesMap, it, failed)
-                    )
+                    ) { fileUploadProgressViewData -> removeUploadItem(fileUploadProgressViewData, filesToUpload) }
                 }
 
                 viewData = ShareExtensionProgressViewData(
@@ -118,17 +125,18 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                     currentSize = currentSize.humanReadableByteCount(),
                     progressInt = ((currentSize.toDouble() / maxSize.toDouble()) * 100.0).toInt(),
                     percentage = "${String.format("%.1f", currentSize.toDouble() / maxSize.toDouble() * 100.0)}%",
-                    retryVisible = failed
+                    failed = failed
                 ).also {
                     _data.postValue(it)
                 }
             } else {
                 viewData?.apply {
                     this.subtitle = subtitle
+                    this.maxSize = maxSize.humanReadableByteCount()
                     this.currentSize = currentSize.humanReadableByteCount()
                     this.progressInt = ((currentSize.toDouble() / maxSize.toDouble()) * 100).toInt()
                     this.percentage = "${String.format("%.1f", currentSize.toDouble() / maxSize.toDouble() * 100.0)}%"
-                    this.retryVisible = failed
+                    this.failed = failed
                     filesToUpload.forEach { fileToUpload ->
                         val status = getFileUploadStatus(uploadedFilesMap, fileToUpload, failed)
                         this.items.find { it.data.name == fileToUpload.name }.apply {
@@ -144,11 +152,13 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                             }
                         }
                     }
+
+                    notifyPropertyChanged(BR.subtitle)
+                    notifyPropertyChanged(BR.maxSize)
                     notifyPropertyChanged(BR.currentSize)
                     notifyPropertyChanged(BR.progressInt)
                     notifyPropertyChanged(BR.percentage)
-                    notifyPropertyChanged(BR.subtitle)
-                    notifyPropertyChanged(BR.retryVisible)
+                    notifyPropertyChanged(BR.failed)
                 }
             }
         }
@@ -168,29 +178,12 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
         }
     }
 
-    fun onRetryClick() {
-        viewModelScope.launch {
-            fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
-                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>().build()
-                fileUploadInputDao.insert(it.copy(workerId = worker.id.toString()))
-                fileUploadInputDao.delete(it)
-                dashboardFileUploadDao.deleteByWorkerId(it.workerId)
-                workManager.enqueue(worker)
-                setUUID(worker.id)
-            }
-        }
-    }
-
     private fun allDataPresent(progress: Data): Boolean {
         return progress.hasKeyWithValueOfType<Long>(
             FileUploadWorker.PROGRESS_DATA_FULL_SIZE
         ) && progress.hasKeyWithValueOfType<Array<String>>(
             FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD
         )
-    }
-
-    fun onCloseClicked() {
-        _events.postValue(Event(ShareExtensionProgressAction.Close))
     }
 
     @DrawableRes
@@ -204,8 +197,55 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
         }
     }
 
-    fun cancelUpload(workerId: UUID) {
-        workManager.cancelWorkById(workerId)
+    private fun removeUploadItem(fileUploadProgressViewData: FileProgressViewData, filesToUpload: List<FileSubmitObject>) {
+        if (fileUploadProgressViewData.status != FileProgressStatus.FAILED) return
+        viewModelScope.launch {
+            val uploadItems = data.value?.items?.toMutableList()
+            uploadItems?.removeIf { it.data.name == fileUploadProgressViewData.name }
+            data.value?.items = uploadItems.orEmpty()
+            data.value?.notifyPropertyChanged(BR.items)
+            val pathToRemove = filesToUpload.find { it.name == fileUploadProgressViewData.name }?.fullPath.orEmpty()
+            fileUploadInputDao.findByWorkerId(workerId.toString())?.let { fileUploadEntity ->
+                if (fileUploadEntity.filePaths.size > 1) {
+                    val filePaths = fileUploadEntity.filePaths.filter { !it.contains(Uri.fromFile(File(pathToRemove)).toString()) }
+                    fileUploadInputDao.update(fileUploadEntity.copy(filePaths = filePaths))
+                    fileUploadUtilsHelper.deleteCachedFiles(listOf(pathToRemove))
+                } else {
+                    cancelUpload()
+                }
+            }
+        }
+    }
+
+    fun onRetryClick() {
+        viewModelScope.launch {
+            fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
+                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>().build()
+                fileUploadInputDao.insert(it.copy(workerId = worker.id.toString()))
+                fileUploadInputDao.delete(it)
+                dashboardFileUploadDao.deleteByWorkerId(it.workerId)
+                workManager.enqueue(worker)
+                setUUID(worker.id)
+            }
+        }
+    }
+
+    fun onCloseClicked() {
+        _events.postValue(Event(ShareExtensionProgressAction.Close))
+    }
+
+    fun cancelUpload() {
+        viewModelScope.launch {
+            workerId?.let { workerId ->
+                workManager.cancelWorkById(workerId)
+                dashboardFileUploadDao.deleteByWorkerId(workerId.toString())
+                fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
+                    fileUploadUtilsHelper.deleteCachedFiles(it.filePaths)
+                    fileUploadInputDao.delete(it)
+                }
+            }
+            onCloseClicked()
+        }
     }
 
     fun cancelClicked() {

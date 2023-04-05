@@ -21,6 +21,9 @@ import android.content.Context
 import android.net.Uri
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.FileUploadUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
 
 class FileUploadUtilsHelper(
     private val fileUploadUtils: FileUploadUtils,
@@ -41,5 +44,13 @@ class FileUploadUtilsHelper(
 
     fun getFileSubmitObjectByFileUri(fileUri: Uri, fileName: String, mimeType: String): FileSubmitObject? {
         return fileUploadUtils.getFileSubmitObjectByFileUri(fileUri, fileName, mimeType)
+    }
+
+    suspend fun deleteCachedFiles(uriStrings: List<String>) = withContext(Dispatchers.IO) {
+        uriStrings.forEach { uriString ->
+            Uri.parse(uriString).path?.let {
+                File(it).delete()
+            }
+        }
     }
 }

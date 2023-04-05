@@ -110,12 +110,8 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             .setTitle(title)
             .setMessage(message)
             .setNegativeButton(R.string.no) { _, _ -> }
-            .setPositiveButton(R.string.yes) { _, _ ->
-                uuid?.let {
-                    viewModel.cancelUpload(it)
-                }
-                viewModel.onCloseClicked()
-            }.show()
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.cancelUpload() }
+            .show()
     }
 
     companion object {
