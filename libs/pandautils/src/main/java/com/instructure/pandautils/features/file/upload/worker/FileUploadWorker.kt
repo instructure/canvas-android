@@ -79,6 +79,7 @@ class FileUploadWorker @AssistedInject constructor(
     private val workDataBuilder = Data.Builder()
 
     override suspend fun doWork(): Result {
+        var title = ""
         var subtitle = ""
         try {
             val inputData = fileUploadInputDao.findByWorkerId(id.toString()) ?: throw IllegalArgumentException()
@@ -88,7 +89,7 @@ class FileUploadWorker @AssistedInject constructor(
             fullSize = fileSubmitObjects.sumOf { it.size }
             uploadCount = fileSubmitObjects.size
 
-            val title = if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+            title = if (action == ACTION_ASSIGNMENT_SUBMISSION) {
                 context.getString(R.string.dashboardNotificationUploadingSubmissionTitle)
             } else {
                 context.resources.getQuantityString(R.plurals.dashboardNotificationUploadingFilesTitle, uploadCount)
@@ -152,7 +153,7 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             }
 
-            val successTitle = context.getString(
+            title = context.getString(
                 if (action == ACTION_ASSIGNMENT_SUBMISSION) {
                     R.string.dashboardNotificationSubmissionUploadSuccessTitle
                 } else {
@@ -160,21 +161,21 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             )
 
-            insertDashboardUpload(successTitle, subtitle)
             fileUploadInputDao.delete(inputData)
             fileUploadUtilsHelper.deleteCachedFiles(inputData.filePaths)
             return result
         } catch (e: Exception) {
-            val failedTitle = context.getString(
+            title = context.getString(
                 if (action == ACTION_ASSIGNMENT_SUBMISSION) {
                     R.string.dashboardNotificationSubmissionUploadFailedTitle
                 } else {
                     R.string.dashboardNotificationUploadingFilesFailedTitle
                 }
             )
-            insertDashboardUpload(failedTitle, subtitle)
             e.printStackTrace()
             return Result.failure(workDataBuilder.build())
+        } finally {
+            insertDashboardUpload(title, subtitle)
         }
     }
 

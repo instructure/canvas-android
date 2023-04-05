@@ -231,11 +231,10 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private suspend fun getUploads(fileUploadEntities: List<DashboardFileUploadEntity>?) = fileUploadEntities?.mapNotNull { fileUploadEntity ->
         val workerId = UUID.fromString(fileUploadEntity.workerId)
-        workManager.getWorkInfoById(workerId).await()?.let { workinfo ->
+        workManager.getWorkInfoById(workerId).await()?.let { workInfo ->
             val icon: Int
             val background: Int
-
-            when (workinfo.state) {
+            when (workInfo.state) {
                 WorkInfo.State.FAILED -> {
                     icon = R.drawable.ic_exclamation_mark
                     background = R.color.backgroundDanger
@@ -252,7 +251,7 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             val uploadViewData = UploadViewData(
                 fileUploadEntity.title.orEmpty(), fileUploadEntity.subtitle.orEmpty(),
-                icon, background, workinfo.state == WorkInfo.State.RUNNING
+                icon, background, workInfo.state == WorkInfo.State.RUNNING
             )
 
             UploadItemViewModel(
