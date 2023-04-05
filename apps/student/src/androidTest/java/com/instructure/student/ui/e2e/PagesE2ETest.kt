@@ -101,6 +101,7 @@ class PagesE2ETest: StudentTest() {
         courseId = course.id,
         published = published,
         frontPage = frontPage,
-        token = teacher.token
+        token = teacher.token,
+        body = body
     )
 }

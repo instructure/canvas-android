@@ -21,6 +21,7 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FlakyE2E
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -210,6 +211,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
+    @FlakyE2E(explanation = "The same named test under this is working, but when I've tried to extract the API calls from it, it throws 401 unauthorized, but seems like there is no technical difference between these two cases.")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPercentageFileAssignmentWithCommentE2E() {
 
@@ -259,6 +261,102 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed as a comment.")
         submissionDetailsPage.assertCommentDisplayed(uploadInfo.fileName, student)
+
+        val newComment = "My comment!!"
+        Log.d(STEP_TAG,"Add a new comment ($newComment) and send it.")
+        submissionDetailsPage.addAndSendComment(newComment)
+        sleep(2000) // Give the comment time to propagate
+
+        Log.d(STEP_TAG,"Assert that $newComment is displayed.")
+        submissionDetailsPage.assertCommentDisplayed(newComment, student)
+
+        Log.d(STEP_TAG, "Open the 'Files' tab of the submission and assert if the file is present there as well.")
+        submissionDetailsPage.openFiles()
+
+        Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed.")
+        submissionDetailsPage.assertFileDisplayed(uploadInfo.fileName)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testPercentageFileAssignmentWithCommentE2EWithAPI() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
+        val percentageFileAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+            gradingType = GradingType.PERCENT,
+            teacherToken = teacher.token,
+            pointsPossible = 25.0,
+            allowedExtensions = listOf("txt", "pdf", "jpg")
+        ))
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG,"Assert that ${percentageFileAssignment.name} assignment is displayed.")
+        assignmentListPage.assertHasAssignment(percentageFileAssignment)
+
+        Log.d(STEP_TAG,"Select assignment: ${percentageFileAssignment.name}.")
+
+        Log.d(STEP_TAG,"Click on ${percentageFileAssignment.name} assignment.")
+        assignmentListPage.clickAssignment(percentageFileAssignment)
+
+        Log.d(PREPARATION_TAG, "Seed a text file.")
+        val uploadInfo = uploadTextFile(
+            courseId = course.id,
+            assignmentId = percentageFileAssignment.id,
+            token = student.token,
+            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
+        )
+
+        Log.d(PREPARATION_TAG,"Submit ${percentageFileAssignment.name} assignment for ${student.name} student.")
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_UPLOAD,
+            courseId = course.id,
+            assignmentId = percentageFileAssignment.id,
+            fileIds = listOf(uploadInfo.id).toMutableList(),
+            studentToken = student.token
+        )
+
+        Log.d(STEP_TAG,"Refresh the page. Assert that the ${percentageFileAssignment.name} assignment has been submitted.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.assertAssignmentSubmitted()
+
+        Log.d(PREPARATION_TAG,"Grade ${percentageFileAssignment.name} assignment with 22 percentage.")
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = percentageFileAssignment.id,
+            studentId = student.id,
+            postedGrade = "22",
+            excused = false
+        )
+
+        Log.d(STEP_TAG,"Refresh the page. Assert that the ${percentageFileAssignment.name} assignment has been graded with 22 percentage.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.assertAssignmentGraded("22")
+
+        Log.d(STEP_TAG,"Navigate to submission details Comments Tab.")
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+
+        Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed as a comment.")
+        submissionDetailsPage.assertCommentDisplayed(
+            uploadInfo.fileName,
+            student)
 
         val newComment = "My comment!!"
         Log.d(STEP_TAG,"Add a new comment ($newComment) and send it.")
