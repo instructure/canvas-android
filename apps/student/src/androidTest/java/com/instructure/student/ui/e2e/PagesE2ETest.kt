@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.util.Randomizer
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -95,12 +96,11 @@ class PagesE2ETest: StudentTest() {
         teacher: CanvasUserApiModel,
         published: Boolean,
         frontPage: Boolean,
-        body: String? = null
+        body: String = Randomizer.randomPageBody()
     ) = PagesApi.createCoursePage(
         courseId = course.id,
         published = published,
         frontPage = frontPage,
-        token = teacher.token,
-        body = body!!
+        token = teacher.token
     )
 }

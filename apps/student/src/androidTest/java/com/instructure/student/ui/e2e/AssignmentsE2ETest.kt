@@ -60,7 +60,7 @@ class AssignmentsE2ETest: StudentTest() {
         teacher: CanvasUserApiModel,
         gradingType: GradingType,
         pointsPossible: Double,
-        dueAt: String? = null,
+        dueAt: String = EMPTY_STRING,
         allowedExtensions: List<String>? = null,
         assignmentGroupId: Long? = null
     ): AssignmentApiModel {
@@ -71,7 +71,7 @@ class AssignmentsE2ETest: StudentTest() {
                 gradingType = gradingType,
                 teacherToken = teacher.token,
                 pointsPossible = pointsPossible,
-                dueAt = dueAt!!,
+                dueAt = dueAt,
                 allowedExtensions = allowedExtensions,
                 assignmentGroupId = assignmentGroupId
             )
@@ -188,7 +188,7 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val letterGradeTextAssignment = createAssignment(course.id, teacher, GradingType.LETTER_GRADE, 20.0, null)
+        val letterGradeTextAssignment = createAssignment(course.id, teacher, GradingType.LETTER_GRADE, 20.0)
 
         Log.d(PREPARATION_TAG,"Submit assignment: ${letterGradeTextAssignment.name} for student: ${student.name}.")
         submitAssignment(letterGradeTextAssignment, course, student)
@@ -220,7 +220,7 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val percentageFileAssignment = createAssignment(course.id, teacher, GradingType.PERCENT, 25.0, null, allowedExtensions = listOf("txt", "pdf", "jpg"))
+        val percentageFileAssignment = createAssignment(course.id, teacher, GradingType.PERCENT, 25.0, allowedExtensions = listOf("txt", "pdf", "jpg"))
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
