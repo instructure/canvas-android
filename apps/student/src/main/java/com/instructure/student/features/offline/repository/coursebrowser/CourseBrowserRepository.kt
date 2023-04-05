@@ -44,6 +44,6 @@ class CourseBrowserRepository(
 
     private suspend fun fetchTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return tabApi.getTabs(canvasContext.id, params).dataOrThrow
+        return tabApi.getTabs(canvasContext.id, canvasContext.type.apiString, params).dataOrThrow
     }
 }

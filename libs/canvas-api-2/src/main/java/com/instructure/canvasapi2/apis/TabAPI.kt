@@ -32,8 +32,8 @@ object TabAPI {
         @GET("{contextId}/tabs")
         fun getTabs(@Path("contextId") contextId: Long): Call<List<Tab>>
 
-        @GET("courses/{contextId}/tabs")
-        suspend fun getTabs(@Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<Tab>>
+        @GET("{contextType}/{contextId}/tabs")
+        suspend fun getTabs(@Path("contextId") contextId: Long, @Path("contextType") contextType: String, @Tag params: RestParams): DataResult<List<Tab>>
 
         @GET("{contextId}/tabs?include[]=course_subject_tabs")
         fun getTabsForElementary(@Path("contextId") contextId: Long): Call<List<Tab>>
