@@ -19,7 +19,6 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
 
 @Entity(
     primaryKeys = ["courseId", "gradingPeriodId"],
@@ -28,13 +27,13 @@ import androidx.room.ForeignKey.CASCADE
             entity = CourseEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = GradingPeriodEntity::class,
             parentColumns = ["id"],
             childColumns = ["gradingPeriodId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

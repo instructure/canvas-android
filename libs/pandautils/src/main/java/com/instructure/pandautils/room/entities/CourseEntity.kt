@@ -19,7 +19,6 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.SET_NULL
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Course
 
@@ -29,7 +28,7 @@ import com.instructure.canvasapi2.models.Course
             entity = TermEntity::class,
             parentColumns = ["id"],
             childColumns = ["termId"],
-            onDelete = SET_NULL
+            onDelete = ForeignKey.SET_NULL
         )
     ]
 )

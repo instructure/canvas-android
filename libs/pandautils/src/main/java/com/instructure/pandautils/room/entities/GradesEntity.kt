@@ -19,7 +19,6 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Grades
 
@@ -28,7 +27,7 @@ import com.instructure.canvasapi2.models.Grades
         entity = EnrollmentEntity::class,
         parentColumns = ["id"],
         childColumns = ["enrollmentId"],
-        onDelete = CASCADE
+        onDelete = ForeignKey.CASCADE
     )]
 )
 class GradesEntity(

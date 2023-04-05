@@ -19,7 +19,6 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Section
 
@@ -29,7 +28,7 @@ import com.instructure.canvasapi2.models.Section
             entity = CourseEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

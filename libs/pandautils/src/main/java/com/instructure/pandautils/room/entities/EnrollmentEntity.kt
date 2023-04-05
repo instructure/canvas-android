@@ -19,8 +19,6 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
-import androidx.room.ForeignKey.NO_ACTION
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Enrollment
 import java.util.*
@@ -31,25 +29,25 @@ import java.util.*
             entity = UserEntity::class,
             parentColumns = ["id"],
             childColumns = ["observedUserId"],
-            onDelete = NO_ACTION
+            onDelete = ForeignKey.NO_ACTION
         ),
         ForeignKey(
             entity = UserEntity::class,
             parentColumns = ["id"],
             childColumns = ["userId"],
-            onDelete = NO_ACTION
+            onDelete = ForeignKey.NO_ACTION
         ),
         ForeignKey(
             entity = SectionEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseSectionId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.NO_ACTION
         ),
         ForeignKey(
             entity = CourseEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

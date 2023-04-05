@@ -17,17 +17,13 @@
 
 package com.instructure.pandautils.room.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.entities.TermEntity
 
 @Dao
 interface TermDao {
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: TermEntity)
 
     @Delete
