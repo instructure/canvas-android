@@ -18,24 +18,31 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
-import androidx.room.Room
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.OfflineDatabase
+import com.instructure.pandautils.room.OfflineDatabaseProvider
 import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 class OfflineModule {
 
     @Provides
-    fun provideOfflineDatabase(@ApplicationContext context: Context, apiPrefs: ApiPrefs): OfflineDatabase {
-        return Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-${apiPrefs.user?.id}").build()
+    @Singleton
+    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context): OfflineDatabaseProvider {
+        return OfflineDatabaseProvider(context)
+    }
+
+    @Provides
+    fun provideOfflineDatabase(offlineDatabaseProvider: OfflineDatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
+        return offlineDatabaseProvider.getDatabase(apiPrefs.user?.id)
     }
 
     @Provides
