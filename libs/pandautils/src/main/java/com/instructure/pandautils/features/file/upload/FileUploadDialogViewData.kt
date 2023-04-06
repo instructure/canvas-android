@@ -16,12 +16,11 @@
 
 package com.instructure.pandautils.features.file.upload
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
-import java.util.UUID
+import java.util.*
 
 data class FileUploadDialogViewData(
         val allowedExtensions: String?,
@@ -32,11 +31,6 @@ data class FileItemViewData(
         val fileName: String,
         val fileSize: String,
         val fullPath: String
-)
-
-data class FileUploadData(
-        val uri: Uri,
-        val fileSubmitObject: FileSubmitObject
 )
 
 sealed class FileUploadAction {

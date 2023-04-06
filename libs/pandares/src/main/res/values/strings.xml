@@ -1301,6 +1301,7 @@
     <string name="a11y_closeProgress">Close progress dialog</string>
     <string name="fileUploadProgress">%1$s of %2$s</string>
     <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="fileUploadFailedSubtitle">One or more files failed to upload. Check your internet connection and retry to submit.</string>
     <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
 
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
