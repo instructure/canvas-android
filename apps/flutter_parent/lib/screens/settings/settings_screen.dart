@@ -41,7 +41,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         builder: (context) => Scaffold(
           appBar: AppBar(
             title: Text(L10n(context).settings),
-            bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+            bottom:
+                ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           ),
           body: ListView(
             children: [
@@ -52,8 +53,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _themeButtons(context),
               SizedBox(height: 16),
-              if (ParentTheme.of(context).isDarkMode) _webViewDarkModeSwitch(context),
+              if (ParentTheme.of(context).isDarkMode)
+                _webViewDarkModeSwitch(context),
               _highContrastModeSwitch(context),
+              _about(context),
               if (_interactor.isDebugMode()) _themeViewer(context),
               if (_interactor.isDebugMode()) _remoteConfigs(context)
             ],
@@ -77,7 +80,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             semanticsLabel: L10n(context).lightModeLabel,
             child: SvgPicture.asset(
               'assets/svg/panda-light-mode.svg',
-              excludeFromSemantics: true, // Semantic label is set in _themeOption()
+              excludeFromSemantics:
+                  true, // Semantic label is set in _themeOption()
             ),
           ),
           _themeOption(
@@ -88,7 +92,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             semanticsLabel: L10n(context).darkModeLabel,
             child: SvgPicture.asset(
               'assets/svg/panda-dark-mode.svg',
-              excludeFromSemantics: true, // Semantic label is set in _themeOption()
+              excludeFromSemantics:
+                  true, // Semantic label is set in _themeOption()
             ),
           ),
         ],
@@ -118,7 +123,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         foregroundDecoration: selected
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: Theme.of(context).accentColor, width: 2),
+                border:
+                    Border.all(color: Theme.of(context).accentColor, width: 2),
               )
             : null,
         child: ClipRRect(
@@ -130,7 +136,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 type: MaterialType.transparency,
                 child: InkWell(
                   key: buttonKey,
-                  onTap: selected ? null : () => _interactor.toggleDarkMode(context, anchorKey),
+                  onTap: selected
+                      ? null
+                      : () => _interactor.toggleDarkMode(context, anchorKey),
                 ),
               )
             ],
@@ -182,6 +190,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _interactor.toggleHCMode(context);
   }
 
+  Widget _about(BuildContext context) => ListTile(
+      key: Key('about'),
+      title: Row(
+        children: [SizedBox(width: 16), Text(L10n(context).about)],
+      ),
+      onTap: () => _interactor.showAboutDialog(context));
+
   Widget _themeViewer(BuildContext context) => ListTile(
         key: Key('theme-viewer'),
         title: Row(
@@ -194,8 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onTap: () => _interactor.routeToThemeViewer(context),
       );
 
-  Widget _remoteConfigs(BuildContext context) =>
-      ListTile(
+  Widget _remoteConfigs(BuildContext context) => ListTile(
         key: Key('remote-configs'),
         title: Row(
           children: [
