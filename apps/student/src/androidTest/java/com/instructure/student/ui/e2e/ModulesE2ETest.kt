@@ -20,8 +20,7 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.*
-import com.instructure.dataseeding.model.ModuleItemTypes
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -37,17 +36,13 @@ import org.junit.Test
 
 @HiltAndroidTest
 class ModulesE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E)
     fun testModulesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -57,109 +52,41 @@ class ModulesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val assignment1 = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = true,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                teacherToken = teacher.token,
-                dueAt = 1.days.fromNow.iso8601
-        ))
+        val assignment1 = createAssignment(course, true, teacher, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Seeding another assignment for ${course.name} course.")
-        val assignment2 = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = true,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                teacherToken = teacher.token,
-                dueAt = 2.days.fromNow.iso8601
-        ))
+        val assignment2 = createAssignment(course, true, teacher, 2.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Create a PUBLISHED quiz for ${course.name} course.")
-        val quiz1 = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
-                courseId = course.id,
-                withDescription = true,
-                dueAt = 3.days.fromNow.iso8601,
-                token = teacher.token,
-                published = true
-        ))
+        val quiz1 = createQuiz(course, teacher)
 
         Log.d(PREPARATION_TAG,"Create a page for ${course.name} course.")
-        val page1 = PagesApi.createCoursePage(
-                courseId = course.id,
-                published = true,
-                frontPage = false,
-                token = teacher.token
-        )
+        val page1 = createCoursePage(course, teacher)
 
         Log.d(PREPARATION_TAG,"Create a discussion topic for ${course.name} course.")
-        val discussionTopic1 = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = teacher.token
-        )
+        val discussionTopic1 = createDiscussion(course, teacher)
 
         //Modules start out as unpublished.
         Log.d(PREPARATION_TAG,"Create a module for ${course.name} course.")
-        val module1 = ModulesApi.createModule(
-                courseId = course.id,
-                teacherToken = teacher.token,
-                unlockAt = null)
+        val module1 = createModule(course, teacher)
 
         Log.d(PREPARATION_TAG,"Create another module for ${course.name} course.")
-        val module2 = ModulesApi.createModule(
-                courseId = course.id,
-                teacherToken = teacher.token,
-                unlockAt = null)
+        val module2 = createModule(course, teacher)
 
         Log.d(PREPARATION_TAG,"Associate ${assignment1.name} assignment with ${module1.name} module.")
-        ModulesApi.createModuleItem(
-                courseId = course.id,
-                moduleId = module1.id,
-                teacherToken = teacher.token,
-                title = assignment1.name,
-                type = ModuleItemTypes.ASSIGNMENT.stringVal,
-                contentId = assignment1.id.toString()
-        )
+        createModuleItem(course.id, module1.id, teacher, assignment1.name, ModuleItemTypes.ASSIGNMENT.stringVal, assignment1.id.toString())
 
         Log.d(PREPARATION_TAG,"Associate ${quiz1.title} quiz with ${module1.name} module.")
-        ModulesApi.createModuleItem(
-                courseId = course.id,
-                moduleId = module1.id,
-                teacherToken = teacher.token,
-                title = quiz1.title,
-                type = ModuleItemTypes.QUIZ.stringVal,
-                contentId = quiz1.id.toString()
-        )
+        createModuleItem(course.id, module1.id, teacher, quiz1.title, ModuleItemTypes.QUIZ.stringVal, quiz1.id.toString())
 
         Log.d(PREPARATION_TAG,"Associate ${assignment2.name} assignment with ${module2.name} module.")
-        ModulesApi.createModuleItem(
-                courseId = course.id,
-                moduleId = module2.id,
-                teacherToken = teacher.token,
-                title = assignment2.name,
-                type = ModuleItemTypes.ASSIGNMENT.stringVal,
-                contentId = assignment2.id.toString()
-        )
+        createModuleItem(course.id, module2.id, teacher, assignment2.name, ModuleItemTypes.ASSIGNMENT.stringVal, assignment2.id.toString())
 
         Log.d(PREPARATION_TAG,"Associate ${page1.title} page with ${module2.name} module.")
-        ModulesApi.createModuleItem(
-                courseId = course.id,
-                moduleId = module2.id,
-                teacherToken = teacher.token,
-                title = page1.title,
-                type = ModuleItemTypes.PAGE.stringVal,
-                contentId = null, // Not necessary for Page item
-                pageUrl = page1.url // Only necessary for Page item
-        )
+        createModuleItem(course.id, module2.id, teacher, page1.title, ModuleItemTypes.PAGE.stringVal, null, page1.url)
 
         Log.d(PREPARATION_TAG,"Associate ${discussionTopic1.title} discussion topic with ${module2.name} module.")
-        ModulesApi.createModuleItem(
-                courseId = course.id,
-                moduleId = module2.id,
-                teacherToken = teacher.token,
-                title = discussionTopic1.title,
-                type = ModuleItemTypes.DISCUSSION.stringVal,
-                contentId = discussionTopic1.id.toString()
-        )
+        createModuleItem(course.id, module2.id, teacher, discussionTopic1.title, ModuleItemTypes.DISCUSSION.stringVal, discussionTopic1.id.toString())
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(student)
@@ -183,20 +110,10 @@ class ModulesE2ETest: StudentTest() {
         Espresso.pressBack()
 
         Log.d(PREPARATION_TAG,"Publish ${module1.name} module.")
-        ModulesApi.updateModule(
-                courseId = course.id,
-                id = module1.id,
-                published = true,
-                teacherToken = teacher.token
-        )
+        updateModule(course, module1, teacher)
 
         Log.d(PREPARATION_TAG,"Publish ${module2.name} module.")
-        ModulesApi.updateModule(
-                courseId = course.id,
-                id = module2.id,
-                published = true,
-                teacherToken = teacher.token
-        )
+        updateModule(course, module2, teacher)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the 'Modules' Tab is displayed.")
         courseBrowserPage.refresh()
@@ -217,4 +134,92 @@ class ModulesE2ETest: StudentTest() {
         modulesPage.assertModuleItemDisplayed(module2, page1.title)
         modulesPage.assertModuleItemDisplayed(module2, discussionTopic1.title)
     }
+
+    private fun updateModule(
+        course: CourseApiModel,
+        module1: ModuleApiModel,
+        teacher: CanvasUserApiModel
+    ) {
+        ModulesApi.updateModule(
+            courseId = course.id,
+            id = module1.id,
+            published = true,
+            teacherToken = teacher.token
+        )
+    }
+
+    private fun createModuleItem(
+        courseId: Long,
+        moduleId: Long,
+        teacher: CanvasUserApiModel,
+        title: String,
+        moduleItemType: String,
+        contentId: String?,
+        pageUrl: String? = null
+    ) {
+        ModulesApi.createModuleItem(
+            courseId = courseId,
+            moduleId = moduleId,
+            teacherToken = teacher.token,
+            title = title,
+            type = moduleItemType,
+            contentId = contentId,
+            pageUrl = pageUrl
+        )
+    }
+
+    private fun createModule(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = ModulesApi.createModule(
+        courseId = course.id,
+        teacherToken = teacher.token,
+        unlockAt = null
+    )
+
+    private fun createDiscussion(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = DiscussionTopicsApi.createDiscussion(
+        courseId = course.id,
+        token = teacher.token
+    )
+
+    private fun createCoursePage(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = PagesApi.createCoursePage(
+        courseId = course.id,
+        published = true,
+        frontPage = false,
+        token = teacher.token
+    )
+
+    private fun createQuiz(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = QuizzesApi.createQuiz(
+        QuizzesApi.CreateQuizRequest(
+            courseId = course.id,
+            withDescription = true,
+            dueAt = 3.days.fromNow.iso8601,
+            token = teacher.token,
+            published = true
+        )
+    )
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        withDescription: Boolean,
+        teacher: CanvasUserApiModel,
+        dueAt: String
+    ) = AssignmentsApi.createAssignment(
+        AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            withDescription = withDescription,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            dueAt = dueAt
+        )
+    )
 }

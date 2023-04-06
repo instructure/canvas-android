@@ -13,6 +13,9 @@ interface DashboardFileUploadDao {
     @Delete
     suspend fun delete(dashboardFileUploadEntity: DashboardFileUploadEntity)
 
-    @Query("SELECT * FROM DashboardFileUploadEntity")
-    fun getAll(): LiveData<List<DashboardFileUploadEntity>>
+    @Query("SELECT * FROM DashboardFileUploadEntity WHERE userId = :userId")
+    fun getAll(userId: Long): LiveData<List<DashboardFileUploadEntity>>
+
+    @Query("DELETE FROM DashboardFileUploadEntity WHERE workerId = :workerId")
+    suspend fun deleteByWorkerId(workerId: String)
 }

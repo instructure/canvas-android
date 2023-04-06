@@ -103,6 +103,7 @@ class EditDashboardFragment : Fragment() {
                 Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG).show()
                 view?.announceForAccessibility(requireContext().getString(action.res))
             }
+            else -> {}
         }
     }
 

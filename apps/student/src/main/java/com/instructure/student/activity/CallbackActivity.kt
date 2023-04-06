@@ -214,6 +214,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
                 return ApiPrefs.effectiveLocale != oldLocale
             }
             ApiType.CACHE -> if (!APIHelper.hasNetworkConnection()) ApiPrefs.user = user
+            ApiType.UNKNOWN -> {}
         }
         return false
     }

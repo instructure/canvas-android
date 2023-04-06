@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -52,7 +53,9 @@ class FileUploadWorker @AssistedInject constructor(
     private val submissionCommentDao: SubmissionCommentDao,
     private val mediaCommentDao: MediaCommentDao,
     private val authorDao: AuthorDao,
-    private val dashboardFileUploadDao: DashboardFileUploadDao
+    private val dashboardFileUploadDao: DashboardFileUploadDao,
+    private val apiPrefs: ApiPrefs,
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -76,7 +79,8 @@ class FileUploadWorker @AssistedInject constructor(
     private val workDataBuilder = Data.Builder()
 
     override suspend fun doWork(): Result {
-        var assignmentName = ""
+        var title = ""
+        var subtitle = ""
         try {
             val inputData = fileUploadInputDao.findByWorkerId(id.toString()) ?: throw IllegalArgumentException()
             getArguments(inputData)
@@ -85,14 +89,13 @@ class FileUploadWorker @AssistedInject constructor(
             fullSize = fileSubmitObjects.sumOf { it.size }
             uploadCount = fileSubmitObjects.size
 
-            val title = context.getString(
-                if (action == ACTION_ASSIGNMENT_SUBMISSION) {
-                    R.string.dashboardNotificationUploadingSubmissionTitle
-                } else {
-                    R.string.dashboardNotificationUploadingFilesTitle
-                }
-            )
+            title = if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+                context.getString(R.string.dashboardNotificationUploadingSubmissionTitle)
+            } else {
+                context.resources.getQuantityString(R.plurals.dashboardNotificationUploadingFilesTitle, uploadCount)
+            }
 
+            var assignmentName = ""
             var groupId: Long? = null
             if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
                 val assignment = getAssignment(assignmentId, courseId)
@@ -105,13 +108,13 @@ class FileUploadWorker @AssistedInject constructor(
                     .putString(PROGRESS_DATA_TITLE, title)
                     .putString(PROGRESS_DATA_ASSIGNMENT_NAME, assignmentName)
                     .putLong(PROGRESS_DATA_FULL_SIZE, fullSize)
-                    .putStringArray(PROGRESS_DATA_FILES_TO_UPLOAD, fileSubmitObjects.map {
-                        it.toJson()
-                    }.toTypedArray())
+                    .putStringArray(PROGRESS_DATA_FILES_TO_UPLOAD, fileSubmitObjects.map { it.toJson() }.toTypedArray())
                     .build()
             )
 
-            insertDashboardUpload(title, assignmentName)
+            subtitle = assignmentName.ifEmpty { fileSubmitObjects.joinToString { it.name } }
+
+            insertDashboardUpload(title, subtitle)
 
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
@@ -149,22 +152,41 @@ class FileUploadWorker @AssistedInject constructor(
                     Result.success()
                 }
             }
+
+            title = context.getString(
+                if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+                    R.string.dashboardNotificationSubmissionUploadSuccessTitle
+                } else {
+                    R.string.dashboardNotificationUploadingFilesSuccessTitle
+                }
+            )
+
             fileUploadInputDao.delete(inputData)
-            insertDashboardUpload(context.getString(R.string.dashboardNotificationSubmissionUploadSuccessTitle), assignmentName)
+            fileUploadUtilsHelper.deleteCachedFiles(inputData.filePaths)
             return result
         } catch (e: Exception) {
-            insertDashboardUpload(context.getString(R.string.dashboardNotificationSubmissionUploadFailedTitle), assignmentName)
+            title = context.getString(
+                if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+                    R.string.dashboardNotificationSubmissionUploadFailedTitle
+                } else {
+                    R.string.dashboardNotificationUploadingFilesFailedTitle
+                }
+            )
             e.printStackTrace()
-            return Result.failure()
+            return Result.failure(workDataBuilder.build())
+        } finally {
+            insertDashboardUpload(title, subtitle)
         }
     }
 
-    private suspend fun insertDashboardUpload(title: String, assignmentName: String) {
+    private suspend fun insertDashboardUpload(title: String, subtitle: String) {
+        val userId = apiPrefs.user?.id ?: return
         dashboardFileUploadDao.insert(
             DashboardFileUploadEntity(
                 workerId = id.toString(),
+                userId = userId,
                 title = title,
-                assignmentName = assignmentName
+                subtitle = subtitle
             )
         )
     }
@@ -216,8 +238,9 @@ class FileUploadWorker @AssistedInject constructor(
             val mimeType = fileUploadUtilsHelper.getFileMimeType(uri)
             val fileName = fileUploadUtilsHelper.getFileNameWithDefault(uri)
 
-            fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(uri, fileName, mimeType)
+            fileUploadUtilsHelper.getFileSubmitObjectByFileUri(uri, fileName, mimeType)
         }
+
         if (fileSubmitObjects.contains(null)) throw IllegalArgumentException("Could not parse file.")
 
         return fileSubmitObjects.filterNotNull()
@@ -298,10 +321,13 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             }).dataOrThrow
 
-            val updatedList =
-                workDataBuilder.build().getStringArray(PROGRESS_DATA_UPLOADED_FILES).orEmpty().toMutableList().apply {
-                    add(fileSubmitObject.toJson())
-                }.toTypedArray()
+            val updatedList = workDataBuilder.build()
+                .getStringArray(PROGRESS_DATA_UPLOADED_FILES)
+                .orEmpty()
+                .toMutableList()
+                .apply { add(fileSubmitObject.toJson()) }
+                .toTypedArray()
+
             uploaded += fileSubmitObject.size
             currentProgress = uploaded
 

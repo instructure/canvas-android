@@ -46,8 +46,8 @@ class UserSeedApi {
       ..user.name = "$firstName $lastName"
       ..user.shortName = firstName
       ..user.sortableName = "$lastName, $firstName"
-      ..pseudonym.uniqueId = Guid().guid()
-      ..pseudonym.password = Guid().guid()
+      ..pseudonym.uniqueId = Guid(RandomGenerator()).guid()
+      ..pseudonym.password = Guid(RandomGenerator()).guid()
       // Don't care about CommunicationChannel initialization for now
       ..build());
 
@@ -66,7 +66,7 @@ class UserSeedApi {
       result = result.rebuild((b) => b
         ..loginId = userData.pseudonym.uniqueId
         ..password = userData.pseudonym.password
-        ..domain = response.request.uri.host);
+        ..domain = response.requestOptions.uri.host);
 
       var verifyResult = await AuthApi().mobileVerify(result.domain, forceBetaDomain: true);
       var authCode = await _getAuthCode(result, verifyResult);
@@ -75,7 +75,7 @@ class UserSeedApi {
       result = result.rebuild((b) => b..token = token);
       return result;
     } else {
-      print("error request:" + response.request.toString() + ", headers: ${response.request.headers.toString()}");
+      print("error request:" + response.requestOptions.toString() + ", headers: ${response.requestOptions.headers.toString()}");
       print(
           "error response body: ${response.data}, status: ${response.statusCode}, message: ${response.statusMessage} ");
       return null;

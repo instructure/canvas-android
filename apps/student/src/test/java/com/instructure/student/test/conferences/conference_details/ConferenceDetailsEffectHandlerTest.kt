@@ -59,7 +59,7 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
     fun test(block: suspend TestCoroutineScope.() -> Unit) = testDispatcher.runBlockingTest(block)
 
     @Test
-    fun `ShowRecording calls launchUrl on view, waits 3000ms, and produces ShowRecordingFinished event`() = test {
+    fun `ShowRecording calls launchUrl on view and produces ShowRecordingFinished event`() = test {
         val recordingId = "recording_123"
         val url = "url"
 
@@ -69,10 +69,7 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
         verify { view.launchUrl(url) }
 
         // Advance the clock to skip delay
-        val timeSkipped = advanceUntilIdle()
-
-        // Time skipped should be 3000ms
-        assertEquals(timeSkipped, 3000)
+        advanceUntilIdle()
 
         // Should produce ShowRecordingFinished event
         verify { eventConsumer.accept(ConferenceDetailsEvent.ShowRecordingFinished(recordingId)) }
@@ -82,7 +79,7 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `JoinConference calls launchUrl, waits 3000ms, and produces JoinConferenceFinished event`() = test {
+    fun `JoinConference calls launchUrl and produces JoinConferenceFinished event`() = test {
         val url = "url"
         val authenticate = false
 
@@ -92,10 +89,7 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
         verify { view.launchUrl(url) }
 
         // Advance the clock to skip delay
-        val timeSkipped = advanceUntilIdle()
-
-        // Time skipped should be 3000ms
-        assertEquals(timeSkipped, 3000)
+        advanceUntilIdle()
 
         // Should produce JoinConferenceFinished event
         verify { eventConsumer.accept(ConferenceDetailsEvent.JoinConferenceFinished) }
@@ -123,10 +117,7 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
         coVerify { awaitApi<AuthenticatedSession>(any()) }
 
         // Advance the clock to skip delay
-        val timeSkipped = advanceUntilIdle()
-
-        // Time skipped should be 3000ms
-        assertEquals(timeSkipped, 3000)
+        advanceUntilIdle()
 
         // Should produce JoinConferenceFinished event
         verify { eventConsumer.accept(ConferenceDetailsEvent.JoinConferenceFinished) }

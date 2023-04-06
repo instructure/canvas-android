@@ -105,6 +105,7 @@ class FloatingRecordingView @JvmOverloads constructor(
         when(mediaType) {
             is RecordingMediaType.Video -> stopVideoView()
             is RecordingMediaType.Audio -> cleanupMediaObjects()
+            else -> {}
         }
     }
 

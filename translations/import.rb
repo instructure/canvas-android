@@ -81,6 +81,17 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
     elsif file.end_with?('.xml')
       language = language.gsub('-', '-r') # Android specific naming convention
     end
+
+    # This is a workaround, because the AAPT bundled in the latest AGP (7.0.0+) has a bug.
+    # It seems like the resource merger cannot recognise resources using custom BCP-47 language subtags without also specifing a region tag.
+    # We should monitor this in later releases and remove the workaround once it's fixed.
+    # Related issue: https://issuetracker.google.com/issues/234820481
+    if file.end_with?('.xml')
+      language = language.gsub('da+instk12', 'da+DK+instk12')
+      language = language.gsub('nb+instk12', 'nb+NO+instk12')
+      language = language.gsub('sv+instk12', 'sv+SE+instk12')
+    end
+
     if language.eql? 'en'
       puts "Skipping redundant 'en' resource"
       next

@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.GradingPeriodsApi
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.page.getStringFromResource
@@ -66,47 +68,17 @@ class GradesElementaryE2ETest : StudentTest() {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         val testGradingPeriodListApiModel = GradingPeriodsApi.getGradingPeriodsOfCourse(nonHomeroomCourses[0].id)
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${nonHomeroomCourses[0].name} course.")
-        val testAssignment = AssignmentsApi.createAssignment(
-             AssignmentsApi.CreateAssignmentRequest(
-                 courseId = nonHomeroomCourses[1].id,
-                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                 gradingType = GradingType.PERCENT,
-                 teacherToken = teacher.token,
-                 pointsPossible = 100.0,
-                 dueAt = calendar.time.toApiString()
-             )
-         )
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${nonHomeroomCourses[1].name} course.")
+        val testAssignment = createAssignment(nonHomeroomCourses[1].id, teacher, calendar, GradingType.PERCENT, 100.0)
 
         Log.d(PREPARATION_TAG,"Seeding another 'Text Entry' assignment for ${nonHomeroomCourses[0].name} course.")
-        val testAssignment2 = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = nonHomeroomCourses[0].id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.LETTER_GRADE,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = calendar.time.toApiString()
-            )
-        )
+        val testAssignment2 = createAssignment(nonHomeroomCourses[0].id,  teacher, calendar, GradingType.LETTER_GRADE, 100.0)
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${nonHomeroomCourses[1].name} assignment.")
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = nonHomeroomCourses[1].id,
-            assignmentId = testAssignment.id,
-            studentId = student.id,
-            postedGrade="9",
-            excused = false)
+        gradeSubmission(teacher,nonHomeroomCourses[1].id, student, testAssignment.id, "9")
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${nonHomeroomCourses[0].name} assignment.")
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = nonHomeroomCourses[0].id,
-            assignmentId = testAssignment2.id,
-            studentId = student.id,
-            postedGrade="A-",
-            excused = false)
+        gradeSubmission(teacher, nonHomeroomCourses[0].id, student, testAssignment2.id, "A-")
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)
@@ -123,13 +95,7 @@ class GradesElementaryE2ETest : StudentTest() {
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${testAssignment2.name} assignment.")
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = nonHomeroomCourses[0].id,
-            assignmentId = testAssignment2.id,
-            studentId = student.id,
-            postedGrade="C-",
-            excused = false)
+        gradeSubmission(teacher,nonHomeroomCourses[0].id, student, testAssignment2.id, "C-")
 
         Thread.sleep(5000) //This time is needed here to let the SubMissionApi does it's job.
 
@@ -153,6 +119,42 @@ class GradesElementaryE2ETest : StudentTest() {
         Espresso.pressBack()
         gradesPage.assertPageObjects()
 
+    }
+
+    private fun createAssignment(
+        courseId: Long,
+        teacher: CanvasUserApiModel,
+        calendar: Calendar,
+        gradingType: GradingType,
+        pointsPossible: Double
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = courseId,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = gradingType,
+                teacherToken = teacher.token,
+                pointsPossible = pointsPossible,
+                dueAt = calendar.time.toApiString()
+            )
+        )
+    }
+
+    private fun gradeSubmission(
+        teacher: CanvasUserApiModel,
+        courseId: Long,
+        student: CanvasUserApiModel,
+        assignmentId: Long,
+        postedGrade: String
+    ) {
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = courseId,
+            assignmentId = assignmentId,
+            studentId = student.id,
+            postedGrade = postedGrade,
+            excused = false
+        )
     }
 }
 
