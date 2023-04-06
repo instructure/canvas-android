@@ -1392,4 +1392,9 @@
     <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
     <string name="a11y_avatarContentDescription">Avatar of %s</string>
     <string name="inboxUndo">Undo</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domain</string>
+    <string name="aboutLoginTitle">Login ID</string>
+    <string name="aboutEmailTitle">Email</string>
+    <string name="aboutVersionTitle">Version</string>
 </resources>
