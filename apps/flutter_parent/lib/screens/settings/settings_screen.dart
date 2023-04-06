@@ -193,7 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _about(BuildContext context) => ListTile(
       key: Key('about'),
       title: Row(
-        children: [SizedBox(width: 16), Text(L10n(context).about)],
+        children: [Text(L10n(context).about)],
       ),
       onTap: () => _interactor.showAboutDialog(context));
 

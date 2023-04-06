@@ -25,120 +25,125 @@
             type="com.instructure.pandautils.features.about.AboutViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:id="@+id/aboutPage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/appTitle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/aboutAppTitle"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:padding="24dp">
 
-        <TextView
-            android:id="@+id/appName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.data.appName}"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/appTitle"
-            tools:text="Canvas Student" />
+            <TextView
+                android:id="@+id/appTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/aboutAppTitle"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/domainTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/aboutDomainTitle"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/appName" />
+            <TextView
+                android:id="@+id/appName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.data.appName}"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/appTitle"
+                tools:text="Canvas Student" />
 
-        <TextView
-            android:id="@+id/domain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.data.appDomain}"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/domainTitle"
-            tools:text="mobile.instructure.com" />
+            <TextView
+                android:id="@+id/domainTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/aboutDomainTitle"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/appName" />
 
-        <TextView
-            android:id="@+id/loginTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/aboutLoginTitle"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/domain" />
+            <TextView
+                android:id="@+id/domain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.data.appDomain}"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/domainTitle"
+                tools:text="mobile.instructure.com" />
 
-        <TextView
-            android:id="@+id/loginId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.data.loginId}"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/loginTitle"
-            tools:text="student1" />
+            <TextView
+                android:id="@+id/loginTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/aboutLoginTitle"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/domain" />
 
-        <TextView
-            android:id="@+id/emailTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/aboutEmailTitle"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/loginId" />
+            <TextView
+                android:id="@+id/loginId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.data.loginId}"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/loginTitle"
+                tools:text="student1" />
 
-        <TextView
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.data.email}"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/emailTitle"
-            tools:text="student1@gmail.com" />
+            <TextView
+                android:id="@+id/emailTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/aboutEmailTitle"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/loginId" />
 
-        <TextView
-            android:id="@+id/versionTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/aboutVersionTitle"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/email" />
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.data.email}"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/emailTitle"
+                tools:text="student1@gmail.com" />
 
-        <TextView
-            android:id="@+id/version"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.data.appVersion}"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/versionTitle"
-            tools:text="student1@gmail.com" />
+            <TextView
+                android:id="@+id/versionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/aboutVersionTitle"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/email" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_instructure_logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/version" />
+            <TextView
+                android:id="@+id/version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.data.appVersion}"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/versionTitle"
+                tools:text="student1@gmail.com" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_instructure_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/version" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
