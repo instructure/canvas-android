@@ -79,7 +79,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         }
         setupFilePicker()
         binding.discussionWebView.addVideoClient(requireActivity())
-        binding.discussionWebView.setDarkModeSupport()
+        binding.discussionWebView.enableAlgorithmicDarkening()
         binding.discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 webViewRouter.openMedia(url)
