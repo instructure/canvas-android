@@ -20,16 +20,29 @@ package com.instructure.pandautils.room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE PendingSubmissionCommentEntity ADD COLUMN attemptId INTEGER")
-        database.execSQL("ALTER TABLE FileUploadInputEntity ADD COLUMN attemptId INTEGER")
-        database.execSQL("ALTER TABLE SubmissionCommentEntity ADD COLUMN attemptId INTEGER")
+fun createMigration(from: Int, to: Int, migrationBlock: (SupportSQLiteDatabase) -> Unit): Migration {
+    return object : Migration(from, to) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            migrationBlock(database)
+        }
     }
 }
 
-val MIGRATION_2_3 = object : Migration(2, 3) {
-    override fun migrate(database: SupportSQLiteDatabase) {
+val appDatabaseMigrations = arrayOf(
+
+    createMigration(1, 2) { database ->
+        database.execSQL("ALTER TABLE PendingSubmissionCommentEntity ADD COLUMN attemptId INTEGER")
+        database.execSQL("ALTER TABLE FileUploadInputEntity ADD COLUMN attemptId INTEGER")
+        database.execSQL("ALTER TABLE SubmissionCommentEntity ADD COLUMN attemptId INTEGER")
+    },
+
+    createMigration(2, 3) { database ->
         database.execSQL("CREATE TABLE IF NOT EXISTS DashboardFileUploadEntity (workerId TEXT NOT NULL, userId INTEGER NOT NULL, title TEXT, assignmentName TEXT, PRIMARY KEY(workerId))")
+    },
+
+    createMigration(3, 4) { database ->
+        database.execSQL("ALTER TABLE FileUploadInputEntity ADD COLUMN notificationId INTEGER")
     }
-}
+
+)
+
