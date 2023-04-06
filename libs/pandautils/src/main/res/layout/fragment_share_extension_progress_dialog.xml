@@ -168,12 +168,20 @@
                 android:background="@color/backgroundMedium"
                 app:layout_constraintTop_toBottomOf="@id/cancel" />
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:itemViewModels="@{viewModel.data.items}"
-                app:layout_constraintTop_toBottomOf="@id/itemsDivider" />
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHeight_default="wrap"
+                app:layout_constraintTop_toBottomOf="@id/itemsDivider">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:itemViewModels="@{viewModel.data.items}" />
+
+            </ScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
