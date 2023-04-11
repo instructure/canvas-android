@@ -1328,6 +1328,8 @@
     <string name="fileUploadProgressSubtitle">Загрузка в файлы</string>
     <string name="submissionProgressSubtitle">Загрузка отправки в \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Загрузка отправки</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Отправка выполнена</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Ошибка отправки</string>
     <string name="dashboardNotificationUploadingFilesTitle">Загрузка файлов</string>
     <string name="cancelSubmissionDialogTitle">Отменить отправку</string>
     <string name="cancelSubmissionDialogMessage">Данное действие отменит отправку данных и удалит отравляемые данные.</string>
@@ -1407,4 +1409,6 @@
     <string name="a11y_conversationDeselected">Выбор обсуждения отменен</string>
     <string name="a11y_exitSelectionMode">Выйти из режима выбора</string>
     <string name="a11y_selectionModeDeactivated">Режим выбора деактивирован.</string>
+    <string name="a11y_avatarContentDescription">Аватар %s</string>
+    <string name="inboxUndo">Отменить</string>
 </resources>

@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Tukuake ki nga Kōnae</string>
     <string name="submissionProgressSubtitle">Te tuku tukunga ki \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Tukuake ana tāpaetanga</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Angitu te tukunga</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">I rahua te tuku o te tāpaetanga</string>
     <string name="dashboardNotificationUploadingFilesTitle">Tikiake ana ngā kōnae</string>
     <string name="cancelSubmissionDialogTitle">Whakakore Tāpaetanga</string>
     <string name="cancelSubmissionDialogMessage">Ka mukua me te whakakoretia to tāpaetanga.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Kua whakakorehia te korerorero</string>
     <string name="a11y_exitSelectionMode">Putaatu i te aratau whiriwhiri</string>
     <string name="a11y_selectionModeDeactivated">Kua whakakorehia te aratau whiriwhiri.</string>
+    <string name="a11y_avatarContentDescription">Avatar o %s</string>
+    <string name="inboxUndo">Wete</string>
 </resources>

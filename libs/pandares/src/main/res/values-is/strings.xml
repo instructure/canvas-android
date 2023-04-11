@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Hleð upp í Skrár</string>
     <string name="submissionProgressSubtitle">Hlaða upp skilum í \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Hlaða upp skilum</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Skil tókust</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Mistókst að skila</string>
     <string name="dashboardNotificationUploadingFilesTitle">Hleður upp skrám</string>
     <string name="cancelSubmissionDialogTitle">Hætta við skil</string>
     <string name="cancelSubmissionDialogMessage">Þetta hættir við og eyðir skilunum þínum.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Samræða afvalin</string>
     <string name="a11y_exitSelectionMode">Fara úr valham</string>
     <string name="a11y_selectionModeDeactivated">Valhamur afvirkjaður.</string>
+    <string name="a11y_avatarContentDescription">Gengill %s</string>
+    <string name="inboxUndo">Hætta við</string>
 </resources>

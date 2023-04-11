@@ -1297,6 +1297,8 @@
     <string name="fileUploadProgressSubtitle">Đang tải lên tới Các Tập Tin</string>
     <string name="submissionProgressSubtitle">Đang tải bài nộp tới \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Tải Lên Bài Nộp</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Nộp Thành Công</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Nộp Thất Bại</string>
     <string name="dashboardNotificationUploadingFilesTitle">Đang tải Các Tập Tin</string>
     <string name="cancelSubmissionDialogTitle">Hủy Nộp</string>
     <string name="cancelSubmissionDialogMessage">Thao tác này sẽ hủy và xóa bài nộp của bạn.</string>
@@ -1374,4 +1376,6 @@
     <string name="a11y_conversationDeselected">Đã bỏ chọn cuộc trò chuyện</string>
     <string name="a11y_exitSelectionMode">Thoát chế độ lựa chọn</string>
     <string name="a11y_selectionModeDeactivated">Đã hủy kích hoạt chế độ lựa chọn.</string>
+    <string name="a11y_avatarContentDescription">Hình Đại Diện của %s</string>
+    <string name="inboxUndo">Hoàn tác</string>
 </resources>

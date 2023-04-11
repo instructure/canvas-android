@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Wird nach „Dateien“ hochgeladen</string>
     <string name="submissionProgressSubtitle">Abgabe wird zu \"%s\" hochgeladen</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Abgabe wird hochgeladen</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Abgabe erfolgreichAbgabe erfolgreich</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Abgabe fehlgeschlagen</string>
     <string name="dashboardNotificationUploadingFilesTitle">Dateien hochladen</string>
     <string name="cancelSubmissionDialogTitle">Abgabe abbrechen</string>
     <string name="cancelSubmissionDialogMessage">Dadurch wird Ihre Abgabe storniert und gelöscht.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Gespräch abgewählt</string>
     <string name="a11y_exitSelectionMode">Auswahlmodus verlassen</string>
     <string name="a11y_selectionModeDeactivated">Der Auswahlmodus ist deaktiviert.</string>
+    <string name="a11y_avatarContentDescription">Avatar von %s</string>
+    <string name="inboxUndo">Rückgängig machen</string>
 </resources>
