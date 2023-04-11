@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Fazendo upload para arquivos</string>
     <string name="submissionProgressSubtitle">Carregando envio para \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Realizando upload</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Sucesso do envio</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Falha no envio</string>
     <string name="dashboardNotificationUploadingFilesTitle">Carregamento de arquivos</string>
     <string name="cancelSubmissionDialogTitle">Cancelar envio</string>
     <string name="cancelSubmissionDialogMessage">Isso cancelará e excluirá seu envio.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Conversa não selecionada</string>
     <string name="a11y_exitSelectionMode">Sair do modo de seleção</string>
     <string name="a11y_selectionModeDeactivated">Modo de seleção desativado.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfazer</string>
 </resources>

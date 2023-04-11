@@ -1297,6 +1297,8 @@
     <string name="fileUploadProgressSubtitle">S\'està penjant als fitxers</string>
     <string name="submissionProgressSubtitle">S\'està penjant l\'entrega a \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">S\'està carregant l\'entrega</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">S\'ha realitzat correctament l\'entrega</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">S’ha produït un error en fer l\'entrega</string>
     <string name="dashboardNotificationUploadingFilesTitle">S\'estan penjant els fitxers</string>
     <string name="cancelSubmissionDialogTitle">Cancel·la l\'entrega</string>
     <string name="cancelSubmissionDialogMessage">Amb aquesta acció es cancel·larà i se suprimirà l\'entrega.</string>
@@ -1374,4 +1376,6 @@
     <string name="a11y_conversationDeselected">S’ha anul·lat la selecció de la conversa.</string>
     <string name="a11y_exitSelectionMode">Surt del mode de selecció</string>
     <string name="a11y_selectionModeDeactivated">S’ha desactivat el mode de selecció.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfés</string>
 </resources>
