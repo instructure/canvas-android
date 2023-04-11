@@ -37,7 +37,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.room.entities.*
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
@@ -67,8 +66,7 @@ class FileUploadWorker @AssistedInject constructor(
     private lateinit var action: String
     private var userId: Long = INVALID_ID
     private var attemptId: Long? = null
-
-    private val notificationId = notificationId(inputData)
+    private var notificationId: Int = DEFAULT_NOTIFICATION_ID
 
     private var fullSize = 0L
     private var currentProgress = 0L
@@ -229,6 +227,7 @@ class FileUploadWorker @AssistedInject constructor(
         action = inputData.action
         userId = inputData.userId ?: INVALID_ID
         attemptId = inputData.attemptId
+        notificationId = inputData.notificationId ?: DEFAULT_NOTIFICATION_ID
     }
 
     private fun getFileSubmitObjects(filePaths: List<String>): List<FileSubmitObject> {
@@ -358,14 +357,6 @@ class FileUploadWorker @AssistedInject constructor(
         )
     }
 
-    private fun notificationId(data: Data): Int {
-        return if (data.getLong(Const.SUBMISSION_ID, INVALID_ID) != INVALID_ID) {
-            data.getLong(Const.SUBMISSION_ID, INVALID_ID).toInt()
-        } else {
-            NOTIFICATION_ID
-        }
-    }
-
     private fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
         // Prevents recreation of notification channel if it exists.
         if (notificationManager.notificationChannels.any { it.id == channelId }) return
@@ -427,7 +418,7 @@ class FileUploadWorker @AssistedInject constructor(
     }
 
     companion object {
-        private const val NOTIFICATION_ID = -2
+        private const val DEFAULT_NOTIFICATION_ID = -2
         const val INVALID_ID = -1L
         const val FILE_SUBMIT_ACTION = "fileSubmitAction"
         const val FILE_PATHS = "filePaths"
