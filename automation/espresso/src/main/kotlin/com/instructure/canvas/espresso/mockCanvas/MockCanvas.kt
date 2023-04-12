@@ -1086,7 +1086,7 @@ fun MockCanvas.addUser(): User {
     val name = Randomizer.randomName()
     val email = Randomizer.randomEmail()
     val user = User(
-            id = users.size + 1L,
+            id = Random().nextLong(),
             name = name.fullName,
             shortName = name.firstName,
             loginId = email,
