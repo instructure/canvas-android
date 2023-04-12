@@ -42,10 +42,16 @@ class RequestInterceptor : Interceptor {
         // a RestParams instance. Here we will attempt to retrieve it, but if unsuccessful we will
         // fall back to a new RestParams instance with default values.
         val params: RestParams
-        params = if (request.tag() != null && request.tag() is RestParams) {
-            request.tag() as RestParams
-        } else {
-            RestParams()
+        params = when {
+            request.tag(RestParams::class.java) != null -> {
+                request.tag(RestParams::class.java) ?: RestParams()
+            }
+            request.tag() != null && request.tag() is RestParams -> {
+                request.tag() as RestParams
+            }
+            else -> {
+                RestParams()
+            }
         }
 
         // Set the UserAgent

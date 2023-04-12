@@ -1143,6 +1143,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Вы можете открыть информацию об отправке здесь</string>
+
     <plurals name="minutes">
         <item quantity="one">%s минута</item>
         <item quantity="few">%s минут</item>
@@ -1326,6 +1328,8 @@
     <string name="fileUploadProgressSubtitle">Загрузка в файлы</string>
     <string name="submissionProgressSubtitle">Загрузка отправки в \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Загрузка отправки</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Отправка выполнена</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Ошибка отправки</string>
     <string name="dashboardNotificationUploadingFilesTitle">Загрузка файлов</string>
     <string name="cancelSubmissionDialogTitle">Отменить отправку</string>
     <string name="cancelSubmissionDialogMessage">Данное действие отменит отправку данных и удалит отравляемые данные.</string>
@@ -1363,4 +1367,48 @@
     <string name="acceptableUsePolicyAgree">Я соглашаюсь с Политикой допустимого использования.</string>
     <string name="acceptableUsePolicySubmit">Отправить</string>
     <string name="acceptFail">Не удалось отправить заявку на принятие условий.</string>
+    <string name="attempt">Попытка %d</string>
+    <string name="quizQuestions">Вопросы: %d</string>
+    <string name="quizTimeLimit">Ограничение по времени: %s</string>
+    <string name="allowedAttempts">Разрешенные попытки: %s</string>
+    <string name="usedAttempts">Использовано попыток: %d</string>
+    <string name="generalUnexpectedError">Произошла непредвиденная ошибка.</string>
+
+    <string name="deleteSelected">Удалить</string>
+    <string name="archiveSelected">Архив</string>
+    <string name="unarchiveSelected">Разархивировать</string>
+    <string name="markAsReadSelected">Отметить как прочитанное</string>
+    <string name="markAsUnreadSelected">Отметить как непрочитанное</string>
+    <string name="starSelected">Звезда</string>
+    <string name="unstarSelected">Снять метку</string>
+
+    <string name="inboxOperationFailed">Не удалось выполнить операцию</string>
+    <string name="inboxDeletedConfirmation">%s удалено</string>
+    <string name="inboxArchivedConfirmation">%s архивировано</string>
+    <string name="inboxUnarchivedConfirmation">%s разархивировано</string>
+    <string name="inboxMarkAsReadConfirmation">%s отмечено как прочитанное</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s отмечено как непрочитанное</string>
+    <string name="inboxStarredConfirmation">%s помечено звездочкой</string>
+    <string name="inboxUnstarredConfirmation">%s снята метка (звездочка)</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Это обсуждение будет удалено из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+        <item quantity="few">Эти обсуждения будут удалены из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+        <item quantity="many">Эти обсуждения будут удалены из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+        <item quantity="other">Эти обсуждения будут удалены из папки «Входящие» на всех ваших устройствах. Это действие невозможно отменить.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Не удалось загрузить следующую страницу. Проверьте интернет-подключение.</string>
+    <string name="conversationsRefreshFailed">Не удалось обновить обсуждения. Проверьте интернет-подключение.</string>
+    <string name="inboxScopeInbox">Входящие</string>
+    <string name="inboxContextSelectorTitle">Выбрать курс или группу</string>
+    <string name="inboxClearFilter">Очистить</string>
+    <string name="a11y_courseFilterContentDescription">Фильтр по курсам: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">выбрать</string>
+    <string name="a11y_itemSelectedSwipeForActions">Обсуждение выбрано. Активирован режим выбора. Перейти к действиям.</string>
+    <string name="a11y_conversationSelected">Выбранное обсуждение</string>
+    <string name="a11y_conversationDeselected">Выбор обсуждения отменен</string>
+    <string name="a11y_exitSelectionMode">Выйти из режима выбора</string>
+    <string name="a11y_selectionModeDeactivated">Режим выбора деактивирован.</string>
+    <string name="a11y_avatarContentDescription">Аватар %s</string>
+    <string name="inboxUndo">Отменить</string>
 </resources>

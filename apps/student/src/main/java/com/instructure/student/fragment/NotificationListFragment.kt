@@ -35,21 +35,25 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.ParentActivity
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
+import com.instructure.student.databinding.FragmentListNotificationBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_list_notification.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
 @ScreenView(SCREEN_VIEW_NOTIFICATION_LIST)
 @PageView
 class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager.OnBackStackChangedListener {
+
+    private val binding by viewBinding(FragmentListNotificationBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     @PageViewUrl
     @Suppress("unused")
@@ -72,20 +76,20 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
 
             override fun onRefreshFinished() {
                 setRefreshing(false)
-                editOptions.setGone()
+                binding.editOptions.setGone()
                 if (recyclerAdapter.size() == 0) {
-                    setEmptyView(emptyView, R.drawable.ic_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
+                    setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
                     if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
+                        recyclerBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
                     } else {
-                        emptyView.setGuidelines(.28f,.6f,.73f,.12f,.88f)
+                        recyclerBinding.emptyView.setGuidelines(.28f,.6f,.73f,.12f,.88f)
                     }
                 }
                 (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
             }
 
             override fun onShowEditView(isVisible: Boolean) {
-                editOptions.setVisible(isVisible)
+                binding.editOptions.setVisible(isVisible)
             }
 
             override fun onShowErrorCrouton(message: Int) {
@@ -106,6 +110,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
             = layoutInflater.inflate(R.layout.fragment_list_notification, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
@@ -116,13 +121,12 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
             R.id.listView
         )
 
-        listView.isSelectionEnabled = false
+        recyclerBinding.listView.isSelectionEnabled = false
 
-        confirmButton.text = getString(R.string.delete)
-        confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
-
-        cancelButton.text = getString(R.string.cancel)
-        cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
+        binding.confirmButton.text = getString(R.string.delete)
+        binding.confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
+        binding.cancelButton.text = getString(R.string.cancel)
+        binding.cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
 
         applyTheme()
 
@@ -134,7 +138,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
     override fun onBackStackChanged() {
         if (activity?.supportFragmentManager?.fragments?.lastOrNull()?.javaClass == this.javaClass) {
             if (shouldRefreshOnResume) {
-                swipeRefreshLayout.isRefreshing = true
+                recyclerBinding.swipeRefreshLayout.isRefreshing = true
                 recyclerAdapter.refresh()
                 shouldRefreshOnResume = false
             }
@@ -149,17 +153,17 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        toolbar.title = title()
+        binding.toolbar.title = title()
     }
 
     override fun applyTheme() {
         val canvasContext = canvasContext
         if (canvasContext is Course || canvasContext is Group) {
-            toolbar.setupAsBackButton(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+            binding.toolbar.setupAsBackButton(this)
+            ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, canvasContext)
         } else {
             val navigation = navigation
-            navigation?.attachNavigationDrawer(this, toolbar!!)
+            navigation?.attachNavigationDrawer(this, binding.toolbar)
             // Styling done in attachNavigationDrawer
         }
     }
@@ -176,19 +180,19 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 R.string.noNotifications
         )
         if (recyclerAdapter.size() == 0) {
-            emptyView.changeTextSize()
+            recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
                 } else {
-                    emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    recyclerBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     // Change nothing, at least for now
                 } else {
-                    emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
+                    recyclerBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
                 }
             }
         }

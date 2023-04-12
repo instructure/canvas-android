@@ -29,6 +29,7 @@ import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
@@ -42,19 +43,16 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import kotlinx.android.synthetic.main.rce_color_picker.view.*
-import kotlinx.android.synthetic.main.rce_controller.view.*
-import kotlinx.android.synthetic.main.rce_dialog_alt_text.view.*
-import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_bottomDivider as bottomDivider
-import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_colorPickerWrapper as colorPickerView
-import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_controller as controller
-import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_webView as editor
+import instructure.rceditor.databinding.RceDialogAltTextBinding
+import instructure.rceditor.databinding.RceTextEditorViewBinding
 
 @Suppress("unused")
 class RCETextEditorView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
 
+    private val binding: RceTextEditorViewBinding
+    
     @ColorInt
     private var themeColor = Color.BLACK
 
@@ -63,7 +61,7 @@ class RCETextEditorView @JvmOverloads constructor(
 
     private var actionTypeButtonMap: Map<String, ImageButton?>
 
-    val html: String get() = editor?.html.orEmpty()
+    val html: String get() = binding.rceWebView.html.orEmpty()
 
     private val fragmentManager get() = (context as? FragmentActivity)?.supportFragmentManager
 
@@ -71,158 +69,162 @@ class RCETextEditorView @JvmOverloads constructor(
     var actionUploadImageCallback: (() -> Unit)? = null
 
     init {
-        View.inflate(getContext(), R.layout.rce_text_editor_view, this)
+        binding = RceTextEditorViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-        if (attrs != null) {
-            val a = getContext().obtainStyledAttributes(attrs, R.styleable.RCETextEditorView, 0, 0)
-            fun Float.pxToDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
-            if (a.hasValue(R.styleable.RCETextEditorView_rce_editor_padding)) {
-                val editorPadding = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding, 0f).pxToDp()
-                editor.setPadding(editorPadding, editorPadding, editorPadding, editorPadding)
-            } else {
-                val padStart = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_start, 0f).pxToDp()
-                val padEnd = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_end, 0f).pxToDp()
-                val padTop = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_top, 0f).pxToDp()
-                val pagBottom = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_bottom, 0f).pxToDp()
-                editor.setPadding(padStart, padTop, padEnd, pagBottom)
-            }
-
-            val controlMarginStart = a.getDimensionPixelSize(R.styleable.RCETextEditorView_rce_controls_margin_start, 0)
-            val controlMarginEnd = a.getDimensionPixelSize(R.styleable.RCETextEditorView_rce_controls_margin_end, 0)
-
-            (controller.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                marginStart = controlMarginStart
-                marginEnd = controlMarginEnd
-            }
-
-            (bottomDivider.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                marginStart = controlMarginStart
-                marginEnd = controlMarginEnd
-            }
-
-            (colorPickerView.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                marginStart = controlMarginStart
-                marginEnd = controlMarginEnd
-            }
-
-            val controlsVisible = a.getBoolean(R.styleable.RCETextEditorView_rce_controls_visible, true)
-            if (controlsVisible) showEditorToolbar() else hideEditorToolbar()
-            a.recycle()
-        }
-
-        val viewColorMap = mapOf(
-            rce_colorPickerWhite to R.color.rce_pickerWhite,
-            rce_colorPickerBlack to R.color.rce_pickerBlack,
-            rce_colorPickerGray to R.color.rce_pickerGray,
-            rce_colorPickerRed to R.color.rce_pickerRed,
-            rce_colorPickerOrange to R.color.rce_pickerOrange,
-            rce_colorPickerYellow to R.color.rce_pickerYellow,
-            rce_colorPickerGreen to R.color.rce_pickerGreen,
-            rce_colorPickerBlue to R.color.rce_pickerBlue,
-            rce_colorPickerPurple to R.color.rce_pickerPurple
-        )
-
-        viewColorMap.forEach { (view, colorRes) ->
-            view.setOnClickListener {
-                editor?.setTextColor(ContextCompat.getColor(context, colorRes))
-                toggleColorPicker()
-            }
-        }
-
-        actionTypeButtonMap = mapOf(
-            "BOLD" to action_bold,
-            "ITALIC" to action_italic,
-            "UNDERLINE" to action_underline,
-            "UNORDEREDLIST" to action_insert_bullets,
-            "ORDEREDLIST" to action_insert_numbers
-        )
-
-        // Update formatting states after the block
-        val postUpdateState = { block: () -> Unit ->
-            block()
-            editor.evaluateJavascript("javascript:RE.enabledEditingItems();", null)
-        }
-
-        action_txt_color.setOnClickListener { toggleColorPicker() }
-        action_undo.setOnClickListener { postUpdateState { editor.undo() } }
-        action_redo.setOnClickListener { postUpdateState { editor.redo() } }
-        action_bold.setOnClickListener { postUpdateState { editor.setBold() } }
-        action_italic.setOnClickListener { postUpdateState { editor.setItalic() } }
-        action_underline.setOnClickListener { postUpdateState { editor.setUnderline() } }
-        action_insert_bullets.setOnClickListener { postUpdateState { editor.setBullets() } }
-        action_insert_numbers.setOnClickListener { postUpdateState { editor.setNumbers() } }
-
-        actionUploadImage.setOnClickListener {
-            actionUploadImageCallback?.invoke()
-        }
-
-        action_insert_link.setOnClickListener {
-            RCEInsertDialog.newInstance(context.getString(R.string.rce_insertLink), themeColor, buttonColor, true)
-                .setListener { url, alt ->
-                    if (URLUtil.isValidUrl(url)) { // Checks if the url contains any valid schema, etc
-                        editor.insertLink(url, alt)
-                    } else {
-                        // For now, we'll default to https always
-                        editor.insertLink("https://$url", alt)
-                    }
+        with(binding) {
+            if (attrs != null) {
+                val a = getContext().obtainStyledAttributes(attrs, R.styleable.RCETextEditorView, 0, 0)
+                fun Float.pxToDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
+                if (a.hasValue(R.styleable.RCETextEditorView_rce_editor_padding)) {
+                    val editorPadding = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding, 0f).pxToDp()
+                    rceWebView.setPadding(editorPadding, editorPadding, editorPadding, editorPadding)
+                } else {
+                    val padStart = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_start, 0f).pxToDp()
+                    val padEnd = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_end, 0f).pxToDp()
+                    val padTop = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_top, 0f).pxToDp()
+                    val pagBottom = a.getDimension(R.styleable.RCETextEditorView_rce_editor_padding_bottom, 0f).pxToDp()
+                    rceWebView.setPadding(padStart, padTop, padEnd, pagBottom)
                 }
-                .show(fragmentManager ?: return@setOnClickListener, RCEInsertDialog::class.java.simpleName)
-        }
 
-        editor.setOnDecorationChangeListener { state, _ ->
-            if (!isToolbarVisible()) showEditorToolbar()
-            actionTypeButtonMap.values.forEach {
-                it?.setColorFilter(context.getColor(R.color.rce_defaultTextColor))
-                it?.setBackgroundColor(Color.TRANSPARENT)
-            }
-            state.split(',').forEach {
-                actionTypeButtonMap[it]?.setColorFilter(Color.WHITE)
-                actionTypeButtonMap[it]?.setBackgroundColor(Color.BLACK)
-            }
-        }
+                val controlMarginStart = a.getDimensionPixelSize(R.styleable.RCETextEditorView_rce_controls_margin_start, 0)
+                val controlMarginEnd = a.getDimensionPixelSize(R.styleable.RCETextEditorView_rce_controls_margin_end, 0)
 
-        // Update formatting states when text changes
-        editor.setOnTextChangeListener { postUpdateState {} }
-        val heightInPixels = (resources.getDimension(R.dimen.rce_view_min_height)).toInt()
-        editor.setEditorHeight(heightInPixels)
-        if (resources.getBoolean(R.bool.isRtl))
-            editor.setupRtl()
+                (rceControllerWrapper.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                    marginStart = controlMarginStart
+                    marginEnd = controlMarginEnd
+                }
+
+                (rceBottomDivider.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                    marginStart = controlMarginStart
+                    marginEnd = controlMarginEnd
+                }
+
+                (rceColorPickerWrapper.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                    marginStart = controlMarginStart
+                    marginEnd = controlMarginEnd
+                }
+
+                val controlsVisible = a.getBoolean(R.styleable.RCETextEditorView_rce_controls_visible, true)
+                if (controlsVisible) showEditorToolbar() else hideEditorToolbar()
+                a.recycle()
+            }
+
+            val viewColorMap = mapOf(
+                rceColorPicker.rceColorPickerWhite to R.color.rce_pickerWhite,
+                rceColorPicker.rceColorPickerBlack to R.color.rce_pickerBlack,
+                rceColorPicker.rceColorPickerGray to R.color.rce_pickerGray,
+                rceColorPicker.rceColorPickerRed to R.color.rce_pickerRed,
+                rceColorPicker.rceColorPickerOrange to R.color.rce_pickerOrange,
+                rceColorPicker.rceColorPickerYellow to R.color.rce_pickerYellow,
+                rceColorPicker.rceColorPickerGreen to R.color.rce_pickerGreen,
+                rceColorPicker.rceColorPickerBlue to R.color.rce_pickerBlue,
+                rceColorPicker.rceColorPickerPurple to R.color.rce_pickerPurple
+            )
+
+            viewColorMap.forEach { (view, colorRes) ->
+                view.setOnClickListener {
+                    rceWebView.setTextColor(ContextCompat.getColor(context, colorRes))
+                    toggleColorPicker()
+                }
+            }
+
+            actionTypeButtonMap = mapOf(
+                "BOLD" to rceController.actionBold,
+                "ITALIC" to rceController.actionItalic,
+                "UNDERLINE" to rceController.actionUnderline,
+                "UNORDEREDLIST" to rceController.actionInsertBullets,
+                "ORDEREDLIST" to rceController.actionInsertNumbers
+            )
+
+            // Update formatting states after the block
+            val postUpdateState = { block: () -> Unit ->
+                block()
+                rceWebView.evaluateJavascript("javascript:RE.enabledEditingItems();", null)
+            }
+
+            rceController.actionTxtColor.setOnClickListener { toggleColorPicker() }
+            rceController.actionUndo.setOnClickListener { postUpdateState { rceWebView.undo() } }
+            rceController.actionRedo.setOnClickListener { postUpdateState { rceWebView.redo() } }
+            rceController.actionBold.setOnClickListener { postUpdateState { rceWebView.setBold() } }
+            rceController.actionItalic.setOnClickListener { postUpdateState { rceWebView.setItalic() } }
+            rceController.actionUnderline.setOnClickListener { postUpdateState { rceWebView.setUnderline() } }
+            rceController.actionInsertBullets.setOnClickListener { postUpdateState { rceWebView.setBullets() } }
+            rceController.actionInsertNumbers.setOnClickListener { postUpdateState { rceWebView.setNumbers() } }
+
+            rceController.actionUploadImage.setOnClickListener {
+                actionUploadImageCallback?.invoke()
+            }
+
+            rceController.actionInsertLink.setOnClickListener {
+                rceWebView.getSelectedText {
+                    RCEInsertDialog.newInstance(context.getString(R.string.rce_insertLink), themeColor, buttonColor, true, it)
+                        .setListener { url, alt ->
+                            if (URLUtil.isValidUrl(url)) { // Checks if the url contains any valid schema, etc
+                                rceWebView.insertLink(url, alt)
+                            } else {
+                                // For now, we'll default to https always
+                                rceWebView.insertLink("https://$url", alt)
+                            }
+                        }
+                        .show(fragmentManager ?: return@getSelectedText, RCEInsertDialog::class.java.simpleName)
+                }
+            }
+
+            rceWebView.setOnDecorationChangeListener { state, _ ->
+                if (!isToolbarVisible()) showEditorToolbar()
+                actionTypeButtonMap.values.forEach {
+                    it?.setColorFilter(context.getColor(R.color.rce_defaultTextColor))
+                    it?.setBackgroundColor(Color.TRANSPARENT)
+                }
+                state.split(',').forEach {
+                    actionTypeButtonMap[it]?.setColorFilter(Color.WHITE)
+                    actionTypeButtonMap[it]?.setBackgroundColor(Color.BLACK)
+                }
+            }
+
+            // Update formatting states when text changes
+            rceWebView.setOnTextChangeListener { postUpdateState {} }
+            val heightInPixels = (resources.getDimension(R.dimen.rce_view_min_height)).toInt()
+            rceWebView.setEditorHeight(heightInPixels)
+            if (resources.getBoolean(R.bool.isRtl))
+                rceWebView.setupRtl()
+        }
     }
 
     fun setOnTextChangeListener(callback: (String) -> Unit) {
-        editor.setOnTextChangeListener {
+        binding.rceWebView.setOnTextChangeListener {
             callback.invoke(it)
         }
     }
 
     fun setPaddingOnEditor(left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
-        editor.setPadding(left, top, right, bottom)
+        binding.rceWebView.setPadding(left, top, right, bottom)
     }
 
-    fun insertImage(activity: Activity, imageUrl: String) {
+    fun insertImage(activity: Activity, imageUrl: String) = with(binding) {
         showAltTextDialog(activity, { altText ->
-            editor.insertImage(imageUrl, altText)
+            rceWebView.insertImage(imageUrl, altText)
         }, {
-            editor.insertImage(imageUrl, "")
+            rceWebView.insertImage(imageUrl, "")
         })
     }
 
     fun insertImage(url: String, alt: String) {
-        editor.insertImage(url, alt)
+        binding.rceWebView.insertImage(url, alt)
     }
 
     private fun showAltTextDialog(activity: Activity, onPositiveClick: (String) -> Unit, onNegativeClick: () -> Unit) {
-        val view = View.inflate(activity, R.layout.rce_dialog_alt_text, null)
-        val altTextInput = view?.altText
+        val dialogBinding = RceDialogAltTextBinding.inflate(LayoutInflater.from(context), null, false)
+        val altTextInput = dialogBinding.altText
 
         var buttonClicked = false
 
         val altTextDialog = AlertDialog.Builder(activity)
             .setTitle(activity.getString(R.string.rce_dialogAltText))
-            .setView(view)
+            .setView(dialogBinding.root)
             .setPositiveButton(activity.getString(android.R.string.ok)) { _, _ ->
                 buttonClicked = true
-                onPositiveClick(altTextInput?.text.toString())
+                onPositiveClick(altTextInput.text.toString())
             }
             .setNegativeButton(activity.getString(android.R.string.cancel)) { _, _ ->
                 buttonClicked = true
@@ -239,7 +241,7 @@ class RCETextEditorView @JvmOverloads constructor(
                 }
             }
 
-        altTextInput?.addTextChangedListener(object : TextWatcher {
+        altTextInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
@@ -257,28 +259,28 @@ class RCETextEditorView @JvmOverloads constructor(
         @ColorInt themeColor: Int,
         @ColorInt dialogButtonsColor: Int
     ) {
-        editor.applyHtml(html.orEmpty(), accessibilityTitle)
-        editor.setPlaceholder(hint)
+        binding.rceWebView.applyHtml(html.orEmpty(), accessibilityTitle)
+        binding.rceWebView.setPlaceholder(hint)
         this.themeColor = themeColor
         this.buttonColor = dialogButtonsColor
     }
 
-    fun setHint(hint: String) = editor.setPlaceholder(hint)
+    fun setHint(hint: String) = binding.rceWebView.setPlaceholder(hint)
 
-    fun setHint(@StringRes hint: Int) = editor.setPlaceholder(context.getString(hint))
+    fun setHint(@StringRes hint: Int) = binding.rceWebView.setPlaceholder(context.getString(hint))
 
-    fun hideEditorToolbar() {
-        controller.visibility = View.GONE
-        bottomDivider.visibility = View.GONE
-        colorPickerView.visibility = View.GONE
+    fun hideEditorToolbar() = with(binding) {
+        rceControllerWrapper.visibility = View.GONE
+        rceBottomDivider.visibility = View.GONE
+        rceColorPickerWrapper.visibility = View.GONE
     }
 
-    fun showEditorToolbar() {
-        controller.visibility = View.VISIBLE
-        bottomDivider.visibility = View.VISIBLE
+    fun showEditorToolbar() = with(binding) {
+        rceControllerWrapper.visibility = View.VISIBLE
+        rceBottomDivider.visibility = View.VISIBLE
     }
 
-    private fun isToolbarVisible(): Boolean = controller.visibility == View.VISIBLE
+    private fun isToolbarVisible(): Boolean = binding.rceControllerWrapper.visibility == View.VISIBLE
 
     /**
      * Takes care of making the label darker or lighter depending on when it's focused
@@ -287,29 +289,29 @@ class RCETextEditorView @JvmOverloads constructor(
      * @param defaultColor Color you want the label to be when unfocused
      */
     fun setLabel(label: TextView, focusedColor: Int, defaultColor: Int) {
-        editor.onFocusChangeListener = OnFocusChangeListener { _, focused ->
+        binding.rceWebView.onFocusChangeListener = OnFocusChangeListener { _, focused ->
             label.setTextColor(ContextCompat.getColor(context, if (focused) focusedColor else defaultColor))
         }
     }
 
-    private fun toggleColorPicker() {
-        if (colorPickerView.visibility == View.VISIBLE) {
-            val animator = ObjectAnimator.ofFloat(colorPickerView, "translationY", colorPickerView.height * -1f, 0f)
+    private fun toggleColorPicker() = with(binding) {
+        if (rceColorPickerWrapper.visibility == View.VISIBLE) {
+            val animator = ObjectAnimator.ofFloat(rceColorPickerWrapper, "translationY", rceColorPickerWrapper.height * -1f, 0f)
             animator.duration = 200
             animator.addListener(object : RCEAnimationListener() {
                 override fun onAnimationFinish(animation: Animator) {
-                    colorPickerView.visibility = View.INVISIBLE
+                    rceColorPickerWrapper.visibility = View.INVISIBLE
                 }
             })
             animator.start()
         } else {
-            val animator = ObjectAnimator.ofFloat(colorPickerView, "translationY", 0f, colorPickerView.height * -1f)
+            val animator = ObjectAnimator.ofFloat(rceColorPickerWrapper, "translationY", 0f, rceColorPickerWrapper.height * -1f)
             animator.duration = 230
             animator.addListener(object : RCEAnimationListener() {
                 override fun onAnimationBegin(animation: Animator) {
-                    colorPickerView.post {
-                        colorPickerView.visibility = View.VISIBLE
-                        rce_colorPickerWhite.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                    rceColorPickerWrapper.post {
+                        rceColorPickerWrapper.visibility = View.VISIBLE
+                        rceColorPicker.rceColorPickerWhite.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
                     }
                 }
             })
@@ -343,7 +345,7 @@ class RCETextEditorView @JvmOverloads constructor(
         alertDialog.show()
     }
 
-    fun requestEditorFocus() = editor.focusEditor()
+    fun requestEditorFocus() = binding.rceWebView.focusEditor()
 
     //region save and restore state
 
@@ -352,7 +354,7 @@ class RCETextEditorView @JvmOverloads constructor(
         val ss = SavedState(superState!!)
 
         ss.htmlState = html
-        ss.contentDescription = editor.accessibilityContentDescription
+        ss.contentDescription = binding.rceWebView.accessibilityContentDescription
         ss.themeColor = themeColor
         ss.buttonColor = buttonColor
 

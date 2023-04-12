@@ -19,10 +19,10 @@ package com.instructure.student.holders
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.viewholder_module_empty.view.*
+import com.instructure.student.databinding.ViewholderModuleEmptyBinding
 
 class ModuleEmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(text: String?) = with(itemView){
+    fun bind(text: String?) = with(ViewholderModuleEmptyBinding.bind(itemView)){
         titleText.text = text
     }
 

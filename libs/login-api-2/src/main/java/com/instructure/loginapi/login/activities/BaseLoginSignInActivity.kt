@@ -18,7 +18,6 @@ package com.instructure.loginapi.login.activities
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.net.Uri
@@ -35,7 +34,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.OAuthManager.getToken
@@ -56,10 +54,10 @@ import com.instructure.canvasapi2.utils.Logger.d
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.api.MobileVerifyAPI.mobileVerify
+import com.instructure.loginapi.login.databinding.ActivitySignInBinding
 import com.instructure.loginapi.login.dialog.AuthenticationDialog
 import com.instructure.loginapi.login.dialog.AuthenticationDialog.Companion.newInstance
 import com.instructure.loginapi.login.dialog.AuthenticationDialog.OnAuthenticationSet
-import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyActivity
 import com.instructure.loginapi.login.model.DomainVerificationResult
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.snicker.SnickerDoodle
@@ -72,10 +70,9 @@ import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
-import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
-import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -95,6 +92,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     protected abstract fun refreshWidgets()
     protected abstract fun userAgent(): String
 
+    private val binding by viewBinding(ActivitySignInBinding::inflate)
+
     private lateinit var webView: WebView
     private var canvasLogin = 0
     private var specialCase = false
@@ -112,7 +111,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        setContentView(binding.root)
         canvasLogin = intent!!.extras!!.getInt(Const.CANVAS_LOGIN, 0)
         setupViews()
         applyTheme()
@@ -135,10 +134,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         @Suppress("DEPRECATION")
         webView.settings.saveFormData = false
         webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-        webView.settings.setAppCacheEnabled(false)
         webView.settings.domStorageEnabled = true
         webView.settings.userAgentString = Utils.generateUserAgent(this, userAgent())
-        webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webView.webViewClient = mWebViewClient
         if (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             WebView.setWebContentsDebuggingEnabled(true)
@@ -228,7 +225,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             // when loading multiple pages after each other.
             shouldShowProgressBar = false
             progressBarHandler.postDelayed({
-                if (!shouldShowProgressBar) webViewProgressBar.setGone()
+                if (!shouldShowProgressBar) binding.webViewProgressBar.setGone()
             }, 50)
         }
     }
@@ -341,7 +338,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     private fun showErrorDialog(@StringRes resId: Int) {
         shouldShowProgressBar = false
-        webViewProgressBar.setGone()
+        binding.webViewProgressBar.setGone()
 
         if (!isFinishing) {
             val builder = AlertDialog.Builder(this)
@@ -489,7 +486,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         progressBarHandler.postDelayed({ showLoading() }, 50)
     }
 
-    private fun showLoading() {
+    private fun showLoading() = with(binding) {
         shouldShowProgressBar = true
         webViewProgressBar.setVisible()
         webViewProgressBar.announceForAccessibility(getString(R.string.loading))

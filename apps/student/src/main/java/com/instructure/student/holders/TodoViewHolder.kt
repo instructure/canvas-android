@@ -4,17 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat
-
-import com.instructure.student.R
-
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
+import com.instructure.student.databinding.ViewholderTodoBinding
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
-import kotlinx.android.synthetic.main.viewholder_todo.view.*
 
 class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -24,8 +24,8 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         item: ToDo,
         adapterToFragmentCallback: NotificationAdapterToFragmentCallback<ToDo>?,
         checkboxCallback: TodoListRecyclerAdapter.TodoCheckboxCallback
-    ) = with(itemView){
-        setOnClickListener {
+    ) = with(ViewholderTodoBinding.bind(itemView)){
+        root.setOnClickListener {
             if (checkboxCallback.isEditMode) {
                 checkboxCallback.onCheckChanged(item, !item.isChecked, adapterPosition)
             } else {
@@ -33,7 +33,7 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         }
 
-        setOnLongClickListener(View.OnLongClickListener {
+        root.setOnLongClickListener(View.OnLongClickListener {
             if (item.ignore == null) return@OnLongClickListener false
             checkboxCallback.onCheckChanged(item, !item.isChecked, adapterPosition)
             true
@@ -55,9 +55,9 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val iconColor = item.canvasContext?.textAndIconColor ?: ContextCompat.getColor(context, R.color.textDarkest)
 
         if (item.isChecked) {
-            setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))
+            root.setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))
         } else {
-            setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundLightest))
+            root.setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundLightest))
         }
 
         var todoDetails: String? = ""
@@ -82,6 +82,7 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 title.text = item.title
                 todoDetails = item.scheduleItem!!.getStartToEndString(context)
             }
+            null -> {}
         }
 
         description.setTextForVisibility(todoDetails)

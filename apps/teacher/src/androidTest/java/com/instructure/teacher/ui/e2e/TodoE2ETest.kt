@@ -19,6 +19,9 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -35,9 +38,7 @@ import org.junit.Test
 class TodoE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -82,17 +83,26 @@ class TodoE2ETest : TeacherTest() {
         todoPage.assertTodoElementIsDisplayed(course.name)
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${student.name} student.")
-        SubmissionsApi.gradeSubmission(
-                teacherToken = teacher.token,
-                courseId = course.id,
-                assignmentId = assignment[0].id,
-                studentId = student.id,
-                postedGrade = "15",
-                excused = false
-        )
+        gradeSubmission(teacher, course, assignment, student)
 
         Log.d(STEP_TAG,"Refresh the To Do Page. Assert that the empty view is displayed so that the To Do has disappeared because it has been graded.")
         todoPage.refresh()
         todoPage.assertEmptyView()
+    }
+
+    private fun gradeSubmission(
+        teacher: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: List<AssignmentApiModel>,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = assignment[0].id,
+            studentId = student.id,
+            postedGrade = "15",
+            excused = false
+        )
     }
 }

@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Sie können die Abgabedetails von hier aus öffnen</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
         <item quantity="other">%s Minuten</item>
@@ -1294,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Wird nach „Dateien“ hochgeladen</string>
     <string name="submissionProgressSubtitle">Abgabe wird zu \"%s\" hochgeladen</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Abgabe wird hochgeladen</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Abgabe erfolgreichAbgabe erfolgreich</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Abgabe fehlgeschlagen</string>
     <string name="dashboardNotificationUploadingFilesTitle">Dateien hochladen</string>
     <string name="cancelSubmissionDialogTitle">Abgabe abbrechen</string>
     <string name="cancelSubmissionDialogMessage">Dadurch wird Ihre Abgabe storniert und gelöscht.</string>
@@ -1331,4 +1335,46 @@
     <string name="acceptableUsePolicyAgree">Ich stimme der Richtlinie zur akzeptablen Nutzung zu</string>
     <string name="acceptableUsePolicySubmit">Absenden</string>
     <string name="acceptFail">Zustimmung zu Richtlinie konnte nicht abgesendet werden</string>
+    <string name="attempt">Versuch %d</string>
+    <string name="quizQuestions">Fragen: %d</string>
+    <string name="quizTimeLimit">Zeitbeschränkung: %s</string>
+    <string name="allowedAttempts">Erlaubte Versuche: %s</string>
+    <string name="usedAttempts">Verwendete Versuche: %d</string>
+    <string name="generalUnexpectedError">Es ist ein unerwarteter Fehler aufgetreten.</string>
+
+    <string name="deleteSelected">Löschen</string>
+    <string name="archiveSelected">Archivieren</string>
+    <string name="unarchiveSelected">Dearchivieren</string>
+    <string name="markAsReadSelected">Als gelesen markieren</string>
+    <string name="markAsUnreadSelected">Als ungelesen markieren</string>
+    <string name="starSelected">Stern</string>
+    <string name="unstarSelected">Stern entfernen</string>
+
+    <string name="inboxOperationFailed">Vorgang konnte nicht ausgeführt werden</string>
+    <string name="inboxDeletedConfirmation">%s gelöscht</string>
+    <string name="inboxArchivedConfirmation">%s archiviert</string>
+    <string name="inboxUnarchivedConfirmation">Archivierung für %s aufgehoben</string>
+    <string name="inboxMarkAsReadConfirmation">%s als gelesen markiert</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s als ungelesen markiert</string>
+    <string name="inboxStarredConfirmation">%s mit Sternchen markiert</string>
+    <string name="inboxUnstarredConfirmation">Markierung mit Sternchen für %s aufgehoben</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Diese Konversation wird auf all Ihren Geräten aus dem Posteingang gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</item>
+        <item quantity="other">Diese Konversationen werden auf all Ihren Geräten aus dem Posteingang gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Nächste Seite konnte nicht geladen werden. Überprüfen Sie Ihre Internetverbindung.</string>
+    <string name="conversationsRefreshFailed">Konversationen konnten nicht aktualisiert werden. Überprüfen Sie Ihre Internetverbindung.</string>
+    <string name="inboxScopeInbox">Posteingang</string>
+    <string name="inboxContextSelectorTitle">Kurs oder Gruppe auswählen</string>
+    <string name="inboxClearFilter">Löschen</string>
+    <string name="a11y_courseFilterContentDescription">Kurs-Filter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">auswählen</string>
+    <string name="a11y_itemSelectedSwipeForActions">Konversation ausgewählt. Auswahlmodus aktiviert. Für Aktionen navigieren.</string>
+    <string name="a11y_conversationSelected">Gespräch ausgewählt</string>
+    <string name="a11y_conversationDeselected">Gespräch abgewählt</string>
+    <string name="a11y_exitSelectionMode">Auswahlmodus verlassen</string>
+    <string name="a11y_selectionModeDeactivated">Der Auswahlmodus ist deaktiviert.</string>
+    <string name="a11y_avatarContentDescription">Avatar von %s</string>
+    <string name="inboxUndo">Rückgängig machen</string>
 </resources>

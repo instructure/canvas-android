@@ -37,6 +37,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.AttachmentPickerDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
@@ -48,6 +49,7 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.FragmentDiscussionsDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.events.DiscussionEntryEvent
@@ -57,8 +59,6 @@ import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.DiscussionsDetailsView
-import kotlinx.android.synthetic.main.fragment_discussions_details.*
-import kotlinx.android.synthetic.main.view_submissions_donut_group.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
@@ -70,6 +70,8 @@ import java.util.*
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
         DiscussionsDetailsView>(), DiscussionsDetailsView, Identity {
+
+    private val binding by viewBinding(FragmentDiscussionsDetailsBinding::bind)
 
     //region Member Variables
 
@@ -93,11 +95,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     override fun layoutResId(): Int = R.layout.fragment_discussions_details
 
     override fun onRefreshFinished() {
-        discussionProgressBar.setGone()
+        binding.discussionProgressBar.setGone()
     }
 
     override fun onRefreshStarted() {
-        discussionProgressBar.setVisible()
+        binding.discussionProgressBar.setVisible()
     }
 
     override fun onStart() {
@@ -171,7 +173,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         //TODO: when we add support for students
     }
 
-    override fun populateDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader, forceNetwork: Boolean) {
+    override fun populateDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader, forceNetwork: Boolean) = with(binding) {
         if(discussionTopicHeader.assignment != null) {
             setupAssignmentDetails(discussionTopicHeader.assignment!!)
             presenter.getSubmissionData(forceNetwork)
@@ -193,10 +195,9 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             }
         } else {
             pointsPublishedLayout.setGone()
-            pointsPublishedDivider.setGone()
-            dueLayoutDivider.setGone()
-            submissionDivider.setGone()
-
+            pointsPublishedDivider.root.setGone()
+            dueLayoutDivider.root.setGone()
+            submissionDivider.root.setGone()
         }
 
         // If we're getting here by a deep link (like from an email) we don't know that it is an announcement
@@ -225,7 +226,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic, topLevelReplyPosted: Boolean) {
+    override fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic, topLevelReplyPosted: Boolean) = with(binding) {
         // Check if we have permissions and if we have any discussions to display.
 
         loadDiscussionJob = tryWeave {
@@ -270,19 +271,18 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         } catch { Logger.e("Error loading discussion " + it.message) }
     }
 
-    private fun setupAssignmentDetails(assignment: Assignment) = with(assignment) {
-
+    private fun setupAssignmentDetails(assignment: Assignment) = with(binding) {
         pointsTextView.setVisible()
         // Points possible
         pointsTextView.text = resources.getQuantityString(
                 R.plurals.quantityPointsAbbreviated,
-                pointsPossible.toInt(),
-                NumberHelper.formatDecimal(pointsPossible, 1, true)
+                assignment.pointsPossible.toInt(),
+                NumberHelper.formatDecimal(assignment.pointsPossible, 1, true)
         )
         pointsTextView.contentDescription = resources.getQuantityString(
                 R.plurals.quantityPointsFull,
-                pointsPossible.toInt(),
-                NumberHelper.formatDecimal(pointsPossible, 1, true))
+                assignment.pointsPossible.toInt(),
+                NumberHelper.formatDecimal(assignment.pointsPossible, 1, true))
 
         dueLayout.setVisible()
         submissionsLayout.setVisible((mCanvasContext as? Course)?.isDesigner() == false)
@@ -298,8 +298,9 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         // Lock status
         val atSeparator = getString(R.string.at)
 
+        val allDates = assignment.allDates
         allDates.singleOrNull()?.apply {
-            if (lockDate?.before(Date()) == true) {
+            if (assignment.lockDate?.before(Date()) == true) {
                 availabilityLayout.setVisible()
                 availabilityTextView.setText(R.string.closed)
             } else {
@@ -335,7 +336,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     }
 
-    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) {
+    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)
@@ -363,7 +364,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         notSubmittedChart.invalidate()
     }
 
-    private fun setupListeners() {
+    private fun setupListeners() = with(binding) {
         dueLayout.setOnClickListener {
             val args = DueDatesFragment.makeBundle(presenter.discussionTopicHeader.assignment!!)
             RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, mCanvasContext, args))
@@ -371,14 +372,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         submissionsLayout.setOnClickListener {
             navigateToSubmissions(mCanvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
         }
-        viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
-        gradedWrapper.setOnClickListener {
+        binding.donutGroup.viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
+        binding.donutGroup.gradedWrapper.setOnClickListener {
             navigateToSubmissions(mCanvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
         }
-        ungradedWrapper.setOnClickListener {
+        binding.donutGroup.ungradedWrapper.setOnClickListener {
             navigateToSubmissions(mCanvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
         }
-        notSubmittedWrapper.setOnClickListener {
+        binding.donutGroup.notSubmittedWrapper.setOnClickListener {
             navigateToSubmissions(mCanvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
         }
     }
@@ -388,7 +389,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, context, args))
     }
 
-    private fun loadDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader) {
+    private fun loadDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader) = with(binding) {
         val displayName = discussionTopicHeader.author?.displayName
         ProfileUtils.loadAvatarForUser(authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
@@ -415,14 +416,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         discussionRepliesWebViewWrapper.loadHtml("", "")
     }
 
-    override fun onPause() {
+    override fun onPause() = with(binding) {
         super.onPause()
         presenter.scrollPosition = discussionsScrollView.scrollY
         discussionTopicHeaderWebViewWrapper.webView.onPause()
         discussionRepliesWebViewWrapper.webView.onPause()
     }
 
-    override fun onResume() {
+    override fun onResume() = with(binding) {
         super.onResume()
         setupToolbar()
 
@@ -456,9 +457,9 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun setupToolbar() {
-        toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
-            toolbar.updateToolbarExpandCollapseIcon(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupBackButtonWithExpandCollapseAndBack(this@DiscussionsDetailsFragment) {
+            toolbar.updateToolbarExpandCollapseIcon(this@DiscussionsDetailsFragment)
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
@@ -470,7 +471,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    val menuItemCallback: (MenuItem) -> Unit = { item ->
+    private val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_edit -> {
                 if(APIHelper.hasNetworkConnection()) {
@@ -614,7 +615,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         updateDiscussionLikedState(discussionEntry, "setUnliked" /*Constant found in the JS files*/)
     }
 
-    private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
+    private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) = with(binding) {
         val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum + ")"
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
@@ -624,10 +625,10 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun updateDiscussionEntry(discussionEntry: DiscussionEntry) {
+    override fun updateDiscussionEntry(discussionEntry: DiscussionEntry) = with(binding) {
         requireActivity().runOnUiThread {
             discussionRepliesWebViewWrapper.webView.loadUrl("javascript:updateEntry('${discussionEntry.id}', '${discussionEntry.message}')")
-            if (discussionEntry.attachments == null && discussionEntry.attachments?.size!! < 1)
+            if (discussionEntry.attachments == null)
                 discussionRepliesWebViewWrapper.webView.loadUrl("javascript:hideAttachmentIcon('${discussionEntry.id}'")
         }
     }
@@ -685,21 +686,21 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     override fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {
         val deletedText = DiscussionUtils.formatDeletedInfoText(requireContext(), discussionEntry)
-        discussionRepliesWebViewWrapper.post { discussionRepliesWebViewWrapper.webView.loadUrl(
+        binding.discussionRepliesWebViewWrapper.post { binding.discussionRepliesWebViewWrapper.webView.loadUrl(
                 "javascript:markAsDeleted" + "('" + discussionEntry.id.toString() + "','" + deletedText + "')") }
     }
 
     override fun updateDiscussionsMarkedAsReadCompleted(markedAsReadIds: List<Long>) {
         markedAsReadIds.forEach {
-            discussionRepliesWebViewWrapper.post { discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead('$it')") }
+            binding.discussionRepliesWebViewWrapper.post { binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead('$it')") }
         }
     }
 
     override fun updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId: Long) {
-        discussionRepliesWebViewWrapper.post { discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
+        binding.discussionRepliesWebViewWrapper.post { binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
     }
 
-    override fun showAnonymousDiscussionView() {
+    override fun showAnonymousDiscussionView() = with(binding) {
         anonymousDiscussionsNotSupported.setVisible()
         openInBrowser.setVisible(mDiscussionTopicHeader.htmlUrl?.isNotEmpty() == true)
         replyToDiscussionTopic.setGone()
@@ -714,8 +715,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     /**
      * Checks to see if the webview element is within the viewable bounds of the scrollview.
      */
-    private fun isElementInViewPortWithinScrollView(elementHeight: Int, topOffset: Int): Boolean {
-        if (discussionsScrollView == null) return false
+    private fun isElementInViewPortWithinScrollView(elementHeight: Int, topOffset: Int): Boolean = with(binding) {
         val scrollBounds = Rect().apply { discussionsScrollView.getDrawingRect(this) }
 
         val discussionRepliesHeight = discussionRepliesWebViewWrapper.height
@@ -736,7 +736,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                     AttachmentPickerDialog.hide(requireFragmentManager())
                     attachment.view(requireContext())
                 }
-            } else if (attachments.size == 1) {
+            } else {
                 attachments[0].view(requireContext())
             }
         }

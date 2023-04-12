@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Du kan åbne afleveringsdetaljerne herfra</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minutter</item>
@@ -1294,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Uploader til filer</string>
     <string name="submissionProgressSubtitle">Uploader indsendelse til \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploader aflevering</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Aflevering lykkedes</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Aflevering mislykkedes</string>
     <string name="dashboardNotificationUploadingFilesTitle">Uploader filer</string>
     <string name="cancelSubmissionDialogTitle">Annuller aflevering</string>
     <string name="cancelSubmissionDialogMessage">Dette annullerer og sletter din aflevering.</string>
@@ -1331,4 +1335,46 @@
     <string name="acceptableUsePolicyAgree">Jeg accepterer betingelserne for acceptabel brug.</string>
     <string name="acceptableUsePolicySubmit">Indsend</string>
     <string name="acceptFail">Kunne ikke indsende accept af vilkår.</string>
+    <string name="attempt">Forsøg %d</string>
+    <string name="quizQuestions">Spørgsmål: %d</string>
+    <string name="quizTimeLimit">Tidsbegrænsning: %s</string>
+    <string name="allowedAttempts">Tilladte forsøg: %s</string>
+    <string name="usedAttempts">Brugte forsøg: %d</string>
+    <string name="generalUnexpectedError">En uventet fejl opstod.</string>
+
+    <string name="deleteSelected">Slet</string>
+    <string name="archiveSelected">Arkiv</string>
+    <string name="unarchiveSelected">Fjern fra arkivet</string>
+    <string name="markAsReadSelected">Marker som læst</string>
+    <string name="markAsUnreadSelected">Marker som ulæst</string>
+    <string name="starSelected">Stjerne</string>
+    <string name="unstarSelected">Slet stjerne</string>
+
+    <string name="inboxOperationFailed">Operation kunne ikke udføres</string>
+    <string name="inboxDeletedConfirmation">%s slettet</string>
+    <string name="inboxArchivedConfirmation">%s arkiveret</string>
+    <string name="inboxUnarchivedConfirmation">%s fjernet fra arkivet</string>
+    <string name="inboxMarkAsReadConfirmation">%s markeret som læst</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s markeret som ulæst</string>
+    <string name="inboxStarredConfirmation">%s markeret med stjerne</string>
+    <string name="inboxUnstarredConfirmation">%s stjernemarkering fjernet</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Denne samtale vil blive slettet fra indbakken på alle dine enheder. Denne handling kan ikke fortrydes.</item>
+        <item quantity="other">Disse samtaler vil blive slettet fra indbakken på alle dine enheder. Denne handling kan ikke fortrydes.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Kunne ikke indlæse næste side. Kontroller din internetforbindelse.</string>
+    <string name="conversationsRefreshFailed">Diskussioner kunne ikke opdateres. Kontroller din internetforbindelse.</string>
+    <string name="inboxScopeInbox">Indbakke</string>
+    <string name="inboxContextSelectorTitle">Vælg fag eller gruppe</string>
+    <string name="inboxClearFilter">Ryd</string>
+    <string name="a11y_courseFilterContentDescription">Fagfilter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">vælg</string>
+    <string name="a11y_itemSelectedSwipeForActions">Diskussion valgt. Valgtilstand aktiveret. Naviger efter handlinger.</string>
+    <string name="a11y_conversationSelected">Diskussion valgt</string>
+    <string name="a11y_conversationDeselected">Diskussion fravalgt</string>
+    <string name="a11y_exitSelectionMode">Deaktiver valgtilstand</string>
+    <string name="a11y_selectionModeDeactivated">Valgtilstand deaktiveret.</string>
+    <string name="a11y_avatarContentDescription">Avatar for %s</string>
+    <string name="inboxUndo">Fortryd</string>
 </resources>

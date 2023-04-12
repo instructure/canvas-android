@@ -27,15 +27,21 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.FileFolderCallback
+import com.instructure.student.databinding.ViewholderFileBinding
 import com.instructure.student.fragment.FileListFragment
-import kotlinx.android.synthetic.main.viewholder_file.view.*
 
 class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(item: FileFolder, tint: Int, context: Context, hasOptions: List<FileListFragment.FileMenuType>, callback: FileFolderCallback): Unit = with(itemView) {
+    fun bind(
+        item: FileFolder,
+        tint: Int,
+        context: Context,
+        hasOptions: List<FileListFragment.FileMenuType>,
+        callback: FileFolderCallback
+    ): Unit = with(ViewholderFileBinding.bind(itemView)) {
         // Set up click listeners
-        onClick { callback.onItemClicked(item) }
-        onLongClick { overflowButton.performClick() }
+        root.onClick { callback.onItemClicked(item) }
+        root.onLongClick { overflowButton.performClick() }
 
         if (hasOptions.isNotEmpty()) {
             // User has options

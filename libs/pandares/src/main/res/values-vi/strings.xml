@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Bạn có thể mở chi tiết Bài Nộp từ đây</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Phút</item>
         <item quantity="other">%s Phút</item>
@@ -1295,6 +1297,8 @@
     <string name="fileUploadProgressSubtitle">Đang tải lên tới Các Tập Tin</string>
     <string name="submissionProgressSubtitle">Đang tải bài nộp tới \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Tải Lên Bài Nộp</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Nộp Thành Công</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Nộp Thất Bại</string>
     <string name="dashboardNotificationUploadingFilesTitle">Đang tải Các Tập Tin</string>
     <string name="cancelSubmissionDialogTitle">Hủy Nộp</string>
     <string name="cancelSubmissionDialogMessage">Thao tác này sẽ hủy và xóa bài nộp của bạn.</string>
@@ -1332,4 +1336,46 @@
     <string name="acceptableUsePolicyAgree">Tôi đồng ý với Chính Sách Sử Dụng Có Thể Chấp Nhận Được.</string>
     <string name="acceptableUsePolicySubmit">Nộp</string>
     <string name="acceptFail">Không thể gửi chấp nhận điều khoản.</string>
+    <string name="attempt">Lần Làm %d</string>
+    <string name="quizQuestions">Câu Hỏi: %d</string>
+    <string name="quizTimeLimit">Giới hạn thời gian: %s</string>
+    <string name="allowedAttempts">Lần làm được phép: %s</string>
+    <string name="usedAttempts">Lần làm đã sử dụng: %d</string>
+    <string name="generalUnexpectedError">Đã xảy ra lỗi không lường trước.</string>
+
+    <string name="deleteSelected">Xóa</string>
+    <string name="archiveSelected">Lưu Trữ</string>
+    <string name="unarchiveSelected">Bỏ Lưu Trữ</string>
+    <string name="markAsReadSelected">Đánh dấu là đã đọc</string>
+    <string name="markAsUnreadSelected">Đánh dấu là chưa đọc</string>
+    <string name="starSelected">Gắn dấu sao</string>
+    <string name="unstarSelected">Gỡ dấu sao</string>
+
+    <string name="inboxOperationFailed">Không thực hiện được thao tác</string>
+    <string name="inboxDeletedConfirmation">%s đã bị xóa</string>
+    <string name="inboxArchivedConfirmation">%s đã lưu trữ</string>
+    <string name="inboxUnarchivedConfirmation">%s đã bỏ lưu trữ</string>
+    <string name="inboxMarkAsReadConfirmation">%s đã đánh dấu là đã đọc</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s đã đánh dấu là chưa đọc</string>
+    <string name="inboxStarredConfirmation">%s đã gắn dấu sao</string>
+    <string name="inboxUnstarredConfirmation">%s đã bỏ dấu sao</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Cuộc trò chuyện này sẽ bị xóa khỏi Hộp Thư Đến trên mọi thiết bị của bạn. Không thể hoàn tác thao tác này.</item>
+        <item quantity="other">Các cuộc trò chuyện này sẽ bị xóa khỏi Hộp Thư Đến trên mọi thiết bị của bạn. Không thể hoàn tác thao tác này.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Không thể tải trang sau. Hãy kiểm tra kết nối internet của bạn.</string>
+    <string name="conversationsRefreshFailed">Không thể làm mới cuộc trò chuyện. Hãy kiểm tra kết nối internet của bạn.</string>
+    <string name="inboxScopeInbox">Hộp Thư Đến</string>
+    <string name="inboxContextSelectorTitle">Chọn Khóa Học hoặc Nhóm</string>
+    <string name="inboxClearFilter">Xóa bỏ</string>
+    <string name="a11y_courseFilterContentDescription">Bộ lọc khóa học: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">chọn</string>
+    <string name="a11y_itemSelectedSwipeForActions">Đã chọn cuộc trò chuyện. Đã kích hoạt chế độ lựa chọn. Điều hướng để thực hiện thao tác.</string>
+    <string name="a11y_conversationSelected">Đã chọn cuộc trò chuyện</string>
+    <string name="a11y_conversationDeselected">Đã bỏ chọn cuộc trò chuyện</string>
+    <string name="a11y_exitSelectionMode">Thoát chế độ lựa chọn</string>
+    <string name="a11y_selectionModeDeactivated">Đã hủy kích hoạt chế độ lựa chọn.</string>
+    <string name="a11y_avatarContentDescription">Hình Đại Diện của %s</string>
+    <string name="inboxUndo">Hoàn tác</string>
 </resources>

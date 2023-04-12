@@ -20,7 +20,7 @@ import android.graphics.Color
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.models.CanvasModel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @JvmSuppressWildcards

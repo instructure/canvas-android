@@ -19,17 +19,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import com.instructure.student.R
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.models.DueDateGroup
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setGone
-import kotlinx.android.synthetic.main.view_assignment_override.view.*
+import com.instructure.student.R
+import com.instructure.student.databinding.ViewAssignmentOverrideBinding
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
-import kotlinx.android.synthetic.main.view_assignment_override.view.dueDate as dueDateText
 
 class AssignmentOverrideView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -38,6 +37,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
     private var mDueDateGroup: DueDateGroup by Delegates.notNull()
     private val mDateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
     private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(context) }
+
+    private val binding: ViewAssignmentOverrideBinding
 
     // Default time to use if none is set; 11:59pm
     private var mDefaultTime = Calendar.getInstance().apply { set(Calendar.HOUR_OF_DAY, 23); set(Calendar.MINUTE, 59) }
@@ -48,7 +49,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
     private var mShowRemove = true
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_assignment_override, this, true)
+        binding = ViewAssignmentOverrideBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     /**
@@ -56,9 +57,9 @@ class AssignmentOverrideView @JvmOverloads constructor(
      *
      */
     fun toAndFromDatesOnly() {
-        dueDateTextInput.setGone()
-        dueTimeTextInput.setGone()
-        assignToTextInput.setGone()
+        binding.dueDateTextInput.setGone()
+        binding.dueTimeTextInput.setGone()
+        binding.assignToTextInput.setGone()
     }
 
     /**
@@ -82,7 +83,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
             timePickerClickListener: (date: Date?, (Int, Int) -> Unit) -> Unit,
             removeOverrideClickListener: (DueDateGroup) -> Unit,
             assigneeClickListener: () -> Unit
-    ) {
+    ) = with(binding) {
 
         mDueDateGroup = dueDateGroup
         mShowRemove = showRemove
@@ -199,7 +200,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         }
     }
 
-    fun validateInput(): Boolean {
+    fun validateInput(): Boolean = with(binding) {
         var saveError = false
         // Check
         // unlock date <= due date <= lock date
@@ -243,7 +244,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         return saveError
     }
 
-    private fun clearDateTimeErrors() {
+    private fun clearDateTimeErrors() = with(binding) {
         val textInputList = arrayOf(toDateTextInput, toTimeTextInput, fromDateTextInput, fromTimeTextInput, dueDateTextInput, dueTimeTextInput)
         textInputList.forEach {
             it.error = null
@@ -252,8 +253,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
     }
 
     private fun clearAssigneeError() {
-        assignToTextInput.error = null
-        assignToTextInput.isErrorEnabled = false
+        binding.assignToTextInput.error = null
+        binding.assignToTextInput.isErrorEnabled = false
     }
 
     /**

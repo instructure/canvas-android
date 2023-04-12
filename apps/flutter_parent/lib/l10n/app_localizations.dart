@@ -252,6 +252,15 @@ class AppLocalizations {
         desc: 'Screen reader label used for the points possible for an assignment, quiz, etc.',
       );
 
+  String calendarDaySemanticsLabel(String date, int eventCount) => Intl.plural(
+        eventCount,
+        one: '$date, $eventCount event',
+        other: '$date, $eventCount events',
+        name: 'calendarDaySemanticsLabel',
+        args: [date, eventCount],
+        desc: 'Screen reader label used for calendar day, reads the date and count of events',
+      );
+
   String get noEventsTitle => Intl.message(
         'No Events Today!',
         desc: 'Title displayed when there are no calendar events for the current day',
@@ -1666,4 +1675,34 @@ class AppLocalizations {
 
   String get messageSent =>
       Intl.message('Message sent', desc: 'confirmation message on the screen when the user succesfully sends a message');
+
+  String get acceptableUsePolicyTitle =>
+      Intl.message('Acceptable Use Policy', desc: 'title for the acceptable use policy screen');
+
+  String get acceptableUsePolicyConfirm =>
+      Intl.message('Submit', desc: 'submit button title for acceptable use policy screen');
+
+  String get acceptableUsePolicyDescription =>
+      Intl.message('Either you\'re a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.', desc: 'acceptable use policy screen description');
+
+  String get acceptableUsePolicyAgree =>
+      Intl.message('I agree to the Acceptable Use Policy.', desc: 'acceptable use policy switch title');
+
+  String get about =>
+      Intl.message('About', desc: 'Title for about menu item in settings');
+
+  String get aboutAppTitle =>
+      Intl.message('App', desc: 'Title for App field on about page');
+
+  String get aboutDomainTitle =>
+      Intl.message('Domain', desc: 'Title for Domain field on about page');
+
+  String get aboutLoginIdTitle =>
+      Intl.message('Login ID', desc: 'Title for Login ID field on about page');
+
+  String get aboutEmailTitle =>
+      Intl.message('Email', desc: 'Title for Email field on about page');
+
+  String get aboutVersionTitle =>
+      Intl.message('Version', desc: 'Title for Version field on about page');
 }

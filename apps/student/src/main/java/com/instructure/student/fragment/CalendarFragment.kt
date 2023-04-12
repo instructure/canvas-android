@@ -35,17 +35,14 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import kotlinx.android.extensions.CacheImplementation
-import kotlinx.android.extensions.ContainerOptions
 
 @ScreenView(SCREEN_VIEW_CALENDAR)
 @PageView(url = "calendar")
-@ContainerOptions(cache = CacheImplementation.NO_CACHE)
 class CalendarFragment : ParentFragment() {
     override fun title() = getString(R.string.calendar)
 

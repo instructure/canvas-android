@@ -17,31 +17,28 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Attendance
-
+import com.instructure.teacher.databinding.AdapterAttendanceBinding
 import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 import com.instructure.teacher.viewinterface.AttendanceListView
-
 import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class AttendanceListRecyclerAdapter(
-        mContext: Context,
-        presenter: SyncPresenter<Attendance, AttendanceListView>,
-        private val mCallback: AttendanceToFragmentCallback<Attendance>
+    mContext: Context,
+    presenter: SyncPresenter<Attendance, AttendanceListView>,
+    private val mCallback: AttendanceToFragmentCallback<Attendance>
 ) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder, AttendanceListView>(mContext, presenter) {
 
-    override fun bindHolder(attendance: Attendance, holder: AttendanceViewHolder, position: Int) {
-        holder.bind(attendance, mCallback, position, context!!)
+    override fun bindHolder(model: Attendance, holder: AttendanceViewHolder, position: Int) {
+        holder.bind(model, mCallback, position, context!!)
     }
 
-    override fun createViewHolder(v: View, viewType: Int): AttendanceViewHolder {
-        return AttendanceViewHolder(v)
-    }
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = AttendanceViewHolder(binding as AdapterAttendanceBinding)
 
-    override fun itemLayoutResId(viewType: Int): Int {
-        return AttendanceViewHolder.HOLDER_RES_ID
-    }
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> AdapterAttendanceBinding = AdapterAttendanceBinding::inflate
 }

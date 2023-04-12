@@ -16,7 +16,7 @@
 package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * CourseGrade object for displaying course grade totals. Property should always be accessed from

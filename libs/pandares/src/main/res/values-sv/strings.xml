@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Du kan öppna inlämningsinformationen härifrån</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minuter</item>
@@ -1294,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Laddar upp till Filer</string>
     <string name="submissionProgressSubtitle">Laddar upp inlämning till \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Laddar upp inlämning</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Inlämningen lyckades</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Inlämningen misslyckades</string>
     <string name="dashboardNotificationUploadingFilesTitle">Laddar upp filer</string>
     <string name="cancelSubmissionDialogTitle">Avbryt inlämningen</string>
     <string name="cancelSubmissionDialogMessage">Detta avbryter och tar bort din inlämning.</string>
@@ -1331,4 +1335,46 @@
     <string name="acceptableUsePolicyAgree">Jag godkänner policyn för godkänd användning.</string>
     <string name="acceptableUsePolicySubmit">Lämna in</string>
     <string name="acceptFail">Det gick inte att lämna in godkännande av terminer</string>
+    <string name="attempt">Försök %d</string>
+    <string name="quizQuestions">Frågor: %d</string>
+    <string name="quizTimeLimit">Tidsgräns: %s</string>
+    <string name="allowedAttempts">Tillåtna försök: %s</string>
+    <string name="usedAttempts">Genomförda försök: %d</string>
+    <string name="generalUnexpectedError">Ett oväntat fel uppstod.</string>
+
+    <string name="deleteSelected">Radera</string>
+    <string name="archiveSelected">Arkivera</string>
+    <string name="unarchiveSelected">Ta bort arkivering</string>
+    <string name="markAsReadSelected">Markera som läst</string>
+    <string name="markAsUnreadSelected">Markera som oläst</string>
+    <string name="starSelected">Stjärna</string>
+    <string name="unstarSelected">Ta bort stjärnmarkering</string>
+
+    <string name="inboxOperationFailed">Det gick inte att utföra åtgärden</string>
+    <string name="inboxDeletedConfirmation">%s raderade</string>
+    <string name="inboxArchivedConfirmation">%s arkiverade</string>
+    <string name="inboxUnarchivedConfirmation">%s framtagna från arkivet</string>
+    <string name="inboxMarkAsReadConfirmation">%s markerade som lästa</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s markerade som olästa</string>
+    <string name="inboxStarredConfirmation">%s stjärnmärkta</string>
+    <string name="inboxUnstarredConfirmation">%s med borttagen stjärnmärkning</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Den här konversationen kommer att raderas från inkorgen på alla dina enheter. Den här åtgärden kan inte ångras.</item>
+        <item quantity="other">De här konversationerna kommer att raderas från inkorgen på alla dina enheter. Den här åtgärden kan inte ångras.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Det gick inte att läsa in nästa sida. Kontrollera din anslutning till internet.</string>
+    <string name="conversationsRefreshFailed">Det gick inte att uppdatera konversationerna. Kontrollera din anslutning till internet.</string>
+    <string name="inboxScopeInbox">Inkorg</string>
+    <string name="inboxContextSelectorTitle">Välj kurs eller grupp</string>
+    <string name="inboxClearFilter">Rensa</string>
+    <string name="a11y_courseFilterContentDescription">Kursfilter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">välj</string>
+    <string name="a11y_itemSelectedSwipeForActions">Konversation markerad. Urvalsläget aktiverat. Navigera efter åtgärder.</string>
+    <string name="a11y_conversationSelected">Konversation markerad</string>
+    <string name="a11y_conversationDeselected">Konversation avmarkerad</string>
+    <string name="a11y_exitSelectionMode">Avsluta urvalsläget</string>
+    <string name="a11y_selectionModeDeactivated">Urvalsläget inaktiverat.</string>
+    <string name="a11y_avatarContentDescription">Avatar för %s</string>
+    <string name="inboxUndo">Ångra</string>
 </resources>

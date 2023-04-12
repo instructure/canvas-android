@@ -40,26 +40,29 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PANDA_AVATAR
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.PandaImageBinding
 import com.instructure.student.util.PandaDrawables
-import kotlinx.android.synthetic.main.panda_image.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.Date
-import kotlinx.android.synthetic.main.toolbar_layout.toolbar as mToolbar
-
+import java.util.*
 
 private object PandaAvatarPrefs : PrefManager(Const.NAME)
 
 @ScreenView(SCREEN_VIEW_PANDA_AVATAR)
 class PandaAvatarActivity : ParentActivity() {
 
+    private val binding by viewBinding(PandaImageBinding::inflate)
+
     private enum class BodyPart { HEAD, BODY, LEGS }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         setupViews()
         setupListeners()
         Analytics.logEvent(AnalyticsEventConstants.PANDA_AVATAR_EDITOR_OPENED)
@@ -68,7 +71,7 @@ class PandaAvatarActivity : ParentActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.panda_avatar_create, menu)
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     override fun contentResId(): Int = R.layout.panda_image
@@ -127,17 +130,18 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun setupViews() {
-        mToolbar.setTitle(R.string.pandaAvatar)
-        mToolbar.setupAsBackButton { finish() }
-        ViewStyler.themeToolbarColored(this, mToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        mToolbar.elevation = this.DP(2f)
+
+        binding.toolbar.setTitle(R.string.pandaAvatar)
+        binding.toolbar.setupAsBackButton { finish() }
+        ViewStyler.themeToolbarColored(this, binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        binding.toolbar.elevation = this.DP(2f)
         // Make the head and body all black
-        changeHead.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_head_02, Color.BLACK)
-        changeBody.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_body_11, Color.BLACK)
+        binding.changeHead.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_head_02, Color.BLACK)
+        binding.changeBody.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_body_11, Color.BLACK)
         loadBodyParts()
     }
 
-    private fun loadBodyParts() {
+    private fun loadBodyParts() = with(binding) {
         val head = PandaDrawables.heads[loadPart(BodyPart.HEAD)]
         imageHead.setImageResource(head.first)
         imageHead.contentDescription = getString(R.string.content_description_chosen_head, getString(head.second))
@@ -152,10 +156,10 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun setupListeners() {
-        changeHead.onClick { showPartsMenu(BodyPart.HEAD) }
-        changeBody.onClick { showPartsMenu(BodyPart.BODY) }
-        changeLegs.onClick { showPartsMenu(BodyPart.LEGS) }
-        backButton.onClick { slide(up = false) }
+        binding.changeHead.onClick { showPartsMenu(BodyPart.HEAD) }
+        binding.changeBody.onClick { showPartsMenu(BodyPart.BODY) }
+        binding.changeLegs.onClick { showPartsMenu(BodyPart.LEGS) }
+        binding.backButton.onClick { slide(up = false) }
     }
 
     private fun setAsAvatar() {
@@ -167,7 +171,7 @@ class PandaAvatarActivity : ParentActivity() {
         finish()
     }
 
-    private fun saveImageAsPNG(showSuccessMsg: Boolean, color: Int, saveToPictures: Boolean): File? {
+    private fun saveImageAsPNG(showSuccessMsg: Boolean, color: Int, saveToPictures: Boolean): File? = with(binding) {
         val padding = 16
 
         // We can set the density value to be bigger to make the images smaller if necessary
@@ -230,13 +234,13 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun showPartsMenu(part: BodyPart) {
-        partsOptions.visibility = View.VISIBLE
+        binding.partsOptions.visibility = View.VISIBLE
         slide(up = true)
-        partsContainer.removeAllViewsInLayout()
+        binding.partsContainer.removeAllViewsInLayout()
         addParts(part)
     }
 
-    private fun slide(up: Boolean) {
+    private fun slide(up: Boolean) = with(binding) {
         val slide = TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f,
                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
                 if (up) 5f else 0f, Animation.RELATIVE_TO_SELF, if (up) 0f else 5.2f)
@@ -271,14 +275,14 @@ class PandaAvatarActivity : ParentActivity() {
         })
     }
 
-    private fun addParts(part: BodyPart) {
+    private fun addParts(part: BodyPart) = with(binding) {
         val (parts, destView, contentDescriptionFormat) = when (part) {
             BodyPart.HEAD -> Triple(PandaDrawables.heads, imageHead, R.string.content_description_chosen_head)
             BodyPart.BODY -> Triple(PandaDrawables.bodies, imageBody, R.string.content_description_chosen_body)
             BodyPart.LEGS -> Triple(PandaDrawables.legs, imageLegs, R.string.content_description_chosen_feet)
         }
         parts.forEachIndexed { index, it ->
-            val imageView = ImageView(this)
+            val imageView = ImageView(this@PandaAvatarActivity)
             imageView.setImageResource(it.first)
             imageView.contentDescription = context.getString(it.second)
             imageView.onClick { _ ->
@@ -332,7 +336,7 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     override fun onBackPressed() {
-        if (partsOptions.visibility == View.VISIBLE) {
+        if (binding.partsOptions.visibility == View.VISIBLE) {
             slide(up = false)
         } else {
             super.onBackPressed()

@@ -18,26 +18,19 @@ package com.instructure.teacher.holders
 
 import android.content.res.ColorStateList
 import android.view.Gravity
-import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterCoursesBinding
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.utils.Const.COURSE_EDIT_COLOR_ID
 import com.instructure.teacher.utils.Const.COURSE_EDIT_NAME_ID
 import com.instructure.teacher.utils.TeacherPrefs
-import kotlinx.android.synthetic.main.adapter_courses.view.*
 
-
-class CoursesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_courses
-    }
-
-    fun bind(course: Course, callback: DashboardFragment.CourseBrowserCallback?) = with(itemView) {
+class CoursesViewHolder(private val binding: AdapterCoursesBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(course: Course, callback: DashboardFragment.CourseBrowserCallback?) = with(binding) {
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 

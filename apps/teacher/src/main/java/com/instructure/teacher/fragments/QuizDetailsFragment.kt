@@ -29,11 +29,13 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.databinding.FragmentQuizDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
@@ -45,9 +47,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.QuizDetailsView
-import kotlinx.android.synthetic.main.fragment_quiz_details.*
-import kotlinx.android.synthetic.main.view_quiz_preview_button.*
-import kotlinx.android.synthetic.main.view_submissions_donut_group.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -62,6 +61,8 @@ class QuizDetailsFragment : BasePresenterFragment<
         QuizDetailsPresenter,
         QuizDetailsView>(),
         QuizDetailsView, Identity {
+
+    private val binding by viewBinding(FragmentQuizDetailsBinding::bind)
 
     private var mCourse: Course by ParcelableArg(default = Course())
     private var mQuizId: Long by LongArg(0L, QUIZ_ID)
@@ -97,14 +98,14 @@ class QuizDetailsFragment : BasePresenterFragment<
     override fun onRefreshFinished() = Unit
 
     override fun onRefreshStarted() {
-        toolbar.menu.clear()
+        binding.toolbar.menu.clear()
         clearListeners()
     }
 
     override val identity: Long? get() = if(mQuizId != 0L) mQuizId else mQuiz.id
     override val skipCheck: Boolean get() = false
 
-    override fun populateQuizDetails(quiz: Quiz) {
+    override fun populateQuizDetails(quiz: Quiz): Unit = with(binding) {
         mQuiz = quiz
         toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(quiz) }
         swipeRefreshLayout.isRefreshing = false
@@ -115,9 +116,9 @@ class QuizDetailsFragment : BasePresenterFragment<
         fullDateDetailsButton.setVisible(quiz._assignment != null)
     }
 
-    private fun setupToolbar() {
-        toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
-            toolbar.updateToolbarExpandCollapseIcon(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupBackButtonWithExpandCollapseAndBack(this@QuizDetailsFragment) {
+            toolbar.updateToolbarExpandCollapseIcon(this@QuizDetailsFragment)
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
@@ -129,7 +130,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    private fun setupViews(quiz: Quiz) = with(quiz) {
+    private fun setupViews(quiz: Quiz) = with(binding) {
         swipeRefreshLayout.setOnRefreshListener {
             presenter.loadData(true)
 
@@ -146,26 +147,26 @@ class QuizDetailsFragment : BasePresenterFragment<
         otherDueDateTextView.setGone()
 
         // Assignment name
-        quizTitleTextView.text = title
+        quizTitleTextView.text = quiz.title
 
         // Points possible
-        pointsPossible?.let {
+        quiz.pointsPossible?.let {
             pointsTextView.text = resources.getQuantityString(
-                    R.plurals.quantityPointsAbbreviated,
-                    pointsPossible?.toDouble()?.toInt() ?: 1,
-                    NumberHelper.formatDecimal(pointsPossible!!.toDouble(), 1, true)
+                R.plurals.quantityPointsAbbreviated,
+                it.toDouble().toInt(),
+                NumberHelper.formatDecimal(it.toDouble(), 1, true)
             )
         }
 
-        pointsTextView.contentDescription = if (pointsPossible != null) {
+        pointsTextView.contentDescription = if (quiz.pointsPossible != null) {
             resources.getQuantityString(
                     R.plurals.quantityPointsFull,
-                    pointsPossible?.toDouble()?.toInt() ?: 1,
-                    NumberHelper.formatDecimal(pointsPossible!!.toDouble(), 1, true))
+                    quiz.pointsPossible?.toDouble()?.toInt() ?: 1,
+                    NumberHelper.formatDecimal(quiz.pointsPossible!!.toDouble(), 1, true))
         } else getString(R.string.quiz_details_no_points_assigned)
 
         // Publish status
-        if (published) {
+        if (quiz.published) {
             publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
             publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
             publishStatusTextView.setText(R.string.published)
@@ -180,17 +181,18 @@ class QuizDetailsFragment : BasePresenterFragment<
         // Lock status
         val atSeparator = getString(R.string.at)
 
+        val allDates = quiz.allDates
         allDates.singleOrNull()?.apply {
-            if (lockDate?.before(Date()) == true) {
+            if (quiz.lockDate?.before(Date()) == true) {
                 availabilityLayout.setVisible()
                 availabilityTextView.setText(R.string.closed)
             } else {
                 availableFromLayout.setVisible()
                 availableToLayout.setVisible()
-                availableFromTextView.text = if (unlockDate != null)
-                    DateHelper.getMonthDayAtTime(requireContext(), unlockDate, atSeparator) else getString(R.string.no_date_filler)
-                availableToTextView.text = if (lockDate != null)
-                    DateHelper.getMonthDayAtTime(requireContext(), lockDate, atSeparator) else getString(R.string.no_date_filler)
+                availableFromTextView.text = if (quiz.unlockDate != null)
+                    DateHelper.getMonthDayAtTime(requireContext(), quiz.unlockDate, atSeparator) else getString(R.string.no_date_filler)
+                availableToTextView.text = if (quiz.lockDate != null)
+                    DateHelper.getMonthDayAtTime(requireContext(), quiz.lockDate, atSeparator) else getString(R.string.no_date_filler)
             }
         }
 
@@ -199,12 +201,12 @@ class QuizDetailsFragment : BasePresenterFragment<
             otherDueDateTextView.setVisible()
             otherDueDateTextView.setText(R.string.multiple_due_dates)
         } else {
-            if (allDates.size == 0 || allDates[0].dueAt == null) {
+            if (allDates.isEmpty() || allDates[0].dueAt == null) {
                 otherDueDateTextView.setVisible()
                 otherDueDateTextView.setText(R.string.no_due_date)
 
                 dueForLayout.setVisible()
-                dueForTextView.text = if (allDates.size == 0 || allDates[0].isBase) getString(R.string.everyone) else allDates[0].title ?: ""
+                dueForTextView.text = if (allDates.isEmpty() || allDates[0].isBase) getString(R.string.everyone) else allDates[0].title ?: ""
 
             } else with(allDates[0]) {
                 dueDateLayout.setVisible()
@@ -218,15 +220,14 @@ class QuizDetailsFragment : BasePresenterFragment<
         // If the user is a designer we don't want to show the submissions layout
         submissionsLayout.setVisible(!mCourse.isDesigner)
 
-
-        if (!isGradeable) {
+        if (!quiz.isGradeable) {
             // Quiz is not gradeable, don't show submission dials
             submissionsLayout.setGone()
             submissionsHR.setGone()
         }
 
         // Description
-        setupDescription(this)
+        setupDescription(quiz)
 
         // Settings
         quizSettingsContainer.removeAllViews()
@@ -292,7 +293,7 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         return getString(R.string.quiz_details_until, toDate)
     }
-    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) {
+    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
 
         // Submission section
         gradedChart.setSelected(gradedStudents)
@@ -321,7 +322,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         notSubmittedChart.invalidate()
     }
 
-    private fun setupDescription(quiz: Quiz) {
+    private fun setupDescription(quiz: Quiz) = with(binding) {
         noInstructionsTextView.setVisible(quiz.description.isNullOrBlank())
 
         // Show progress bar while loading description
@@ -370,7 +371,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun setupListeners(quiz: Quiz) {
+    private fun setupListeners(quiz: Quiz) = with(binding) {
         dueLayout.setOnClickListener {
             if(quiz._assignment != null) {
                 val args = DueDatesFragment.makeBundle(quiz._assignment!!)
@@ -381,22 +382,22 @@ class QuizDetailsFragment : BasePresenterFragment<
         submissionsLayout.setOnClickListener {
             navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.ALL)
         }
-        viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
-        gradedWrapper.setOnClickListener {
+        donutGroup.viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
+        donutGroup.gradedWrapper.setOnClickListener {
             navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.GRADED)
         }
-        ungradedWrapper.setOnClickListener {
+        donutGroup.ungradedWrapper.setOnClickListener {
             navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.NOT_GRADED)
         }
-        notSubmittedWrapper.setOnClickListener {
+        donutGroup.notSubmittedWrapper.setOnClickListener {
             navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.MISSING)
         }
         noInstructionsTextView.setOnClickListener {
             openEditPage(quiz)
         }
 
-        ViewStyler.themeButton(quizPreviewButton)
-        quizPreviewButton.setOnClickListener {
+        ViewStyler.themeButton(quizPreviewButton.quizPreviewButton)
+        quizPreviewButton.quizPreviewButton.setOnClickListener {
             try {
                 var urlStr = mQuiz.htmlUrl +"/take?preview=1&persist_headless=1"
                 val url = URL(urlStr)
@@ -415,17 +416,16 @@ class QuizDetailsFragment : BasePresenterFragment<
         RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }
 
-    private fun clearListeners() {
+    private fun clearListeners() = with(binding) {
         dueLayout.setOnClickListener {}
         submissionsLayout.setOnClickListener {}
-        gradedWrapper.setOnClickListener {}
-        ungradedWrapper.setOnClickListener {}
-        notSubmittedWrapper.setOnClickListener {}
+        donutGroup.gradedWrapper.setOnClickListener {}
+        donutGroup.ungradedWrapper.setOnClickListener {}
+        donutGroup.notSubmittedWrapper.setOnClickListener {}
         noInstructionsTextView.setOnClickListener {}
     }
 
-
-    fun openEditPage(quiz: Quiz) {
+    private fun openEditPage(quiz: Quiz) {
         if(APIHelper.hasNetworkConnection()) {
             val args = EditQuizDetailsFragment.makeBundle(quiz, false)
             RouteMatcher.route(requireContext(), Route(EditQuizDetailsFragment::class.java, mCourse, args))

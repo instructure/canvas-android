@@ -23,13 +23,17 @@ import android.view.View
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOT_A_TEACHER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentNotATeacherBinding
 import com.instructure.teacher.tasks.TeacherLogoutTask
-import kotlinx.android.synthetic.main.fragment_not_a_teacher.*
 
 @ScreenView(SCREEN_VIEW_NOT_A_TEACHER)
 class NotATeacherFragment : BaseFragment() {
+
+    private val binding by viewBinding(FragmentNotATeacherBinding::bind)
+
     private val MARKET_URI_PREFIX = "market://details?id="
     private val CANVAS_ID = "com.instructure.candroid"
     private val PARENT_ID = "com.instructure.parentapp"
@@ -38,7 +42,7 @@ class NotATeacherFragment : BaseFragment() {
 
     override fun onCreateView(view: View) = Unit
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
         parentLink.setOnClickListener {

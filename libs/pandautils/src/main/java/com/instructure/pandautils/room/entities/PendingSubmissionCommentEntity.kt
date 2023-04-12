@@ -14,7 +14,8 @@ data class PendingSubmissionCommentEntity(
     var date: Date = Date(),
     var status: String = CommentSendStatus.DRAFT.toString(),
     var workerId: String? = null,
-    var filePath: String? = null
+    var filePath: String? = null,
+    var attemptId: Long? = null
 ) {
     constructor(pendingSubmissionComment: PendingSubmissionComment): this(
         pendingSubmissionComment.id,
@@ -23,7 +24,8 @@ data class PendingSubmissionCommentEntity(
         pendingSubmissionComment.date,
         pendingSubmissionComment.status.toString(),
         pendingSubmissionComment.workerId.toString(),
-        pendingSubmissionComment.filePath
+        pendingSubmissionComment.filePath,
+        pendingSubmissionComment.attemptId
     )
 
     fun toApiModel(): PendingSubmissionComment {
@@ -36,6 +38,7 @@ data class PendingSubmissionCommentEntity(
             this.status = CommentSendStatus.valueOf(this@PendingSubmissionCommentEntity.status)
             this.workerId = if (this@PendingSubmissionCommentEntity.workerId != null && this@PendingSubmissionCommentEntity.workerId != "null") UUID.fromString(this@PendingSubmissionCommentEntity.workerId) else null
             this.filePath = this@PendingSubmissionCommentEntity.filePath ?: ""
+            this.attemptId = this@PendingSubmissionCommentEntity.attemptId
         }
     }
 }

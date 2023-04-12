@@ -17,16 +17,15 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
-
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.teacher.databinding.ViewholderRecipientBinding
 import com.instructure.teacher.holders.RecipientViewHolder
 import com.instructure.teacher.interfaces.RecipientAdapterCallback
 import com.instructure.teacher.presenters.ChooseRecipientsPresenter
 import com.instructure.teacher.viewinterface.ChooseRecipientsView
-
-import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class ChooseMessageRecipientRecyclerAdapter(
@@ -35,12 +34,17 @@ class ChooseMessageRecipientRecyclerAdapter(
     private val mAdapterCallback: RecipientAdapterCallback
 ) : SyncRecyclerAdapter<Recipient, RecipientViewHolder, ChooseRecipientsView>(context, presenter) {
 
-    override fun bindHolder(recipient: Recipient, holder: RecipientViewHolder, position: Int) {
-        holder.bind(context!!, holder, recipient, mAdapterCallback, mAdapterCallback.isRecipientSelected(recipient))
+    override fun bindHolder(model: Recipient, holder: RecipientViewHolder, position: Int) {
+        holder.bind(
+            context!!,
+            holder,
+            model,
+            mAdapterCallback,
+            mAdapterCallback.isRecipientSelected(model)
+        )
     }
 
-    override fun createViewHolder(v: View, viewType: Int): RecipientViewHolder = RecipientViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = RecipientViewHolder(binding as ViewholderRecipientBinding)
 
-    override fun itemLayoutResId(viewType: Int): Int = RecipientViewHolder.HOLDER_RES_ID
-
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = ViewholderRecipientBinding::inflate
 }

@@ -22,7 +22,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -35,17 +38,22 @@ import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.ExoTrackSelection
-import com.google.android.exoplayer2.upstream.*
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.ExoAgent
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.student.R
+import com.instructure.student.databinding.ActivityVideoViewBinding
 import com.instructure.student.util.Const
-import kotlinx.android.synthetic.main.activity_video_view.player_view as playerView
 
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
 class VideoViewActivity : AppCompatActivity() {
+
+    private val binding by viewBinding(ActivityVideoViewBinding::inflate)
 
     private var player: ExoPlayer? = null
     private lateinit var trackSelector: DefaultTrackSelector
@@ -55,7 +63,7 @@ class VideoViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_view)
-        playerView.requestFocus()
+        binding.playerView.requestFocus()
         mediaDataSourceFactory = buildDataSourceFactory(true)
         mainHandler = Handler()
         val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()
@@ -64,7 +72,7 @@ class VideoViewActivity : AppCompatActivity() {
             .setTrackSelector(trackSelector)
             .setLoadControl(DefaultLoadControl())
             .build()
-        playerView.player = player
+        binding.playerView.player = player
         player?.playWhenReady = true
         player?.setMediaSource(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
         player?.prepare()

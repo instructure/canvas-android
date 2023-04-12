@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2023 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/inboxArchiveSelected"
+        android:title="@string/archiveSelected"
+        android:icon="@drawable/ic_archive"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/inboxUnarchiveSelected"
+        android:title="@string/unarchiveSelected"
+        android:icon="@drawable/ic_unarchive"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/inboxMarkAsReadSelected"
+        android:title="@string/markAsReadSelected"
+        android:icon="@drawable/ic_mark_as_read"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/inboxMarkAsUnreadSelected"
+        android:title="@string/markAsUnreadSelected"
+        android:icon="@drawable/ic_mark_as_unread"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/inboxStarSelected"
+        android:title="@string/starSelected"
+        android:icon="@drawable/ic_star_filled"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/inboxUnstarSelected"
+        android:title="@string/unstarSelected"
+        android:icon="@drawable/ic_star_outline"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/inboxDeleteSelected"
+        android:title="@string/deleteSelected"
+        app:showAsAction="never"/>
+</menu>

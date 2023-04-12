@@ -24,15 +24,18 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_EMPTY
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.fragment_speedgrader_empty.*
+import com.instructure.teacher.databinding.FragmentSpeedgraderEmptyBinding
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_EMPTY)
 class SpeedGraderEmptyFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentSpeedgraderEmptyBinding::bind)
 
     private var mTitle by StringArg()
     private var mSubtitle by StringArg()
@@ -44,7 +47,7 @@ class SpeedGraderEmptyFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_speedgrader_empty, container, false)
     }
 
-    override fun onResume() {
+    override fun onResume(): Unit = with(binding) {
         super.onResume()
         if (mTitle.isNotBlank()) titleTextView.setVisible().text = mTitle
         if (mSubtitle.isNotBlank()) subtitleTextView.setVisible().text = mSubtitle

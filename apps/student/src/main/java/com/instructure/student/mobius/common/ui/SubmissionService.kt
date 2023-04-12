@@ -19,7 +19,6 @@ package com.instructure.student.mobius.common.ui
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -47,6 +46,7 @@ import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
 import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.events.ShowConfettiEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.ChannelSource
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -390,7 +390,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                             mediaId = result.id!!,
                             mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType),
                             isGroupComment = comment.isGroupMessage,
-                            callback = callback
+                            callback = callback,
+                            attemptId = comment.attemptId
                         )
                     }
                 } ?: awaitApi { callback ->
@@ -405,12 +406,17 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                         commentText = comment.message.orEmpty(),
                         isGroupMessage = comment.isGroupMessage,
                         attachments = attachmentIds,
-                        callback = callback
+                        callback = callback,
+                        attemptId = comment.attemptId
                     )
                 }
 
                 val newComment = submission.submissionComments.last()
                 ChannelSource.getChannel<SubmissionComment>().trySend(newComment)
+
+                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+                    SubmissionDetailsSharedEvent.SubmissionCommentsUpdated(submission.submissionComments)
+                )
 
                 // Remove db entry
                 commentDb.deleteCommentById(comment.id)
@@ -777,7 +783,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentName: String,
             message: String?,
             attachments: List<FileSubmitObject>?,
-            isGroupMessage: Boolean
+            isGroupMessage: Boolean,
+            attemptId: Long?
         ) {
             require(message.isValid() || attachments?.isNotEmpty() == true)
             val db = Db.getInstance(context)
@@ -789,7 +796,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 lastActivityDate = Date.now(),
                 isGroupMessage = isGroupMessage,
                 message = message,
-                mediaPath = null
+                mediaPath = null,
+                attemptId = attemptId
             )
             val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
             attachments?.forEach { db.submissionCommentFileQueries.insertFile(commentId, it.name, it.size, it.contentType, it.fullPath) }
@@ -810,7 +818,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentId: Long,
             assignmentName: String,
             mediaFile: File,
-            isGroupMessage: Boolean
+            isGroupMessage: Boolean,
+            attemptId: Long?
         ) {
             val db = Db.getInstance(context)
             db.pendingSubmissionCommentQueries.insertComment(
@@ -821,7 +830,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 lastActivityDate = Date.now(),
                 isGroupMessage = isGroupMessage,
                 message = null,
-                mediaPath = mediaFile.absolutePath
+                mediaPath = mediaFile.absolutePath,
+                attemptId = attemptId
             )
             val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
 

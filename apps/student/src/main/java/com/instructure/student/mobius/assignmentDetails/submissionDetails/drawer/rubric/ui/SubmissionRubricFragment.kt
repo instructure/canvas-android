@@ -24,13 +24,14 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_RUBRIC
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.student.databinding.FragmentSubmissionRubricBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @ScreenView(SCREEN_VIEW_SUBMISSION_RUBRIC)
 class SubmissionRubricFragment :
-    MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState>() {
+    MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState, FragmentSubmissionRubricBinding>() {
     private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
     private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
 

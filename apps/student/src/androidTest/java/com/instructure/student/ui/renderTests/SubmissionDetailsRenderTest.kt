@@ -16,7 +16,6 @@
 package com.instructure.student.ui.renderTests
 
 import android.content.pm.ActivityInfo
-import android.os.SystemClock.sleep
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
@@ -136,7 +135,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
                 )
             )
         )
-        submissionDetailsRenderPage.assertSpinnerMatchesText("Jan 31 at 11:59 PM")
+        submissionDetailsRenderPage.assertSpinnerMatchesText("Jan 31, 2050 11:59 PM")
     }
 
     @Test
@@ -159,8 +158,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             )
         )
         submissionDetailsRenderPage.versionSpinner.click()
-        submissionDetailsRenderPage.assertSpinnerDropdownItemHasText(0, "Jan 31 at 11:59 PM")
-        submissionDetailsRenderPage.assertSpinnerDropdownItemHasText(1, "Jan 30 at 11:59 PM")
+        submissionDetailsRenderPage.assertSpinnerDropdownItemHasText(0, "Jan 31, 2050 11:59 PM")
+        submissionDetailsRenderPage.assertSpinnerDropdownItemHasText(1, "Jan 30, 2050 11:59 PM")
     }
 
     @Test

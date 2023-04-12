@@ -6,43 +6,44 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebChromeClient
+import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FEEDBACK
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ActivityFeedbackBinding
 import com.instructure.teacher.utils.setupBackButton
-import kotlinx.android.synthetic.main.activity_feedback.*
 
 @ScreenView(SCREEN_VIEW_FEEDBACK)
 class FeedbackActivity : AppCompatActivity() {
 
+    private val binding by viewBinding(ActivityFeedbackBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_feedback)
+        setContentView(binding.root)
         setupToolbar()
         setupWebView()
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         toolbar.setTitle(R.string.feedback_form)
         toolbar.setBackgroundColor(ThemePrefs.primaryColor)
         toolbar.setNavigationIcon(R.drawable.ic_back_arrow)
         toolbar.setupBackButton { finish() }
 
-        ViewStyler.setStatusBarDark(this, ThemePrefs.darkPrimaryColor)
-        ViewStyler.colorToolbarIconsAndText(this, toolbar, ThemePrefs.primaryTextColor)
+        ViewStyler.setStatusBarDark(this@FeedbackActivity, ThemePrefs.darkPrimaryColor)
+        ViewStyler.colorToolbarIconsAndText(this@FeedbackActivity, toolbar, ThemePrefs.primaryTextColor)
     }
 
-    private fun setupWebView() {
-        webView.setWebChromeClient(WebChromeClient())
+    private fun setupWebView() = with(binding) {
+        webView.webChromeClient = WebChromeClient()
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
-        webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webView.loadUrl(buildUrl())
     }
 
@@ -72,7 +73,7 @@ class FeedbackActivity : AppCompatActivity() {
 
     companion object {
 
-        private val BASE_URL = "docs.google.com/forms/d/e/1FAIpQLSeBW9mUTkwMUXpIr4LOE_jtAXzynjWExUDsfg98_ktBldq_6A/viewform"
+        private const val BASE_URL = "docs.google.com/forms/d/e/1FAIpQLSeBW9mUTkwMUXpIr4LOE_jtAXzynjWExUDsfg98_ktBldq_6A/viewform"
 
         fun createIntent(context: Context): Intent {
             return Intent(context, FeedbackActivity::class.java)

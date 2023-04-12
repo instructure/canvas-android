@@ -103,7 +103,6 @@ class SettingsE2ETest : StudentTest() {
         val newSavedPandaAvatarCount = getSavedPandaAvatarCount()
         Log.d(STEP_TAG, "Assert that saved panda avatar count has increased by one. Old value: $originalSavedPandaAvatarCount, new value: $newSavedPandaAvatarCount.")
         Assert.assertTrue(newSavedPandaAvatarCount == originalSavedPandaAvatarCount + 1)
-
     }
 
     @E2E
@@ -206,10 +205,9 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Check that e-mail is equal to: ${student.loginId} (student's Login ID).")
         aboutPage.emailIs(student.loginId)
-
     }
 
-    //The remote config settings page only available on debug builds.
+    //The remote config settings page only available on DEBUG/DEV builds. So this test is testing a non user facing feature.
     @E2E
     @Test
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SETTINGS, TestCategory.E2E)
@@ -257,7 +255,6 @@ class SettingsE2ETest : StudentTest() {
         RemoteConfigParam.values().forEach { param ->
             remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
         }
-
     }
 
     @E2E

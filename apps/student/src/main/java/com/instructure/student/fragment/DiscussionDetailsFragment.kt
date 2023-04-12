@@ -49,6 +49,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
@@ -56,13 +57,13 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentDiscussionsDetailsBinding
 import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
-import kotlinx.android.synthetic.main.fragment_discussions_details.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
@@ -76,6 +77,8 @@ import java.util.regex.Pattern
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(FragmentDiscussionsDetailsBinding::bind)
     // Weave jobs
     private var sessionAuthJob: Job? = null
     private var discussionMarkAsReadJob: Job? = null
@@ -114,7 +117,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         populateDiscussionData()
-        swipeRefreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             authenticatedSessionURL = null
             populateDiscussionData(true)
             // Send out bus events to trigger a refresh for discussion list
@@ -129,8 +132,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     override fun onResume() {
         super.onResume()
-        discussionTopicHeaderWebViewWrapper.webView.onResume()
-        discussionRepliesWebViewWrapper.webView.onResume()
+        binding.discussionTopicHeaderWebViewWrapper.webView.onResume()
+        binding.discussionRepliesWebViewWrapper.webView.onResume()
         addAccessibilityButton()
 
         /* TODO - Comms - 868
@@ -146,7 +149,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         */
     }
 
-    override fun onPause() {
+    override fun onPause() = with(binding) {
         super.onPause()
         scrollPosition = discussionsScrollView.scrollY
         discussionTopicHeaderWebViewWrapper.webView.onPause()
@@ -166,9 +169,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionsLoadingJob?.cancel()
         loadHeaderHtmlJob?.cancel()
         loadRepliesHtmlJob?.cancel()
-
-        discussionTopicHeaderWebViewWrapper?.webView?.destroy()
-        discussionRepliesWebViewWrapper?.webView?.destroy()
     }
     //endregion
 
@@ -177,15 +177,17 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             ?: getString(R.string.discussion) else getString(R.string.discussion)
 
     override fun applyTheme() {
-        toolbar.title = title()
-        setupToolbarMenu(toolbar)
-        toolbar.setupAsBackButton(this)
-        /* TODO - Blocked by COMMS - 868
+        with (binding) {
+            toolbar.title = title()
+            setupToolbarMenu(toolbar)
+            toolbar.setupAsBackButton(this@DiscussionDetailsFragment)
+            /* TODO - Blocked by COMMS - 868
         if(!isAnnouncements && discussionTopicHeader.author.id == ApiPrefs.user?.id && hasEditPermissions) {
             toolbar.setMenu(R.menu.menu_edit_generic, menuItemCallback)
         }
         */
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        }
     }
 
     //endregion
@@ -216,7 +218,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showReplyView(discussionEntryId: Long) {
         if (APIHelper.hasNetworkConnection()) {
-            scrollPosition = discussionsScrollView.scrollY
+            scrollPosition = binding.discussionsScrollView.scrollY
             val route = DiscussionsReplyFragment.makeRoute(canvasContext, discussionTopicHeader.id, discussionEntryId, discussionTopicHeader.permissions!!.attach)
             RouteMatcher.route(requireActivity(), route)
         } else {
@@ -244,9 +246,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             }
 
             successfullyMarkedAsReadIds.forEach {
-                discussionRepliesWebViewWrapper.post {
+                binding.discussionRepliesWebViewWrapper.post {
                     // Posting lets this escape Weave's lifecycle, so use a null-safe call on the webview here
-                    discussionRepliesWebViewWrapper?.webView?.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
+                    binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
                 }
             }
             if (!groupDiscussion) {
@@ -276,8 +278,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {
         val deletedText = DiscussionUtils.formatDeletedInfoText(requireContext(), discussionEntry)
-        discussionRepliesWebViewWrapper.post {
-            discussionRepliesWebViewWrapper.webView.loadUrl(
+        binding.discussionRepliesWebViewWrapper.post {
+            binding.discussionRepliesWebViewWrapper.webView.loadUrl(
                     "javascript:markAsDeleted" + "('" + discussionEntry.id.toString() + "','" + deletedText + "')")
         }
     }
@@ -353,8 +355,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
         activity?.runOnUiThread {
-            discussionRepliesWebViewWrapper.webView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
-            discussionRepliesWebViewWrapper.webView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
+            binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
+            binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
         }
     }
 
@@ -394,13 +396,13 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupHeaderWebView() {
-        setupWebView(discussionTopicHeaderWebViewWrapper.webView)
-        discussionTopicHeaderWebViewWrapper.webView.addJavascriptInterface(JSDiscussionHeaderInterface(), "accessor")
+        setupWebView(binding.discussionTopicHeaderWebViewWrapper.webView)
+        binding.discussionTopicHeaderWebViewWrapper.webView.addJavascriptInterface(JSDiscussionHeaderInterface(), "accessor")
         DiscussionManager.markDiscussionTopicRead(canvasContext, getTopicId(), object : StatusCallback<Void>() {})
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setupRepliesWebView() {
+    private fun setupRepliesWebView() = with(binding) {
         setupWebView(discussionRepliesWebViewWrapper.webView, addDarkTheme = !discussionRepliesWebViewWrapper.themeSwitched)
         discussionRepliesWebViewWrapper.onThemeChanged = { themeChanged, html ->
             setupWebView(discussionRepliesWebViewWrapper.webView, addDarkTheme = !themeChanged)
@@ -499,9 +501,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         fun calculateActualOffset(elementId: String, elementHeight: String, elementTopOffset: String): Boolean {
             return DiscussionUtils.isElementInViewPortWithinScrollView(
                     requireContext(),
-                    discussionsScrollView,
-                    discussionRepliesWebViewWrapper.height,
-                    discussionsScrollViewContentWrapper.height,
+                    binding.discussionsScrollView,
+                    binding.discussionRepliesWebViewWrapper.height,
+                    binding.discussionsScrollViewContentWrapper.height,
                     // Javascript passes us back a number, which could be either a float or an int, so we'll need to convert the string first to a float, then an int to avoid errors in conversion
                     elementHeight.toFloat().toInt(), elementTopOffset.toFloat().toInt())
         }
@@ -538,7 +540,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     //region Loading
-    private fun populateDiscussionData(forceRefresh: Boolean = false, topLevelReplyPosted: Boolean = false) {
+    private fun populateDiscussionData(forceRefresh: Boolean = false, topLevelReplyPosted: Boolean = false) = with(binding) {
         discussionsLoadingJob = tryWeave {
             discussionProgressBar.setVisible()
             discussionRepliesWebViewWrapper.loadHtml("", "")
@@ -611,7 +613,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun showAnonymousDiscussionView() {
+    private fun showAnonymousDiscussionView() = with(binding) {
         anonymousDiscussionsNotSupported.setVisible()
         openInBrowser.setVisible(discussionTopicHeader.htmlUrl?.isNotEmpty() == true)
         replyToDiscussionTopic.setGone()
@@ -665,7 +667,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     @BeforePageView
-    private fun loadDiscussionTopicHeaderViews(discussionTopicHeader: DiscussionTopicHeader) {
+    private fun loadDiscussionTopicHeaderViews(discussionTopicHeader: DiscussionTopicHeader) = with(binding) {
         if (discussionTopicHeader.assignment != null) {
             setupAssignmentDetails(discussionTopicHeader.assignment!!)
         }
@@ -682,12 +684,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         val displayName = discussionTopicHeader.author?.displayName
         ProfileUtils.loadAvatarForUser(authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
-        authorName?.text = Pronouns.span(displayName, discussionTopicHeader.author?.pronouns)
-        authoredDate?.text = DateHelper.getMonthDayAtTime(this@DiscussionDetailsFragment.context, discussionTopicHeader.postedDate, getString(R.string.at))
-        discussionTopicTitle?.text = discussionTopicHeader.title
+        authorName.text = Pronouns.span(displayName, discussionTopicHeader.author?.pronouns)
+        authoredDate.text = DateHelper.getMonthDayAtTime(this@DiscussionDetailsFragment.context, discussionTopicHeader.postedDate, getString(R.string.at))
+        discussionTopicTitle.text = discussionTopicHeader.title
 
-        discussionSection?.text = getString(R.string.announcementSections, discussionTopicHeader.sections?.joinToString { it.name })
-        discussionSection?.setVisible(discussionTopicHeader.sections?.isNotEmpty() == true)
+        discussionSection.text = getString(R.string.announcementSections, discussionTopicHeader.sections?.joinToString { it.name })
+        discussionSection.setVisible(discussionTopicHeader.sections?.isNotEmpty() == true)
 
         replyToDiscussionTopic.setTextColor(ThemePrefs.textButtonColor)
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
@@ -704,20 +706,18 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        if (discussionTopicHeaderWebViewWrapper != null) {
-            setupHeaderWebView()
-            discussionTopicHeaderWebViewWrapper.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
-        }
+        setupHeaderWebView()
+        binding.discussionTopicHeaderWebViewWrapper.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
     }
 
-    private fun loadDiscussionTopicViews(html: String) {
+    private fun loadDiscussionTopicViews(html: String) = with(binding) {
         discussionRepliesWebViewWrapper.setVisible()
         discussionProgressBar.setGone()
 
         setupRepliesWebView()
 
         loadRepliesHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
-            discussionRepliesWebViewWrapper?.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
+            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
         })
 
         swipeRefreshLayout.isRefreshing = false
@@ -726,55 +726,69 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
     //endregion Loading
 
-    private fun setupAssignmentDetails(assignment: Assignment) = with(assignment) {
-        pointsTextView.setVisible()
-        // Points possible
-        pointsTextView.text = resources.getQuantityString(
-                R.plurals.quantityPointsAbbreviated,
-                pointsPossible.toInt(),
-                NumberHelper.formatDecimal(pointsPossible, 1, true)
-        )
-        pointsTextView.contentDescription = resources.getQuantityString(
-                R.plurals.quantityPointsFull,
-                pointsPossible.toInt(),
-                NumberHelper.formatDecimal(pointsPossible, 1, true))
+    private fun setupAssignmentDetails(assignment: Assignment) =
+        with(binding) {
+            with(assignment) {
+                pointsTextView.setVisible()
+                // Points possible
+                pointsTextView.text = resources.getQuantityString(
+                    R.plurals.quantityPointsAbbreviated,
+                    pointsPossible.toInt(),
+                    NumberHelper.formatDecimal(pointsPossible, 1, true)
+                )
+                pointsTextView.contentDescription = resources.getQuantityString(
+                    R.plurals.quantityPointsFull,
+                    pointsPossible.toInt(),
+                    NumberHelper.formatDecimal(pointsPossible, 1, true)
+                )
 
-        // Set these as gone initially and make them visible if we have data for them
-        availabilityLayout.setGone()
-        availableFromLayout.setGone()
-        availableToLayout.setGone()
-        dueDateLayout.setGone()
+                // Set these as gone initially and make them visible if we have data for them
+                availabilityLayout.setGone()
+                availableFromLayout.setGone()
+                availableToLayout.setGone()
+                dueDateLayout.setGone()
 
-        // Lock status
-        val atSeparator = getString(R.string.at)
+                // Lock status
+                val atSeparator = getString(R.string.at)
 
-        allDates.singleOrNull()?.apply {
-            if (lockDate?.before(Date()) == true) {
-                availabilityLayout.setVisible()
-                availabilityTextView.setText(R.string.closed)
-            } else {
-                availableFromLayout.setVisible()
-                availableToLayout.setVisible()
-                availableFromTextView.text = if (unlockAt != null)
-                    DateHelper.getMonthDayAtTime(requireContext(), unlockDate, atSeparator) else getString(R.string.utils_noDateFiller)
-                availableToTextView.text = if (lockAt != null)
-                    DateHelper.getMonthDayAtTime(requireContext(), lockDate, atSeparator) else getString(R.string.utils_noDateFiller)
+                allDates.singleOrNull()?.apply {
+                    if (lockDate?.before(Date()) == true) {
+                        availabilityLayout.setVisible()
+                        availabilityTextView.setText(R.string.closed)
+                    } else {
+                        availableFromLayout.setVisible()
+                        availableToLayout.setVisible()
+                        availableFromTextView.text = if (unlockAt != null)
+                            DateHelper.getMonthDayAtTime(
+                                requireContext(),
+                                unlockDate,
+                                atSeparator
+                            ) else getString(R.string.utils_noDateFiller)
+                        availableToTextView.text = if (lockAt != null)
+                            DateHelper.getMonthDayAtTime(
+                                requireContext(),
+                                lockDate,
+                                atSeparator
+                            ) else getString(R.string.utils_noDateFiller)
+                    }
+                }
+
+                dueLayout.setVisible(allDates.singleOrNull() != null)
+
+                dueDate?.let {
+                    dueDateLayout.setVisible()
+                    dueDateTextView.text = DateHelper.getMonthDayAtTime(requireContext(), it, atSeparator)
+                }
             }
         }
 
-        dueLayout.setVisible(allDates.singleOrNull() != null)
-
-        dueDate?.let {
-            dueDateLayout.setVisible()
-            dueDateTextView.text = DateHelper.getMonthDayAtTime(requireContext(), it, atSeparator)
-        }
-    }
-
     private fun addAccessibilityButton() {
         if (isAccessibilityEnabled(requireContext()) && discussionTopicHeader.htmlUrl != null) {
-            alternateViewButton.visibility = View.VISIBLE
-            alternateViewButton.setOnClickListener {
-                RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, discussionTopicHeader.htmlUrl!!, authenticate = true, shouldRouteInternally = false, allowRoutingTheSameUrlInternally = false, isUnsupportedFeature = false, allowUnsupportedRouting = false))
+            binding.alternateViewButton.apply {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, discussionTopicHeader.htmlUrl!!, authenticate = true, shouldRouteInternally = false, allowRoutingTheSameUrlInternally = false, isUnsupportedFeature = false, allowUnsupportedRouting = false))
+                }
             }
         }
     }
@@ -806,11 +820,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     fun onBackStackChangedEvent(event: OnBackStackChangedEvent) {
         event.get { clazz ->
             if (clazz?.isAssignableFrom(DiscussionDetailsFragment::class.java) == true || clazz?.isAssignableFrom(CourseModuleProgressionFragment::class.java) == true) {
-                discussionRepliesWebViewWrapper.webView.onResume()
-                discussionTopicHeaderWebViewWrapper.webView.onResume()
+                binding.discussionRepliesWebViewWrapper.webView.onResume()
+                binding.discussionTopicHeaderWebViewWrapper.webView.onResume()
             } else {
-                discussionRepliesWebViewWrapper.webView.onPause()
-                discussionTopicHeaderWebViewWrapper.webView.onPause()
+                binding.discussionRepliesWebViewWrapper.webView.onPause()
+                binding.discussionTopicHeaderWebViewWrapper.webView.onPause()
             }
         }
     }

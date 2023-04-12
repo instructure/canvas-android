@@ -31,20 +31,23 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
+import com.instructure.student.databinding.FragmentListTodoBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_list_todo.*
-import kotlinx.android.synthetic.main.fragment_list_todo.view.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
 @ScreenView(SCREEN_VIEW_TO_DO_LIST)
 @PageView
 class ToDoListFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentListTodoBinding::bind)
+    private lateinit var recyclerViewBinding: PandaRecyclerRefreshLayoutBinding
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -59,14 +62,14 @@ class ToDoListFragment : ParentFragment() {
         override fun onRefreshFinished() {
             if (!isAdded) return
             setRefreshing(false)
-            editOptions.setGone()
+            binding.editOptions.setGone()
             if (recyclerAdapter.size() == 0) {
-                setEmptyView(emptyView, R.drawable.ic_panda_sleeping, R.string.noTodos, R.string.noTodosSubtext)
+                setEmptyView(recyclerViewBinding.emptyView, R.drawable.ic_panda_sleeping, R.string.noTodos, R.string.noTodosSubtext)
             }
         }
 
         override fun onShowEditView(isVisible: Boolean) {
-            editOptions.setVisible(isVisible)
+            binding.editOptions.setVisible(isVisible)
         }
 
         override fun onShowErrorCrouton(message: Int) = Unit
@@ -75,18 +78,18 @@ class ToDoListFragment : ParentFragment() {
     override fun title(): String = getString(R.string.Todo)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = layoutInflater.inflate(R.layout.fragment_list_todo, container, false)
-        with (rootView.toolbar) {
+        return layoutInflater.inflate(R.layout.fragment_list_todo, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerViewBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
+        with (binding.toolbar) {
             inflateMenu(R.menu.fragment_list_todo)
             menu.findItem(R.id.todoListFilter).setOnMenuItemClickListener {
                 showCourseFilterDialog()
                 true
             }
         }
-        return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerAdapter = TodoListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
@@ -97,35 +100,34 @@ class ToDoListFragment : ParentFragment() {
             R.id.listView
         )
 
-        listView.isSelectionEnabled = false
+        recyclerViewBinding.listView.isSelectionEnabled = false
 
-        confirmButton.text = getString(R.string.markAsDone)
-        confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
-
-        cancelButton.setText(R.string.cancel)
-        cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
+        binding.confirmButton.text = getString(R.string.markAsDone)
+        binding.confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
+        binding.cancelButton.setText(R.string.cancel)
+        binding.cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
 
         updateFilterTitle(recyclerAdapter.getFilterMode())
-        clearFilterTextView.setOnClickListener {
+        binding.clearFilterTextView.setOnClickListener {
             recyclerAdapter.loadDataWithFilter(NoFilter)
             updateFilterTitle(recyclerAdapter.getFilterMode())
         }
     }
 
     private fun updateFilterTitle(filterMode: FilterMode) {
-        clearFilterTextView.setVisible(filterMode != NoFilter)
-        todoFilterTitle.setText(filterMode.titleId)
+        binding.clearFilterTextView.setVisible(filterMode != NoFilter)
+        binding.todoFilterTitle.setText(filterMode.titleId)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        toolbar.title = title()
-        navigation?.attachNavigationDrawer(this, toolbar)
+        binding.toolbar.title = title()
+        navigation?.attachNavigationDrawer(this, binding.toolbar)
     }
 
     override fun applyTheme() {
-        setupToolbarMenu(toolbar)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        setupToolbarMenu(binding.toolbar)
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -140,19 +142,19 @@ class ToDoListFragment : ParentFragment() {
                 R.string.noTodos
         )
         if (recyclerAdapter.size() == 0) {
-            emptyView.changeTextSize()
+            recyclerViewBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
-                    emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
+                    recyclerViewBinding.emptyView.setGuidelines(.24f, .53f, .62f, .12f, .88f)
                 } else {
-                    emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
+                    recyclerViewBinding.emptyView.setGuidelines(.28f, .6f, .73f, .12f, .88f)
 
                 }
             } else {
                 if (isTablet) {
                     //change nothing, at least for now
                 } else {
-                    emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
+                    recyclerViewBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
                 }
             }
         }

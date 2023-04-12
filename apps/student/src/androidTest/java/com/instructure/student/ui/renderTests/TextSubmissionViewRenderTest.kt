@@ -15,7 +15,6 @@
  */
 package com.instructure.student.ui.renderTests
 
-import android.os.Build
 import com.instructure.canvas.espresso.Stub
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
@@ -60,9 +59,10 @@ class TextSubmissionViewRenderTest : StudentRenderTest() {
         page.assertUrlMatches(linkUrl)
     }
 
-    private fun loadPageWithHtml(html: String) {
-        val fragment = TextSubmissionViewFragment.newInstance(html)
-        activityRule.activity.loadFragment(fragment)
+    private fun loadPageWithHtml(html: String) = with(activityRule.activity) {
+        runOnUiThread {
+            val fragment = TextSubmissionViewFragment.newInstance(html)
+            loadFragment(fragment)
+        }
     }
-
 }

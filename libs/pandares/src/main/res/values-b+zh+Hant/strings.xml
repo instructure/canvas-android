@@ -1104,6 +1104,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">您可以從此處開啟提交項目詳細資料</string>
+
     <plurals name="minutes">
         <item quantity="other">%s 分鐘</item>
     </plurals>
@@ -1278,6 +1280,8 @@
     <string name="fileUploadProgressSubtitle">上傳到檔案</string>
     <string name="submissionProgressSubtitle">上傳提交項目到 \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">正在上傳提交項目</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提交項目成功</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">提交項目失敗</string>
     <string name="dashboardNotificationUploadingFilesTitle">上傳檔案</string>
     <string name="cancelSubmissionDialogTitle">取消提交項目</string>
     <string name="cancelSubmissionDialogMessage">此動作將取消並刪除您的提交項目。</string>
@@ -1315,4 +1319,45 @@
     <string name="acceptableUsePolicyAgree">您必須同意「可接受使用政策」。</string>
     <string name="acceptableUsePolicySubmit">提交</string>
     <string name="acceptFail">無法提交條款接受。</string>
+    <string name="attempt">嘗試 %d</string>
+    <string name="quizQuestions">問題：%d</string>
+    <string name="quizTimeLimit">時間限制：%s</string>
+    <string name="allowedAttempts">允許的嘗試次數：%s</string>
+    <string name="usedAttempts">已使用的嘗試次數：%d</string>
+    <string name="generalUnexpectedError">出現意外錯誤。</string>
+
+    <string name="deleteSelected">刪除</string>
+    <string name="archiveSelected">存檔</string>
+    <string name="unarchiveSelected">取消存檔</string>
+    <string name="markAsReadSelected">標記為已讀</string>
+    <string name="markAsUnreadSelected">標記為未讀</string>
+    <string name="starSelected">星形</string>
+    <string name="unstarSelected">刪除星號</string>
+
+    <string name="inboxOperationFailed">無法執行操作</string>
+    <string name="inboxDeletedConfirmation">已刪除 %s</string>
+    <string name="inboxArchivedConfirmation">已存檔 %s</string>
+    <string name="inboxUnarchivedConfirmation">未存檔 %s</string>
+    <string name="inboxMarkAsReadConfirmation">已將 %s 標記為已讀</string>
+    <string name="inboxMarkAsUnreadConfirmation">已將 %s 標記為未讀</string>
+    <string name="inboxStarredConfirmation">已將 %s 加星號</string>
+    <string name="inboxUnstarredConfirmation">未將 %s 加星號</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="other">這些交談將從您所有裝置的收件匣中刪除。此操作無法撤消。</item>
+    </plurals>
+    <string name="failedToLoadNextPage">無法載入下一頁。請檢查您的網際網路連線。</string>
+    <string name="conversationsRefreshFailed">無法重新整理交談。請檢查您的網際網路連線。</string>
+    <string name="inboxScopeInbox">收件匣</string>
+    <string name="inboxContextSelectorTitle">選擇課程或群組</string>
+    <string name="inboxClearFilter">清除</string>
+    <string name="a11y_courseFilterContentDescription">課程篩選器：%s</string>
+    <string name="a11y_inboxEntryLongClickDescription">選擇</string>
+    <string name="a11y_itemSelectedSwipeForActions">已選擇的交談。選擇模式已啟用。導航操作。</string>
+    <string name="a11y_conversationSelected">已選擇的交談</string>
+    <string name="a11y_conversationDeselected">已取消選擇的交談</string>
+    <string name="a11y_exitSelectionMode">退出選擇模式</string>
+    <string name="a11y_selectionModeDeactivated">選擇模式停用</string>
+    <string name="a11y_avatarContentDescription">%s 的頭像</string>
+    <string name="inboxUndo">復原</string>
 </resources>

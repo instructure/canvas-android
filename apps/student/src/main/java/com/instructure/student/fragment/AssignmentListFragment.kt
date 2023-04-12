@@ -43,6 +43,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
@@ -50,11 +51,11 @@ import com.instructure.student.adapter.assignment.AssignmentListByDateRecyclerAd
 import com.instructure.student.adapter.assignment.AssignmentListByTypeRecyclerAdapter
 import com.instructure.student.adapter.assignment.AssignmentListFilter
 import com.instructure.student.adapter.assignment.AssignmentListRecyclerAdapter
+import com.instructure.student.databinding.AssignmentListLayoutBinding
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
-import kotlinx.android.synthetic.main.assignment_list_layout.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -62,6 +63,8 @@ import kotlinx.coroutines.launch
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "{canvasContext}/assignments")
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(AssignmentListLayoutBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -88,14 +91,16 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private val adapterToAssignmentsCallback = object : AdapterToAssignmentsCallback {
         override fun assignmentLoadingFinished() {
+            if (view == null) return
             // If we only have one grading period we want to disable the spinner
             val termCount = termAdapter?.count ?: 0
-            termSpinner?.isEnabled = termCount > 1
+            binding.termSpinner.isEnabled = termCount > 1
             termAdapter?.isLoading = false
             termAdapter?.notifyDataSetChanged()
         }
 
         override fun gradingPeriodsFetched(periods: List<GradingPeriod>) {
+            if (view == null) return
             setupGradingPeriods(periods)
         }
 
@@ -107,7 +112,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             if (!isAdded) return // Refresh can finish after user has left screen, causing emptyView to be null
             setRefreshing(false)
             if (recyclerAdapter.size() == 0) {
-                setEmptyView(emptyView, R.drawable.ic_panda_space, R.string.noAssignments, R.string.noAssignmentsSubtext)
+                setEmptyView(binding.emptyView, R.drawable.ic_panda_space, R.string.noAssignments, R.string.noAssignmentsSubtext)
             }
         }
     }
@@ -125,8 +130,8 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerAdapter = createRecyclerAdapter()
 
-        sortByTextView.setText(sortOrder.buttonTextRes)
-        sortByButton.contentDescription = getString(sortOrder.contentDescriptionRes)
+        binding.sortByTextView.setText(sortOrder.buttonTextRes)
+        binding.sortByButton.contentDescription = getString(sortOrder.contentDescriptionRes)
 
         configureRecyclerView(
                 view,
@@ -137,7 +142,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                 R.id.listView
         )
 
-        appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, i ->
+        binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, i ->
             // Workaround for Toolbar not showing with swipe to refresh
             if (i == 0) {
                 setRefreshingEnabled(true)
@@ -170,7 +175,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setupSortByButton() {
-        sortByButton.onClick {
+        binding.sortByButton.onClick {
             val checkedItemIndex = sortOrder.index
             AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
                     .setTitle(R.string.sortByDialogTitle)
@@ -180,7 +185,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun sortOrderSelected(dialog: DialogInterface, index: Int) {
+    private fun sortOrderSelected(dialog: DialogInterface, index: Int) = with(binding) {
         dialog.dismiss()
         val selectedSortOrder = AssignmentsSortOrder.fromIndex(index)
         if (sortOrder != selectedSortOrder) {
@@ -218,7 +223,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                     backgroundColor = requireContext().getColor(R.color.backgroundInfo)
                 }
             }
-            toolbar?.let {
+            binding.toolbar.let {
                 if (filterPosition == 0) {
                     BadgeUtils.detachBadgeDrawable(badgeDrawable, it, R.id.menu_filter_assignments)
                 } else {
@@ -228,15 +233,15 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    override fun applyTheme() {
+    override fun applyTheme() = with(binding) {
         setupToolbarMenu(toolbar, R.menu.menu_assignment_list)
         toolbar.title = title()
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@AssignmentListFragment)
         toolbar.addSearch(getString(R.string.searchAssignmentsHint)) { query ->
             if (query.isBlank()) {
-                emptyView?.emptyViewText(R.string.noItemsToDisplayShort)
+                emptyView.emptyViewText(R.string.noItemsToDisplayShort)
             } else {
-                emptyView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
             recyclerAdapter.searchQuery = query
         }
@@ -252,7 +257,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupGradingPeriods(periods: List<GradingPeriod>) {
+    private fun setupGradingPeriods(periods: List<GradingPeriod>) = with(binding) {
         val hasGradingPeriods = periods.isNotEmpty()
         val adapter = TermSpinnerAdapter(
                 requireContext(),
@@ -290,9 +295,9 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    override fun handleBackPressed() = toolbar.closeSearch()
+    override fun handleBackPressed() = binding.toolbar.closeSearch()
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
+    override fun onConfigurationChanged(newConfig: Configuration) = with(binding) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
                 requireView(),

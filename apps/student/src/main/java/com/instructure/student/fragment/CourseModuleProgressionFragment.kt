@@ -24,15 +24,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -44,27 +43,30 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_MODULE_PROGRESSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.CourseModuleProgressionBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore
 import com.instructure.student.util.ModuleProgressionUtility
 import com.instructure.student.util.ModuleUtility
-import kotlinx.android.synthetic.main.course_module_progression.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
-import java.util.*
 
+@PageView(url = "courses/{canvasContext}/modules")
 @ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(CourseModuleProgressionBinding::bind)
 
     private val discussionRouteHelper = DiscussionRouteHelper(
         FeaturesManager,
@@ -89,8 +91,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     // Default number will get reset
     private var itemsCount = 3
-
-    private var adapter: CourseModuleProgressionAdapter? = null
 
     // There's a case where we try to get the previous module and the previous module has a paginated list
     // of items.  A task will get those items and populate them in the background, but it throws off the
@@ -117,8 +117,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prev_item.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.textAndIconColor)
-        next_item.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.textAndIconColor)
+        binding.prevItem.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.textAndIconColor)
+        binding.nextItem.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.textAndIconColor)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -140,10 +140,10 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     //region Fragment Overrides
     // This function is mostly for the internal web view fragments so we can go back in the webview
-    override fun handleBackPressed(): Boolean {
-        if (viewPager != null && viewPager.currentItem != -1 && items.isNotEmpty()) {
-            val pFrag = adapter?.instantiateItem(viewPager, viewPager.currentItem) as? ParentFragment
-            if (pFrag != null && pFrag.handleBackPressed()) {
+    override fun handleBackPressed(): Boolean = with(binding) {
+        if (items.isNotEmpty()) {
+            val pFrag = childFragmentManager.fragments[0] as ParentFragment
+            if (pFrag.handleBackPressed()) {
                 return true
             }
         }
@@ -175,7 +175,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         setupPrevModuleName(currentPos)
         setupPreviousModule(getModuleItemGroup(currentPos))
         if (currentPos >= 1) {
-            viewPager.currentItem = --currentPos
+            showFragment(getItem(--currentPos))
         }
 
         updateBottomNavBarButtons()
@@ -185,16 +185,16 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         setupNextModuleName(currentPos)
         setupNextModule(getModuleItemGroup(currentPos))
         if (currentPos < itemsCount - 1) {
-            viewPager.currentItem = ++currentPos
+            showFragment(getItem(++currentPos))
         }
         updateBottomNavBarButtons()
     }
 
     private fun setButtonListeners() {
-        prev_item.setOnClickListener(prevItemClickCallback)
-        next_item.setOnClickListener(nextItemClickCallback)
+        binding.prevItem.setOnClickListener(prevItemClickCallback)
+        binding.nextItem.setOnClickListener(nextItemClickCallback)
 
-        markDoneButton.setOnClickListener {
+        binding.markDoneButton.setOnClickListener {
             val moduleItem = getModelObject()
             if (moduleItem?.completionRequirement != null) {
                 if (moduleItem.completionRequirement!!.completed) {
@@ -219,7 +219,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private fun setMarkDone(moduleItem: ModuleItem, markDone: Boolean) {
         val currentModuleItem = getModelObject()
         if (isAdded && moduleItem == currentModuleItem) {
-            markDoneCheckbox.isChecked = markDone
+            binding.markDoneCheckbox.isChecked = markDone
         }
         moduleItem.completionRequirement?.completed = markDone
         notifyOfItemChanged(moduleItem)
@@ -227,7 +227,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private fun setModuleName(name: String) {
         // Set the label at the bottom
-        moduleName.text = name
+        binding.moduleName.text = name
     }
 
     private fun setViewInfo(bundle: Bundle?) {
@@ -243,18 +243,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             getCurrentModuleItemPos(groupPos, childPos)
         }
 
-        // Setup adapter
-        adapter = CourseModuleProgressionAdapter(childFragmentManager)
-
-        viewPager?.let {
-            it.adapter = adapter
-
-            // Set a custom page transformer for RTL
-            if (Locale.getDefault().isRtl) it.setPageTransformer(true, pageTransformer)
-
-            // Set the item number in the adapter to be the overall position
-            it.currentItem = currentPos
-        }
+        showFragment(getItem(currentPos))
 
         updatePrevNextButtons(currentPos)
 
@@ -277,6 +266,23 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         updateModuleMarkDoneView(getCurrentModuleItem(currentPos))
     }
+
+    private fun showFragment(item: Fragment?) {
+        item?.let {
+            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commit()
+            applyFragmentTheme(it)
+        }
+    }
+
+    private fun applyFragmentTheme(fragment: Fragment) {
+        fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
+                super.onResume(owner)
+                (fragment as? FragmentInteractions)?.applyTheme()
+                fragment.lifecycle.removeObserver(this)
+            }
+        })
+    }
     //endregion
 
     //region View Helpers
@@ -285,8 +291,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // dynamically when we use an async task to get the next_item group of module items
     private fun updateBottomNavBarButtons() {
         // Make them visible by default
-        prev_item.setVisible()
-        next_item.setVisible()
+        binding.prevItem.setVisible()
+        binding.nextItem.setVisible()
 
         updatePrevNextButtons(currentPos)
 
@@ -295,7 +301,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             // Reload the sequential module object to update the subsequent items that may now be unlocked
             // The user has viewed the item, and may have completed the contribute/submit requirements for a
             // discussion/assignment.
-            adapter?.notifyDataSetChanged()
             addLockedIconIfNeeded(modules, items, groupPos, childPos)
 
             // Mark the item as viewed
@@ -330,15 +335,15 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private fun updatePrevNextButtons(currentPosition: Int) {
         // Don't want to see the previous button if we're on the first item
         if (currentPosition == 0) {
-            prev_item.setInvisible()
+            binding.prevItem.setInvisible()
         }
         // Don't show the next_item button if we're on the last item
         if (currentPosition >= itemsCount - 1) {
-            next_item.visibility = View.INVISIBLE
+            binding.nextItem.visibility = View.INVISIBLE
         }
     }
 
-    private fun updateModuleMarkDoneView(item: ModuleItem?) {
+    private fun updateModuleMarkDoneView(item: ModuleItem?) = with(binding) {
         // Sets up if the "mark done" view should be visible
         if (item == null) {
             markDoneWrapper.setGone()
@@ -401,15 +406,13 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 currentPos += itemsAdded
             }
 
-            adapter?.notifyDataSetChanged()
-
             // When we tap on a module item it will try to load the previous and next_item modules, this can throw off the module item that was already loaded,
             // so load it to the current position
-            viewPager.currentItem = currentPos
+            showFragment(getItem(currentPos))
 
             //prev_item/next_item buttons may now need to be visible (if we were on a module item that was the last in its group but
             //now we have info about the next_item module, we want the user to be able to navigate there)
-            bottomBarModule.setVisible()
+            binding.bottomBarModule.setVisible()
             updateBottomNavBarButtons()
         } catch { }
     }
@@ -563,12 +566,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
      */
     private fun addLockedIconIfNeeded(objects: ArrayList<ModuleObject>, moduleItems: ArrayList<ArrayList<ModuleItem>>, groupPosition: Int, childPosition: Int): Boolean {
         if (objects.size <= groupPosition) {
-            moduleNotFound.setVisible()
+            binding.moduleNotFound.setVisible()
             setLockedIcon()
             return true
         }
 
-        moduleNotFound.setGone()
+        binding.moduleNotFound.setGone()
 
         // If the group is locked, add locked icon
         if (ModuleUtility.isGroupLocked(objects[groupPosition])) {
@@ -605,91 +608,37 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             }
         }
 
-        moduleNameIcon.setGone()
+        binding.moduleNameIcon.setGone()
         return false
     }
 
     private fun setLockedIcon() {
-        moduleNameIcon.setVisible()
+        binding.moduleNameIcon.setVisible()
+    }
+
+    private fun getItem(position: Int): Fragment {
+        // Position is the overall position, and we could have multiple modules with their individual positions (if 2 modules have 3 items each, the last
+        // item in the second module is position 5, not 2 (zero based)),
+        // so we need to find the correct one overall
+        val moduleItem = getCurrentModuleItem(position) ?: getCurrentModuleItem(0) // Default to the first item, band-aid for NPE
+
+        val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos], isDiscussionRedesignEnabled)
+        var args: Bundle? = fragment!!.arguments
+        if (args == null) {
+            args = Bundle()
+            fragment.arguments = args
+        }
+
+        // Add module item ID to bundle for PageView tracking.
+        args.putLong(com.instructure.pandautils.utils.Const.MODULE_ITEM_ID, moduleItem.id)
+
+        return fragment
+        // Don't update the actionbar title here, we'll do it later. When we update it here the actionbar title sometimes
+        // gets updated to the next_item fragment's title
     }
     //endregion
 
     private fun getModelObject(): ModuleItem? = getCurrentModuleItem(currentPos)
-
-    //region Adapter
-    inner class CourseModuleProgressionAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-
-        private var expectingUpdate: Boolean = false
-
-        override fun finishUpdate(container: ViewGroup) {
-            super.finishUpdate(container)
-            if (!expectingUpdate) return
-
-            expectingUpdate = false
-            val fragments = childFragmentManager.fragments
-            for (fragment in fragments) {
-                if (fragment.isResumed)
-                    (fragment as? FragmentInteractions)?.applyTheme()
-            }
-        }
-
-        override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
-
-        override fun getCount(): Int = itemsCount
-
-        override fun getItem(position: Int): Fragment {
-            expectingUpdate = true
-
-            // Position is the overall position, and we could have multiple modules with their individual positions (if 2 modules have 3 items each, the last
-            // item in the second module is position 5, not 2 (zero based)),
-            // so we need to find the correct one overall
-            val moduleItem = getCurrentModuleItem(position) ?: getCurrentModuleItem(0) // Default to the first item, band-aid for NPE
-
-            val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos], isDiscussionRedesignEnabled)
-            var args: Bundle? = fragment!!.arguments
-            if (args == null) {
-                args = Bundle()
-                fragment.arguments = args
-            }
-
-            // Add module item ID to bundle for PageView tracking.
-            args.putLong(com.instructure.pandautils.utils.Const.MODULE_ITEM_ID, moduleItem.id)
-
-            return fragment
-            // Don't update the actionbar title here, we'll do it later. When we update it here the actionbar title sometimes
-            // gets updated to the next_item fragment's title
-        }
-
-        override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
-            super.setPrimaryItem(container, position, `object`)
-            // For PageView tracking
-            (`object` as? Fragment)?.userVisibleHint = true
-        }
-
-        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-            // Need to remove all the child fragments so they don't
-            // hang around and get attached to other activities
-            val fragment = `object` as? ParentFragment
-            fragment?.removeChildFragments()
-            super.destroyItem(container, position, `object`)
-        }
-    }
-
-    // For RTL - this prevents the scrolling animations (ViewPager doesn't come with RTL support and default page transition animations are backwards)
-    private val pageTransformer = ViewPager.PageTransformer { page, position ->
-        // Page on right, position = 1
-        // Page on left, position = -1
-        // Page on screen, position = 0
-
-        // Position updates dynamically, scrolling halfway through a page means one page pos = -0.5, the other 0.5
-        page.apply {
-            translationX = width * -position
-            visibility = if (position in -0.5..0.5) View.VISIBLE else View.GONE
-        }
-
-    }
-
-    //endregion
 
     //region Bookmarks
     override val bookmark: Bookmarker
@@ -729,7 +678,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
     //endregion
 
-    private fun loadModuleProgression(bundle: Bundle?) {
+    private fun loadModuleProgression(bundle: Bundle?) = with(binding) {
         if(assetId.isBlank()) {
             bottomBarModule.setVisible()
             setViewInfo(bundle)

@@ -16,6 +16,7 @@
  */
 package com.instructure.loginapi.login.features.acceptableusepolicy
 
+import android.webkit.CookieManager
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -58,7 +59,9 @@ class AcceptableUsePolicyViewModelTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private val userManager: UserManager = mockk<UserManager>(relaxed = true)
+    private val userManager: UserManager = mockk(relaxed = true)
+
+    private val cookieManager: CookieManager = mockk(relaxed = true)
 
     private lateinit var viewModel: AcceptableUsePolicyViewModel
 
@@ -82,7 +85,7 @@ class AcceptableUsePolicyViewModelTest {
         }
 
         // When
-        viewModel = AcceptableUsePolicyViewModel(userManager)
+        viewModel = AcceptableUsePolicyViewModel(userManager, cookieManager)
 
         // Then
         val expectedData = AcceptableUsePolicyViewData(TERMS_OF_SERVICE, false, false)
@@ -97,7 +100,7 @@ class AcceptableUsePolicyViewModelTest {
         }
 
         // When
-        viewModel = AcceptableUsePolicyViewModel(userManager)
+        viewModel = AcceptableUsePolicyViewModel(userManager, cookieManager)
         viewModel.checkedChanged(true)
 
         // Then
@@ -113,7 +116,7 @@ class AcceptableUsePolicyViewModelTest {
         }
 
         // When
-        viewModel = AcceptableUsePolicyViewModel(userManager)
+        viewModel = AcceptableUsePolicyViewModel(userManager, cookieManager)
         viewModel.openPolicy()
 
         // Then
@@ -130,7 +133,7 @@ class AcceptableUsePolicyViewModelTest {
         }
 
         // When
-        viewModel = AcceptableUsePolicyViewModel(userManager)
+        viewModel = AcceptableUsePolicyViewModel(userManager, cookieManager)
         viewModel.openPolicy()
 
         // Then
@@ -147,7 +150,7 @@ class AcceptableUsePolicyViewModelTest {
         }
 
         // When
-        viewModel = AcceptableUsePolicyViewModel(userManager)
+        viewModel = AcceptableUsePolicyViewModel(userManager, cookieManager)
         viewModel.openPolicy()
 
         // Then
@@ -163,7 +166,7 @@ class AcceptableUsePolicyViewModelTest {
         }
 
         // When
-        viewModel = AcceptableUsePolicyViewModel(userManager)
+        viewModel = AcceptableUsePolicyViewModel(userManager, cookieManager)
         viewModel.acceptPolicy()
 
         // Then
@@ -179,7 +182,7 @@ class AcceptableUsePolicyViewModelTest {
         }
 
         // When
-        viewModel = AcceptableUsePolicyViewModel(userManager)
+        viewModel = AcceptableUsePolicyViewModel(userManager, cookieManager)
         viewModel.acceptPolicy()
 
         // Then

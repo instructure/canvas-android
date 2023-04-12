@@ -18,27 +18,28 @@ package com.instructure.teacher.holders
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.viewholder_header_expandable.view.*
+import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 
-class QuizExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class QuizExpandableViewHolder(private val binding: ViewholderHeaderExpandableBinding) : RecyclerView.ViewHolder(binding.root) {
 
     var mIsExpanded = false
 
-    fun bind(context: Context,
-             isExpanded: Boolean,
-             holder: QuizExpandableViewHolder,
-             group: String,
-             callback: (String) -> Unit) = with(itemView) {
+    fun bind(
+        context: Context,
+        isExpanded: Boolean,
+        holder: QuizExpandableViewHolder,
+        group: String,
+        callback: (String) -> Unit
+    ) = with(binding) {
 
         mIsExpanded = isExpanded
         var title = ""
 
         // the group name is currently the quiz type, but it's not very readable, so change it
-        when(group) {
+        when (group) {
             Quiz.TYPE_ASSIGNMENT -> title = context.getString(R.string.assignmentQuizzes)
             Quiz.TYPE_SURVEY -> title = context.getString(R.string.surveys)
             Quiz.TYPE_GRADED_SURVEY -> title = context.getString(R.string.gradedSurveys)
@@ -56,9 +57,5 @@ class QuizExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
             flipAnimator.start()
             callback(group)
         }
-    }
-
-    companion object {
-        const val HOLDER_RES_ID: Int = R.layout.viewholder_header_expandable
     }
 }

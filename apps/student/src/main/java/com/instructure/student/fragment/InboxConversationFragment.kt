@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -37,18 +36,18 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_CONVERSATION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxConversationAdapter
+import com.instructure.student.databinding.FragmentInboxConversationBinding
+import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.interfaces.MessageAdapterCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.FileDownloadJobIntentService
 import com.instructure.student.view.AttachmentView
-import kotlinx.android.synthetic.main.fragment_inbox_conversation.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
-import kotlinx.android.synthetic.main.toolbar_layout.toolbar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -56,6 +55,9 @@ import org.greenrobot.eventbus.ThreadMode
 @ScreenView(SCREEN_VIEW_INBOX_CONVERSATION)
 @PageView(url = "conversations")
 class InboxConversationFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentInboxConversationBinding::bind)
+    private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
 
     private var scope by NullableStringArg(Const.SCOPE)
     private var conversation by ParcelableArg<Conversation>(key = Const.CONVERSATION)
@@ -166,6 +168,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         when {
         // Setup from conversation ID
             conversationId != 0L -> {
@@ -197,7 +200,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun setupViews() {
@@ -209,15 +212,15 @@ class InboxConversationFragment : ParentFragment() {
     private fun initAdapter() {
         configureRecyclerView(requireView(), requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         val dividerItemDecoration = DividerItemDecoration(
-            listView.context,
+            recyclerBinding.listView.context,
             LinearLayoutManager.VERTICAL
         )
         dividerItemDecoration.setDrawable(requireContext().getDrawableCompat(R.drawable.item_decorator_gray))
-        listView.addItemDecoration(dividerItemDecoration)
+        recyclerBinding.listView.addItemDecoration(dividerItemDecoration)
     }
 
-    private fun initToolbar() {
-        toolbar.setupAsBackButton(this)
+    private fun initToolbar() = with(binding) {
+        toolbar.setupAsBackButton(this@InboxConversationFragment)
         toolbar.setTitle(R.string.message)
         toolbar.inflateMenu(R.menu.message_thread)
 
@@ -236,7 +239,7 @@ class InboxConversationFragment : ParentFragment() {
         toolbar.setOnMenuItemClickListener(menuListener)
     }
 
-    private fun initConversationDetails() {
+    private fun initConversationDetails() = with(binding) {
         val conversation = conversation
 
         if (conversation.subject == null || conversation.subject?.trim { it <= ' ' }?.isEmpty() == true) {
@@ -264,7 +267,7 @@ class InboxConversationFragment : ParentFragment() {
         ToolbarColorizeHelper.colorizeToolbar(toolbar, textColor, requireActivity())
     }
 
-    private fun toggleStarred() {
+    private fun toggleStarred() = with(binding) {
         starCall?.cancel()
         val shouldStar = !conversation.isStarred
         tryWeave {
@@ -278,7 +281,7 @@ class InboxConversationFragment : ParentFragment() {
             onConversationUpdated(false)
         } catch {
             toast(R.string.errorConversationGeneric)
-            starred?.setImageResource(if (!shouldStar) R.drawable.ic_star_filled else R.drawable.ic_star_outline)
+            starred.setImageResource(if (!shouldStar) R.drawable.ic_star_filled else R.drawable.ic_star_outline)
             ColorUtils.colorIt(ThemePrefs.brandColor, starred.drawable)
             refreshConversationData()
         }
@@ -310,7 +313,7 @@ class InboxConversationFragment : ParentFragment() {
     private fun markConversationUnread() {
         unreadCall?.cancel()
         unreadCall = tryWeave {
-            awaitApi<Void> { InboxManager.markConversationAsUnread(conversation.id, InboxApi.CONVERSATION_MARK_UNREAD, it) }
+            awaitApi<Void> { InboxManager.markConversationAsUnread(conversation.id, it) }
             onConversationUpdated(true)
         } catch {
             toast(R.string.errorConversationGeneric)
@@ -334,10 +337,15 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun replyAllMessage() {
+        val users = if (adapter.participants.size == 1) {
+            adapter.participants.values
+        } else {
+            adapter.participants.values.filter { it.id != ApiPrefs.user?.id }
+        }
         val route = InboxComposeMessageFragment.makeRoute(
                 true,
                 conversation,
-                adapter.participants.values.map { Recipient.from(it) },
+                users.map { Recipient.from(it) },
                 longArrayOf(),
                 null)
         RouteMatcher.route(requireContext(), route)
@@ -365,19 +373,28 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun getMessageRecipientsForReplyAll(message: Message): List<BasicUser> {
-        return message.participatingUserIds
-                // Map the conversations participating users to the messages participating users
-                .mapNotNull { participatingUserId ->
-                    adapter.participants.values.find { basicUser ->
-                        basicUser.id == participatingUserId
-                    }
+        val userIds = if (message.participatingUserIds.size == 1) {
+            message.participatingUserIds
+        } else {
+            message.participatingUserIds.filter { it != ApiPrefs.user?.id }
+        }
+        return userIds
+            // Map the conversations participating users to the messages participating users
+            .mapNotNull { participatingUserId ->
+                adapter.participants.values.find { basicUser ->
+                    basicUser.id == participatingUserId
                 }
+            }
     }
 
     private fun getMessageRecipientsForReply(message: Message): List<BasicUser>  {
         // If the author is self, we default to all other participants
         return if (message.authorId == ApiPrefs.user!!.id) {
-            adapter.participants.values.toList()
+            if (adapter.participants.size == 1) {
+                adapter.participants.values.toList()
+            } else {
+                adapter.participants.values.filter { it.id != ApiPrefs.user?.id }
+            }
         } else {
             listOf(adapter.participants.values.first { it.id == message.authorId })
         }
