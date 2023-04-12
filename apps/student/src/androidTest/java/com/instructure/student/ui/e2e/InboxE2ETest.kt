@@ -98,7 +98,7 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Click on 'Send' button.")
         newMessagePage.clickSend()
 
-        sleep(3000) // Allow time for messages to propagate
+        sleep(2000) // Allow time for messages to propagate
 
         Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
         inboxPage.goToDashboard()
@@ -174,6 +174,8 @@ class InboxE2ETest: StudentTest() {
         inboxPage.clickUnArchive()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
+        sleep(2000)
+
         Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that ${seededConversation.subject} conversation is displayed.")
         inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
@@ -200,6 +202,8 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
 
+        sleep(2000)
+
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that both of the conversations are displayed there.")
         inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
@@ -221,6 +225,8 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
 
+        sleep(2000)
+
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that both of the conversations are displayed there.")
         inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
@@ -231,6 +237,8 @@ class InboxE2ETest: StudentTest() {
         inboxPage.clickUnArchive()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
+
+        sleep(2000)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope and assert that both of the conversations are displayed there.")
         inboxPage.filterInbox("Inbox")
@@ -267,6 +275,8 @@ class InboxE2ETest: StudentTest() {
         inboxPage.clickStar()
         inboxPage.assertSelectedConversationNumber("2")
         inboxPage.clickMarkAsUnread()
+
+        sleep(1000)
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that both of the conversation are displayed in the 'STARRED' scope.")
         inboxPage.filterInbox("Starred")
