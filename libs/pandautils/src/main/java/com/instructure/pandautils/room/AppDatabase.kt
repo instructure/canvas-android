@@ -10,11 +10,11 @@ import com.instructure.pandautils.room.entities.*
     entities = [
         AttachmentEntity::class,
         AuthorEntity::class,
+        DashboardFileUploadEntity::class,
         FileUploadInputEntity::class,
         MediaCommentEntity::class,
-        SubmissionCommentEntity::class,
         PendingSubmissionCommentEntity::class,
-        DashboardFileUploadEntity::class
+        SubmissionCommentEntity::class,
     ], version = 3
 )
 @TypeConverters(Converters::class)
