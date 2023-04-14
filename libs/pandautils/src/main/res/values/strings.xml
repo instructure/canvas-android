@@ -487,4 +487,13 @@
     <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">Offline Content</string>
+    <string name="course_menu_manage_offline_content">Manage Offline Content</string>
+    <string name="offline_content_storage">Storage</string>
+    <string name="offline_content_storage_info">%s of %s Used</string>
+    <string name="offline_content_other">Other Apps</string>
+    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_remaining">Remaining</string>
+
 </resources>

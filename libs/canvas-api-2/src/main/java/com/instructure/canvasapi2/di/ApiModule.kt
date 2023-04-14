@@ -167,4 +167,9 @@ class ApiModule {
     fun provideTabApi(): TabAPI.TabsInterface {
         return RestBuilder().build(TabAPI.TabsInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideFileFolderApi(): FileFolderAPI.FilesFoldersInterface {
+        return RestBuilder().build(FileFolderAPI.FilesFoldersInterface::class.java, RestParams())
+    }
 }

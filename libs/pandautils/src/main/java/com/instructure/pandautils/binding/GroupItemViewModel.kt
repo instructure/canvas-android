@@ -31,4 +31,15 @@ abstract class GroupItemViewModel(
         collapsed = !collapsed
         notifyPropertyChanged(BR.collapsed)
     }
+
+    fun getAllItems(): List<ItemViewModel> {
+        val result = mutableListOf<ItemViewModel>()
+        items.forEach {
+            result += it
+            if (it is GroupItemViewModel && !it.collapsed) {
+                result += it.getAllItems()
+            }
+        }
+        return result
+    }
 }

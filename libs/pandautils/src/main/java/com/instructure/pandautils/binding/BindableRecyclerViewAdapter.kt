@@ -37,15 +37,15 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
                 toggleGroup(sender)
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context), viewTypeLayoutMap[viewType]
-                ?: 0, parent, false
+            LayoutInflater.from(parent.context),
+            viewTypeLayoutMap[viewType] ?: 0,
+            parent,
+            false
         )
-
         return BindableViewHolder(binding)
     }
 
@@ -92,8 +92,9 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
     private fun toggleGroup(group: GroupItemViewModel) {
         val position = itemViewModels.indexOf(group)
         if (group.collapsed) {
-            itemViewModels.removeAll(group.items)
-            notifyItemRangeRemoved(position + 1, group.items.size)
+            val items = group.getAllItems()
+            itemViewModels.removeAll(items)
+            notifyItemRangeRemoved(position + 1, items.size)
         } else {
             itemViewModels.addAll(position + 1, group.items)
             setupGroups(group.items.filterIsInstance<GroupItemViewModel>())
@@ -110,7 +111,6 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
         itemViewModels.removeAll { it is LoadingItemViewModel }
         notifyDataSetChanged()
     }
-
 }
 
 class BindableViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {

@@ -65,12 +65,14 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             // Add things to the popup menu
             menu.add(0, 0, 0, R.string.editNickname)
             menu.add(0, 1, 1, R.string.editCourseColor)
+            menu.add(0, 2, 2, R.string.course_menu_manage_offline_content)
 
             // Add click listener
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     0 -> callback.onEditCourseNickname(course)
                     1 -> callback.onPickCourseColor(course)
+                    2 -> callback.onManageOfflineContent(course)
                 }
                 true
             }

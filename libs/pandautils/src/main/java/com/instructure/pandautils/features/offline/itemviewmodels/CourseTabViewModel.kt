@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -15,17 +15,16 @@
  *
  */
 
-package com.instructure.student.interfaces
+package com.instructure.pandautils.features.offline.itemviewmodels
 
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.GroupItemViewModel
+import com.instructure.pandautils.features.offline.CourseTabViewData
+import com.instructure.pandautils.features.offline.OfflineItemViewModelType
 
-interface CourseAdapterToFragmentCallback {
-    fun onRefreshFinished()
-    fun onSeeAllCourses()
-    fun onGroupSelected(group: Group)
-    fun onCourseSelected(course: Course)
-    fun onEditCourseNickname(course: Course)
-    fun onPickCourseColor(course: Course)
-    fun onManageOfflineContent(course: Course)
+data class CourseTabViewModel(
+    val data: CourseTabViewData
+) : GroupItemViewModel(collapsable = false, collapsed = false, items = data.files) {
+    override val layoutId = R.layout.item_offline_tab
+    override val viewType = OfflineItemViewModelType.COURSE_TAB.viewType
 }

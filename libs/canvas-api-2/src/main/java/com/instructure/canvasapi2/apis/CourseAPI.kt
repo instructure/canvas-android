@@ -63,6 +63,9 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image")
         fun getCourse(@Path("courseId") courseId: Long): Call<Course>
 
+        @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image")
+        suspend fun getCourse(@Path("courseId") courseId: Long, @Tag params: RestParams): DataResult<Course>
+
         @GET("courses/{courseId}/settings")
         fun getCourseSettings(@Path("courseId") courseId: Long): Call<CourseSettings>
 
