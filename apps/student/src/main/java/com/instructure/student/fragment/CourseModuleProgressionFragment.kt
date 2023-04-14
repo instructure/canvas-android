@@ -269,7 +269,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private fun showFragment(item: Fragment?) {
         item?.let {
-            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commit()
+            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commitAllowingStateLoss()
             applyFragmentTheme(it)
         }
     }
