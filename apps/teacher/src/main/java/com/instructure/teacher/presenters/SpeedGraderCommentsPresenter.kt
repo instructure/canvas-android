@@ -30,8 +30,8 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.room.daos.*
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
-import com.instructure.pandautils.room.entities.PendingSubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.model.SubmissionCommentWithAttachments
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent

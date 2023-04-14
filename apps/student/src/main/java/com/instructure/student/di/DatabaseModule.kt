@@ -2,9 +2,9 @@ package com.instructure.student.di
 
 import android.content.Context
 import androidx.room.Room
-import com.instructure.pandautils.room.AppDatabase
 import com.instructure.pandautils.room.MIGRATION_1_2
 import com.instructure.pandautils.room.MIGRATION_2_3
+import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance

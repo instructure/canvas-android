@@ -3,10 +3,10 @@ package com.instructure.pandautils.room.model
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.instructure.canvasapi2.models.SubmissionComment
-import com.instructure.pandautils.room.entities.AttachmentEntity
-import com.instructure.pandautils.room.entities.AuthorEntity
-import com.instructure.pandautils.room.entities.MediaCommentEntity
-import com.instructure.pandautils.room.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
+import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
+import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
 
 data class SubmissionCommentWithAttachments(
     @Embedded

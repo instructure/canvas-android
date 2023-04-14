@@ -19,9 +19,9 @@ package com.instructure.pandautils.di
 
 import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.OfflineDatabase
-import com.instructure.pandautils.room.OfflineDatabaseProvider
-import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
+import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides

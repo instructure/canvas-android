@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
+import com.instructure.pandautils.room.appdatabase.entities.*
 import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.room.entities.*
 import com.instructure.pandautils.utils.Const

@@ -18,7 +18,7 @@
 package com.instructure.student.di
 
 import com.instructure.canvasapi2.apis.TabAPI
-import com.instructure.pandautils.room.daos.TabDao
+import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
 import dagger.Module

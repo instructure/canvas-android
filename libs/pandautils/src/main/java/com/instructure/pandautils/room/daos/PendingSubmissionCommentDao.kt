@@ -1,7 +1,7 @@
 package com.instructure.pandautils.room.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.entities.PendingSubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.model.PendingSubmissionCommentWithFileUploadInput
 
 @Dao

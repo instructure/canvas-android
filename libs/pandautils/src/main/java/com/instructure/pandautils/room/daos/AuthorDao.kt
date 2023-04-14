@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
-import com.instructure.pandautils.room.entities.AuthorEntity
+import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
 
 @Dao
 interface AuthorDao {

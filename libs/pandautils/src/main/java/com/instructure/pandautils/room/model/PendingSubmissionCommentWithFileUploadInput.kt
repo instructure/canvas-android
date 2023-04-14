@@ -5,8 +5,8 @@ import androidx.room.Relation
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
-import com.instructure.pandautils.room.entities.PendingSubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import java.util.*
 
 data class PendingSubmissionCommentWithFileUploadInput(

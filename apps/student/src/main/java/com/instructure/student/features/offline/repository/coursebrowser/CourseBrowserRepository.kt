@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.room.daos.TabDao
+import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.utils.NetworkStateProvider
 
 

@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -32,12 +33,13 @@ import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemVi
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.daos.FileUploadInputDao
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -290,6 +292,8 @@ class FileUploadDialogViewModel @Inject constructor(
             if (uploadType == FileUploadType.DISCUSSION) {
                 _events.value = Event(FileUploadAction.AttachmentSelectedAction(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri()))
             } else {
+                PeriodicWorkRequestBuilder<FileUploadWorker>(1, TimeUnit.DAYS)
+                PeriodicWorkRequestBuilder<FileUploadWorker>(7, TimeUnit.DAYS)
                 val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
                     .build()
 

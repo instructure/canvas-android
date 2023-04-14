@@ -1,7 +1,7 @@
 package com.instructure.pandautils.room.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
 import com.instructure.pandautils.room.model.SubmissionCommentWithAttachments
 
 @Dao

@@ -1,7 +1,7 @@
 package com.instructure.pandautils.room.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 
 @Dao
 interface FileUploadInputDao {
