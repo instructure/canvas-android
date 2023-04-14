@@ -401,7 +401,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun refreshConversationData() {
-        initConversationDetails()
+        if (view != null) initConversationDetails()
     }
 
     private fun onConversationUpdated(goBack: Boolean) {
