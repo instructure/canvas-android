@@ -29,7 +29,7 @@ class OfflineDatabaseProvider(private val context: Context) {
 
         return dbMap.getOrPut(userId) {
             Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-$userId")
-                .addMigrations()
+                .addMigrations(*offlineDatabaseMigrations)
                 .build()
         }
     }

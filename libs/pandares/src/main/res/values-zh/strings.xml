@@ -1280,6 +1280,8 @@
     <string name="fileUploadProgressSubtitle">上传到文件</string>
     <string name="submissionProgressSubtitle">上传提交项到\"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">正在上传提交作业</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">成功提交文件</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">提交文件失败</string>
     <string name="dashboardNotificationUploadingFilesTitle">上传文件</string>
     <string name="cancelSubmissionDialogTitle">取消提交</string>
     <string name="cancelSubmissionDialogMessage">此操作将取消并删除您的提交项。</string>
@@ -1356,4 +1358,6 @@
     <string name="a11y_conversationDeselected">已取消选择会话</string>
     <string name="a11y_exitSelectionMode">退出选择模式</string>
     <string name="a11y_selectionModeDeactivated">选择模式已被禁用。</string>
+    <string name="a11y_avatarContentDescription">%s头像</string>
+    <string name="inboxUndo">后退</string>
 </resources>

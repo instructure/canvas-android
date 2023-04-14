@@ -117,6 +117,7 @@
                 android:contentDescription="@string/dismiss"
                 android:onClick="@{() -> itemViewModel.remove()}"
                 android:src="@drawable/ic_close"
+                android:visibility="@{itemViewModel.data.uploading ? View.GONE : View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/textDarkest" />

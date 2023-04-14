@@ -35,9 +35,11 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
-import com.instructure.pandautils.room.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import io.mockk.coEvery
 import io.mockk.every
@@ -76,6 +78,8 @@ class DashboardNotificationsViewModelTest {
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
+    private val fileUploadInputDao: FileUploadInputDao = mockk(relaxed = true)
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
     private lateinit var uploadsLiveData: MutableLiveData<List<DashboardFileUploadEntity>>
 
@@ -130,7 +134,9 @@ class DashboardNotificationsViewModelTest {
             conferenceDashboardBlacklist,
             apiPrefs,
             workManager,
-            dashboardFileUploadDao
+            dashboardFileUploadDao,
+            fileUploadInputDao,
+            fileUploadUtilsHelper
         )
 
         viewModel.data.observe(lifecycleOwner, {})

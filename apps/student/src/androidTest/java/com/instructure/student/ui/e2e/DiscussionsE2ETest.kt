@@ -21,6 +21,8 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.ViewUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -34,13 +36,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DiscussionsE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -54,28 +52,16 @@ class DiscussionsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed a discussion topic.")
-        val topic1 = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = teacher.token
-        )
+        val topic1 = createDiscussion(course, teacher)
 
         Log.d(PREPARATION_TAG,"Seed another discussion topic.")
-        val topic2 = DiscussionTopicsApi.createDiscussion(
-            courseId = course.id,
-            token = teacher.token
-        )
+        val topic2 = createDiscussion(course, teacher)
 
         Log.d(STEP_TAG,"Seed an announcement for ${course.name} course.")
-        val announcement = DiscussionTopicsApi.createAnnouncement(
-            courseId = course.id,
-            token = teacher.token
-        )
+        val announcement = createAnnouncement(course, teacher)
 
         Log.d(STEP_TAG,"Seed another announcement for ${course.name} course.")
-        val announcement2 = DiscussionTopicsApi.createAnnouncement(
-            courseId = course.id,
-            token = teacher.token
-        )
+        val announcement2 = createAnnouncement(course, teacher)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -168,4 +154,20 @@ class DiscussionsE2ETest: StudentTest() {
         discussionListPage.assertReplyCount(newTopicName, 1)
 
     }
+
+    private fun createAnnouncement(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = DiscussionTopicsApi.createAnnouncement(
+        courseId = course.id,
+        token = teacher.token
+    )
+
+    private fun createDiscussion(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = DiscussionTopicsApi.createDiscussion(
+        courseId = course.id,
+        token = teacher.token
+    )
 }

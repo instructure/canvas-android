@@ -60,7 +60,7 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
         setShouldLoadUrl(false)
         canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
-        canvasWebView.setDarkModeSupport()
+        canvasWebView.enableAlgorithmicDarkening()
 
         val originalCallback = canvasWebView.canvasWebViewClientCallback!!
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by originalCallback {

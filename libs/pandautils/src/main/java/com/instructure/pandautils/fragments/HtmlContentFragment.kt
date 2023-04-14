@@ -28,7 +28,6 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,7 +65,6 @@ class HtmlContentFragment : Fragment() {
     }
 
     private fun setupWebView(canvasWebView: CanvasWebView) {
-        canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
         canvasWebView.settings.loadWithOverviewMode = true
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)

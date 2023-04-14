@@ -32,12 +32,13 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.room.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -71,7 +72,7 @@ class FileUploadDialogViewModel @Inject constructor(
 
     var dialogCallback: ((Int) -> Unit)? = null
 
-    private var filesToUpload = mutableListOf<FileUploadData>()
+    private var filesToUpload = mutableListOf<FileSubmitObject>()
 
     fun setData(
         assignment: Assignment?,
@@ -90,7 +91,7 @@ class FileUploadDialogViewModel @Inject constructor(
         files?.forEach { uri ->
             val submitObject = getUriContents(uri)
             submitObject?.let { fso ->
-                this.filesToUpload.add(FileUploadData(uri, fso))
+                this.filesToUpload.add(fso)
             }
         }
         this.uploadType = uploadType
@@ -146,7 +147,7 @@ class FileUploadDialogViewModel @Inject constructor(
         val submitObject = getUriContents(fileUri)
         if (submitObject != null) {
             if (submitObject.errorMessage.isNullOrEmpty()) {
-                val added = addIfExtensionAllowed(fileUri, submitObject)
+                val added = addIfExtensionAllowed(submitObject)
                 if (added) {
                     updateItems()
                 }
@@ -168,9 +169,9 @@ class FileUploadDialogViewModel @Inject constructor(
     private fun updateItems() {
         val itemViewModels = filesToUpload.map {
             FileItemViewModel(FileItemViewData(
-                    it.fileSubmitObject.name,
-                    it.fileSubmitObject.size.humanReadableByteCount(),
-                    it.fileSubmitObject.fullPath
+                    it.name,
+                    it.size.humanReadableByteCount(),
+                    it.fullPath
             ), this::onRemoveFileClicked)
         }
         _data.postValue(FileUploadDialogViewData(
@@ -180,7 +181,7 @@ class FileUploadDialogViewModel @Inject constructor(
 
     private fun onRemoveFileClicked(fullPath: String) {
         filesToUpload.removeIf {
-            it.fileSubmitObject.fullPath == fullPath
+            it.fullPath == fullPath
         }
         updateItems()
     }
@@ -192,9 +193,9 @@ class FileUploadDialogViewModel @Inject constructor(
         return fileUploadUtils.getFileSubmitObjectFromInputStream(fileUri, fileName, mimeType)
     }
 
-    private fun addIfExtensionAllowed(uri: Uri, fileSubmitObject: FileSubmitObject): Boolean {
-        if (assignment != null && (assignment?.allowedExtensions == null || assignment?.allowedExtensions?.size == 0)) {
-            filesToUpload.add(FileUploadData(uri, fileSubmitObject))
+    private fun addIfExtensionAllowed(fileSubmitObject: FileSubmitObject): Boolean {
+        if (assignment != null && assignment?.allowedExtensions.isNullOrEmpty()) {
+            filesToUpload.add(fileSubmitObject)
             return true
         }
 
@@ -204,7 +205,7 @@ class FileUploadDialogViewModel @Inject constructor(
             val ext = fileSubmitObject.fullPath.substring(index + 1)
             for (i in 0 until (assignment?.allowedExtensions?.size ?: 0)) {
                 if (assignment!!.allowedExtensions[i].trim { it <= ' ' }.equals(ext, ignoreCase = true)) {
-                    filesToUpload.add(FileUploadData(uri, fileSubmitObject))
+                    filesToUpload.add(fileSubmitObject)
                     return true
                 }
             }
@@ -216,7 +217,7 @@ class FileUploadDialogViewModel @Inject constructor(
         //submit to, so we won't know if there are any extension limits
         //also, the assignment and/or course could be null due to memory pressures
         if (assignment == null || canvasContext.id != 0L) {
-            filesToUpload.add(FileUploadData(uri, fileSubmitObject))
+            filesToUpload.add(fileSubmitObject)
             return true
         }
 
@@ -270,22 +271,20 @@ class FileUploadDialogViewModel @Inject constructor(
                 }
 
                 filesToUpload.forEach {
-                    if (!isExtensionAllowed(it.fileSubmitObject.fullPath)) {
+                    if (!isExtensionAllowed(it.fullPath)) {
                         _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.oneOrMoreExtensionNotAllowed)))
                         return
                     }
                 }
             }
 
-            val uris = filesToUpload.map { it.uri }
+            val uris = filesToUpload.map { Uri.fromFile(File(it.fullPath)) }
 
             startUpload(uris)
         }
     }
 
-    private fun getAttachmentUri(): FileSubmitObject? {
-        return filesToUpload.firstOrNull()?.fileSubmitObject
-    }
+    private fun getAttachmentUri() = filesToUpload.firstOrNull()
 
     private fun startUpload(uris: List<Uri>) {
         viewModelScope.launch {
@@ -294,13 +293,19 @@ class FileUploadDialogViewModel @Inject constructor(
             } else {
                 PeriodicWorkRequestBuilder<FileUploadWorker>(1, TimeUnit.DAYS)
                 PeriodicWorkRequestBuilder<FileUploadWorker>(7, TimeUnit.DAYS)
-                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-                    .build()
+                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>().build()
 
                 val input = getInputData(worker.id, uris)
                 fileUploadInputDao.insert(input)
 
-                _events.value = Event(FileUploadAction.UploadStartedAction(worker.id, workManager.getWorkInfoByIdLiveData(worker.id), filesToUpload.map { it.uri.toString() }))
+                _events.value = Event(
+                    FileUploadAction.UploadStartedAction(
+                        worker.id,
+                        workManager.getWorkInfoByIdLiveData(worker.id),
+                        uris.map { it.toString() }
+                    )
+                )
+
                 workManager.enqueue(worker)
                 dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)
             }

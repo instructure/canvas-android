@@ -30,7 +30,7 @@ class QuizSubmissionViewFragment : InternalWebviewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         getCanvasLoading().setVisible() // Set visible so we can test it
         binding.canvasWebViewWrapper.apply {
-            webView.setDarkModeSupport()
+            webView.enableAlgorithmicDarkening()
             webView.setInitialScale(100)
             setInvisible() // Set invisible so we can test it
             webView.webChromeClient = object : WebChromeClient() {

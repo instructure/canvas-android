@@ -57,7 +57,7 @@ data class AnnouncementViewData(
 data class UploadViewData(
     val title: String,
     val subTitle: String,
-    val icon: Int,
+    @DrawableRes val icon: Int,
     @ColorRes val backgroundColorTint: Int,
     val isUploading: Boolean
 )

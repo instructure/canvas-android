@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room.model
+package com.instructure.pandautils.room.appdatabase.model
 
 import androidx.room.Embedded
 import androidx.room.Relation

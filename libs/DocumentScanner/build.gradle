@@ -13,12 +13,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion Versions.TARGET_SDK
         versionCode libraryVersionCode
         versionName libraryVersionName
 

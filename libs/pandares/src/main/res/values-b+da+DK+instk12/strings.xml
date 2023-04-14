@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Uploader til filer</string>
     <string name="submissionProgressSubtitle">Uploader indsendelse til \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploader aflevering</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Aflevering lykkedes</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Aflevering mislykkedes</string>
     <string name="dashboardNotificationUploadingFilesTitle">Uploader filer</string>
     <string name="cancelSubmissionDialogTitle">Annuller aflevering</string>
     <string name="cancelSubmissionDialogMessage">Dette annullerer og sletter din aflevering.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Diskussion fravalgt</string>
     <string name="a11y_exitSelectionMode">Deaktiver valgtilstand</string>
     <string name="a11y_selectionModeDeactivated">Valgtilstand deaktiveret.</string>
+    <string name="a11y_avatarContentDescription">Avatar for %s</string>
+    <string name="inboxUndo">Fortryd</string>
 </resources>

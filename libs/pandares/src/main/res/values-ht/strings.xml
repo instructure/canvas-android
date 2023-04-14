@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Transfere nan Fichye</string>
     <string name="submissionProgressSubtitle">Transfere Soumisyon nan \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Chajman Soumisyon</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Soumisyon Reyisi</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Soumisyon Echwe</string>
     <string name="dashboardNotificationUploadingFilesTitle">Ajoute Fichye</string>
     <string name="cancelSubmissionDialogTitle">Anile Soumisyon</string>
     <string name="cancelSubmissionDialogMessage">Aksyon sa a ap anile epi efase soumisyon w lan.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Konvèsasyon deseleksyone</string>
     <string name="a11y_exitSelectionMode">Sòti nan mòd seleksyon</string>
     <string name="a11y_selectionModeDeactivated">Mòd seleksyon dezaktive.</string>
+    <string name="a11y_avatarContentDescription">Avatar %s</string>
+    <string name="inboxUndo">Defèt</string>
 </resources>

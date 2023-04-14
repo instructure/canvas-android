@@ -112,7 +112,7 @@ internal class CameraScreenFragment: BaseFragment<FragmentCameraScreenBinding>(F
 
     private fun checkForStoragePermissions() {
         RxPermissions(this)
-            .requestEach(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .requestEach(Manifest.permission.READ_MEDIA_IMAGES)
             .subscribe { permission ->
                 when {
                     permission.granted -> {

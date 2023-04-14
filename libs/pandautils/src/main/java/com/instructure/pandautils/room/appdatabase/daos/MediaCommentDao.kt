@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room.daos
+package com.instructure.pandautils.room.appdatabase.daos
 
 import androidx.room.Dao
 import androidx.room.Delete

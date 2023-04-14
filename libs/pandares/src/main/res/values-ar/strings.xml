@@ -1359,6 +1359,8 @@
     <string name="fileUploadProgressSubtitle">جارٍ التحميل إلى الملفات</string>
     <string name="submissionProgressSubtitle">جارٍ تحميل الإرسال إلى \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">جارٍ تحميل الإرسال</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">نجح الإرسال</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">فشل الإرسال</string>
     <string name="dashboardNotificationUploadingFilesTitle">جارٍ تحميل الملفات</string>
     <string name="cancelSubmissionDialogTitle">إلغاء الإرسال</string>
     <string name="cancelSubmissionDialogMessage">سيؤدي هذا إلى إلغاء وحذف إرسالك.</string>
@@ -1440,4 +1442,6 @@
     <string name="a11y_conversationDeselected">تم إلغاء تحديد المحادثة</string>
     <string name="a11y_exitSelectionMode">الخروج من وضع التحديد</string>
     <string name="a11y_selectionModeDeactivated">تم إلغاء تنشيط وضع التحديد.</string>
+    <string name="a11y_avatarContentDescription">صورة رمزية %s</string>
+    <string name="inboxUndo">تراجع</string>
 </resources>

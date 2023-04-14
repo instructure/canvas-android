@@ -50,7 +50,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getCanvasWebView().setDarkModeSupport()
+        getCanvasWebView().enableAlgorithmicDarkening()
         getCanvasWebView().addJavascriptInterface(JSInterface(), "HtmlViewer")
 
         getCanvasWebView().canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {

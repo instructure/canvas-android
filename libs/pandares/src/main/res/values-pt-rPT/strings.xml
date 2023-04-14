@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Carregamento para ficheiros</string>
     <string name="submissionProgressSubtitle">A carregar o envio para \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">A carregar o envio</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submissão Bem sucedida</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Falha na submissão</string>
     <string name="dashboardNotificationUploadingFilesTitle">Carregamento de ficheiros</string>
     <string name="cancelSubmissionDialogTitle">Cancelar subscrição</string>
     <string name="cancelSubmissionDialogMessage">Isto irá cancelar e eliminar a sua submissão.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Conversação desmarcada</string>
     <string name="a11y_exitSelectionMode">Sair do modo de seleção</string>
     <string name="a11y_selectionModeDeactivated">Modo de seleção desativado.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfazer</string>
 </resources>
