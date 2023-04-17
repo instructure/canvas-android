@@ -17,10 +17,7 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 
 @Dao
@@ -34,4 +31,7 @@ interface CourseSyncSettingsDao {
 
     @Update
     suspend fun update(entity: CourseSyncSettingsEntity)
+
+    @Query("SELECT * FROM CourseSyncSettingsEntity")
+    suspend fun findAll(): List<CourseSyncSettingsEntity>
 }

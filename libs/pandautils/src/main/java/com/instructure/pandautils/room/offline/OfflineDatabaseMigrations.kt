@@ -21,7 +21,8 @@ import com.instructure.pandautils.room.createMigration
 
 val offlineDatabaseMigrations = arrayOf(
 
-    createMigration(1, 2) {
-
+    createMigration(1, 2) { _db ->
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `CourseSyncSettingsEntity` (`courseId` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, PRIMARY KEY(`courseId`))")
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `CourseFilesEntity` (`courseId` INTEGER NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`courseId`, `url`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncSettingsEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )")
     }
 )

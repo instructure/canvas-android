@@ -27,6 +27,7 @@ import com.instructure.pandautils.room.offline.entities.*
 @Database(
     entities = [
         CourseEntity::class,
+        CourseFilesEntity::class,
         CourseGradingPeriodEntity::class,
         CourseSyncSettingsEntity::class,
         EnrollmentEntity::class,
@@ -37,7 +38,7 @@ import com.instructure.pandautils.room.offline.entities.*
         TermEntity::class,
         UserCalendarEntity::class,
         UserEntity::class
-    ], version = 1
+    ], version = 2
 )
 @TypeConverters(Converters::class)
 abstract class OfflineDatabase : RoomDatabase() {
