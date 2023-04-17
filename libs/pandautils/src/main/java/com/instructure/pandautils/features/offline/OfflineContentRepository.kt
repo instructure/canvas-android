@@ -35,22 +35,26 @@ class OfflineContentRepository(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) {
 
-    suspend fun getCourses(courseId: Long?): List<Course> {
-        val params = RestParams(usePerPageQueryParam = true)
+    suspend fun getCourse(courseId: Long, forceNetwork: Boolean): Course {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val courseResult = coursesApi.getCourse(courseId, params)
 
-        if (courseId == null) {
-            val coursesResult = coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
-            if (coursesResult.isFail) return emptyList() //TODO error handling
-            return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
-        } else {
-            val courseResult = coursesApi.getCourse(courseId, params)
-            if (courseResult.isFail) return emptyList() //TODO error handling
-            return listOf(courseResult.dataOrThrow)
-        }
+        if (courseResult.isFail) return Course() //TODO error handling
+
+        return courseResult.dataOrThrow
     }
 
-    suspend fun getTabs(courseId: Long): List<Tab> {
-        val params = RestParams()
+    suspend fun getCourses(forceNetwork: Boolean): List<Course> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val coursesResult = coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
+
+        if (coursesResult.isFail) return emptyList() //TODO error handling
+
+        return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
+    }
+
+    suspend fun getTabs(courseId: Long, forceNetwork: Boolean): List<Tab> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val tabsResult = tabApi.getTabs(courseId, CanvasContext.Type.COURSE.apiString, params)
 
         if (tabsResult.isFail) return emptyList() //TODO error handling
@@ -60,32 +64,32 @@ class OfflineContentRepository(
         }
     }
 
-    suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
+    suspend fun getCourseFiles(courseId: Long, forceNetwork: Boolean): List<FileFolder> {
         val params = RestParams()
         val rootFolderResult = fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
 
         if (rootFolderResult.isFail) return emptyList() //TODO error handling
 
-        return getAllFiles(rootFolderResult.dataOrThrow)
+        return getAllFiles(rootFolderResult.dataOrThrow, forceNetwork)
     }
 
-    private suspend fun getAllFiles(folder: FileFolder): List<FileFolder> {
+    private suspend fun getAllFiles(folder: FileFolder, forceNetwork: Boolean): List<FileFolder> {
         val result = mutableListOf<FileFolder>()
-        val subFolders = getFolders(folder)
+        val subFolders = getFolders(folder, forceNetwork)
 
-        val currentFolderFiles = getFiles(folder)
+        val currentFolderFiles = getFiles(folder, forceNetwork)
         result.addAll(currentFolderFiles)
 
         for (subFolder in subFolders) {
-            val subFolderFiles = getAllFiles(subFolder)
+            val subFolderFiles = getAllFiles(subFolder, forceNetwork)
             result.addAll(subFolderFiles)
         }
 
         return result.filter { !it.isHidden && !it.isLocked && !it.isHiddenForUser && !it.isLockedForUser }
     }
 
-    private suspend fun getFolders(folder: FileFolder): List<FileFolder> {
-        val params = RestParams()
+    private suspend fun getFolders(folder: FileFolder, forceNetwork: Boolean): List<FileFolder> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val foldersResult = fileFolderApi.getFirstPageFolders(folder.id, params).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
@@ -95,8 +99,8 @@ class OfflineContentRepository(
         return foldersResult.dataOrThrow
     }
 
-    private suspend fun getFiles(folder: FileFolder): List<FileFolder> {
-        val params = RestParams()
+    private suspend fun getFiles(folder: FileFolder, forceNetwork: Boolean): List<FileFolder> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val filesResult = fileFolderApi.getFirstPageFiles(folder.id, params).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }

@@ -17,14 +17,25 @@
 
 package com.instructure.pandautils.features.offline.itemviewmodels
 
+import android.widget.CompoundButton
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.FileViewData
 import com.instructure.pandautils.features.offline.OfflineItemViewModelType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class FileViewModel(
-    val data: FileViewData
+    val data: FileViewData,
+    val courseId: Long,
+    val tabId: String,
+    val updateParentCheckBox: (FileViewModel) -> Unit
 ) : ItemViewModel {
     override val layoutId = R.layout.item_offline_file
     override val viewType = OfflineItemViewModelType.FILE.viewType
+
+    val onCheckChanged = CompoundButton.OnCheckedChangeListener { cb, checked ->
+        data.checked = checked
+        if (cb.isPressed) {
+            updateParentCheckBox(this)
+        }
+    }
 }

@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="com.instructure.pandautils.utils.ViewStyler" />
+
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
+
         <variable
             name="itemViewModel"
             type="com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel" />
@@ -20,6 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:buttonTint="@{ViewStyler.INSTANCE.makeColorStateList(@color/textDarkest, ThemePrefs.INSTANCE.brandColor)}"
+            android:checked="@{itemViewModel.data.checked}"
+            android:onCheckedChanged="@{itemViewModel.onCheckChanged}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

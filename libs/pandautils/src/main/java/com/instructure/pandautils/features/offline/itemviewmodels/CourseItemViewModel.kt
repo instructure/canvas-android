@@ -17,14 +17,31 @@
 
 package com.instructure.pandautils.features.offline.itemviewmodels
 
+import android.widget.CompoundButton.OnCheckedChangeListener
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.offline.CourseItemViewData
 import com.instructure.pandautils.features.offline.OfflineItemViewModelType
 
 data class CourseItemViewModel(
-    val data: CourseItemViewData
+    val data: CourseItemViewData,
+    val courseId: Long
 ) : GroupItemViewModel(collapsable = true, collapsed = data.collapsed, items = data.tabs) {
     override val layoutId = R.layout.item_offline_course
     override val viewType = OfflineItemViewModelType.COURSE.viewType
+
+    val onCheckChanged = OnCheckedChangeListener { cb, checked ->
+        data.checked = checked
+        if (cb.isPressed) {
+            data.tabs.forEach { tabViewModel ->
+                tabViewModel.data.checked = checked
+                tabViewModel.data.notifyPropertyChanged(BR.checked)
+                tabViewModel.data.files.forEach {
+                    it.data.checked = checked
+                    it.data.notifyPropertyChanged(BR.checked)
+                }
+            }
+        }
+    }
 }

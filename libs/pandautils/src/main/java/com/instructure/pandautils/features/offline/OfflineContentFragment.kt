@@ -29,16 +29,15 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentOfflineContentBinding
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.argsWithContext
-import com.instructure.pandautils.utils.withArgs
+import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class OfflineContentFragment : Fragment(), FragmentInteractions {
 
     private val viewModel: OfflineContentViewModel by viewModels()
+
+    private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var binding: FragmentOfflineContentBinding
 
@@ -63,7 +62,11 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
 
     override fun applyTheme() {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        binding.toolbar.setBackgroundColor(ThemePrefs.primaryColor)
+        binding.toolbar.apply {
+            subtitle = canvasContext?.name ?: getString(R.string.offline_content_all_courses)
+            setBackgroundColor(ThemePrefs.primaryColor)
+            setupAsBackButton(this@OfflineContentFragment)
+        }
     }
 
     override fun getFragment(): Fragment = this
