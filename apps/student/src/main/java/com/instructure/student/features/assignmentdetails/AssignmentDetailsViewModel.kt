@@ -131,7 +131,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 }
                 if (isUploading && submission.errorFlag) {
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
-                        removeFirst()
+                        if (isNotEmpty()) removeFirst()
                         add(0, AssignmentDetailsAttemptItemViewModel(
                             AssignmentDetailsAttemptViewData(
                                 resources.getString(R.string.attempt, attempts.size),

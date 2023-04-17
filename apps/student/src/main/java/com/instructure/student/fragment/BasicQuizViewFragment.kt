@@ -130,12 +130,12 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                getCanvasLoading().visibility = View.VISIBLE
+                getCanvasLoading()?.visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
-                getCanvasLoading().visibility = View.GONE
+                getCanvasLoading()?.visibility = View.GONE
             }
         }
     }
