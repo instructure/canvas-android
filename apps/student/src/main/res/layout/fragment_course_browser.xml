@@ -129,11 +129,18 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/downloadButton"
+                android:text="@string/download" />
+
             <com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_below="@id/downloadButton">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/courseBrowserRecyclerView"

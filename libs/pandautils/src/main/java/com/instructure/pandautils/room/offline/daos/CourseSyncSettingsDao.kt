@@ -23,7 +23,7 @@ import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 @Dao
 interface CourseSyncSettingsDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: CourseSyncSettingsEntity)
 
     @Delete

@@ -18,6 +18,7 @@
 package com.instructure.student.features.offline.sync
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -28,6 +29,7 @@ import com.instructure.pandautils.room.offline.entities.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
+@HiltWorker
 class OfflineSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
@@ -49,8 +51,31 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courses = courseSyncSettingsDao.findAll()
         courses.forEach { courseSettings ->
             fetchCourseDetails(courseSettings.courseId)
+            when {
+                courseSettings.grades -> {
+                    fetchGrades(courseSettings.courseId)
+                }
+                courseSettings.assignments -> {
+                    fetchAssignments(courseSettings.courseId)
+                }
+                courseSettings.pages -> {
+                    fetchPages(courseSettings.courseId)
+                }
+            }
         }
         return Result.success()
+    }
+
+    private fun fetchPages(courseId: Long) {
+
+    }
+
+    private fun fetchAssignments(courseId: Long) {
+
+    }
+
+    private fun fetchGrades(courseId: Long) {
+
     }
 
     private suspend fun fetchCourseDetails(courseId: Long) {
@@ -60,6 +85,8 @@ class OfflineSyncWorker @AssistedInject constructor(
         course.term?.let {
             termDao.insert(TermEntity(it))
         }
+
+        courseDao.insert(CourseEntity(course))
 
         course.enrollments?.forEach { enrollment ->
             if (enrollment.userId != 0L) {
@@ -96,7 +123,5 @@ class OfflineSyncWorker @AssistedInject constructor(
         course.tabs?.forEach { tab ->
             tabDao.insert(TabEntity(tab, courseId))
         }
-
-        courseDao.insert(CourseEntity(course))
     }
 }
