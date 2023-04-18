@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.binding
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +37,7 @@ class FragmentViewBindingDelegate<T : ViewBinding>(
     private var binding: T? = null
 
     init {
-        fragment.activity?.runOnUiThread {
+        Handler(Looper.getMainLooper()).post {
             fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
                 val viewLifecycleOwnerLiveDataObserver =
                     Observer<LifecycleOwner?> {
