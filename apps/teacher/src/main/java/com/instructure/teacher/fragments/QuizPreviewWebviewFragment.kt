@@ -42,7 +42,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
 
         // Try to automatically tap the Preview button so we take them directly into the quiz preview
         Handler().postDelayed({
-            requireActivity().runOnUiThread {
+            activity?.runOnUiThread {
                 mClickedPreview = true
                 val js = "javascript: { " +
                         "document.getElementById('preview_quiz_button').click();" +
