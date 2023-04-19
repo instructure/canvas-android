@@ -25,15 +25,10 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.adapter_page.view.*
+import com.instructure.teacher.databinding.AdapterPageBinding
 
-class PageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_page
-    }
-
-
-    fun bind(context: Context, page: Page, iconColor: Int, callback: (Page) -> Unit) = with(itemView) {
+class PageViewHolder(private val binding: AdapterPageBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(context: Context, page: Page, iconColor: Int, callback: (Page) -> Unit) = with(binding) {
         pageLayout.setOnClickListener { callback(page) }
         pageTitle.text = page.title
         pageIcon.setIcon(R.drawable.ic_pages, iconColor)
@@ -50,6 +45,5 @@ class PageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         // set the content description on the container so we can tell the user that it is published as the last piece of information. When a content description is on a container
         pageLayout.contentDescription = page.title + " " + updatedDate.text + " " + if (page.published) context.getString(R.string.published) else context.getString(R.string.not_published)
-
     }
 }

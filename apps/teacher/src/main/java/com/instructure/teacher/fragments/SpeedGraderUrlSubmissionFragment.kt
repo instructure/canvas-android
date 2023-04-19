@@ -16,23 +16,26 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_URL_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClick
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
-import com.instructure.pandautils.utils.NullableStringArg
-import com.instructure.pandautils.utils.StringArg
-import kotlinx.android.synthetic.main.fragment_speedgrader_url_submission.*
+import com.instructure.teacher.databinding.FragmentSpeedgraderUrlSubmissionBinding
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_URL_SUBMISSION)
 class SpeedGraderUrlSubmissionFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentSpeedgraderUrlSubmissionBinding::bind)
 
     private var mUrl by StringArg()
     private var mPreviewUrl by NullableStringArg()
@@ -41,7 +44,7 @@ class SpeedGraderUrlSubmissionFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_speedgrader_url_submission, container, false)
     }
 
-    override fun onStart() {
+    override fun onStart() = with(binding) {
         super.onStart()
         Glide.with(requireContext()).load(mPreviewUrl).into(urlPreviewImageView)
         urlTextView.text = mUrl

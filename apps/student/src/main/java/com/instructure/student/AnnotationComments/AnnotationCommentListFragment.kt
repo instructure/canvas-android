@@ -40,18 +40,21 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOTATION_COMMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentAnnotationCommentListBinding
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.PdfStudentSubmissionView
-import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
-import java.util.Locale
+import java.util.*
 
 @ScreenView(SCREEN_VIEW_ANNOTATION_COMMENT_LIST)
 class AnnotationCommentListFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentAnnotationCommentListBinding::bind)
 
     private var annotations by ParcelableArrayListArg<CanvaDocAnnotation>()
     private var assigneeId by LongArg()
@@ -69,9 +72,11 @@ class AnnotationCommentListFragment : ParentFragment() {
     override fun title() = getString(R.string.comments)
 
     override fun applyTheme() {
-        toolbar.title = title()
-        toolbar.setupAsCloseButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        with (binding) {
+            toolbar.title = title()
+            toolbar.setupAsCloseButton(this@AnnotationCommentListFragment)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -126,12 +131,14 @@ class AnnotationCommentListFragment : ParentFragment() {
     fun configureRecyclerView() {
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = RecyclerView.VERTICAL
-        annotationCommentsRecyclerView.layoutManager = layoutManager
-        annotationCommentsRecyclerView.itemAnimator = DefaultItemAnimator()
-        annotationCommentsRecyclerView.adapter = recyclerAdapter
+        binding.annotationCommentsRecyclerView.apply {
+            this.layoutManager = layoutManager
+            itemAnimator = DefaultItemAnimator()
+            adapter = recyclerAdapter
+        }
     }
 
-    private fun setupCommentInput() {
+    private fun setupCommentInput() = with(binding) {
         // We want users with read permission to still be able to create and respond to comments.
         if(docSession.annotationMetadata?.canRead() == false || !canComment) {
             commentInputContainer.setVisible(false)
@@ -149,7 +156,7 @@ class AnnotationCommentListFragment : ParentFragment() {
         }
     }
 
-    private fun showSendingStatus() {
+    private fun showSendingStatus() = with(binding) {
         sendCommentButton.setInvisible()
         sendingProgressBar.setVisible()
         sendingProgressBar.announceForAccessibility(getString(R.string.sendingSimple))
@@ -157,7 +164,7 @@ class AnnotationCommentListFragment : ParentFragment() {
         commentEditText.isEnabled = false
     }
 
-    private fun hideSendingStatus(success: Boolean) {
+    private fun hideSendingStatus(success: Boolean) = with(binding) {
         sendingProgressBar.setGone()
         sendCommentButton.setVisible()
         commentEditText.isEnabled = true

@@ -36,6 +36,11 @@ class UserApi {
     return fetch(canvasDio(forceRefresh: refresh).get('users/self/colors'));
   }
 
+  Future<User> acceptUserTermsOfUse() async {
+    final queryParams = {'user[terms_of_use]': 1};
+    return fetch(canvasDio().put('users/self', queryParameters: queryParams));
+  }
+
   Future<ColorChangeResponse> setUserColor(String contextId, Color color) async {
     var hexCode = '#' + color.value.toRadixString(16).substring(2);
     var queryParams = {'hexcode': hexCode};

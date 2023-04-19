@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -15,7 +15,26 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.action.ViewActions.typeTextIntoFocusedView
+import com.instructure.canvas.espresso.explicitClick
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 
-class TextSubmissionUploadPage : BasePage(R.id.textSubmissionUpload)
+class TextSubmissionUploadPage : BasePage(R.id.textSubmissionUpload) {
+
+    val submitButton by OnViewWithId(R.id.menuSubmit)
+    val contentRceView by OnViewWithId(R.id.rce_webView)
+    val textEntryLabel by OnViewWithText(R.string.textEntry)
+
+    fun typeText(textToType: String) {
+        contentRceView.click()
+        contentRceView.perform(typeTextIntoFocusedView(textToType))
+    }
+
+    fun clickOnSubmitButton() {
+        submitButton.perform(explicitClick())
+    }
+}

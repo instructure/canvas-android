@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.instructure.pandautils.features.inbox.list.InboxViewModel" />
+
+        <import type="com.instructure.pandautils.utils.ThemePrefs"/>
+    </data>
+
+    <LinearLayout
+        android:id="@+id/inboxPage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/toolbarWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_alignParentTop="true"
+                android:background="@color/textDarkest"
+                android:elevation="6dp"
+                app:popupTheme="@style/ToolBarPopupStyle"
+                app:theme="@style/ToolBarStyle"
+                app:title="@string/inbox"
+                tools:targetApi="lollipop" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/editToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_alignParentTop="true"
+                android:background="@color/textDarkest"
+                android:elevation="6dp"
+                android:visibility="gone"
+                android:contentDescription="@string/a11y_itemSelectedSwipeForActions"
+                app:popupTheme="@style/ToolBarPopupStyle"
+                app:theme="@style/ToolBarStyle"
+                app:title="@{viewModel.data.selectedItemsCount}"
+                tools:targetApi="lollipop" />
+
+        </FrameLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/filterSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundLightest"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    app:layout_scrollFlags="scroll|enterAlways">
+
+                    <LinearLayout
+                        android:id="@+id/courseFilter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:contentDescription="@{@string/a11y_courseFilterContentDescription(viewModel.data.filterText)}"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:onClick="@{() -> viewModel.coursesFilterClicked()}"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toStartOf="@id/scopeFilter"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@{viewModel.data.filterText}"
+                            android:textColor="@color/textDarkest"
+                            android:textSize="22sp"
+                            tools:text="All Courses" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_weight="0"
+                            android:paddingTop="2dp"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/textDarkest" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/scopeFilter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:onClick="@{() -> viewModel.openScopeSelector()}"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        app:layout_constraintBottom_toBottomOf="@id/courseFilter"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/courseFilter">
+
+                        <TextView
+                            android:id="@+id/scopeFilterText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="6dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@{viewModel.data.scope}"
+                            android:textColor="@{ThemePrefs.INSTANCE.textButtonColor}"
+                            android:textSize="16sp"
+                            tools:text="Inbox" />
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_arrow_down"
+                            app:imageTint="@{ThemePrefs.INSTANCE.textButtonColor}" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:onRefreshListener="@{() -> viewModel.refresh()}"
+                app:refreshState="@{viewModel.state}">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inboxRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:importantForAccessibility="no"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:loadingState="@{viewModel.state}"
+                    app:onBottomReached="@{viewModel.bottomReachedCallback}"
+                    app:recyclerViewItemViewModels="@{viewModel.itemViewModels}"
+                    app:useDiffUtil="@{true}" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <com.instructure.pandautils.views.EmptyView
+                android:id="@+id/emptyInboxView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:emptyViewState="@{viewModel.state}" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:contentDescription="@string/addMessage"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:tint="@color/white"
+                app:elevation="4dp"
+                app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+                app:onClickWithNetworkCheck="@{() -> viewModel.createNewMessage()}"
+                app:srcCompat="@drawable/ic_add" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </LinearLayout>
+
+</layout>

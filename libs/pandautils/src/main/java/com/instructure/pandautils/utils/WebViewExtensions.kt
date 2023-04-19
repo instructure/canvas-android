@@ -17,10 +17,8 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.webkit.JavascriptInterface
-import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
@@ -90,24 +88,8 @@ class JsGoogleDocsInterface(private val context: Context) {
     }
 }
 
-fun WebView.setDarkModeSupport(webThemeDarkeningOnly: Boolean = false) {
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-            WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON)
-            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
-                setForceDarkStrategy(webThemeDarkeningOnly, settings)
-            }
-        } else {
-            WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_OFF)
-        }
-    }
-}
-
-private fun setForceDarkStrategy(webThemeDarkeningOnly: Boolean, settings: WebSettings) {
-    if (webThemeDarkeningOnly) {
-        WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY)
-    } else {
-        WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING)
+fun WebView.enableAlgorithmicDarkening() {
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+        WebSettingsCompat.setAlgorithmicDarkeningAllowed(settings, true)
     }
 }

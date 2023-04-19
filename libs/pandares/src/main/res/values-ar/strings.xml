@@ -1168,6 +1168,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s، %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">يمكنك فتح تفاصيل الإرسال من هنا</string>
+
     <plurals name="minutes">
         <item quantity="zero">%s من الدقائق</item>
         <item quantity="one">%s دقيقة</item>
@@ -1357,6 +1359,8 @@
     <string name="fileUploadProgressSubtitle">جارٍ التحميل إلى الملفات</string>
     <string name="submissionProgressSubtitle">جارٍ تحميل الإرسال إلى \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">جارٍ تحميل الإرسال</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">نجح الإرسال</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">فشل الإرسال</string>
     <string name="dashboardNotificationUploadingFilesTitle">جارٍ تحميل الملفات</string>
     <string name="cancelSubmissionDialogTitle">إلغاء الإرسال</string>
     <string name="cancelSubmissionDialogMessage">سيؤدي هذا إلى إلغاء وحذف إرسالك.</string>
@@ -1394,4 +1398,50 @@
     <string name="acceptableUsePolicyAgree">أوافق على سياسة الاستخدام المقبول</string>
     <string name="acceptableUsePolicySubmit">إرسال</string>
     <string name="acceptFail">تعذر إرسال قبول الشروط.</string>
+    <string name="attempt">محاولة %d</string>
+    <string name="quizQuestions">الأسئلة: %d</string>
+    <string name="quizTimeLimit">الحد الزمني: %s</string>
+    <string name="allowedAttempts">المحاولات المسموح بها: %s</string>
+    <string name="usedAttempts">المحاولات المستخدمة: %d</string>
+    <string name="generalUnexpectedError">حدث خطأ غير متوقع.</string>
+
+    <string name="deleteSelected">حذف</string>
+    <string name="archiveSelected">أرشفة</string>
+    <string name="unarchiveSelected">إلغاء الأرشفة</string>
+    <string name="markAsReadSelected">وضع علامة كمقروء</string>
+    <string name="markAsUnreadSelected">وضع علامة غير مقروء</string>
+    <string name="starSelected">نجمة</string>
+    <string name="unstarSelected">إلغاء النجمة</string>
+
+    <string name="inboxOperationFailed">تعذر تنفيذ العملية</string>
+    <string name="inboxDeletedConfirmation">تم حذف %s</string>
+    <string name="inboxArchivedConfirmation">تم أرشفة %s</string>
+    <string name="inboxUnarchivedConfirmation">تم إلغاء أرشفة %s</string>
+    <string name="inboxMarkAsReadConfirmation">تم وضع علامة مقروء على %s</string>
+    <string name="inboxMarkAsUnreadConfirmation">تم وضع علامة غير مقروء على %s</string>
+    <string name="inboxStarredConfirmation">تم وضع علامة نجمة على %s</string>
+    <string name="inboxUnstarredConfirmation">تم إلغاء النجمة على %s</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="zero">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="one">سيتم حذف هذا المحادثة من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="two">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="few">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="many">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="other">سيتم حذف هذا المحادثات من علبة الوارد على جميع أجهزتك. لا يمكن التراجع عن هذا الإجراء.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">تعذر تحميل الصفحة التالية. تحقق من اتصالك بالإنترنت.</string>
+    <string name="conversationsRefreshFailed">تعذر تحديث المحادثات. تحقق من اتصالك بالإنترنت.</string>
+    <string name="inboxScopeInbox">علبة الوارد</string>
+    <string name="inboxContextSelectorTitle">حدد مساقًا أو مجموعة</string>
+    <string name="inboxClearFilter">مسح</string>
+    <string name="a11y_courseFilterContentDescription">عامل تصفية المساق: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">تحديد</string>
+    <string name="a11y_itemSelectedSwipeForActions">تم تحديد المحادثة. تم تنشيط وضع التحديد. تنقل للوصول إلى الإجراءات.</string>
+    <string name="a11y_conversationSelected">تم تحديد المحادثة</string>
+    <string name="a11y_conversationDeselected">تم إلغاء تحديد المحادثة</string>
+    <string name="a11y_exitSelectionMode">الخروج من وضع التحديد</string>
+    <string name="a11y_selectionModeDeactivated">تم إلغاء تنشيط وضع التحديد.</string>
+    <string name="a11y_avatarContentDescription">صورة رمزية %s</string>
+    <string name="inboxUndo">تراجع</string>
 </resources>

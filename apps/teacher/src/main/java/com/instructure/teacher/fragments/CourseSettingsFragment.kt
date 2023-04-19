@@ -18,16 +18,17 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.globalName
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentCourseSettingsBinding
 import com.instructure.teacher.dialog.EditCourseNameDialog
 import com.instructure.teacher.dialog.RadioButtonDialog
 import com.instructure.teacher.factory.CourseSettingsFragmentPresenterFactory
@@ -35,14 +36,13 @@ import com.instructure.teacher.presenters.CourseSettingsFragmentPresenter
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.CourseSettingsFragmentView
-import kotlinx.android.synthetic.main.fragment_course_settings.*
-import kotlinx.android.synthetic.main.view_edit_course_homepage.*
-import kotlinx.android.synthetic.main.view_rename_course.*
 
 @ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : BasePresenterFragment<
         CourseSettingsFragmentPresenter,
         CourseSettingsFragmentView>(), CourseSettingsFragmentView {
+
+    private val binding by viewBinding(FragmentCourseSettingsBinding::bind)
 
     private var mCourse: Course by ParcelableArg(default = Course())
 
@@ -62,7 +62,7 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
         setupToolbar()
-        courseImage.setCourseImage(mCourse, mCourse.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
+        binding.courseImage.setCourseImage(mCourse, mCourse.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -75,18 +75,18 @@ class CourseSettingsFragment : BasePresenterFragment<
         }
     }
 
-    override fun onPresenterPrepared(presenter: CourseSettingsFragmentPresenter) {
-        editCourseNameRoot.onClickWithRequireNetwork {
+    override fun onPresenterPrepared(presenter: CourseSettingsFragmentPresenter) = with(binding) {
+        renameCourse.root.onClickWithRequireNetwork {
             presenter.editCourseNameClicked()
         }
 
-        editHomeRoot.onClickWithRequireNetwork {
+        editCourseHomepage.root.onClickWithRequireNetwork {
             presenter.editCourseHomePageClicked()
         }
     }
 
-    private fun setupToolbar() {
-        toolbar.setupBackButton(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupBackButton(this@CourseSettingsFragment)
         toolbar.title = getString(R.string.course_settings)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         toolbar.setSubtitleTextColor(mCourse.textAndIconColor)
@@ -110,15 +110,15 @@ class CourseSettingsFragment : BasePresenterFragment<
        dialog.show(requireActivity().supportFragmentManager, RadioButtonDialog::class.java.simpleName)
     }
 
-    override fun updateCourseName(course: Course) {
-        courseName.text = course.globalName
+    override fun updateCourseName(course: Course) = with(binding) {
+        renameCourse.courseName.text = course.globalName
         toolbar.subtitle = course.globalName
         mCourse.globalName = course.globalName
         setResult()
     }
 
     override fun updateCourseHomePage(newHomePage: Course.HomePage?) {
-        courseHomePage.text = mHomePages[newHomePage?.apiString]
+        binding.editCourseHomepage.courseHomePage.text = mHomePages[newHomePage?.apiString]
         mCourse.homePage = newHomePage
         setResult()
     }

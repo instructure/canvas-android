@@ -17,10 +17,8 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
-import com.instructure.pandautils.utils.setDarkModeSupport
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
-import kotlinx.android.synthetic.main.fragment_internal_webview.*
-import kotlinx.coroutines.Job
 
 /**
  * TEMPORARY fragment to house discussion submissions
@@ -38,9 +36,9 @@ class SimpleWebViewFragment : InternalWebViewFragment() {
         setShouldLoadUrl(false)
         setShouldAuthenticateUponLoad(true)
         setShouldRouteInternally(false)
-        canvasWebView.setInitialScale(100)
+        binding.canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
-        canvasWebView?.setDarkModeSupport()
+        binding.canvasWebView.enableAlgorithmicDarkening()
 
         loadUrl(url)
         toolbar?.setGone()

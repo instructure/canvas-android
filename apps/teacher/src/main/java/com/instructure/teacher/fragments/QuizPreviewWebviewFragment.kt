@@ -24,13 +24,12 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_PREVIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setDarkModeSupport
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
-import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import kotlinx.coroutines.Job
 
 @ScreenView(SCREEN_VIEW_QUIZ_PREVIEW)
@@ -43,21 +42,21 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
 
         // Try to automatically tap the Preview button so we take them directly into the quiz preview
         Handler().postDelayed({
-            requireActivity().runOnUiThread({
+            activity?.runOnUiThread {
                 mClickedPreview = true
                 val js = "javascript: { " +
                         "document.getElementById('preview_quiz_button').click();" +
                         "};"
 
-                canvasWebView.evaluateJavascript(js, { })
-            })
+                binding.canvasWebView.evaluateJavascript(js) { }
+            }
         }, 0)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         setShouldLoadUrl(false)
         super.onActivityCreated(savedInstanceState)
-        canvasWebView?.setDarkModeSupport()
+        canvasWebView.enableAlgorithmicDarkening()
 
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) =
@@ -68,7 +67,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
                 if(!mClickedPreview) {
                     clickPreviewButton()
                 }
-                loading?.setGone()
+                loading.setGone()
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) {

@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Anda boleh membuka butiran Serahan di sini</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minit</item>
         <item quantity="other">%s Minit</item>
@@ -1300,6 +1302,8 @@
     <string name="fileUploadProgressSubtitle">Memuat Naik ke Fail</string>
     <string name="submissionProgressSubtitle">Memuat naik serahan ke \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Memuat Naik Serahan</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Serahan Berjaya</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Serahan Gagal</string>
     <string name="dashboardNotificationUploadingFilesTitle">Memuat Naik Fail</string>
     <string name="cancelSubmissionDialogTitle">Batal Serahan</string>
     <string name="cancelSubmissionDialogMessage">Ini akan membatalkan dan memadamkan serahan anda.</string>
@@ -1337,4 +1341,46 @@
     <string name="acceptableUsePolicyAgree">Anda mesti memberikan persetujuan untuk Dasar Penggunaan Boleh Diterima.</string>
     <string name="acceptableUsePolicySubmit">Serahkan</string>
     <string name="acceptFail">Gagal menyerahkan penerimaan terma.</string>
+    <string name="attempt">Percubaan %d</string>
+    <string name="quizQuestions">Soalan: %d</string>
+    <string name="quizTimeLimit">Had masa: %s</string>
+    <string name="allowedAttempts">Percubaan dibenarkan: %s</string>
+    <string name="usedAttempts">Percubaan digunakan: %d</string>
+    <string name="generalUnexpectedError">Ralat tidak dijangka berlaku.</string>
+
+    <string name="deleteSelected">Padam</string>
+    <string name="archiveSelected">Arkib</string>
+    <string name="unarchiveSelected">Nyaharkib</string>
+    <string name="markAsReadSelected">Tandakan sebagai telah dibaca</string>
+    <string name="markAsUnreadSelected">Tandakan sebagai belum dibaca</string>
+    <string name="starSelected">Bintangkan</string>
+    <string name="unstarSelected">Nyahbintang</string>
+
+    <string name="inboxOperationFailed">Gagal melaksanakan operasi</string>
+    <string name="inboxDeletedConfirmation">%s dipadamkan</string>
+    <string name="inboxArchivedConfirmation">%s diarkibkan</string>
+    <string name="inboxUnarchivedConfirmation">%s dinyaharkibkan</string>
+    <string name="inboxMarkAsReadConfirmation">%s ditandakan sebagai dibaca</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s ditandakan sebagai belum dibaca</string>
+    <string name="inboxStarredConfirmation">%s dibintangkan</string>
+    <string name="inboxUnstarredConfirmation">%s dinyahbintangkan</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Perbualan ini akan dipadamkan daripada Peti Masuk pada semua peranti anda. Tindakan ini tidak boleh dibuat asal.</item>
+        <item quantity="other">Perbualan ini akan dipadamkan daripada Peti Masuk pada semua peranti anda. Tindakan ini tidak boleh dibuat asal.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Gagal memuatkan halaman seterusnya. Periksa sambungan Internet anda.</string>
+    <string name="conversationsRefreshFailed">Gagal menyegar semula perbualan. Periksa sambungan Internet anda.</string>
+    <string name="inboxScopeInbox">Peti masuk</string>
+    <string name="inboxContextSelectorTitle">Pilih Kursus atau Kumpulan</string>
+    <string name="inboxClearFilter">Kosongkan</string>
+    <string name="a11y_courseFilterContentDescription">Penapis kursus: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">pilih</string>
+    <string name="a11y_itemSelectedSwipeForActions">Perbualan dipilih. Mod pilihan diaktifkan. Navigasi untuk tindakan.</string>
+    <string name="a11y_conversationSelected">Perbualan dipilih</string>
+    <string name="a11y_conversationDeselected">Perbualan dinyahpilih</string>
+    <string name="a11y_exitSelectionMode">Keluar mod pilihan</string>
+    <string name="a11y_selectionModeDeactivated">Mod pilihan diaktifkan.</string>
+    <string name="a11y_avatarContentDescription">Avatar %s</string>
+    <string name="inboxUndo">Buat asal</string>
 </resources>

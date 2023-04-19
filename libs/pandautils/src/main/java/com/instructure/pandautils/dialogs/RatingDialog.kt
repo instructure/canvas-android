@@ -34,11 +34,12 @@ import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_RATING
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.databinding.DialogRatingBinding
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
-import kotlinx.android.synthetic.main.dialog_rating.view.*
 
 @ScreenView(SCREEN_VIEW_RATING)
 class RatingDialog : DialogFragment() {
@@ -51,6 +52,8 @@ class RatingDialog : DialogFragment() {
     }
 
     lateinit private var stars: List<ImageView>
+
+    private lateinit var binding: DialogRatingBinding
 
     /**
      * Called when the user hits the back button, this will delay the dialog from showing for 4 weeks
@@ -68,12 +71,12 @@ class RatingDialog : DialogFragment() {
         val appType = arguments?.getSerializable(APP_TYPE) as AppType
         val buttonText = if (Prefs.hasShown) getString(R.string.utils_dontShowAgain) else getString(R.string.done)
 
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_rating, null)
-        setupViews(view, appType)
+        binding = DialogRatingBinding.inflate(LayoutInflater.from(context))
+        setupViews(appType)
 
         val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.utils_howAreWeDoing)
-                .setView(view)
+                .setView(binding.root)
                 .setPositiveButton(buttonText) { _, _ -> Prefs.dontShowAgain = true }
                 .create()
         dialog.setCanceledOnTouchOutside(true)
@@ -81,8 +84,8 @@ class RatingDialog : DialogFragment() {
         return dialog
     }
 
-    private fun setupViews(view: View, appType: AppType) = with(view) {
-        stars = listOf(view.star1, view.star2, view.star3, view.star4, view.star5)
+    private fun setupViews(appType: AppType) = with(binding) {
+        stars = listOf(star1, star2, star3, star4, star5)
 
         send.setOnClickListener {
             val message = comments.text?.toString().orEmpty()

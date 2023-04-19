@@ -17,7 +17,6 @@
 
 package com.instructure.student.fragment
 
-import com.instructure.student.R
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -26,14 +25,14 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_UNSUPPORTED_TAB
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.setupAsBackButton
-import kotlinx.android.synthetic.main.fragment_webview.*
+import com.instructure.student.R
 
 @ScreenView(SCREEN_VIEW_UNSUPPORTED_TAB)
 class UnsupportedTabFragment : InternalWebviewFragment() {
 
     override fun applyTheme() {
         super.applyTheme()
-        toolbar.setupAsBackButton {
+        binding.toolbar.setupAsBackButton {
             navigation?.popCurrentFragment()
         }
     }
@@ -43,14 +42,14 @@ class UnsupportedTabFragment : InternalWebviewFragment() {
         fun newInstance(route: Route) = if (validRoute(route)) {
             UnsupportedTabFragment().apply {
                 val info = extractInfo(route.canvasContext!!, route.tabId!!)
-                arguments = InternalWebviewFragment.makeBundle(route.canvasContext!!, info.first, info.second, true, true, false)
+                arguments = makeBundle(route.canvasContext!!, info.first, info.second, true, true, false)
             }
 
         } else null
 
         fun makeRoute(canvasContext: CanvasContext, tabId: String): Route {
             val info = extractInfo(canvasContext, tabId)
-            val bundle = InternalWebviewFragment.makeRoute(info.first, info.second, true, true, false)
+            val bundle = makeRoute(info.first, info.second, true, true, false)
             return Route(UnsupportedTabFragment::class.java, canvasContext, bundle, tabId)
         }
 

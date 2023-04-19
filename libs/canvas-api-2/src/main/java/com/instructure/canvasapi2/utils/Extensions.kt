@@ -16,6 +16,7 @@
  */
 package com.instructure.canvasapi2.utils
 
+import com.instructure.canvasapi2.builders.RestParams
 import java.util.Locale
 
 /**
@@ -29,4 +30,22 @@ fun String.capitalized(): String {
             it.toString()
         }
     }
+}
+
+suspend fun <T>DataResult<List<T>>.depaginate(nextPageCall: suspend (nextUrl: String) -> DataResult<List<T>>): DataResult<List<T>> {
+    if (this !is DataResult.Success) return this
+
+    val depaginatedList = data.toMutableList()
+    var nextUrl = linkHeaders.nextUrl
+    while (nextUrl != null) {
+        val newItemsResult = nextPageCall(nextUrl)
+        if (newItemsResult is DataResult.Success) {
+            depaginatedList.addAll(newItemsResult.data)
+            nextUrl = newItemsResult.linkHeaders.nextUrl
+        } else {
+            nextUrl = null
+        }
+    }
+
+    return DataResult.Success(depaginatedList, apiType = apiType)
 }

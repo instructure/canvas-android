@@ -28,17 +28,20 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.SetViewPagerCurrentItemAction
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 
 fun ViewInteraction.assertVisible(): ViewInteraction
-        = check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        = assertVisibility(ViewMatchers.Visibility.VISIBLE)
 
 fun ViewInteraction.assertInvisible(): ViewInteraction
-        = check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+        = assertVisibility(ViewMatchers.Visibility.INVISIBLE)
 
 fun ViewInteraction.assertGone(): ViewInteraction
-        = check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+        = assertVisibility(ViewMatchers.Visibility.GONE)
+
+fun ViewInteraction.assertVisibility(visibility: ViewMatchers.Visibility): ViewInteraction
+        = check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(visibility)))
 
 fun ViewInteraction.assertDisplayed(): ViewInteraction
         = check(ViewAssertions.matches(ViewMatchers.isDisplayed()))

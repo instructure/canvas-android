@@ -47,12 +47,10 @@ App | Description
 [Canvas Student][canvas]      | Used by Students all over the world to be smarter, go faster, and do more.
 [Canvas Teacher][teacher]     | User by Teachers all over the world to update course content or grade on the go.
 [Canvas Parent][parent]       | Used by Parents all over the world to be parents.
-[Canvas Polls][polls]         | Used to take live polls. 
 
 [canvas]: https://play.google.com/store/apps/details?id=com.instructure.candroid
 [teacher]: https://play.google.com/store/apps/details?id=com.instructure.teacher
 [parent]: https://play.google.com/store/apps/details?id=com.instructure.parentapp
-[polls]: https://play.google.com/store/apps/details?id=com.instructure.androidpolling.app
 
 ## Modules:
 
@@ -70,7 +68,7 @@ SoSeedyGRPC  | gRPC server for using data seeding with iOS from Xcode
 Foosball     | A Foosball Application created and used interally to boost fun by over 120%.
 Login-Api    | *Deprecated* - The Library used to making logging in and getting a token relatively easy. (deprecated)
 Login-Api-2  | The libarary used to make logging in and getting a token relative easy and is testable.
-PandaUtils   | The junk drawer of things.
+PandaUtils   | The core library for new features in the Student and Teacher apps.
 PandaRecyclerView | A fancy RecyclerView library that supports expanding and collapsing, pagination, and stuff like that.
 Rceditor     | A wrapper for rich content editing used in Canvas Teacher.
 

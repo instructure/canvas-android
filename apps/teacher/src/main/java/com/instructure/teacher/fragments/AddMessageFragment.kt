@@ -28,10 +28,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
@@ -42,6 +42,7 @@ import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CanvasContextSpinnerAdapter
 import com.instructure.teacher.adapters.NothingSelectedSpinnerAdapter
+import com.instructure.teacher.databinding.FragmentAddMessageBinding
 import com.instructure.teacher.events.ChooseMessageEvent
 import com.instructure.teacher.events.MessageAddedEvent
 import com.instructure.teacher.factory.AddMessagePresenterFactory
@@ -50,7 +51,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.viewinterface.AddMessageView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_add_message.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -61,6 +61,8 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 @AndroidEntryPoint
 class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView, FileUploadDialogParent {
+
+    private val binding by viewBinding(FragmentAddMessageBinding::bind)
 
     private var currentMessage: Message? by NullableParcelableArg(null, Const.MESSAGE_TO_USER)
     private var selectedCourse: CanvasContext? = null
@@ -84,10 +86,10 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 }
             }
 
-            if (chips.recipients.isEmpty()) {
+            if (binding.chips.recipients.isEmpty()) {
                 showToast(R.string.message_has_no_recipients)
                 return false
-            } else if (TextUtils.getTrimmedLength(message.text) == 0) {
+            } else if (TextUtils.getTrimmedLength(binding.message.text) == 0) {
                 showToast(R.string.empty_message)
                 return false
             }
@@ -96,7 +98,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         }
 
     private val recipientsFromRecipientEntries: ArrayList<Recipient>
-        get() = ArrayList(chips.recipients)
+        get() = ArrayList(binding.chips.recipients)
 
     override fun layoutResId(): Int = R.layout.fragment_add_message
 
@@ -104,7 +106,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         return inflater.inflate(R.layout.fragment_add_message, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
 
         if (savedInstanceState != null && !isNewMessage) {
 
@@ -180,7 +182,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         return AddMessagePresenterFactory(conversation, participants, messages, isReply)
     }
 
-    override fun onReadySetGo(presenter: AddMessagePresenter) {
+    override fun onReadySetGo(presenter: AddMessagePresenter) = with(binding) {
         setupToolbar()
 
         // Set conversation subject
@@ -203,7 +205,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             if (entryCount >= 100) {
                 if (sendIndividualSwitch.isEnabled) {
                     sendIndividualMessageWrapper.alpha = 0.3f
-                    previousCheckState = sendIndividualSwitch.isChecked
+                    previousCheckState = binding.sendIndividualSwitch.isChecked
                     sendIndividualSwitch.isEnabled = false
                     sendIndividualSwitch.isChecked = true
                 }
@@ -248,7 +250,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         }
     }
 
-    override fun addCoursesAndGroups(courses: ArrayList<Course>, groups: ArrayList<Group>) {
+    override fun addCoursesAndGroups(courses: ArrayList<Course>, groups: ArrayList<Group>) = with(binding) {
         val adapter = CanvasContextSpinnerAdapter.newAdapterInstance(requireContext(), courses, groups)
         courseSpinner.adapter = NothingSelectedSpinnerAdapter(
             adapter = adapter,
@@ -278,14 +280,14 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         }
     }
 
-    private fun courseWasSelected() {
+    private fun courseWasSelected() = with(binding) {
         recipientWrapper.setVisible()
         contactsImageButton.setVisible()
         requireActivity().invalidateOptionsMenu()
         chips.canvasContext = selectedCourse
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         if (isNewMessage || isMessageStudentsWho && isPersonalMessage) {
             toolbar.setTitle(R.string.newMessage)
         } else if (isMessageStudentsWho) {
@@ -322,7 +324,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     fun handleExit() {
         // Check to see if the user has made any changes
-        if (selectedCourse != null || editSubject.text.isNotEmpty() || message.text.isNotEmpty() || presenter.attachments.isNotEmpty()) {
+        if (selectedCourse != null || binding.editSubject.text.isNotEmpty() || binding.message.text.isNotEmpty() || presenter.attachments.isNotEmpty()) {
             shouldAllowExit = false
             UnsavedChangesExitDialog.show(requireActivity().supportFragmentManager) {
                 shouldAllowExit = true
@@ -357,7 +359,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         requireActivity().onBackPressed()
     }
 
-    override fun messageFailure() {
+    override fun messageFailure() = with(binding) {
         toolbar.menu.findItem(R.id.menu_send).isVisible = true
         toolbar.menu.findItem(R.id.menu_attachment).isVisible = true
 
@@ -367,12 +369,12 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     }
 
     override fun refreshAttachments() {
-        attachments.setPendingAttachments(presenter.attachments, true) { action, attachment ->
+        binding.attachments.setPendingAttachments(presenter.attachments, true) { action, attachment ->
             if (action == AttachmentView.AttachmentAction.REMOVE) presenter.removeAttachment(attachment)
         }
     }
 
-    internal fun sendMessage() {
+    internal fun sendMessage() = with(binding) {
         // Validate inputs
         if (!isValidNewMessage) return
 
@@ -418,27 +420,25 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
-        val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
+        val selectedRecipients = binding.chips.recipients
         val recipients = initialRecipientIds
             .map { it.toString() }
             .filter { id ->
-                // Skip existing recipients and self
-                id != myId && selectedRecipients.none { it.stringId == id }
+                // Skip existing recipients
+                selectedRecipients.none { it.stringId == id }
             }
             .mapNotNull { presenter.getParticipantById(it) }
-        chips.addRecipients(recipients)
+        binding.chips.addRecipients(recipients)
     }
 
     private fun addRecipients(newRecipients: List<Recipient>) {
-        val selectedRecipients = chips.recipients
-        val myId = ApiPrefs.user?.id?.toString().orEmpty()
+        val selectedRecipients = binding.chips.recipients
         val recipients = newRecipients.filter { recipient ->
-            // Skip existing recipients and self
+            // Skip existing recipients
             val stringId = recipient.stringId
-            stringId != myId && selectedRecipients.none { it.stringId == stringId }
+            selectedRecipients.none { it.stringId == stringId }
         }
-        chips.addRecipients(recipients)
+        binding.chips.addRecipients(recipients)
     }
 
     override fun onRefreshFinished() {}
@@ -451,7 +451,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         event.once(javaClass.simpleName) { recipients ->
             // We're going to add all the recipients that the user has selected. They may have removed a user previously selected,
             // so clear the view so we only add the users selected
-            chips.clearRecipients()
+            binding.chips.clearRecipients()
             addRecipients(recipients)
         }
     }

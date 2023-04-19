@@ -21,7 +21,7 @@ package com.instructure.teacher.view.edit_rubric
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -32,20 +32,21 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ViewEditRubricBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.utils.getColorCompat
-import kotlinx.android.synthetic.main.view_edit_rubric.view.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 class RubricEditView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+    private val binding: ViewEditRubricBinding
 
     /**
      * A reference to the original assessment, if any. Will be compared to the working
@@ -82,19 +83,21 @@ class RubricEditView @JvmOverloads constructor(
 
     init {
         // Inflate
-        View.inflate(context, R.layout.view_edit_rubric, this)
+        binding = ViewEditRubricBinding.inflate(LayoutInflater.from(context), this, true)
 
         // Set save button colors
-        saveRubricButton.setTextColor(ColorStateList(
+        binding.saveRubricButton.setTextColor(
+            ColorStateList(
                 arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf()),
                 intArrayOf(context.getColorCompat(R.color.textDark), ThemePrefs.textButtonColor)
-        ))
+            )
+        )
 
-        saveRubricButton.onClickWithRequireNetwork { saveRubricAssessment() }
+        binding.saveRubricButton.onClickWithRequireNetwork { saveRubricAssessment() }
     }
 
     /** Must be called in order to populate this view with rubric information */
-    fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) {
+    fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) = with(binding) {
         mAssignment = assignment
         mSubmission = submission
         mAssignee = assignee
@@ -141,7 +144,7 @@ class RubricEditView @JvmOverloads constructor(
 
     /** Attempts to save the rubric assessment to the API */
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun saveRubricAssessment() {
+    private fun saveRubricAssessment() = with(binding) {
         mSaveJob = weave {
             // Hide save button, show progressbar
             saveRubricButton.setGone()
@@ -199,10 +202,14 @@ class RubricEditView @JvmOverloads constructor(
     private fun refreshScore(): Double {
         val scoringAssessments = mAssessment.filterKeys { criteriaMap[it]?.ignoreForScoring != true }.values
         val sum = scoringAssessments.sumOf { it.points ?: 0.0 }
-        rubricScoreView.text = context.getString(R.string.rubric_assessment_score_out_of_total,
+        binding.rubricScoreView.apply {
+            text = context.getString(
+                R.string.rubric_assessment_score_out_of_total,
                 NumberHelper.formatDecimal(sum, 2, true),
-                NumberHelper.formatDecimal(mPointsPossible, 2, true))
-        rubricScoreView.setVisible(mAssignment.rubricSettings?.hideScoreTotal != true)
+                NumberHelper.formatDecimal(mPointsPossible, 2, true)
+            )
+            setVisible(mAssignment.rubricSettings?.hideScoreTotal != true)
+        }
         return sum
     }
 
@@ -248,7 +255,6 @@ class RubricEditView @JvmOverloads constructor(
 
     /** Checks for differences between the original assessment and the working assessment */
     private fun checkForChanges() {
-        saveRubricButton.isEnabled = hasUnsavedChanges
+        binding.saveRubricButton.isEnabled = hasUnsavedChanges
     }
-
 }

@@ -30,7 +30,6 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_notification_preferences.*
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
@@ -43,9 +42,11 @@ class PushNotificationPreferencesFragment : Fragment() {
 
     private val viewModel: PushNotificationPreferencesViewModel by viewModels()
 
+    private lateinit var binding: FragmentNotificationPreferencesBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val binding = FragmentNotificationPreferencesBinding.inflate(inflater, container, false)
+        binding = FragmentNotificationPreferencesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
         binding.title = resources.getString(R.string.pushNotifications)
@@ -54,7 +55,7 @@ class PushNotificationPreferencesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarSetupBehavior.setupToolbar(toolbar)
+        toolbarSetupBehavior.setupToolbar(binding.toolbar)
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
@@ -65,6 +66,7 @@ class PushNotificationPreferencesFragment : Fragment() {
     private fun handleAction(action: NotificationPreferencesAction) {
         when (action) {
             is NotificationPreferencesAction.ShowSnackbar -> Snackbar.make(requireView(), action.snackbar, Snackbar.LENGTH_LONG).show()
+            is NotificationPreferencesAction.ShowFrequencySelectionDialog -> {}
         }
     }
 

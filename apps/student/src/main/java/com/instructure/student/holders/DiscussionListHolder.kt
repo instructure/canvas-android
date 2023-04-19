@@ -29,13 +29,15 @@ import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.adapter.DiscussionListRecyclerAdapter
-import kotlinx.android.synthetic.main.viewholder_discussion.view.*
+import com.instructure.student.databinding.ViewholderDiscussionBinding
 import java.util.*
 
 class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bind(context: Context, discussionTopicHeader: DiscussionTopicHeader, courseColor: Int, isDiscussion: Boolean,
-             callback: DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback) = with(itemView) {
+    fun bind(
+        context: Context, discussionTopicHeader: DiscussionTopicHeader, courseColor: Int, isDiscussion: Boolean,
+        callback: DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback
+    ) = with(ViewholderDiscussionBinding.bind(itemView)) {
 
         discussionLayout.onClick { callback.onRowClicked(discussionTopicHeader, adapterPosition, true) }
 
@@ -63,16 +65,18 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val isAssignmentType = discussionTopicHeader.assignment != null
 
-        if(isDiscussion) {
-            discussionIcon.setIcon(if (isAssignmentType) R.drawable.ic_assignment
-                    else R.drawable.ic_discussion, courseColor)
+        if (isDiscussion) {
+            discussionIcon.setIcon(
+                if (isAssignmentType) R.drawable.ic_assignment
+                else R.drawable.ic_discussion, courseColor
+            )
             readUnreadCounts.setVisible()
         } else {
             discussionIcon.setIcon(R.drawable.ic_announcement, courseColor)
             readUnreadCounts.setGone()
         }
 
-        if(discussionTopicHeader.lockedForUser) {
+        if (discussionTopicHeader.lockedForUser) {
             discussionIcon.setNestedIcon(R.drawable.ic_lock, ContextCompat.getColor(context, R.color.textDark))
             discussionIcon.setNestedIconContentDescription(context.getString(R.string.locked))
         } else {
@@ -81,7 +85,10 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         dueDate.text = when {
             isAssignmentType -> {
-                if (discussionTopicHeader.assignment!!.dueDate == null) getFormattedLastPost( context, discussionTopicHeader.lastReplyDate)
+                if (discussionTopicHeader.assignment!!.dueDate == null) getFormattedLastPost(
+                    context,
+                    discussionTopicHeader.lastReplyDate
+                )
                 else getFormattedDueDate(context, discussionTopicHeader.assignment!!.dueDate)
             }
             isDiscussion -> getFormattedLastPost(context, discussionTopicHeader.lastReplyDate)
@@ -94,31 +101,38 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         val unreadDisplayCount = if (discussionTopicHeader.unreadCount > 99) context.getString(R.string.max_count)
         else discussionTopicHeader.unreadCount.localized
 
-        if(discussionTopicHeader.unreadCount != 0) {
+        if (discussionTopicHeader.unreadCount != 0) {
             statusIndicator.setVisible()
         } else {
             statusIndicator.setInvisible()
         }
 
-        val entryCountString = context.resources.getQuantityString(R.plurals.utils_discussionsReplies, entryCount, entryCount.localized)
-        val unreadCountString = context.resources.getQuantityString(R.plurals.utils_discussionsUnread, discussionTopicHeader.unreadCount , unreadDisplayCount)
+        val entryCountString =
+            context.resources.getQuantityString(R.plurals.utils_discussionsReplies, entryCount, entryCount.localized)
+        val unreadCountString = context.resources.getQuantityString(
+            R.plurals.utils_discussionsUnread,
+            discussionTopicHeader.unreadCount,
+            unreadDisplayCount
+        )
 
-        readUnreadCounts.text = context.getString(R.string.utils_discussionsUnreadRepliesBlank,
-                entryCountString, context.getString(R.string.utils_dotWithSpaces), unreadCountString)
+        readUnreadCounts.text = context.getString(
+            R.string.utils_discussionsUnreadRepliesBlank,
+            entryCountString, context.getString(R.string.utils_dotWithSpaces), unreadCountString
+        )
     }
 
     private fun getFormattedLastPost(context: Context, date: Date?): String {
-        if(date == null) return ""
+        if (date == null) return ""
         return context.getString(R.string.utils_lastPost).format(DateHelper.getFormattedDate(context, date))
     }
 
     private fun getFormattedPostedOn(context: Context, date: Date?): String {
-        if(date == null) return ""
+        if (date == null) return ""
         return context.getString(R.string.utils_postedOnDate).format(DateHelper.getFormattedDate(context, date))
     }
 
     private fun getFormattedDueDate(context: Context, date: Date?): String {
-        if(date == null) return ""
+        if (date == null) return ""
         val dueDate = DateHelper.dayMonthDateFormatUniversal.format(date)
         val dueTime = DateHelper.getPreferredTimeFormat(context).format(date)
         return context.getString(R.string.utils_dueDateAtTime).format(dueDate, dueTime)

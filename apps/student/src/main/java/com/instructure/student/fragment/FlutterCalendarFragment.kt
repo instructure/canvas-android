@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.util.AppManager
 import com.instructure.student.util.BaseAppManager
 import io.flutter.embedding.android.FlutterFragment
 import io.flutter.embedding.android.FlutterView

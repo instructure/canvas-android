@@ -21,6 +21,8 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -65,58 +67,17 @@ class ImportantDatesE2ETest : StudentTest() {
         val elementaryCourse3 = data.coursesList[2]
         val elementaryCourse4 = data.coursesList[3]
 
-
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for ${elementaryCourse1.name} course.")
-        val testAssignment1 = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = elementaryCourse1.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = 3.days.fromNow.iso8601,
-                importantDate = true
-            )
-        )
+        val testAssignment1 = createAssignment(elementaryCourse1.id,teacher, GradingType.POINTS, 100.0, 3.days.fromNow.iso8601, importantDate = true)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for ${elementaryCourse2.name} course.")
-        val testAssignment2 = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = elementaryCourse2.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = 4.days.fromNow.iso8601,
-                importantDate = true
-            )
-        )
+        val testAssignment2 = createAssignment(elementaryCourse2.id,teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for ${elementaryCourse3.name} course.")
-        val testAssignment3 = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = elementaryCourse3.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = 4.days.fromNow.iso8601,
-                importantDate = true
-            )
-        )
+        val testAssignment3 = createAssignment(elementaryCourse3.id,teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' NOT IMPORTANT assignment for ${elementaryCourse4.name} course.")
-        val testNotImportantAssignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = elementaryCourse4.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = 4.days.fromNow.iso8601,
-                importantDate = false
-            )
-        )
+        val testNotImportantAssignment = createAssignment(elementaryCourse4.id,teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = false)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)
@@ -139,7 +100,7 @@ class ImportantDatesE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Opening ${testAssignment1.name} important date assignment's event. Assert that the Assignment Details Page is displayed.")
         importantDatesPage.clickImportantDatesItem(testAssignment1.name)
-        assignmentDetailsPage.verifyAssignmentTitle(testAssignment1.name)
+        assignmentDetailsPage.assertAssignmentTitle(testAssignment1.name)
 
         Log.d(STEP_TAG, "Navigate back to Important Dates page.")
         Espresso.pressBack()
@@ -162,6 +123,27 @@ class ImportantDatesE2ETest : StudentTest() {
 
     private fun generateDayString(date: Date?): String {
         return SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(date)
+    }
+
+    private fun createAssignment(
+        courseId: Long,
+        teacher: CanvasUserApiModel,
+        gradingType: GradingType,
+        pointsPossible: Double,
+        dueAt: String,
+        importantDate: Boolean
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = courseId,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = gradingType,
+                teacherToken = teacher.token,
+                pointsPossible = pointsPossible,
+                dueAt = dueAt,
+                importantDate = importantDate
+            )
+        )
     }
 }
 

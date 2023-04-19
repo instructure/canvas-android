@@ -19,15 +19,14 @@ package instructure.androidblueprint
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import java.lang.ref.WeakReference
-import java.util.*
 
 abstract class SyncExpandableRecyclerAdapter<
         GROUP,
@@ -38,9 +37,7 @@ abstract class SyncExpandableRecyclerAdapter<
     presenter: SyncExpandablePresenter<GROUP, MODEL, VIEW>
 ) : RecyclerView.Adapter<HOLDER>() {
 
-    abstract fun createViewHolder(v: View, viewType: Int): HOLDER
-
-    abstract fun itemLayoutResId(viewType: Int): Int
+    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
 
     abstract fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: GROUP, isExpanded: Boolean)
 
@@ -85,9 +82,11 @@ abstract class SyncExpandableRecyclerAdapter<
         notifyDataSetChanged()
     }
 
+    abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HOLDER {
-        val v = LayoutInflater.from(parent.context).inflate(itemLayoutResId(viewType), parent, false)
-        return createViewHolder(v, viewType)
+        val binding = bindingInflater(viewType)(LayoutInflater.from(context), parent, false)
+        return createViewHolder(binding, viewType)
     }
 
     override fun onBindViewHolder(baseHolder: HOLDER, position: Int) {

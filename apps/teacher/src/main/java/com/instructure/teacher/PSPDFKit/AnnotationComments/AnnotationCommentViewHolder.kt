@@ -17,7 +17,6 @@
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
 import android.view.Gravity
-import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
@@ -26,14 +25,17 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.adapter_annotation_comment.view.*
+import com.instructure.teacher.databinding.AdapterAnnotationCommentBinding
 
-class AnnotationCommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    companion object {
-        const val HOLDER_RES = R.layout.adapter_annotation_comment
-    }
-
-    fun bind(annotation: CanvaDocAnnotation, canEdit: Boolean, canDelete: Boolean, editCallback: (CanvaDocAnnotation, Int) -> Unit, deleteCallback: (CanvaDocAnnotation, Int) -> Unit) = with(itemView) {
+class AnnotationCommentViewHolder(private val binding: AdapterAnnotationCommentBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(
+        annotation: CanvaDocAnnotation,
+        canEdit: Boolean,
+        canDelete: Boolean,
+        editCallback: (CanvaDocAnnotation, Int) -> Unit,
+        deleteCallback: (CanvaDocAnnotation, Int) -> Unit
+    ) = with(binding) {
+        val context = binding.root.context
         commentAuthorTextView.text = annotation.userName
         commentDateTextView.text = DateHelper.getMonthDayAtTime(context, DateHelper.stringToDateWithMillis(annotation.createdAt), context.getString(R.string.at))
         commentContentsTextView.text = annotation.contents
@@ -43,7 +45,7 @@ class AnnotationCommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         if(annotation.deleted) {
             commentRemovedLabel.setVisible()
             val date = DateHelper.getMonthDayAtTime(context, DateHelper.stringToDateWithMillis(annotation.deletedAt), context.getString(R.string.at))
-            commentRemovedLabel.text = resources.getString(R.string.removedComment, date, annotation.deletedBy)
+            commentRemovedLabel.text = context.resources.getString(R.string.removedComment, date, annotation.deletedBy)
         } else {
             commentRemovedLabel.setGone()
         }

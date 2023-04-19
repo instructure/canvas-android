@@ -71,6 +71,8 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
     private var mediaCommentId: Long = -1L
 
+    private var attemptId: Long? = null
+
     private val context: Context
         get() = applicationContext
 
@@ -90,6 +92,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
                 studentId = intent.getLongExtra(Const.STUDENT_ID, ApiPrefs.user!!.id)
                 isGroupComment = intent.getBooleanExtra(Const.IS_GROUP, false)
                 pageId = intent.getStringExtra(Const.PAGE_ID)
+                attemptId = intent.getLongExtra(Const.SUBMISSION_ATTEMPT, -1L).takeIf { it != -1L }
             }
             ACTION.ASSIGNMENT_SUBMISSION -> assignment = intent.getParcelableExtra(Const.ASSIGNMENT)
             ACTION.DISCUSSION_COMMENT -> {
@@ -207,7 +210,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             when (action) {
                 ACTION.SUBMISSION_COMMENT -> broadcastSubmission(awaitApi {
                     SubmissionManager.postMediaSubmissionComment(
-                        course, assignment?.id ?: 0, studentId, result.id!!, mediaType, isGroupComment, it
+                        course, assignment?.id ?: 0, studentId, result.id!!, mediaType, attemptId, isGroupComment, it
                     )
                 })
                 ACTION.ASSIGNMENT_SUBMISSION -> broadcastSubmission(awaitApi {

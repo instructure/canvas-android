@@ -51,7 +51,7 @@ class DonutChartView(context: Context, attrs: AttributeSet) : View(context, attr
     private var color: Int = 0
 
     /** The color of the background arc */
-    private val bgColor: Int = ContextCompat.getColor(
+    private var bgColor: Int = ContextCompat.getColor(
         context,
         R.color.textLight
     )
@@ -73,6 +73,12 @@ class DonutChartView(context: Context, attrs: AttributeSet) : View(context, attr
     /** Sets the color of this graph */
     fun setColor(@ColorInt selectedColor: Int) {
         color = selectedColor
+        invalidate()
+    }
+
+    /** Sets the track color of this graph */
+    fun setTrackColor(@ColorInt selectedColor: Int) {
+        bgColor = selectedColor
         invalidate()
     }
 

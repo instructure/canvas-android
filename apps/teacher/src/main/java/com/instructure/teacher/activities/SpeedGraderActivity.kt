@@ -43,6 +43,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesContinueDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
@@ -51,6 +52,7 @@ import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
+import com.instructure.teacher.databinding.ActivitySpeedgraderBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction
@@ -66,7 +68,6 @@ import com.instructure.teacher.view.VideoPermissionGrantedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderView
 import com.pspdfkit.preferences.PSPDFKitPreferences
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_speedgrader.*
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -77,12 +78,14 @@ import java.util.*
 @AndroidEntryPoint
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
 
+    private val binding by viewBinding(ActivitySpeedgraderBinding::inflate)
+
     /* These should be passed to the presenter factory and should not be directly referenced otherwise */
     private val courseId: Long by lazy { intent.extras!!.getLong(Const.COURSE_ID) }
     private val assignmentId: Long by lazy { intent.extras!!.getLong(Const.ASSIGNMENT_ID) }
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
-    private val submissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras!!.getParcelableArrayList<GradeableStudentSubmission>(Const.SUBMISSION) ?: arrayListOf() }
-    private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable<DiscussionTopicHeader>(Const.DISCUSSION_HEADER) }
+    private val submissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras!!.getParcelableArrayList(Const.SUBMISSION) ?: arrayListOf() }
+    private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
 
     private val initialSelection: Int by lazy { intent.extras!!.getInt(Const.SELECTED_ITEM, 0) }
@@ -128,17 +131,17 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             PSPDFKitPreferences.get(this).setAnnotationCreator(ApiPrefs.user?.name)
         }
 
-        setContentView(R.layout.activity_speedgrader)
+        setContentView(binding.root)
 
-        viewModel.events.observe(this, { event ->
+        viewModel.events.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
-        })
+        }
 
-        viewModel.data.observe(this, { data ->
+        viewModel.data.observe(this) { data ->
             hasCommentLibrarySuggestions = !data.isEmpty()
-        })
+        }
     }
 
     private fun handleAction(action: CommentLibraryAction) {
@@ -147,7 +150,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         }
     }
 
-    override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>) {
+    override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>): Unit = with(binding) {
         val assignmentWithAnonymousGrading = if (anonymousGrading != null) {
             assignment.copy(anonymousGrading = anonymousGrading!!)
         } else {
@@ -181,14 +184,14 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         if (BuildConfig.IS_TESTING || TeacherPrefs.hasViewedSwipeTutorial || adapter.count < 2 || isTalkbackEnabled()) return@weave
 
         delay(TUTORIAL_DELAY)
-        swipeTutorialView.setVisible().onClick {
+        binding.swipeTutorialView.setVisible().onClick {
             if (it.alpha != 1f) return@onClick
             ObjectAnimator.ofFloat(it, "alpha", 1f, 0f).apply {
                 addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(animation: Animator?) = Unit
-                    override fun onAnimationCancel(animation: Animator?) = Unit
-                    override fun onAnimationStart(animation: Animator?) = Unit
-                    override fun onAnimationEnd(animation: Animator?) {
+                    override fun onAnimationRepeat(animation: Animator) = Unit
+                    override fun onAnimationCancel(animation: Animator) = Unit
+                    override fun onAnimationStart(animation: Animator) = Unit
+                    override fun onAnimationEnd(animation: Animator) {
                         it.setGone()
                         TeacherPrefs.hasViewedSwipeTutorial = true
                     }
@@ -196,7 +199,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 duration = TUTORIAL_DELAY
             }.start()
         }
-        ObjectAnimator.ofFloat(swipeTutorialView, "alpha", 0f, 1f).apply {
+        ObjectAnimator.ofFloat(binding.swipeTutorialView, "alpha", 0f, 1f).apply {
             duration = TUTORIAL_DELAY
         }.start()
     }
@@ -207,11 +210,11 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     }
 
     fun enableViewPager() {
-        submissionContentPager.isPagingEnabled = true
+        binding.submissionContentPager.isPagingEnabled = true
     }
 
     fun disableViewPager() {
-        submissionContentPager.isPagingEnabled = false
+        binding.submissionContentPager.isPagingEnabled = false
     }
 
     @Suppress("unused")
@@ -241,7 +244,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     @Suppress("unused")
     @Subscribe
     fun onTabSelected(event: TabSelectedEvent) {
-        submissionContentPager.hideKeyboard()
+        binding.submissionContentPager.hideKeyboard()
         adapter.initialTabIdx = event.selectedTabIdx
     }
 
@@ -304,7 +307,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     fun openCommentLibrary(submissionId: Long) {
         viewModel.currentSubmissionId = submissionId
         if (!isCommentLibraryOpen() && hasCommentLibrarySuggestions) {
-            submissionContentPager.isCommentLibraryOpen = true
+            binding.submissionContentPager.isCommentLibraryOpen = true
 
             val commentLibraryFragment = CommentLibraryFragment.newInstance(submissionId)
             val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -312,16 +315,16 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             fragmentTransaction.addToBackStack(commentLibraryFragment::class.java.name)
             fragmentTransaction.commitAllowingStateLoss()
 
-            submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            binding.submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
         }
     }
 
     fun closeCommentLibrary() {
         if (isCommentLibraryOpen()) {
-            submissionContentPager.isCommentLibraryOpen = false
+            binding.submissionContentPager.isCommentLibraryOpen = false
             supportFragmentManager.popBackStackImmediate()
 
-            submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+            binding.submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         }
     }
 
@@ -375,11 +378,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 }
 
                 // Only sort when anon grading is off
-                val anonymousGradingOn = if (anonymousGrading != null) {
-                    anonymousGrading
-                } else {
-                    submissions.firstOrNull()?.submission?.assignment?.anonymousGrading == true
-                }
+                val anonymousGradingOn = anonymousGrading ?: (submissions.firstOrNull()?.submission?.assignment?.anonymousGrading == true)
 
                 if(!anonymousGradingOn) {
                     // We need to sort the submissions so they appear in the same order as the submissions list

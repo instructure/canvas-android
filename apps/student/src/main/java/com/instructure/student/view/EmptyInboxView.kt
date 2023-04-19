@@ -3,18 +3,18 @@ package com.instructure.student.view
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import com.instructure.student.R
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import kotlinx.android.synthetic.main.empty_inbox_view.view.*
+import com.instructure.student.R
+import com.instructure.student.databinding.EmptyInboxViewBinding
 
 class EmptyInboxView @JvmOverloads constructor(
         context: Context,
@@ -22,21 +22,23 @@ class EmptyInboxView @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), EmptyInterface {
 
+    private val binding: EmptyInboxViewBinding
+
     private var noConnectionText: String? = null
     private var titleText: String? = null
     private var messageText: String? = null
     private var isDisplayNoConnection = false
 
     init {
-        View.inflate(context, R.layout.empty_inbox_view, this)
+        binding = EmptyInboxViewBinding.inflate(LayoutInflater.from(getContext()), this, true)
     }
 
     override fun setLoading() {
-        title.setGone()
-        message.setGone()
-        image.setGone()
-        loading.announceForAccessibility(context.getString(R.string.loading))
-        loading.setVisible()
+        binding.title.setGone()
+        binding.message.setGone()
+        binding.image.setGone()
+        binding.loading.root.announceForAccessibility(context.getString(R.string.loading))
+        binding.loading.root.setVisible()
     }
 
     override fun setDisplayNoConnection(isNoConnection: Boolean) {
@@ -45,44 +47,43 @@ class EmptyInboxView @JvmOverloads constructor(
 
     override fun setListEmpty() {
         if (isDisplayNoConnection) {
-            // TODO We can move this also to commons later, and than we can use the synthetic properties.
-            findViewById<TextView>(R.id.noConnection).text = noConnectionText
+            binding.loading.noConnection.text = noConnectionText
         } else {
-            title.text = titleText
-            message.text = messageText
+            binding.title.text = titleText
+            binding.message.text = messageText
         }
-        title.setVisible()
-        message.setVisible()
-        loading.setGone()
-        image.setVisible(image.drawable != null)
+        binding.title.setVisible()
+        binding.message.setVisible()
+        binding.loading.root.setGone()
+        binding.image.setVisible(binding.image.drawable != null)
     }
 
     fun getTitle(): TextView {
-        return title
+        return binding.title
     }
 
     override fun setTitleText(s: String) {
         titleText = s
-        title.text = titleText
+        binding.title.text = titleText
     }
 
     override fun setTitleText(sResId: Int) {
         titleText = context.resources.getString(sResId)
-        title.text = titleText
+        binding.title.text = titleText
     }
 
     fun getMessage(): TextView {
-        return message
+        return binding.message
     }
 
     override fun setMessageText(s: String) {
         messageText = s
-        message.text = messageText
+        binding.message.text = messageText
     }
 
     override fun setMessageText(sResId: Int) {
         messageText = context.resources.getString(sResId)
-        message.text = messageText
+        binding.message.text = messageText
     }
 
     override fun setNoConnectionText(s: String) {
@@ -90,10 +91,10 @@ class EmptyInboxView @JvmOverloads constructor(
         findViewById<TextView>(R.id.noConnection).text = noConnectionText
     }
 
-    override fun getEmptyViewImage(): ImageView? = image
+    override fun getEmptyViewImage(): ImageView? = binding.image
 
     override fun setEmptyViewImage(drawable: Drawable) {
-        image.setImageDrawable(drawable)
+        binding.image.setImageDrawable(drawable)
     }
 
     override fun emptyViewText(s: String) {
@@ -110,12 +111,12 @@ class EmptyInboxView @JvmOverloads constructor(
 
     fun setImageVisible(visible: Boolean) {
         when (visible) {
-            true -> image.setVisible()
-            false -> image.setGone()
+            true -> binding.image.setVisible()
+            false -> binding.image.setGone()
         }
     }
 
-    fun changeTextSize(isCalendar: Boolean = false) {
+    fun changeTextSize(isCalendar: Boolean = false) = with(binding) {
         if (isCalendar) {
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
@@ -133,7 +134,7 @@ class EmptyInboxView @JvmOverloads constructor(
         }
     }
 
-    fun setGuidelines(imTop: Float, imBottom: Float, tiTop: Float, txLeft: Float, txRight: Float) {
+    fun setGuidelines(imTop: Float, imBottom: Float, tiTop: Float, txLeft: Float, txRight: Float) = with(binding) {
         val iTop = imageTop.layoutParams as ConstraintLayout.LayoutParams
         iTop.guidePercent = imTop
         imageTop.layoutParams = iTop

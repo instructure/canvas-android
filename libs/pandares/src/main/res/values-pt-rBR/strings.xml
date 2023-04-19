@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Você pode abrir os detalhes do Envio aqui</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minuto</item>
         <item quantity="other">%s Minutos</item>
@@ -1294,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Fazendo upload para arquivos</string>
     <string name="submissionProgressSubtitle">Carregando envio para \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Realizando upload</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Sucesso do envio</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Falha no envio</string>
     <string name="dashboardNotificationUploadingFilesTitle">Carregamento de arquivos</string>
     <string name="cancelSubmissionDialogTitle">Cancelar envio</string>
     <string name="cancelSubmissionDialogMessage">Isso cancelará e excluirá seu envio.</string>
@@ -1331,4 +1335,46 @@
     <string name="acceptableUsePolicyAgree">Eu concordo com a Política de Uso Aceitável.</string>
     <string name="acceptableUsePolicySubmit">Enviar</string>
     <string name="acceptFail">Falha ao enviar a aceitação dos termos.</string>
+    <string name="attempt">Tentativa %d</string>
+    <string name="quizQuestions">Perguntas: %d</string>
+    <string name="quizTimeLimit">Limite de tempo: %s</string>
+    <string name="allowedAttempts">Tentativas permitidas: %s</string>
+    <string name="usedAttempts">Tentativas usadas: %d</string>
+    <string name="generalUnexpectedError">Ocorreu um erro inesperado.</string>
+
+    <string name="deleteSelected">Excluir</string>
+    <string name="archiveSelected">Arquivar</string>
+    <string name="unarchiveSelected">Desarquivar</string>
+    <string name="markAsReadSelected">Marcar como lido</string>
+    <string name="markAsUnreadSelected">Marcar como não lido</string>
+    <string name="starSelected">Adicionar aos favoritos</string>
+    <string name="unstarSelected">Remover dos favoritos</string>
+
+    <string name="inboxOperationFailed">Falha ao executar a operação</string>
+    <string name="inboxDeletedConfirmation">%s excluído</string>
+    <string name="inboxArchivedConfirmation">%s arquivado</string>
+    <string name="inboxUnarchivedConfirmation">%s desarquivado</string>
+    <string name="inboxMarkAsReadConfirmation">%s marcado como lido</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marcado como não lido</string>
+    <string name="inboxStarredConfirmation">%s favoritado</string>
+    <string name="inboxUnstarredConfirmation">%s não favoritado</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Esta conversa será excluída da caixa de entrada em todos os seus dispositivos. Essa ação não pode ser desfeita.</item>
+        <item quantity="other">Essas conversas serão excluídas da caixa de entrada em todos os seus dispositivos. Essa ação não pode ser desfeita.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Falha ao carregar a próxima página. Verifique a sua conexão com a internet.</string>
+    <string name="conversationsRefreshFailed">Falha ao atualizar as conversas. Verifique a sua conexão com a internet.</string>
+    <string name="inboxScopeInbox">Caixa de entrada</string>
+    <string name="inboxContextSelectorTitle">Selecionar curso ou grupo</string>
+    <string name="inboxClearFilter">Limpar</string>
+    <string name="a11y_courseFilterContentDescription">Filtro de curso: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">selecionar</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversa selecionada. Modo de seleção ativado. Navegue pelas ações.</string>
+    <string name="a11y_conversationSelected">Conversa selecionada</string>
+    <string name="a11y_conversationDeselected">Conversa não selecionada</string>
+    <string name="a11y_exitSelectionMode">Sair do modo de seleção</string>
+    <string name="a11y_selectionModeDeactivated">Modo de seleção desativado.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfazer</string>
 </resources>

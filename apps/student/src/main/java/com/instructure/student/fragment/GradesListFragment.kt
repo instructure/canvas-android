@@ -38,23 +38,25 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_GRADES_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.GradesListRecyclerAdapter
 import com.instructure.student.adapter.TermSpinnerAdapter
+import com.instructure.student.databinding.FragmentCourseGradesBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
+import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_course_grades.*
 import retrofit2.Response
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.*
 
 @ScreenView(SCREEN_VIEW_GRADES_LIST)
 @PageView(url = "{canvasContext}/grades")
 class GradesListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(FragmentCourseGradesBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -100,7 +102,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                     }
 
                     //Compute new overall grade
-                    computeGrades(showTotalCheckBox.isChecked, position)
+                    computeGrades(binding.showTotalCheckBox.isChecked, position)
                 }
             }
         })
@@ -117,10 +119,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun applyTheme() {
-        setupToolbarMenu(toolbar)
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
+        with(binding) {
+            setupToolbarMenu(toolbar)
+            toolbar.title = title()
+            toolbar.setupAsBackButton(this@GradesListFragment)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -132,7 +136,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         val appBarLayout = rootView.findViewById<AppBarLayout>(R.id.appbar)
 
         val lockDrawable = ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_lock, ContextCompat.getColor(requireContext(), R.color.textDarkest))
-        lockedGradeImage.setImageDrawable(lockDrawable)
+        binding.lockedGradeImage.setImageDrawable(lockDrawable)
 
         setupListeners()
         lockGrade(course.hideFinalGrades)
@@ -143,7 +147,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         })
     }
 
-    private fun setupListeners() {
+    private fun setupListeners() = with(binding) {
         gradeToggleView.setOnClickListener { showTotalCheckBox.toggle() }
 
         showTotalCheckBox.setOnCheckedChangeListener { _, isChecked ->
@@ -174,7 +178,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             // cached data, so fast.
             if (!showWhatIfCheckBox.isChecked) {
                 recyclerAdapter.whatIfGrade = null
-                recyclerAdapter.refresh()
+                recyclerAdapter.loadCachedData()
             } else {
                 // Only log when what if grades is checked on
                 Analytics.logEvent(AnalyticsEventConstants.WHAT_IF_GRADES)
@@ -194,7 +198,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     private val adapterToGradesCallback = object : GradesListRecyclerAdapter.AdapterToGradesCallback {
         override fun setTermSpinnerState(isEnabled: Boolean) {
             if (!isAdded) return
-            termSpinner.isEnabled = isEnabled
+            binding.termSpinner.isEnabled = isEnabled
             termAdapter?.let {
                 it.isLoading = !isEnabled
                 it.notifyDataSetChanged()
@@ -202,20 +206,20 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun notifyGradeChanged(courseGrade: CourseGrade?) {
-            Logger.d("Logging for Grades E2E, current total grade is: ${txtOverallGrade.text}")
+            Logger.d("Logging for Grades E2E, current total grade is: ${binding.txtOverallGrade.text}")
             if (!isAdded) return
-            val gradeString = formatGrade(courseGrade, !showTotalCheckBox.isChecked)
+            val gradeString = formatGrade(courseGrade, !binding.showTotalCheckBox.isChecked)
             Logger.d("Logging for Grades E2E, new total grade is: $gradeString")
-            txtOverallGrade.text = gradeString
-            txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
+            binding.txtOverallGrade.text = gradeString
+            binding.txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
             lockGrade(course.hideFinalGrades || courseGrade?.isLocked == true)
         }
 
         // showWhatIfCheckBox is accessed a little too early when this fragment is loaded, so we add an elvis operator here
-        override val isEdit: Boolean get() = showWhatIfCheckBox?.isChecked ?: false
+        override val isEdit: Boolean get() = binding.showWhatIfCheckBox.isChecked
 
         override fun setIsWhatIfGrading(isWhatIfGrading: Boolean) {
-            whatIfView.setVisible(isWhatIfGrading)
+            binding.whatIfView.setVisible(isWhatIfGrading)
             this@GradesListFragment.isWhatIfGrading = isWhatIfGrading
         }
     }
@@ -237,41 +241,55 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     private val gradingPeriodsCallback = object : StatusCallback<GradingPeriodResponse>() {
 
         override fun onResponse(response: Response<GradingPeriodResponse>, linkHeaders: LinkHeaders, type: ApiType) {
-            gradingPeriodsList = ArrayList()
-            gradingPeriodsList.addAll(response.body()!!.gradingPeriodList)
-            // Add "select all" option
-            gradingPeriodsList.add(allTermsGradingPeriod)
-            termAdapter = TermSpinnerAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, gradingPeriodsList)
-            termSpinner.adapter = termAdapter
-            termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    // The current item must always be set first
-                    recyclerAdapter.currentGradingPeriod = termAdapter?.getItem(position)
-                    if (termAdapter?.getItem(position)?.title == getString(R.string.allGradingPeriods)) {
-                        recyclerAdapter.loadData()
-                    } else {
-                        if(termAdapter?.isEmpty == false) {
-                            recyclerAdapter.loadAssignmentsForGradingPeriod(termAdapter?.getItem(position)?.id ?: 0, true)
-                            termSpinner.isEnabled = false
-                            termAdapter?.isLoading = true
-                            termAdapter?.notifyDataSetChanged()
+            with(binding) {
+                gradingPeriodsList = ArrayList()
+                gradingPeriodsList.addAll(response.body()!!.gradingPeriodList)
+                // Add "select all" option
+                gradingPeriodsList.add(allTermsGradingPeriod)
+                termAdapter = TermSpinnerAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    gradingPeriodsList
+                )
+                termSpinner.adapter = termAdapter
+                termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        // The current item must always be set first
+                        recyclerAdapter.currentGradingPeriod = termAdapter?.getItem(position)
+                        if (termAdapter?.getItem(position)?.title == getString(R.string.allGradingPeriods)) {
+                            recyclerAdapter.loadData()
+                        } else {
+                            if (termAdapter?.isEmpty == false) {
+                                recyclerAdapter.loadAssignmentsForGradingPeriod(
+                                    termAdapter?.getItem(position)?.id ?: 0,
+                                    true,
+                                    true
+                                )
+                                termSpinner.isEnabled = false
+                                termAdapter?.isLoading = true
+                                termAdapter?.notifyDataSetChanged()
+                            }
                         }
+                        showTotalCheckBox.isChecked = true
                     }
-                    showTotalCheckBox.isChecked = true
                 }
-            }
 
-            // If we have a "current" grading period select it
-            if (recyclerAdapter.currentGradingPeriod != null) {
-                val position = termAdapter?.getPositionForId(recyclerAdapter.currentGradingPeriod?.id ?: -1) ?: -1
-                if (position != -1) {
-                    termSpinner.setSelection(position)
-                } else {
-                    Toast.makeText(requireActivity(), com.instructure.loginapi.login.R.string.errorOccurred, Toast.LENGTH_SHORT).show()
+                // If we have a "current" grading period select it
+                if (recyclerAdapter.currentGradingPeriod != null) {
+                    val position = termAdapter?.getPositionForId(recyclerAdapter.currentGradingPeriod?.id ?: -1) ?: -1
+                    if (position != -1) {
+                        termSpinner.setSelection(position)
+                    } else {
+                        Toast.makeText(
+                            requireActivity(),
+                            com.instructure.loginapi.login.R.string.errorOccurred,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
+                termSpinner.setVisible()
             }
-            termSpinner.setVisible()
         }
     }
 
@@ -286,15 +304,15 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     private fun lockGrade(isLocked: Boolean) {
         if (isLocked || recyclerAdapter.isAllGradingPeriodsSelected && !course.isTotalsForAllGradingPeriodsEnabled) {
-            txtOverallGrade.setInvisible()
-            lockedGradeImage.setVisible()
-            gradeToggleView.setGone()
-            whatIfView.setGone()
+            binding.txtOverallGrade.setInvisible()
+            binding.lockedGradeImage.setVisible()
+            binding.gradeToggleView.setGone()
+            binding.whatIfView.setGone()
         } else {
-            txtOverallGrade.setVisible()
-            lockedGradeImage.setInvisible()
-            gradeToggleView.setVisible()
-            if (isWhatIfGrading) whatIfView.setVisible()
+            binding.txtOverallGrade.setVisible()
+            binding.lockedGradeImage.setInvisible()
+            binding.gradeToggleView.setVisible()
+            if (isWhatIfGrading) binding.whatIfView.setVisible()
         }
     }
 
@@ -317,7 +335,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             }
 
             recyclerAdapter.whatIfGrade = result
-            txtOverallGrade.text = NumberHelper.doubleToPercentage(result)
+            binding.txtOverallGrade.text = NumberHelper.doubleToPercentage(result)
 
             if(lastPositionChanged >= 0) recyclerAdapter.notifyItemChanged(lastPositionChanged)
         }
@@ -342,12 +360,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             var totalPoints = 0.0
             val weight = g.groupWeight
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty()) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
                     earnedPoints += tempSub.score
                 }
-                if(tempAssignment != null) totalPoints += tempAssignment.pointsPossible
+                if (tempAssignment != null) totalPoints += tempAssignment.pointsPossible
             }
 
             if (totalPoints != 0.0 && earnedPoints != 0.0) {
@@ -377,9 +395,9 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             val weight = g.groupWeight
             var assignCount = 0
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
                     assignCount++ // Determines if a group contains assignments
                     totalPoints += tempAssignment.pointsPossible
                     earnedPoints += tempSub.score
@@ -426,12 +444,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         var totalPoints = 0.0
         for (g in groups) {
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
                     earnedPoints += tempSub.score
                 }
-                if(tempAssignment != null) totalPoints += tempAssignment.pointsPossible
+                if (tempAssignment != null) totalPoints += tempAssignment.pointsPossible
             }
         }
         if (totalPoints != 0.0 && earnedPoints != 0.0) {
@@ -460,9 +478,9 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         var earnedPoints = 0.0
         for (g in groups) {
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter.assignmentsHash[a.id]
+                val tempAssignment = recyclerAdapter.assignmentsHash[a.id].takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
-                if (tempSub?.grade != null && !tempAssignment.submissionTypesRaw.isEmpty()) {
+                if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
                     totalPoints += tempAssignment.pointsPossible
                     earnedPoints += tempSub.score
                 }

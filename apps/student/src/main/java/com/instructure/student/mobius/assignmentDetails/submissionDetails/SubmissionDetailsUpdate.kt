@@ -68,8 +68,12 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                 }
             }
             is SubmissionDetailsEvent.DataLoaded -> {
+                val selectedSubmission = event.rootSubmissionResult.dataOrNull?.submissionHistory?.find {
+                    it?.attempt == model.initialSelectedSubmissionAttempt
+                } ?: event.rootSubmissionResult.dataOrNull
+
                 val submissionType = getSubmissionContentType(
-                    event.rootSubmissionResult.dataOrNull,
+                    selectedSubmission,
                     event.assignment.dataOrNull,
                     model.canvasContext,
                     event.isStudioEnabled,
@@ -83,8 +87,9 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         isLoading = false,
                         assignmentResult = event.assignment,
                         rootSubmissionResult = event.rootSubmissionResult,
-                        selectedSubmissionAttempt = event.rootSubmissionResult.dataOrNull?.attempt,
-                        quizResult = event.quizResult
+                        selectedSubmissionAttempt = selectedSubmission?.attempt,
+                        quizResult = event.quizResult,
+                        assignmentEnhancementsEnabled = event.assignmentEnhancementsEnabled
                     ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }
@@ -142,6 +147,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             SubmissionDetailsEvent.SubmissionUploadFinished ->  Next.next(
                 model.copy(isLoading = true),
                 setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId)))
+            is SubmissionDetailsEvent.SubmissionCommentsUpdated -> Next.next(model.copy(submissionComments = event.submissionComments))
         }
     }
 

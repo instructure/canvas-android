@@ -22,8 +22,8 @@ import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemCallback
+import com.instructure.teacher.databinding.AdapterPostPolicySectionBinding
 import com.instructure.teacher.features.postpolicies.PostSection
-import kotlinx.android.synthetic.main.adapter_post_policy_section.view.*
 
 interface PostGradeSectionCallback : BasicItemCallback, ListItemCallback {
     fun sectionToggled(sectionId: Long)
@@ -39,13 +39,13 @@ private class PostGradeSectionBinder : BasicItemBinder<PostSection, PostGradeSec
     override val layoutResId = R.layout.adapter_post_policy_section
     override fun getItemId(item: PostSection) = item.section.id
 
-    override val bindBehavior = Item  { item, callback, _ ->
-        postPolicySectionTitle.text = item.section.name
-
-        postPolicySectionToggle.applyTheme(item.courseColor)
-        postPolicySectionToggle.setOnCheckedChangeListener(null)
-        postPolicySectionToggle.isChecked = item.selected
-        postPolicySectionToggle.setOnCheckedChangeListener { _, _ ->
+    override val bindBehavior = Item { item, callback, _ ->
+        val binding = AdapterPostPolicySectionBinding.bind(this)
+        binding.postPolicySectionTitle.text = item.section.name
+        binding.postPolicySectionToggle.applyTheme(item.courseColor)
+        binding.postPolicySectionToggle.setOnCheckedChangeListener(null)
+        binding.postPolicySectionToggle.isChecked = item.selected
+        binding.postPolicySectionToggle.setOnCheckedChangeListener { _, _ ->
             callback.sectionToggled(item.section.id)
         }
     }

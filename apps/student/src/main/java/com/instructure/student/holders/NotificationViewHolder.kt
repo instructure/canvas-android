@@ -28,9 +28,9 @@ import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
+import com.instructure.student.databinding.ViewholderNotificationBinding
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.util.BinderUtils
-import kotlinx.android.synthetic.main.viewholder_notification.view.*
 
 class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     @SuppressLint("SetTextI18n")
@@ -39,9 +39,9 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         item: StreamItem,
         checkboxCallback: NotificationListRecyclerAdapter.NotificationCheckboxCallback,
         adapterToFragmentCallback: NotificationAdapterToFragmentCallback<StreamItem>
-    ) = with(itemView) {
+    ) = with(ViewholderNotificationBinding.bind(itemView)) {
 
-        setOnClickListener {
+        root.setOnClickListener {
             if (checkboxCallback.isEditMode()) {
                 checkboxCallback.onCheckChanged(item, !item.isChecked, adapterPosition)
             } else {
@@ -49,7 +49,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
             }
         }
 
-        setOnLongClickListener {
+        root.setOnLongClickListener {
             checkboxCallback.onCheckChanged(item, !item.isChecked, adapterPosition)
             true
         }
@@ -78,9 +78,9 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         if (item.isChecked) {
-            setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))
+            root.setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))
         } else {
-            setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundLightest))
+            root.setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundLightest))
         }
 
         // Icon

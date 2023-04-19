@@ -25,39 +25,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
-import com.instructure.pandautils.utils.AppTheme
-import com.instructure.pandautils.utils.AppThemeSelector
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.setupAsBackButton
-import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.SettingsActivity
+import com.instructure.student.databinding.FragmentApplicationSettingsBinding
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
-import kotlinx.android.synthetic.main.dialog_about.*
-import kotlinx.android.synthetic.main.fragment_application_settings.*
 
 @ScreenView(SCREEN_VIEW_APPLICATION_SETTINGS)
 @PageView(url = "profile/settings")
 class ApplicationSettingsFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentApplicationSettingsBinding::bind)
 
     override fun title(): String = getString(R.string.settings)
 
@@ -70,13 +61,13 @@ class ApplicationSettingsFragment : ParentFragment() {
         setupViews()
     }
 
-    override fun applyTheme() {
-        toolbar.setupAsBackButton(this)
+    override fun applyTheme() = with(binding) {
+        toolbar.setupAsBackButton(this@ApplicationSettingsFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         profileSettings.onClick {
             val frag = if (ApiPrefs.isStudentView) {
                 // Profile settings not available in Student View
@@ -117,16 +108,7 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         about.onClick {
-            AlertDialog.Builder(requireContext())
-                .setTitle(R.string.about)
-                .setView(R.layout.dialog_about)
-                .show()
-                .apply {
-                    domain.text = ApiPrefs.domain
-                    loginId.text = ApiPrefs.user!!.loginId
-                    email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
-                    version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                }
+            AboutFragment.newInstance().show(childFragmentManager, null)
         }
 
         if (ApiPrefs.canvasForElementary) {
@@ -165,27 +147,28 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     private fun setUpAppThemeSelector() {
         val initialAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
-        appThemeStatus.setText(initialAppTheme.themeNameRes)
+        binding.appThemeStatus.setText(initialAppTheme.themeNameRes)
 
-        appThemeContainer.onClick {
-            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), appThemeStatus)
+        binding.appThemeContainer.onClick {
+            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), binding.appThemeStatus)
         }
     }
 
     private fun setUpSubscribeToCalendarFeed() {
         val calendarFeed = ApiPrefs.user?.calendar?.ics
         if (!calendarFeed.isNullOrEmpty()) {
-            subscribeToCalendar.setVisible()
-            subscribeToCalendar.onClick {
-
-                AlertDialog.Builder(requireContext())
-                    .setMessage(R.string.subscribeToCalendarMessage)
-                    .setPositiveButton(R.string.subscribeButton, { dialog, _ ->
-                        dialog.dismiss()
-                        openCalendarLink(calendarFeed)
-                    })
-                    .setNegativeButton(R.string.cancel, {dialog, _ -> dialog.dismiss()})
-                    .showThemed()
+            binding.subscribeToCalendar.apply {
+               setVisible()
+                onClick {
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(R.string.subscribeToCalendarMessage)
+                        .setPositiveButton(R.string.subscribeButton) { dialog, _ ->
+                            dialog.dismiss()
+                            openCalendarLink(calendarFeed)
+                        }
+                        .setNegativeButton(R.string.cancel, {dialog, _ -> dialog.dismiss()})
+                        .showThemed()
+                }
             }
         }
     }

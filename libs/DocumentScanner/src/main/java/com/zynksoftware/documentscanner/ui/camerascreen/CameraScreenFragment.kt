@@ -24,43 +24,28 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.tbruyelle.rxpermissions3.RxPermissions
 import com.zynksoftware.documentscanner.R
 import com.zynksoftware.documentscanner.common.extensions.hide
 import com.zynksoftware.documentscanner.common.extensions.show
 import com.zynksoftware.documentscanner.common.utils.FileUriUtils
+import com.zynksoftware.documentscanner.databinding.FragmentCameraScreenBinding
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.ui.base.BaseFragment
 import com.zynksoftware.documentscanner.ui.components.scansurface.ScanSurfaceListener
 import com.zynksoftware.documentscanner.ui.scan.InternalScanActivity
-import kotlinx.android.synthetic.main.fragment_camera_screen.*
 import java.io.File
 import java.io.FileNotFoundException
 
 
-internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
+internal class CameraScreenFragment: BaseFragment<FragmentCameraScreenBinding>(FragmentCameraScreenBinding::inflate), ScanSurfaceListener  {
 
-    companion object {
-        private const val GALLERY_REQUEST_CODE = 878
-        private val TAG = CameraScreenFragment::class.simpleName
-
-        fun newInstance(): CameraScreenFragment {
-            return CameraScreenFragment()
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_camera_screen, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
-        scanSurfaceView.lifecycleOwner = this
-        scanSurfaceView.listener = this
+        scanSurfaceView.lifecycleOwner = this@CameraScreenFragment
+        scanSurfaceView.listener = this@CameraScreenFragment
         scanSurfaceView.originalImageFile = getScanActivity().originalImageFile
 
         checkForCameraPermissions()
@@ -77,10 +62,10 @@ internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
     override fun onResume() {
         super.onResume()
         getScanActivity().reInitOriginalImageFile()
-        scanSurfaceView.originalImageFile = getScanActivity().originalImageFile
+        binding.scanSurfaceView.originalImageFile = getScanActivity().originalImageFile
     }
 
-    private fun initListeners() {
+    private fun initListeners() = with(binding) {
         cameraCaptureButton.setOnClickListener {
             takePhoto()
         }
@@ -98,7 +83,7 @@ internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
         }
     }
 
-    private fun toggleAutoManualButton() {
+    private fun toggleAutoManualButton() = with(binding) {
         scanSurfaceView.isAutoCaptureOn = !scanSurfaceView.isAutoCaptureOn
         if (scanSurfaceView.isAutoCaptureOn) {
             autoButton.text = getString(R.string.zdc_auto)
@@ -127,7 +112,7 @@ internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
 
     private fun checkForStoragePermissions() {
         RxPermissions(this)
-            .requestEach(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .requestEach(Manifest.permission.READ_MEDIA_IMAGES)
             .subscribe { permission ->
                 when {
                     permission.granted -> {
@@ -144,11 +129,11 @@ internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
     }
 
     private fun startCamera() {
-        scanSurfaceView.start()
+        binding.scanSurfaceView.start()
     }
 
     private fun takePhoto() {
-        scanSurfaceView.takePicture()
+        binding.scanSurfaceView.takePicture()
     }
 
     private fun getScanActivity(): InternalScanActivity {
@@ -160,15 +145,15 @@ internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
     }
 
     private fun switchFlashState() {
-        scanSurfaceView.switchFlashState()
+        binding.scanSurfaceView.switchFlashState()
     }
 
     override fun showFlash() {
-        flashButton?.show()
+        binding.flashButton.show()
     }
 
     override fun hideFlash() {
-        flashButton?.hide()
+        binding.flashButton.hide()
     }
 
     private fun selectImageFromGallery() {
@@ -232,10 +217,19 @@ internal class CameraScreenFragment: BaseFragment(), ScanSurfaceListener  {
     }
 
     override fun showFlashModeOn() {
-        flashButton.setImageResource(R.drawable.zdc_flash_on)
+        binding.flashButton.setImageResource(R.drawable.zdc_flash_on)
     }
 
     override fun showFlashModeOff() {
-        flashButton.setImageResource(R.drawable.zdc_flash_off)
+        binding.flashButton.setImageResource(R.drawable.zdc_flash_off)
+    }
+
+    companion object {
+        private const val GALLERY_REQUEST_CODE = 878
+        private val TAG = CameraScreenFragment::class.simpleName
+
+        fun newInstance(): CameraScreenFragment {
+            return CameraScreenFragment()
+        }
     }
 }

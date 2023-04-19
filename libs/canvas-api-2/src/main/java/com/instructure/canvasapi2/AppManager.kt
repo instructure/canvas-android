@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Bundle
 import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasAuthError
 import com.instructure.canvasapi2.models.User

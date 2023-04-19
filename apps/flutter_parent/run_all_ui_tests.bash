@@ -45,6 +45,8 @@ do
         startTime=`date +"%s"`
 
         # Run the test
+        flutter clean
+        flutter pub get
         flutter drive --target=$target
 
         # Allow for a single retry for a failed test

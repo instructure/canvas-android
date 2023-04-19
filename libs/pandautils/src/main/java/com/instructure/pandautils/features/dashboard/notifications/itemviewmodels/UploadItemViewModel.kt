@@ -35,7 +35,8 @@ class UploadItemViewModel(
     val workManager: WorkManager,
     val data: UploadViewData,
     @get:Bindable var progress: Int = 0,
-    val open: (UUID) -> Unit
+    val open: (UUID) -> Unit,
+    val remove: () -> Unit
 ) : ItemViewModel, BaseObservable() {
 
     private val observer = Observer<WorkInfo> {
@@ -55,6 +56,7 @@ class UploadItemViewModel(
         workManager.getWorkInfoByIdLiveData(workerId).removeObserver(observer)
     }
 
-
     fun open() = open.invoke(workerId)
+
+    fun remove() = remove.invoke()
 }

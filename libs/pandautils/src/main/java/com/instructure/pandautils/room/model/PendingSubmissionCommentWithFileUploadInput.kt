@@ -38,6 +38,7 @@ data class PendingSubmissionCommentWithFileUploadInput(
                 fileUploadInput?.assignmentId ?: -1L,
                 fileUploadInput?.userId ?: -1L
             )
+            attemptId = pendingSubmissionCommentEntity.attemptId
         }
     }
 }

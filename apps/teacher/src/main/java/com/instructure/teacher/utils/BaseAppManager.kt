@@ -22,10 +22,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.Configuration
 import androidx.work.WorkerFactory
-import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.heapanalytics.android.config.Options
+import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.AppTheme
@@ -42,11 +42,9 @@ import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configuration.Provider {
 
     override fun onCreate() {
-        if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
-            // Skip app initialization.
-            return
-        }
         super.onCreate()
+
+        FileCache.versionCode = BuildConfig.VERSION_CODE
 
         val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)

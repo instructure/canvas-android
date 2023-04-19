@@ -1143,6 +1143,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Tutaj można otworzyć szczegóły przesyłki</string>
+
     <plurals name="minutes">
         <item quantity="one">%s min</item>
         <item quantity="few">%s min</item>
@@ -1326,6 +1328,8 @@
     <string name="fileUploadProgressSubtitle">Przesyłanie do Plików</string>
     <string name="submissionProgressSubtitle">Przesyłanie materiałów do \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Trwa przesyłanie zadania</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Przesłano pomyślnie</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Przesyłanie nie powiodło się</string>
     <string name="dashboardNotificationUploadingFilesTitle">Przesyłanie plików</string>
     <string name="cancelSubmissionDialogTitle">Anuluj przesyłkę</string>
     <string name="cancelSubmissionDialogMessage">Spowoduje to anulowanie i usunięcie przesyłki.</string>
@@ -1363,4 +1367,48 @@
     <string name="acceptableUsePolicyAgree">Wyrażam zgodę na Zasady dozwolonego użytku.</string>
     <string name="acceptableUsePolicySubmit">Prześlij</string>
     <string name="acceptFail">Nie udało się przesłać akceptacji zasad.</string>
+    <string name="attempt">Próba %d</string>
+    <string name="quizQuestions">Pytania: %d</string>
+    <string name="quizTimeLimit">Limit czasu: %s</string>
+    <string name="allowedAttempts">Dozwolone próby: %s</string>
+    <string name="usedAttempts">Wykorzystane próby: %d</string>
+    <string name="generalUnexpectedError">Wystąpił nieoczekiwany błąd.</string>
+
+    <string name="deleteSelected">Usuń</string>
+    <string name="archiveSelected">Archiwum</string>
+    <string name="unarchiveSelected">Usuń z archiwum</string>
+    <string name="markAsReadSelected">Oznacz jako przeczytane</string>
+    <string name="markAsUnreadSelected">Oznacz jako nieprzeczytane</string>
+    <string name="starSelected">Gwiazdka</string>
+    <string name="unstarSelected">Nieoznaczone gwiazdą</string>
+
+    <string name="inboxOperationFailed">Nie udało się przeprowadzić działania</string>
+    <string name="inboxDeletedConfirmation">Usunięto %s.</string>
+    <string name="inboxArchivedConfirmation">Zarchiwizowano %s.</string>
+    <string name="inboxUnarchivedConfirmation">Anulowano archiwizację %s.</string>
+    <string name="inboxMarkAsReadConfirmation">%s – oznaczono jako przeczytane.</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s – oznaczono jako nieprzeczytane.</string>
+    <string name="inboxStarredConfirmation">%s – oznaczono gwiazdką.</string>
+    <string name="inboxUnstarredConfirmation">%s – anulowano oznaczenie gwiazdką.</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Ta rozmowa zostanie usunięta ze skrzynki odbiorczej na wszystkich urządzeniach użytkownika. Ta czynność jest nieodwracalna.</item>
+        <item quantity="few">Te rozmowy zostaną usunięte ze skrzynki odbiorczej na wszystkich urządzeniach użytkownika. Ta czynność jest nieodwracalna.</item>
+        <item quantity="many">Te rozmowy zostaną usunięte ze skrzynki odbiorczej na wszystkich urządzeniach użytkownika. Ta czynność jest nieodwracalna.</item>
+        <item quantity="other">Te rozmowy zostaną usunięte ze skrzynki odbiorczej na wszystkich urządzeniach użytkownika. Ta czynność jest nieodwracalna.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Nie udało się wczytać następnej strony. Sprawdź połączenie internetowe.</string>
+    <string name="conversationsRefreshFailed">Nie udało się odświeżyć rozmów. Sprawdź połączenie internetowe.</string>
+    <string name="inboxScopeInbox">Skrzynka odbiorcza</string>
+    <string name="inboxContextSelectorTitle">Wybierz kurs lub grupę</string>
+    <string name="inboxClearFilter">Wyczyść</string>
+    <string name="a11y_courseFilterContentDescription">Filtr kursów: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">wybierz</string>
+    <string name="a11y_itemSelectedSwipeForActions">Wybrano rozmowę. Aktywowano tryb wyboru. Nawiguj, aby wybrać działania.</string>
+    <string name="a11y_conversationSelected">Wybrano rozmowę.</string>
+    <string name="a11y_conversationDeselected">Anulowano wybór rozmowy.</string>
+    <string name="a11y_exitSelectionMode">Zamknij tryb wyboru.</string>
+    <string name="a11y_selectionModeDeactivated">Dezaktywowano tryb wyboru.</string>
+    <string name="a11y_avatarContentDescription">Awatar %s</string>
+    <string name="inboxUndo">Cofnij</string>
 </resources>

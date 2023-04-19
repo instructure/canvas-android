@@ -20,7 +20,6 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
@@ -36,23 +35,26 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ActivityMasterDetailBinding
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_master_detail.*
 import retrofit2.Response
 
 @AndroidEntryPoint
 class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
+
+    private val binding by viewBinding(ActivityMasterDetailBinding::inflate)
 
     private var mRoute: Route? = null
 
@@ -64,12 +66,12 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         ValueAnimator.ofFloat(expandPercent).setDuration(500)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_master_detail)
+        setContentView(binding.root)
 
-        mRoute = intent.extras!!.getParcelable<Route>(Route.ROUTE)
+        mRoute = intent.extras!!.getParcelable(Route.ROUTE)
 
         if (mRoute == null) {
             finish()
@@ -153,7 +155,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         if(fragment == null) throw IllegalStateException("MasterDetailActivity.class addMasterFragment was null")
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
-        ft.replace(master.id, fragment, fragment.javaClass.simpleName)
+        ft.replace(binding.master.id, fragment, fragment.javaClass.simpleName)
         ft.commit()
     }
 
@@ -162,11 +164,11 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
-        val currentFragment = fm.findFragmentById(detail.id)
+        val currentFragment = fm.findFragmentById(binding.detail.id)
 
         if(identityMatch(currentFragment, fragment)) return
 
-        ft.replace(detail.id, fragment, fragment.javaClass.simpleName)
+        ft.replace(binding.detail.id, fragment, fragment.javaClass.simpleName)
         if(currentFragment != null && !(currentFragment is EmptyFragment)) {
             //Add to back stack if not empty fragment and a fragment exists
             ft.addToBackStack(fragment.javaClass.simpleName)
@@ -180,7 +182,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
     override fun popFragment(canvasContext: CanvasContext) {
         val fm = supportFragmentManager
-        val currentFragment = fm.findFragmentById(detail.id)
+        val currentFragment = fm.findFragmentById(binding.detail.id)
         if(currentFragment != null) {
             val ft = fm.beginTransaction()
             ft.remove(currentFragment)
@@ -208,13 +210,13 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     }
 
     override val isMasterVisible: Boolean
-        get() = master.visibility == View.VISIBLE
+        get() = binding.master.visibility == View.VISIBLE
 
     private fun toggleResize() {
         //prevent animation from executing if already running
         if(expandAnimation.isRunning || collapseAnimation.isRunning) return
 
-        if (master.visibility == View.VISIBLE) {
+        if (binding.master.visibility == View.VISIBLE) {
             expand()
         } else {
             collapse()
@@ -226,42 +228,41 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     }
 
     private fun expand() {
-        detail.bringToFront()
+        binding.detail.bringToFront()
 
-        expandAnimation.addUpdateListener ({ animation ->
-            val info = (detail.layoutParams as PercentLayoutHelper.PercentLayoutParams).percentLayoutInfo
+        expandAnimation.addUpdateListener { animation ->
+            val info = (binding.detail.layoutParams as PercentLayoutHelper.PercentLayoutParams).percentLayoutInfo
             info.widthPercent = calculateAnimatedValue(info.widthPercent, expandPercent, animation.animatedFraction)
-            detail.requestLayout()
-        })
-        expandAnimation.addListener(object: Animator.AnimatorListener{
-            override fun onAnimationRepeat(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {
-                master.setGone()
-
+            binding.detail.requestLayout()
+        }
+        expandAnimation.addListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
+                binding.master.setGone()
             }
-            override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationStart(animation: Animator?) {}
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationStart(animation: Animator) {}
         })
 
         expandAnimation.start()
     }
 
-    private fun collapse() {
+    private fun collapse() = with(binding) {
         detail.bringToFront()
 
         collapseAnimation.setTarget(detail)
-        collapseAnimation.addUpdateListener ({ animation ->
+        collapseAnimation.addUpdateListener { animation ->
             val info = (detail.layoutParams as PercentLayoutHelper.PercentLayoutParams).percentLayoutInfo
             info.widthPercent = calculateAnimatedValue(info.widthPercent, collapsePercent, animation.animatedFraction)
             detail.requestLayout()
-        })
-        collapseAnimation.addListener(object: Animator.AnimatorListener{
-            override fun onAnimationRepeat(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {
+        }
+        collapseAnimation.addListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
                 middleDividerWrapper.bringToFront()
             }
-            override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationStart(animation: Animator) {
                 master.setVisible()
             }
         })
@@ -272,8 +273,13 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     //endregion
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(MASTER_VISIBLE, master.visibility == View.VISIBLE)
+        outState.putBoolean(MASTER_VISIBLE, binding.master.visibility == View.VISIBLE)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onBackPressed() {
+        if ((supportFragmentManager.findFragmentById(R.id.master) as? NavigationCallbacks)?.onHandleBackPressed() == true) return
+        super.onBackPressed()
     }
 
     companion object {

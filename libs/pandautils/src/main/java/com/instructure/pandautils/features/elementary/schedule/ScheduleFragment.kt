@@ -25,16 +25,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_SCHEDULE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.StringArg
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_schedule.*
-import kotlinx.android.synthetic.main.item_schedule_planner_item.*
 import javax.inject.Inject
 
+@PageView("#schedule")
 @ScreenView(SCREEN_VIEW_K5_SCHEDULE)
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
@@ -50,6 +50,8 @@ class ScheduleFragment : Fragment() {
 
     private var recyclerView: RecyclerView? = null
 
+    private lateinit var binding: FragmentScheduleBinding
+
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -58,7 +60,7 @@ class ScheduleFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
+        binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.adapter = adapter
@@ -108,7 +110,7 @@ class ScheduleFragment : Fragment() {
                 jumpToToday()
             }
             is ScheduleAction.AnnounceForAccessibility -> {
-                checkbox.announceForAccessibility(action.announcement)
+                binding.root.announceForAccessibility(action.announcement)
             }
         }
     }
@@ -131,7 +133,7 @@ class ScheduleFragment : Fragment() {
 
     fun checkFirstPosition() {
         val firstItemPosition =
-            (scheduleRecyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+            (binding.scheduleRecyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         val todayRange = viewModel.getTodayRange()
         if (todayRange != null) {
             toggleJumpToTodayButton(firstItemPosition !in todayRange)

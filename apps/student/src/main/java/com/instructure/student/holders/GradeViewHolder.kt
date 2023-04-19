@@ -27,10 +27,10 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.GradesListRecyclerAdapter
-import com.instructure.student.util.BinderUtils
+import com.instructure.student.databinding.ViewholderGradeBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import kotlinx.android.synthetic.main.viewholder_grade.view.*
+import com.instructure.student.util.BinderUtils
 
 class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -42,9 +42,8 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         whatIfDialogCallback: WhatIfDialogStyled.WhatIfDialogCallback,
         adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>,
         selectedItemCallback: GradesListRecyclerAdapter.SetSelectedItemCallback
-    ): Unit = with(itemView) {
-
-        setOnClickListener {
+    ): Unit = with(ViewholderGradeBinding.bind(itemView)) {
+        root.setOnClickListener {
             adapterToFragmentCallback.onRowClicked(assignment, adapterPosition, true)
             selectedItemCallback.setSelected(adapterPosition)
         }

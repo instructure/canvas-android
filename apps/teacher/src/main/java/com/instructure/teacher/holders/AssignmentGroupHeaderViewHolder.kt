@@ -18,19 +18,20 @@ package com.instructure.teacher.holders
 
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.adapter_assignment_group_header.view.*
+import com.instructure.teacher.databinding.AdapterAssignmentGroupHeaderBinding
 
-class AssignmentGroupHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class AssignmentGroupHeaderViewHolder(private val binding: AdapterAssignmentGroupHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
 
     private var mIsExpanded = false
 
-    fun bind(assignmentGroup: AssignmentGroup,
-             isExpanded: Boolean,
-             callback: (AssignmentGroup) -> Unit) = with(itemView) {
+    fun bind(
+        assignmentGroup: AssignmentGroup,
+        isExpanded: Boolean,
+        callback: (AssignmentGroup) -> Unit
+    ) = with(binding) {
 
         mIsExpanded = isExpanded
 
@@ -39,16 +40,12 @@ class AssignmentGroupHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view
         assignmentGroupContainer.setOnClickListener {
             val animationType = if (mIsExpanded) R.animator.rotation_from_0_to_neg90 else R.animator.rotation_from_neg90_to_0
             mIsExpanded = !mIsExpanded
-            val flipAnimator = AnimatorInflater.loadAnimator(context, animationType) as ObjectAnimator
+            val flipAnimator = AnimatorInflater.loadAnimator(root.context, animationType) as ObjectAnimator
             flipAnimator.target = collapseIcon
             flipAnimator.duration = 200
             flipAnimator.start()
             callback(assignmentGroup)
         }
-    }
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_assignment_group_header
     }
 }
 

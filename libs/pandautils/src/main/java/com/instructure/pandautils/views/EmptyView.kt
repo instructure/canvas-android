@@ -20,6 +20,7 @@ import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -29,19 +30,18 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.EmptyViewBinding
 import com.instructure.pandautils.utils.isGone
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import kotlinx.android.synthetic.main.empty_view.view.*
-import kotlinx.android.synthetic.main.loading_lame.view.*
 
-open class EmptyView @JvmOverloads constructor(
+class EmptyView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), EmptyInterface {
 
-    open val viewId: Int = R.layout.empty_view
+    private val binding: EmptyViewBinding
 
     private var noConnectionText: String? = null
     private var titleText: String? = null
@@ -49,31 +49,31 @@ open class EmptyView @JvmOverloads constructor(
     private var isDisplayNoConnection = false
 
     init {
-        View.inflate(context, viewId, this)
+        binding = EmptyViewBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    override fun setLoading() {
+    override fun setLoading() = with(binding) {
         title.setGone()
         message.setGone()
         image.setGone()
-        loading.announceForAccessibility(context.getString(R.string.loading))
-        loading.setVisible()
+        loading.root.announceForAccessibility(context.getString(R.string.loading))
+        loading.root.visibility = View.VISIBLE
     }
 
     override fun setDisplayNoConnection(isNoConnection: Boolean) {
         isDisplayNoConnection = isNoConnection
     }
 
-    override fun setListEmpty() {
+    override fun setListEmpty() = with(binding) {
         if (isDisplayNoConnection) {
-            noConnection.text = noConnectionText
+            loading.noConnection.text = noConnectionText
         } else {
             title.text = titleText
             message.text = messageText
         }
         title.setVisible()
         message.setVisible()
-        loading.setGone()
+        loading.root.setGone()
         image.setVisible(image.drawable != null)
         // we don't have an image for the empty state we want the title to be centered instead.
         if (image.isGone) {
@@ -84,7 +84,7 @@ open class EmptyView @JvmOverloads constructor(
     }
 
     private fun resetTitle() {
-        emptyViewLayout?.let {
+        binding.emptyViewLayout.let {
             val constraintSet = ConstraintSet()
             constraintSet.clone(it)
             constraintSet.connect(R.id.textViews, ConstraintSet.TOP, R.id.titleTop, ConstraintSet.BOTTOM)
@@ -95,49 +95,49 @@ open class EmptyView @JvmOverloads constructor(
 
     private fun centerTitle() {
         val constraintSet = ConstraintSet()
-        constraintSet.clone(emptyViewLayout)
+        constraintSet.clone(binding.emptyViewLayout)
         constraintSet.connect(R.id.textViews, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         constraintSet.connect(R.id.textViews, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        constraintSet.applyTo(emptyViewLayout)
+        constraintSet.applyTo(binding.emptyViewLayout)
     }
 
     fun getTitle(): TextView {
-        return title
+        return binding.title
     }
 
     override fun setTitleText(s: String) {
         titleText = s
-        title.text = titleText
+        binding.title.text = titleText
     }
 
     override fun setTitleText(sResId: Int) {
         titleText = context.resources.getString(sResId)
-        title.text = titleText
+        binding.title.text = titleText
     }
 
     fun getMessage(): TextView {
-        return message
+        return binding.message
     }
 
     override fun setMessageText(s: String) {
         messageText = s
-        message.text = messageText
+        binding.message.text = messageText
     }
 
     override fun setMessageText(sResId: Int) {
         messageText = context.resources.getString(sResId)
-        message.text = messageText
+        binding.message.text = messageText
     }
 
     override fun setNoConnectionText(s: String) {
         noConnectionText = s
-        noConnection.text = noConnectionText
+        binding.loading.noConnection.text = noConnectionText
     }
 
-    override fun getEmptyViewImage(): ImageView? = image
+    override fun getEmptyViewImage(): ImageView? = binding.image
 
     override fun setEmptyViewImage(drawable: Drawable) {
-        image.setImageDrawable(drawable)
+        binding.image.setImageDrawable(drawable)
     }
 
     override fun emptyViewText(s: String) {
@@ -156,17 +156,17 @@ open class EmptyView @JvmOverloads constructor(
         ContextCompat.getDrawable(context, dResId)?.let { setEmptyViewImage(it) }
     }
 
-    fun setImageVisible(visible: Boolean) {
+    fun setImageVisible(visible: Boolean) = with(binding) {
         when (visible) {
             true -> image.setVisible()
             false -> image.setGone()
         }
     }
 
-    fun setError(errorMessage: String) {
+    fun setError(errorMessage: String) = with(binding) {
         title.setVisible()
         image.setGone()
-        loading.setGone()
+        loading.root.setGone()
         centerTitle()
         titleText = errorMessage
         messageText = ""
@@ -174,7 +174,25 @@ open class EmptyView @JvmOverloads constructor(
         title.text = titleText
     }
 
-    fun changeTextSize(isCalendar: Boolean = false) {
+    fun handleConfigChange(isTablet: Boolean, orientation: Int) {
+        changeTextSize()
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (isTablet) {
+                setGuidelines(.24f, .53f, .62f, .12f, .88f)
+            } else {
+                setGuidelines(.28f, .6f, .73f, .12f, .88f)
+
+            }
+        } else {
+            if (isTablet) {
+                //change nothing, at least for now
+            } else {
+                setGuidelines(.25f, .7f, .74f, .15f, .85f)
+            }
+        }
+    }
+
+    fun changeTextSize(isCalendar: Boolean = false) = with(binding) {
         if (isCalendar) {
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
@@ -192,7 +210,7 @@ open class EmptyView @JvmOverloads constructor(
         }
     }
 
-    fun setGuidelines(imTop: Float, imBottom: Float, tiTop: Float, txLeft: Float, txRight: Float) {
+    fun setGuidelines(imTop: Float, imBottom: Float, tiTop: Float, txLeft: Float, txRight: Float) = with(binding) {
         val iTop = imageTop.layoutParams as ConstraintLayout.LayoutParams
         iTop.guidePercent = imTop
         imageTop.layoutParams = iTop

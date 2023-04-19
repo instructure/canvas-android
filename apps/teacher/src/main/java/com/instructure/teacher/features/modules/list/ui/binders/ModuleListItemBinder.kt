@@ -21,9 +21,9 @@ import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
+import com.instructure.teacher.databinding.AdapterModuleItemBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
-import kotlinx.android.synthetic.main.adapter_module_item.view.*
 
 class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, ModuleListCallback>() {
 
@@ -32,7 +32,8 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
     override fun getItemId(item: ModuleListItemData.ModuleItemData) = item.id
 
     override val bindBehavior = Item { item, view, callback ->
-        with(view) {
+        val binding = AdapterModuleItemBinding.bind(view)
+        with(binding) {
             moduleItemIcon.setVisible(item.iconResId != null)
             item.iconResId?.let {
                 moduleItemIcon.setImageResource(it)
@@ -44,9 +45,8 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemPublishedIcon.setVisible(item.isPublished == true)
             moduleItemUnpublishedIcon.setVisible(item.isPublished == false)
             moduleItemLoadingView.setVisible(item.isLoading)
-            setOnClickListener { callback.moduleItemClicked(item.id) }
-            isEnabled = item.enabled
+            root.setOnClickListener { callback.moduleItemClicked(item.id) }
+            root.isEnabled = item.enabled
         }
     }
-
 }

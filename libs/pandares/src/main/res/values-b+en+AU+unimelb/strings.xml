@@ -1117,6 +1117,8 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
         <item quantity="other">%s Minutes</item>
@@ -1294,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Uploading to Files</string>
     <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submission Success</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Submission Failed</string>
     <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
     <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
     <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
@@ -1331,4 +1335,46 @@
     <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
     <string name="acceptableUsePolicySubmit">Submit</string>
     <string name="acceptFail">Failed to submit terms acceptance.</string>
+    <string name="attempt">Attempt %d</string>
+    <string name="quizQuestions">Questions: %d</string>
+    <string name="quizTimeLimit">Time limit: %s</string>
+    <string name="allowedAttempts">Allowed attempts: %s</string>
+    <string name="usedAttempts">Attempts used: %d</string>
+    <string name="generalUnexpectedError">An unexpected error occurred.</string>
+
+    <string name="deleteSelected">Delete</string>
+    <string name="archiveSelected">Archive</string>
+    <string name="unarchiveSelected">Unarchive</string>
+    <string name="markAsReadSelected">Mark as read</string>
+    <string name="markAsUnreadSelected">Mark as unread</string>
+    <string name="starSelected">Star</string>
+    <string name="unstarSelected">Unstar</string>
+
+    <string name="inboxOperationFailed">Failed to perform operation</string>
+    <string name="inboxDeletedConfirmation">%s deleted</string>
+    <string name="inboxArchivedConfirmation">%s archived</string>
+    <string name="inboxUnarchivedConfirmation">%s unarchived</string>
+    <string name="inboxMarkAsReadConfirmation">%s marked as read</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marked as unread</string>
+    <string name="inboxStarredConfirmation">%s starred</string>
+    <string name="inboxUnstarredConfirmation">%s unstarred</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">This conversation will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+        <item quantity="other">These conversations will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Failed to load next page. Check your internet connection.</string>
+    <string name="conversationsRefreshFailed">Failed to refresh conversations. Check your internet connection.</string>
+    <string name="inboxScopeInbox">Inbox</string>
+    <string name="inboxContextSelectorTitle">Select Subject or Group</string>
+    <string name="inboxClearFilter">Clear</string>
+    <string name="a11y_courseFilterContentDescription">Subject filter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">select</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversation selected. Selection mode activated. Navigate for actions.</string>
+    <string name="a11y_conversationSelected">Conversation selected</string>
+    <string name="a11y_conversationDeselected">Conversation deselected</string>
+    <string name="a11y_exitSelectionMode">Exit selection mode</string>
+    <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
+    <string name="a11y_avatarContentDescription">Avatar of %s</string>
+    <string name="inboxUndo">Undo</string>
 </resources>
