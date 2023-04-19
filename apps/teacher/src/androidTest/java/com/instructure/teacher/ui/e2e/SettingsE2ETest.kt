@@ -53,7 +53,7 @@ class SettingsE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
-        dashboardPage.openUserSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open Profile Settings Page.")
@@ -119,7 +119,7 @@ class SettingsE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
-        dashboardPage.openUserSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings.")
@@ -139,9 +139,9 @@ class SettingsE2ETest : TeacherTest() {
         courseBrowserPage.assertTabLabelTextColor("Announcements","#FFFFFFFF")
         courseBrowserPage.assertTabLabelTextColor("Assignments","#FFFFFFFF")
 
-        Log.d(STEP_TAG,"Navigate to Settins Page and open App Theme Settings again.")
+        Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings again.")
         Espresso.pressBack()
-        dashboardPage.openUserSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openAppThemeSettings()
 
         Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
@@ -168,7 +168,7 @@ class SettingsE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG,"Navigate to User Settings Page.")
-        dashboardPage.openUserSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Open Legal Page and assert that all the corresponding buttons are displayed.")
@@ -190,7 +190,7 @@ class SettingsE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG,"Navigate to User Settings Page.")
-        dashboardPage.openUserSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Open Legal Page and assert that all the corresponding buttons are displayed.")
@@ -215,7 +215,7 @@ class SettingsE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG,"Navigate to User Settings Page.")
-        dashboardPage.openUserSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
 
         Log.d(PREPARATION_TAG,"Capture the initial remote config values.")
         val initialValues = mutableMapOf<String, String?>()

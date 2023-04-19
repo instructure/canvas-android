@@ -27,15 +27,66 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.ui.espresso.TeacherHiltTestApplication
 import com.instructure.teacher.ui.espresso.TeacherHiltTestApplication_Application
-import com.instructure.teacher.ui.pages.*
+import com.instructure.teacher.ui.pages.AddMessagePage
+import com.instructure.teacher.ui.pages.AnnouncementsListPage
+import com.instructure.teacher.ui.pages.AssigneeListPage
+import com.instructure.teacher.ui.pages.AssignmentDetailsPage
+import com.instructure.teacher.ui.pages.AssignmentDueDatesPage
+import com.instructure.teacher.ui.pages.AssignmentListPage
+import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
+import com.instructure.teacher.ui.pages.CalendarEventPage
+import com.instructure.teacher.ui.pages.ChooseRecipientsPage
+import com.instructure.teacher.ui.pages.CommentLibraryPage
+import com.instructure.teacher.ui.pages.CourseBrowserPage
+import com.instructure.teacher.ui.pages.CourseSettingsPage
+import com.instructure.teacher.ui.pages.DashboardPage
+import com.instructure.teacher.ui.pages.DiscussionsDetailsPage
+import com.instructure.teacher.ui.pages.DiscussionsListPage
+import com.instructure.teacher.ui.pages.EditAnnouncementPage
+import com.instructure.teacher.ui.pages.EditAssignmentDetailsPage
+import com.instructure.teacher.ui.pages.EditDashboardPage
+import com.instructure.teacher.ui.pages.EditDiscussionsDetailsPage
+import com.instructure.teacher.ui.pages.EditPageDetailsPage
+import com.instructure.teacher.ui.pages.EditProfileSettingsPage
+import com.instructure.teacher.ui.pages.EditQuizDetailsPage
+import com.instructure.teacher.ui.pages.EditSyllabusPage
+import com.instructure.teacher.ui.pages.FileListPage
+import com.instructure.teacher.ui.pages.HelpPage
+import com.instructure.teacher.ui.pages.InboxMessagePage
+import com.instructure.teacher.ui.pages.InboxPage
+import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
+import com.instructure.teacher.ui.pages.LegalPage
+import com.instructure.teacher.ui.pages.LoginFindSchoolPage
+import com.instructure.teacher.ui.pages.LoginLandingPage
+import com.instructure.teacher.ui.pages.LoginSignInPage
+import com.instructure.teacher.ui.pages.ModulesPage
+import com.instructure.teacher.ui.pages.NavDrawerPage
+import com.instructure.teacher.ui.pages.NotATeacherPage
+import com.instructure.teacher.ui.pages.PageListPage
+import com.instructure.teacher.ui.pages.PeopleListPage
+import com.instructure.teacher.ui.pages.PersonContextPage
+import com.instructure.teacher.ui.pages.PostSettingsPage
+import com.instructure.teacher.ui.pages.ProfileSettingsPage
+import com.instructure.teacher.ui.pages.QuizDetailsPage
+import com.instructure.teacher.ui.pages.QuizListPage
+import com.instructure.teacher.ui.pages.QuizSubmissionListPage
+import com.instructure.teacher.ui.pages.RemoteConfigSettingsPage
+import com.instructure.teacher.ui.pages.SettingsPage
+import com.instructure.teacher.ui.pages.SpeedGraderCommentsPage
+import com.instructure.teacher.ui.pages.SpeedGraderFilesPage
+import com.instructure.teacher.ui.pages.SpeedGraderGradePage
+import com.instructure.teacher.ui.pages.SpeedGraderPage
+import com.instructure.teacher.ui.pages.SpeedGraderQuizSubmissionPage
+import com.instructure.teacher.ui.pages.StudentContextPage
+import com.instructure.teacher.ui.pages.SyllabusPage
+import com.instructure.teacher.ui.pages.TodoPage
+import com.instructure.teacher.ui.pages.WebViewLoginPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 abstract class TeacherTest : CanvasTest() {
@@ -82,6 +133,7 @@ abstract class TeacherTest : CanvasTest() {
     val courseBrowserPage = CourseBrowserPage()
     val courseSettingsPage = CourseSettingsPage()
     val dashboardPage = DashboardPage()
+    val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val editDashboardPage = EditDashboardPage()
     val settingsPage = SettingsPage()
     val legalPage = LegalPage()

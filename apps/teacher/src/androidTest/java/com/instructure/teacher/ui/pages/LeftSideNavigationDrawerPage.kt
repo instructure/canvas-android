@@ -7,25 +7,25 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
-import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
 class LeftSideNavigationDrawerPage: BasePage() {
 
-    private val settings by OnViewWithId(R.id.navigationDrawerSettings)
     private val userName by OnViewWithId(R.id.navigationDrawerUserName)
     private val userEmail by OnViewWithId(R.id.navigationDrawerUserEmail)
-    private val changeUser by OnViewWithId(R.id.navigationDrawerItem_changeUser)
     private val logoutButton by OnViewWithId(R.id.navigationDrawerItem_logout)
     private val version by OnViewWithId(R.id.navigationDrawerVersion)
     private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
@@ -65,18 +65,8 @@ class LeftSideNavigationDrawerPage: BasePage() {
         clickMenu(R.id.navigationDrawerItem_files)
     }
 
-    fun clickBookmarksMenu() {
-        clickMenu(R.id.navigationDrawerItem_bookmarks)
-    }
-
     fun clickSettingsMenu() {
         clickMenu(R.id.navigationDrawerSettings)
-    }
-
-    fun setShowGrades(showGrades: Boolean) {
-        hamburgerButton.click()
-        onViewWithId(R.id.navigationDrawerShowGradesSwitch).perform(SetSwitchCompat(showGrades))
-        Espresso.pressBack()
     }
 
     fun setColorOverlay(colorOverlay: Boolean) {
@@ -85,25 +75,9 @@ class LeftSideNavigationDrawerPage: BasePage() {
         Espresso.pressBack()
     }
 
-    fun assertProfileDetails(teacher: User) {
-        userName.check(matches(withText(teacher.shortName)))
-    }
-
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
         onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(user: User) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName!!).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(userName: String) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(userName).assertDisplayed()
         Espresso.pressBack()
     }
 
