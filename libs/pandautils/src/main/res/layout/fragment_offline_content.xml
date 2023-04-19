@@ -201,7 +201,8 @@
                         android:nestedScrollingEnabled="false"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintTop_toBottomOf="@id/selectedLabel"
-                        app:recyclerViewItemViewModels="@{viewModel.data.courseItems}" />
+                        app:recyclerViewItemViewModels="@{viewModel.data.courseItems}"
+                        app:useDiffUtil="@{true}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

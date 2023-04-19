@@ -18,29 +18,35 @@
 package com.instructure.pandautils.features.offline.itemviewmodels
 
 import android.widget.CompoundButton
-import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.offline.CourseTabViewData
 import com.instructure.pandautils.features.offline.OfflineItemViewModelType
+import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class CourseTabViewModel(
     val data: CourseTabViewData,
     val courseId: Long,
     val tabId: String,
-    val updateParentCheckBox: (CourseTabViewModel) -> Unit
+    val onCheckedChanged: (Boolean, CourseTabViewModel) -> Unit
 ) : GroupItemViewModel(collapsable = false, collapsed = false, items = data.files) {
     override val layoutId = R.layout.item_offline_tab
     override val viewType = OfflineItemViewModelType.COURSE_TAB.viewType
 
     val onCheckChanged = CompoundButton.OnCheckedChangeListener { cb, checked ->
-        data.checked = checked
-        updateParentCheckBox(this)
-        if (cb.isPressed) {
-            data.files.forEach {
-                it.data.checked = checked
-                it.data.notifyPropertyChanged(BR.checked)
-            }
-        }
+        if (cb.isPressed) onCheckedChanged(checked, this)
+    }
+
+    override fun areContentsTheSame(other: ItemViewModel): Boolean {
+        return other is CourseTabViewModel
+                && other.courseId == this.courseId
+                && other.tabId == this.tabId
+                && other.data == this.data
+    }
+
+    override fun areItemsTheSame(other: ItemViewModel): Boolean {
+        return other is CourseTabViewModel
+                && other.courseId == this.courseId
+                && other.tabId == this.tabId
     }
 }

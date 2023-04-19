@@ -27,15 +27,25 @@ data class FileViewModel(
     val data: FileViewData,
     val courseId: Long,
     val tabId: String,
-    val updateParentCheckBox: (FileViewModel) -> Unit
+    val onCheckedChanged: (Boolean, FileViewModel) -> Unit
 ) : ItemViewModel {
     override val layoutId = R.layout.item_offline_file
     override val viewType = OfflineItemViewModelType.FILE.viewType
 
     val onCheckChanged = CompoundButton.OnCheckedChangeListener { cb, checked ->
-        data.checked = checked
-        if (cb.isPressed) {
-            updateParentCheckBox(this)
-        }
+        if (cb.isPressed) onCheckedChanged(checked, this)
+    }
+
+    override fun areContentsTheSame(other: ItemViewModel): Boolean {
+        return other is FileViewModel
+                && other.courseId == this.courseId
+                && other.tabId == this.tabId
+                && other.data == this.data
+    }
+
+    override fun areItemsTheSame(other: ItemViewModel): Boolean {
+        return other is FileViewModel
+                && other.courseId == this.courseId
+                && other.tabId == this.tabId
     }
 }

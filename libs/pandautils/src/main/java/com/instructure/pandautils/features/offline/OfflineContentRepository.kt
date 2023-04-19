@@ -39,8 +39,6 @@ class OfflineContentRepository(
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val courseResult = coursesApi.getCourse(courseId, params)
 
-        if (courseResult.isFail) return Course() //TODO error handling
-
         return courseResult.dataOrThrow
     }
 
@@ -48,16 +46,12 @@ class OfflineContentRepository(
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         val coursesResult = coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
-        if (coursesResult.isFail) return emptyList() //TODO error handling
-
         return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
     }
 
     suspend fun getTabs(courseId: Long, forceNetwork: Boolean): List<Tab> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val tabsResult = tabApi.getTabs(courseId, CanvasContext.Type.COURSE.apiString, params)
-
-        if (tabsResult.isFail) return emptyList() //TODO error handling
 
         return tabsResult.dataOrThrow.filter {
             it.tabId in listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
@@ -68,7 +62,7 @@ class OfflineContentRepository(
         val params = RestParams()
         val rootFolderResult = fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
 
-        if (rootFolderResult.isFail) return emptyList() //TODO error handling
+        if (rootFolderResult.isFail) return emptyList()
 
         return getAllFiles(rootFolderResult.dataOrThrow, forceNetwork)
     }
@@ -94,9 +88,7 @@ class OfflineContentRepository(
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
 
-        if (foldersResult.isFail) return emptyList() //TODO error handling
-
-        return foldersResult.dataOrThrow
+        return foldersResult.dataOrNull.orEmpty()
     }
 
     private suspend fun getFiles(folder: FileFolder, forceNetwork: Boolean): List<FileFolder> {
@@ -105,8 +97,6 @@ class OfflineContentRepository(
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
 
-        if (filesResult.isFail) return emptyList() //TODO error handling
-
-        return filesResult.dataOrThrow
+        return filesResult.dataOrNull.orEmpty()
     }
 }

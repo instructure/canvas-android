@@ -498,5 +498,8 @@
     <string name="offline_content_all_courses">All Courses</string>
     <string name="offline_content_sync">Sync</string>
     <string name="offline_content_selected">%d Selected</string>
+    <string name="offline_content_select_all">Select All</string>
+    <string name="offline_content_deselect_all">Deselect All</string>
+    <string name="offline_content_loading_error">An error occurred while loading the content.</string>
 
 </resources>

@@ -53,6 +53,10 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
+
+        viewModel.data.observe(viewLifecycleOwner) { data ->
+            setupMenu(data.selectedCount)
+        }
     }
 
     override val navigation: Navigation?
@@ -70,6 +74,16 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
     }
 
     override fun getFragment(): Fragment = this
+
+    private fun setupMenu(selectedCount: Int) {
+        binding.toolbar.setMenu(R.menu.menu_offline_content) {
+            viewModel.toggleSelection()
+        }
+
+        binding.toolbar.menu.items.firstOrNull()?.title = getString(
+            if (selectedCount > 0) R.string.offline_content_deselect_all else R.string.offline_content_select_all
+        )
+    }
 
     companion object {
 

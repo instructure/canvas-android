@@ -64,12 +64,20 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
     }
 
     fun updateItems(items: List<ItemViewModel>?, useDiffUtil: Boolean = false) {
+        val allItems = mutableListOf<ItemViewModel>()
+        items?.forEach {
+            allItems.add(it)
+            if (it is GroupItemViewModel) {
+                allItems.addAll(it.getAllItems())
+            }
+        }
+
         if (useDiffUtil) {
-            val diffResult = DiffUtil.calculateDiff(DiffUtilCallback(itemViewModels, items ?: emptyList()), false)
-            itemViewModels = items.orEmpty().toMutableList()
+            val diffResult = DiffUtil.calculateDiff(DiffUtilCallback(itemViewModels, allItems), false)
+            itemViewModels = allItems.toMutableList()
             diffResult.dispatchUpdatesTo(this)
         } else {
-            itemViewModels = items.orEmpty().toMutableList()
+            itemViewModels = allItems.toMutableList()
             notifyDataSetChanged()
         }
 
@@ -82,8 +90,6 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
             it.removeOnPropertyChangedCallback(groupObserver)
             it.addOnPropertyChangedCallback(groupObserver)
             if (!it.collapsed) {
-                itemViewModels.addAll(itemViewModels.indexOf(it) + 1, it.items)
-                notifyItemRangeInserted(itemViewModels.indexOf(it) + 1, it.items.size)
                 setupGroups(it.items.filterIsInstance<GroupItemViewModel>())
             }
         }
@@ -91,14 +97,14 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
 
     private fun toggleGroup(group: GroupItemViewModel) {
         val position = itemViewModels.indexOf(group)
+        val items = group.getAllItems()
         if (group.collapsed) {
-            val items = group.getAllItems()
             itemViewModels.removeAll(items)
             notifyItemRangeRemoved(position + 1, items.size)
         } else {
-            itemViewModels.addAll(position + 1, group.items)
+            itemViewModels.addAll(position + 1, items)
             setupGroups(group.items.filterIsInstance<GroupItemViewModel>())
-            notifyItemRangeInserted(position + 1, group.items.size)
+            notifyItemRangeInserted(position + 1, items.size)
         }
     }
 

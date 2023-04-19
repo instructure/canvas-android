@@ -22,12 +22,10 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Environment
 import android.text.format.Formatter
-import androidx.databinding.Observable
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseTabViewModel
@@ -35,6 +33,7 @@ import com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -63,14 +62,6 @@ class OfflineContentViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<OfflineContentAction>>()
 
-    private val onCheckChangedCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            if (propertyId == BR.checked) {
-                updateSelectedItems()
-            }
-        }
-    }
-
     init {
         loadData(false)
     }
@@ -78,11 +69,15 @@ class OfflineContentViewModel @Inject constructor(
     private fun loadData(forceNetwork: Boolean) {
         _state.postValue(ViewState.Loading)
         viewModelScope.launch {
-            val storageInfo = getStorageInfo()
-            val coursesData = getCoursesData(course?.id, forceNetwork)
-            val data = OfflineContentViewData(storageInfo, coursesData, 0)
-            _data.postValue(data)
-            _state.postValue(ViewState.Success)
+            try {
+                val storageInfo = getStorageInfo()
+                val coursesData = getCoursesData(course?.id, forceNetwork)
+                val data = OfflineContentViewData(storageInfo, coursesData, 0)
+                _data.postValue(data)
+                _state.postValue(ViewState.Success)
+            } catch (ex: Exception) {
+                _state.postValue(ViewState.Error(resources.getString(R.string.offline_content_loading_error)))
+            }
         }
     }
 
@@ -104,59 +99,86 @@ class OfflineContentViewModel @Inject constructor(
     private fun createCourseItemViewModel(course: Course, size: String, tabs: List<Tab>, files: List<FileFolder>) = CourseItemViewModel(
         CourseItemViewData(false, course.name, size, false, tabs.map { tab ->
             createTabViewModel(course.id, tab, size, files)
-        }).apply {
-            removeOnPropertyChangedCallback(onCheckChangedCallback)
-            addOnPropertyChangedCallback(onCheckChangedCallback)
-        }, course.id
-    )
+        }), course.id
+    ) { checked, item ->
+        val courseViewModel = data.value?.courseItems?.find { it == item } ?: return@CourseItemViewModel
+        val newTabs = courseViewModel.data.tabs.map { tab ->
+            val newFiles = tab.data.files.map { it.copy(data = it.data.copy(checked = checked)) }
+            tab.copy(data = tab.data.copy(checked = checked, files = newFiles))
+        }
+        val newCourseViewModel = courseViewModel.copy(data = item.data.copy(checked = checked, tabs = newTabs))
+        val newList = _data.value?.courseItems?.toMutableList()?.apply {
+            replaceAll { if (it == item) newCourseViewModel else it }
+        }.orEmpty()
+        val selectedCount = getSelectedItemCount(newList)
+        _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
+    }
 
     private fun createTabViewModel(courseId: Long, tab: Tab, size: String, files: List<FileFolder>) = CourseTabViewModel(
         if (tab.tabId == Tab.FILES_ID) {
             CourseTabViewData(false, tab.label.orEmpty(), size, files.map { fileFolder ->
                 createFileViewModel(fileFolder, courseId, tab.tabId)
-            }).apply {
-                removeOnPropertyChangedCallback(onCheckChangedCallback)
-                addOnPropertyChangedCallback(onCheckChangedCallback)
-            }
+            })
         } else {
             CourseTabViewData(false, tab.label.orEmpty(), "", emptyList())
         }, courseId, tab.tabId
-    ) { courseTabViewModel ->
-        _data.value?.courseItems?.find { it.courseId == courseTabViewModel.courseId }?.apply {
-            data.checked = data.tabs.all { it.data.checked }
-            data.notifyPropertyChanged(BR.checked)
-        }
+    ) { checked, item ->
+        val courseViewModel = data.value?.courseItems?.find { it.courseId == item.courseId } ?: return@CourseTabViewModel
+        val tabViewModel = courseViewModel.data.tabs.find { it == item } ?: return@CourseTabViewModel
+        val newFiles = tabViewModel.data.files.map { it.copy(data = it.data.copy(checked = checked)) }
+        val newTabViewModel = tabViewModel.copy(data = tabViewModel.data.copy(checked = checked, files = newFiles))
+        val newTabs = courseViewModel.data.tabs.toMutableList().apply { replaceAll { if (it == item) newTabViewModel else it } }
+        val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(checked = newTabs.all { it.data.checked }, tabs = newTabs))
+        val newList = _data.value?.courseItems?.toMutableList()?.apply {
+            replaceAll { if (it == courseViewModel) newCourseViewModel else it }
+        }.orEmpty()
+        val selectedCount = getSelectedItemCount(newList)
+        _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
     }
 
     private fun createFileViewModel(fileFolder: FileFolder, courseId: Long, tabId: String): FileViewModel {
         val fileSize = Formatter.formatShortFileSize(context, fileFolder.size)
-        return FileViewModel(FileViewData(false, fileFolder.displayName.orEmpty(), fileSize).apply {
-            removeOnPropertyChangedCallback(onCheckChangedCallback)
-            addOnPropertyChangedCallback(onCheckChangedCallback)
-        }, courseId, tabId) { fileViewModel ->
-            _data.value?.courseItems
-                ?.find { it.courseId == fileViewModel.courseId }?.data?.tabs
-                ?.find { it.tabId == fileViewModel.tabId }
-                ?.apply {
-                    data.checked = data.files.all { it.data.checked }
-                    data.notifyPropertyChanged(BR.checked)
-                }
+        return FileViewModel(FileViewData(false, fileFolder.displayName.orEmpty(), fileSize), courseId, tabId) { checked, item ->
+            val courseViewModel = data.value?.courseItems?.find { it.courseId == item.courseId } ?: return@FileViewModel
+            val tabViewModel = courseViewModel.data.tabs.find { it.tabId == item.tabId } ?: return@FileViewModel
+            val fileViewModel = tabViewModel.data.files.find { it == item } ?: return@FileViewModel
+            val newFile = fileViewModel.copy(data = fileViewModel.data.copy(checked = checked))
+            val newFiles = tabViewModel.data.files.toMutableList().apply { replaceAll { if (it == item) newFile else it } }
+            val newTabViewModel = tabViewModel.copy(data = tabViewModel.data.copy(checked = newFiles.all { it.data.checked }, files = newFiles))
+            val newTabs = courseViewModel.data.tabs.toMutableList().apply { replaceAll { if (it.tabId == item.tabId) newTabViewModel else it } }
+            val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(checked = newTabs.all { it.data.checked }, tabs = newTabs))
+            val newList = _data.value?.courseItems?.toMutableList()?.apply {
+                replaceAll { if (it == courseViewModel) newCourseViewModel else it }
+            }.orEmpty()
+            val selectedCount = getSelectedItemCount(newList)
+            _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
         }
     }
 
-    private fun updateSelectedItems() {
+    private fun getSelectedItemCount(courses: List<CourseItemViewModel>): Int {
         val selectedTabs = mutableListOf<CourseTabViewModel>()
         val selectedFiles = mutableListOf<FileViewModel>()
-
-        _data.value?.courseItems?.forEach { courseItemViewModel ->
+        courses.forEach { courseItemViewModel ->
             selectedTabs += courseItemViewModel.data.tabs.filter { it.data.checked && it.tabId != Tab.FILES_ID }
             courseItemViewModel.data.tabs.forEach { courseTabViewModel ->
                 selectedFiles += courseTabViewModel.data.files.filter { it.data.checked }
             }
         }
 
-        _data.value?.selectedCount = selectedTabs.size + selectedFiles.size
-        _data.value?.notifyPropertyChanged(BR.selectedCount)
+        return selectedTabs.size + selectedFiles.size
+    }
+
+    fun toggleSelection() {
+        val shouldCheck = _data.value?.selectedCount.orDefault() == 0
+        val newList = _data.value?.courseItems?.map { courseItemViewModel ->
+            val newTabs = courseItemViewModel.data.tabs.map { tab ->
+                val newFiles = tab.data.files.map { it.copy(data = it.data.copy(checked = shouldCheck)) }
+                tab.copy(data = tab.data.copy(checked = shouldCheck, files = newFiles))
+            }
+            courseItemViewModel.copy(data = courseItemViewModel.data.copy(checked = shouldCheck, tabs = newTabs))
+        }.orEmpty()
+        val selectedCount = getSelectedItemCount(newList)
+        _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
     }
 
     fun onSyncClicked() {
