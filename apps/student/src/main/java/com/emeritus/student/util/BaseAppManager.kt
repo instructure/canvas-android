@@ -67,7 +67,7 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
         // Hold off on initializing this until we emit the user properties.
         RemoteConfigUtils.initialize()
 
-        initPSPDFKit()
+//        initPSPDFKit()
 
         initDocumentScanning()
 

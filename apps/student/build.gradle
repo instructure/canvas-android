@@ -141,7 +141,7 @@ android {
             shrinkResources true
             buildConfigField 'boolean', 'IS_DEBUG', 'false'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            resValue "string", "student_app_name", "Emeritus Student"
+            resValue "string", "student_app_name", "Emeritus Classroom"
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
             }
