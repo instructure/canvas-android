@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.StorageUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -90,5 +91,11 @@ class ApplicationModule {
     @Singleton
     fun provideCookieManager(): CookieManager {
         return CookieManager.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorageUtils(@ApplicationContext context: Context): StorageUtils {
+        return StorageUtils(context)
     }
 }

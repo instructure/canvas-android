@@ -18,9 +18,7 @@
 package com.instructure.pandautils.features.offline
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.os.Environment
 import android.text.format.Formatter
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.models.Course
@@ -33,11 +31,11 @@ import com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +43,8 @@ class OfflineContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val resources: Resources,
-    private val offlineContentRepository: OfflineContentRepository
+    private val offlineContentRepository: OfflineContentRepository,
+    private val storageUtils: StorageUtils
 ) : ViewModel() {
 
     val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
@@ -97,9 +96,9 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     private fun createCourseItemViewModel(course: Course, size: String, tabs: List<Tab>, files: List<FileFolder>) = CourseItemViewModel(
-        CourseItemViewData(false, course.name, size, false, tabs.map { tab ->
+        CourseItemViewData(false, course.name, size, tabs.map { tab ->
             createTabViewModel(course.id, tab, size, files)
-        }), course.id
+        }), course.id, this.course != null
     ) { checked, item ->
         val courseViewModel = data.value?.courseItems?.find { it == item } ?: return@CourseItemViewModel
         val newTabs = courseViewModel.data.tabs.map { tab ->
@@ -191,38 +190,18 @@ class OfflineContentViewModel @Inject constructor(
 
     @Suppress("DEPRECATION")
     private fun getStorageInfo(): StorageInfo {
-        val packageInfo = context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_ACTIVITIES)
-        val appInfo = packageInfo.applicationInfo
-
-        val appSize = File(appInfo.publicSourceDir).length()
-        val dataDirSize = getDirSize(File(appInfo.dataDir))
-        val cacheDirSize = getDirSize(context.cacheDir)
-        val externalCacheDirSize = getDirSize(context.externalCacheDir)
-        val filesDirSize = getDirSize(context.filesDir)
-        val externalFilesDirSize = getDirSize(context.getExternalFilesDir(null))
-
-        val totalAppSpace = appSize + dataDirSize + cacheDirSize + externalCacheDirSize + filesDirSize + externalFilesDirSize
-        val externalStorageDirectory = Environment.getExternalStorageDirectory()
-        val totalSpace = externalStorageDirectory.totalSpace
-        val freeSpace = totalSpace - externalStorageDirectory.freeSpace
-        val otherAppsSpace = freeSpace - appSize
-
+        val appSize = storageUtils.getAppSize()
+        val totalSpace = storageUtils.getTotalSpace()
+        val usedSpace = totalSpace - storageUtils.getFreeSpace()
+        val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
-        val canvasPercent = if (totalSpace > 0) (totalAppSpace.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
+        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
         val storageIndoText = resources.getString(
             R.string.offline_content_storage_info,
-            Formatter.formatShortFileSize(context, freeSpace),
+            Formatter.formatShortFileSize(context, usedSpace),
             Formatter.formatShortFileSize(context, totalSpace),
         )
 
         return StorageInfo(otherPercent, canvasPercent, storageIndoText)
-    }
-
-    private fun getDirSize(directory: File?): Long {
-        if (directory == null || !directory.isDirectory) return 0
-        var size: Long = 0
-        val files = directory.listFiles() ?: return 0
-        for (file in files) size += if (file.isDirectory) getDirSize(file) else file.length()
-        return size
     }
 }

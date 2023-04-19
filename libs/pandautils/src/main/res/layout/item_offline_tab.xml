@@ -23,7 +23,7 @@
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="14dp"
+            android:layout_marginVertical="12dp"
             android:layout_marginStart="20dp"
             android:buttonTint="@{ViewStyler.INSTANCE.makeColorStateList(@color/textDarkest, ThemePrefs.INSTANCE.brandColor)}"
             android:checked="@{itemViewModel.data.checked}"

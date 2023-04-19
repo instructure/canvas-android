@@ -67,7 +67,7 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
         val allItems = mutableListOf<ItemViewModel>()
         items?.forEach {
             allItems.add(it)
-            if (it is GroupItemViewModel) {
+            if (it is GroupItemViewModel && !it.collapsed) {
                 allItems.addAll(it.getAllItems())
             }
         }
@@ -89,9 +89,6 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
         groups.forEach {
             it.removeOnPropertyChangedCallback(groupObserver)
             it.addOnPropertyChangedCallback(groupObserver)
-            if (!it.collapsed) {
-                setupGroups(it.items.filterIsInstance<GroupItemViewModel>())
-            }
         }
     }
 

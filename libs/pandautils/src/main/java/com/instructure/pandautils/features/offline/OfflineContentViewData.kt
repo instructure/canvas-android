@@ -17,7 +17,6 @@ data class CourseItemViewData(
     val checked: Boolean,
     val title: String,
     val size: String,
-    val collapsed: Boolean,
     val tabs: List<CourseTabViewModel>
 ) : BaseObservable()
 

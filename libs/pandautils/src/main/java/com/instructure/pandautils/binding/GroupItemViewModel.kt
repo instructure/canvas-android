@@ -23,7 +23,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 
 abstract class GroupItemViewModel(
     val collapsable: Boolean,
-    @get:Bindable var collapsed: Boolean = collapsable,
+    @get:Bindable open var collapsed: Boolean = collapsable,
     val items: List<ItemViewModel>
 ) : ItemViewModel, BaseObservable() {
 
