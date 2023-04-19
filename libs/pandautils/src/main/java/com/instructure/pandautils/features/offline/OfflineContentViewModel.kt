@@ -98,7 +98,7 @@ class OfflineContentViewModel @Inject constructor(
     private fun createCourseItemViewModel(course: Course, size: String, tabs: List<Tab>, files: List<FileFolder>) = CourseItemViewModel(
         CourseItemViewData(false, course.name, size, tabs.map { tab ->
             createTabViewModel(course.id, tab, size, files)
-        }), course.id, this.course != null
+        }), course.id, this.course == null
     ) { checked, item ->
         val courseViewModel = data.value?.courseItems?.find { it == item } ?: return@CourseItemViewModel
         val newTabs = courseViewModel.data.tabs.map { tab ->
