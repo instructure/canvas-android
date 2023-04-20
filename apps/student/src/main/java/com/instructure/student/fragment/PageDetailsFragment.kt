@@ -102,19 +102,19 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getCanvasWebView().canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        getCanvasWebView()?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
             override fun launchInternalWebViewFragment(url: String) = InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, isLTITool))
         }
 
         // Add to the webview client for clearing webview history after an update to prevent going back to old data
-        val callback = getCanvasWebView().canvasWebViewClientCallback
+        val callback = getCanvasWebView()?.canvasWebViewClientCallback
         callback?.let {
-            getCanvasWebView().canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by it {
+            getCanvasWebView()?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by it {
                 override fun onPageFinishedCallback(webView: WebView, url: String) {
                     it.onPageFinishedCallback(webView, url)
                     // Only clear history after an update
-                    if (isUpdated) getCanvasWebView().clearHistory()
+                    if (isUpdated) getCanvasWebView()?.clearHistory()
                 }
 
                 override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -289,12 +289,16 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     private fun checkCanEdit() = with(binding) {
-        if (page.editingRoles?.contains("public") == true) {
-            toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
-        } else if (page.editingRoles?.contains("student") == true && (canvasContext as? Course)?.isStudent == true) {
-            toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
-        } else if (page.editingRoles?.contains("teacher") == true && (canvasContext as? Course)?.isTeacher == true) {
-            toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
+        val course = canvasContext as? Course
+        val editingRoles = page.editingRoles.orEmpty()
+        if (course?.isStudent == true) {
+            if (page.lockInfo == null && (editingRoles.contains("public") || editingRoles.contains("student"))) {
+                toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
+            }
+        } else if (course?.isTeacher == true) {
+            if ((editingRoles.contains("public") || editingRoles.contains("teacher"))) {
+                toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
+            }
         }
     }
 
