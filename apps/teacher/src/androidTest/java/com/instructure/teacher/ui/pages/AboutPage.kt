@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.pages
+package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -24,7 +24,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
-import com.instructure.student.R
+import com.instructure.teacher.R
 
 class AboutPage : BasePage(R.id.aboutPage) {
 
@@ -33,7 +33,8 @@ class AboutPage : BasePage(R.id.aboutPage) {
     private val emailLabel by OnViewWithText(R.string.email)
 
     fun domainIs(domain: String) {
-        onView(withText(domain)).assertDisplayed()
+        onView(withId(R.id.domain) + withText(domain)).assertDisplayed()
+
     }
 
     fun loginIdIs(loginId: String) {

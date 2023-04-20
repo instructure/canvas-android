@@ -205,6 +205,9 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Check that e-mail is equal to: ${student.loginId} (student's Login ID).")
         aboutPage.emailIs(student.loginId)
+
+        Log.d(STEP_TAG,"Assert that the Instructure company logo has been displayed on the About page.")
+        aboutPage.assertInstructureLogoDisplayed()
     }
 
     //The remote config settings page only available on DEBUG/DEV builds. So this test is testing a non user facing feature.

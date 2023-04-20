@@ -178,6 +178,40 @@ class SettingsE2ETest : TeacherTest() {
 
     @E2E
     @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testAboutE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on 'About' link to open About Page. Assert that About Page has opened.")
+        settingsPage.openAboutPage()
+        aboutPage.assertPageObjects()
+
+        Log.d(STEP_TAG,"Check that domain is equal to: ${teacher.domain} (teacher's domain).")
+        aboutPage.domainIs(teacher.domain)
+
+        Log.d(STEP_TAG,"Check that Login ID is equal to: ${teacher.loginId} (teacher's Login ID).")
+        aboutPage.loginIdIs(teacher.loginId)
+
+        Log.d(STEP_TAG,"Check that e-mail is equal to: ${teacher.loginId} (teacher's Login ID).")
+        aboutPage.emailIs(teacher.loginId)
+
+        Log.d(STEP_TAG,"Assert that the Instructure company logo has been displayed on the About page.")
+        aboutPage.assertInstructureLogoDisplayed()
+    }
+
+    @E2E
+    @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testRateAppDialogE2E() {
 
