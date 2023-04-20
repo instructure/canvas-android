@@ -104,4 +104,9 @@ class OfflineModule {
     fun provideCourseSyncSettingsDao(appDatabase: OfflineDatabase): CourseSyncSettingsDao {
         return appDatabase.courseSyncSettingsDao()
     }
+
+    @Provides
+    fun providePageDao(appDatabase: OfflineDatabase): PageDao {
+        return appDatabase.pageDao()
+    }
 }

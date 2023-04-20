@@ -24,5 +24,6 @@ val offlineDatabaseMigrations = arrayOf(
     createMigration(1, 2) { _db ->
         _db.execSQL("CREATE TABLE IF NOT EXISTS `CourseSyncSettingsEntity` (`courseId` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, PRIMARY KEY(`courseId`))")
         _db.execSQL("CREATE TABLE IF NOT EXISTS `CourseFilesEntity` (`courseId` INTEGER NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`courseId`, `url`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncSettingsEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `PageEntity` (`id` INTEGER NOT NULL, `url` TEXT, `title` TEXT, `createdAt` INTEGER, `updatedAt` INTEGER, `hideFromStudents` INTEGER NOT NULL, `status` TEXT, `body` TEXT, `frontPage` INTEGER NOT NULL, `published` INTEGER NOT NULL, `editingRoles` TEXT, `htmlUrl` TEXT, `courseId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
     }
 )

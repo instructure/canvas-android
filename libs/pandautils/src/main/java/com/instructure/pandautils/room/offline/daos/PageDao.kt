@@ -17,18 +17,21 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.*
-import com.instructure.pandautils.room.offline.entities.SectionEntity
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Update
+import com.instructure.pandautils.room.offline.entities.PageEntity
 
 @Dao
-interface SectionDao {
+interface PageDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: SectionEntity)
+    @Insert
+    suspend fun insert(vararg entities: PageEntity)
 
     @Delete
-    suspend fun delete(entity: SectionEntity)
+    suspend fun delete(entity: PageEntity)
 
     @Update
-    suspend fun update(entity: SectionEntity)
+    suspend fun update(entity: PageEntity)
 }

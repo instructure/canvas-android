@@ -17,16 +17,13 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.CourseEntity
 
 @Dao
 interface CourseDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: CourseEntity)
 
     @Delete

@@ -33,6 +33,7 @@ import com.instructure.pandautils.room.offline.entities.*
         EnrollmentEntity::class,
         GradesEntity::class,
         GradingPeriodEntity::class,
+        PageEntity::class,
         SectionEntity::class,
         TabEntity::class,
         TermEntity::class,
@@ -64,4 +65,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun tabDao(): TabDao
 
     abstract fun courseSyncSettingsDao(): CourseSyncSettingsDao
+
+    abstract fun pageDao(): PageDao
 }

@@ -172,4 +172,9 @@ class ApiModule {
     fun providesUserApi(): UserAPI.UsersInterface {
         return RestBuilder().build(UserAPI.UsersInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun providePageApi(): PageAPI.PagesInterface {
+        return RestBuilder().build(PageAPI.PagesInterface::class.java, RestParams())
+    }
 }
