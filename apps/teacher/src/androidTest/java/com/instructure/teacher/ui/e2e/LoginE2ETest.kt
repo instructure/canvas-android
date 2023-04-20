@@ -52,22 +52,22 @@ class LoginE2ETest : TeacherTest() {
         loginWithUser(teacher1)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        verifyDashboardPage(teacher1)
+        assertSuccessfulLogin(teacher1)
 
         Log.d(STEP_TAG,"Validate ${teacher1.name} user's role as a Teacher.")
         validateUserRole(teacher1, course, "Teacher")
 
         Log.d(STEP_TAG,"Log out with ${teacher1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${teacher2.name}, login id: ${teacher2.loginId}.")
         loginWithUser(teacher2, true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        verifyDashboardPage(teacher2)
+        assertSuccessfulLogin(teacher2)
 
         Log.d(STEP_TAG,"Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -76,10 +76,10 @@ class LoginE2ETest : TeacherTest() {
         loginWithUser(teacher1, true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        verifyDashboardPage(teacher1)
+        assertSuccessfulLogin(teacher1)
 
         Log.d(STEP_TAG,"Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -88,7 +88,7 @@ class LoginE2ETest : TeacherTest() {
         loginLandingPage.loginWithPreviousUser(teacher2)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        verifyDashboardPage(teacher2)
+        assertSuccessfulLogin(teacher2)
     }
 
     @E2E
@@ -145,17 +145,16 @@ class LoginE2ETest : TeacherTest() {
         loginWithUser(teacher1)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        verifyDashboardPage(teacher1)
+        assertSuccessfulLogin(teacher1)
 
         Log.d(STEP_TAG, "Log out with ${teacher1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${teacher2.name}, login id: ${teacher2.loginId}, via the last saved school's button.")
         loginWithLastSavedSchool(teacher2)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        verifyDashboardPage(teacher2)
-
+        assertSuccessfulLogin(teacher2)
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
@@ -201,10 +200,10 @@ class LoginE2ETest : TeacherTest() {
         ViewUtils.pressBackButton(2)
     }
 
-    private fun verifyDashboardPage(user: CanvasUserApiModel)
+    private fun assertSuccessfulLogin(user: CanvasUserApiModel)
     {
         dashboardPage.waitForRender()
-        dashboardPage.assertUserLoggedIn(user)
+        leftSideNavigationDrawerPage.assertUserLoggedIn(user)
         dashboardPage.assertDisplaysCourses()
         dashboardPage.assertPageObjects()
     }
