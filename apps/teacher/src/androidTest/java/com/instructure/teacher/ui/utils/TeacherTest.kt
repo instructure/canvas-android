@@ -28,6 +28,7 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.espresso.TeacherHiltTestApplication_Application
+import com.instructure.teacher.ui.pages.AboutPage
 import com.instructure.teacher.ui.pages.AddMessagePage
 import com.instructure.teacher.ui.pages.AnnouncementsListPage
 import com.instructure.teacher.ui.pages.AssigneeListPage
@@ -138,6 +139,7 @@ abstract class TeacherTest : CanvasTest() {
     val settingsPage = SettingsPage()
     val legalPage = LegalPage()
     val helpPage = HelpPage()
+    val aboutPage = AboutPage()
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
     val editProfileSettingsPage = EditProfileSettingsPage()
