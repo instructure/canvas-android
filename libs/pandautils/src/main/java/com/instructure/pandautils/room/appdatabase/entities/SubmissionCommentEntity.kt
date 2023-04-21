@@ -14,7 +14,8 @@ data class SubmissionCommentEntity(
     val comment: String? = null,
     val createdAt: Date? = null,
     val mediaCommentId: String? = null,
-    val attemptId: Long? = null
+    val attemptId: Long? = null,
+    val submissionId: Long? = null
 ) {
     constructor(submissionComment: SubmissionComment): this(
         submissionComment.id,

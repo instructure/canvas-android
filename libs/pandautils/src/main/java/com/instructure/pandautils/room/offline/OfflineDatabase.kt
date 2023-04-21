@@ -26,22 +26,49 @@ import com.instructure.pandautils.room.offline.entities.*
 
 @Database(
     entities = [
+        AssignmentDueDateEntity::class,
+        AssignmentEntity::class,
+        AssignmentGroupEntity::class,
+        AssignmentOverrideEntity::class,
+        AssignmentRubricCriterionEntity::class,
+        AssignmentScoreStatisticsEntity::class,
         CourseEntity::class,
         CourseFilesEntity::class,
         CourseGradingPeriodEntity::class,
         CourseSyncSettingsEntity::class,
+        DiscussionEntryAttachmentEntity::class,
+        DiscussionEntryEntity::class,
+        DiscussionParticipantEntity::class,
+        DiscussionTopicHeaderEntity::class,
+        DiscussionTopicPermissionEntity::class,
+        DiscussionTopicRemoteFileEntity::class,
+        DiscussionTopicSectionEntity::class,
         EnrollmentEntity::class,
+        ExternalToolAttributesEntity::class,
         GradesEntity::class,
         GradingPeriodEntity::class,
+        GradingRuleEntity::class,
+        GroupEntity::class,
+        GroupUserEntity::class,
+        NeedsGradingCountEntity::class,
         PageEntity::class,
+        PlannerOverrideEntity::class,
+        RemoteFileEntity::class,
+        RubricCriterionAssessmentEntity::class,
+        RubricCriterionEntity::class,
+        RubricCriterionRatingEntity::class,
+        RubricSettingsEntity::class,
         SectionEntity::class,
+        SubmissionDiscussionEntryEntity::class,
+        SubmissionEntity::class,
+        SubmissionHistoryEntity::class,
         TabEntity::class,
         TermEntity::class,
         UserCalendarEntity::class,
         UserEntity::class
     ], version = 2
 )
-@TypeConverters(Converters::class)
+@TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
 
     abstract fun courseDao(): CourseDao

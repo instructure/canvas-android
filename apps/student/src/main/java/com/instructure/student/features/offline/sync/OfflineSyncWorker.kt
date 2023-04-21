@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.UserAPI
@@ -38,6 +39,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseApi: CourseAPI.CoursesInterface,
     private val userApi: UserAPI.UsersInterface,
     private val pageApi: PageAPI.PagesInterface,
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val userDao: UserDao,
     private val courseDao: CourseDao,
@@ -75,8 +77,12 @@ class OfflineSyncWorker @AssistedInject constructor(
         pageDao.insert(*entities.toTypedArray())
     }
 
-    private fun fetchAssignments(courseId: Long) {
-
+    private suspend fun fetchAssignments(courseId: Long) {
+        val restParams = RestParams(isForceReadFromNetwork = true)
+        val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
+            .depaginate { nextUrl ->
+                assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
+            }.dataOrThrow
     }
 
     private fun fetchGrades(courseId: Long) {

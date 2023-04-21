@@ -177,4 +177,9 @@ class ApiModule {
     fun providePageApi(): PageAPI.PagesInterface {
         return RestBuilder().build(PageAPI.PagesInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideAssignmentApi(): AssignmentAPI.AssignmentInterface {
+        return RestBuilder().build(AssignmentAPI.AssignmentInterface::class.java, RestParams())
+    }
 }
