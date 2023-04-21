@@ -1280,6 +1280,8 @@
     <string name="fileUploadProgressSubtitle">ファイルアップロード中</string>
     <string name="submissionProgressSubtitle">提出物を\"%s\"にアップロード中</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">提出物をアップロードしています</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提出に成功しました</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">提出に失敗しました</string>
     <string name="dashboardNotificationUploadingFilesTitle">ファイルアップロード中</string>
     <string name="cancelSubmissionDialogTitle">提出をキャンセル</string>
     <string name="cancelSubmissionDialogMessage">これにより、送信がキャンセルおよび削除されます。</string>
@@ -1356,4 +1358,6 @@
     <string name="a11y_conversationDeselected">会話が選択解除されました</string>
     <string name="a11y_exitSelectionMode">選択モードを終了する</string>
     <string name="a11y_selectionModeDeactivated">選択モードが解除されました。</string>
+    <string name="a11y_avatarContentDescription">%sのアバター</string>
+    <string name="inboxUndo">アンドゥーする</string>
 </resources>

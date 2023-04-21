@@ -88,7 +88,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
         // Make sure we are prepared to handle file uploads for quizzes that allow them
         setupFilePicker()
-        binding.canvasWebViewWrapper.webView.setDarkModeSupport()
+        binding.canvasWebViewWrapper.webView.enableAlgorithmicDarkening()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -102,8 +102,8 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
         }
         val uri = Uri.parse(baseURL)
         val host = uri.host ?: ""
-        getCanvasWebView().settings.javaScriptCanOpenWindowsAutomatically = true
-        getCanvasWebView().webViewClient = object : WebViewClient() {
+        getCanvasWebView()?.settings?.javaScriptCanOpenWindowsAutomatically = true
+        getCanvasWebView()?.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean = handleOverrideURlLoading(view, request?.url?.toString())
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean = handleOverrideURlLoading(view, url)
 
@@ -141,7 +141,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     }
 
     private fun setupFilePicker() {
-        getCanvasWebView().setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+        getCanvasWebView()?.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
             override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
                 startActivityForResult(intent, requestCode)
             }
@@ -167,13 +167,13 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRequestPermissionsResult(result: PermissionRequester.PermissionResult) {
         if (PermissionUtils.allPermissionsGrantedResultSummary(result.grantResults)) {
-            getCanvasWebView().clearPickerCallback()
+            getCanvasWebView()?.clearPickerCallback()
             Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!getCanvasWebView().handleOnActivityResult(requestCode, resultCode, data)) {
+        if (getCanvasWebView()?.handleOnActivityResult(requestCode, resultCode, data) == false) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -213,7 +213,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             val authenticatedUrl = tryOrNull {
                 awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }.sessionUrl
             }
-            getCanvasWebView().loadUrl(authenticatedUrl ?: url, APIHelper.referrer)
+            getCanvasWebView()?.loadUrl(authenticatedUrl ?: url, APIHelper.referrer)
         }
     }
 
@@ -222,7 +222,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
         quizDetailsJob?.cancel()
     }
 
-    override fun handleBackPressed() = getCanvasWebView().handleGoBack() ?: false
+    override fun handleBackPressed() = getCanvasWebView()?.handleGoBack() ?: false
 
     companion object {
 

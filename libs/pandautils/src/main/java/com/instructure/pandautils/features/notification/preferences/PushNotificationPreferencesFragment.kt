@@ -66,6 +66,7 @@ class PushNotificationPreferencesFragment : Fragment() {
     private fun handleAction(action: NotificationPreferencesAction) {
         when (action) {
             is NotificationPreferencesAction.ShowSnackbar -> Snackbar.make(requireView(), action.snackbar, Snackbar.LENGTH_LONG).show()
+            is NotificationPreferencesAction.ShowFrequencySelectionDialog -> {}
         }
     }
 

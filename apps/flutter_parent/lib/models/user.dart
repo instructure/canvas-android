@@ -60,6 +60,10 @@ abstract class User implements Built<User, UserBuilder> {
   @nullable
   UserPermission get permissions;
 
+  @nullable
+  @BuiltValueField(wireName: 'login_id')
+  String get loginId;
+
   static void _initializeBuilder(UserBuilder b) => b
     ..id = ''
     ..name = '';

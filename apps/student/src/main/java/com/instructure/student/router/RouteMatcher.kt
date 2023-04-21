@@ -139,6 +139,7 @@ object RouteMatcher : BaseRouteMatcher() {
         // Discussions
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics"), DiscussionListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionRouterFragment::class.java)) // Route for bookmarking
 
         // Pages
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages"), PageListFragment::class.java))
@@ -499,7 +500,11 @@ object RouteMatcher : BaseRouteMatcher() {
 
     fun generateUrl(type: CanvasContext.Type, masterCls: Class<out Fragment>?, detailCls: Class<out Fragment>?, replacementParams: HashMap<String, String>?, queryParams: HashMap<String, String>?): String? {
         val domain = ApiPrefs.fullDomain
-        val urlRoute = getInternalRoute(masterCls, detailCls)
+
+        // Workaround for the discussion details because we bookmark a different class that we use for routing
+        val detailsClass = if (detailCls == DiscussionDetailsFragment::class.java) DiscussionRouterFragment::class.java else detailCls
+
+        val urlRoute = getInternalRoute(masterCls, detailsClass)
         if(urlRoute != null) {
             var path = urlRoute.createUrl(replacementParams)
             if (path.contains(COURSE_OR_GROUP_REGEX)) {

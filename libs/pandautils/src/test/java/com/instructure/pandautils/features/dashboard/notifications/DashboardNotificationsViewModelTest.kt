@@ -35,9 +35,11 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.room.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.daos.FileUploadInputDao
 import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
 import io.mockk.coEvery
 import io.mockk.every
@@ -76,6 +78,8 @@ class DashboardNotificationsViewModelTest {
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
+    private val fileUploadInputDao: FileUploadInputDao = mockk(relaxed = true)
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
     private lateinit var uploadsLiveData: MutableLiveData<List<DashboardFileUploadEntity>>
 
@@ -114,8 +118,10 @@ class DashboardNotificationsViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        every { apiPrefs.user } returns User(id = 1)
+
         uploadsLiveData = MutableLiveData(emptyList())
-        every { dashboardFileUploadDao.getAll() } returns uploadsLiveData
+        every { dashboardFileUploadDao.getAll(1) } returns uploadsLiveData
 
         viewModel = DashboardNotificationsViewModel(
             resources,
@@ -128,7 +134,9 @@ class DashboardNotificationsViewModelTest {
             conferenceDashboardBlacklist,
             apiPrefs,
             workManager,
-            dashboardFileUploadDao
+            dashboardFileUploadDao,
+            fileUploadInputDao,
+            fileUploadUtilsHelper
         )
 
         viewModel.data.observe(lifecycleOwner, {})
@@ -453,9 +461,9 @@ class DashboardNotificationsViewModelTest {
         val subTitle3 = "SubTitle"
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), title, subTitle),
-            DashboardFileUploadEntity(workerId2.toString(), title2, subTitle2),
-            DashboardFileUploadEntity(workerId3.toString(), title3, subTitle3)
+            DashboardFileUploadEntity(workerId.toString(), 1, title, subTitle),
+            DashboardFileUploadEntity(workerId2.toString(), 1, title2, subTitle2),
+            DashboardFileUploadEntity(workerId3.toString(), 1, title3, subTitle3)
         )
 
         every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
@@ -532,7 +540,7 @@ class DashboardNotificationsViewModelTest {
         val expectedFinished = UploadViewData(title2, subTitle, R.drawable.ic_check_white_24dp, R.color.backgroundSuccess, false)
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), title, subTitle)
+            DashboardFileUploadEntity(workerId.toString(), 1, title, subTitle)
         )
 
         every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(WorkInfo(
@@ -559,7 +567,7 @@ class DashboardNotificationsViewModelTest {
         ))
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), title2, subTitle)
+            DashboardFileUploadEntity(workerId.toString(), 1, title2, subTitle)
         )
 
         assertEquals(1, viewModel.data.value?.uploadItems?.size)
@@ -571,7 +579,7 @@ class DashboardNotificationsViewModelTest {
         val workerId = UUID.randomUUID()
 
         uploadsLiveData.value = listOf(
-            DashboardFileUploadEntity(workerId.toString(), "", "")
+            DashboardFileUploadEntity(workerId.toString(), 1, "", "")
         )
 
         every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(

@@ -17,7 +17,7 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
-import com.instructure.pandautils.utils.setDarkModeSupport
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
 
 /**
@@ -38,7 +38,7 @@ class SimpleWebViewFragment : InternalWebViewFragment() {
         setShouldRouteInternally(false)
         binding.canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
-        binding.canvasWebView.setDarkModeSupport()
+        binding.canvasWebView.enableAlgorithmicDarkening()
 
         loadUrl(url)
         toolbar?.setGone()

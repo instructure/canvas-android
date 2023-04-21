@@ -418,10 +418,9 @@ class SubmissionContentView(
         setGradeableContent(getAttachmentContent(attachment))
     }
 
-    private fun setupSubmissionVersions(unsortedSubmissions: List<Submission>?) {
-        val submissionVersionsSpinner = binding.submissionVersionsSpinner
+    private fun setupSubmissionVersions(unsortedSubmissions: List<Submission>?) = with(binding.submissionVersionsSpinner) {
         if (unsortedSubmissions.isNullOrEmpty()) {
-            submissionVersionsSpinner.setGone()
+            setGone()
         } else {
             unsortedSubmissions.sortedByDescending { it.submittedAt }.let { submissions ->
                 val itemViewModels = submissions.mapIndexed { index, submission ->
@@ -432,16 +431,24 @@ class SubmissionContentView(
                         )
                     )
                 }
-                submissionVersionsSpinner.adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
-                submissionVersionsSpinner.setSelection(0, false)
-                submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
+                setSelection(0, false)
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         EventBus.getDefault().post(SubmissionSelectedEvent(submissions[position]))
                     }
                 }
-                submissionVersionsSpinner.setVisible()
-                submissionVersionsSpinner.isEnabled = submissions.size > 1
+
+                if (submissions.size > 1) {
+                    setVisible()
+                } else {
+                    setGone()
+                    binding.attemptView?.apply {
+                        itemViewModel = itemViewModels.firstOrNull()
+                        root.setVisible()
+                    }
+                }
             }
         }
     }
@@ -659,7 +666,7 @@ class SubmissionContentView(
                                              previousState: SlidingUpPanelLayout.PanelState?,
                                              newState: SlidingUpPanelLayout.PanelState?) {
                 if (newState != previousState) {
-                    @Suppress("NON_EXHAUSTIVE_WHEN") //we don't want to update for all states, just these three
+                    // We don't want to update for all states, just these three
                     when (newState) {
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
                             submissionVersionsSpinner.isClickable = true
@@ -678,6 +685,7 @@ class SubmissionContentView(
                             postPanelEvent(newState, 0.0f)
                             contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                         }
+                        else -> {}
                     }
                 }
             }

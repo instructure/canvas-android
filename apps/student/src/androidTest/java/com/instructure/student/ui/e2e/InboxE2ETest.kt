@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
+import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -68,10 +69,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(PREPARATION_TAG,"Seed an email from the teacher to ${student1.name} and ${student2.name} students.")
-        val seededConversation = ConversationsApi.createConversation(
-            token = teacher.token,
-            recipients = listOf(student1.id.toString(), student2.id.toString())
-        )[0]
+        val seededConversation = createConversation(teacher, student1, student2)[0]
 
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()
@@ -84,12 +82,7 @@ class InboxE2ETest: StudentTest() {
         val newMessageSubject = "Hey There"
         val newMessage = "Just checking in"
         Log.d(STEP_TAG,"Create a new message with subject: $newMessageSubject, and message: $newMessage")
-        newMessagePage.populateMessage(
-                course,
-                student2,
-                newMessageSubject,
-                newMessage
-        )
+        newMessagePage.populateMessage(course, student2, newMessageSubject, newMessage)
 
         Log.d(STEP_TAG,"Click on 'Send' button.")
         newMessagePage.clickSend()
@@ -100,12 +93,7 @@ class InboxE2ETest: StudentTest() {
         val newGroupMessageSubject = "Group Message"
         val newGroupMessage = "Testing Group ${group.name}"
         Log.d(STEP_TAG,"Create a new message with subject: $newGroupMessageSubject, and message: $newGroupMessage")
-        newMessagePage.populateGroupMessage(
-                group,
-                student2,
-                newGroupMessageSubject,
-                newGroupMessage
-        )
+        newMessagePage.populateGroupMessage(group, student2, newGroupMessageSubject, newGroupMessage)
 
         Log.d(STEP_TAG,"Click on 'Send' button.")
         newMessagePage.clickSend()
@@ -318,4 +306,13 @@ class InboxE2ETest: StudentTest() {
         inboxPage.confirmDelete()
         inboxPage.assertConversationNotDisplayed(newGroupMessageSubject)
     }
+
+    private fun createConversation(
+        teacher: CanvasUserApiModel,
+        student1: CanvasUserApiModel,
+        student2: CanvasUserApiModel
+    ) = ConversationsApi.createConversation(
+        token = teacher.token,
+        recipients = listOf(student1.id.toString(), student2.id.toString())
+    )
 }

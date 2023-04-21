@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">กำลังอัพโหลดไปที่ไฟล์ (Files)</string>
     <string name="submissionProgressSubtitle">กำลังอัพโหลดผลงานจัดส่งไปยัง \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">กำลังอัพโหลดผลงานจัดส่ง</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">จัดส่งเสร็จสิ้น</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">จัดส่งล้มเหลว</string>
     <string name="dashboardNotificationUploadingFilesTitle">กำลังอัพโหลดไฟล์</string>
     <string name="cancelSubmissionDialogTitle">ยกเลิกการจัดส่ง</string>
     <string name="cancelSubmissionDialogMessage">นี่จะเป็นการยกเลิกและลบผลงานจัดส่งของคุณ</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">เลิกการเลือกการพูดคุยแล้ว</string>
     <string name="a11y_exitSelectionMode">ออกจากโหมดเลือก</string>
     <string name="a11y_selectionModeDeactivated">ปิดใช้งานโหมดเลือกรายการแล้ว</string>
+    <string name="a11y_avatarContentDescription">ภาพประจำตัวของ %s</string>
+    <string name="inboxUndo">เลิกทำ</string>
 </resources>

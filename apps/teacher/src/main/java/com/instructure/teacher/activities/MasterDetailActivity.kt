@@ -235,13 +235,13 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
             info.widthPercent = calculateAnimatedValue(info.widthPercent, expandPercent, animation.animatedFraction)
             binding.detail.requestLayout()
         }
-        expandAnimation.addListener(object: Animator.AnimatorListener{
-            override fun onAnimationRepeat(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {
+        expandAnimation.addListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
                 binding.master.setGone()
             }
-            override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationStart(animation: Animator?) {}
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationStart(animation: Animator) {}
         })
 
         expandAnimation.start()
@@ -256,13 +256,13 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
             info.widthPercent = calculateAnimatedValue(info.widthPercent, collapsePercent, animation.animatedFraction)
             detail.requestLayout()
         }
-        collapseAnimation.addListener(object: Animator.AnimatorListener{
-            override fun onAnimationRepeat(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {
+        collapseAnimation.addListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
                 middleDividerWrapper.bringToFront()
             }
-            override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationStart(animation: Animator) {
                 master.setVisible()
             }
         })
