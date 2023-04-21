@@ -18,7 +18,6 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Environment
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -38,10 +37,7 @@ class StorageUtils(
     }
 
     fun getAppSize(): Long {
-        @Suppress("DEPRECATION")
-        val packageInfo = context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_ACTIVITIES)
-        val appInfo = packageInfo.applicationInfo
-
+        val appInfo = context.applicationInfo
         val appSize = File(appInfo.publicSourceDir).length()
         val dataDirSize = getDirSize(File(appInfo.dataDir))
         val cacheDirSize = getDirSize(context.cacheDir)
