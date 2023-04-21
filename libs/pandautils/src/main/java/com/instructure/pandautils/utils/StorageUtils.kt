@@ -38,6 +38,7 @@ class StorageUtils(
     }
 
     fun getAppSize(): Long {
+        @Suppress("DEPRECATION")
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_ACTIVITIES)
         val appInfo = packageInfo.applicationInfo
 

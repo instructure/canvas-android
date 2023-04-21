@@ -188,7 +188,6 @@ class OfflineContentViewModel @Inject constructor(
         loadData(true)
     }
 
-    @Suppress("DEPRECATION")
     private fun getStorageInfo(): StorageInfo {
         val appSize = storageUtils.getAppSize()
         val totalSpace = storageUtils.getTotalSpace()
@@ -196,12 +195,12 @@ class OfflineContentViewModel @Inject constructor(
         val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
         val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
-        val storageIndoText = resources.getString(
+        val storageInfoText = resources.getString(
             R.string.offline_content_storage_info,
             Formatter.formatShortFileSize(context, usedSpace),
             Formatter.formatShortFileSize(context, totalSpace),
         )
 
-        return StorageInfo(otherPercent, canvasPercent, storageIndoText)
+        return StorageInfo(otherPercent, canvasPercent, storageInfoText)
     }
 }

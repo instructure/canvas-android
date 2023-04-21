@@ -11,7 +11,7 @@ data class OfflineContentViewData(
     val selectedCount: Int
 ) : BaseObservable()
 
-data class StorageInfo(val otherPercent: Int, val canvasPercent: Int, val storageInfoText: String)
+data class StorageInfo(val otherAppsReservedPercent: Int, val allAppsReservedPercent: Int, val storageInfoText: String)
 
 data class CourseItemViewData(
     val checked: Boolean,

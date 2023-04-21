@@ -34,6 +34,9 @@ class OfflineContentRepository(
     private val tabApi: TabAPI.TabsInterface,
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) {
+    companion object {
+        private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
+    }
 
     suspend fun getCourse(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -54,7 +57,7 @@ class OfflineContentRepository(
         val tabsResult = tabApi.getTabs(courseId, CanvasContext.Type.COURSE.apiString, params)
 
         return tabsResult.dataOrThrow.filter {
-            it.tabId in listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
+            it.tabId in ALLOWED_TAB_IDS
         }
     }
 

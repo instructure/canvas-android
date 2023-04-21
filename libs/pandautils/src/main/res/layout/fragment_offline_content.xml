@@ -80,9 +80,9 @@
                             android:layout_height="12dp"
                             android:layout_marginTop="16dp"
                             android:max="100"
-                            android:progress="@{viewModel.data.storageInfo.otherPercent}"
+                            android:progress="@{viewModel.data.storageInfo.otherAppsReservedPercent}"
                             android:progressDrawable="@drawable/storage_progress_bar_background"
-                            android:secondaryProgress="@{viewModel.data.storageInfo.canvasPercent}"
+                            android:secondaryProgress="@{viewModel.data.storageInfo.allAppsReservedPercent}"
                             app:layout_constraintTop_toBottomOf="@id/storageLabel" />
 
                         <LinearLayout

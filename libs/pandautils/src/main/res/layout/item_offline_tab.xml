@@ -23,7 +23,7 @@
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="12dp"
+            android:layout_marginVertical="10dp"
             android:layout_marginStart="20dp"
             android:buttonTint="@{ViewStyler.INSTANCE.makeColorStateList(@color/textDarkest, ThemePrefs.INSTANCE.brandColor)}"
             android:checked="@{itemViewModel.data.checked}"
@@ -37,6 +37,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:lines="1"
             android:text="@{itemViewModel.data.title}"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
@@ -45,6 +48,8 @@
             app:layout_constraintStart_toEndOf="@id/checkbox"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
+            app:layout_goneMarginBottom="12dp"
+            app:layout_goneMarginEnd="20dp"
             tools:text="Files" />
 
         <TextView
@@ -52,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginBottom="12dp"
             android:text="@{itemViewModel.data.size}"
             android:textColor="@color/textDark"
             android:textSize="14sp"
