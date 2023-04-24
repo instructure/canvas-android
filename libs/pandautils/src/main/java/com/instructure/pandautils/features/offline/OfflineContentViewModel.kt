@@ -97,7 +97,8 @@ class OfflineContentViewModel @Inject constructor(
 
     private fun createCourseItemViewModel(course: Course, size: String, tabs: List<Tab>, files: List<FileFolder>) = CourseItemViewModel(
         CourseItemViewData(false, course.name, size, tabs.map { tab ->
-            createTabViewModel(course.id, tab, size, files)
+            val isFilesTab = tab.tabId == Tab.FILES_ID
+            createTabViewModel(course.id, tab, if (isFilesTab) size else "", if (isFilesTab) files else emptyList())
         }), course.id, this.course == null
     ) { checked, item ->
         val courseViewModel = data.value?.courseItems?.find { it == item } ?: return@CourseItemViewModel
@@ -106,31 +107,23 @@ class OfflineContentViewModel @Inject constructor(
             tab.copy(data = tab.data.copy(checked = checked, files = newFiles))
         }
         val newCourseViewModel = courseViewModel.copy(data = item.data.copy(checked = checked, tabs = newTabs))
-        val newList = _data.value?.courseItems?.toMutableList()?.apply {
-            replaceAll { if (it == item) newCourseViewModel else it }
-        }.orEmpty()
+        val newList = _data.value?.courseItems?.map { if (it == item) newCourseViewModel else it }.orEmpty()
         val selectedCount = getSelectedItemCount(newList)
         _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
     }
 
     private fun createTabViewModel(courseId: Long, tab: Tab, size: String, files: List<FileFolder>) = CourseTabViewModel(
-        if (tab.tabId == Tab.FILES_ID) {
-            CourseTabViewData(false, tab.label.orEmpty(), size, files.map { fileFolder ->
-                createFileViewModel(fileFolder, courseId, tab.tabId)
-            })
-        } else {
-            CourseTabViewData(false, tab.label.orEmpty(), "", emptyList())
-        }, courseId, tab.tabId, false
+        CourseTabViewData(false, tab.label.orEmpty(), size, files.map { fileFolder ->
+            createFileViewModel(fileFolder, courseId, tab.tabId)
+        }), courseId, tab.tabId, false
     ) { checked, item ->
         val courseViewModel = data.value?.courseItems?.find { it.courseId == item.courseId } ?: return@CourseTabViewModel
         val tabViewModel = courseViewModel.data.tabs.find { it == item } ?: return@CourseTabViewModel
         val newFiles = tabViewModel.data.files.map { it.copy(data = it.data.copy(checked = checked)) }
         val newTabViewModel = tabViewModel.copy(data = tabViewModel.data.copy(checked = checked, files = newFiles))
-        val newTabs = courseViewModel.data.tabs.toMutableList().apply { replaceAll { if (it == item) newTabViewModel else it } }
+        val newTabs = courseViewModel.data.tabs.map { if (it == item) newTabViewModel else it }
         val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(checked = newTabs.all { it.data.checked }, tabs = newTabs))
-        val newList = _data.value?.courseItems?.toMutableList()?.apply {
-            replaceAll { if (it == courseViewModel) newCourseViewModel else it }
-        }.orEmpty()
+        val newList = _data.value?.courseItems?.map { if (it == courseViewModel) newCourseViewModel else it }.orEmpty()
         val selectedCount = getSelectedItemCount(newList)
         _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
     }
@@ -142,39 +135,34 @@ class OfflineContentViewModel @Inject constructor(
             val tabViewModel = courseViewModel.data.tabs.find { it.tabId == item.tabId } ?: return@FileViewModel
             val fileViewModel = tabViewModel.data.files.find { it == item } ?: return@FileViewModel
             val newFile = fileViewModel.copy(data = fileViewModel.data.copy(checked = checked))
-            val newFiles = tabViewModel.data.files.toMutableList().apply { replaceAll { if (it == item) newFile else it } }
+            val newFiles = tabViewModel.data.files.map { if (it == item) newFile else it }
             val newTabViewModel = tabViewModel.copy(data = tabViewModel.data.copy(checked = newFiles.all { it.data.checked }, files = newFiles))
-            val newTabs = courseViewModel.data.tabs.toMutableList().apply { replaceAll { if (it.tabId == item.tabId) newTabViewModel else it } }
+            val newTabs = courseViewModel.data.tabs.map { if (it.tabId == item.tabId) newTabViewModel else it }
             val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(checked = newTabs.all { it.data.checked }, tabs = newTabs))
-            val newList = _data.value?.courseItems?.toMutableList()?.apply {
-                replaceAll { if (it == courseViewModel) newCourseViewModel else it }
-            }.orEmpty()
+            val newList = _data.value?.courseItems?.map { if (it == courseViewModel) newCourseViewModel else it }.orEmpty()
             val selectedCount = getSelectedItemCount(newList)
             _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
         }
     }
 
     private fun getSelectedItemCount(courses: List<CourseItemViewModel>): Int {
-        val selectedTabs = mutableListOf<CourseTabViewModel>()
-        val selectedFiles = mutableListOf<FileViewModel>()
-        courses.forEach { courseItemViewModel ->
-            selectedTabs += courseItemViewModel.data.tabs.filter { it.data.checked && it.tabId != Tab.FILES_ID }
-            courseItemViewModel.data.tabs.forEach { courseTabViewModel ->
-                selectedFiles += courseTabViewModel.data.files.filter { it.data.checked }
-            }
-        }
-
-        return selectedTabs.size + selectedFiles.size
+        val selectedTabs = courses.flatMap { it.data.tabs }.count { it.data.checked && it.tabId != Tab.FILES_ID }
+        val selectedFiles = courses.flatMap { it.data.tabs }.flatMap { it.data.files }.count { it.data.checked }
+        return selectedTabs + selectedFiles
     }
 
     fun toggleSelection() {
         val shouldCheck = _data.value?.selectedCount.orDefault() == 0
         val newList = _data.value?.courseItems?.map { courseItemViewModel ->
-            val newTabs = courseItemViewModel.data.tabs.map { tab ->
-                val newFiles = tab.data.files.map { it.copy(data = it.data.copy(checked = shouldCheck)) }
-                tab.copy(data = tab.data.copy(checked = shouldCheck, files = newFiles))
-            }
-            courseItemViewModel.copy(data = courseItemViewModel.data.copy(checked = shouldCheck, tabs = newTabs))
+            courseItemViewModel.copy(data = courseItemViewModel.data.copy(
+                checked = shouldCheck,
+                tabs = courseItemViewModel.data.tabs.map { tab ->
+                    tab.copy(data = tab.data.copy(
+                        checked = shouldCheck,
+                        files = tab.data.files.map { it.copy(data = it.data.copy(checked = shouldCheck)) }
+                    ))
+                }
+            ))
         }.orEmpty()
         val selectedCount = getSelectedItemCount(newList)
         _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
