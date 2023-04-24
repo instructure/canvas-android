@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Group
 
 @Entity
 data class GroupEntity(
@@ -32,10 +33,28 @@ data class GroupEntity(
     val joinLevel: String?,
     val courseId: Long,
     val accountId: Long,
-    val role: String,
+    val role: String?,
     val groupCategoryId: Long,
     val storageQuotaMb: Long,
     val isFavorite: Boolean,
     val concluded: Boolean,
     val canAccess: Boolean?
-)
+) {
+    constructor(group: Group) : this(
+        group.id,
+        group.name,
+        group.description,
+        group.avatarUrl,
+        group.isPublic,
+        group.membersCount,
+        group.joinLevel?.name,
+        group.courseId,
+        group.accountId,
+        group.role?.name,
+        group.groupCategoryId,
+        group.storageQuotaMb,
+        group.isFavorite,
+        group.concluded,
+        group.canAccess
+    )
+}

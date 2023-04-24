@@ -15,26 +15,20 @@
  *
  */
 
-package com.instructure.pandautils.room.offline.entities
+package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.instructure.canvasapi2.models.PlannerOverride
+import androidx.room.*
+import com.instructure.pandautils.room.offline.entities.PlannerOverrideEntity
 
-@Entity
-data class PlannerOverrideEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
-    val plannableType: String,
-    val plannableId: Long,
-    val dismissed: Boolean,
-    val markedComplete: Boolean
-) {
-    constructor(plannerOverride: PlannerOverride) : this(
-        plannerOverride.id ?: 0L,
-        plannerOverride.plannableType.name,
-        plannerOverride.plannableId,
-        plannerOverride.dismissed,
-        plannerOverride.markedComplete
-    )
+@Dao
+interface PlannerOverrideDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entity: PlannerOverrideEntity): Long
+
+    @Delete
+    suspend fun delete(entity: PlannerOverrideEntity)
+
+    @Update
+    suspend fun update(entity: PlannerOverrideEntity)
 }

@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Submission
 import java.util.*
 
 @Entity(
@@ -34,12 +35,6 @@ import java.util.*
             entity = UserEntity::class,
             parentColumns = ["id"],
             childColumns = ["userId"],
-            onDelete = ForeignKey.SET_NULL
-        ),
-        ForeignKey(
-            entity = UserEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["graderId"],
             onDelete = ForeignKey.SET_NULL
         )
     ]
@@ -66,11 +61,41 @@ data class SubmissionEntity(
     val missing: Boolean,
     val mediaCommentId: String?,
     val assignmentId: Long,
-    val userId: Long,
-    val graderId: Long,
+    val userId: Long?,
+    val graderId: Long?,
     val groupId: Long?,
     val pointsDeducted: Double?,
     val enteredScore: Double,
     val enteredGrade: String?,
     val postedAt: Date?
-)
+) {
+    constructor(submission: Submission, groupId: Long?, mediaCommentId: String?) : this(
+        submission.id,
+        submission.grade,
+        submission.score,
+        submission.attempt,
+        submission.submittedAt,
+        submission.commentCreated,
+        submission.mediaContentType,
+        submission.mediaCommentUrl,
+        submission.mediaCommentDisplay,
+        submission.body,
+        submission.isGradeMatchesCurrentSubmission,
+        submission.workflowState,
+        submission.submissionType,
+        submission.previewUrl,
+        submission.url,
+        submission.late,
+        submission.excused,
+        submission.missing,
+        mediaCommentId,
+        submission.assignmentId,
+        if (submission.userId == 0L) null else submission.userId,
+        if (submission.graderId == 0L) null else submission.graderId,
+        groupId,
+        submission.pointsDeducted,
+        submission.enteredScore,
+        submission.enteredGrade,
+        submission.postedAt
+    )
+}

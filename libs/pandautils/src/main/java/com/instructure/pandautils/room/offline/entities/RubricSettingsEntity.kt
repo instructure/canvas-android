@@ -19,10 +19,11 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.RubricSettings
 
 @Entity
 data class RubricSettingsEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val contextId: Long,
     val contextType: String?,
@@ -34,4 +35,18 @@ data class RubricSettingsEntity(
     val freeFormCriterionComments: Boolean,
     val hideScoreTotal: Boolean,
     val hidePoints: Boolean
-)
+) {
+    constructor(rubricSettings: RubricSettings) : this(
+        rubricSettings.id ?: 0L,
+        rubricSettings.contextId,
+        rubricSettings.contextType,
+        rubricSettings.pointsPossible,
+        rubricSettings.title,
+        rubricSettings.isReusable,
+        rubricSettings.isPublic,
+        rubricSettings.isReadOnly,
+        rubricSettings.freeFormCriterionComments,
+        rubricSettings.hideScoreTotal,
+        rubricSettings.hidePoints
+    )
+}

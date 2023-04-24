@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.DiscussionParticipant
 
 @Entity
 data class DiscussionParticipantEntity(
@@ -28,4 +29,12 @@ data class DiscussionParticipantEntity(
     val pronouns: String?,
     var avatarImageUrl: String?,
     var htmlUrl: String?
-)
+) {
+    constructor(discussionParticipant: DiscussionParticipant): this(
+        discussionParticipant.id,
+        discussionParticipant.displayName,
+        discussionParticipant.pronouns,
+        discussionParticipant.avatarImageUrl,
+        discussionParticipant.htmlUrl
+    )
+}

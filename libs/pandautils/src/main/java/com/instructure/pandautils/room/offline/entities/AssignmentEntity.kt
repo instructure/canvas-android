@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Assignment
 
 @Entity(
     foreignKeys = [
@@ -53,7 +54,7 @@ data class AssignmentEntity(
     val url: String?,
     val quizId: Long,
     val isUseRubricForGrading: Boolean,
-    val rubricSettingsId: Long,
+    val rubricSettingsId: Long?,
     val allowedExtensions: List<String>,
     val submissionId: Long?,
     val assignmentGroupId: Long,
@@ -81,4 +82,54 @@ data class AssignmentEntity(
     val annotatableAttachmentId: Long,
     val anonymousSubmissions: Boolean,
     val omitFromFinalGrade: Boolean
-)
+) {
+    constructor(
+        assignment: Assignment,
+        rubricSettingsId: Long?,
+        submissionId: Long?,
+        discussionTopicHeaderId: Long?,
+        plannerOverrideId: Long?
+    ) : this(
+        assignment.id,
+        assignment.name,
+        assignment.description,
+        assignment.submissionTypesRaw,
+        assignment.dueAt,
+        assignment.pointsPossible,
+        assignment.courseId,
+        assignment.isGradeGroupsIndividually,
+        assignment.gradingType,
+        assignment.needsGradingCount,
+        assignment.htmlUrl,
+        assignment.url,
+        assignment.quizId,
+        assignment.isUseRubricForGrading,
+        rubricSettingsId,
+        assignment.allowedExtensions,
+        submissionId,
+        assignment.assignmentGroupId,
+        assignment.position,
+        assignment.isPeerReviews,
+        assignment.lockedForUser,
+        assignment.lockAt,
+        assignment.unlockAt,
+        assignment.lockExplanation,
+        discussionTopicHeaderId,
+        assignment.freeFormCriterionComments,
+        assignment.published,
+        assignment.groupCategoryId,
+        assignment.userSubmitted,
+        assignment.unpublishable,
+        assignment.onlyVisibleToOverrides,
+        assignment.anonymousPeerReviews,
+        assignment.moderatedGrading,
+        assignment.anonymousGrading,
+        assignment.allowedAttempts,
+        plannerOverrideId,
+        assignment.isStudioEnabled,
+        assignment.inClosedGradingPeriod,
+        assignment.annotatableAttachmentId,
+        assignment.anonymousSubmissions,
+        assignment.omitFromFinalGrade
+    )
+}

@@ -15,26 +15,21 @@
  *
  */
 
-package com.instructure.pandautils.room.offline.entities
+package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.instructure.pandautils.room.offline.entities.GroupEntity
 
-@Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = AssignmentGroupEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["assignmentGroupId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
-data class GradingRuleEntity(
-    @PrimaryKey
-    val assignmentGroupId: Long,
-    val dropLowest: Int,
-    val dropHighest: Int,
-    val neverDrop: List<Int>
-)
+@Dao
+interface GroupDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entity: GroupEntity): Long
+
+    @Delete
+    suspend fun delete(entity: GroupEntity)
+
+    @Update
+    suspend fun update(entity: GroupEntity)
+
+}

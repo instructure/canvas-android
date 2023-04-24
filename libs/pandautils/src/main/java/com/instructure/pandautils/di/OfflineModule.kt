@@ -109,4 +109,44 @@ class OfflineModule {
     fun providePageDao(appDatabase: OfflineDatabase): PageDao {
         return appDatabase.pageDao()
     }
+
+    @Provides
+    fun provideAssignmentGroupDao(appDatabase: OfflineDatabase): AssignmentGroupDao {
+        return appDatabase.assignmentGroupDao()
+    }
+
+    @Provides
+    fun provideAssignmentDao(appDatabase: OfflineDatabase): AssignmentDao {
+        return appDatabase.assignmentDao()
+    }
+
+    @Provides
+    fun provideRubricSettings(appDatabase: OfflineDatabase): RubricSettingsDao {
+        return appDatabase.rubricSettingsDao()
+    }
+
+    @Provides
+    fun provideSubmissionDao(appDatabase: OfflineDatabase): SubmissionDao {
+        return appDatabase.submissionDao()
+    }
+
+    @Provides
+    fun provideGroupDao(appDatabase: OfflineDatabase): GroupDao {
+        return appDatabase.groupDao()
+    }
+
+    @Provides
+    fun providePlannerOverrideDao(appDatabase: OfflineDatabase): PlannerOverrideDao {
+        return appDatabase.plannerOverrideDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicHeaderDao(appDatabase: OfflineDatabase): DiscussionTopicHeaderDao {
+        return appDatabase.discussionTopicHeaderDao()
+    }
+
+    @Provides
+    fun provideDiscussionParticipantDao(appDatabase: OfflineDatabase): DiscussionParticipantDao {
+        return appDatabase.discussionParticipantDao()
+    }
 }

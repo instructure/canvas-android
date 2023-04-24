@@ -26,7 +26,11 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 import dagger.assisted.Assisted
@@ -50,7 +54,16 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val termDao: TermDao,
     private val gradesDao: GradesDao,
     private val sectionDao: SectionDao,
-    private val pageDao: PageDao
+    private val pageDao: PageDao,
+    private val assignmentGroupDao: AssignmentGroupDao,
+    private val assignmentDao: AssignmentDao,
+    private val rubricSettingsDao: RubricSettingsDao,
+    private val mediaCommentDao: MediaCommentDao,
+    private val groupDao: GroupDao,
+    private val submissionDao: SubmissionDao,
+    private val plannerOverrideDao: PlannerOverrideDao,
+    private val discussionTopicHeaderDao: DiscussionTopicHeaderDao,
+    private val discussionParticipantDao: DiscussionParticipantDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -58,7 +71,10 @@ class OfflineSyncWorker @AssistedInject constructor(
         courses.forEach { courseSettings ->
             fetchCourseDetails(courseSettings.courseId)
             if (courseSettings.pages) {
-                fetchPages(courseSettings.courseId)
+//                fetchPages(courseSettings.courseId)
+            }
+            if (courseSettings.assignments) {
+                fetchAssignments(courseSettings.courseId)
             }
         }
         return Result.success()
@@ -83,6 +99,68 @@ class OfflineSyncWorker @AssistedInject constructor(
             .depaginate { nextUrl ->
                 assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
             }.dataOrThrow
+
+        assignmentGroups.forEach { assignmentGroup ->
+            assignmentGroupDao.insert(AssignmentGroupEntity(assignmentGroup))
+
+            assignmentGroup.assignments.forEach { assignment ->
+                val rubricSettingsId =
+                    assignment.rubricSettings?.let { rubricSettingsDao.insert(RubricSettingsEntity(it)) }
+                val submissionId = assignment.submission?.let { submission ->
+                    insertSubmission(submission)
+                }
+                val plannerOverrideId = assignment.plannerOverride?.let { plannerOverride ->
+                    plannerOverrideDao.insert(PlannerOverrideEntity(plannerOverride))
+                }
+
+                val discussionTopicHeaderId = assignment.discussionTopicHeader?.let { insertDiscussion(it) }
+
+                val assignmentEntity = AssignmentEntity(
+                    assignment = assignment,
+                    rubricSettingsId = rubricSettingsId,
+                    submissionId = submissionId,
+                    discussionTopicHeaderId = discussionTopicHeaderId,
+                    plannerOverrideId = plannerOverrideId,
+                )
+
+                assignmentDao.insert(assignmentEntity)
+            }
+        }
+    }
+
+    private suspend fun insertSubmission(submission: Submission): Long {
+        val groupId = submission.group?.let { group -> groupDao.insert(GroupEntity(group)) }
+        submission.mediaComment?.let { mediaComment ->
+            mediaCommentDao.insert(
+                MediaCommentEntity(
+                    mediaComment
+                )
+            )
+        }
+        if (submission.userId != 0L) {
+            val user = submission.user ?: userApi.getUser(
+                submission.userId,
+                RestParams(isForceReadFromNetwork = true)
+            ).dataOrNull
+
+            user?.let { userDao.insert(UserEntity(it)) }
+        }
+
+        if (submission.graderId != 0L) {
+            val grader = userApi.getUser(submission.graderId, RestParams(isForceReadFromNetwork = true)).dataOrNull
+            grader?.let { userDao.insert(UserEntity(it)) }
+        }
+
+        submission.submissionHistory.forEach { submissionHistoryItem ->
+            submissionHistoryItem?.let { insertSubmission(it) }
+        }
+
+        return submissionDao.insert(SubmissionEntity(submission, groupId, submission.mediaComment?.mediaId))
+    }
+
+    private suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader): Long {
+        discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
+        return discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader))
     }
 
     private fun fetchGrades(courseId: Long) {

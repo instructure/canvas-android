@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import java.util.*
 
 @Entity(
@@ -67,4 +68,38 @@ data class DiscussionTopicHeaderEntity(
     var userCanSeePosts: Boolean,
     var specificSections: String?,
     var anonymousState: String?
-)
+) {
+    constructor(discussionTopicHeader: DiscussionTopicHeader): this(
+        discussionTopicHeader.id,
+        discussionTopicHeader.discussionType,
+        discussionTopicHeader.title,
+        discussionTopicHeader.message,
+        discussionTopicHeader.htmlUrl,
+        discussionTopicHeader.postedDate,
+        discussionTopicHeader.delayedPostDate,
+        discussionTopicHeader.lastReplyDate,
+        discussionTopicHeader.requireInitialPost,
+        discussionTopicHeader.discussionSubentryCount,
+        discussionTopicHeader.readState,
+        discussionTopicHeader.unreadCount,
+        discussionTopicHeader.position,
+        discussionTopicHeader.assignmentId,
+        discussionTopicHeader.locked,
+        discussionTopicHeader.lockedForUser,
+        discussionTopicHeader.lockExplanation,
+        discussionTopicHeader.pinned,
+        discussionTopicHeader.author?.id,
+        discussionTopicHeader.podcastUrl,
+        discussionTopicHeader.groupCategoryId,
+        discussionTopicHeader.announcement,
+        discussionTopicHeader.published,
+        discussionTopicHeader.allowRating,
+        discussionTopicHeader.onlyGradersCanRate,
+        discussionTopicHeader.sortByRating,
+        discussionTopicHeader.subscribed,
+        discussionTopicHeader.lockAt,
+        discussionTopicHeader.userCanSeePosts,
+        discussionTopicHeader.specificSections,
+        discussionTopicHeader.anonymousState
+    )
+}
