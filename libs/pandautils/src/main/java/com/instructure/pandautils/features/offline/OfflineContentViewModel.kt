@@ -120,7 +120,7 @@ class OfflineContentViewModel @Inject constructor(
             })
         } else {
             CourseTabViewData(false, tab.label.orEmpty(), "", emptyList())
-        }, courseId, tab.tabId
+        }, courseId, tab.tabId, false
     ) { checked, item ->
         val courseViewModel = data.value?.courseItems?.find { it.courseId == item.courseId } ?: return@CourseTabViewModel
         val tabViewModel = courseViewModel.data.tabs.find { it == item } ?: return@CourseTabViewModel
