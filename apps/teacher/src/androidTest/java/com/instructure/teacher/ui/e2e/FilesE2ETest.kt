@@ -29,7 +29,13 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.DiscussionApiModel
+import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.espresso.ViewUtils
 import com.instructure.panda_annotations.FeatureCategory
@@ -120,8 +126,8 @@ class FilesE2ETest: TeacherTest() {
             Log.v(PREPARATION_TAG, "Discussion post error: $it")
         }
 
-        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menu.")
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
@@ -153,8 +159,8 @@ class FilesE2ETest: TeacherTest() {
         Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(5)
 
-        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menu.")
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled")
