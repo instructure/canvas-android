@@ -84,7 +84,7 @@ class TodoPage: BasePage(R.id.todoPage) {
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
         onView(withText(R.string.favoritedCoursesLabel) + withParent(R.id.select_dialog_listview)).click()
-        onView(allOf(isAssignableFrom(Button::class.java), withText(R.string.ok))).click()
+        onView(allOf(isAssignableFrom(Button::class.java), withText(R.string.ok), withParent(R.id.select_dialog_listview))).click()
     }
 
     fun clearFilter() {
