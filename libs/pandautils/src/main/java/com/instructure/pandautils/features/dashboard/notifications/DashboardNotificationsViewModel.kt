@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
@@ -258,16 +259,8 @@ class DashboardNotificationsViewModel @Inject constructor(
                 workerId = workerId,
                 workManager = workManager,
                 data = uploadViewData,
-                open = { uuid -> _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid))) },
-                remove = {
-                    viewModelScope.launch {
-                        dashboardFileUploadDao.delete(fileUploadEntity)
-                        fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
-                            fileUploadUtilsHelper.deleteCachedFiles(it.filePaths)
-                            fileUploadInputDao.delete(it)
-                        }
-                    }
-                }
+                open = { uuid -> openUploadNotification(workInfo.state, uuid, fileUploadEntity) },
+                remove = { removeUploadNotification(fileUploadEntity, workerId) }
             )
         }
     }.orEmpty()
@@ -286,6 +279,41 @@ class DashboardNotificationsViewModel @Inject constructor(
         } ?: true // Case when the course has no end date
 
         return !course.restrictEnrollmentsToCourseDate || isBeforeEndDate
+    }
+
+    private fun openUploadNotification(state: WorkInfo.State, uuid: UUID, fileUploadEntity: DashboardFileUploadEntity) {
+        if (state == WorkInfo.State.SUCCEEDED) {
+            viewModelScope.launch {
+                dashboardFileUploadDao.delete(fileUploadEntity)
+                if (fileUploadEntity.courseId != null && fileUploadEntity.assignmentId != null && fileUploadEntity.attemptId != null) {
+                    runCatching {
+                        awaitApi { CourseManager.getCourse(fileUploadEntity.courseId, it, false) }
+                    }.getOrNull()?.let {
+                        _events.postValue(
+                            Event(DashboardNotificationsActions.NavigateToSubmissionDetails(it, fileUploadEntity.assignmentId, fileUploadEntity.attemptId))
+                        )
+                    }
+                } else if (fileUploadEntity.folderId != null) {
+                    apiPrefs.user?.let {
+                        _events.postValue(Event(DashboardNotificationsActions.NavigateToMyFiles(it, fileUploadEntity.folderId)))
+                    }
+                } else {
+                    _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+                }
+            }
+        } else {
+            _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+        }
+    }
+
+    private fun removeUploadNotification(fileUploadEntity: DashboardFileUploadEntity, workerId: UUID) {
+        viewModelScope.launch {
+            dashboardFileUploadDao.delete(fileUploadEntity)
+            fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
+                fileUploadUtilsHelper.deleteCachedFiles(it.filePaths)
+                fileUploadInputDao.delete(it)
+            }
+        }
     }
 
     private fun handleInvitation(
