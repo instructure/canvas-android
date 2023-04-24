@@ -172,6 +172,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.selectConversation(seededConversation)
         inboxPage.assertSelectedConversationNumber("1")
         inboxPage.clickUnArchive()
+        inboxPage.assertInboxEmpty()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that ${seededConversation.subject} conversation is displayed.")

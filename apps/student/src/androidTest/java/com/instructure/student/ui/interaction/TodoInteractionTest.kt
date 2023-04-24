@@ -67,7 +67,6 @@ class TodoInteractionTest : StudentTest() {
     @StubLandscape("Stubbed because on lowres device in landscape mode, the space is too narrow to scroll properly. Will be refactored and running when we changed to non-lowres device on nightly runs.")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
     fun testFilters() {
-        //TODO: Check and refactor (if necessary) after migrated nightly runs from lowres device to non-lowres one.
         val data = goToTodos(courseCount = 2, favoriteCourseCount = 1)
         val favoriteCourse = data.courses.values.first {course -> course.isFavorite}
         val notFavoriteCourse = data.courses.values.first {course -> !course.isFavorite}

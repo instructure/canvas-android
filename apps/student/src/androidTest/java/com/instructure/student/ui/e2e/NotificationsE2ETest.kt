@@ -22,7 +22,13 @@ import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.QuizAnswer
+import com.instructure.dataseeding.model.QuizQuestion
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -104,7 +110,7 @@ class NotificationsE2ETest : StudentTest() {
         gradeSubmission(teacher, course, testAssignment, student)
 
         Log.d(STEP_TAG,"Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
-        sleep(5000) //Let the submission api do it's job
+        sleep(10000) //Let the submission api do it's job
         refresh()
         notificationPage.assertHasGrade(testAssignment.name,"13")
     }
