@@ -37,7 +37,7 @@ val appDatabaseMigrations = arrayOf(
     },
 
     createMigration(2, 3) { database ->
-        database.execSQL("CREATE TABLE IF NOT EXISTS DashboardFileUploadEntity (workerId TEXT NOT NULL, userId INTEGER NOT NULL, title TEXT, assignmentName TEXT, PRIMARY KEY(workerId))")
+        database.execSQL("CREATE TABLE IF NOT EXISTS DashboardFileUploadEntity (workerId TEXT NOT NULL, userId INTEGER NOT NULL, title TEXT, subtitle TEXT, PRIMARY KEY(workerId))")
     },
 
     createMigration(3, 4) { database ->

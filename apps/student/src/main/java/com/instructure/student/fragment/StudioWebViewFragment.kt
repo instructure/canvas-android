@@ -59,7 +59,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
             }
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
-                getCanvasLoading().visibility = View.GONE
+                getCanvasLoading()?.visibility = View.GONE
 
                 // Check for a successful Studio submission
                 if (url.contains("success/external_tool_dialog")) {
@@ -68,7 +68,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) {
-                getCanvasLoading().visibility = View.VISIBLE
+                getCanvasLoading()?.visibility = View.VISIBLE
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean {

@@ -142,8 +142,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // This function is mostly for the internal web view fragments so we can go back in the webview
     override fun handleBackPressed(): Boolean = with(binding) {
         if (items.isNotEmpty()) {
-            val pFrag = childFragmentManager.fragments[0] as ParentFragment
-            if (pFrag.handleBackPressed()) {
+            val pFrag = childFragmentManager.fragments.firstOrNull() as? ParentFragment
+            if (pFrag?.handleBackPressed() == true) {
                 return true
             }
         }
@@ -269,7 +269,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private fun showFragment(item: Fragment?) {
         item?.let {
-            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commit()
+            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commitAllowingStateLoss()
             applyFragmentTheme(it)
         }
     }
