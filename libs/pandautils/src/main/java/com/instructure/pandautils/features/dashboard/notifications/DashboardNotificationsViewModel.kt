@@ -283,9 +283,14 @@ class DashboardNotificationsViewModel @Inject constructor(
     private fun openUploadNotification(state: WorkInfo.State, uuid: UUID, fileUploadEntity: DashboardFileUploadEntity) {
         if (state == WorkInfo.State.SUCCEEDED) {
             viewModelScope.launch {
-                dashboardFileUploadDao.delete(fileUploadEntity)
+                val uploadItemViewModel = _data.value?.uploadItems?.find { it.workerId == uuid }
+                uploadItemViewModel?.apply {
+                    loading = true
+                    notifyPropertyChanged(BR.loading)
+                }
                 if (fileUploadEntity.courseId != null && fileUploadEntity.assignmentId != null && fileUploadEntity.attemptId != null) {
                     courseManager.getCourseAsync(fileUploadEntity.courseId, false).await().dataOrNull?.let {
+                        dashboardFileUploadDao.delete(fileUploadEntity)
                         _events.postValue(
                             Event(
                                 DashboardNotificationsActions.NavigateToSubmissionDetails(
@@ -297,11 +302,17 @@ class DashboardNotificationsViewModel @Inject constructor(
                         )
                     }
                 } else if (fileUploadEntity.folderId != null) {
+                    dashboardFileUploadDao.delete(fileUploadEntity)
                     apiPrefs.user?.let {
                         _events.postValue(Event(DashboardNotificationsActions.NavigateToMyFiles(it, fileUploadEntity.folderId)))
                     }
                 } else {
+                    dashboardFileUploadDao.delete(fileUploadEntity)
                     _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+                }
+                uploadItemViewModel?.apply {
+                    loading = false
+                    notifyPropertyChanged(BR.loading)
                 }
             }
         } else {
