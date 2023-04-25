@@ -36,6 +36,7 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.threeten.bp.OffsetDateTime
 import java.util.*
+import kotlin.random.Random
 
 class MockCanvas {
     /** Fake domain */
@@ -1086,7 +1087,7 @@ fun MockCanvas.addUser(): User {
     val name = Randomizer.randomName()
     val email = Randomizer.randomEmail()
     val user = User(
-            id = Random().nextLong(),
+            id = Random.nextLong(),
             name = name.fullName,
             shortName = name.firstName,
             loginId = email,

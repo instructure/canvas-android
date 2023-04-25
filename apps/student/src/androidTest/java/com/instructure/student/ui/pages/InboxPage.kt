@@ -32,8 +32,25 @@ import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.ConversationApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertVisibility
+import com.instructure.espresso.click
+import com.instructure.espresso.longClick
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeLeft
+import com.instructure.espresso.swipeRight
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
@@ -167,7 +184,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
         fun assertInboxEmpty() {
-        onView(withId(R.id.emptyInboxView)).assertDisplayed()
+        waitForView(withId(R.id.emptyInboxView)).assertDisplayed()
     }
 
     fun assertHasConversation() {
