@@ -20,6 +20,8 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
@@ -67,27 +69,10 @@ class HomeroomE2ETest : StudentTest() {
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${nonHomeroomCourses[2].name} course.")
-        val testAssignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = nonHomeroomCourses[2].id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.LETTER_GRADE,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = OffsetDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_DATE_TIME)
-            )
-        )
+        val testAssignment = createAssignment(nonHomeroomCourses[2].id, teacher, GradingType.LETTER_GRADE, 100.0, OffsetDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_DATE_TIME))
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' MISSING assignment for ${nonHomeroomCourses[2].name} course.")
-        val testAssignmentMissing = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = nonHomeroomCourses[2].id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.PERCENT,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = 3.days.ago.iso8601
-            ))
+        val testAssignmentMissing = createAssignment(nonHomeroomCourses[2].id, teacher, GradingType.PERCENT, 100.0, 3.days.ago.iso8601)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)
@@ -95,20 +80,15 @@ class HomeroomE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to K5 Important Dates Page and assert it is loaded.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
-        //TODO: Maybe at this point is why this test is flaky. Suggestion: Check if homeroomPage's page object has been loaded, and check if homeroomPage and elementaryDashboardPage is different at all.
 
         Log.d(STEP_TAG, "Assert that there is a welcome text with the student's shortname (${student.shortName}).")
         homeroomPage.assertWelcomeText(student.shortName)
 
         Log.d(STEP_TAG, "Assert that the ${homeroomAnnouncement.title} announcement (which belongs to ${homeroomCourse.name} homeroom course) is displayed.")
-        homeroomPage.assertAnnouncementDisplayed(
-            homeroomCourse.name,
-            homeroomAnnouncement.title,
-            homeroomAnnouncement.message
-        )
+        homeroomPage.assertAnnouncementDisplayed(homeroomCourse.name, homeroomAnnouncement.title, homeroomAnnouncement.message)
 
         Log.d(STEP_TAG, "Assert that under the 'My Subject' section there are 3 items.")
-        homeroomPage.assertCourseItemsCount(3) //gives back the number of courses under 'My Subject' list
+        homeroomPage.assertCourseItemsCount(3)
 
         Log.d(STEP_TAG, "Click on 'View Previous Announcements'." +
                 "Assert that the Announcement List Page is displayed" +
@@ -120,7 +100,7 @@ class HomeroomE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate back to Homeroom Page and assert it is displayed well.")
         Espresso.pressBack()
         homeroomPage.assertPageObjects()
-        elementaryDashboardPage.waitForRender() //TODO: might not need this here.
+        elementaryDashboardPage.waitForRender()
 
         for (i in 0 until nonHomeroomCourses.size - 1) {
             Log.d(STEP_TAG, "Assert that the ${nonHomeroomCourses[i].name} course is displayed with the announcements which belongs to it.")
@@ -159,6 +139,26 @@ class HomeroomE2ETest : StudentTest() {
         assignmentListPage.assertPageObjects()
         assignmentListPage.assertHasAssignment(testAssignment)
         assignmentListPage.assertHasAssignment(testAssignmentMissing)
+    }
+
+
+    private fun createAssignment(
+        courseId: Long,
+        teacher: CanvasUserApiModel,
+        gradingType: GradingType,
+        pointsPossible: Double,
+        dueAt: String
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = courseId,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = gradingType,
+                teacherToken = teacher.token,
+                pointsPossible = pointsPossible,
+                dueAt = dueAt
+            )
+        )
     }
 }
 

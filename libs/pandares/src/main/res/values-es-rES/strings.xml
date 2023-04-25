@@ -1298,6 +1298,8 @@
     <string name="fileUploadProgressSubtitle">Cargando a archivos</string>
     <string name="submissionProgressSubtitle">Cargando entrega a \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Cargando entrega</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Se ha realizado la entrega</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">No se ha podido entregar</string>
     <string name="dashboardNotificationUploadingFilesTitle">Cargando archivos</string>
     <string name="cancelSubmissionDialogTitle">Cancelar entrega</string>
     <string name="cancelSubmissionDialogMessage">Esta acción cancelará y eliminará tu entrega.</string>
@@ -1375,4 +1377,6 @@
     <string name="a11y_conversationDeselected">Conversación no seleccionada.</string>
     <string name="a11y_exitSelectionMode">Salir del modo de selección</string>
     <string name="a11y_selectionModeDeactivated">Modo de selección desactivado.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Deshacer</string>
 </resources>

@@ -155,7 +155,7 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open Help Menu.")
-        dashboardPage.openHelpMenu()
+        leftSideNavigationDrawerPage.clickHelpMenu()
 
         Log.d(STEP_TAG, "Assert Help Menu Dialog is displayed.")
         helpPage.assertHelpMenuDisplayed()

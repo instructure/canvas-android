@@ -103,7 +103,7 @@ class AttendanceListFragment : BaseSyncFragment<
     }
 
     private fun setupViews() = with(binding) {
-        webView.setDarkModeSupport()
+        webView.enableAlgorithmicDarkening()
         toolbar.setupMenu(R.menu.menu_attendance) { menuItem ->
             when(menuItem.itemId) {
                 R.id.menuFilterSections -> { /* Do Nothing */ }

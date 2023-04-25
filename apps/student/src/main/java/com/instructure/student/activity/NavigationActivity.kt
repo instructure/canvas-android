@@ -17,6 +17,7 @@
 @file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
 package com.instructure.student.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -32,6 +33,7 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -135,6 +137,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private var colorOverlayJob: Job? = null
 
     private val bottomNavScreensStack: Deque<String> = ArrayDeque()
+
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     override fun contentResId(): Int = R.layout.activity_navigation
 
@@ -271,6 +275,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val themeSelector = ThemeSelectorBottomSheet()
             themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
             ThemePrefs.themeSelectionShown = true
+        }
+
+        requestNotificationsPermission()
+    }
+
+    private fun requestNotificationsPermission() {
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 

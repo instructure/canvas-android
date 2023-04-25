@@ -62,7 +62,7 @@ class VideoViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video_view)
+        setContentView(binding.root)
         binding.playerView.requestFocus()
         mediaDataSourceFactory = buildDataSourceFactory(true)
         mainHandler = Handler()

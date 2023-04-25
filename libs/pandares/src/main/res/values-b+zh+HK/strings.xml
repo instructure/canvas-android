@@ -1280,6 +1280,8 @@
     <string name="fileUploadProgressSubtitle">上傳到檔案</string>
     <string name="submissionProgressSubtitle">上傳提交項目到 \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">正在上傳提交項目</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提交項目成功</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">提交項目失敗</string>
     <string name="dashboardNotificationUploadingFilesTitle">上傳檔案</string>
     <string name="cancelSubmissionDialogTitle">取消提交項目</string>
     <string name="cancelSubmissionDialogMessage">此動作將取消並刪除您的提交項目。</string>
@@ -1356,4 +1358,6 @@
     <string name="a11y_conversationDeselected">已取消選擇的交談</string>
     <string name="a11y_exitSelectionMode">退出選擇模式</string>
     <string name="a11y_selectionModeDeactivated">選擇模式停用</string>
+    <string name="a11y_avatarContentDescription">%s 的頭像</string>
+    <string name="inboxUndo">復原</string>
 </resources>

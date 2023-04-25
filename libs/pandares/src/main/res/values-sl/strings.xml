@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Nalagam v datoteke</string>
     <string name="submissionProgressSubtitle">Nalagam oddajo v \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Nalaganje oddaje</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Oddaja je uspela</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Oddaja ni uspela</string>
     <string name="dashboardNotificationUploadingFilesTitle">Nalaganje datotek</string>
     <string name="cancelSubmissionDialogTitle">Prekliči oddajo</string>
     <string name="cancelSubmissionDialogMessage">S tem boste preklicali in izbrisali oddajo.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Izbira pogovora je odstranjena</string>
     <string name="a11y_exitSelectionMode">Izhod iz načina izbire</string>
     <string name="a11y_selectionModeDeactivated">Način izbire je deaktiviran.</string>
+    <string name="a11y_avatarContentDescription">Avatar osebe %s</string>
+    <string name="inboxUndo">Razveljavi</string>
 </resources>

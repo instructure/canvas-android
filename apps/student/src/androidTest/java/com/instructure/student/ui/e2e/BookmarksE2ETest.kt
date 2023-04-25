@@ -21,8 +21,7 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -39,13 +38,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class BookmarksE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -59,15 +54,7 @@ class BookmarksE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Preparing an assignment which will be saved as a bookmark.")
-        val assignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-            courseId = course.id,
-            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-            gradingType = GradingType.POINTS,
-            teacherToken = teacher.token,
-            pointsPossible = 15.0,
-            dueAt = 1.days.fromNow.iso8601
-        ))
+        val assignment = createAssignment(course, teacher)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -117,6 +104,22 @@ class BookmarksE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Assert that empty view is displayed, so the bookmark has been deleted.")
         bookmarkPage.assertEmptyView()
+    }
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacher.token,
+                pointsPossible = 15.0,
+                dueAt = 1.days.fromNow.iso8601
+            )
+        )
     }
 
 }

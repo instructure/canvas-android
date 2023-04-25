@@ -64,6 +64,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/subtitle"
+                app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Course name" />
 
             <TextView
@@ -78,6 +80,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
                 app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintBottom_toTopOf="@id/termTitle"
                 tools:text="Interaction Design for Usability" />
 
             <TextView
@@ -93,6 +96,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
                 app:layout_constraintTop_toBottomOf="@id/subtitle"
+                app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="DEFAULT TERM | STUDENT" />
 
             <ImageView

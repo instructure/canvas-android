@@ -21,6 +21,9 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.util.Randomizer
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -34,13 +37,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class PagesE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -54,30 +53,13 @@ class PagesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed an UNPUBLISHED page for ${course.name} course.")
-        val pageUnpublished = PagesApi.createCoursePage(
-                courseId = course.id,
-                published = false,
-                frontPage = false,
-                token = teacher.token
-        )
+        val pageUnpublished = createCoursePage(course, teacher, published = false, frontPage = false)
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED page for ${course.name} course.")
-        val pagePublished = PagesApi.createCoursePage(
-                courseId = course.id,
-                published = true,
-                frontPage = false,
-                token = teacher.token,
-                body = "<h1 id=\"header1\">Regular Page Text</h1>"
-        )
+        val pagePublished = createCoursePage(course, teacher, published = true, frontPage = false, body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED, FRONT page for ${course.name} course.")
-        val pagePublishedFront = PagesApi.createCoursePage(
-                courseId = course.id,
-                published = true,
-                frontPage = true,
-                token = teacher.token,
-                body = "<h1 id=\"header1\">Front Page Text</h1>"
-        )
+        val pagePublishedFront = createCoursePage(course, teacher, published = true, frontPage = true, body = "<h1 id=\"header1\">Front Page Text</h1>")
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -98,18 +80,28 @@ class PagesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Open ${pagePublishedFront.title} page. Assert that it is really a front (published) page via web view assertions.")
         pageListPage.selectFrontPage(pagePublishedFront)
-        canvasWebViewPage.runTextChecks(
-                WebViewTextCheck(Locator.ID, "header1", "Front Page Text")
-        )
+        canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
 
         Log.d(STEP_TAG,"Navigate back to Pages page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Open ${pagePublished.title} page. Assert that it is really a regular published page via web view assertions.")
         pageListPage.selectRegularPage(pagePublished)
-        canvasWebViewPage.runTextChecks(
-                WebViewTextCheck(Locator.ID, "header1", "Regular Page Text")
-        )
+        canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Regular Page Text"))
 
     }
+
+    private fun createCoursePage(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel,
+        published: Boolean,
+        frontPage: Boolean,
+        body: String = Randomizer.randomPageBody()
+    ) = PagesApi.createCoursePage(
+        courseId = course.id,
+        published = published,
+        frontPage = frontPage,
+        token = teacher.token,
+        body = body
+    )
 }

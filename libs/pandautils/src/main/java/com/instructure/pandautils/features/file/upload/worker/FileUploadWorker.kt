@@ -37,7 +37,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.room.entities.*
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
@@ -54,7 +53,8 @@ class FileUploadWorker @AssistedInject constructor(
     private val mediaCommentDao: MediaCommentDao,
     private val authorDao: AuthorDao,
     private val dashboardFileUploadDao: DashboardFileUploadDao,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -66,8 +66,7 @@ class FileUploadWorker @AssistedInject constructor(
     private lateinit var action: String
     private var userId: Long = INVALID_ID
     private var attemptId: Long? = null
-
-    private val notificationId = notificationId(inputData)
+    private var notificationId: Int = DEFAULT_NOTIFICATION_ID
 
     private var fullSize = 0L
     private var currentProgress = 0L
@@ -78,6 +77,7 @@ class FileUploadWorker @AssistedInject constructor(
     private val workDataBuilder = Data.Builder()
 
     override suspend fun doWork(): Result {
+        var title = ""
         var subtitle = ""
         try {
             val inputData = fileUploadInputDao.findByWorkerId(id.toString()) ?: throw IllegalArgumentException()
@@ -87,7 +87,7 @@ class FileUploadWorker @AssistedInject constructor(
             fullSize = fileSubmitObjects.sumOf { it.size }
             uploadCount = fileSubmitObjects.size
 
-            val title = if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+            title = if (action == ACTION_ASSIGNMENT_SUBMISSION) {
                 context.getString(R.string.dashboardNotificationUploadingSubmissionTitle)
             } else {
                 context.resources.getQuantityString(R.plurals.dashboardNotificationUploadingFilesTitle, uploadCount)
@@ -150,27 +150,30 @@ class FileUploadWorker @AssistedInject constructor(
                     Result.success()
                 }
             }
-            fileUploadInputDao.delete(inputData)
-            val successTitle = context.getString(
+
+            title = context.getString(
                 if (action == ACTION_ASSIGNMENT_SUBMISSION) {
                     R.string.dashboardNotificationSubmissionUploadSuccessTitle
                 } else {
                     R.string.dashboardNotificationUploadingFilesSuccessTitle
                 }
             )
-            insertDashboardUpload(successTitle, subtitle)
+
+            fileUploadInputDao.delete(inputData)
+            fileUploadUtilsHelper.deleteCachedFiles(inputData.filePaths)
             return result
         } catch (e: Exception) {
-            val failedTitle = context.getString(
+            title = context.getString(
                 if (action == ACTION_ASSIGNMENT_SUBMISSION) {
                     R.string.dashboardNotificationSubmissionUploadFailedTitle
                 } else {
                     R.string.dashboardNotificationUploadingFilesFailedTitle
                 }
             )
-            insertDashboardUpload(failedTitle, subtitle)
             e.printStackTrace()
-            return Result.failure()
+            return Result.failure(workDataBuilder.build())
+        } finally {
+            insertDashboardUpload(title, subtitle)
         }
     }
 
@@ -224,6 +227,7 @@ class FileUploadWorker @AssistedInject constructor(
         action = inputData.action
         userId = inputData.userId ?: INVALID_ID
         attemptId = inputData.attemptId
+        notificationId = inputData.notificationId ?: DEFAULT_NOTIFICATION_ID
     }
 
     private fun getFileSubmitObjects(filePaths: List<String>): List<FileSubmitObject> {
@@ -233,8 +237,9 @@ class FileUploadWorker @AssistedInject constructor(
             val mimeType = fileUploadUtilsHelper.getFileMimeType(uri)
             val fileName = fileUploadUtilsHelper.getFileNameWithDefault(uri)
 
-            fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(uri, fileName, mimeType)
+            fileUploadUtilsHelper.getFileSubmitObjectByFileUri(uri, fileName, mimeType)
         }
+
         if (fileSubmitObjects.contains(null)) throw IllegalArgumentException("Could not parse file.")
 
         return fileSubmitObjects.filterNotNull()
@@ -315,10 +320,13 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             }).dataOrThrow
 
-            val updatedList =
-                workDataBuilder.build().getStringArray(PROGRESS_DATA_UPLOADED_FILES).orEmpty().toMutableList().apply {
-                    add(fileSubmitObject.toJson())
-                }.toTypedArray()
+            val updatedList = workDataBuilder.build()
+                .getStringArray(PROGRESS_DATA_UPLOADED_FILES)
+                .orEmpty()
+                .toMutableList()
+                .apply { add(fileSubmitObject.toJson()) }
+                .toTypedArray()
+
             uploaded += fileSubmitObject.size
             currentProgress = uploaded
 
@@ -347,14 +355,6 @@ class FileUploadWorker @AssistedInject constructor(
             it,
             attemptId
         )
-    }
-
-    private fun notificationId(data: Data): Int {
-        return if (data.getLong(Const.SUBMISSION_ID, INVALID_ID) != INVALID_ID) {
-            data.getLong(Const.SUBMISSION_ID, INVALID_ID).toInt()
-        } else {
-            NOTIFICATION_ID
-        }
     }
 
     private fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
@@ -418,7 +418,7 @@ class FileUploadWorker @AssistedInject constructor(
     }
 
     companion object {
-        private const val NOTIFICATION_ID = -2
+        private const val DEFAULT_NOTIFICATION_ID = -2
         const val INVALID_ID = -1L
         const val FILE_SUBMIT_ACTION = "fileSubmitAction"
         const val FILE_PATHS = "filePaths"
