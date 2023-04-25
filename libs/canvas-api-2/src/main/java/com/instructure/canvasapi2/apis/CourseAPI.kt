@@ -42,7 +42,7 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available")
         val firstPageCourses: Call<List<Course>>
 
-        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available")
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available&include[]=tabs")
         suspend fun getFirstPageCourses(@Tag params: RestParams): DataResult<List<Course>>
 
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&state[]=unpublished")
@@ -63,7 +63,7 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image")
         fun getCourse(@Path("courseId") courseId: Long): Call<Course>
 
-        @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image")
+        @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image&include[]=tabs")
         suspend fun getCourse(@Path("courseId") courseId: Long, @Tag params: RestParams): DataResult<Course>
 
         @GET("courses/{courseId}/settings")

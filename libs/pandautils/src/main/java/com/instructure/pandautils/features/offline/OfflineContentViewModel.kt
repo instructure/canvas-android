@@ -62,15 +62,15 @@ class OfflineContentViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<OfflineContentAction>>()
 
     init {
-        loadData(false)
+        loadData()
     }
 
-    private fun loadData(forceNetwork: Boolean) {
+    private fun loadData() {
         _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
                 val storageInfo = getStorageInfo()
-                val coursesData = getCoursesData(course?.id, forceNetwork)
+                val coursesData = getCoursesData(course?.id)
                 val data = OfflineContentViewData(storageInfo, coursesData, 0)
                 _data.postValue(data)
                 _state.postValue(ViewState.Success)
@@ -80,16 +80,16 @@ class OfflineContentViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCoursesData(courseId: Long? = null, forceNetwork: Boolean): List<CourseItemViewModel> {
+    private suspend fun getCoursesData(courseId: Long? = null): List<CourseItemViewModel> {
         val courses = if (courseId == null) {
-            offlineContentRepository.getCourses(forceNetwork)
+            offlineContentRepository.getCourses()
         } else {
-            listOf(offlineContentRepository.getCourse(courseId, forceNetwork))
+            listOf(offlineContentRepository.getCourse(courseId))
         }
 
         return courses.map { course ->
-            val tabs = offlineContentRepository.getTabs(course.id, forceNetwork)
-            val files = offlineContentRepository.getCourseFiles(course.id, forceNetwork)
+            val tabs = course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }.orEmpty()
+            val files = offlineContentRepository.getCourseFiles(course.id)
             val size = Formatter.formatShortFileSize(context, files.sumOf { it.size })
             createCourseItemViewModel(course, size, tabs, files)
         }
@@ -173,7 +173,7 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     fun onRefresh() {
-        loadData(true)
+        loadData()
     }
 
     private fun getStorageInfo(): StorageInfo {
@@ -190,5 +190,9 @@ class OfflineContentViewModel @Inject constructor(
         )
 
         return StorageInfo(otherPercent, canvasPercent, storageInfoText)
+    }
+
+    companion object {
+        private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
     }
 }

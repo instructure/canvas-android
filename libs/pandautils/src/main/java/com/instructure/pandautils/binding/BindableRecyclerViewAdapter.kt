@@ -68,7 +68,7 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
         items?.forEach {
             allItems.add(it)
             if (it is GroupItemViewModel && !it.collapsed) {
-                allItems.addAll(it.getAllItems())
+                allItems.addAll(it.getAllVisibleItems())
             }
         }
 
@@ -94,7 +94,7 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
 
     private fun toggleGroup(group: GroupItemViewModel) {
         val position = itemViewModels.indexOf(group)
-        val items = group.getAllItems()
+        val items = group.getAllVisibleItems()
         if (group.collapsed) {
             itemViewModels.removeAll(items)
             notifyItemRangeRemoved(position + 1, items.size)

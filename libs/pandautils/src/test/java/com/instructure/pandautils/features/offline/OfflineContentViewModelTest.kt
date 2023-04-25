@@ -78,7 +78,7 @@ class OfflineContentViewModelTest {
 
     @Test
     fun `Post error state when fetching fails`() {
-        coEvery { offlineContentRepository.getCourses(any()) } throws Exception()
+        coEvery { offlineContentRepository.getCourses() } throws Exception()
         every { resources.getString(R.string.offline_content_loading_error) } returns "Error"
 
         createViewModel()
@@ -88,7 +88,7 @@ class OfflineContentViewModelTest {
 
     @Test
     fun `Post success state when fetching was successful`() {
-        coEvery { offlineContentRepository.getCourses(any()) } returns listOf(Course(id = 1))
+        coEvery { offlineContentRepository.getCourses() } returns listOf(Course(id = 1))
 
         createViewModel()
 
@@ -99,7 +99,7 @@ class OfflineContentViewModelTest {
     fun `Post success state when fetching by specific course id was successful`() {
         val course = Course(id = 1)
         every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns course
-        coEvery { offlineContentRepository.getCourse(any(), any()) } returns course
+        coEvery { offlineContentRepository.getCourse(any()) } returns course
 
         createViewModel()
 
@@ -108,7 +108,7 @@ class OfflineContentViewModelTest {
 
     @Test
     fun `Storage info maps correctly`() {
-        coEvery { offlineContentRepository.getCourses(any()) } returns emptyList()
+        coEvery { offlineContentRepository.getCourses() } returns emptyList()
         every { storageUtils.getTotalSpace() } returns 100L
         every { storageUtils.getFreeSpace() } returns 80L
         every { storageUtils.getAppSize() } returns 10L
@@ -219,13 +219,13 @@ class OfflineContentViewModelTest {
 
     @Test
     fun `Refresh updates list`() {
-        coEvery { offlineContentRepository.getCourses(any()) } returns emptyList()
+        coEvery { offlineContentRepository.getCourses() } returns emptyList()
 
         createViewModel()
 
         Assert.assertEquals(0, viewModel.data.value?.courseItems?.size)
 
-        coEvery { offlineContentRepository.getCourses(any()) } returns listOf(Course(id = 1))
+        coEvery { offlineContentRepository.getCourses() } returns listOf(Course(id = 1))
 
         viewModel.onRefresh()
 
@@ -238,12 +238,11 @@ class OfflineContentViewModelTest {
     }
 
     private fun mockkCourseViewModels() {
-        val courses = listOf(Course(id = 1), Course(id = 2))
         val tabs = listOf(Tab(tabId = "pages", label = "Pages"), Tab(tabId = "files", label = "Files"))
+        val courses = listOf(Course(id = 1, tabs = tabs), Course(id = 2, tabs = tabs))
         val files = listOf(FileFolder(id = 1, displayName = "File 1"), FileFolder(id = 2, displayName = "File 2"))
 
-        coEvery { offlineContentRepository.getCourses(any()) } returns courses
-        coEvery { offlineContentRepository.getTabs(any(), any()) } returns tabs
-        coEvery { offlineContentRepository.getCourseFiles(any(), any()) } returns files
+        coEvery { offlineContentRepository.getCourses() } returns courses
+        coEvery { offlineContentRepository.getCourseFiles(any()) } returns files
     }
 }

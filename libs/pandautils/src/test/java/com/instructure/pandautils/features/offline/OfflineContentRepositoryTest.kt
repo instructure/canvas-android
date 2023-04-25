@@ -20,8 +20,10 @@ package com.instructure.pandautils.features.offline;
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
-import com.instructure.canvasapi2.apis.TabAPI
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -37,10 +39,9 @@ import java.time.OffsetDateTime
 class OfflineContentRepositoryTest {
 
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val tabApi: TabAPI.TabsInterface = mockk(relaxed = true)
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
 
-    private val repository = OfflineContentRepository(coursesApi, tabApi, fileFolderApi)
+    private val repository = OfflineContentRepository(coursesApi, fileFolderApi)
 
     @Test
     fun `Returns course`() = runBlockingTest {
@@ -48,7 +49,7 @@ class OfflineContentRepositoryTest {
 
         coEvery { coursesApi.getCourse(any(), any()) } returns DataResult.Success(course)
 
-        val result = repository.getCourse(course.id, true)
+        val result = repository.getCourse(course.id)
 
         Assert.assertEquals(course, result)
     }
@@ -58,7 +59,7 @@ class OfflineContentRepositoryTest {
         coEvery { coursesApi.getCourse(any(), any()) } returns DataResult.Fail()
 
         Assert.assertThrows(IllegalStateException::class.java, ThrowingRunnable {
-            runBlocking { repository.getCourse(1, true) }
+            runBlocking { repository.getCourse(1) }
         })
     }
 
@@ -71,7 +72,7 @@ class OfflineContentRepositoryTest {
 
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
 
-        val result = repository.getCourses(true)
+        val result = repository.getCourses()
 
         Assert.assertEquals(courses, result)
     }
@@ -91,7 +92,7 @@ class OfflineContentRepositoryTest {
 
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
 
-        val result = repository.getCourses(true)
+        val result = repository.getCourses()
 
         Assert.assertEquals(listOf(courses.first()), result)
     }
@@ -101,32 +102,7 @@ class OfflineContentRepositoryTest {
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Fail()
 
         Assert.assertThrows(IllegalStateException::class.java, ThrowingRunnable {
-            runBlocking { repository.getCourses(true) }
-        })
-    }
-
-    @Test
-    fun `Returns tabs if it's allowed`() = runBlockingTest {
-        val tabs = listOf(
-            Tab(tabId = Tab.ASSIGNMENTS_ID),
-            Tab(tabId = Tab.PAGES_ID),
-            Tab(tabId = Tab.FILES_ID),
-            Tab(tabId = Tab.ANNOUNCEMENTS_ID)
-        )
-
-        coEvery { tabApi.getTabs(any(), any(), any()) } returns DataResult.Success(tabs)
-
-        val result = repository.getTabs(1, true)
-
-        Assert.assertEquals(tabs.subList(0, 3), result)
-    }
-
-    @Test
-    fun `Throws exception when tabs requests fails`() = runBlockingTest {
-        coEvery { tabApi.getTabs(any(), any(), any()) } returns DataResult.Fail()
-
-        Assert.assertThrows(IllegalStateException::class.java, ThrowingRunnable {
-            runBlocking { repository.getTabs(1, true) }
+            runBlocking { repository.getCourses() }
         })
     }
 
@@ -145,7 +121,7 @@ class OfflineContentRepositoryTest {
         coEvery { fileFolderApi.getFirstPageFiles(5, any()) } returns DataResult.Success(emptyList())
         coEvery { fileFolderApi.getFirstPageFolders(5, any()) } returns DataResult.Success(emptyList())
 
-        val result = repository.getCourseFiles(1, true)
+        val result = repository.getCourseFiles(1)
 
         Assert.assertEquals(files + subfolderFiles, result)
     }
@@ -154,7 +130,7 @@ class OfflineContentRepositoryTest {
     fun `Returns empty list when files request fails`() = runBlockingTest {
         coEvery { fileFolderApi.getRootFolderForContext(any(), any(), any()) } returns DataResult.Fail()
 
-        val result = repository.getCourseFiles(1, true)
+        val result = repository.getCourseFiles(1)
 
         Assert.assertEquals(emptyList<FileFolder>(), result)
     }
