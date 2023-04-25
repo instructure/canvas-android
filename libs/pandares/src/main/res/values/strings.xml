@@ -1397,4 +1397,7 @@
     <string name="aboutLoginTitle">Login ID</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="preferences">Preferences</string>
+    <string name="offlineContent">Offline Content</string>
+    <string name="offlineSyncSettingsTitle">Synchronization</string>
 </resources>
