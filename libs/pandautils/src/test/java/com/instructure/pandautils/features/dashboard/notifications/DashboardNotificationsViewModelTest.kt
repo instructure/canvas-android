@@ -671,10 +671,6 @@ class DashboardNotificationsViewModelTest {
             )
         )
 
-        every { courseManager.getCourseAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(id = 1))
-        }
-
         viewModel.loadData()
 
         val itemViewModel = viewModel.data.value?.uploadItems?.first()
