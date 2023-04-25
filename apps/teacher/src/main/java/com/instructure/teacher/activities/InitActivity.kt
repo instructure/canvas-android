@@ -16,13 +16,16 @@
 
 package com.instructure.teacher.activities
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
 import androidx.appcompat.app.AlertDialog
@@ -132,6 +135,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private val isDrawerOpen: Boolean
         get() = binding.drawerLayout.isDrawerOpen(GravityCompat.START)
 
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -182,6 +187,14 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             val themeSelector = ThemeSelectorBottomSheet()
             themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
             ThemePrefs.themeSelectionShown = true
+        }
+
+        requestNotificationsPermission()
+    }
+
+    private fun requestNotificationsPermission() {
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 

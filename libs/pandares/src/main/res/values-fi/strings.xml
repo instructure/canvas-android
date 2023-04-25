@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Ladataan tiedostoihin</string>
     <string name="submissionProgressSubtitle">Ladataan lähetystä kohteeseen \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Ladataan tehtäväpalautusta</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Tehtävänpalautus onnistui</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Tehtäväpalautus epäonnistui</string>
     <string name="dashboardNotificationUploadingFilesTitle">Ladataan tiedostoja</string>
     <string name="cancelSubmissionDialogTitle">Peruuta lähetys</string>
     <string name="cancelSubmissionDialogMessage">Tämä peruuttaa ja poistaa lähetyksesi.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Keskustelun valinta poistettu.</string>
     <string name="a11y_exitSelectionMode">Poistu valintatilasta</string>
     <string name="a11y_selectionModeDeactivated">Valintatilan aktivointi poistettu.</string>
+    <string name="a11y_avatarContentDescription">Kohteen %s avatar</string>
+    <string name="inboxUndo">Peruuta</string>
 </resources>

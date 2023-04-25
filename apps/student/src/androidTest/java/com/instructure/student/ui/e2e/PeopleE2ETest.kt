@@ -29,18 +29,11 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-private const val STEP_TAG = "PeopleE2ETest #STEP# "
-private const val PREPARATION_TAG = "PeopleE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class PeopleE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test

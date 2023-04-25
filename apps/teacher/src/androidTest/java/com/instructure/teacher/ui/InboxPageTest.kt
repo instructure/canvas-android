@@ -18,7 +18,11 @@
 package com.instructure.teacher.ui
 
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addConversation
+import com.instructure.canvas.espresso.mockCanvas.addConversations
+import com.instructure.canvas.espresso.mockCanvas.createBasicConversation
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
@@ -98,6 +102,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
 
+        inboxPage.refresh()
         inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversation1.subject!!)
         inboxPage.assertConversationDisplayed(conversation2.subject!!)

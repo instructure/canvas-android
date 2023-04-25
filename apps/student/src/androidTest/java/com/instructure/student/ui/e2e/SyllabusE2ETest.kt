@@ -20,6 +20,8 @@ import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -36,13 +38,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class SyllabusE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -67,22 +65,10 @@ class SyllabusE2ETest: StudentTest() {
         syllabusPage.assertEmptyView()
 
         Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
-        val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                teacherToken = teacher.token,
-                submissionTypes = listOf(SubmissionType.ON_PAPER),
-                dueAt = 1.days.fromNow.iso8601,
-                withDescription = true
-        ))
+        val assignment = createAssignment(course, teacher)
 
         Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
-        val quiz = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
-                courseId = course.id,
-                withDescription = true,
-                published = true,
-                token = teacher.token,
-                dueAt = 2.days.fromNow.iso8601
-        ))
+        val quiz = createQuiz(course, teacher)
 
         // TODO: Seed a generic calendar event
 
@@ -91,4 +77,30 @@ class SyllabusE2ETest: StudentTest() {
         syllabusPage.assertItemDisplayed(assignment.name)
         syllabusPage.assertItemDisplayed(quiz.title)
     }
+
+    private fun createQuiz(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = QuizzesApi.createQuiz(
+        QuizzesApi.CreateQuizRequest(
+            courseId = course.id,
+            withDescription = true,
+            published = true,
+            token = teacher.token,
+            dueAt = 2.days.fromNow.iso8601
+        )
+    )
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = AssignmentsApi.createAssignment(
+        AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            teacherToken = teacher.token,
+            submissionTypes = listOf(SubmissionType.ON_PAPER),
+            dueAt = 1.days.fromNow.iso8601,
+            withDescription = true
+        )
+    )
 }

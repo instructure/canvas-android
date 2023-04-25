@@ -14,7 +14,6 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityFeedbackBinding
 import com.instructure.teacher.utils.setupBackButton
@@ -45,7 +44,6 @@ class FeedbackActivity : AppCompatActivity() {
         webView.webChromeClient = WebChromeClient()
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
-        webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webView.loadUrl(buildUrl())
     }
 

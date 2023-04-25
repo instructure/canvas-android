@@ -91,6 +91,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private val adapterToAssignmentsCallback = object : AdapterToAssignmentsCallback {
         override fun assignmentLoadingFinished() {
+            if (view == null) return
             // If we only have one grading period we want to disable the spinner
             val termCount = termAdapter?.count ?: 0
             binding.termSpinner.isEnabled = termCount > 1
@@ -99,6 +100,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun gradingPeriodsFetched(periods: List<GradingPeriod>) {
+            if (view == null) return
             setupGradingPeriods(periods)
         }
 
