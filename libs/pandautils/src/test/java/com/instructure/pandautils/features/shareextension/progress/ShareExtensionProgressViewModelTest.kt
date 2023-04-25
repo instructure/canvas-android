@@ -17,7 +17,7 @@ import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.utils.toJson
 import io.mockk.coEvery
 import io.mockk.every

@@ -179,7 +179,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
-        onView(withText(course.name)).click()
+        onView(withText(course.name) + withId(R.id.titleTextView)).click()
     }
 
     fun assertAnnouncementShowing(announcement: AccountNotification) {

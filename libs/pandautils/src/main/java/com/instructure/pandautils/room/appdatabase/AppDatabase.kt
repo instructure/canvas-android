@@ -33,7 +33,7 @@ import com.instructure.pandautils.room.appdatabase.entities.*
         MediaCommentEntity::class,
         PendingSubmissionCommentEntity::class,
         SubmissionCommentEntity::class,
-    ], version = 3
+    ], version = 4
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
