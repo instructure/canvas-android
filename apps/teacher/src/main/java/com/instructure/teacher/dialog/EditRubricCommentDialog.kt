@@ -39,7 +39,7 @@ import org.greenrobot.eventbus.EventBus
 @ScreenView(SCREEN_VIEW_EDIT_RUBRIC_COMMENT)
 class EditRubricCommentDialog : AppCompatDialogFragment() {
 
-    private val binding by viewBinding(ViewEditGradeCommentBinding::bind)
+    private lateinit var binding: ViewEditGradeCommentBinding
 
     var mCriterionId by StringArg()
     var mStudentId by LongArg(-1L)
@@ -74,7 +74,8 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = AppCompatDialog(requireContext(), R.style.Theme_AppCompat_DayNight_Translucent).apply {
-        setContentView(R.layout.view_edit_grade_comment)
+        binding = ViewEditGradeCommentBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
 
         // Send event bus on save, dismiss dialog. Send null if text is blank (i.e. delete comment)
         binding.saveCommentButton.onClick {
