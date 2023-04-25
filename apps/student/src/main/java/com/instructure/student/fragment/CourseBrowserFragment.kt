@@ -135,25 +135,6 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
         swipeRefreshLayout.setOnRefreshListener { loadTabs(true) }
 
-        binding.root.findViewById<Button>(R.id.downloadButton).setOnClickListener {
-            lifecycleScope.launch {
-                if (canvasContext.isCourse) {
-                    courseSyncSettingsDao.insert(
-                        CourseSyncSettingsEntity(
-                            canvasContext.id,
-                            true,
-                            true,
-                            true
-                        )
-                    )
-                }
-
-                val request = OneTimeWorkRequestBuilder<OfflineSyncWorker>()
-                    .build()
-                workManager.enqueue(request)
-            }
-        }
-
         loadTabs()
     }
 

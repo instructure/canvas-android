@@ -71,9 +71,9 @@ class OfflineSyncWorker @AssistedInject constructor(
         courses.forEach { courseSettings ->
             fetchCourseDetails(courseSettings.courseId)
             if (courseSettings.pages) {
-//                fetchPages(courseSettings.courseId)
+                fetchPages(courseSettings.courseId)
             }
-            if (courseSettings.assignments) {
+            if (courseSettings.assignments || courseSettings.pages) {
                 fetchAssignments(courseSettings.courseId)
             }
         }
@@ -161,10 +161,6 @@ class OfflineSyncWorker @AssistedInject constructor(
     private suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader): Long {
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
         return discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader))
-    }
-
-    private fun fetchGrades(courseId: Long) {
-
     }
 
     private suspend fun fetchCourseDetails(courseId: Long) {
