@@ -36,11 +36,13 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.daos.FileUploadInputDao
 import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,7 +64,9 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
     private val apiPrefs: ApiPrefs,
     private val workManager: WorkManager,
-    private val dashboardFileUploadDao: DashboardFileUploadDao
+    private val dashboardFileUploadDao: DashboardFileUploadDao,
+    private val fileUploadInputDao: FileUploadInputDao,
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -227,11 +231,10 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private suspend fun getUploads(fileUploadEntities: List<DashboardFileUploadEntity>?) = fileUploadEntities?.mapNotNull { fileUploadEntity ->
         val workerId = UUID.fromString(fileUploadEntity.workerId)
-        workManager.getWorkInfoById(workerId).await()?.let {
+        workManager.getWorkInfoById(workerId).await()?.let { workInfo ->
             val icon: Int
             val background: Int
-
-            when (it.state) {
+            when (workInfo.state) {
                 WorkInfo.State.FAILED -> {
                     icon = R.drawable.ic_exclamation_mark
                     background = R.color.backgroundDanger
@@ -248,7 +251,7 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             val uploadViewData = UploadViewData(
                 fileUploadEntity.title.orEmpty(), fileUploadEntity.subtitle.orEmpty(),
-                icon, background, it.state == WorkInfo.State.RUNNING
+                icon, background, workInfo.state == WorkInfo.State.RUNNING
             )
 
             UploadItemViewModel(
@@ -256,7 +259,15 @@ class DashboardNotificationsViewModel @Inject constructor(
                 workManager = workManager,
                 data = uploadViewData,
                 open = { uuid -> _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid))) },
-                remove = { viewModelScope.launch { dashboardFileUploadDao.delete(fileUploadEntity) } }
+                remove = {
+                    viewModelScope.launch {
+                        dashboardFileUploadDao.delete(fileUploadEntity)
+                        fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
+                            fileUploadUtilsHelper.deleteCachedFiles(it.filePaths)
+                            fileUploadInputDao.delete(it)
+                        }
+                    }
+                }
             )
         }
     }.orEmpty()

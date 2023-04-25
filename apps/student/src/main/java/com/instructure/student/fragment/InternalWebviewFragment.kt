@@ -113,7 +113,6 @@ open class InternalWebviewFragment : ParentFragment() {
         originalUserAgentString = canvasWebViewWrapper.webView.settings.userAgentString
         canvasWebViewWrapper.webView.settings.userAgentString = ApiPrefs.userAgent
         canvasWebViewWrapper.webView.setInitialScale(100)
-        canvasWebViewWrapper.webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webViewLoading.setVisible(true)
 
         canvasWebViewWrapper.webView.canvasWebChromeClientCallback =
@@ -345,8 +344,8 @@ open class InternalWebviewFragment : ParentFragment() {
         } else false
     }
 
-    fun getCanvasLoading(): ProgressBar = binding.webViewLoading
-    fun getCanvasWebView(): CanvasWebView = binding.canvasWebViewWrapper.webView
+    fun getCanvasLoading(): ProgressBar? = if (view != null) binding.webViewLoading else null
+    fun getCanvasWebView(): CanvasWebView? = if (view != null) binding.canvasWebViewWrapper.webView else null
     fun getIsUnsupportedFeature(): Boolean = isUnsupportedFeature
     private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
 

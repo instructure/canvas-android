@@ -1687,4 +1687,22 @@ class AppLocalizations {
 
   String get acceptableUsePolicyAgree =>
       Intl.message('I agree to the Acceptable Use Policy.', desc: 'acceptable use policy switch title');
+
+  String get about =>
+      Intl.message('About', desc: 'Title for about menu item in settings');
+
+  String get aboutAppTitle =>
+      Intl.message('App', desc: 'Title for App field on about page');
+
+  String get aboutDomainTitle =>
+      Intl.message('Domain', desc: 'Title for Domain field on about page');
+
+  String get aboutLoginIdTitle =>
+      Intl.message('Login ID', desc: 'Title for Login ID field on about page');
+
+  String get aboutEmailTitle =>
+      Intl.message('Email', desc: 'Title for Email field on about page');
+
+  String get aboutVersionTitle =>
+      Intl.message('Version', desc: 'Title for Version field on about page');
 }

@@ -28,9 +28,9 @@ import com.instructure.student.fragment.InternalWebviewFragment
 @ScreenView(SCREEN_VIEW_QUIZ_SUBMISSION_VIEW)
 class QuizSubmissionViewFragment : InternalWebviewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        getCanvasLoading().setVisible() // Set visible so we can test it
+        getCanvasLoading()?.setVisible() // Set visible so we can test it
         binding.canvasWebViewWrapper.apply {
-            webView.setDarkModeSupport()
+            webView.enableAlgorithmicDarkening()
             webView.setInitialScale(100)
             setInvisible() // Set invisible so we can test it
             webView.webChromeClient = object : WebChromeClient() {
@@ -40,10 +40,10 @@ class QuizSubmissionViewFragment : InternalWebviewFragment() {
 
                     // Update visibilities
                     if (newProgress >= 100) {
-                        getCanvasLoading().setGone()
+                        getCanvasLoading()?.setGone()
                         setVisible()
                     } else {
-                        getCanvasLoading().announceForAccessibility(getString(R.string.loading))
+                        getCanvasLoading()?.announceForAccessibility(getString(R.string.loading))
                     }
                 }
             }

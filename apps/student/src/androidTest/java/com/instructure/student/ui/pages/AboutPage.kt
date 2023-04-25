@@ -18,17 +18,13 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withParent
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
-import org.hamcrest.Matchers.allOf
 
 class AboutPage : BasePage(R.id.aboutPage) {
 
@@ -46,5 +42,9 @@ class AboutPage : BasePage(R.id.aboutPage) {
 
     fun emailIs(email: String) {
         onView(withId(R.id.email) + withText(email)).assertDisplayed()
+    }
+
+    fun assertInstructureLogoDisplayed() {
+        onView(withId(R.id.instructureLogo)).scrollTo().assertDisplayed()
     }
 }

@@ -31,6 +31,7 @@ import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
@@ -39,7 +40,6 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.SettingsActivity
-import com.instructure.student.databinding.DialogAboutBinding
 import com.instructure.student.databinding.FragmentApplicationSettingsBinding
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
@@ -108,17 +108,7 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         about.onClick {
-            val binding = DialogAboutBinding.inflate(layoutInflater)
-            AlertDialog.Builder(requireContext())
-                .setTitle(R.string.about)
-                .setView(binding.root)
-                .show()
-                .apply {
-                    binding.domain.text = ApiPrefs.domain
-                    binding.loginId.text = ApiPrefs.user!!.loginId
-                    binding.email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
-                    binding.version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                }
+            AboutFragment.newInstance().show(childFragmentManager, null)
         }
 
         if (ApiPrefs.canvasForElementary) {
