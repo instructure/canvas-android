@@ -25,10 +25,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderHeaderModuleBinding
 import com.instructure.student.util.ModuleUtility
-import kotlinx.android.synthetic.main.viewholder_header_module.view.*
 
 class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var isExpanded: Boolean = false
@@ -38,13 +40,13 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         context: Context,
         viewHolderHeaderClicked: ViewHolderHeaderClicked<ModuleObject>,
         expanded: Boolean
-    ) = with(itemView){
+    ) = with(ViewholderHeaderModuleBinding.bind(itemView)) {
         val isLocked = ModuleUtility.isGroupLocked(moduleObject)
         isExpanded = expanded
         expandCollapse.rotation = if (isExpanded) 180f else 0f
         divider.setVisible(!isExpanded)
         val color = ContextCompat.getColor(context, R.color.textDark)
-        itemView.setOnClickListener { v ->
+        root.setOnClickListener { v ->
             viewHolderHeaderClicked.viewClicked(v, moduleObject)
             val animationType: Int
             if (isExpanded) {
@@ -65,6 +67,7 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 override fun onAnimationEnd(animation: Animator) {
                     if (!isExpanded) divider.setVisible()
                 }
+
                 override fun onAnimationCancel(animation: Animator) {}
                 override fun onAnimationRepeat(animation: Animator) {}
             })
@@ -74,8 +77,14 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         // Reset the status text and drawable to default state
         val drawable: Int = if (moduleObject.state != null) {
             when {
-                moduleObject.state.equals(ModuleObject.State.Locked.apiString, ignoreCase = true) -> R.drawable.ic_lock
-                moduleObject.state.equals(ModuleObject.State.Completed.apiString, ignoreCase = true) -> R.drawable.ic_check_white_24dp
+                moduleObject.state.equals(
+                    ModuleObject.State.Locked.apiString,
+                    ignoreCase = true
+                ) -> R.drawable.ic_lock
+                moduleObject.state.equals(
+                    ModuleObject.State.Completed.apiString,
+                    ignoreCase = true
+                ) -> R.drawable.ic_check_white_24dp
                 else -> R.drawable.ic_module_circle
             }
         } else {

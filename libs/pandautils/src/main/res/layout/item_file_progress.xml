@@ -6,6 +6,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.instructure.pandautils.features.shareextension.progress.FileProgressStatus" />
+
         <variable
             name="itemViewModel"
             type="com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel" />
@@ -28,7 +30,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/textDarkest"
+            app:tint="@{itemViewModel.data.iconTint}"
             tools:src="@drawable/ic_media" />
 
         <TextView
@@ -70,14 +72,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:progressTint="@color/backgroundInfo"
-                android:visibility="@{itemViewModel.data.uploaded ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{itemViewModel.data.status == FileProgressStatus.IN_PROGRESS ? View.VISIBLE : View.GONE}" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_checkmark"
-                android:visibility="@{itemViewModel.data.uploaded ? View.VISIBLE : View.GONE}"
-                app:tint="@color/backgroundSuccess"
+                android:onClick="@{() -> itemViewModel.data.onStatusIconClick.invoke(itemViewModel.data)}"
+                android:visibility="@{itemViewModel.data.status == FileProgressStatus.IN_PROGRESS ? View.GONE : View.VISIBLE}"
+                app:imageRes="@{itemViewModel.data.status.drawable}"
+                app:imageTint="@{context.getColor(itemViewModel.data.status.tint)}"
                 tools:visibility="gone" />
         </FrameLayout>
 

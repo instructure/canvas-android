@@ -36,16 +36,17 @@ import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.models.DueDateGroup
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentCreateDiscussionBinding
 import com.instructure.student.dialog.UnsavedChangesExitDialog
 import com.instructure.student.events.DiscussionCreatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.view.AssignmentOverrideView
-import kotlinx.android.synthetic.main.fragment_create_discussion.*
 import kotlinx.coroutines.Job
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -56,6 +57,8 @@ import java.util.*
 @PageView("courses/{canvasContext}/discussion_topics/new")
 @ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentCreateDiscussionBinding::bind)
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private val sendButton: TextView? get() = view?.findViewById(R.id.menuSaveDiscussion)
@@ -114,7 +117,7 @@ class CreateDiscussionFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupViews()
-        attachmentLayout.setGone()
+        binding.attachmentLayout.setGone()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -126,7 +129,7 @@ class CreateDiscussionFragment : ParentFragment() {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                rceImageJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> descriptionRCEView.insertImage(requireActivity(), imageUrl) }
+                rceImageJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> binding.descriptionRCEView.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
@@ -146,34 +149,37 @@ class CreateDiscussionFragment : ParentFragment() {
 
     //region Setup
     private fun setupToolbar() {
-        createDiscussionToolbar.setupAsCloseButton {
-            if (discussionTopicHeader == null) {
-                activity?.onBackPressed()
-            } else {
-                if (discussionTopicHeader?.message == descriptionRCEView?.html) {
+        with (binding) {
+            createDiscussionToolbar.setupAsCloseButton {
+                if (discussionTopicHeader == null) {
                     activity?.onBackPressed()
                 } else {
-                    UnsavedChangesExitDialog.show(requireFragmentManager()) {
+                    if (discussionTopicHeader?.message == descriptionRCEView.html) {
                         activity?.onBackPressed()
+                    } else {
+                        UnsavedChangesExitDialog.show(requireFragmentManager()) {
+                            activity?.onBackPressed()
+                        }
                     }
                 }
             }
-        }
 
-        createDiscussionToolbar.title = if (discussionTopicHeader == null) getString(R.string.utils_createDiscussion) else getString(R.string.utils_editDiscussion)
-        createDiscussionToolbar.setMenu(if (discussionTopicHeader == null) R.menu.create_discussion else R.menu.menu_save_generic) { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menuSaveDiscussion, R.id.menuSave -> if (NetworkUtils.isNetworkAvailable) saveDiscussion()
-            //R.id.menuAddAttachment -> if (discussionTopicHeader == null) addAttachment() BLOCKED COMMS 868
+            createDiscussionToolbar.title =
+                if (discussionTopicHeader == null) getString(R.string.utils_createDiscussion) else getString(R.string.utils_editDiscussion)
+            createDiscussionToolbar.setMenu(if (discussionTopicHeader == null) R.menu.create_discussion else R.menu.menu_save_generic) { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.menuSaveDiscussion, R.id.menuSave -> if (NetworkUtils.isNetworkAvailable) saveDiscussion()
+                    //R.id.menuAddAttachment -> if (discussionTopicHeader == null) addAttachment() BLOCKED COMMS 868
+                }
             }
+            ViewStyler.themeToolbarLight(requireActivity(), createDiscussionToolbar)
+            ViewStyler.setToolbarElevationSmall(requireContext(), createDiscussionToolbar)
+            sendButton?.setTextColor(ThemePrefs.textButtonColor)
+            saveButton?.setTextColor(ThemePrefs.textButtonColor)
         }
-        ViewStyler.themeToolbarLight(requireActivity(), createDiscussionToolbar)
-        ViewStyler.setToolbarElevationSmall(requireContext(), createDiscussionToolbar)
-        sendButton?.setTextColor(ThemePrefs.textButtonColor)
-        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
-    fun setupViews() {
+    fun setupViews() = with(binding) {
         (view as? ViewGroup)?.descendants<TextInputLayout>()?.forEach {
             it.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         }
@@ -188,7 +194,7 @@ class CreateDiscussionFragment : ParentFragment() {
             if (hasFocus) descriptionRCEView.hideEditorToolbar()
         }
 
-        descriptionRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        descriptionRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@CreateDiscussionFragment) }
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
         descriptionRCEView.setLabel(discussionDescLabel, R.color.textDarkest, R.color.textDark)
@@ -224,7 +230,7 @@ class CreateDiscussionFragment : ParentFragment() {
     }
 
     private fun setupOverrides() {
-        overrideContainer.removeAllViews()
+        binding.overrideContainer.removeAllViews()
 
         // Load in overrides
         editDateGroups.forEachIndexed { index, dueDateGroup ->
@@ -238,25 +244,29 @@ class CreateDiscussionFragment : ParentFragment() {
                 setupOverrides()
             }) { }
 
-            overrideContainer.addView(v)
+            binding.overrideContainer.addView(v)
         }
     }
 
     private fun setupAllowThreadedSwitch() {
-        threadedSwitch.applyTheme()
-        threadedSwitch.isChecked = allowThreaded
-        threadedSwitch.setOnCheckedChangeListener { _, isChecked -> allowThreaded = isChecked }
+        binding.threadedSwitch.apply {
+            applyTheme()
+            isChecked = allowThreaded
+            setOnCheckedChangeListener { _, isChecked -> allowThreaded = isChecked }
+        }
     }
 
     private fun setupUsersMustPostSwitch() {
-        usersMustPostSwitch.applyTheme()
-        usersMustPostSwitch.isChecked = usersMustPost
-        usersMustPostSwitch.setOnCheckedChangeListener { _, isChecked -> usersMustPost = isChecked }
+        binding.usersMustPostSwitch.apply {
+            applyTheme()
+            isChecked = usersMustPost
+            setOnCheckedChangeListener { _, isChecked -> usersMustPost = isChecked }
+        }
     }
 
     private fun setupDelete() {
         // TODO - For now we set it to be gone, in the future we will revisit after COMMS-868
-        deleteWrapper.setGone()
+        binding.deleteWrapper.setGone()
         /*
         deleteWrapper.setVisible(discussionTopicHeader != null)
         deleteWrapper.onClickWithRequireNetwork {
@@ -276,7 +286,7 @@ class CreateDiscussionFragment : ParentFragment() {
     //endregion
 
     //region Functionality
-    private fun saveDiscussion() {
+    private fun saveDiscussion() = with(binding) {
         if (discussionTopicHeader != null) {
             val postData = DiscussionTopicPostBody()
             // Discussion title isn't required
@@ -375,8 +385,8 @@ class CreateDiscussionFragment : ParentFragment() {
     private fun startSavingDiscussion() {
         sendButton?.setGone()
 //        mAttachmentButton?.setGone() Blocked COMMS 868
-        savingProgressBar.announceForAccessibility(getString(R.string.utils_saving))
-        savingProgressBar.setVisible()
+        binding.savingProgressBar.announceForAccessibility(getString(R.string.utils_saving))
+        binding.savingProgressBar.setVisible()
     }
 
     private fun errorSavingDiscussion() {
@@ -386,12 +396,12 @@ class CreateDiscussionFragment : ParentFragment() {
         mAttachmentButton?.text = resources.getQuantityString(R.plurals.utils_addAttachment, quantity, quantity)
         mAttachmentButton?.setVisible()
         */
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
     }
 
     private fun errorSavingDiscussionAttachment() {
         toast(R.string.utils_discussionSuccessfulAttachmentNot)
-        editDiscussionName.hideKeyboard() // Close the keyboard
+        binding.editDiscussionName.hideKeyboard() // Close the keyboard
         navigation?.popCurrentFragment()
     }
 
@@ -405,7 +415,7 @@ class CreateDiscussionFragment : ParentFragment() {
             toast(R.string.utils_discussionSuccessfullyUpdated)
         }
 
-        editDiscussionName.hideKeyboard() // Close the keyboard
+        binding.editDiscussionName.hideKeyboard() // Close the keyboard
         navigation?.popCurrentFragment()
     }
 

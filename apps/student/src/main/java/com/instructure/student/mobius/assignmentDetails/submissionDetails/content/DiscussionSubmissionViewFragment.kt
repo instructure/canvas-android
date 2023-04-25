@@ -28,21 +28,24 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.StringArg
-import com.instructure.pandautils.utils.setDarkModeSupport
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.databinding.FragmentDiscussionSubmissionViewBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_discussion_submission_view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class DiscussionSubmissionViewFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentDiscussionSubmissionViewBinding::bind)
 
     private var discussionUrl: String by StringArg()
     private var authJob: Job? = null
@@ -57,20 +60,20 @@ class DiscussionSubmissionViewFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        progressBar.announceForAccessibility(getString(R.string.loading))
-        discussionSubmissionWebView.setDarkModeSupport()
-        discussionSubmissionWebView.webChromeClient = object : WebChromeClient() {
+        binding.progressBar.announceForAccessibility(getString(R.string.loading))
+        binding.discussionSubmissionWebView.enableAlgorithmicDarkening()
+        binding.discussionSubmissionWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (!isAdded) return
                 if (newProgress >= 100) {
-                    progressBar?.setGone()
-                    discussionSubmissionWebView?.setVisible()
+                    binding.progressBar.setGone()
+                    binding.discussionSubmissionWebView.setVisible()
                 }
             }
         }
 
-        discussionSubmissionWebView.canvasWebViewClientCallback =
+        binding.discussionSubmissionWebView.canvasWebViewClientCallback =
             object : CanvasWebView.CanvasWebViewClientCallback {
                 override fun openMediaFromWebView(mime: String, url: String, filename: String) =
                     RouteMatcher.openMedia(requireActivity(), url)
@@ -92,7 +95,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
                 }
             }
 
-        discussionSubmissionWebView.canvasEmbeddedWebViewCallback =
+        binding.discussionSubmissionWebView.canvasEmbeddedWebViewCallback =
             object : CanvasWebView.CanvasEmbeddedWebViewCallback {
                 override fun launchInternalWebViewFragment(url: String) =
                     requireActivity().startActivity(
@@ -103,7 +106,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
                     !url.contains(ApiPrefs.domain)
             }
 
-        discussionSubmissionWebView.setInitialScale(100)
+        binding.discussionSubmissionWebView.setInitialScale(100)
 
         authJob = GlobalScope.launch(Dispatchers.Main) {
             val authenticatedUrl = if (ApiPrefs.domain in discussionUrl)
@@ -120,13 +123,13 @@ class DiscussionSubmissionViewFragment : Fragment() {
             else
                 discussionUrl
 
-            discussionSubmissionWebView?.loadUrl(authenticatedUrl)
+            binding.discussionSubmissionWebView.loadUrl(authenticatedUrl)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        discussionSubmissionWebView.stopLoading()
+        binding.discussionSubmissionWebView.stopLoading()
     }
 
     override fun onDestroy() {

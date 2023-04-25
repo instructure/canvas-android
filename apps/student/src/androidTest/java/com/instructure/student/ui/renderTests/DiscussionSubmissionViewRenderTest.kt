@@ -52,9 +52,10 @@ class DiscussionSubmissionViewRenderTest : StudentRenderTest() {
         page.assertUrlMatches(linkUrl)
     }
 
-    private fun loadPageWithUrl(url: String) {
-        val fragment = DiscussionSubmissionViewFragment.newInstance(url)
-        activityRule.activity.loadFragment(fragment)
+    private fun loadPageWithUrl(url: String) = with(activityRule.activity) {
+        runOnUiThread {
+            val fragment = DiscussionSubmissionViewFragment.newInstance(url)
+            activityRule.activity.loadFragment(fragment)
+        }
     }
-
 }

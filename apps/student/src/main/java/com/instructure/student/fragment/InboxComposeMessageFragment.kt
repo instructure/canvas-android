@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.room.daos.AttachmentDao
@@ -44,6 +45,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
 import com.instructure.student.adapter.NothingSelectedSpinnerAdapter
+import com.instructure.student.databinding.FragmentInboxComposeMessageBinding
 import com.instructure.student.dialog.UnsavedChangesExitDialog
 import com.instructure.student.events.ChooseRecipientsEvent
 import com.instructure.student.events.ConversationUpdatedEvent
@@ -51,7 +53,6 @@ import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.view.AttachmentView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -62,6 +63,8 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 @AndroidEntryPoint
 class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
+
+    private val binding by viewBinding(FragmentInboxComposeMessageBinding::bind)
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)
     private val participants by ParcelableArrayListArg<Recipient>(key = PARTICIPANTS)
@@ -102,10 +105,12 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     override fun title(): String = getString(R.string.composeMessage)
 
     override fun applyTheme() {
-        ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
-        ViewStyler.themeSwitch(requireContext(), sendIndividualSwitch, ThemePrefs.brandColor)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))
+        with (binding) {
+            ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
+            ViewStyler.themeSwitch(requireContext(), sendIndividualSwitch, ThemePrefs.brandColor)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+            ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))
+        }
     }
 
     private fun validateMessage() = when {
@@ -113,11 +118,11 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
             toast(R.string.noCourseSelected)
             false
         }
-        chips.recipients.isEmpty() -> {
+        binding.chips.recipients.isEmpty() -> {
             toast(R.string.noRecipients)
             false
         }
-        TextUtils.getTrimmedLength(message.text) == 0 -> {
+        TextUtils.getTrimmedLength(binding.message.text) == 0 -> {
             toast(R.string.emptyMessage)
             false
         }
@@ -138,13 +143,13 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
         if (isNewMessage) {
             // Composing a new message
-            spinnerWrapper.setVisible()
-            recipientWrapper.setGone()
-            subjectView.setGone()
-            editSubject.setVisible()
-            sendIndividualMessageWrapper.setVisible()
-            sendIndividualDivider.setVisible()
-            sendIndividualSwitch.setOnCheckedChangeListener { _, isChecked -> sendIndividually = isChecked }
+            binding.spinnerWrapper.setVisible()
+            binding.recipientWrapper.setGone()
+            binding.subjectView.setGone()
+            binding.editSubject.setVisible()
+            binding.sendIndividualMessageWrapper.setVisible()
+            binding.sendIndividualDivider.setVisible()
+            binding.sendIndividualSwitch.setOnCheckedChangeListener { _, isChecked -> sendIndividually = isChecked }
             if (participants.isNotEmpty()) {
                 globalAddRecipients()
             }
@@ -156,7 +161,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     private fun globalAddRecipients() {
-        chips.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        binding.chips.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 if (isReply) {
                     if (currentMessage == null && conversation?.participants != null && conversation!!.participants.size == 1) {
@@ -171,12 +176,12 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
                 } else if (participants.isNotEmpty()) {
                     addRecipients(participants)
                 }
-                chips.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                binding.chips.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         // Set conversation subject
         conversation?.let { subjectView.text = it.subject }
 
@@ -225,9 +230,9 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     private fun hideFieldsForHomeroomMessage() {
-        spinnerWrapper.setGone()
-        recipientWrapper.setGone()
-        sendIndividualMessageWrapper.setGone()
+        binding.spinnerWrapper.setGone()
+        binding.recipientWrapper.setGone()
+        binding.sendIndividualMessageWrapper.setGone()
     }
 
     private fun getAllCoursesAndGroups() {
@@ -243,7 +248,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         }
     }
 
-    private fun addCoursesAndGroups(courses: List<Course>, groups: List<Group>) {
+    private fun addCoursesAndGroups(courses: List<Course>, groups: List<Group>) = with(binding) {
         val adapter = CanvasContextSpinnerAdapter.newAdapterInstance(requireContext(), courses, groups)
         courseSpinner.adapter = NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_nothing_selected, context)
         if (selectedContext != null) {
@@ -272,7 +277,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         }
     }
 
-    private fun courseWasSelected() {
+    private fun courseWasSelected() = with(binding) {
         if (!homeroomMessage) {
             recipientWrapper.visibility = View.VISIBLE
             contactsImageButton.visibility = View.VISIBLE
@@ -281,7 +286,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         chips.canvasContext = selectedContext
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         toolbar.setTitle(
             when {
                 isNewMessage -> R.string.newMessage
@@ -307,12 +312,12 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
             true
         }
 
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@InboxComposeMessageFragment)
     }
 
     private fun handleExit() {
         // Check to see if the user has made any changes
-        if (editSubject.text.isNotBlank() || message.text.isNotBlank() || attachments.isNotEmpty()) {
+        if (binding.editSubject.text.isNotBlank() || binding.message.text.isNotBlank() || attachments.isNotEmpty()) {
             shouldAllowExit = false
             // Use childFragmentManager so that exiting the compose fragment also dismisses the dialog
             UnsavedChangesExitDialog.show(childFragmentManager) {
@@ -343,21 +348,21 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     }
 
     private fun messageFailure(@StringRes message: Int = R.string.errorSendingMessage) {
-        toolbar.menu.findItem(R.id.menu_send).isVisible = true
-        toolbar.menu.findItem(R.id.menu_attachment).isVisible = true
-        savingProgressBar.visibility = View.GONE
+        binding.toolbar.menu.findItem(R.id.menu_send).isVisible = true
+        binding.toolbar.menu.findItem(R.id.menu_attachment).isVisible = true
+        binding.savingProgressBar.visibility = View.GONE
         toast(message)
     }
 
     private fun refreshAttachments() {
-        attachmentLayout.setPendingAttachments(attachments, true) { action, attachment ->
+        binding.attachmentLayout.setPendingAttachments(attachments, true) { action, attachment ->
             if (action == AttachmentView.AttachmentAction.REMOVE) {
                 attachments -= attachment
             }
         }
     }
 
-    private fun sendMessage() {
+    private fun sendMessage() = with(binding) {
         // Validate inputs
         if (!validateMessage()) return
 
@@ -449,17 +454,17 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
                     it.stringId == id
                 }
             }
-            .minus(chips.recipients)
-        chips.addRecipients(recipients)
+            .minus(binding.chips.recipients)
+        binding.chips.addRecipients(recipients)
     }
 
     private fun addRecipients(newRecipients: List<Recipient>) {
-        val selectedRecipients = chips.recipients
+        val selectedRecipients = binding.chips.recipients
         val recipients = newRecipients.filter { recipient ->
             // Skip existing recipients
             selectedRecipients.none { it.stringId == recipient.stringId }
         }
-        chips.addRecipients(recipients)
+        binding.chips.addRecipients(recipients)
     }
 
     @Suppress("unused")
@@ -468,7 +473,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
         event.once(javaClass.simpleName) { recipients ->
             // We're going to add all the recipients that the user has selected. They may have removed a user previously selected,
             // so clear the view so we only add the users selected
-            chips.clearRecipients()
+            binding.chips.clearRecipients()
             addRecipients(recipients)
         }
     }

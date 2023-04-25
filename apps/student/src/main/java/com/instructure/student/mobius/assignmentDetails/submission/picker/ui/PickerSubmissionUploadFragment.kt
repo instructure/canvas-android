@@ -26,12 +26,13 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
+import com.instructure.student.databinding.FragmentPickerSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @ScreenView(SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER)
 class PickerSubmissionUploadFragment :
-    MobiusFragment<PickerSubmissionUploadModel, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect, PickerSubmissionUploadView, PickerSubmissionUploadViewState>() {
+    MobiusFragment<PickerSubmissionUploadModel, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect, PickerSubmissionUploadView, PickerSubmissionUploadViewState, FragmentPickerSubmissionUploadBinding>() {
 
     private val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
     private val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)

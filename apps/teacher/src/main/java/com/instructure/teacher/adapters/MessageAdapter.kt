@@ -17,31 +17,31 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
-
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
-import com.instructure.teacher.R
 import com.instructure.teacher.binders.MessageBinder
+import com.instructure.teacher.databinding.AdapterMessageBinding
 import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.presenters.MessageThreadPresenter
 import com.instructure.teacher.viewinterface.MessageThreadView
-
-import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
-
 open class MessageAdapter(
-        context: Context,
-        presenter: MessageThreadPresenter,
-        protected var mConversation: Conversation,
-        protected var mCallback: MessageAdapterCallback) : SyncRecyclerAdapter<Message, MessageHolder, MessageThreadView>(context, presenter) {
+    context: Context,
+    presenter: MessageThreadPresenter,
+    private var mConversation: Conversation,
+    protected var mCallback: MessageAdapterCallback
+) : SyncRecyclerAdapter<Message, MessageHolder, MessageThreadView>(context, presenter) {
 
-    override fun bindHolder(message: Message, holder: MessageHolder, position: Int) =
-        MessageBinder.bind(message, mConversation, mCallback.getParticipantById(message.authorId), holder, position, mCallback)
+    override fun bindHolder(model: Message, holder: MessageHolder, position: Int) = MessageBinder.bind(
+        model, mConversation, mCallback.getParticipantById(model.authorId), position, mCallback, holder
+    )
 
-    override fun createViewHolder(v: View, viewType: Int): MessageHolder = MessageHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = MessageHolder(binding as AdapterMessageBinding)
 
-    override fun itemLayoutResId(viewType: Int): Int = R.layout.adapter_message
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterMessageBinding::inflate
 }

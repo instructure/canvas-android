@@ -38,14 +38,17 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.R
+import com.instructure.loginapi.login.databinding.DialogErrorReportBinding
+import com.instructure.loginapi.login.databinding.ErrorReportSverityItemBinding
 import com.instructure.loginapi.login.util.Const
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
-import kotlinx.android.synthetic.main.dialog_error_report.*
-import kotlinx.android.synthetic.main.error_report_sverity_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ErrorReportDialog : DialogFragment() {
+
+    private val binding by viewBinding(DialogErrorReportBinding::bind)
 
     private val severityOptions by lazy {
         listOf(
@@ -80,7 +83,7 @@ class ErrorReportDialog : DialogFragment() {
 
     @Suppress("UNCHECKED_CAST")
     private val selectedSeverity: Pair<ErrorReportAPI.Severity, String>
-        get() = (severitySpinner.selectedItem as? Pair<ErrorReportAPI.Severity, String>) ?: severityOptions[0]
+        get() = (binding.severitySpinner.selectedItem as? Pair<ErrorReportAPI.Severity, String>) ?: severityOptions[0]
 
     interface ErrorReportDialogResultListener {
         fun onTicketPost()
@@ -100,7 +103,7 @@ class ErrorReportDialog : DialogFragment() {
         return inflater.inflate(R.layout.dialog_error_report, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
         if (fromLogin) {
             emailAddressEditText.visibility = View.VISIBLE
@@ -149,14 +152,15 @@ class ErrorReportDialog : DialogFragment() {
 
         private fun getViewForText(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = convertView ?: inflater.inflate(R.layout.error_report_sverity_item, parent, false)
-            view.text.text = getItem(position)?.second
+            val binding = ErrorReportSverityItemBinding.bind(view)
+            binding.text.text = getItem(position)?.second
             return view
         }
     }
 
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun uploadErrorReport() {
+    private fun uploadErrorReport() = with(binding) {
         weave {
 
             var comment: String = descriptionEditText.text.toString()

@@ -19,6 +19,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
@@ -33,6 +34,7 @@ import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
@@ -44,6 +46,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.SpeedGraderCommentsAdapter
+import com.instructure.teacher.databinding.FragmentSpeedgraderCommentsBinding
 import com.instructure.teacher.decorations.SpacesItemDecoration
 import com.instructure.teacher.dialog.SGAddMediaCommentDialog
 import com.instructure.teacher.events.SubmissionCommentsUpdated
@@ -63,9 +66,6 @@ import com.instructure.teacher.view.SubmissionSelectedEvent
 import com.instructure.teacher.view.UploadMediaCommentEvent
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.adapter_submission_comment.*
-import kotlinx.android.synthetic.main.fragment_speedgrader_comments.*
-import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -77,6 +77,8 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
 @AndroidEntryPoint
 class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, SpeedGraderCommentsPresenter, SpeedGraderCommentsView, SpeedGraderCommentHolder, SpeedGraderCommentsAdapter>(), SpeedGraderCommentsView, FileUploadDialogParent {
+
+    private val binding by viewBinding(FragmentSpeedgraderCommentsBinding::bind)
 
     @Inject
     lateinit var fileUploadInputDao: FileUploadInputDao
@@ -117,7 +119,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         .apply { this.stackFromEnd = true }}
 
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
-    override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
+    override val recyclerView: RecyclerView get() = binding.speedGraderCommentsRecyclerView
     override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(
         mRawComments,
         mSubmissionHistory,
@@ -134,17 +136,6 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         mSubmission.attempt,
         assignmentEnhancementsEnabled
     )
-    override fun onCreateView(view: View) {
-        commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
-            if (commentEditText.text.toString() != it.comment) {
-                commentEditText.setText(it.comment)
-                if (it.selectedFromSuggestion) {
-                    commentEditText.setSelection(it.comment.length)
-                }
-            }
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCommentInput()
@@ -157,7 +148,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     private val commentLibraryViewModel: CommentLibraryViewModel by activityViewModels()
 
-    override fun onPresenterPrepared(presenter: SpeedGraderCommentsPresenter) {
+    override fun onPresenterPrepared(presenter: SpeedGraderCommentsPresenter) = with(binding) {
         RecyclerViewUtils.buildRecyclerView(requireContext(), adapter, presenter, swipeRefreshLayout, speedGraderCommentsRecyclerView, speedGraderCommentsEmptyView, getString(R.string.no_submission_comments))
         speedGraderCommentsRecyclerView.addItemDecoration(SpacesItemDecoration(requireContext(), R.dimen.speedgrader_comment_margins))
         speedGraderCommentsRecyclerView.layoutManager = mLayoutManager
@@ -179,7 +170,16 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         }
     }
 
-    private fun setupCommentInput() {
+    private fun setupCommentInput() = with(binding.commentInputContainer) {
+        commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
+            if (commentEditText.text.toString() != it.comment) {
+                commentEditText.setText(it.comment)
+                if (it.selectedFromSuggestion) {
+                    commentEditText.setSelection(it.comment.length)
+                }
+            }
+        }
+
         sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
                 intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.textDark),
                 intArrayOf() to ThemePrefs.textButtonColor
@@ -197,6 +197,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         sendCommentButton.onClickWithRequireNetwork {
             (requireActivity() as SpeedGraderActivity).closeCommentLibrary()
             presenter.sendComment(commentEditText.text.toString())
+            val errorLayout = binding.root.findViewById<LinearLayout>(R.id.errorLayout)
             errorLayout?.announceForAccessibility(getString(R.string.sendingSimple))
         }
 
@@ -231,7 +232,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         // We use this flag to avoid opening the comment library, when text is set externally.
         // Cases like sending a comment and clearing the comment field or populating the comment field with cached data
         changeCommentFieldExternallyFlag = true
-        commentEditText.setText(comment.orEmpty())
+        binding.commentInputContainer.commentEditText.setText(comment.orEmpty())
         changeCommentFieldExternallyFlag = false
     }
 
@@ -239,11 +240,11 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this)
 
-        presenter.saveDraft(commentEditText.text.toString())
+        presenter.saveDraft(binding.commentInputContainer.commentEditText.text.toString())
         super.onStop()
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
          RecyclerViewUtils.checkIfEmpty(speedGraderCommentsEmptyView, speedGraderCommentsRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
@@ -254,7 +255,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             if (mAssignee.id == event.assigneeId) {
                 val id = presenter.createPendingMediaComment(event.file.absolutePath)
                 uploadSGMediaComment(event.file, event.assignmentId, event.courseId, id, event.attemptId)
-                addAttachment.isEnabled = true
+                binding.commentInputContainer.addAttachment.isEnabled = true
             }
         }
     }
@@ -319,7 +320,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     @Suppress("UNUSED_PARAMETER", "unused")
     @Subscribe
     fun onMediaCommentDialogClosed(event: MediaCommentDialogClosedEvent) {
-        addAttachment.isEnabled = true
+        binding.commentInputContainer.addAttachment.isEnabled = true
     }
 
     @Suppress("unused")
@@ -396,6 +397,4 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             this.assignmentEnhancementsEnabled = assignmentEnhancementsEnabled
         }
     }
-
 }
-

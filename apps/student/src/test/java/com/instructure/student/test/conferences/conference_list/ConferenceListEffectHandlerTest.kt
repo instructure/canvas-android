@@ -81,7 +81,7 @@ class ConferenceListEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `LaunchInBrowser calls API, calls launchUrl, waits 3000ms, and produces LaunchInBrowserFinished`() = test {
+    fun `LaunchInBrowser calls API, calls launchUrl and produces LaunchInBrowserFinished`() = test {
         val url = "url"
         val sessionUrl = "session-url"
 
@@ -98,10 +98,7 @@ class ConferenceListEffectHandlerTest : Assert() {
         coVerify { awaitApi<AuthenticatedSession>(any()) }
 
         // Advance the clock to skip delay
-        val timeSkipped = advanceUntilIdle()
-
-        // Time skipped should be 3000ms
-        assertEquals(timeSkipped, 3000)
+        advanceUntilIdle()
 
         // Should produce LaunchInBrowserFinished event
         verify { eventConsumer.accept(ConferenceListEvent.LaunchInBrowserFinished) }

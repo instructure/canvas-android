@@ -253,7 +253,7 @@ object ConversationEndpoint : Endpoint(
             val newStarred = request.url.queryParameter("conversation[starred]")?.equals("true")
             val newStateRaw = request.url.queryParameter("conversation[workflow_state]")
             val newState = when(newStateRaw) {
-                "read" -> Conversation.WorkflowState.UNREAD
+                "read" -> Conversation.WorkflowState.READ
                 "unread" -> Conversation.WorkflowState.UNREAD
                 "archived" -> Conversation.WorkflowState.ARCHIVED
                 else -> null

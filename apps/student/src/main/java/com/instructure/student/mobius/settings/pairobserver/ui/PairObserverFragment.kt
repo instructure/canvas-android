@@ -23,11 +23,12 @@ import android.view.ViewGroup
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAIR_OBSERVER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.student.databinding.FragmentPairObserverBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.settings.pairobserver.*
 
 @ScreenView(SCREEN_VIEW_PAIR_OBSERVER)
-class PairObserverFragment : MobiusFragment<PairObserverModel, PairObserverEvent, PairObserverEffect, PairObserverView, PairObserverViewState>() {
+class PairObserverFragment : MobiusFragment<PairObserverModel, PairObserverEvent, PairObserverEffect, PairObserverView, PairObserverViewState, FragmentPairObserverBinding>() {
 
     override fun makeEffectHandler() =
         PairObserverEffectHandler()

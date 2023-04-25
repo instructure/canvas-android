@@ -18,7 +18,6 @@ package com.instructure.student.dialog
  */
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
@@ -28,9 +27,8 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.dismissExisting
-import com.instructure.student.R
-import kotlinx.android.synthetic.main.dialog_edit_text.view.*
-import java.util.Locale
+import com.instructure.student.databinding.DialogEditTextBinding
+import java.util.*
 import kotlin.properties.Delegates
 
 class EditTextDialog : AppCompatDialogFragment() {
@@ -44,7 +42,12 @@ class EditTextDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        fun getInstance(manager: FragmentManager, title: String, defaultText: String, callback: (String) -> Unit) : EditTextDialog {
+        fun getInstance(
+            manager: FragmentManager,
+            title: String,
+            defaultText: String,
+            callback: (String) -> Unit
+        ): EditTextDialog {
             manager.dismissExisting<EditTextDialog>()
             return EditTextDialog().apply {
                 mEditTextCallback = callback
@@ -59,21 +62,21 @@ class EditTextDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = View.inflate(activity, R.layout.dialog_edit_text, null).apply {
-            ViewStyler.themeEditText(context, textInput, ThemePrefs.brandColor)
-            textInput.setText(mDefaultText)
-            textInput.selectAll()
-        }
+        val binding = DialogEditTextBinding.inflate(layoutInflater, null, false)
+
+        ViewStyler.themeEditText(requireContext(), binding.textInput, ThemePrefs.brandColor)
+        binding.textInput.setText(mDefaultText)
+        binding.textInput.selectAll()
 
         val dialog = AlertDialog.Builder(requireContext())
-                .setCancelable(true)
-                .setTitle(mTitle)
-                .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault())) { _, _ ->
-                    mEditTextCallback(view.textInput.text.toString())
-                }
+            .setCancelable(true)
+            .setTitle(mTitle)
+            .setView(binding.root)
+            .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault())) { _, _ ->
+                mEditTextCallback(binding.textInput.text.toString())
+            }
             .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
-                .create()
+            .create()
 
         dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 

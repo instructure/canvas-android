@@ -18,7 +18,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -26,10 +26,6 @@ static String isTesting() {
     } else {
         "false"
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 android {

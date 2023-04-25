@@ -25,13 +25,14 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ParcelableListArg
+import com.instructure.student.databinding.FragmentSubmissionFilesBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @ScreenView(SCREEN_VIEW_SUBMISSION_FILES)
 class SubmissionFilesFragment :
-    MobiusFragment<SubmissionFilesModel, SubmissionFilesEvent, SubmissionFilesEffect, SubmissionFilesView, SubmissionFilesViewState>() {
+    MobiusFragment<SubmissionFilesModel, SubmissionFilesEvent, SubmissionFilesEffect, SubmissionFilesView, SubmissionFilesViewState, FragmentSubmissionFilesBinding>() {
 
     private var files: List<Attachment> by ParcelableListArg()
     private var selectedFileId: Long by LongArg()

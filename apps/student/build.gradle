@@ -19,7 +19,6 @@ import com.instructure.android.buildtools.transform.*
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.squareup.sqldelight'
@@ -41,10 +40,6 @@ sqldelight {
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-}
-
-androidExtensions {
-    experimental = true
 }
 
 android {
@@ -143,6 +138,8 @@ android {
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
+                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
+                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
 
             ndk {
@@ -195,6 +192,7 @@ android {
         resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
 
         resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
+        resolutionStrategy.force Libs.KOTLIN_STD_LIB
     }
 
     /*
@@ -221,8 +219,7 @@ android {
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
                     new LocaleTransformer(project),
-                    new FlutterA11yOffsetTransformer(),
-                    new FlutterTextureDisconnectFix()
+                    new FlutterA11yOffsetTransformer()
             )
     )
 
@@ -276,7 +273,6 @@ dependencies {
     testImplementation Libs.MOCKK
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
-    testImplementation Libs.FIREBASE_CORE
     testImplementation Libs.THREETEN_BP
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
@@ -318,7 +314,7 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
-    implementation Libs.PLAY_CORE
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Database */
     implementation Libs.SQLDELIGHT

@@ -27,6 +27,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.Submission
+import com.instructure.student.databinding.FragmentSubmissionDetailsEmptyContentBinding
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEmptyContentEventBusSource
@@ -36,7 +37,7 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT)
 class SubmissionDetailsEmptyContentFragment :
-        MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
+        MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState, FragmentSubmissionDetailsEmptyContentBinding>() {
 
     val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
     val isStudioEnabled by BooleanArg(key = Const.IS_STUDIO_ENABLED)

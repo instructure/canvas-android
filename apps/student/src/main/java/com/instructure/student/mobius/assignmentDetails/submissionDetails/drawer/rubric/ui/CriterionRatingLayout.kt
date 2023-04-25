@@ -50,10 +50,10 @@ class CriterionRatingLayout @JvmOverloads constructor(
         ratings.forEach { rating ->
             val button = CriterionRatingButton(context, rating, tint)
             button.accessibilityDelegate = object : AccessibilityDelegate() {
-                override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+                override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
                     super.onInitializeAccessibilityNodeInfo(host, info)
                     val description = resources.getString(R.string.a11y_criterion_button_click_description)
-                    info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, description))
+                    info.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, description))
                 }
             }
             button.contentDescription = resources.getString(R.string.a11y_criterion_content_description, rating.text)

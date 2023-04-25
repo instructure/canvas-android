@@ -17,7 +17,7 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -71,6 +71,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
     }
 
     buildFeatures {
@@ -83,13 +84,17 @@ android {
     }
 }
 
+tasks.withType(Test) {
+    android.sourceSets.main.res.srcDirs += 'src/test/res'
+}
+
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-}
 
-androidExtensions {
-    experimental = true
+    all*.resolutionStrategy {
+        force Libs.KOTLIN_STD_LIB
+    }
 }
 
 dependencies {
@@ -151,8 +156,8 @@ dependencies {
     implementation Libs.ANDROIDX_EXIF
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.PLAY_CORE_KTX
     implementation Libs.ANDROIDX_WEBKIT
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Work Manager */
     implementation Libs.ANDROIDX_WORK_MANAGER
@@ -182,4 +187,6 @@ dependencies {
     // We need to add this dependency if we update ExoPlayer to 2.12.0
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905
     implementation 'com.google.guava:guava:29.0-android'
+
+    kaptTest Libs.ANDROIDX_DATABINDING_COMPILER
 }

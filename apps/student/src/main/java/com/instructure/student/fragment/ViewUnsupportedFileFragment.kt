@@ -26,14 +26,17 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_unsupported_file_type.*
+import com.instructure.student.databinding.FragmentUnsupportedFileTypeBinding
 import org.greenrobot.eventbus.EventBus
 
 //TODO: make this generic enough teacher and student can use most/all of the code
 class ViewUnsupportedFileFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentUnsupportedFileTypeBinding::bind)
 
     private var mUri by ParcelableArg(Uri.EMPTY)
     private var mDisplayName by StringArg()
@@ -54,9 +57,9 @@ class ViewUnsupportedFileFragment : Fragment() {
         if (fileFolderDeletedEvent != null)
             requireActivity().finish()
 
-        mEditableFile?.let { setupToolbar() } ?: toolbar.setGone()
+        mEditableFile?.let { setupToolbar() } ?: binding.toolbar.setGone()
     }
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
 
         mEditableFile?.let {
             // Check if we need to update the file name
@@ -82,7 +85,7 @@ class ViewUnsupportedFileFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
+    override fun onStart() = with(binding) {
         super.onStart()
         Glide.with(requireContext())
                 .load(mPreviewUri)

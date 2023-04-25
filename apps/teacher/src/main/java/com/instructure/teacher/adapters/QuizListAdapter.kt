@@ -17,42 +17,45 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandarecycler.util.Types
+import com.instructure.teacher.databinding.AdapterQuizBinding
+import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 import com.instructure.teacher.holders.QuizExpandableViewHolder
 import com.instructure.teacher.holders.QuizViewHolder
 import com.instructure.teacher.presenters.QuizListPresenter
 import com.instructure.teacher.viewinterface.QuizListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
-class QuizListAdapter(context: Context,
-                      expandablePresenter: QuizListPresenter,
-                      private val iconColor: Int,
-                      private val mCallback: (Quiz) -> Unit) :
-        SyncExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder, QuizListView>(context, expandablePresenter) {
+class QuizListAdapter(
+    context: Context,
+    expandablePresenter: QuizListPresenter,
+    private val iconColor: Int,
+    private val mCallback: (Quiz) -> Unit
+) : SyncExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder, QuizListView>(context, expandablePresenter) {
 
-    override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
-        when (viewType) {
-            Types.TYPE_ITEM -> return QuizViewHolder(v)
-            else -> return QuizExpandableViewHolder(v)
-        }
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> QuizViewHolder(binding as AdapterQuizBinding)
+        else -> QuizExpandableViewHolder(binding as ViewholderHeaderExpandableBinding)
     }
 
-    override fun itemLayoutResId(viewType: Int): Int {
-        when (viewType) {
-            Types.TYPE_ITEM -> return QuizViewHolder.HOLDER_RES_ID
-            else -> return QuizExpandableViewHolder.HOLDER_RES_ID
-        }
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
+        Types.TYPE_ITEM -> AdapterQuizBinding::inflate
+        else -> ViewholderHeaderExpandableBinding::inflate
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: String, isExpanded: Boolean) {
         context?.let {
-            (holder as QuizExpandableViewHolder).bind(it, isExpanded, holder, group, {
-                assignmentGroup ->
-                expandCollapseGroup(assignmentGroup)
-            })
+            (holder as QuizExpandableViewHolder).bind(
+                it,
+                isExpanded,
+                holder,
+                group
+            ) { assignmentGroup -> expandCollapseGroup(assignmentGroup) }
         }
     }
 

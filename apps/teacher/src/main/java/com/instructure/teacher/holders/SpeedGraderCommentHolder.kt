@@ -16,7 +16,7 @@
  */
 package com.instructure.teacher.holders
 
-import android.view.View
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
@@ -29,6 +29,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.AdapterSubmissionCommentBinding
 import com.instructure.teacher.models.CommentWrapper
 import com.instructure.teacher.models.PendingCommentWrapper
 import com.instructure.teacher.models.SubmissionCommentWrapper
@@ -40,34 +41,29 @@ import com.instructure.teacher.utils.getSubmissionFormattedDate
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
 import com.instructure.teacher.view.*
-import kotlinx.android.synthetic.main.adapter_submission_comment.view.*
-import kotlinx.android.synthetic.main.view_comment.view.*
 
-class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_submission_comment
-    }
-
+class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
-            wrapper: SubmissionCommentWrapper,
-            currentUser: User,
-            courseId: Long,
-            assignee: Assignee,
-            gradeAnonymously: Boolean,
-            onAttachmentClicked: (Attachment) -> Unit,
-            presenter: SpeedGraderCommentsPresenter
-    ): Unit = with(itemView.commentHolder) {
+        wrapper: SubmissionCommentWrapper,
+        currentUser: User,
+        courseId: Long,
+        assignee: Assignee,
+        gradeAnonymously: Boolean,
+        onAttachmentClicked: (Attachment) -> Unit,
+        presenter: SpeedGraderCommentsPresenter
+    ): Unit = with(binding.commentHolder) {
 
         // Reset extra view container
         setExtraView(null)
 
         // Reset status
         alpha = 1f
-        itemView.errorLayout.setGone()
-        itemView.sendingLayout.setGone()
+        binding.errorLayout.setGone()
+        binding.sendingLayout.setGone()
         setOnClickListener(null)
         isClickable = false
 
+        val avatarView = binding.commentHolder.findViewById<ImageView>(R.id.avatarView)
 
         val (text, authorName, avatarUrl) = when (wrapper) {
 
@@ -116,9 +112,9 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                 alpha = 0.35f
                 setDirection(CommentDirection.OUTGOING)
                 when (wrapper.pendingComment.status) {
-                    CommentSendStatus.SENDING -> itemView.sendingLayout.setVisible()
+                    CommentSendStatus.SENDING -> binding.sendingLayout.setVisible()
                     CommentSendStatus.ERROR -> {
-                        itemView.errorLayout.setVisible()
+                        binding.errorLayout.setVisible()
                         onClick {
                             wrapper.pendingComment.workerInputData?.let {
                                 presenter.retryFileUpload(wrapper.pendingComment)

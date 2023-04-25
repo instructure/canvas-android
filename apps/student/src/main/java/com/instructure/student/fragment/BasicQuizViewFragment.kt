@@ -42,7 +42,6 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
-import kotlinx.android.synthetic.main.fragment_webview.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -89,7 +88,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
         // Make sure we are prepared to handle file uploads for quizzes that allow them
         setupFilePicker()
-        canvasWebViewWrapper?.webView?.setDarkModeSupport()
+        binding.canvasWebViewWrapper.webView.enableAlgorithmicDarkening()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -131,12 +130,12 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                getCanvasLoading()?.visibility = View.VISIBLE
+                getCanvasLoading().visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
-                getCanvasLoading()?.visibility = View.GONE
+                getCanvasLoading().visibility = View.GONE
             }
         }
     }
@@ -174,7 +173,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if ((getCanvasWebView()?.handleOnActivityResult(requestCode, resultCode, data)) != true) {
+        if (getCanvasWebView()?.handleOnActivityResult(requestCode, resultCode, data) == false) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }

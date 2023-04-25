@@ -30,17 +30,21 @@ import com.instructure.canvasapi2.utils.cleanDisplayName
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ACCOUNT_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import kotlinx.android.synthetic.main.fragment_account_preferences.*
-import kotlinx.android.synthetic.main.settings_spinner.view.*
+import com.instructure.student.databinding.FragmentAccountPreferencesBinding
+import com.instructure.student.databinding.SettingsSpinnerBinding
+import com.instructure.student.databinding.SettingsSpinnerItemBinding
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_ACCOUNT_PREFERENCES)
 @PageView(url = "profile/settings")
 class AccountPreferencesFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentAccountPreferencesBinding::bind)
 
     private val languages: List<Pair<String, String>> by lazy {
         listOf(
@@ -69,13 +73,13 @@ class AccountPreferencesFragment : ParentFragment() {
         setupViews()
     }
 
-    override fun applyTheme() {
+    override fun applyTheme() = with(binding) {
         toolbar.title = title()
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@AccountPreferencesFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         if (BuildConfig.DEBUG) {
             // Only show language override picker in debug builds
             languageContainer.setVisible()
@@ -99,16 +103,18 @@ class AccountPreferencesFragment : ParentFragment() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view: View = convertView ?: inflater.inflate(R.layout.settings_spinner, parent, false)
-            view.indicator.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_expand, requireContext().getColor(R.color.white)))
-            view.indicator.setColorFilter(ContextCompat.getColor(requireContext(), R.color.textDark))
-            view.title.text = getItem(position).toString()
-            return view
+            val binding = SettingsSpinnerBinding.bind(view)
+            binding.indicator.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_expand, requireContext().getColor(R.color.white)))
+            binding.indicator.setColorFilter(ContextCompat.getColor(requireContext(), R.color.textDark))
+            binding.title.text = getItem(position).toString()
+            return binding.root
         }
 
         override fun getDropDownView(position: Int, view: View?, parent: ViewGroup): View {
             val v = inflater.inflate(R.layout.settings_spinner_item, parent, false)
-            v.title.text = getItem(position).toString()
-            return v
+            val binding = SettingsSpinnerItemBinding.bind(v)
+            binding.title.text = getItem(position).toString()
+            return binding.root
         }
     }
 

@@ -43,7 +43,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testRubrics_showCriterionDescription() {
-
         val data = getToCourse()
         val assignment = data.addAssignment(
                 courseId = course.id,
@@ -87,13 +86,12 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     // Should be able to add a comment on a submission
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
-    fun testComments_addCommentToSubmission() {
+    fun testComments_addCommentToSingleAttemptSubmission() {
 
         val data = getToCourse()
         val assignment = data.addAssignment(
                 courseId =  course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_URL,
-                userSubmitted = true
+                submissionType = Assignment.SubmissionType.ONLINE_URL
         )
 
         courseBrowserPage.selectAssignments()
@@ -106,6 +104,49 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testComments_addCommentToMultipleAttemptSubmission() {
+
+        val data = getToCourse()
+        val assignment = data.addAssignment(
+            courseId =  course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_URL,
+            userSubmitted = true
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+        sleep(1000) // Allow some time for the submission to propagate
+        assignmentDetailsPage.assertAssignmentSubmitted()
+        assignmentDetailsPage.assertNoAttemptSpinner()
+
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+
+        assignmentDetailsPage.goToSubmissionDetails()
+
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.addAndSendComment("Hey!")
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+
+        submissionDetailsPage.selectAttempt("Attempt 2")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 2")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentNotDisplayed("Hey!", data.users.values.first())
+
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+
+
     }
 
     // Student can preview an assignment comment attachment

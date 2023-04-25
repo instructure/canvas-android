@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.builders
 
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.CanvasContext
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 @Parcelize

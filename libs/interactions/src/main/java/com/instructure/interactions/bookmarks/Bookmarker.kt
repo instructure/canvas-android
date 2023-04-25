@@ -3,7 +3,7 @@ package com.instructure.interactions.bookmarks
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.*
 import com.instructure.interactions.router.RouterParams
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.HashMap
 
 @Parcelize

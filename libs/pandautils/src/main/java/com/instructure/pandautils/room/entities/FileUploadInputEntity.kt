@@ -2,6 +2,7 @@ package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Random
 
 @Entity
 data class FileUploadInputEntity(
@@ -18,5 +19,6 @@ data class FileUploadInputEntity(
     val attachments: List<Long> = emptyList(),
     val submissionId: Long? = null,
     var filePaths: List<String>,
-    val attemptId: Long? = null
+    val attemptId: Long? = null,
+    val notificationId: Int? = Random().nextInt()
 )

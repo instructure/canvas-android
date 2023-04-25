@@ -17,27 +17,30 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.databinding.FragmentSpeedGraderTextSubmissionBinding
 import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_speed_grader_text_submission.*
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMISSION)
 class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
+
+    private val binding by viewBinding(FragmentSpeedGraderTextSubmissionBinding::bind)
 
     private var mSubmissionText by StringArg()
 
@@ -45,18 +48,18 @@ class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
         return inflater.inflate(R.layout.fragment_speed_grader_text_submission, container, false)
     }
 
-    override fun canGoBack() = textSubmissionWebViewWrapper.webView.canGoBack()
-    override fun goBack() = textSubmissionWebViewWrapper.webView.goBack()
+    override fun canGoBack() = binding.textSubmissionWebViewWrapper.webView.canGoBack()
+    override fun goBack() = binding.textSubmissionWebViewWrapper.webView.goBack()
 
-    override fun onStart() {
+    override fun onStart() = with(binding) {
         super.onStart()
         textSubmissionWebViewWrapper.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (!isAdded) return
                 if (newProgress >= 100) {
-                    progressBar?.setGone()
-                    textSubmissionWebViewWrapper?.setVisible()
+                    progressBar.setGone()
+                    textSubmissionWebViewWrapper.setVisible()
                 } else {
                     progressBar.announceForAccessibility(getString(R.string.loading))
                 }
@@ -83,7 +86,7 @@ class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
 
     override fun onStop() {
         super.onStop()
-        textSubmissionWebViewWrapper.webView.stopLoading()
+        binding.textSubmissionWebViewWrapper.webView.stopLoading()
     }
 
     companion object {

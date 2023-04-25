@@ -31,7 +31,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentShareExtensionProgressDialogBinding
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.NullableSerializableArg
-import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -83,10 +82,6 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             is ShareExtensionProgressAction.CancelUpload -> {
                 cancelClicked(action.title, action.message)
             }
-            is ShareExtensionProgressAction.ShowErrorDialog -> {
-                dismiss()
-                shareExtensionViewModel.showErrorDialog(action.fileUploadType)
-            }
         }
     }
 
@@ -95,19 +90,10 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
 
         val dialog = AlertDialog.Builder(requireContext())
             .setView(binding.root)
-            .setNegativeButton(R.string.utils_cancel, null)
             .setCancelable(false)
             .create()
 
         dialog.setCanceledOnTouchOutside(false)
-
-        dialog.setOnShowListener {
-            val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            negative.setTextColor(ThemePrefs.textButtonColor)
-            negative.setOnClickListener {
-                viewModel.cancelClicked()
-            }
-        }
 
         dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
@@ -124,12 +110,8 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             .setTitle(title)
             .setMessage(message)
             .setNegativeButton(R.string.no) { _, _ -> }
-            .setPositiveButton(R.string.yes) { _, _ ->
-                uuid?.let {
-                    viewModel.cancelUpload(it)
-                }
-                viewModel.onCloseClicked()
-            }.show()
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.cancelUpload() }
+            .show()
     }
 
     companion object {

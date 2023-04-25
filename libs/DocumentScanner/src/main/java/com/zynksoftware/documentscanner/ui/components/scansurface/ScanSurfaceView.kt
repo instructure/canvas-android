@@ -35,9 +35,9 @@ import com.zynksoftware.documentscanner.R
 import com.zynksoftware.documentscanner.common.extensions.yuvToRgba
 import com.zynksoftware.documentscanner.common.utils.ImageDetectionProperties
 import com.zynksoftware.documentscanner.common.utils.OpenCvNativeBridge
+import com.zynksoftware.documentscanner.databinding.ScanSurfaceViewBinding
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel.ErrorMessage
-import kotlinx.android.synthetic.main.scan_surface_view.view.*
 import org.opencv.core.MatOfPoint2f
 import org.opencv.core.Point
 import org.opencv.core.Size
@@ -46,19 +46,19 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
+private val TAG = ScanSurfaceView::class.simpleName
+
+private const val TIME_POST_PICTURE = 1500L
+private const val DEFAULT_TIME_POST_PICTURE = 1500L
+private const val IMAGE_ANALYSIS_SCALE_WIDTH = 400
+
 internal class ScanSurfaceView : FrameLayout {
-
-    companion object {
-        private val TAG = ScanSurfaceView::class.simpleName
-
-        private const val TIME_POST_PICTURE = 1500L
-        private const val DEFAULT_TIME_POST_PICTURE = 1500L
-        private const val IMAGE_ANALYSIS_SCALE_WIDTH = 400
-    }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
+
+    private val binding: ScanSurfaceViewBinding
 
     lateinit var lifecycleOwner: LifecycleOwner
     lateinit var listener: ScanSurfaceListener
@@ -82,10 +82,10 @@ internal class ScanSurfaceView : FrameLayout {
     private var flashMode: Int = ImageCapture.FLASH_MODE_OFF
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.scan_surface_view, this, true)
+        binding = ScanSurfaceViewBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    fun start() {
+    fun start() = with(binding) {
         viewFinder.post {
             viewFinder.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
             previewSize = android.util.Size(viewFinder.width, viewFinder.height)
@@ -94,7 +94,7 @@ internal class ScanSurfaceView : FrameLayout {
     }
 
     private fun clearAndInvalidateCanvas() {
-        scanCanvasView.clearShape()
+        binding.scanCanvasView.clearShape()
     }
 
     private fun openCamera() {
@@ -141,7 +141,7 @@ internal class ScanSurfaceView : FrameLayout {
             .setTargetRotation(Surface.ROTATION_0)
             .build()
             .also {
-                it.setSurfaceProvider(viewFinder.surfaceProvider)
+                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
             }
 
         setImageCapture()
@@ -195,13 +195,13 @@ internal class ScanSurfaceView : FrameLayout {
         val imgDetectionPropsObj = ImageDetectionProperties(previewWidth.toDouble(), previewHeight.toDouble(),
             points[0], points[1], points[2], points[3], resultWidth.toInt(), resultHeight.toInt())
         if (imgDetectionPropsObj.isNotValidImage(approx)) {
-            scanCanvasView.clearShape()
+            binding.scanCanvasView.clearShape()
             cancelAutoCapture()
         } else {
             if (!isAutoCaptureScheduled) {
                 scheduleAutoCapture()
             }
-            scanCanvasView.showShape(previewWidth, previewHeight, points)
+            binding.scanCanvasView.showShape(previewWidth, previewHeight, points)
         }
     }
 

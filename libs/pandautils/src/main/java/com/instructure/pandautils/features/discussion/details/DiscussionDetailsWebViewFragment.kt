@@ -39,7 +39,6 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_discussion_details_web_view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
@@ -58,12 +57,14 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
     private val viewModel: DiscussionDetailsWebViewViewModel by viewModels()
 
+    private lateinit var binding: FragmentDiscussionDetailsWebViewBinding
+
     @PageViewUrlParam("topicId")
     private fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val binding = FragmentDiscussionDetailsWebViewBinding.inflate(inflater, container, false)
+        binding = FragmentDiscussionDetailsWebViewBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -77,9 +78,9 @@ class DiscussionDetailsWebViewFragment : Fragment() {
             applyTheme(it.title)
         }
         setupFilePicker()
-        discussionWebView.addVideoClient(requireActivity())
-        discussionWebView.setDarkModeSupport()
-        discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        binding.discussionWebView.addVideoClient(requireActivity())
+        binding.discussionWebView.enableAlgorithmicDarkening()
+        binding.discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 webViewRouter.openMedia(url)
             }
@@ -90,7 +91,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 viewModel.setLoading(false)
-                discussionSwipeRefreshLayout?.isRefreshing = false
+                binding.discussionSwipeRefreshLayout?.isRefreshing = false
             }
 
             override fun routeInternallyCallback(url: String) {
@@ -104,13 +105,13 @@ class DiscussionDetailsWebViewFragment : Fragment() {
             }
         }
 
-        discussionSwipeRefreshLayout.setOnRefreshListener {
-            discussionWebView.reload()
+        binding.discussionSwipeRefreshLayout.setOnRefreshListener {
+            binding.discussionWebView.reload()
         }
     }
 
     private fun setupFilePicker() {
-        discussionWebView.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+        binding.discussionWebView.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
             override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
                 startActivityForResult(intent, requestCode)
             }
@@ -136,20 +137,20 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRequestPermissionsResult(result: PermissionRequester.PermissionResult) {
         if (PermissionUtils.allPermissionsGrantedResultSummary(result.grantResults)) {
-            discussionWebView.clearPickerCallback()
+            binding.discussionWebView.clearPickerCallback()
             Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!discussionWebView.handleOnActivityResult(requestCode, resultCode, data)) {
+        if (!binding.discussionWebView.handleOnActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
-    private fun applyTheme(title: String) {
+    private fun applyTheme(title: String) = with(binding) {
         toolbar.title = title
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@DiscussionDetailsWebViewFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 

@@ -21,15 +21,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClick
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
-import kotlinx.android.synthetic.main.fragment_url_submission_view.*
+import com.instructure.student.databinding.FragmentUrlSubmissionViewBinding
 
 class UrlSubmissionViewFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentUrlSubmissionViewBinding::bind)
 
     private var url by StringArg()
     private var previewUrl by NullableStringArg()
@@ -38,7 +41,7 @@ class UrlSubmissionViewFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_url_submission_view, container, false)
     }
 
-    override fun onStart() {
+    override fun onStart() = with(binding) {
         super.onStart()
         Glide.with(requireContext()).load(previewUrl).into(urlPreviewImageView)
         urlTextView.text = url

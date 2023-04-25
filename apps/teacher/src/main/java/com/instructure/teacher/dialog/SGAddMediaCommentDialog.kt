@@ -27,8 +27,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
+import com.instructure.teacher.databinding.DialogSgAddAttachmentCommentBinding
 import com.instructure.teacher.view.MediaCommentDialogClosedEvent
-import kotlinx.android.synthetic.main.dialog_sg_add_attachment_comment.*
 import org.greenrobot.eventbus.EventBus
 
 class SGAddMediaCommentDialog : AppCompatDialogFragment() {
@@ -41,34 +41,35 @@ class SGAddMediaCommentDialog : AppCompatDialogFragment() {
     var onUploadFileClick: (() -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val binding = DialogSgAddAttachmentCommentBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(requireContext())
-                .setView(R.layout.dialog_sg_add_attachment_comment)
+                .setView(binding.root)
                 .create()
 
         dialog.setOnShowListener {
             // Setup clicks
-            dialog.audioComment.onClick {
+            binding.audioComment.onClick {
                 (activity as SpeedGraderActivity).requestAudioPermissions(studentId)
                 dismiss()
             }
 
-            dialog.videoComment.onClick {
+            binding.videoComment.onClick {
                 (activity as SpeedGraderActivity).requestVideoPermissions(studentId)
                 dismiss()
             }
 
-            dialog.fileComment.onClick {
+            binding.fileComment.onClick {
                 onUploadFileClick?.invoke()
                 dismiss()
             }
 
             // Setting these here rather than in XMl so TalkBack doesn't read them automatically without selecting them
-            dialog.audioText.text = getString(R.string.addAudioComment)
-            dialog.videoText.text = getString(R.string.addVideoComment)
-            dialog.fileText.text = getString(R.string.addFile)
+            binding.audioText.text = getString(R.string.addAudioComment)
+            binding.videoText.text = getString(R.string.addVideoComment)
+            binding.fileText.text = getString(R.string.addFile)
 
-            dialog.videoComment.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-            dialog.videoComment.requestAccessibilityFocus()
+            binding.videoComment.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+            binding.videoComment.requestAccessibilityFocus()
         }
 
         return dialog

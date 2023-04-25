@@ -29,16 +29,19 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.PeopleListRecyclerAdapter
+import com.instructure.student.databinding.FragmentPeopleListBinding
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_people_list.*
 
 @ScreenView(SCREEN_VIEW_PEOPLE_LIST)
 @PageView(url = "{canvasContext}/users")
 class PeopleListFragment : ParentFragment(), Bookmarkable {
+
+    private val binding by viewBinding(FragmentPeopleListBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -77,10 +80,12 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun applyTheme() {
-        toolbar.title = title()
-        toolbar.setupAsBackButton(this)
-        setupToolbarMenu(toolbar)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        with(binding) {
+            toolbar.title = title()
+            toolbar.setupAsBackButton(this@PeopleListFragment)
+            setupToolbarMenu(toolbar)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        }
     }
 
     override val bookmark: Bookmarker

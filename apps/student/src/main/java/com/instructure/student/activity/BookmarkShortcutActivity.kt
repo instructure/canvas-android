@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_SHORTCUT
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.lightColor

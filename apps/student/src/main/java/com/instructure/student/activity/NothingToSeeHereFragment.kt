@@ -22,14 +22,17 @@ import android.view.ViewGroup
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTHING_TO_SEE_HERE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentNothingToSeeHereBinding
 import com.instructure.student.fragment.ParentFragment
-import kotlinx.android.synthetic.main.fragment_nothing_to_see_here.*
 
 @ScreenView(SCREEN_VIEW_NOTHING_TO_SEE_HERE)
 class NothingToSeeHereFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentNothingToSeeHereBinding::bind)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_nothing_to_see_here, container, false)
@@ -42,8 +45,8 @@ class NothingToSeeHereFragment : ParentFragment() {
     }
 
     override fun applyTheme() {
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        binding.toolbar.setupAsBackButton(this)
+        ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
     }
 
     companion object {
