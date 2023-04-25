@@ -51,4 +51,3 @@ val appDatabaseMigrations = arrayOf(
         database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN folderId INTEGER")
     }
 )
-

@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
@@ -286,11 +285,15 @@ class DashboardNotificationsViewModel @Inject constructor(
             viewModelScope.launch {
                 dashboardFileUploadDao.delete(fileUploadEntity)
                 if (fileUploadEntity.courseId != null && fileUploadEntity.assignmentId != null && fileUploadEntity.attemptId != null) {
-                    runCatching {
-                        awaitApi { CourseManager.getCourse(fileUploadEntity.courseId, it, false) }
-                    }.getOrNull()?.let {
+                    courseManager.getCourseAsync(fileUploadEntity.courseId, false).await().dataOrNull?.let {
                         _events.postValue(
-                            Event(DashboardNotificationsActions.NavigateToSubmissionDetails(it, fileUploadEntity.assignmentId, fileUploadEntity.attemptId))
+                            Event(
+                                DashboardNotificationsActions.NavigateToSubmissionDetails(
+                                    it,
+                                    fileUploadEntity.assignmentId,
+                                    fileUploadEntity.attemptId
+                                )
+                            )
                         )
                     }
                 } else if (fileUploadEntity.folderId != null) {
