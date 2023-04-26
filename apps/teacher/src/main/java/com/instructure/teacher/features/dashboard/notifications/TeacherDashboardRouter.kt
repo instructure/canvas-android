@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.fragments.HtmlContentFragment
+import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherDashboardRouter(private val activity: FragmentActivity) : DashboardRouter {
@@ -32,5 +33,11 @@ class TeacherDashboardRouter(private val activity: FragmentActivity) : Dashboard
 
     override fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long) {}
 
-    override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) {}
+    override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) {
+        val args = FileListFragment.makeBundle(canvasContext)
+        RouteMatcher.route(
+            activity,
+            Route(FileListFragment::class.java, canvasContext, args)
+        )
+    }
 }
