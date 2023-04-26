@@ -127,6 +127,26 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
+    fun `Hidden and locked files are filtered`() = runBlockingTest {
+        val root = FileFolder(id = 1)
+        val files = listOf(
+            FileFolder(id = 2),
+            FileFolder(id = 3, isHidden = true),
+            FileFolder(id = 4, isLocked = true),
+            FileFolder(id = 5, isHiddenForUser = true),
+            FileFolder(id = 6, isLockedForUser = true)
+        )
+
+        coEvery { fileFolderApi.getRootFolderForContext(any(), any(), any()) } returns DataResult.Success(root)
+        coEvery { fileFolderApi.getFirstPageFiles(1, any()) } returns DataResult.Success(files)
+        coEvery { fileFolderApi.getFirstPageFolders(1, any()) } returns DataResult.Success(emptyList())
+
+        val result = repository.getCourseFiles(1)
+
+        Assert.assertEquals(files.subList(0, 1), result)
+    }
+
+    @Test
     fun `Returns empty list when files request fails`() = runBlockingTest {
         coEvery { fileFolderApi.getRootFolderForContext(any(), any(), any()) } returns DataResult.Fail()
 

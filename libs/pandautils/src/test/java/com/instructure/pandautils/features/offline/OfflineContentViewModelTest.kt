@@ -18,7 +18,6 @@
 package com.instructure.pandautils.features.offline
 
 import android.content.Context
-import android.content.res.Resources
 import android.text.format.Formatter
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
@@ -49,7 +48,6 @@ class OfflineContentViewModelTest {
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
-    private val resources: Resources = mockk(relaxed = true)
     private val offlineContentRepository: OfflineContentRepository = mockk(relaxed = true)
     private val storageUtils: StorageUtils = mockk(relaxed = true)
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
@@ -79,7 +77,7 @@ class OfflineContentViewModelTest {
     @Test
     fun `Post error state when fetching fails`() {
         coEvery { offlineContentRepository.getCourses() } throws Exception()
-        every { resources.getString(R.string.offline_content_loading_error) } returns "Error"
+        every { context.getString(R.string.offline_content_loading_error) } returns "Error"
 
         createViewModel()
 
@@ -112,7 +110,7 @@ class OfflineContentViewModelTest {
         every { storageUtils.getTotalSpace() } returns 100L
         every { storageUtils.getFreeSpace() } returns 80L
         every { storageUtils.getAppSize() } returns 10L
-        every { resources.getString(R.string.offline_content_storage_info, any(), any()) } returns "Used 20 GB of 100 GB"
+        every { context.getString(R.string.offline_content_storage_info, any(), any()) } returns "Used 20 GB of 100 GB"
 
         createViewModel()
 
@@ -233,7 +231,7 @@ class OfflineContentViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = OfflineContentViewModel(savedStateHandle, context, resources, offlineContentRepository, storageUtils)
+        viewModel = OfflineContentViewModel(savedStateHandle, context, offlineContentRepository, storageUtils)
         viewModel.data.observe(lifecycleOwner) {}
     }
 

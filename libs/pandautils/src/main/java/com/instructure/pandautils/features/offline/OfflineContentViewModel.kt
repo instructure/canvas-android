@@ -18,7 +18,6 @@
 package com.instructure.pandautils.features.offline
 
 import android.content.Context
-import android.content.res.Resources
 import android.text.format.Formatter
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.models.Course
@@ -38,11 +37,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
+
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
-    private val resources: Resources,
     private val offlineContentRepository: OfflineContentRepository,
     private val storageUtils: StorageUtils
 ) : ViewModel() {
@@ -75,7 +75,7 @@ class OfflineContentViewModel @Inject constructor(
                 _data.postValue(data)
                 _state.postValue(ViewState.Success)
             } catch (ex: Exception) {
-                _state.postValue(ViewState.Error(resources.getString(R.string.offline_content_loading_error)))
+                _state.postValue(ViewState.Error(context.getString(R.string.offline_content_loading_error)))
             }
         }
     }
@@ -183,16 +183,12 @@ class OfflineContentViewModel @Inject constructor(
         val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
         val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
-        val storageInfoText = resources.getString(
+        val storageInfoText = context.getString(
             R.string.offline_content_storage_info,
             Formatter.formatShortFileSize(context, usedSpace),
             Formatter.formatShortFileSize(context, totalSpace),
         )
 
         return StorageInfo(otherPercent, canvasPercent, storageInfoText)
-    }
-
-    companion object {
-        private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
     }
 }

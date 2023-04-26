@@ -19,12 +19,9 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.os.Environment
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 
-class StorageUtils(
-    @ApplicationContext private val context: Context
-) {
+class StorageUtils(private val context: Context) {
 
     fun getTotalSpace(): Long {
         val externalStorageDirectory = Environment.getExternalStorageDirectory()

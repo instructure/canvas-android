@@ -55,7 +55,7 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
         applyTheme()
 
         viewModel.data.observe(viewLifecycleOwner) { data ->
-            setupMenu(data.selectedCount)
+            updateMenuText(data.selectedCount)
         }
     }
 
@@ -70,16 +70,15 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
             subtitle = canvasContext?.name ?: getString(R.string.offline_content_all_courses)
             setBackgroundColor(ThemePrefs.primaryColor)
             setupAsBackButton(this@OfflineContentFragment)
+            setMenu(R.menu.menu_offline_content) {
+                viewModel.toggleSelection()
+            }
         }
     }
 
     override fun getFragment(): Fragment = this
 
-    private fun setupMenu(selectedCount: Int) {
-        binding.toolbar.setMenu(R.menu.menu_offline_content) {
-            viewModel.toggleSelection()
-        }
-
+    private fun updateMenuText(selectedCount: Int) {
         binding.toolbar.menu.items.firstOrNull()?.title = getString(
             if (selectedCount > 0) R.string.offline_content_deselect_all else R.string.offline_content_select_all
         )
