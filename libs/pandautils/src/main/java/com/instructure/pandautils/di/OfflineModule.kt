@@ -18,10 +18,13 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
 import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.facade.*
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides
@@ -148,5 +151,74 @@ class OfflineModule {
     @Provides
     fun provideDiscussionParticipantDao(appDatabase: OfflineDatabase): DiscussionParticipantDao {
         return appDatabase.discussionParticipantDao()
+    }
+
+    @Provides
+    fun provideAssignmentFacade(
+        assignmentGroupDao: AssignmentGroupDao,
+        assignmentDao: AssignmentDao,
+        plannerOverrideDao: PlannerOverrideDao,
+        rubricSettingsDao: RubricSettingsDao,
+        submissionFacade: SubmissionFacade,
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+    ): AssignmentFacade {
+        return AssignmentFacade(
+            assignmentGroupDao,
+            assignmentDao,
+            plannerOverrideDao,
+            rubricSettingsDao,
+            submissionFacade,
+            discussionTopicHeaderFacade
+        )
+    }
+
+    @Provides
+    fun provideSubmissionFacade(
+        submissionDao: SubmissionDao,
+        groupDao: GroupDao,
+        mediaCommentDao: MediaCommentDao,
+        userDao: UserDao,
+        userApi: UserAPI.UsersInterface
+    ): SubmissionFacade {
+        return SubmissionFacade(submissionDao, groupDao, mediaCommentDao, userDao, userApi)
+    }
+
+    @Provides
+    fun provideDiscussionTopicHeaderFacade(
+        discussionTopicHeaderDao: DiscussionTopicHeaderDao,
+        discussionParticipantDao: DiscussionParticipantDao
+    ): DiscussionTopicHeaderFacade {
+        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao)
+    }
+
+    @Provides
+    fun provideCourseFacade(
+        termDao: TermDao,
+        courseDao: CourseDao,
+        gradingPeriodDao: GradingPeriodDao,
+        courseGradingPeriodDao: CourseGradingPeriodDao,
+        sectionDao: SectionDao,
+        tabDao: TabDao,
+        enrollmentFacade: EnrollmentFacade
+    ): CourseFacade {
+        return CourseFacade(
+            termDao,
+            courseDao,
+            gradingPeriodDao,
+            courseGradingPeriodDao,
+            sectionDao,
+            tabDao,
+            enrollmentFacade
+        )
+    }
+
+    @Provides
+    fun provideEnrollmentFacade(
+        userDao: UserDao,
+        enrollmentDao: EnrollmentDao,
+        gradesDao: GradesDao,
+        userApi: UserAPI.UsersInterface
+    ): EnrollmentFacade {
+        return EnrollmentFacade(userDao, enrollmentDao, gradesDao, userApi)
     }
 }

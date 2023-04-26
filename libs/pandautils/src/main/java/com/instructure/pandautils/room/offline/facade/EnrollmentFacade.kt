@@ -1,0 +1,59 @@
+/*
+ * Copyright (C) 2023 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+package com.instructure.pandautils.room.offline.facade
+
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.pandautils.room.offline.daos.EnrollmentDao
+import com.instructure.pandautils.room.offline.daos.GradesDao
+import com.instructure.pandautils.room.offline.daos.UserDao
+import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
+import com.instructure.pandautils.room.offline.entities.GradesEntity
+import com.instructure.pandautils.room.offline.entities.UserEntity
+
+class EnrollmentFacade(
+    private val userDao: UserDao,
+    private val enrollmentDao: EnrollmentDao,
+    private val gradesDao: GradesDao,
+    private val userApi: UserAPI.UsersInterface
+) {
+
+    suspend fun insertEnrollment(enrollment: Enrollment, courseId: Long) {
+        if (enrollment.userId != 0L) {
+            val user = enrollment.user ?: userApi.getUser(
+                enrollment.userId,
+                RestParams(isForceReadFromNetwork = true)
+            ).dataOrThrow
+            userDao.insert(UserEntity(user))
+        }
+
+        enrollment.observedUser?.let { observedUser ->
+            userDao.insert(UserEntity(observedUser))
+        }
+
+        val enrollmentId = enrollmentDao.insert(
+            EnrollmentEntity(
+                enrollment,
+                courseId = courseId,
+                observedUserId = enrollment.observedUser?.id
+            )
+        )
+        enrollment.grades?.let { grades -> gradesDao.insert(GradesEntity(grades, enrollmentId)) }
+    }
+}
