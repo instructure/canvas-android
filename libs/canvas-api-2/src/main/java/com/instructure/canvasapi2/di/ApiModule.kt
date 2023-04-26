@@ -182,4 +182,9 @@ class ApiModule {
     fun provideAssignmentApi(): AssignmentAPI.AssignmentInterface {
         return RestBuilder().build(AssignmentAPI.AssignmentInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideFileFolderApi(): FileFolderAPI.FilesFoldersInterface {
+        return RestBuilder().build(FileFolderAPI.FilesFoldersInterface::class.java, RestParams())
+    }
 }

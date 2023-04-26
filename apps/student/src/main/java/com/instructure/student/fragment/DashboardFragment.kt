@@ -45,6 +45,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
+import com.instructure.pandautils.features.offline.OfflineContentFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
@@ -156,6 +157,10 @@ class DashboardFragment : ParentFragment() {
                     }
                 }.show(requireFragmentManager(), ColorPickerDialog::class.java.simpleName)
             }
+
+            override fun onManageOfflineContent(course: Course) {
+                RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute(course))
+            }
         })
 
         configureRecyclerView()
@@ -171,6 +176,7 @@ class DashboardFragment : ParentFragment() {
             toolbar.setMenu(R.menu.menu_dashboard) { item ->
                 when (item.itemId) {
                     R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+                    R.id.menu_dashboard_offline -> RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute())
                 }
             }
 

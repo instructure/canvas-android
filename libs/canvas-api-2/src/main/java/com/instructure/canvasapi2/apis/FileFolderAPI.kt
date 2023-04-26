@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 import java.io.IOException
@@ -31,13 +32,20 @@ import java.util.*
 
 object FileFolderAPI {
 
-    internal interface FilesFoldersInterface {
+    interface FilesFoldersInterface {
 
         @GET("self/folders/root")
         fun getRootUserFolder(): Call<FileFolder>
 
         @GET("{contextId}/folders/root")
         fun getRootFolderForContext(@Path("contextId") contextId: Long): Call<FileFolder>
+
+        @GET("{contextType}/{contextId}/folders/root")
+        suspend fun getRootFolderForContext(
+            @Path("contextId") contextId: Long,
+            @Path("contextType") contextType: String,
+            @Tag params: RestParams
+        ): DataResult<FileFolder>
 
         @GET("folders/{folderId}")
         fun getFolder(@Path("folderId") folderId: Long): Call<FileFolder>
@@ -51,14 +59,23 @@ object FileFolderAPI {
         @GET("folders/{folderId}/folders")
         fun getFirstPageFolders(@Path("folderId") folderId: Long): Call<List<FileFolder>>
 
+        @GET("folders/{folderId}/folders")
+        suspend fun getFirstPageFolders(@Path("folderId") folderId: Long, @Tag params: RestParams): DataResult<List<FileFolder>>
+
         @GET("folders/{folderId}/files?include[]=usage_rights")
         fun getFirstPageFiles(@Path("folderId") folderId: Long): Call<List<FileFolder>>
+
+        @GET("folders/{folderId}/files?include[]=usage_rights")
+        suspend fun getFirstPageFiles(@Path("folderId") folderId: Long, @Tag params: RestParams): DataResult<List<FileFolder>>
 
         @GET("{fileUrl}")
         fun getFileFolderFromURL(@Path(value = "fileUrl", encoded = true) fileURL: String): Call<FileFolder>
 
         @GET
         fun getNextPageFileFoldersList(@Url nextURL: String): Call<List<FileFolder>>
+
+        @GET
+        suspend fun getNextPageFileFoldersList(@Url nextURL: String, @Tag params: RestParams): DataResult<List<FileFolder>>
 
         @GET("{canvasContext}/files")
         fun searchFiles(@Path(value = "canvasContext", encoded = true) contextPath: String, @Query("search_term") query: String): Call<List<FileFolder>>
