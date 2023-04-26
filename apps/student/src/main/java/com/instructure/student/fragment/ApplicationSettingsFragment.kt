@@ -34,6 +34,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
@@ -43,9 +44,11 @@ import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.databinding.FragmentApplicationSettingsBinding
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 @ScreenView(SCREEN_VIEW_APPLICATION_SETTINGS)
 @PageView(url = "profile/settings")
+@AndroidEntryPoint
 class ApplicationSettingsFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentApplicationSettingsBinding::bind)
@@ -53,7 +56,7 @@ class ApplicationSettingsFragment : ParentFragment() {
     override fun title(): String = getString(R.string.settings)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_application_settings, container, false)
+        inflater.inflate(R.layout.fragment_application_settings, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -111,6 +114,10 @@ class ApplicationSettingsFragment : ParentFragment() {
             AboutFragment.newInstance().show(childFragmentManager, null)
         }
 
+        offlineSyncSettingsContainer.onClick {
+            addFragment(SyncSettingsFragment.newInstance())
+        }
+
         if (ApiPrefs.canvasForElementary) {
             elementaryViewSwitch.isChecked = ApiPrefs.elementaryDashboardEnabledOverride
             elementaryViewLayout.setVisible()
@@ -158,7 +165,7 @@ class ApplicationSettingsFragment : ParentFragment() {
         val calendarFeed = ApiPrefs.user?.calendar?.ics
         if (!calendarFeed.isNullOrEmpty()) {
             binding.subscribeToCalendar.apply {
-               setVisible()
+                setVisible()
                 onClick {
                     AlertDialog.Builder(requireContext())
                         .setMessage(R.string.subscribeToCalendarMessage)
@@ -166,7 +173,7 @@ class ApplicationSettingsFragment : ParentFragment() {
                             dialog.dismiss()
                             openCalendarLink(calendarFeed)
                         }
-                        .setNegativeButton(R.string.cancel, {dialog, _ -> dialog.dismiss()})
+                        .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
                         .showThemed()
                 }
             }
