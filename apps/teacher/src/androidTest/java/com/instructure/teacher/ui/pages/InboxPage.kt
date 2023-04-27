@@ -12,8 +12,25 @@ import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertVisibility
+import com.instructure.espresso.click
+import com.instructure.espresso.longClick
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeLeft
+import com.instructure.espresso.swipeRight
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
 import org.hamcrest.Matchers
@@ -69,7 +86,6 @@ class InboxPage: BasePage() {
     }
 
     fun filterInbox(filterFor: String) {
-        refresh()
         waitForView(withId(R.id.scopeFilterText))
         onView(withId(R.id.scopeFilter)).click()
         waitForViewWithText(filterFor).click()

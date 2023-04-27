@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Wrthi’n llwytho i fyny i Ffeiliau</string>
     <string name="submissionProgressSubtitle">Wrthi’n llwytho cyflwyniad i fyny i \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Llwytho cyflwyniad i fyny</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Wedi Llwyddo i Gyflwyno</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Cyflwyniad wedi methu</string>
     <string name="dashboardNotificationUploadingFilesTitle">Wrthi’n llwytho ffeiliau i fyny</string>
     <string name="cancelSubmissionDialogTitle">Canslo Cyflwyniad</string>
     <string name="cancelSubmissionDialogMessage">Bydd hyn yn canslo ac yn dileu eich cyflwyniad.</string>

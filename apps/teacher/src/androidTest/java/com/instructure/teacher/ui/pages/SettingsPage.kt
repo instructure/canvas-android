@@ -22,7 +22,11 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.TextViewColorAssertion
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
@@ -32,6 +36,7 @@ class SettingsPage : BasePage(R.id.settingsPage) {
     private val pushNotificationsLabel by OnViewWithId(R.id.notificationPreferenesButton)
     private val rateAppLabel by OnViewWithId(R.id.rateButton)
     private val legalLabel by OnViewWithId(R.id.legalButton)
+    private val aboutLabel by OnViewWithId(R.id.aboutButton)
     private val featureFlagLabel by OnViewWithId(R.id.featureFlagButton)
     private val remoteConfigLabel by OnViewWithId(R.id.remoteConfigButton)
     private val appThemeTitle by OnViewWithId(R.id.appThemeTitle)
@@ -51,6 +56,10 @@ class SettingsPage : BasePage(R.id.settingsPage) {
 
     fun openLegalPage() {
         legalLabel.scrollTo().click()
+    }
+
+    fun openAboutPage() {
+        aboutLabel.scrollTo().click()
     }
 
     fun openFeatureFlagsPage() {
