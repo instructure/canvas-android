@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.PageDao
@@ -48,22 +49,26 @@ class OfflineSyncWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
-        val courses = courseSyncSettingsDao.findAll()
-        courses.forEach { courseSettings ->
-            fetchCourseDetails(courseSettings.courseId)
-            if (courseSettings.pages) {
-                fetchPages(courseSettings.courseId)
+        try {
+            val courses = courseSyncSettingsDao.findAll()
+            courses.forEach { courseSettings ->
+                fetchCourseDetails(courseSettings.courseId)
+                if (courseSettings.pages) {
+                    fetchPages(courseSettings.courseId)
+                }
+                if (courseSettings.assignments || courseSettings.grades) {
+                    fetchAssignments(courseSettings.courseId)
+                }
             }
-            if (courseSettings.assignments || courseSettings.grades) {
-                fetchAssignments(courseSettings.courseId)
-            }
+            return Result.success()
+        } catch (e: Exception) {
+            return Result.retry()
         }
-        return Result.success()
     }
 
     private suspend fun fetchPages(courseId: Long) {
         val params = RestParams(isForceReadFromNetwork = true)
-        val pages = pageApi.getFirstPagePages(courseId, "courses", params).depaginate { nextUrl ->
+        val pages = pageApi.getFirstPagePages(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
             pageApi.getNextPagePagesList(nextUrl, params)
         }.dataOrThrow
 
