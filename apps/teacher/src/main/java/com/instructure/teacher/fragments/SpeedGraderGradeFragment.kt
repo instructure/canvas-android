@@ -252,7 +252,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         hiddenIcon.setGone()
     }
 
-    val hasUnsavedChanges: Boolean get() = binding.rubricEditView.hasUnsavedChanges
+    val hasUnsavedChanges: Boolean get() = if (view != null) binding.rubricEditView.hasUnsavedChanges else false
 
     override fun onRefreshFinished() = with(binding) {
         gradeProgressSpinner.setGone()
