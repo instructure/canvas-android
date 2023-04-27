@@ -54,7 +54,7 @@ class OfflineSyncWorker @AssistedInject constructor(
             if (courseSettings.pages) {
                 fetchPages(courseSettings.courseId)
             }
-            if (courseSettings.assignments || courseSettings.pages) {
+            if (courseSettings.assignments || courseSettings.grades) {
                 fetchAssignments(courseSettings.courseId)
             }
         }
