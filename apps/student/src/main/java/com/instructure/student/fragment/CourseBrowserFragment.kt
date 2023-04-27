@@ -73,12 +73,6 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     @Inject
     lateinit var repository: CourseBrowserRepository
 
-    @Inject
-    lateinit var courseSyncSettingsDao: CourseSyncSettingsDao
-
-    @Inject
-    lateinit var workManager: WorkManager
-
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
     private var apiCalls: Job? = null
