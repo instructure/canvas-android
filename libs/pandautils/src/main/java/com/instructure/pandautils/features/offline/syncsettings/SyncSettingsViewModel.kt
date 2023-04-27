@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.features.offline.syncsettings
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SyncSettingsViewModel @Inject constructor(
-    private val syncSettingsPreferences: SyncSettingsPreferences
+    private val syncSettingsPreferences: SyncSettingsPreferences,
+    private val resources: Resources
 ) : ViewModel() {
 
     val data: LiveData<SyncSettingsViewData>
@@ -37,6 +39,22 @@ class SyncSettingsViewModel @Inject constructor(
     }
 
     fun loadData() {
-        _data.postValue(SyncSettingsViewData(true, "Daily", true))
+        _data.postValue(
+            SyncSettingsViewData(
+                syncSettingsPreferences.autoContentSync,
+                resources.getString(SyncFrequency.valueOf(syncSettingsPreferences.syncFrequency).readable),
+                syncSettingsPreferences.wifiOnly
+            )
+        )
+    }
+
+    fun onAutoSyncChanged(checked: Boolean) {
+        syncSettingsPreferences.autoContentSync = checked
+        loadData()
+    }
+
+    fun onWifiOnlyChanged(checked: Boolean) {
+        syncSettingsPreferences.wifiOnly = checked
+        loadData()
     }
 }

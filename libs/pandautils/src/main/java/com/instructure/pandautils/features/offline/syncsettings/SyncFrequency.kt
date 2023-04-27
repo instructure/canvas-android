@@ -17,6 +17,11 @@
 
 package com.instructure.pandautils.features.offline.syncsettings
 
-enum class SyncFrequency {
-    DAILY, WEEKLY
+import androidx.annotation.StringRes
+import com.instructure.pandautils.R
+
+enum class SyncFrequency(@StringRes val readable: Int) {
+    DAILY(R.string.daily),
+
+    WEEKLY(R.string.weekly)
 }

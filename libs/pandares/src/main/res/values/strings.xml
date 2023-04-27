@@ -1422,4 +1422,6 @@
     <string name="syncSettings_wifiOnlyTitle">Sync Content Over Wi-Fi Only</string>
     <string name="syncSettings_wifiOnlyDescription">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
     <string name="syncSettings_toolbarTitle">Synchronization</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
 </resources>

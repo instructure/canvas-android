@@ -34,7 +34,9 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
 import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsFragment
+import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsPreferences
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
@@ -114,9 +116,7 @@ class ApplicationSettingsFragment : ParentFragment() {
             AboutFragment.newInstance().show(childFragmentManager, null)
         }
 
-        offlineSyncSettingsContainer.onClick {
-            addFragment(SyncSettingsFragment.newInstance())
-        }
+        setUpSyncSettings()
 
         if (ApiPrefs.canvasForElementary) {
             elementaryViewSwitch.isChecked = ApiPrefs.elementaryDashboardEnabledOverride
@@ -158,6 +158,15 @@ class ApplicationSettingsFragment : ParentFragment() {
 
         binding.appThemeContainer.onClick {
             AppThemeSelector.showAppThemeSelectorDialog(requireContext(), binding.appThemeStatus)
+        }
+    }
+
+    private fun setUpSyncSettings() {
+        val syncFrequency = getString(SyncFrequency.valueOf(SyncSettingsPreferences.syncFrequency).readable)
+
+        binding.offlineSyncSettingsStatus.text = syncFrequency
+        binding.offlineSyncSettingsContainer.onClick {
+            addFragment(SyncSettingsFragment.newInstance())
         }
     }
 

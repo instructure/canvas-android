@@ -23,9 +23,9 @@ import com.instructure.canvasapi2.utils.StringPref
 
 object SyncSettingsPreferences : PrefManager("sync-settings-preferences") {
 
-    val autoContentSync by BooleanPref()
+    var autoContentSync by BooleanPref(defaultValue = true)
 
-    val syncFrequency by StringPref()
+    var syncFrequency by StringPref(defaultValue = "DAILY")
 
-    val wifiOnly by BooleanPref()
+    var wifiOnly by BooleanPref(defaultValue = true)
 }
