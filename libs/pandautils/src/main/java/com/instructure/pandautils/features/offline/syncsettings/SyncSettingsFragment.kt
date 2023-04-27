@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.features.offline.syncsettings
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,10 +53,35 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         applyTheme()
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
     }
 
-    companion object {
-        fun newInstance() = SyncSettingsFragment()
+    private fun handleAction(action: SyncSettingsAction) {
+        when (action) {
+            is SyncSettingsAction.ShowFrequencySelector -> showFrequencySelector(
+                action.items,
+                action.selectedItemPosition,
+                action.onItemSelected
+            )
+        }
+    }
+
+    private fun showFrequencySelector(items: List<String>, selectedItemPosition: Int, onItemSelected: (Int) -> Unit) {
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
+            .setTitle(R.string.syncSettings_syncFrequencyDialogTitle)
+            .setSingleChoiceItems(items.toTypedArray(), selectedItemPosition) { dialog, selected ->
+                onItemSelected(selected)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override val navigation: Navigation?
@@ -76,5 +102,9 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
         }
     }
 
-    override fun getFragment(): Fragment? = this
+    override fun getFragment(): Fragment = this
+
+    companion object {
+        fun newInstance() = SyncSettingsFragment()
+    }
 }

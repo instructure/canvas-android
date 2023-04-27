@@ -21,6 +21,7 @@ import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.instructure.pandautils.mvvm.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -33,6 +34,10 @@ class SyncSettingsViewModel @Inject constructor(
     val data: LiveData<SyncSettingsViewData>
         get() = _data
     private val _data = MutableLiveData<SyncSettingsViewData>()
+
+    val events: LiveData<Event<SyncSettingsAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<SyncSettingsAction>>()
 
     init {
         loadData()
@@ -56,5 +61,20 @@ class SyncSettingsViewModel @Inject constructor(
     fun onWifiOnlyChanged(checked: Boolean) {
         syncSettingsPreferences.wifiOnly = checked
         loadData()
+    }
+
+    fun showFrequencySelector() {
+        val items = SyncFrequency.values()
+        val selectedItem = items.indexOf(SyncFrequency.valueOf(syncSettingsPreferences.syncFrequency))
+
+        _events.postValue(
+            Event(SyncSettingsAction.ShowFrequencySelector(
+                items.map { resources.getString(it.readable) },
+                selectedItem,
+            ) {
+                syncSettingsPreferences.syncFrequency = items[it].name
+                loadData()
+            })
+        )
     }
 }

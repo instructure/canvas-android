@@ -22,3 +22,11 @@ data class SyncSettingsViewData(
     val syncFrequency: String,
     val wifiOnly: Boolean
 )
+
+sealed class SyncSettingsAction {
+    data class ShowFrequencySelector(
+        val items: List<String>,
+        val selectedItemPosition: Int,
+        val onItemSelected: (Int) -> Unit
+    ) : SyncSettingsAction()
+}

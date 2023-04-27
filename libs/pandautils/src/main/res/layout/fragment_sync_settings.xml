@@ -46,13 +46,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="@{viewModel.data.autoSyncEnabled}"
+            android:onCheckedChanged="@{(view, checked) -> view.isPressed() ? viewModel.onAutoSyncChanged(checked) : null}"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
             android:text="@string/syncSettings_autoContentSyncTitle"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            android:theme="@style/SwitchTheme"
-            android:onCheckedChanged="@{(view, checked) -> view.isPressed() ? viewModel.onAutoSyncChanged(checked) : null}"/>
+            android:theme="@style/SwitchTheme" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -73,10 +73,12 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:id="@+id/syncFrequencyContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
             android:clickable="@{viewModel.data.autoSyncEnabled}"
+            android:onClick="@{() -> viewModel.showFrequencySelector()}"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp">
@@ -120,6 +122,7 @@
             android:layout_height="wrap_content"
             android:checked="@{viewModel.data.wifiOnly}"
             android:enabled="@{viewModel.data.autoSyncEnabled}"
+            android:onCheckedChanged="@{(view, checked) -> view.isPressed() ? viewModel.onWifiOnlyChanged(checked) : null}"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
             android:text="@string/syncSettings_wifiOnlyTitle"
