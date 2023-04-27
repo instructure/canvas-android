@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.facade
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
 import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
@@ -37,6 +38,8 @@ class SubmissionFacade(
     private val userApi: UserAPI.UsersInterface,
 ) {
 
+    private val fetchedUsers = mutableMapOf<Long, User>()
+
     suspend fun insertSubmission(submission: Submission): Long {
         val groupId = submission.group?.let { group -> groupDao.insert(GroupEntity(group)) }
         submission.mediaComment?.let { mediaComment ->
@@ -47,17 +50,30 @@ class SubmissionFacade(
             )
         }
         if (submission.userId != 0L) {
-            val user = submission.user ?: userApi.getUser(
-                submission.userId,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull
+            val user = submission.user
+                ?: fetchedUsers[submission.userId]
+                ?: userApi.getUser(
+                    submission.userId,
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrNull
 
-            user?.let { userDao.insert(UserEntity(it)) }
+            if (user != null) {
+                fetchedUsers[user.id] = user
+                userDao.insert(UserEntity(user))
+            }
         }
 
         if (submission.graderId != 0L) {
-            val grader = userApi.getUser(submission.graderId, RestParams(isForceReadFromNetwork = true)).dataOrNull
-            grader?.let { userDao.insert(UserEntity(it)) }
+            val grader = fetchedUsers[submission.graderId]
+                ?: userApi.getUser(
+                    submission.graderId,
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrNull
+
+            if (grader != null) {
+                fetchedUsers[grader.id] = grader
+                userDao.insert(UserEntity(grader))
+            }
         }
 
         submission.submissionHistory.forEach { submissionHistoryItem ->
