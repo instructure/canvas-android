@@ -127,7 +127,7 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Hidden and locked files are filtered`() = runBlockingTest {
+    fun `Hidden and locked files and folders are filtered`() = runBlockingTest {
         val root = FileFolder(id = 1)
         val files = listOf(
             FileFolder(id = 2),
@@ -136,14 +136,24 @@ class OfflineContentRepositoryTest {
             FileFolder(id = 5, isHiddenForUser = true),
             FileFolder(id = 6, isLockedForUser = true)
         )
+        val folders = listOf(
+            FileFolder(id = 7),
+            FileFolder(id = 8, isHidden = true),
+            FileFolder(id = 9, isLocked = true),
+            FileFolder(id = 10, isHiddenForUser = true),
+            FileFolder(id = 11, isLockedForUser = true)
+        )
+        val subFolderFiles = listOf(FileFolder(id = 12))
 
         coEvery { fileFolderApi.getRootFolderForContext(any(), any(), any()) } returns DataResult.Success(root)
         coEvery { fileFolderApi.getFirstPageFiles(1, any()) } returns DataResult.Success(files)
-        coEvery { fileFolderApi.getFirstPageFolders(1, any()) } returns DataResult.Success(emptyList())
+        coEvery { fileFolderApi.getFirstPageFolders(1, any()) } returns DataResult.Success(folders)
+        coEvery { fileFolderApi.getFirstPageFiles(7, any()) } returns DataResult.Success(subFolderFiles)
+        coEvery { fileFolderApi.getFirstPageFolders(7, any()) } returns DataResult.Success(emptyList())
 
         val result = repository.getCourseFiles(1)
 
-        Assert.assertEquals(files.subList(0, 1), result)
+        Assert.assertEquals(files.subList(0, 1) + subFolderFiles, result)
     }
 
     @Test

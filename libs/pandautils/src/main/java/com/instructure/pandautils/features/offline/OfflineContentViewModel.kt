@@ -89,7 +89,7 @@ class OfflineContentViewModel @Inject constructor(
 
         return courses.map { course ->
             val tabs = course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }.orEmpty()
-            val files = offlineContentRepository.getCourseFiles(course.id)
+            val files = if (tabs.any { it.tabId == Tab.FILES_ID }) offlineContentRepository.getCourseFiles(course.id) else emptyList()
             val size = Formatter.formatShortFileSize(context, files.sumOf { it.size })
             createCourseItemViewModel(course, size, tabs, files)
         }
