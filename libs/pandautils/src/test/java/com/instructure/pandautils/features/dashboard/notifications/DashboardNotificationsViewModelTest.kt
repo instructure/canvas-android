@@ -38,9 +38,9 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
-import com.instructure.pandautils.room.daos.DashboardFileUploadDao
-import com.instructure.pandautils.room.daos.FileUploadInputDao
-import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

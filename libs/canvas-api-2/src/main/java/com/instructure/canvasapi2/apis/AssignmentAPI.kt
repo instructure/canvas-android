@@ -22,12 +22,13 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBodyWrapper
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
 
 object AssignmentAPI {
-    internal interface AssignmentInterface {
+    interface AssignmentInterface {
         @GET("courses/{courseId}/external_tools/sessionless_launch")
         fun getExternalToolLaunchUrl(@Path("courseId") courseId: Long, @Query("id") externalToolId: Long, @Query("assignment_id") assignmentId: Long, @Query("launch_type") launchType: String = "assessment"): Call<LTITool>
 
@@ -48,8 +49,14 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long): Call<List<AssignmentGroup>>
 
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
+        suspend fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<List<AssignmentGroup>>
+
         @GET
         fun getNextPageAssignmentGroupListWithAssignments(@Url nextUrl: String): Call<List<AssignmentGroup>>
+
+        @GET
+        suspend fun getNextPageAssignmentGroupListWithAssignments(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<AssignmentGroup>>
 
         // https://canvas.instructure.com/doc/api/all_resources.html#method.submissions_api.for_students
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
