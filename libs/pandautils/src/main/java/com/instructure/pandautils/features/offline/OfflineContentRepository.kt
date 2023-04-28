@@ -32,21 +32,21 @@ class OfflineContentRepository(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) {
     suspend fun getCourse(courseId: Long): Course {
-        val params = RestParams()
+        val params = RestParams(isForceReadFromNetwork = true)
         val courseResult = coursesApi.getCourse(courseId, params)
 
         return courseResult.dataOrThrow
     }
 
     suspend fun getCourses(): List<Course> {
-        val params = RestParams(usePerPageQueryParam = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         val coursesResult = coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
         return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
     }
 
     suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
-        val params = RestParams()
+        val params = RestParams(isForceReadFromNetwork = true)
         val rootFolderResult = fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
 
         if (rootFolderResult.isFail) return emptyList()
@@ -66,24 +66,28 @@ class OfflineContentRepository(
             result.addAll(subFolderFiles)
         }
 
-        return result.filter { !it.isHidden && !it.isLocked && !it.isHiddenForUser && !it.isLockedForUser }
+        return result
     }
 
     private suspend fun getFolders(folder: FileFolder): List<FileFolder> {
-        val params = RestParams()
+        val params = RestParams(isForceReadFromNetwork = true)
         val foldersResult = fileFolderApi.getFirstPageFolders(folder.id, params).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
 
-        return foldersResult.dataOrNull.orEmpty()
+        return foldersResult.dataOrNull.orEmpty().filterValidFileFolders()
     }
 
     private suspend fun getFiles(folder: FileFolder): List<FileFolder> {
-        val params = RestParams()
+        val params = RestParams(isForceReadFromNetwork = true)
         val filesResult = fileFolderApi.getFirstPageFiles(folder.id, params).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
 
-        return filesResult.dataOrNull.orEmpty()
+        return filesResult.dataOrNull.orEmpty().filterValidFileFolders()
+    }
+
+    private fun List<FileFolder>.filterValidFileFolders() = this.filter {
+        !it.isHidden && !it.isLocked && !it.isHiddenForUser && !it.isLockedForUser
     }
 }
