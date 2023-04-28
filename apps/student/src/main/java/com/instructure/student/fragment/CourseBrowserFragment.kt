@@ -23,9 +23,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.models.*
@@ -41,12 +44,15 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.offline.sync.OfflineSyncWorker
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.DisableableAppBarLayoutBehavior
@@ -62,7 +68,7 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_COURSE_BROWSER)
 @PageView(url = "{canvasContext}")
 @AndroidEntryPoint
-class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnOffsetChangedListener  {
+class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnOffsetChangedListener {
 
     @Inject
     lateinit var repository: CourseBrowserRepository
@@ -78,7 +84,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_course_browser, container, false)
+        inflater.inflate(R.layout.fragment_course_browser, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
@@ -155,7 +161,13 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Set course image again after orientation change to ensure correct scale/crop
-        (canvasContext as? Course)?.let { binding.courseImage.setCourseImage(it, it.backgroundColor, !StudentPrefs.hideCourseColorOverlay) }
+        (canvasContext as? Course)?.let {
+            binding.courseImage.setCourseImage(
+                it,
+                it.backgroundColor,
+                !StudentPrefs.hideCourseColorOverlay
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -167,8 +179,16 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), binding.noOverlayToolbar, requireContext().getColor(R.color.white))
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), binding.overlayToolbar, requireContext().getColor(R.color.white))
+        ViewStyler.colorToolbarIconsAndText(
+            requireActivity(),
+            binding.noOverlayToolbar,
+            requireContext().getColor(R.color.white)
+        )
+        ViewStyler.colorToolbarIconsAndText(
+            requireActivity(),
+            binding.overlayToolbar,
+            requireContext().getColor(R.color.white)
+        )
         ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
     }
 
@@ -184,9 +204,10 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
             // We don't want to list external tools that are hidden
             var homePageTitle: String? = null
-            val isHomeAPage = if (canvasContext is Course) TabHelper.isHomeTabAPage(canvasContext as Course) else false // Courses are the only CanvasContext that have settable home pages
+            val isHomeAPage =
+                if (canvasContext is Course) TabHelper.isHomeTabAPage(canvasContext as Course) else false // Courses are the only CanvasContext that have settable home pages
 
-            if(isHomeAPage) {
+            if (isHomeAPage) {
                 val homePage = awaitApi<Page> { PageManager.getFrontPage(canvasContext, isRefresh, it) }
                 homePageTitle = homePage.title
             }
@@ -206,7 +227,10 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
                     }
 
                     // If the home tab is a Page and we clicked it lets route directly there.
-                    RouteMatcher.route(requireActivity(), PageDetailsFragment.makeRoute(canvasContext, Page.FRONT_PAGE_NAME).apply { ignoreDebounce = true })
+                    RouteMatcher.route(
+                        requireActivity(),
+                        PageDetailsFragment.makeRoute(canvasContext, Page.FRONT_PAGE_NAME)
+                            .apply { ignoreDebounce = true })
                 } else {
                     val route = TabHelper.getRouteByTabId(tab, canvasContext)?.apply { ignoreDebounce = true }
                     RouteMatcher.route(requireActivity(), route)
@@ -234,10 +258,21 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         val percentage = Math.abs(verticalOffset).div(appBarLayout?.totalScrollRange?.toFloat() ?: 1F)
 
         if (percentage <= 0.3F) {
-            val toolbarAnimation = if(binding.courseBrowserHeader.courseBrowserHeader==null) null else ObjectAnimator.ofFloat(binding.courseBrowserHeader.courseBrowserHeader, View.ALPHA, binding.courseBrowserHeader.courseBrowserHeader.alpha, 0F)
+            val toolbarAnimation =
+                if (binding.courseBrowserHeader.courseBrowserHeader == null) null else ObjectAnimator.ofFloat(
+                    binding.courseBrowserHeader.courseBrowserHeader,
+                    View.ALPHA,
+                    binding.courseBrowserHeader.courseBrowserHeader.alpha,
+                    0F
+                )
             val titleAnimation =
                 ObjectAnimator.ofFloat(binding.courseBrowserTitle, View.ALPHA, binding.courseBrowserTitle.alpha, 1F)
-            val subtitleAnimation = ObjectAnimator.ofFloat(binding.courseBrowserSubtitle, View.ALPHA, binding.courseBrowserSubtitle.alpha, 0.8F)
+            val subtitleAnimation = ObjectAnimator.ofFloat(
+                binding.courseBrowserSubtitle,
+                View.ALPHA,
+                binding.courseBrowserSubtitle.alpha,
+                0.8F
+            )
 
             toolbarAnimation?.setAutoCancel(true)
             titleAnimation?.setAutoCancel(true)
@@ -256,10 +291,21 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
             subtitleAnimation?.start()
 
         } else if (percentage > 0.7F) {
-            val toolbarAnimation = if(binding.courseBrowserHeader.courseBrowserHeader==null) null else ObjectAnimator.ofFloat(binding.courseBrowserHeader.courseBrowserHeader, View.ALPHA, binding.courseBrowserHeader.courseBrowserHeader.alpha, 1F)
+            val toolbarAnimation =
+                if (binding.courseBrowserHeader.courseBrowserHeader == null) null else ObjectAnimator.ofFloat(
+                    binding.courseBrowserHeader.courseBrowserHeader,
+                    View.ALPHA,
+                    binding.courseBrowserHeader.courseBrowserHeader.alpha,
+                    1F
+                )
             val titleAnimation =
                 ObjectAnimator.ofFloat(binding.courseBrowserTitle, View.ALPHA, binding.courseBrowserTitle.alpha, 0F)
-            val subtitleAnimation = ObjectAnimator.ofFloat(binding.courseBrowserSubtitle, View.ALPHA, binding.courseBrowserSubtitle.alpha, 0F)
+            val subtitleAnimation = ObjectAnimator.ofFloat(
+                binding.courseBrowserSubtitle,
+                View.ALPHA,
+                binding.courseBrowserSubtitle.alpha,
+                0F
+            )
 
             toolbarAnimation?.setAutoCancel(true)
             titleAnimation?.setAutoCancel(true)
@@ -281,9 +327,9 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
     companion object {
         fun newInstance(route: Route) =
-                if (validateRoute(route)) CourseBrowserFragment().apply {
-                    arguments = route.canvasContext!!.makeBundle(route.arguments)
-                } else null
+            if (validateRoute(route)) CourseBrowserFragment().apply {
+                arguments = route.canvasContext!!.makeBundle(route.arguments)
+            } else null
 
         private fun validateRoute(route: Route) = route.canvasContext != null
 

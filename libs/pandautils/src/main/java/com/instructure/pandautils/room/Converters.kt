@@ -33,4 +33,14 @@ class Converters {
     fun longToDate(timestamp: Long?): Date? {
         return timestamp?.let { Date(it) }
     }
+
+    @TypeConverter
+    fun fromIntList(list: List<Int>?): String? {
+        return list?.joinToString(",")
+    }
+
+    @TypeConverter
+    fun toIntList(s: String?): List<Int>? {
+        return s?.split(",")?.map { it.toInt() }
+    }
 }
