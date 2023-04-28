@@ -61,11 +61,12 @@ import com.instructure.pandautils.room.offline.entities.*
         SubmissionDiscussionEntryEntity::class,
         SubmissionEntity::class,
         SubmissionHistoryEntity::class,
+        SyncSettingsEntity::class,
         TabEntity::class,
         TermEntity::class,
         UserCalendarEntity::class,
         UserEntity::class
-    ], version = 2
+    ], version = 3
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
@@ -109,4 +110,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun discussionTopicHeaderDao(): DiscussionTopicHeaderDao
 
     abstract fun discussionParticipantDao(): DiscussionParticipantDao
+
+    abstract fun syncSettingsDao(): SyncSettingsDao
 }

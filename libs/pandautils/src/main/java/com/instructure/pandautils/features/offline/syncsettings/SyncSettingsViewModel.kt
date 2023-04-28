@@ -21,13 +21,17 @@ import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SyncSettingsViewModel @Inject constructor(
-    private val syncSettingsPreferences: SyncSettingsPreferences,
+    private val syncSettingsFacade: SyncSettingsFacade,
     private val resources: Resources
 ) : ViewModel() {
 
@@ -39,42 +43,66 @@ class SyncSettingsViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<SyncSettingsAction>>()
 
+    private lateinit var syncSettings: SyncSettingsEntity
+
     init {
         loadData()
     }
 
     fun loadData() {
-        _data.postValue(
-            SyncSettingsViewData(
-                syncSettingsPreferences.autoContentSync,
-                resources.getString(SyncFrequency.valueOf(syncSettingsPreferences.syncFrequency).readable),
-                syncSettingsPreferences.wifiOnly
+        viewModelScope.launch {
+            syncSettings = syncSettingsFacade.getSyncSettings()
+            _data.postValue(
+                SyncSettingsViewData(
+                    syncSettings.autoSyncEnabled,
+                    resources.getString(syncSettings.syncFrequency.readable),
+                    syncSettings.wifiOnly
+                )
             )
-        )
+        }
     }
 
     fun onAutoSyncChanged(checked: Boolean) {
-        syncSettingsPreferences.autoContentSync = checked
-        loadData()
+        viewModelScope.launch {
+            val updated = syncSettings.copy(
+                autoSyncEnabled = checked
+            )
+            syncSettingsFacade.update(updated)
+            loadData()
+        }
     }
 
     fun onWifiOnlyChanged(checked: Boolean) {
-        syncSettingsPreferences.wifiOnly = checked
-        loadData()
+        viewModelScope.launch {
+            val updated = syncSettings.copy(
+                wifiOnly = checked
+            )
+            syncSettingsFacade.update(updated)
+            loadData()
+        }
     }
 
     fun showFrequencySelector() {
         val items = SyncFrequency.values()
-        val selectedItem = items.indexOf(SyncFrequency.valueOf(syncSettingsPreferences.syncFrequency))
+        val selectedItem = items.indexOf(syncSettings.syncFrequency)
 
         _events.postValue(
             Event(SyncSettingsAction.ShowFrequencySelector(
                 items.map { resources.getString(it.readable) },
                 selectedItem,
             ) {
-                syncSettingsPreferences.syncFrequency = items[it].name
-                loadData()
+                updateSyncFrequency(items[it])
             })
         )
+    }
+
+    private fun updateSyncFrequency(syncFrequency: SyncFrequency) {
+        viewModelScope.launch {
+            val updated = syncSettings.copy(
+                syncFrequency = syncFrequency
+            )
+            syncSettingsFacade.update(updated)
+            loadData()
+        }
     }
 }

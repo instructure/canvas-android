@@ -15,20 +15,20 @@
  *
  */
 
-package com.instructure.pandautils.di
+package com.instructure.pandautils.room.offline.daos
 
-import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsPreferences
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import androidx.room.*
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class SyncSettingsModule {
+@Dao
+interface SyncSettingsDao {
 
-    @Provides
-    fun provideSyncSettingsPreferences(): SyncSettingsPreferences {
-        return SyncSettingsPreferences
-    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entity: SyncSettingsEntity)
+
+    @Update
+    suspend fun update(entity: SyncSettingsEntity)
+
+    @Query("SELECT * FROM SyncSettingsEntity WHERE id=1")
+    suspend fun findSyncSettings(): SyncSettingsEntity?
 }

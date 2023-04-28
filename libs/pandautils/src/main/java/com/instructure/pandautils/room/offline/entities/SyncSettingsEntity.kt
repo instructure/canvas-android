@@ -15,17 +15,17 @@
  *
  */
 
-package com.instructure.pandautils.features.offline.syncsettings
+package com.instructure.pandautils.room.offline.entities
 
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.PrefManager
-import com.instructure.canvasapi2.utils.StringPref
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
 
-object SyncSettingsPreferences : PrefManager("sync-settings-preferences") {
-
-    var autoContentSync by BooleanPref(defaultValue = true)
-
-    var syncFrequency by StringPref(defaultValue = "DAILY")
-
-    var wifiOnly by BooleanPref(defaultValue = true)
-}
+@Entity
+data class SyncSettingsEntity(
+    @PrimaryKey
+    val id: Long = 1,
+    val autoSyncEnabled: Boolean,
+    val syncFrequency: SyncFrequency,
+    val wifiOnly: Boolean
+)

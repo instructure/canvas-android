@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
@@ -34,10 +35,9 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
-import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
 import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsFragment
-import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsPreferences
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -47,11 +47,16 @@ import com.instructure.student.databinding.FragmentApplicationSettingsBinding
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_APPLICATION_SETTINGS)
 @PageView(url = "profile/settings")
 @AndroidEntryPoint
 class ApplicationSettingsFragment : ParentFragment() {
+
+    @Inject
+    lateinit var syncSettingsFacade: SyncSettingsFacade
 
     private val binding by viewBinding(FragmentApplicationSettingsBinding::bind)
 
@@ -162,11 +167,13 @@ class ApplicationSettingsFragment : ParentFragment() {
     }
 
     private fun setUpSyncSettings() {
-        val syncFrequency = getString(SyncFrequency.valueOf(SyncSettingsPreferences.syncFrequency).readable)
+        lifecycleScope.launch {
+            val syncFrequency = syncSettingsFacade.getSyncSettings().syncFrequency
 
-        binding.offlineSyncSettingsStatus.text = syncFrequency
-        binding.offlineSyncSettingsContainer.onClick {
-            addFragment(SyncSettingsFragment.newInstance())
+            binding.offlineSyncSettingsStatus.text = getString(syncFrequency.readable)
+            binding.offlineSyncSettingsContainer.onClick {
+                addFragment(SyncSettingsFragment.newInstance())
+            }
         }
     }
 
