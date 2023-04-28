@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.room.offline.daos
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 
@@ -31,4 +32,7 @@ interface SyncSettingsDao {
 
     @Query("SELECT * FROM SyncSettingsEntity WHERE id=1")
     suspend fun findSyncSettings(): SyncSettingsEntity?
+
+    @Query("SELECT * FROM SyncSettingsEntity WHERE id=1")
+    fun findSyncSettingsLiveData(): LiveData<SyncSettingsEntity?>
 }

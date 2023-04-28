@@ -68,7 +68,23 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
                 action.selectedItemPosition,
                 action.onItemSelected
             )
+            is SyncSettingsAction.ShowWifiConfirmation -> showWifiConfirmation(action.confirmationCallback)
         }
+    }
+
+    private fun showWifiConfirmation(confirmationCallback: (Boolean) -> Unit) {
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
+            .setTitle(R.string.syncSettings_wifiConfirmationTitle)
+            .setMessage(R.string.synySettings_wifiConfirmationMessage)
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                confirmationCallback(false)
+                dialog.dismiss()
+            }
+            .setPositiveButton(R.string.syncSettings_wifiConfirmationPositiveButton) { dialog, _ ->
+                confirmationCallback(true)
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun showFrequencySelector(items: List<String>, selectedItemPosition: Int, onItemSelected: (Int) -> Unit) {

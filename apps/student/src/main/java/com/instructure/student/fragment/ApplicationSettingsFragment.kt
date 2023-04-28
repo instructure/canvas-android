@@ -168,9 +168,18 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     private fun setUpSyncSettings() {
         lifecycleScope.launch {
-            val syncFrequency = syncSettingsFacade.getSyncSettings().syncFrequency
+            syncSettingsFacade.getSyncSettingsListenable().observe(viewLifecycleOwner) { syncSettings ->
+                if (syncSettings == null) {
+                    binding.offlineSyncSettingsContainer.setGone()
+                } else {
+                    binding.offlineSyncSettingsStatus.text = if (syncSettings.autoSyncEnabled) {
+                        getString(syncSettings.syncFrequency.readable)
+                    } else {
+                        getString(R.string.syncSettings_manualDescription)
+                    }
+                }
+            }
 
-            binding.offlineSyncSettingsStatus.text = getString(syncFrequency.readable)
             binding.offlineSyncSettingsContainer.onClick {
                 addFragment(SyncSettingsFragment.newInstance())
             }

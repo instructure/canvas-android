@@ -29,4 +29,8 @@ sealed class SyncSettingsAction {
         val selectedItemPosition: Int,
         val onItemSelected: (Int) -> Unit
     ) : SyncSettingsAction()
+
+    data class ShowWifiConfirmation(
+        val confirmationCallback: (Boolean) -> Unit
+    ) : SyncSettingsAction()
 }

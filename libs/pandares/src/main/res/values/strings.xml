@@ -1425,4 +1425,8 @@
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="syncSettings_syncFrequencyDialogTitle">Sync Frequency</string>
+    <string name="syncSettings_wifiConfirmationTitle">Turn Off Content Sync Over Wi-fi Only?</string>
+    <string name="synySettings_wifiConfirmationMessage">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">Turn Off</string>
+    <string name="syncSettings_manualDescription">Manual</string>
 </resources>

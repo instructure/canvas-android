@@ -73,9 +73,23 @@ class SyncSettingsViewModel @Inject constructor(
     }
 
     fun onWifiOnlyChanged(checked: Boolean) {
+        if (checked) {
+            updateWifiOnly(checked)
+        } else {
+            _events.postValue(Event(SyncSettingsAction.ShowWifiConfirmation { confirmed ->
+                if (confirmed) {
+                    updateWifiOnly(checked)
+                } else {
+                    loadData()
+                }
+            }))
+        }
+    }
+
+    private fun updateWifiOnly(enabled: Boolean) {
         viewModelScope.launch {
             val updated = syncSettings.copy(
-                wifiOnly = checked
+                wifiOnly = enabled
             )
             syncSettingsFacade.update(updated)
             loadData()

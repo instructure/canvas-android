@@ -17,11 +17,18 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.lifecycle.LiveData
 import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
 import com.instructure.pandautils.room.offline.daos.SyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 
 class SyncSettingsFacade(private val syncSettingsDao: SyncSettingsDao) {
+
+    suspend fun getSyncSettingsListenable(): LiveData<SyncSettingsEntity?> {
+        val liveData = syncSettingsDao.findSyncSettingsLiveData()
+        if (liveData.value == null) createDefault()
+        return liveData
+    }
 
     suspend fun getSyncSettings(): SyncSettingsEntity {
         return syncSettingsDao.findSyncSettings() ?: createDefault()
