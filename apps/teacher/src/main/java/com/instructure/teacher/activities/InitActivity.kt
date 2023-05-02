@@ -450,6 +450,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         addDetailFragment(RouteResolver.getDetailFragment(route.canvasContext, route))
     }
 
+    // This case can only happen in Inbox, there is no other master/detial interaction on this Activity.
+    // Detail fragments are intentionally not added to the back stack, because back navigation would be confusing.
     private fun addDetailFragment(fragment: Fragment?) {
         if (fragment == null) throw IllegalStateException("InitActivity.class addDetailFragment was null")
 
@@ -462,10 +464,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         if (identityMatch(currentFragment, fragment)) return
 
         ft.replace(R.id.detail, fragment, fragment.javaClass.simpleName)
-        if (currentFragment != null && currentFragment !is EmptyFragment) {
-            //Add to back stack if not empty fragment and a fragment exists
-            ft.addToBackStack(fragment.javaClass.simpleName)
-        }
         ft.commit()
     }
 
@@ -518,8 +516,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         binding.container.setGone()
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
-        if (clearBackStack && fm.backStackEntryCount > 0) {
-            fm.popBackStackImmediate(fm.getBackStackEntryAt(0).id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        if (clearBackStack) {
+            if (fm.backStackEntryCount > 0) {
+                fm.popBackStackImmediate(fm.getBackStackEntryAt(0).id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            }
         } else {
             ft.addToBackStack(null)
         }
@@ -574,7 +574,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         } else {
             if (binding.masterDetailContainer.isVisible) {
                 if ((supportFragmentManager.findFragmentById(R.id.master) as? NavigationCallbacks)?.onHandleBackPressed() == true) return
-                super.onBackPressed()
             }
             super.onBackPressed()
         }
