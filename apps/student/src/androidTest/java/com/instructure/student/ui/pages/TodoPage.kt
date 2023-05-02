@@ -16,9 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
-import android.widget.Button
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Quiz
@@ -84,7 +82,7 @@ class TodoPage: BasePage(R.id.todoPage) {
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
         onView(withText(R.string.favoritedCoursesLabel) + withParent(R.id.select_dialog_listview)).click()
-        onView(allOf(isAssignableFrom(Button::class.java), withText(R.string.ok))).click()
+        onView(withText(R.string.ok)).click()
     }
 
     fun clearFilter() {

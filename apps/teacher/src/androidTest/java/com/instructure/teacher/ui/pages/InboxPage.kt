@@ -228,7 +228,6 @@ class InboxPage: BasePage() {
     }
 
     fun selectConversations(conversations: List<String>) {
-        refresh()
         for(conversation in conversations) {
             selectConversation(conversation)
         }

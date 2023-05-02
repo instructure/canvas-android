@@ -17,8 +17,11 @@
 package com.instructure.student.features.dashboard.notifications
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.student.fragment.FileListFragment
 import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentDashboardRouter(private val activity: FragmentActivity) : DashboardRouter {
@@ -33,6 +36,20 @@ class StudentDashboardRouter(private val activity: FragmentActivity) : Dashboard
                 message,
                 allowUnsupportedRouting = false
             )
+        )
+    }
+
+    override fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long) {
+        RouteMatcher.route(
+            activity,
+            SubmissionDetailsFragment.makeRoute(canvasContext, assignmentId, initialSelectedSubmissionAttempt = attemptId)
+        )
+    }
+
+    override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) {
+        RouteMatcher.route(
+            activity,
+            FileListFragment.makeRoute(canvasContext, folderId)
         )
     }
 }

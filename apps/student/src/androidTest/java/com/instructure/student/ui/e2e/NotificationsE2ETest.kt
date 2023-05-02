@@ -25,6 +25,9 @@ import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
