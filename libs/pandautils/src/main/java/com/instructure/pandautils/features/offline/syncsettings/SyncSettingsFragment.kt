@@ -17,11 +17,11 @@
 
 package com.instructure.pandautils.features.offline.syncsettings
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.interactions.FragmentInteractions
@@ -32,6 +32,7 @@ import com.instructure.pandautils.databinding.FragmentSyncSettingsBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.showThemed
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -73,7 +74,7 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
     }
 
     private fun showWifiConfirmation(confirmationCallback: (Boolean) -> Unit) {
-        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
+        AlertDialog.Builder(requireContext())
             .setTitle(R.string.syncSettings_wifiConfirmationTitle)
             .setMessage(R.string.synySettings_wifiConfirmationMessage)
             .setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -84,11 +85,11 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
                 confirmationCallback(true)
                 dialog.dismiss()
             }
-            .show()
+            .showThemed()
     }
 
     private fun showFrequencySelector(items: List<String>, selectedItemPosition: Int, onItemSelected: (Int) -> Unit) {
-        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
+        AlertDialog.Builder(requireContext())
             .setTitle(R.string.syncSettings_syncFrequencyDialogTitle)
             .setSingleChoiceItems(items.toTypedArray(), selectedItemPosition) { dialog, selected ->
                 onItemSelected(selected)
@@ -97,7 +98,7 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
             }
-            .show()
+            .showThemed()
     }
 
     override val navigation: Navigation?
@@ -112,10 +113,8 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
             ThemePrefs.primaryColor,
             ThemePrefs.primaryTextColor
         )
-        binding.toolbar.apply {
-            setBackgroundColor(ThemePrefs.primaryColor)
-            setupAsBackButton(this@SyncSettingsFragment)
-        }
+
+        binding.toolbar.setupAsBackButton(this@SyncSettingsFragment)
     }
 
     override fun getFragment(): Fragment = this
