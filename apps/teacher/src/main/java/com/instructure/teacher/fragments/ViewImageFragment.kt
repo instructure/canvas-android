@@ -144,7 +144,9 @@ class ViewImageFragment : Fragment(), ShareableFile {
     fun colorBackground(bitmap: Bitmap) {
         // Generate palette asynchronously
         Palette.from(bitmap).generate { palette ->
-            palette?.let { binding.viewImageRootView.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
+            if (view != null && palette != null) {
+                binding.viewImageRootView.setBackgroundColor(palette.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest)))
+            }
         }
     }
 

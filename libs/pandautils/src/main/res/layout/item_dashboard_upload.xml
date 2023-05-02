@@ -74,29 +74,35 @@
             <TextView
                 android:id="@+id/uploadTitle"
                 style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:importantForAccessibility="no"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.title}"
                 android:textColor="@color/textDarkest"
                 android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@id/loader"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Uploading Submission" />
 
             <TextView
                 android:id="@+id/uploadSubtitle"
                 style="@style/TextFont.Regular"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.subTitle}"
                 android:textColor="@color/textDark"
                 android:textSize="14sp"
                 android:visibility="@{itemViewModel.data.subTitle.empty ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@id/loader"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/uploadTitle" />
 
             <ProgressBar
@@ -111,7 +117,20 @@
                 app:layout_constraintTop_toBottomOf="@id/uploadSubtitle"
                 tools:progress="25" />
 
+            <ProgressBar
+                android:id="@+id/loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:progressTint="@color/backgroundInfo"
+                android:visibility="@{itemViewModel.loading ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/dismiss"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
+
             <ImageView
+                android:id="@+id/dismiss"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:contentDescription="@string/dismiss"

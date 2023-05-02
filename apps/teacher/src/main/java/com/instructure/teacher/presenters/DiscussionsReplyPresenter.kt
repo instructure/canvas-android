@@ -43,6 +43,8 @@ class DiscussionsReplyPresenter(
 
     private var postDiscussionJob: Job? = null
 
+    private var attachment: FileSubmitObject? = null
+
     override fun loadData(forceNetwork: Boolean) {}
     override fun refresh(forceNetwork: Boolean) {}
 
@@ -98,7 +100,6 @@ class DiscussionsReplyPresenter(
         const val REASON_MESSAGE_IN_PROGRESS = 1
         const val REASON_MESSAGE_EMPTY = 2
         const val REASON_MESSAGE_FAILED_TO_SEND = 3
-        var attachment: FileSubmitObject? = null
     }
 
     override fun onDestroyed() {

@@ -38,6 +38,7 @@ import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.room.entities.*
 import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -112,7 +113,7 @@ class FileUploadWorker @AssistedInject constructor(
 
             subtitle = assignmentName.ifEmpty { fileSubmitObjects.joinToString { it.name } }
 
-            insertDashboardUpload(title, subtitle)
+            if (shouldShowDashboardNotification(action)) insertDashboardUpload(title, subtitle)
 
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
@@ -124,6 +125,7 @@ class FileUploadWorker @AssistedInject constructor(
                 ACTION_ASSIGNMENT_SUBMISSION -> {
                     submitAttachmentsToSubmission(attachmentsIds)?.let {
                         updateSubmissionComplete(notificationId)
+                        attemptId = it.attempt
                         Result.success()
                     } ?: Result.retry()
                 }
@@ -173,7 +175,7 @@ class FileUploadWorker @AssistedInject constructor(
             e.printStackTrace()
             return Result.failure(workDataBuilder.build())
         } finally {
-            insertDashboardUpload(title, subtitle)
+            if (shouldShowDashboardNotification(action)) insertDashboardUpload(title, subtitle)
         }
     }
 
@@ -184,10 +186,16 @@ class FileUploadWorker @AssistedInject constructor(
                 workerId = id.toString(),
                 userId = userId,
                 title = title,
-                subtitle = subtitle
+                subtitle = subtitle,
+                courseId = courseId.takeIf { it != INVALID_ID },
+                assignmentId = assignmentId.takeIf { it != INVALID_ID },
+                folderId = if (action == ACTION_USER_FILE) parentFolderId.takeIf { it != INVALID_ID }.orDefault() else null,
+                attemptId = attemptId.takeIf { it != INVALID_ID }
             )
         )
     }
+
+    private fun shouldShowDashboardNotification(action: String) = action == ACTION_ASSIGNMENT_SUBMISSION || action == ACTION_USER_FILE
 
     private suspend fun insertSubmissionComment(submissionComment: SubmissionComment): Long {
         val submissionCommentId = submissionCommentDao.insert(

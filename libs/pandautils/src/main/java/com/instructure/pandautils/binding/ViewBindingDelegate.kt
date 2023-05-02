@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.binding
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -35,26 +37,28 @@ class FragmentViewBindingDelegate<T : ViewBinding>(
     private var binding: T? = null
 
     init {
-        fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            val viewLifecycleOwnerLiveDataObserver =
-                Observer<LifecycleOwner?> {
-                    val viewLifecycleOwner = it ?: return@Observer
+        Handler(Looper.getMainLooper()).post {
+            fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
+                val viewLifecycleOwnerLiveDataObserver =
+                    Observer<LifecycleOwner?> {
+                        val viewLifecycleOwner = it ?: return@Observer
 
-                    viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
-                        override fun onDestroy(owner: LifecycleOwner) {
-                            binding = null
-                        }
-                    })
+                        viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+                            override fun onDestroy(owner: LifecycleOwner) {
+                                binding = null
+                            }
+                        })
+                    }
+
+                override fun onCreate(owner: LifecycleOwner) {
+                    fragment.viewLifecycleOwnerLiveData.observeForever(viewLifecycleOwnerLiveDataObserver)
                 }
 
-            override fun onCreate(owner: LifecycleOwner) {
-                fragment.viewLifecycleOwnerLiveData.observeForever(viewLifecycleOwnerLiveDataObserver)
-            }
-
-            override fun onDestroy(owner: LifecycleOwner) {
-                fragment.viewLifecycleOwnerLiveData.removeObserver(viewLifecycleOwnerLiveDataObserver)
-            }
-        })
+                override fun onDestroy(owner: LifecycleOwner) {
+                    fragment.viewLifecycleOwnerLiveData.removeObserver(viewLifecycleOwnerLiveDataObserver)
+                }
+            })
+        }
     }
 
     override fun getValue(thisRef: Fragment, property: KProperty<*>): T {

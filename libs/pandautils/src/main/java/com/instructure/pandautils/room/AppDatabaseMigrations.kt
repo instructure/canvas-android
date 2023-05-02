@@ -42,7 +42,12 @@ val appDatabaseMigrations = arrayOf(
 
     createMigration(3, 4) { database ->
         database.execSQL("ALTER TABLE FileUploadInputEntity ADD COLUMN notificationId INTEGER")
+    },
+
+    createMigration(4, 5) {database ->
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN courseId INTEGER")
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN assignmentId INTEGER")
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN attemptId INTEGER")
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN folderId INTEGER")
     }
-
 )
-
