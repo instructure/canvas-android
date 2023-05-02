@@ -221,4 +221,14 @@ class OfflineModule {
     ): EnrollmentFacade {
         return EnrollmentFacade(userDao, enrollmentDao, gradesDao, userApi)
     }
+
+    @Provides
+    fun provideSyncSettingsDao(appDatabase: OfflineDatabase): SyncSettingsDao {
+        return appDatabase.syncSettingsDao()
+    }
+
+    @Provides
+    fun provideSyncSettingsFacade(syncSettingsDao: SyncSettingsDao): SyncSettingsFacade {
+        return SyncSettingsFacade(syncSettingsDao)
+    }
 }

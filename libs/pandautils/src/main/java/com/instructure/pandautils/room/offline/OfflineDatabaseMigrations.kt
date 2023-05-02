@@ -58,5 +58,9 @@ val offlineDatabaseMigrations = arrayOf(
         )
         _db.execSQL("CREATE TABLE IF NOT EXISTS `SubmissionHistoryEntity` (`parentSubmissionId` INTEGER NOT NULL, `submissionId` INTEGER NOT NULL, PRIMARY KEY(`parentSubmissionId`, `submissionId`), FOREIGN KEY(`parentSubmissionId`) REFERENCES `SubmissionEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`submissionId`) REFERENCES `SubmissionEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
 
+    },
+
+    createMigration(2, 3) { _db ->
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `SyncSettingsEntity` (`id` INTEGER NOT NULL, `autoSyncEnabled` INTEGER NOT NULL, `syncFrequency` TEXT NOT NULL, `wifiOnly` INTEGER NOT NULL, PRIMARY KEY(`id`))")
     }
 )

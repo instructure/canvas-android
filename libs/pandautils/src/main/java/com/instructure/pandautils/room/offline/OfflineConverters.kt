@@ -21,6 +21,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
 import com.instructure.canvasapi2.models.GradingRule
+import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
 
 @TypeConverters
 class OfflineConverters {
@@ -35,5 +36,15 @@ class OfflineConverters {
     fun toGradingRule(s: String?): GradingRule? {
         if (s == null) return null
         return Gson().fromJson(s, GradingRule::class.java)
+    }
+
+    @TypeConverter
+    fun fromSyncFrequency(syncFrequency: SyncFrequency): String {
+        return syncFrequency.name
+    }
+
+    @TypeConverter
+    fun toSyncFrequency(string: String): SyncFrequency {
+        return SyncFrequency.valueOf(string)
     }
 }
