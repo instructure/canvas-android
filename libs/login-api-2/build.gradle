@@ -24,7 +24,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
-    if ( System.getenv("IS_TESTING") == "true" ) {
+    if (System.getenv("IS_TESTING") == "true") {
         "true"
     } else {
         "false"
@@ -47,11 +47,7 @@ android {
         /* BuildConfig Fields */
         buildConfigField "boolean", "IS_TESTING", isTesting()
         buildConfigField "String", "ANONYMOUS_SCHOOL_DOMAIN", "\"$anonymousSchoolDomain\""
-        buildConfigField "String", "PROTOCOL", "\"https\""
-        buildConfigField "String", "DOMAIN", "\"canvas-test.emeritus.org\""
-        buildConfigField "String", "BASE_URL", "\"https://canvas-test.emeritus.org\""
-        buildConfigField "String", "CLIENT_ID", "\"DqFk95yU5HYiZ6m/qG+e3A==\""
-        buildConfigField "String", "CLIENT_SECRET", "\"Dlf78LRq1201scTbCatoxSg/r7zl0wJRNmGkTqN2WFjyQhpita6ilz0tWyZtGEEgMAOo7OwryfcxuZTIKlwIRe+hkMgjGR2JpCwMFqC5LEw=\""
+
     }
 
     buildTypes {
@@ -64,12 +60,6 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-
-            buildConfigField "String", "PROTOCOL", "\"https\""
-            buildConfigField "String", "DOMAIN", "\"classroom.emeritus.org\""
-            buildConfigField "String", "BASE_URL", "\"https://classroom.emeritus.org\""
-            buildConfigField "String", "CLIENT_ID", "\"q8cvhK47BOOJE5O3662YgA==\""
-            buildConfigField "String", "CLIENT_SECRET", "\"K2PiXVaQJwlmj6d6BbXHNsRf9WQXmTCvjVagmb5epYK9RTnLytPgY4APTAvRla8mW6kN3GdOFukB1OmwdMJpKO+hkMgjGR2JpCwMFqC5LEw=\""
         }
     }
 
@@ -149,11 +139,11 @@ task copySnickerDoodles(type: Copy) {
 
     File snickers = new File("$baseDir/$snickerFileName")
 
-    if(snickers.exists()) {
+    if (snickers.exists()) {
         String dest = "$rootDir/../libs/login-api-2/src/main/res/raw"
 
         File destDirFile = new File("$dest")
-        if(!destDirFile.exists()) {
+        if (!destDirFile.exists()) {
             destDirFile.mkdir()
         }
 

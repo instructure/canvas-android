@@ -16,7 +16,6 @@
  */
 package com.instructure.loginapi.login.api
 
-import com.instructure.canvasapi2.BuildConfig
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.utils.APIHelper.paramIsNull
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -24,6 +23,7 @@ import com.instructure.canvasapi2.utils.Logger.d
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.loginapi.login.model.DomainVerificationResult
+import com.instructure.loginapi.login.util.BaseConfigurations
 import okhttp3.CacheControl
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -36,37 +36,43 @@ object MobileVerifyAPI {
 
     internal interface OAuthInterface {
         @GET("mobile_verify.json")
-        fun mobileVerify(@Query(value = "domain", encoded = false) domain: String?, @Query("user_agent") userAgent: String?): Call<DomainVerificationResult>
+        fun mobileVerify(
+            @Query(value = "domain", encoded = false) domain: String?,
+            @Query("user_agent") userAgent: String?
+        ): Call<DomainVerificationResult>
     }
 
-    private fun getAuthenticationRetrofit(domain: String?) : Retrofit {
-            val httpClient = OkHttpClient.Builder()
-                .addInterceptor { chain ->
-                    val request = chain.request().newBuilder()
-                        .header("User-Agent", ApiPrefs.userAgent)
-                        .cacheControl(CacheControl.FORCE_NETWORK)
-                        .build()
-                    chain.proceed(request)
-                }.build()
-
-            val mobileVerifyBetaEnabled = RemoteConfigUtils.getString(
-                    RemoteConfigParam.MOBILE_VERIFY_BETA_ENABLED)?.equals("true", ignoreCase = true)
-                    ?: false
-
-            // We only want to switch over to the beta mobile verify domain if the remote firebase config is true
-            val baseUrl = if (mobileVerifyBetaEnabled && domain?.contains(".beta.") == true) {
-                "https://canvas.beta.instructure.com/api/v1/"
-            } else {
-                "${BuildConfig.BASE_URL}/api/v1/"
-//                "https://canvas-test.emeritus.org/api/v1/"
-            }
-
-            return Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(httpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
+    private fun getAuthenticationRetrofit(domain: String?): Retrofit {
+        val httpClient = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .header("User-Agent", ApiPrefs.userAgent)
+                    .cacheControl(CacheControl.FORCE_NETWORK)
                     .build()
-        }
+                chain.proceed(request)
+            }.build()
+
+        val mobileVerifyBetaEnabled = RemoteConfigUtils.getString(
+            RemoteConfigParam.MOBILE_VERIFY_BETA_ENABLED
+        )?.equals("true", ignoreCase = true)
+            ?: false
+
+        // We only want to switch over to the beta mobile verify domain if the remote firebase config is true
+//        val baseUrl = if (mobileVerifyBetaEnabled && domain?.contains(".beta.") == true) {
+//            "https://canvas.beta.instructure.com/api/v1/"
+//        } else {
+//            "${BaseConfigurations.baseUrl}/api/v1/"
+////                "https://canvas-test.emeritus.org/api/v1/"
+//        }
+
+        val baseUrl = "${BaseConfigurations.baseUrl}/api/v1/"
+
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
     fun mobileVerify(domain: String?, callback: StatusCallback<DomainVerificationResult>) {
         if (paramIsNull(callback, domain)) {

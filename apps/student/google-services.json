@@ -36,9 +36,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:535094477968:android:832b7de08d81f100c10415",
+        "mobilesdk_app_id": "1:535094477968:android:c6f2f6cb7c1ef08ec10415",
         "android_client_info": {
-          "package_name": "com.emeritus.candroid.debug"
+          "package_name": "com.emeritus.candroid.qa"
         }
       },
       "oauth_client": [

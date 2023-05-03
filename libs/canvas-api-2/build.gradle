@@ -48,14 +48,12 @@ android {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
-        buildConfigField "String", "BASE_URL", "\"https://canvas-test.emeritus.org\""
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "BASE_URL", "\"https://classroom.emeritus.org\""
         }
     }
 

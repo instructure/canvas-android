@@ -109,7 +109,6 @@ android {
     buildTypes {
 
         debug {
-            applicationIdSuffix ".debug"
             testCoverageEnabled = coverageEnabled
             debuggable true
             minifyEnabled false
@@ -128,7 +127,7 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
-            resValue "string", "student_app_name", "Emeritus Student (Debug)"
+
             ext {
                 heapEnabled = true
             }
@@ -141,15 +140,15 @@ android {
             shrinkResources true
             buildConfigField 'boolean', 'IS_DEBUG', 'false'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            resValue "string", "student_app_name", "Emeritus Classroom"
+
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
             }
 
-            ndk {
-                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
-            }
+//            ndk {
+//                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
+//                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+//            }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
 
@@ -167,12 +166,37 @@ android {
         }
 
         qa {
+            applicationIdSuffix ".qa"
             buildConfigField "boolean", "IS_TESTING", "true"
             dimension 'default'
+            resValue "string", "student_app_name", "Emeritus Classroom (Debug)"
+
+            Properties devProps = new Properties()
+
+            devProps.load(new FileInputStream(file("$rootDir/student/qa.properties")))
+
+            buildConfigField "String", "PROTOCOL", "\"${devProps.getProperty('PROTOCOL')}\""
+            buildConfigField "String", "DOMAIN", "\"${devProps.getProperty('DOMAIN')}\""
+            buildConfigField "String", "BASE_URL", "\"${devProps.getProperty('BASE_URL')}\""
+            buildConfigField "String", "CLIENT_ID", "\"${devProps.getProperty('CLIENT_ID')}\""
+            buildConfigField "String", "CLIENT_SECRET", "\"${devProps.getProperty('CLIENT_SECRET')}\""
+
+
         }
 
         prod {
             dimension 'default'
+
+            resValue "string", "student_app_name", "Emeritus Classroom"
+
+            Properties devProps = new Properties()
+            devProps.load(new FileInputStream(file("$rootDir/student/prod.properties")))
+
+            buildConfigField "String", "PROTOCOL", "\"${devProps.getProperty('PROTOCOL')}\""
+            buildConfigField "String", "DOMAIN", "\"${devProps.getProperty('DOMAIN')}\""
+            buildConfigField "String", "BASE_URL", "\"${devProps.getProperty('BASE_URL')}\""
+            buildConfigField "String", "CLIENT_ID", "\"${devProps.getProperty('CLIENT_ID')}\""
+            buildConfigField "String", "CLIENT_SECRET", "\"${devProps.getProperty('CLIENT_SECRET')}\""
         }
     }
 

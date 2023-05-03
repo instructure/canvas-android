@@ -16,7 +16,6 @@
  */
 package com.instructure.canvasapi2.apis
 
-import com.instructure.canvasapi2.BuildConfig
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
@@ -31,8 +30,7 @@ import retrofit2.http.Query
 
 object ErrorReportAPI {
 
-//    const val DEFAULT_DOMAIN = "https://canvas.instructure.com"
-    const val DEFAULT_DOMAIN = BuildConfig.BASE_URL
+    var DEFAULT_DOMAIN = ""
 
     enum class Severity(val tag: String) {
         COMMENT("just_a_comment"),

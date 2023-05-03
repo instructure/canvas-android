@@ -53,7 +53,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs.protocol
 import com.instructure.canvasapi2.utils.ApiPrefs.refreshToken
 import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.Logger.d
-import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.api.MobileVerifyAPI.mobileVerify
@@ -82,6 +81,7 @@ import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 import android.util.Base64
+import com.instructure.loginapi.login.util.BaseConfigurations
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
@@ -378,11 +378,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
 
     private fun loadLoginWeb() {
-        var apiProtocol1 = BuildConfig.PROTOCOL
-        var domain1 = BuildConfig.DOMAIN
+        val apiProtocol1 = BaseConfigurations.protocol!!
+        val domain1 = BaseConfigurations.domain!!
 
-        clientId = decrypt(BuildConfig.CLIENT_ID)
-        clientSecret = decrypt(BuildConfig.CLIENT_SECRET)
+        clientId = decrypt(BaseConfigurations.clientId!!)
+        clientSecret = decrypt(BaseConfigurations.clientSecret!!)
         accountDomain.domain = domain1
 
         buildAuthenticationUrl(
@@ -487,7 +487,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 //            builder.appendQueryParameter("redirect_uri", "https://canvas.instructure.com/login/oauth2/auth")
             builder.appendQueryParameter(
                 "redirect_uri",
-                "${BuildConfig.BASE_URL}/login"
+                "${BaseConfigurations.baseUrl}/login"
             )
         }
 

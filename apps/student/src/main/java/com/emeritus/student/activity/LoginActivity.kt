@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import com.emeritus.student.BuildConfig
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
@@ -31,6 +32,9 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
 import com.emeritus.student.R
+import com.instructure.canvasapi2.apis.AccountDomainAPI
+import com.instructure.canvasapi2.apis.ErrorReportAPI
+import com.instructure.loginapi.login.util.BaseConfigurations
 import dagger.hilt.android.AndroidEntryPoint
 
 @ScreenView(SCREEN_VIEW_LOGIN)
@@ -61,13 +65,27 @@ class LoginActivity : BaseLoginInitActivity() {
             startActivity(InterwebsToApplication.createIntent(this, intent.data!!))
             finish()
         }
+        BaseConfigurations.updateValues(
+            protocol = BuildConfig.PROTOCOL,
+            domain = BuildConfig.DOMAIN,
+            baseUrl = BuildConfig.BASE_URL,
+            clientId = BuildConfig.CLIENT_ID,
+            clientSecret = BuildConfig.CLIENT_SECRET
+        )
+        AccountDomainAPI.DEFAULT_DOMAIN = BuildConfig.BASE_URL
+        ErrorReportAPI.DEFAULT_DOMAIN = BuildConfig.BASE_URL
     }
 
     /**
      * ONLY USE FOR UI TESTING
      * Skips the traditional login process by directly setting the domain, token, and user info.
      */
-    fun loginWithToken(token: String, domain: String, user: User, canvasForElementary: Boolean = false) {
+    fun loginWithToken(
+        token: String,
+        domain: String,
+        user: User,
+        canvasForElementary: Boolean = false
+    ) {
         ApiPrefs.accessToken = token
         ApiPrefs.domain = domain
         ApiPrefs.user = user

@@ -44,6 +44,7 @@ import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
+import com.emeritus.student.BuildConfig
 import com.emeritus.student.fragment.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -91,7 +92,6 @@ import com.emeritus.student.tasks.StudentLogoutTask
 import com.emeritus.student.util.Analytics
 import com.emeritus.student.util.AppShortcutManager
 import com.emeritus.student.util.StudentPrefs
-import com.instructure.canvasapi2.BuildConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.loading_canvas_view.*
