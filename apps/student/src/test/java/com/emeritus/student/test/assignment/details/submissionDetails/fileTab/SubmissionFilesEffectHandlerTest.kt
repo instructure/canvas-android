@@ -24,7 +24,7 @@ import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.fi
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesEvent
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesView
 import com.emeritus.student.mobius.common.ChannelSource
-import com.instructure.student.test.util.receiveOnce
+import com.emeritus.student.test.util.receiveOnce
 import com.spotify.mobius.functions.Consumer
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers

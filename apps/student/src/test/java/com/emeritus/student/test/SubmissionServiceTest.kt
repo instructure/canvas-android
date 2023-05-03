@@ -27,9 +27,9 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.pandautils.utils.Const
-import com.instructure.student.db.Db
-import com.instructure.student.db.Schema
-import com.instructure.student.db.sqlColAdapters.Date
+import com.emeritus.student.db.Db
+import com.emeritus.student.db.Schema
+import com.emeritus.student.db.sqlColAdapters.Date
 import com.emeritus.student.mobius.common.ui.SubmissionService
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import io.mockk.*

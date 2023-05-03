@@ -17,7 +17,7 @@
 @file:Suppress("PackageDirectoryMismatch")
 
 // This must have same package as AppManager, but we only want it to exist in test code
-package com.instructure.student.util
+package com.emeritus.student.util
 
 import android.app.Application
 import android.content.Context

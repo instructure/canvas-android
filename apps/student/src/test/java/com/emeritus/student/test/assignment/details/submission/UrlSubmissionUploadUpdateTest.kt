@@ -77,7 +77,7 @@ class UrlSubmissionUploadUpdateTest : Assert() {
             .then(
                 UpdateSpec.assertThatNext<UrlSubmissionUploadModel, UrlSubmissionUploadEffect>(
                     NextMatchers.hasModel(expectedModel),
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects(
+                    matchesEffects(
                         UrlSubmissionUploadEffect.ShowUrlPreview(expectedPreviewUrl)
                     )
                 )

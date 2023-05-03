@@ -26,9 +26,9 @@ import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.emeritus.student.PendingSubmissionComment
-import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
+import com.emeritus.student.db.Db
+import com.emeritus.student.db.StudentDb
+import com.emeritus.student.db.getInstance
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsModel
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsPresenter
@@ -58,7 +58,7 @@ class SubmissionCommentsPresenterTest : Assert() {
         context = ApplicationProvider.getApplicationContext()
 
         // Set up our mock DB logic
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        mockkStatic("com.emeritus.student.db.ExtensionsKt")
 
         queryMockk = mockk(relaxed = true)
         val db: StudentDb = mockk {

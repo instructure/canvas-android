@@ -21,7 +21,7 @@ import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.co
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsModel
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsUpdate
-import com.instructure.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst

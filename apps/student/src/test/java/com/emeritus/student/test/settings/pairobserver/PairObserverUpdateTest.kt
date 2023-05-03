@@ -22,8 +22,8 @@ import com.emeritus.student.mobius.settings.pairobserver.PairObserverEffect
 import com.emeritus.student.mobius.settings.pairobserver.PairObserverEvent
 import com.emeritus.student.mobius.settings.pairobserver.PairObserverModel
 import com.emeritus.student.mobius.settings.pairobserver.PairObserverUpdate
-import com.instructure.student.test.util.matchesEffects
-import com.instructure.student.test.util.matchesFirstEffects
+import com.emeritus.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst

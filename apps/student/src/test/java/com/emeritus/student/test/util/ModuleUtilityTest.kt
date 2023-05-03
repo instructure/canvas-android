@@ -23,10 +23,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.fragment.*
-import com.instructure.student.util.Const
-import com.instructure.student.util.ModuleUtility
+import com.emeritus.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.emeritus.student.fragment.*
+import com.emeritus.student.util.Const
+import com.emeritus.student.util.ModuleUtility
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith

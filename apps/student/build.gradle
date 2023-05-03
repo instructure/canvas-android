@@ -31,7 +31,7 @@ def coverageEnabled = project.hasProperty('coverage')
 
 sqldelight {
     StudentDb {
-        packageName = "com.instructure.student.db"
+        packageName = "com.emeritus.student.db"
         sourceFolders = ["db"]
         schemaOutputDirectory = file("src/main/db/schemas")
     }

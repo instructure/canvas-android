@@ -35,7 +35,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import com.emeritus.student.R
-import com.instructure.student.db.StudentDb
+import com.emeritus.student.db.StudentDb
 import com.emeritus.student.features.assignmentdetails.gradecellview.GradeCellViewData
 import com.emeritus.student.mobius.assignmentDetails.uploadAudioRecording
 import com.emeritus.student.util.getStudioLTITool

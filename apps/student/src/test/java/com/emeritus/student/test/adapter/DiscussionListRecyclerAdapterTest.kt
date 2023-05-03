@@ -21,7 +21,7 @@ import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.student.adapter.DiscussionListRecyclerAdapter
+import com.emeritus.student.adapter.DiscussionListRecyclerAdapter
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test

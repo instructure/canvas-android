@@ -92,7 +92,7 @@ class PickerSubmissionUploadUpdateTest : Assert() {
             .whenEvent(PickerSubmissionUploadEvent.SubmitClicked)
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
                         PickerSubmissionUploadEffect.HandleSubmit(initModel)
                     )
                 )
@@ -106,7 +106,7 @@ class PickerSubmissionUploadUpdateTest : Assert() {
             .whenEvent(PickerSubmissionUploadEvent.CameraClicked)
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
                         PickerSubmissionUploadEffect.LaunchCamera
                     )
                 )
@@ -120,7 +120,7 @@ class PickerSubmissionUploadUpdateTest : Assert() {
             .whenEvent(PickerSubmissionUploadEvent.GalleryClicked)
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
                         PickerSubmissionUploadEffect.LaunchGallery
                     )
                 )
@@ -134,7 +134,7 @@ class PickerSubmissionUploadUpdateTest : Assert() {
             .whenEvent(PickerSubmissionUploadEvent.SelectFileClicked)
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
                         PickerSubmissionUploadEffect.LaunchSelectFile
                     )
                 )
@@ -154,7 +154,7 @@ class PickerSubmissionUploadUpdateTest : Assert() {
             .then(
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel),
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
                         PickerSubmissionUploadEffect.LoadFileContents(
                             uri,
                             initModel.allowedExtensions

@@ -19,7 +19,7 @@ package com.emeritus.student.db
 import com.emeritus.student.PendingSubmissionComment
 import com.emeritus.student.Submission
 import com.emeritus.student.db.sqlColAdapters.CanvasContextColAdapter
-import com.instructure.student.db.StudentDb
+import com.emeritus.student.db.StudentDb
 import com.emeritus.student.db.sqlColAdapters.DateAdapter
 import com.squareup.sqldelight.db.SqlDriver
 

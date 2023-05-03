@@ -18,9 +18,9 @@ package com.emeritus.student.test.assignment.details.submission
 import android.content.Context
 import com.instructure.canvasapi2.models.Course
 import com.emeritus.student.FileSubmission
-import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
+import com.emeritus.student.db.Db
+import com.emeritus.student.db.StudentDb
+import com.emeritus.student.db.getInstance
 import com.emeritus.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
 import com.emeritus.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffectHandler
 import com.emeritus.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
@@ -70,7 +70,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
             )
         )
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        mockkStatic("com.emeritus.student.db.ExtensionsKt")
 
         val db: StudentDb = mockk {
             every {
@@ -99,7 +99,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `LoadPersistedFiles results in OnPersistedSubmissionLoaded event with success submission`() {
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        mockkStatic("com.emeritus.student.db.ExtensionsKt")
 
         val db: StudentDb = mockk {
             every {
@@ -123,7 +123,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     @Test
     fun `OnDeleteSubmission results in view call for submissionDeleted`() {
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        mockkStatic("com.emeritus.student.db.ExtensionsKt")
 
         val db: StudentDb = mockk {
             every {
@@ -157,7 +157,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
             SubmissionService.retryFileSubmission(any(), any())
         } returns Unit
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        mockkStatic("com.emeritus.student.db.ExtensionsKt")
 
         val db: StudentDb = mockk {
             every {
@@ -180,7 +180,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     @Test
     fun `OnDeleteFileFromSubmission results in db deletion`() {
         val fileId = 101L
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        mockkStatic("com.emeritus.student.db.ExtensionsKt")
 
         val db: StudentDb = mockk {
             every {

@@ -21,7 +21,7 @@ import com.emeritus.student.mobius.assignmentDetails.submissionDetails.content.e
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentModel
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentUpdate
-import com.instructure.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.NextMatchers

@@ -27,7 +27,7 @@ import com.emeritus.student.mobius.assignmentDetails.submission.file.UploadStatu
 import com.emeritus.student.mobius.assignmentDetails.submission.file.ui.UploadListItemViewState
 import com.emeritus.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionViewState
 import com.emeritus.student.mobius.assignmentDetails.submission.file.ui.UploadVisibilities
-import com.instructure.student.util.FileUtils
+import com.emeritus.student.util.FileUtils
 import io.mockk.every
 import io.mockk.mockkObject
 import org.junit.Assert

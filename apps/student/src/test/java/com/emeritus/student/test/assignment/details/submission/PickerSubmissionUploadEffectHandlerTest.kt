@@ -111,7 +111,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val intent = mockk<Intent>()
         every { intent.action } returns ""
 
-        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        mockkStatic("com.emeritus.student.mobius.assignmentDetails.SubmissionUtilsKt")
         every { any<Context>().isIntentAvailable(any()) } returns true
 
         mockkObject(PermissionUtils)

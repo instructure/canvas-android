@@ -22,7 +22,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.student.adapter.ModuleListRecyclerAdapter
+import com.emeritus.student.adapter.ModuleListRecyclerAdapter
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test

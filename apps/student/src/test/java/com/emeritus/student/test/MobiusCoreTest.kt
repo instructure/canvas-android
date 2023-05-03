@@ -77,7 +77,7 @@ class MobiusCoreTest {
             .then(
                 assertThatFirst(
                     FirstMatchers.hasModel(expectedModel),
-                    _root_ide_package_.com.emeritus.student.test.util.matchesFirstEffects<TestModel, TestEffect>(
+                    matchesFirstEffects<TestModel, TestEffect>(
                         TestEffect.PerformInit
                     )
                 )
@@ -112,7 +112,7 @@ class MobiusCoreTest {
             .then(
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel),
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<TestModel, TestEffect>(
+                    matchesEffects<TestModel, TestEffect>(
                         TestEffect.PerformUpdate
                     )
                 )

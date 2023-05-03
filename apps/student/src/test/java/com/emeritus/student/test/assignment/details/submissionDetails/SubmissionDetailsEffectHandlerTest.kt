@@ -27,7 +27,7 @@ import com.emeritus.student.mobius.assignmentDetails.submissionDetails.Submissio
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.emeritus.student.mobius.common.ChannelSource
-import com.instructure.student.test.util.receiveOnce
+import com.emeritus.student.test.util.receiveOnce
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers

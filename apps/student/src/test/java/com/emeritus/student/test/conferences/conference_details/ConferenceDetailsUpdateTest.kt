@@ -24,7 +24,7 @@ import com.emeritus.student.mobius.conferences.conference_details.ConferenceDeta
 import com.emeritus.student.mobius.conferences.conference_details.ConferenceDetailsEvent
 import com.emeritus.student.mobius.conferences.conference_details.ConferenceDetailsModel
 import com.emeritus.student.mobius.conferences.conference_details.ConferenceDetailsUpdate
-import com.instructure.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst

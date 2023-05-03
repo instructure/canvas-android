@@ -1,6 +1,6 @@
 /* Top-level project modules */
 include ':student'
-include ':teacher'
+//include ':teacher'
 
 /* Flutter embed modules */
 setBinding(new Binding([gradle: this]))

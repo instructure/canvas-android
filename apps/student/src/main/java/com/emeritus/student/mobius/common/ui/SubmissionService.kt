@@ -42,7 +42,7 @@ import com.emeritus.student.PendingSubmissionComment
 import com.emeritus.student.R
 import com.emeritus.student.activity.NavigationActivity
 import com.emeritus.student.db.Db
-import com.instructure.student.db.StudentDb
+import com.emeritus.student.db.StudentDb
 import com.emeritus.student.db.getInstance
 import com.emeritus.student.db.sqlColAdapters.Date
 import com.emeritus.student.events.ShowConfettiEvent

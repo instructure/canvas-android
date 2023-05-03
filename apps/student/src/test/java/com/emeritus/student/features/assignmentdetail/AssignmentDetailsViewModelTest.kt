@@ -39,7 +39,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.student.db.StudentDb
+import com.emeritus.student.db.StudentDb
 import com.emeritus.student.features.assignmentdetails.AssignmentDetailAction
 import com.emeritus.student.features.assignmentdetails.AssignmentDetailsViewModel
 import com.emeritus.student.features.assignmentdetails.gradecellview.GradeCellViewData

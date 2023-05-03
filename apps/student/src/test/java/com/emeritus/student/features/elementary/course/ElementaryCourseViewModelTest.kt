@@ -33,10 +33,10 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.student.features.elementary.course.ElementaryCourseAction
-import com.instructure.student.features.elementary.course.ElementaryCourseTab
-import com.instructure.student.features.elementary.course.ElementaryCourseViewData
-import com.instructure.student.features.elementary.course.ElementaryCourseViewModel
+import com.emeritus.student.features.elementary.course.ElementaryCourseAction
+import com.emeritus.student.features.elementary.course.ElementaryCourseTab
+import com.emeritus.student.features.elementary.course.ElementaryCourseViewData
+import com.emeritus.student.features.elementary.course.ElementaryCourseViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

@@ -22,7 +22,7 @@ package com.emeritus.student.features.assignmentdetail.gradecellview
 //import com.instructure.canvasapi2.models.Course
 //import com.instructure.canvasapi2.models.Submission
 //import com.instructure.pandautils.utils.ColorKeeper
-//import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+//import com.emeritus.student.features.assignmentdetails.gradecellview.GradeCellViewData
 //import io.mockk.mockk
 //import org.junit.Assert
 //import org.junit.Test

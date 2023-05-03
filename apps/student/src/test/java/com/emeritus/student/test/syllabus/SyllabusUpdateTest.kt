@@ -23,8 +23,8 @@ import com.emeritus.student.mobius.syllabus.SyllabusEffect
 import com.emeritus.student.mobius.syllabus.SyllabusEvent
 import com.emeritus.student.mobius.syllabus.SyllabusModel
 import com.emeritus.student.mobius.syllabus.SyllabusUpdate
-import com.instructure.student.test.util.matchesEffects
-import com.instructure.student.test.util.matchesFirstEffects
+import com.emeritus.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst

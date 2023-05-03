@@ -34,7 +34,7 @@ import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.co
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
 import com.emeritus.student.mobius.common.ChannelSource
 import com.emeritus.student.mobius.common.ui.SubmissionService
-import com.instructure.student.test.util.receiveOnce
+import com.emeritus.student.test.util.receiveOnce
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers

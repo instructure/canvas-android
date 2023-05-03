@@ -68,7 +68,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
             .then(
                 assertThatFirst(
                     FirstMatchers.hasModel(startModel.copy(isLoading = true)),
-                    _root_ide_package_.com.emeritus.student.test.util.matchesFirstEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                    matchesFirstEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
                         UploadStatusSubmissionEffect.LoadPersistedFiles(submissionId)
                     )
                 )

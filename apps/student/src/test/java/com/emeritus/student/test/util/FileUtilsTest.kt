@@ -17,7 +17,7 @@
 package com.emeritus.student.test.util
 
 import com.emeritus.student.R
-import com.instructure.student.util.FileUtils
+import com.emeritus.student.util.FileUtils
 import org.junit.Assert
 import org.junit.Test
 

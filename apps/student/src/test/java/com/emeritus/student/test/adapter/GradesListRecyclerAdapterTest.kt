@@ -22,7 +22,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.student.adapter.GradesListRecyclerAdapter
+import com.emeritus.student.adapter.GradesListRecyclerAdapter
 import junit.framework.TestCase
 import org.junit.Assert
 import org.junit.Before

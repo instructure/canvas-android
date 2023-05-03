@@ -20,7 +20,7 @@ import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.ru
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricEvent
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricUpdate
-import com.instructure.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst

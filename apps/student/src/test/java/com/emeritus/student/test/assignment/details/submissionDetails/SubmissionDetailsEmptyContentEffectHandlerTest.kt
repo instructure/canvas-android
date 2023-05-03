@@ -28,9 +28,9 @@ import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
 import com.emeritus.student.Submission
-import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
+import com.emeritus.student.db.Db
+import com.emeritus.student.db.StudentDb
+import com.emeritus.student.db.getInstance
 import com.emeritus.student.mobius.assignmentDetails.chooseMediaIntent
 import com.emeritus.student.mobius.assignmentDetails.getVideoIntent
 import com.emeritus.student.mobius.assignmentDetails.isIntentAvailable
@@ -81,7 +81,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = userId)
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        mockkStatic("com.emeritus.student.db.ExtensionsKt")
 
         queryMockk = mockk(relaxed = true)
         val db: StudentDb = mockk {
@@ -574,7 +574,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         every { intent.action } returns ""
 
-        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        mockkStatic("com.emeritus.student.mobius.assignmentDetails.SubmissionUtilsKt")
         every { any<Uri>().getVideoIntent() } returns intent
         every { any<Context>().isIntentAvailable(any()) } returns true
 
@@ -621,7 +621,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         every { intent.addFlags(any()) } returns intent
         every { intent.putExtra(MediaStore.EXTRA_OUTPUT, uri) } returns intent
 
-        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        mockkStatic("com.emeritus.student.mobius.assignmentDetails.SubmissionUtilsKt")
         every { chooseMediaIntent } returns intent
         every { any<Context>().isIntentAvailable(any()) } returns true
 

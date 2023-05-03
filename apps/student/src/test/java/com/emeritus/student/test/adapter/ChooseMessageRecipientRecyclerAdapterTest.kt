@@ -19,7 +19,7 @@ package com.emeritus.student.test.adapter
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.student.adapter.InboxRecipientAdapter
+import com.emeritus.student.adapter.InboxRecipientAdapter
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith

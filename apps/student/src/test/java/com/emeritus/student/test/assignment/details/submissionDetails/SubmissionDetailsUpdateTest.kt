@@ -23,9 +23,9 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.*
-import com.instructure.student.test.util.matchesEffects
-import com.instructure.student.test.util.matchesFirstEffects
-import com.instructure.student.util.Const
+import com.emeritus.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesFirstEffects
+import com.emeritus.student.util.Const
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst

@@ -68,7 +68,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
             .then(
                 assertThatFirst(
                     FirstMatchers.hasModel(startModel),
-                    _root_ide_package_.com.emeritus.student.test.util.matchesFirstEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                    matchesFirstEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
                         TextSubmissionUploadEffect.InitializeText(text)
                     )
                 )
@@ -116,7 +116,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
             .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
                         TextSubmissionUploadEffect.SubmitText(
                             text,
                             course,
@@ -137,7 +137,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
             .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
                         TextSubmissionUploadEffect.SubmitText(
                             text,
                             course,
@@ -158,7 +158,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
             .whenEvent(TextSubmissionUploadEvent.ImageAdded(uri))
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
                         TextSubmissionUploadEffect.AddImage(uri, initModel.canvasContext)
                     )
                 )
@@ -172,7 +172,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
             .whenEvent(TextSubmissionUploadEvent.CameraImageTaken)
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
                         TextSubmissionUploadEffect.ProcessCameraImage
                     )
                 )
@@ -186,7 +186,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
             .whenEvent(TextSubmissionUploadEvent.ImageFailed)
             .then(
                 assertThatNext(
-                    _root_ide_package_.com.emeritus.student.test.util.matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
                         TextSubmissionUploadEffect.ShowFailedImageMessage
                     )
                 )

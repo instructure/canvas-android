@@ -22,8 +22,8 @@ import android.view.View
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.student.adapter.FileFolderCallback
-import com.instructure.student.adapter.FileListRecyclerAdapter
+import com.emeritus.student.adapter.FileFolderCallback
+import com.emeritus.student.adapter.FileListRecyclerAdapter
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test

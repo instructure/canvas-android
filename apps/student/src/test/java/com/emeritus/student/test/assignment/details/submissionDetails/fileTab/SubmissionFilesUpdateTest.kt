@@ -21,7 +21,7 @@ import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.fi
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesEvent
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesModel
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesUpdate
-import com.instructure.student.test.util.matchesEffects
+import com.emeritus.student.test.util.matchesEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst

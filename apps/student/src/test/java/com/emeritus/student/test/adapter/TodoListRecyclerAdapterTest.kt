@@ -23,7 +23,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.ToDo
-import com.instructure.student.adapter.TodoListRecyclerAdapter
+import com.emeritus.student.adapter.TodoListRecyclerAdapter
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test

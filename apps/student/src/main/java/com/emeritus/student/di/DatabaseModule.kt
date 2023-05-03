@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.instructure.pandautils.room.AppDatabase
 import com.emeritus.student.db.Db
-import com.instructure.student.db.StudentDb
+import com.emeritus.student.db.StudentDb
 import com.emeritus.student.db.getInstance
 import dagger.Module
 import dagger.Provides

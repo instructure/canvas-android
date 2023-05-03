@@ -16,7 +16,6 @@
  */
 package com.emeritus.student.db
 
-import com.instructure.student.db.StudentDb
 import com.squareup.sqldelight.db.SqlDriver
 
 object Db {

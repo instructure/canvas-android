@@ -25,13 +25,13 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
-import com.instructure.student.activity.BaseRouterActivity
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.fragment.*
+import com.emeritus.student.activity.BaseRouterActivity
+import com.emeritus.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.emeritus.student.fragment.*
 import com.emeritus.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.emeritus.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.emeritus.student.mobius.syllabus.ui.SyllabusFragment
-import com.emeritus.student.Router.RouteMatcher
+import com.emeritus.student.router.RouteMatcher
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith
