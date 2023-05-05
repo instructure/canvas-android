@@ -66,5 +66,11 @@ sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String) : DashboardNotificationsActions()
     data class LaunchConference(val canvasContext: CanvasContext, val url: String) : DashboardNotificationsActions()
     data class OpenAnnouncement(val subject: String, val message: String) : DashboardNotificationsActions()
-    data class OpenProgressDialog(val uuid: UUID): DashboardNotificationsActions()
+    data class OpenProgressDialog(val uuid: UUID) : DashboardNotificationsActions()
+    data class NavigateToSubmissionDetails(
+        val canvasContext: CanvasContext,
+        val assignmentId: Long,
+        val attemptId: Long
+    ) : DashboardNotificationsActions()
+    data class NavigateToMyFiles(val canvasContext: CanvasContext, val folderId: Long) : DashboardNotificationsActions()
 }

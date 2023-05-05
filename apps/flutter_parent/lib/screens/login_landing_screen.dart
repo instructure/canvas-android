@@ -203,6 +203,7 @@ class LoginLandingScreen extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(fontSize: 16),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           color: Theme.of(context).accentColor,

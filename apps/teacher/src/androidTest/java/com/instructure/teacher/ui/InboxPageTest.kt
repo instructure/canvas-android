@@ -83,7 +83,7 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun archiveMultipleConversations() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
+
         val conversation1 = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
@@ -94,6 +94,7 @@ class InboxPageTest: TeacherTest() {
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body 2",
             messageSubject = "Subject 2")
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
