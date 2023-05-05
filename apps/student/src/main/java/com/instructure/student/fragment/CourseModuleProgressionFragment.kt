@@ -335,8 +335,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
                 // Update the state of the next module to indicate in the list that it is unlocked
                 modules.getOrNull(modules.indexOf(module) + 1)?.let {
-                    val nextModuleUpdatedState = if (isModuleCompleted && it.state != State.Completed.apiString) State.Unlocked.apiString else module.state
-                    ModuleUpdatedEvent(it.copy(state = nextModuleUpdatedState)).post()
+                    if (isModuleCompleted && it.state != State.Completed.apiString) {
+                        ModuleUpdatedEvent(it.copy(state = State.Unlocked.apiString)).post()
+                    }
                 }
             }
         } catch {
