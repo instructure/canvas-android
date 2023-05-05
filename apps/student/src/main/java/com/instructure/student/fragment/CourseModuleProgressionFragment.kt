@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.ModuleObject.State
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
@@ -324,15 +325,19 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
                 setupNextModule(getModuleItemGroup(currentPos))
 
+                // Update the module state to indicate in the list that the module is completed
                 val module = modules.find { it.id == moduleId } ?: return@tryWeave
-                val updatedState = if (items.flatten().filter { it.moduleId == moduleId }.all { it.completionRequirement?.completed.orDefault() }) {
-                    ModuleObject.State.Completed.apiString
-                } else {
-                    module.state
-                }
+                val isModuleCompleted = items.flatten().filter { it.moduleId == moduleId }.all { it.completionRequirement?.completed.orDefault() }
+                val updatedState = if (isModuleCompleted) State.Completed.apiString else module.state
 
                 // Update the module list fragment to show that these requirements are done,
                 ModuleUpdatedEvent(module.copy(state = updatedState)).post()
+
+                // Update the state of the next module to indicate in the list that it is unlocked
+                modules.getOrNull(modules.indexOf(module) + 1)?.let {
+                    val nextModuleUpdatedState = if (isModuleCompleted && it.state != State.Completed.apiString) State.Unlocked.apiString else module.state
+                    ModuleUpdatedEvent(it.copy(state = nextModuleUpdatedState)).post()
+                }
             }
         } catch {
             Logger.e("Error marking module item as read. " + it.message)
