@@ -22,6 +22,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
@@ -87,6 +88,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okio.IOException
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -200,9 +202,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private fun updateTheme() {
         lifecycleScope.launch {
-            val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, false) }
-            ThemePrefs.applyCanvasTheme(theme, this@InitActivity)
-            binding.bottomBar.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
+            try {
+                val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, false) }
+                ThemePrefs.applyCanvasTheme(theme, this@InitActivity)
+                binding.bottomBar.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
+            } catch(e: IOException) {
+                LoggingUtility.log(e.stackTrace.toString(), Log.WARN)
+            }
         }
     }
 
