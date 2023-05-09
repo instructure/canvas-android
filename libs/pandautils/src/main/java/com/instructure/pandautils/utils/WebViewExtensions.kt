@@ -19,14 +19,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
+import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import kotlinx.coroutines.Job
 
 /**
@@ -44,8 +47,9 @@ fun WebView.loadHtmlWithIframes(
     loadHtml: (newHtml: String) -> Unit,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
 ): Job {
-    return weave {
-        val formatter = HtmlContentFormatter(context, FirebaseCrashlytics.getInstance(), OAuthManager)
+    return tryWeave {
+        val formatter =
+            HtmlContentFormatter(context, FirebaseCrashlytics.getInstance(), OAuthManager)
 
         if (HtmlContentFormatter.hasExternalTools(html) && onLtiButtonPressed != null) {
             addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), "accessor")
@@ -56,6 +60,9 @@ fun WebView.loadHtmlWithIframes(
         }
 
         loadHtml(formatter.formatHtmlWithIframes(html.orEmpty()))
+    } catch {
+        Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show()
+        Log.e("Emeritus", "An error at `loadHtmlWithIframes` occurred: ${it.localizedMessage}", it)
     }
 }
 
@@ -92,7 +99,8 @@ class JsGoogleDocsInterface(private val context: Context) {
 
 fun WebView.setDarkModeSupport(webThemeDarkeningOnly: Boolean = false) {
     if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val nightModeFlags: Int =
+            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
             WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON)
             if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
@@ -106,8 +114,12 @@ fun WebView.setDarkModeSupport(webThemeDarkeningOnly: Boolean = false) {
 
 private fun setForceDarkStrategy(webThemeDarkeningOnly: Boolean, settings: WebSettings) {
     if (webThemeDarkeningOnly) {
-        WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY)
+        WebSettingsCompat.setForceDarkStrategy(
+            settings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY
+        )
     } else {
-        WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING)
+        WebSettingsCompat.setForceDarkStrategy(
+            settings, WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING
+        )
     }
 }
