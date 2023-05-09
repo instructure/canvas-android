@@ -60,8 +60,8 @@ android {
         applicationId "com.emeritus.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 100
-        versionName = '0.0.1'
+        versionCode = 101
+        versionName = '0.0.2'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
