@@ -88,7 +88,6 @@
             android:exported="true"
             android:label="@string/student_app_name"
             android:launchMode="singleTop"
-            android:theme="@style/LoginFlowTheme.Splash_Student"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
