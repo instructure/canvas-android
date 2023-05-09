@@ -408,7 +408,7 @@ open class InternalWebviewFragment : ParentFragment() {
                         .build().toString()
                 }
 
-                binding.canvasWebViewWrapper.webView.loadUrl(url!!, getReferer())
+                if (view != null) binding.canvasWebViewWrapper.webView.loadUrl(url!!, getReferer())
             }
         }
     }
