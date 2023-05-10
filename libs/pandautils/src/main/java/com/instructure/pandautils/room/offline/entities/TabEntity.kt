@@ -57,7 +57,15 @@ data class TabEntity(
 
     fun toApiModel(): Tab {
         return Tab(
-            id, label, type, htmlUrl, externalUrl, visibility, isHidden, position, ltiUrl
+            tabId = id,
+            label = label,
+            type = type,
+            htmlUrl = htmlUrl,
+            externalUrl = externalUrl,
+            visibility = visibility,
+            isHidden = isHidden,
+            position = position,
+            ltiUrl = ltiUrl
         )
     }
 }

@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.offline.repository.coursebrowser
+package com.instructure.student.features.offline.coursebrowser
 
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams

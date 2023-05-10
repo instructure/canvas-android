@@ -22,7 +22,6 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
@@ -39,6 +38,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsRepository
 import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.util.getStudioLTITool
@@ -54,7 +54,7 @@ import com.instructure.student.Submission as DatabaseSubmission
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val courseManager: CourseManager,
+    private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val assignmentManager: AssignmentManager,
     private val quizManager: QuizManager,
     private val submissionManager: SubmissionManager,
@@ -162,7 +162,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
-                val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), forceNetwork).await().dataOrThrow
+                val courseResult = assignmentDetailsRepository.getCourseWithGrade(course?.id.orDefault(), forceNetwork)
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 

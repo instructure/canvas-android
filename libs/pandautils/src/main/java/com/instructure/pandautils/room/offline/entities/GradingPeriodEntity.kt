@@ -30,11 +30,19 @@ data class GradingPeriodEntity(
     val endDate: String?,
     val weight: Double,
 ) {
-    constructor(gradingPeriod: GradingPeriod): this(
+    constructor(gradingPeriod: GradingPeriod) : this(
         gradingPeriod.id,
         gradingPeriod.title,
         gradingPeriod.startDate,
         gradingPeriod.endDate,
-        gradingPeriod.weight,
+        gradingPeriod.weight
+    )
+
+    fun toApiModel() = GradingPeriod(
+        id = id,
+        title = title,
+        startDate = startDate,
+        endDate = endDate,
+        weight = weight
     )
 }

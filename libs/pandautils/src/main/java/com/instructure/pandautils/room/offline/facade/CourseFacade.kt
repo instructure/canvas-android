@@ -48,7 +48,7 @@ class CourseFacade(
         }
 
         course.sections.forEach { section ->
-            sectionDao.insert(SectionEntity(section))
+            sectionDao.insert(SectionEntity(section, course.id))
         }
 
         course.tabs?.forEach { tab ->

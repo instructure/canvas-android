@@ -15,12 +15,12 @@
  *
  */
 
-package com.instructure.student.di
+package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.offline.coursebrowser.CourseBrowserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +28,7 @@ import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class OfflineModule {
+class CourseBrowserModule {
 
     @Provides
     fun provideCourseBrowserRepository(tabApi: TabAPI.TabsInterface, tabDao: TabDao, networkStateProvider: NetworkStateProvider): CourseBrowserRepository {

@@ -32,7 +32,7 @@ object SubmissionAPI {
     private const val pointsPostFix = "][points]"
     private const val commentsPostFix = "][comments]"
 
-    internal interface SubmissionInterface {
+    interface SubmissionInterface {
 
         @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getSingleSubmission(
