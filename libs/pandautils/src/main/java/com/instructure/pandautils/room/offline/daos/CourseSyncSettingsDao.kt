@@ -34,4 +34,7 @@ interface CourseSyncSettingsDao {
 
     @Query("SELECT * FROM CourseSyncSettingsEntity")
     suspend fun findAll(): List<CourseSyncSettingsEntity>
+
+    @Query("SELECT * FROM CourseSyncSettingsEntity WHERE courseId=:courseId")
+    suspend fun findById(courseId: Long): CourseSyncSettingsEntity?
 }

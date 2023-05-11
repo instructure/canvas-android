@@ -26,10 +26,13 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 
 class OfflineContentRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao
 ) {
     suspend fun getCourse(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -40,14 +43,16 @@ class OfflineContentRepository(
 
     suspend fun getCourses(): List<Course> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val coursesResult = coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
+        val coursesResult =
+            coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
         return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
     }
 
     suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
         val params = RestParams(isForceReadFromNetwork = true)
-        val rootFolderResult = fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
+        val rootFolderResult =
+            fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
 
         if (rootFolderResult.isFail) return emptyList()
 
@@ -89,5 +94,24 @@ class OfflineContentRepository(
 
     private fun List<FileFolder>.filterValidFileFolders() = this.filter {
         !it.isHidden && !it.isLocked && !it.isHiddenForUser && !it.isLockedForUser
+    }
+
+    suspend fun findCourseSyncSettings(courseId: Long): CourseSyncSettingsEntity {
+        var courseSettingsEntity = courseSyncSettingsDao.findById(courseId)
+        if (courseSettingsEntity == null) {
+            courseSettingsEntity = CourseSyncSettingsEntity(
+                courseId,
+                false,
+                false,
+                false,
+                false
+            )
+            courseSyncSettingsDao.insert(courseSettingsEntity)
+        }
+        return courseSettingsEntity
+    }
+
+    suspend fun updateCourseSyncSettings(courseSyncSettingsEntity: CourseSyncSettingsEntity) {
+        courseSyncSettingsDao.update(courseSyncSettingsEntity)
     }
 }
