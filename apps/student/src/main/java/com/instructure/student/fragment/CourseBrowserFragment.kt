@@ -30,12 +30,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.material.appbar.AppBarLayout
-import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.FragmentInteractions
@@ -51,7 +49,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
 import com.instructure.student.events.CourseColorOverlayToggledEvent
-import com.instructure.student.features.offline.repository.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.offline.coursebrowser.CourseBrowserRepository
 import com.instructure.student.features.offline.sync.OfflineSyncWorker
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
@@ -208,7 +206,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
                 if (canvasContext is Course) TabHelper.isHomeTabAPage(canvasContext as Course) else false // Courses are the only CanvasContext that have settable home pages
 
             if (isHomeAPage) {
-                val homePage = awaitApi<Page> { PageManager.getFrontPage(canvasContext, isRefresh, it) }
+                val homePage = repository.getFrontPage(canvasContext, isRefresh)
                 homePageTitle = homePage.title
             }
 

@@ -31,4 +31,7 @@ interface PageDao {
 
     @Update
     suspend fun update(entity: PageEntity)
+
+    @Query("SELECT * FROM PageEntity WHERE frontPage=TRUE AND courseId=:courseId")
+    suspend fun getFrontPage(courseId: Long): PageEntity
 }
