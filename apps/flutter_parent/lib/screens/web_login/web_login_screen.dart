@@ -267,7 +267,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     // Prepare login information
     var purpose = await DeviceInfoPlugin().androidInfo.then((info) => info.model.replaceAll(' ', '_'));
     var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
-    var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
+    // var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
+    var redirect = Uri.encodeQueryComponent('https://canvas-test.emeritus.org/login/oauth2/auth');
 
     if (forceAuthRedirect || widget.domain.contains(".test.") || widget.loginFlow == LoginFlow.skipMobileVerify) {
       // Skip mobile verify
@@ -400,7 +401,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
         node: _focusScopeNode,
         child: Form(
           key: _formKey,
-          autovalidate: _autoValidate,
+          // autovalidate: _autoValidate,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[

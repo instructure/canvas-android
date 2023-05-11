@@ -37,7 +37,7 @@
             android:id="@id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior="com.instructure.student.util.DisableableAppBarLayoutBehavior">
+            app:layout_behavior="com.emeritus.student.util.DisableableAppBarLayoutBehavior">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsingToolbarLayout"

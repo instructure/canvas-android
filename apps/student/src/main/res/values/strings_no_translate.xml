@@ -18,9 +18,9 @@
 
 <resources>
 
-    <string name="student_app_name" translatable="false">Canvas Student</string>
+<!--    <string name="student_app_name" translatable="false">Emeritus Classroom</string>-->
 
-    <string name="patched_appbar_scrolling_view_behavior" translatable="false">com.instructure.student.view.PatchedScrollingViewBehavior</string>
+    <string name="patched_appbar_scrolling_view_behavior" translatable="false">com.emeritus.student.view.PatchedScrollingViewBehavior</string>
 
     <string name="help_domain" translatable="false">Domain:</string>
     <string name="help_versionNum" translatable="false">Version:</string>

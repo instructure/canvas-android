@@ -34,9 +34,10 @@
         <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
-    <style name="LoginFlowTheme.Splash_Student" parent="@style/LoginFlowTheme.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_background_student</item>
-    </style>
+<!--    <style name="LoginFlowTheme.Splash_Student" parent="@style/LoginFlowTheme.NoActionBar">-->
+<!--        <item name="android:windowBackground">@drawable/splash_background_student</item>-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--    </style>-->
 
     <style name="LoginFlowTheme.Splash_Teacher" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_teacher</item>

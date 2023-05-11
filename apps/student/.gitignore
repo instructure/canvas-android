@@ -1,5 +1,4 @@
 # Private data
-google-services.json
 src/main/res/xml/analytics.xml
 src/main/res/values/private_strings.xml
 private.properties

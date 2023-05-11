@@ -32,7 +32,9 @@ class CreateUpdateToDoScreen extends StatefulWidget with ColoredStatusBar {
   final PlannerItem editToDo;
   final String channelId;
 
-  const CreateUpdateToDoScreen({Key key, this.editToDo, this.initialDate, this.channelId}) : super(key: key);
+  const CreateUpdateToDoScreen(
+      {Key key, this.editToDo, this.initialDate, this.channelId})
+      : super(key: key);
 
   @override
   _CreateUpdateToDoScreenState createState() => _CreateUpdateToDoScreenState();
@@ -54,13 +56,20 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
     if (widget.channelId != null) {
       _channel = AlertDialogChannel(widget.channelId);
     }
-    _coursesFuture = locator<CreateUpdateToDoScreenInteractor>().getCoursesForUser();
-    _date = widget.editToDo?.plannable?.toDoDate?.toLocal() ?? widget.initialDate ?? DateTime.now();
-    _titleController = TextEditingController(text: widget.editToDo?.plannable?.title);
-    _descriptionController = TextEditingController(text: widget.editToDo?.plannable?.details);
+    _coursesFuture =
+        locator<CreateUpdateToDoScreenInteractor>().getCoursesForUser();
+    _date = widget.editToDo?.plannable?.toDoDate?.toLocal() ??
+        widget.initialDate ??
+        DateTime.now();
+    _titleController =
+        TextEditingController(text: widget.editToDo?.plannable?.title);
+    _descriptionController =
+        TextEditingController(text: widget.editToDo?.plannable?.details);
     if (widget.editToDo != null) {
       _coursesFuture.then((courses) {
-        var course = courses.firstWhere((it) => it.id == widget.editToDo.plannable.courseId, orElse: () => null);
+        var course = courses.firstWhere(
+            (it) => it.id == widget.editToDo.plannable.courseId,
+            orElse: () => null);
         setState(() => _selectedCourse = course);
       });
     }
@@ -79,7 +88,9 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
             appBar: dynamicStyleAppBar(
               context: context,
               appBar: AppBar(
-                title: Text(widget.editToDo == null ? L10n(context).newToDo : L10n(context).editToDo),
+                title: Text(widget.editToDo == null
+                    ? L10n(context).newToDo
+                    : L10n(context).editToDo),
                 actions: <Widget>[
                   if (_saving)
                     Container(
@@ -90,7 +101,8 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).buttonColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).buttonColor),
                           )),
                     ),
                   if (!_saving)
@@ -102,7 +114,10 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                         alignment: Alignment.center,
                         child: Text(
                           L10n(context).save.toUpperCase(),
-                          style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).buttonColor),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Theme.of(context).buttonColor),
                         ),
                       ),
                     )
@@ -147,7 +162,9 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                                       height: 16,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: StudentTheme.of(context).getCanvasContextColor('course_${it.id}'),
+                                        color: StudentTheme.of(context)
+                                            .getCanvasContextColor(
+                                                'course_${it.id}'),
                                       ),
                                     ),
                                     SizedBox(width: 12),
@@ -170,7 +187,10 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     L10n(context).toDoCourseLabel,
-                                    style: it.value == null ? TextStyle(color: StudentColors.textDark) : null,
+                                    style: it.value == null
+                                        ? TextStyle(
+                                            color: StudentColors.textDark)
+                                        : null,
                                   ),
                                 );
                               }
@@ -185,19 +205,25 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                                       height: 16,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: StudentTheme.of(context).getCanvasContextColor('course_${course.id}'),
+                                        color: StudentTheme.of(context)
+                                            .getCanvasContextColor(
+                                                'course_${course.id}'),
                                       ),
                                     ),
                                     SizedBox(width: 12),
                                     Text(course.name,
-                                        style: it.value == null ? TextStyle(color: StudentColors.textDark) : null),
+                                        style: it.value == null
+                                            ? TextStyle(
+                                                color: StudentColors.textDark)
+                                            : null),
                                   ],
                                 ),
                               );
                             }).toList();
                           },
                           items: items,
-                          onChanged: (course) => setState(() => _selectedCourse = course),
+                          onChanged: (course) =>
+                              setState(() => _selectedCourse = course),
                         ),
                       );
                     },
@@ -228,7 +254,10 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                     key: Key('description-input'),
                     controller: _descriptionController,
                     textCapitalization: TextCapitalization.sentences,
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(fontSize: 16),
                     minLines: 8,
                     maxLines: 100,
                     decoration: InputDecoration(
@@ -270,7 +299,8 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
     }
 
     if (date != null && time != null) {
-      DateTime newDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      DateTime newDate =
+          DateTime(date.year, date.month, date.day, time.hour, time.minute);
       setState(() {
         _date = newDate;
       });
@@ -296,7 +326,8 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
   bool _hasUnsavedChanges() {
     if (widget.editToDo != null) {
       return _titleController.text != (widget.editToDo.plannable.title ?? '') ||
-          _descriptionController.text != (widget.editToDo.plannable.details ?? '') ||
+          _descriptionController.text !=
+              (widget.editToDo.plannable.details ?? '') ||
           _selectedCourse?.id != widget.editToDo.plannable.courseId ||
           _date != widget.editToDo.plannable.toDoDate?.toLocal();
     } else {
@@ -313,7 +344,8 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
 
     bool yesClicked = await _channel.showDialog(
         L10n(context).unsavedChangesDialogTitle,
-        L10n(context).unsavedChangesDialogBody, L10n(context).yes,
+        L10n(context).unsavedChangesDialogBody,
+        L10n(context).yes,
         L10n(context).no);
     if (yesClicked) {
       Navigator.of(context).pop(true);
@@ -328,7 +360,8 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
     DateTime date = _date;
 
     if (title.isNullOrBlank()) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(L10n(context).titleEmptyErrorMessage)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(L10n(context).titleEmptyErrorMessage)));
       return;
     }
 
@@ -336,7 +369,8 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
       setState(() => _saving = true);
       var interactor = locator<CreateUpdateToDoScreenInteractor>();
       if (widget.editToDo != null) {
-        await interactor.updateToDo(widget.editToDo.plannable.id, title, description, date, courseId);
+        await interactor.updateToDo(
+            widget.editToDo.plannable.id, title, description, date, courseId);
         Navigator.pop(context, [_date, widget.editToDo.plannable.toDoDate]);
       } else {
         await interactor.createToDo(title, description, date, courseId);
@@ -344,7 +378,8 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
       }
     } catch (e, s) {
       setState(() => _saving = false);
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(L10n(context).errorSavingToDo)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(L10n(context).errorSavingToDo)));
     }
   }
 

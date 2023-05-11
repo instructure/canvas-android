@@ -1,0 +1,75 @@
+ --
+ -- Copyright (C) 2019 - present Instructure, Inc.
+ --
+ --     Licensed under the Apache License, Version 2.0 (the "License");
+ --     you may not use this file except in compliance with the License.
+ --     You may obtain a copy of the License at
+ --
+ --     http://www.apache.org/licenses/LICENSE-2.0
+ --
+ --     Unless required by applicable law or agreed to in writing, software
+ --     distributed under the License is distributed on an "AS IS" BASIS,
+ --     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ --     See the License for the specific language governing permissions and
+ --     limitations under the License.
+ --
+
+import com.emeritus.canvasapi2.models.CanvasContext;
+import com.emeritus.student.db.sqlColAdapters.ErrorColAdapter;
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject;
+
+CREATE TABLE submissionCommentFile (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    pendingCommentId INTEGER NOT NULL,
+    attachmentId INTEGER, -- Will be null if file has not been successfully uploaded
+    name TEXT NOT NULL,
+    size INTEGER NOT NULL,
+    contentType TEXT NOT NULL,
+    fullPath TEXT NOT NULL,
+    FOREIGN KEY (pendingCommentId) REFERENCES pendingSubmissionComment(id) ON DELETE CASCADE
+);
+
+CREATE INDEX submissionCommentFile_pendingCommentId ON submissionCommentFile(pendingCommentId);
+
+--
+insertFile:
+INSERT INTO submissionCommentFile (pendingCommentId, name, size, contentType, fullPath)
+VALUES (?, ?, ?, ?, ?);
+--
+
+getAllFiles:
+SELECT *
+FROM submissionCommentFile;
+
+getFileById:
+SELECT *
+FROM submissionCommentFile
+WHERE id = ?;
+
+getFilesForPendingComment:
+SELECT *
+FROM submissionCommentFile
+WHERE pendingCommentId = ?;
+
+getFilesWithoutAttachmentsForSubmissionId:
+SELECT *
+FROM submissionCommentFile
+WHERE pendingCommentId = ? AND attachmentId IS NULL;
+
+deleteFileById:
+DELETE
+FROM submissionCommentFile
+WHERE id = ?;
+
+deleteFilesForCommentId:
+DELETE
+FROM submissionCommentFile
+WHERE pendingCommentId = ?;
+
+setFileAttachmentId:
+UPDATE submissionCommentFile
+SET attachmentId = ?
+WHERE id = ?;
+
+getLastInsertId:
+SELECT last_insert_rowid();

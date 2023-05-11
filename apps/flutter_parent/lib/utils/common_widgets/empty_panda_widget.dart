@@ -60,16 +60,16 @@ class EmptyPandaWidget extends StatelessWidget {
         if (buttonText != null)
           Padding(
             padding: const EdgeInsets.only(top: 48),
-            child: FlatButton(
+            child: TextButton(
               onPressed: onButtonTap,
               child: Text(
                 buttonText,
                 style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(4),
-                side: BorderSide(color: ParentColors.tiara),
-              ),
+              // shape: RoundedRectangleBorder(
+              //   borderRadius: new BorderRadius.circular(4),
+              //   side: BorderSide(color: ParentColors.tiara),
+              // ),
             ),
           ),
       ],

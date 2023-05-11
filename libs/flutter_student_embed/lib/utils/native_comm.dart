@@ -38,10 +38,12 @@ class NativeComm {
   static const methodUpdateShouldPop = 'updateShouldPop';
   static const methodUpdateThemeData = 'updateThemeData';
   static const methodUpdateDarkMode = 'updateLightOrDarkMode';
+  static const methodUpdateBaseUrl = 'updateBaseUrl';
 
   static const channel = const MethodChannel(channelName);
 
-  static final ShouldPopTracker routeTracker = ShouldPopTracker((shouldPop, statusBarColor) {
+  static final ShouldPopTracker routeTracker =
+      ShouldPopTracker((shouldPop, statusBarColor) {
     channel.invokeMethod(methodUpdateShouldPop, shouldPop);
     setStatusBarColor(statusBarColor);
   });
@@ -56,7 +58,8 @@ class NativeComm {
   static Function() resetRoute;
 
   @visibleForTesting
-  static Future<dynamic> Function(MethodCall) methodCallHandler = (methodCall) async {
+  static Future<dynamic> Function(MethodCall) methodCallHandler =
+      (methodCall) async {
     switch (methodCall.method) {
       case methodUpdateLoginData:
         _updateLogin(methodCall.arguments);
@@ -65,7 +68,8 @@ class NativeComm {
         _updateTheme(methodCall.arguments);
         break;
       case methodRouteToCalendar:
-        if (routeToCalendar != null) routeToCalendar(methodCall.arguments as String);
+        if (routeToCalendar != null)
+          routeToCalendar(methodCall.arguments as String);
         break;
       case methodReset:
         _performReset();
@@ -75,6 +79,10 @@ class NativeComm {
         break;
       case methodUpdateDarkMode:
         _updateDarkMode(methodCall.arguments);
+        break;
+      case methodUpdateBaseUrl:
+        print("Sandy baseurl - ${methodCall.arguments['baseurl']}");
+        _updateBaseUrl(methodCall.arguments);
         break;
       default:
         throw 'Channel method not implemented: ${methodCall.method}';
@@ -101,15 +109,21 @@ class NativeComm {
 
   static void _updateTheme(dynamic themeData) {
     try {
-      StudentColors.primaryColor = Color(int.parse(themeData['primaryColor'], radix: 16));
-      StudentColors.accentColor = Color(int.parse(themeData['accentColor'], radix: 16));
-      StudentColors.buttonColor = Color(int.parse(themeData['buttonColor'], radix: 16));
-      StudentColors.textButtonColor = Color(int.parse(themeData['textButtonColor'], radix: 16));
-      StudentColors.primaryTextColor = Color(int.parse(themeData['primaryTextColor'], radix: 16));
+      StudentColors.primaryColor =
+          Color(int.parse(themeData['primaryColor'], radix: 16));
+      StudentColors.accentColor =
+          Color(int.parse(themeData['accentColor'], radix: 16));
+      StudentColors.buttonColor =
+          Color(int.parse(themeData['buttonColor'], radix: 16));
+      StudentColors.textButtonColor =
+          Color(int.parse(themeData['textButtonColor'], radix: 16));
+      StudentColors.primaryTextColor =
+          Color(int.parse(themeData['primaryTextColor'], radix: 16));
 
       Map<dynamic, dynamic> contextColors = themeData['contextColors'];
       StudentColors.contextColors = contextColors.map((contextCode, hexCode) {
-        return MapEntry(contextCode as String, Color(int.parse(hexCode, radix: 16)));
+        return MapEntry(
+            contextCode as String, Color(int.parse(hexCode, radix: 16)));
       });
 
       if (onThemeUpdated != null) onThemeUpdated();
@@ -119,7 +133,9 @@ class NativeComm {
   }
 
   static void _updateCalendarDates(dynamic rawDates) {
-    List<DateTime> dates = (rawDates as List<dynamic>).map((it) => DateTime.parse(it as String).toLocal()).toList();
+    List<DateTime> dates = (rawDates as List<dynamic>)
+        .map((it) => DateTime.parse(it as String).toLocal())
+        .toList();
     PlannerFetcher.notifyDatesChanged(dates);
   }
 
@@ -136,13 +152,23 @@ class NativeComm {
   }
 
   static void setStatusBarColor(Color color) {
-    channel.invokeMethod(methodSetStatusBarColor, color.value.toRadixString(16));
+    channel.invokeMethod(
+        methodSetStatusBarColor, color.value.toRadixString(16));
   }
 
   static void _updateDarkMode(dynamic data) {
     try {
       bool darkMode = data['darkMode'];
       StudentColors.darkMode = darkMode;
+    } catch (e) {
+      print('Error updating dark mode!');
+    }
+  }
+
+  static void _updateBaseUrl(dynamic data) {
+    try {
+      String baseUrl = data['baseurl'];
+      ApiPrefs.baseUrl = baseUrl;
     } catch (e) {
       print('Error updating dark mode!');
     }

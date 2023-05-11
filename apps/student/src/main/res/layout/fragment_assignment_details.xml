@@ -6,13 +6,13 @@
 
         <import type="android.view.View" />
 
-        <import type="com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData.State" />
+        <import type="com.emeritus.student.features.assignmentdetails.gradecellview.GradeCellViewData" />
 
         <import type="com.instructure.pandautils.utils.ThemePrefs" />
 
         <variable
             name="viewModel"
-            type="com.instructure.student.features.assignmentdetails.AssignmentDetailsViewModel" />
+            type="com.emeritus.student.features.assignmentdetails.AssignmentDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

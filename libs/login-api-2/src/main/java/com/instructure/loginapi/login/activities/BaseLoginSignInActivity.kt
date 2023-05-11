@@ -80,11 +80,17 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
+import android.util.Base64
+import com.instructure.loginapi.login.util.BaseConfigurations
+import javax.crypto.Cipher
+import javax.crypto.spec.SecretKeySpec
 
 abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSet {
     companion object {
         const val ACCOUNT_DOMAIN = "accountDomain"
-        const val SUCCESS_URL = "/login/oauth2/auth?code="
+
+        //        const val SUCCESS_URL = "/login/oauth2/auth?code="
+        const val SUCCESS_URL = "/login?code="
         const val ERROR_URL = "/login/oauth2/auth?error=access_denied"
 
         init {
@@ -102,7 +108,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     private var httpAuthHandler: HttpAuthHandler? = null
     private var shouldShowProgressBar = false
 
-    private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) ?: AccountDomain() }
+    private val accountDomain: AccountDomain by lazy {
+        intent.getParcelableExtra<AccountDomain>(
+            ACCOUNT_DOMAIN
+        ) ?: AccountDomain()
+    }
     private val progressBarHandler = Handler()
 
     private val viewModel: LoginViewModel by viewModels()
@@ -113,10 +123,12 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-        canvasLogin = intent!!.extras!!.getInt(Const.CANVAS_LOGIN, 0)
+//        canvasLogin = intent!!.extras!!.getInt(Const.CANVAS_LOGIN, 0)
+        canvasLogin = CANVAS_LOGIN_FLOW
         setupViews()
         applyTheme()
-        beginSignIn(accountDomain)
+//        beginSignIn(accountDomain)
+        loadLoginWeb()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -124,7 +136,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = accountDomain.domain
         toolbar.navigationIcon?.isAutoMirrored = true
-        toolbar.setupAsBackButton { finish() }
+//        toolbar.setupAsBackButton { finish() }
         webView = findViewById(R.id.webView)
         clearCookies()
         CookieManager.getInstance().setAcceptCookie(true)
@@ -171,6 +183,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
 
         private fun handleShouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            d("handleShouldOverrideUrlLoading -> ${url}")
             if (overrideUrlLoading(view, url)) return true
             when {
                 url.contains(SUCCESS_URL) -> {
@@ -193,7 +206,10 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             return super.shouldInterceptRequest(view, url)
         }
 
-        override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
+        override fun shouldInterceptRequest(
+            view: WebView,
+            request: WebResourceRequest
+        ): WebResourceResponse? {
             handleShouldInterceptRequest(request.url.toString())
             return super.shouldInterceptRequest(view, request)
         }
@@ -207,17 +223,29 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             }
         }
 
-        override fun onReceivedHttpAuthRequest(view: WebView, handler: HttpAuthHandler, host: String, realm: String) {
+        override fun onReceivedHttpAuthRequest(
+            view: WebView,
+            handler: HttpAuthHandler,
+            host: String,
+            realm: String
+        ) {
             httpAuthHandler = handler
-            newInstance(accountDomain.domain).show(supportFragmentManager, AuthenticationDialog::class.java.simpleName)
+            newInstance(accountDomain.domain).show(
+                supportFragmentManager,
+                AuthenticationDialog::class.java.simpleName
+            )
         }
 
-        override fun onReceivedHttpError(view: WebView, request: WebResourceRequest?, errorResponse: WebResourceResponse) {
+        override fun onReceivedHttpError(
+            view: WebView,
+            request: WebResourceRequest?,
+            errorResponse: WebResourceResponse
+        ) {
             if (errorResponse.statusCode == 400 && authenticationURL != null && request != null && request.url != null && authenticationURL == request.url.toString()) {
                 //If the institution does not support skipping the authentication screen this will catch that error and force the
                 //rebuilding of the authentication url with the authorization screen flow. Example: canvas.sfu.ca
-                buildAuthenticationUrl(protocol, accountDomain, clientId, true)
-                loadAuthenticationUrl(protocol, accountDomain.domain)
+//                buildAuthenticationUrl(protocol, accountDomain, clientId, true)
+//                loadAuthenticationUrl(protocol, accountDomain.domain)
             }
             super.onReceivedHttpError(view, request, errorResponse)
         }
@@ -236,7 +264,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     private fun beginSignIn(accountDomain: AccountDomain) {
         val url = accountDomain.domain
         if (canvasLogin == MOBILE_VERIFY_FLOW) { //Skip Mobile Verify
-            val view = LayoutInflater.from(this@BaseLoginSignInActivity).inflate(R.layout.dialog_skip_mobile_verify, null)
+            val view = LayoutInflater.from(this@BaseLoginSignInActivity)
+                .inflate(R.layout.dialog_skip_mobile_verify, null)
             val protocolEditText = view.findViewById<EditText>(R.id.mobileVerifyProtocol)
             val clientIdEditText = view.findViewById<EditText>(R.id.mobileVerifyClientId)
             val clientSecretEditText = view.findViewById<EditText>(R.id.mobileVerifyClientSecret)
@@ -276,7 +305,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         if (username.isValid() && password.isValid()) {
             httpAuthHandler?.proceed(username, password)
         } else {
-            Toast.makeText(applicationContext, R.string.invalidEmailPassword, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.invalidEmailPassword, Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -293,7 +323,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     private var mobileVerifyCallback: StatusCallback<DomainVerificationResult> =
         object : StatusCallback<DomainVerificationResult>() {
-            override fun onResponse(response: Response<DomainVerificationResult>, linkHeaders: LinkHeaders, type: ApiType) {
+            override fun onResponse(
+                response: Response<DomainVerificationResult>,
+                linkHeaders: LinkHeaders,
+                type: ApiType
+            ) {
                 if (type.isCache) return
                 val domainVerificationResult = response.body()
                 if (domainVerificationResult!!.result === DomainVerificationResult.DomainVerificationCode.Success) {
@@ -334,10 +368,42 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                 }
             }
 
-            override fun onFail(call: Call<DomainVerificationResult>?, error: Throwable, response: Response<*>?) {
+            override fun onFail(
+                call: Call<DomainVerificationResult>?,
+                error: Throwable,
+                response: Response<*>?
+            ) {
                 showErrorDialog(R.string.mobileVerifyUnknownError)
             }
         }
+
+    private fun loadLoginWeb() {
+        val apiProtocol1 = BaseConfigurations.protocol!!
+        val domain1 = BaseConfigurations.domain!!
+
+        clientId = decrypt(BaseConfigurations.clientId!!)
+        clientSecret = decrypt(BaseConfigurations.clientSecret!!)
+        accountDomain.domain = domain1
+
+        buildAuthenticationUrl(
+            apiProtocol1,
+            accountDomain,
+            clientId,
+            false
+        )
+        loadAuthenticationUrl(apiProtocol1, domain1)
+    }
+
+
+    fun decrypt(encryptedValue: String): String {
+        val KEY = "canvaclassroomke"
+        val spec = SecretKeySpec(KEY.toByteArray(), "AES")
+        val cipher = Cipher.getInstance("AES")
+        cipher.init(Cipher.DECRYPT_MODE, spec)
+        val decodedBytes = Base64.decode(encryptedValue, Base64.DEFAULT)
+        val decryptedBytes = cipher.doFinal(decodedBytes)
+        return String(decryptedBytes)
+    }
 
     private fun showErrorDialog(@StringRes resId: Int) {
         shouldShowProgressBar = false
@@ -354,9 +420,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
     }
 
-    protected fun loadAuthenticationUrl(apiProtocol: String, domain: String?) {
+    protected fun
+            loadAuthenticationUrl(apiProtocol: String, domain: String?) {
         if (canvasLogin == CANVAS_LOGIN_FLOW) {
-            authenticationURL += "&canvas_login=1"
+//            authenticationURL += "&canvas_login=1"
+//            authenticationURL += ""
         } else if (canvasLogin == MASQUERADE_FLOW) {
             // canvas_sa_delegated=1    identifies that we want to masquerade
             val cookieManager = CookieManager.getInstance()
@@ -380,7 +448,12 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
     }
 
-    protected fun buildAuthenticationUrl(protocol: String?, accountDomain: AccountDomain?, clientId: String?, forceAuthRedirect: Boolean) {
+    protected fun buildAuthenticationUrl(
+        protocol: String?,
+        accountDomain: AccountDomain?,
+        clientId: String?,
+        forceAuthRedirect: Boolean
+    ) {
         //Get device name for the login request.
         var deviceName = Build.MODEL
         if (deviceName == null || deviceName == "") {
@@ -403,16 +476,28 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             .appendQueryParameter("response_type", "code")
             .appendQueryParameter("mobile", "1")
             .appendQueryParameter("purpose", deviceName)
-        if (forceAuthRedirect || canvasLogin == MOBILE_VERIFY_FLOW || domain != null && domain.contains(".test.")) {
+        if (forceAuthRedirect || canvasLogin == MOBILE_VERIFY_FLOW || domain != null && domain.contains(
+                ".test."
+            )
+        ) {
             //Skip mobile verify
             builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
         } else {
-            builder.appendQueryParameter("redirect_uri", "https://canvas.instructure.com/login/oauth2/auth")
+
+//            builder.appendQueryParameter("redirect_uri", "https://canvas.instructure.com/login/oauth2/auth")
+            builder.appendQueryParameter(
+                "redirect_uri",
+                "${BaseConfigurations.baseUrl}/login"
+            )
         }
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
         val authenticationProvider = accountDomain.authenticationProvider
-        if (authenticationProvider != null && authenticationProvider.isNotEmpty() && !authenticationProvider.equals("null", ignoreCase = true)) {
+        if (authenticationProvider != null && authenticationProvider.isNotEmpty() && !authenticationProvider.equals(
+                "null",
+                ignoreCase = true
+            )
+        ) {
             d("authentication_provider=$authenticationProvider")
             builder.appendQueryParameter("authentication_provider", authenticationProvider)
         }
@@ -425,7 +510,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     private val mGetTokenCallback: StatusCallback<OAuthTokenResponse> =
         object : StatusCallback<OAuthTokenResponse>() {
-            override fun onResponse(response: Response<OAuthTokenResponse>, linkHeaders: LinkHeaders, type: ApiType) {
+            override fun onResponse(
+                response: Response<OAuthTokenResponse>,
+                linkHeaders: LinkHeaders,
+                type: ApiType
+            ) {
                 if (type.isCache) return
                 val bundle = Bundle()
                 bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
@@ -438,7 +527,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
                 // We now need to get the cache user
                 getSelf(object : StatusCallback<User>() {
-                    override fun onResponse(response: Response<User>, linkHeaders: LinkHeaders, type: ApiType) {
+                    override fun onResponse(
+                        response: Response<User>,
+                        linkHeaders: LinkHeaders,
+                        type: ApiType
+                    ) {
                         if (type.isAPI) {
                             user = response.body()
                             val userResponse = response.body()
@@ -465,7 +558,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                 })
             }
 
-            override fun onFail(call: Call<OAuthTokenResponse>?, error: Throwable, response: Response<*>?) {
+            override fun onFail(
+                call: Call<OAuthTokenResponse>?,
+                error: Throwable,
+                response: Response<*>?
+            ) {
                 val bundle = Bundle()
                 bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
                 logEvent(AnalyticsEventConstants.LOGIN_FAILURE, bundle)

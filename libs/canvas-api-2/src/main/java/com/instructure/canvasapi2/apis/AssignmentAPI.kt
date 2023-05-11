@@ -51,7 +51,7 @@ object AssignmentAPI {
         @GET
         fun getNextPageAssignmentGroupListWithAssignments(@Url nextUrl: String): Call<List<AssignmentGroup>>
 
-        // https://canvas.instructure.com/doc/api/all_resources.html#method.submissions_api.for_students
+        // https://canvas-test.emeritus.org/doc/api/all_resources.html#method.submissions_api.for_students
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("grading_period_id") gradingPeriodId: Long, @Query("scope_assignments_to_student") scopeToStudent: Boolean, @Query("order") order: String = "id"): Call<List<AssignmentGroup>>
 

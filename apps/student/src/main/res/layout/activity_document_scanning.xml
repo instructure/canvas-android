@@ -26,7 +26,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.student.features.documentscanning.DocumentScanningViewModel" />
+            type="com.emeritus.student.features.documentscanning.DocumentScanningViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -211,7 +211,7 @@
                 android:textColorHint="@color/textDark"
                 android:textSize="16sp"/>
 
-            <com.instructure.student.view.AttachmentLayout
+            <com.emeritus.student.view.AttachmentLayout
                 android:id="@+id/attachmentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

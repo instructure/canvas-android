@@ -24,7 +24,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
-    if ( System.getenv("IS_TESTING") == "true" ) {
+    if (System.getenv("IS_TESTING") == "true") {
         "true"
     } else {
         "false"
@@ -47,6 +47,7 @@ android {
         /* BuildConfig Fields */
         buildConfigField "boolean", "IS_TESTING", isTesting()
         buildConfigField "String", "ANONYMOUS_SCHOOL_DOMAIN", "\"$anonymousSchoolDomain\""
+
     }
 
     buildTypes {
@@ -138,11 +139,11 @@ task copySnickerDoodles(type: Copy) {
 
     File snickers = new File("$baseDir/$snickerFileName")
 
-    if(snickers.exists()) {
+    if (snickers.exists()) {
         String dest = "$rootDir/../libs/login-api-2/src/main/res/raw"
 
         File destDirFile = new File("$dest")
-        if(!destDirFile.exists()) {
+        if (!destDirFile.exists()) {
             destDirFile.mkdir()
         }
 

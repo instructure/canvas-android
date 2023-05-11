@@ -74,7 +74,7 @@ class RestBuilder(callback: StatusCallback<*> = object : StatusCallback<Any>(){}
     }
 
     companion object {
-        var isPact: Boolean = false
+        var   isPact: Boolean = false
 
         fun clearCacheDirectory(): Boolean {
             return try {

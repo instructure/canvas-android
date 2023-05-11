@@ -55,11 +55,11 @@ class MasqueradeUI extends StatefulWidget {
           title: Text(L10n(context).stopActAsUser),
           content: Text.rich(StyleSlicer.apply(messageText, [PronounSlice(user.pronouns)])),
           actions: [
-            FlatButton(
+            TextButton(
               child: new Text(L10n(context).cancel),
               onPressed: () => navKey.currentState.pop(false),
             ),
-            FlatButton(
+            TextButton(
               child: new Text(L10n(context).ok),
               onPressed: () async {
                 if (logout) {

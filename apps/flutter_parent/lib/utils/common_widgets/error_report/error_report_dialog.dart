@@ -106,11 +106,11 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           title: Text(widget.title),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(L10n(context).cancel.toUpperCase()),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            FlatButton(
+            TextButton(
               child: Text(L10n(context).sendReport.toUpperCase()),
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
@@ -134,7 +134,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
-        autovalidate: _autoValidate,
+        // autovalidate: _autoValidate,
         child: ArrowAwareFocusScope(
           node: _focusScopeNode,
           child: Column(

@@ -65,7 +65,7 @@ class WidgetBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      overflow: Overflow.visible,
+      // overflow: Overflow.visible,
       children: <Widget>[
         icon,
         _badge(),

@@ -14,7 +14,7 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<com.instructure.student.view.AttachmentDogEarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.emeritus.student.view.AttachmentDogEarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/attachment_view_width"
@@ -68,4 +68,4 @@
         android:tint="@color/white"
         app:srcCompat="@drawable/ic_download"/>
 
-</com.instructure.student.view.AttachmentDogEarLayout>
+</com.emeritus.student.view.AttachmentDogEarLayout>

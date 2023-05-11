@@ -21,7 +21,7 @@
 
         <variable
             name="viewData"
-            type="com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData" />
+            type="com.emeritus.student.features.assignmentdetails.gradecellview.GradeCellViewData" />
 
         <import type="android.view.View" />
 
@@ -163,7 +163,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/submittedTitle" />
 
-        <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.DonutChartView
+        <com.emeritus.student.mobius.assignmentDetails.ui.gradeCell.DonutChartView
             android:id="@+id/chart"
             android:layout_width="130dp"
             android:layout_height="130dp"
