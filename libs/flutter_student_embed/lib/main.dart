@@ -26,7 +26,6 @@ import 'package:flutter_student_embed/utils/service_locator.dart';
 import 'network/utils/api_prefs.dart';
 
 void main() async {
-  print("sandeep - student ");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

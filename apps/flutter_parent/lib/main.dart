@@ -37,7 +37,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
 
-  print("sandeep - parent ");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
