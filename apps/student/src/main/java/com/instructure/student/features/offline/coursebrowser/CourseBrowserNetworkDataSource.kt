@@ -27,13 +27,11 @@ class CourseBrowserNetworkDataSource(
     private val tabApi: TabAPI.TabsInterface,
     private val pageApi: PageAPI.PagesInterface
 ) {
-    @Throws(IllegalStateException::class)
     suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return tabApi.getTabs(canvasContext.id, canvasContext.type.apiString, params).dataOrThrow
     }
 
-    @Throws(IllegalStateException::class)
     suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return pageApi.getFrontPage(canvasContext.apiContext(), canvasContext.id, params).dataOrThrow

@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.utils.NetworkStateProvider
+import java.lang.IllegalStateException
 
 
 class CourseBrowserRepository(
