@@ -79,7 +79,7 @@ class CrashScreen extends StatelessWidget {
         if (!snapshot.hasData) return Container();
         PackageInfo packageInfo = snapshot.data[0];
         AndroidDeviceInfo deviceInfo = snapshot.data[1];
-        return FlatButton(
+        return TextButton(
           onPressed: () => _showDetailsDialog(context, packageInfo, deviceInfo),
           child: Text(
             L10n(context).crashScreenViewDetails,
@@ -146,7 +146,7 @@ class CrashScreen extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(L10n(context).done.toUpperCase()),
             onPressed: () => Navigator.of(context).pop(),
           ),

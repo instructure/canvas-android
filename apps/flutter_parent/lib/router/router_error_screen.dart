@@ -57,31 +57,31 @@ class RouterErrorScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(48, 0, 48, 0),
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () {
                   locator<UrlLauncher>().launch(_route);
                 },
                 child: Text(L10n(context).openInBrowser,
                     style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  side: BorderSide(color: ParentColors.tiara),
-                ),
+                // shape: RoundedRectangleBorder(
+                //   borderRadius: new BorderRadius.circular(4.0),
+                //   side: BorderSide(color: ParentColors.tiara),
+                // ),
               ),
             ),
             SizedBox(height: 28),
             Padding(
               padding: const EdgeInsets.fromLTRB(48, 0, 48, 0),
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () {
                   _switchUsers(context);
                 },
                 child:
                     Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  side: BorderSide(color: ParentColors.tiara),
-                ),
+                // shape: RoundedRectangleBorder(
+                //   borderRadius: new BorderRadius.circular(4.0),
+                //   side: BorderSide(color: ParentColors.tiara),
+                // ),
               ),
             ),
           ]),

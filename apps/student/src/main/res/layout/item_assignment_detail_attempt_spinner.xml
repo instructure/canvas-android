@@ -21,7 +21,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel" />
+            type="com.emeritus.student.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

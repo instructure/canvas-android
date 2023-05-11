@@ -31,6 +31,7 @@ void main() async {
 
   runZonedGuarded<Future<void>>(() async {
     NativeComm.init();
+    await Firebase.initializeApp();
     setupLocator();
 
     await Future.wait([

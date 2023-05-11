@@ -23,7 +23,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
 
-import 'private_consts.dart';
+// import 'private_consts.dart';
 
 /// Class that helps to create and configure [Dio] instances for common use cases
 class DioConfig {
@@ -182,7 +182,8 @@ class DioConfig {
     PageSize pageSize: PageSize.none,
     bool useBetaDomain: false,
   }) {
-    var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://canvas.instructure.com/';
+    // var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://canvas.instructure.com/';
+    var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://canvas-test.emeritus.org/';
     if (includeApiPath) baseUrl += 'api/v1/';
 
     return DioConfig(
@@ -260,6 +261,6 @@ Dio seedingDio({String baseUrl = baseSeedingUrl}) {
       retries: 3, // Allow for retries in our seeding calls, because they can return 500s
       baseHeaders: ApiPrefs.getHeaderMap(
           forceDeviceLanguage: true,
-          token: DATA_SEEDING_ADMIN_TOKEN,
+          // token: DATA_SEEDING_ADMIN_TOKEN,
           extraHeaders: {'Content-type': 'application/json', 'Accept': 'application/json'})).dio;
 }

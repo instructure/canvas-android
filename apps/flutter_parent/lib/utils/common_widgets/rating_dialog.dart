@@ -105,7 +105,7 @@ class _RatingDialogState extends State<RatingDialog> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
             title: Text(L10n(context).ratingDialogTitle),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(L10n(context).ratingDialogDontShowAgain.toUpperCase()),
                 onPressed: _handleDontShowAgain,
               )
@@ -166,10 +166,10 @@ class _RatingDialogState extends State<RatingDialog> {
           ),
         ),
         SizedBox(height: 8),
-        RaisedButton(
+        ElevatedButton(
           child: Text(L10n(context).ratingDialogSendFeedback.toUpperCase()),
-          color: Theme.of(context).accentColor,
-          textColor: Colors.white,
+          // color: Theme.of(context).accentColor,
+          // textColor: Colors.white,
           onPressed: _sending ? null : _sendFeedbackPressed,
         ),
       ],

@@ -99,7 +99,7 @@
         android:autoLink="web"
         tools:text="This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed."/>
 
-    <com.instructure.student.view.AttachmentLayout
+    <com.emeritus.student.view.AttachmentLayout
         android:id="@+id/attachmentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

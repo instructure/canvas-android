@@ -36,6 +36,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

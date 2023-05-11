@@ -31,7 +31,7 @@ def coverageEnabled = project.hasProperty('coverage')
 
 sqldelight {
     StudentDb {
-        packageName = "com.instructure.student.db"
+        packageName = "com.emeritus.student.db"
         sourceFolders = ["db"]
         schemaOutputDirectory = file("src/main/db/schemas")
     }
@@ -47,20 +47,25 @@ androidExtensions {
     experimental = true
 }
 
+def RELEASE_PROPERTIES = new Properties()
+RELEASE_PROPERTIES.load(new FileInputStream(file('./buildconfig/release-build.properties')))
+def DEBUG_PROPERTIES = new Properties()
+DEBUG_PROPERTIES.load(new FileInputStream(file('./buildconfig/debug-build.properties')))
+
 android {
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        applicationId "com.instructure.candroid"
+        applicationId "com.emeritus.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 248
-        versionName = '6.22.0'
+        versionCode = 102
+        versionName = '0.0.3'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
-        testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
+        testInstrumentationRunner 'com.emeritus.student.espresso.StudentHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
         buildConfigField "boolean", "IS_TESTING", "false"
 
@@ -98,17 +103,25 @@ android {
     }
 
     signingConfigs {
+
         release {
-            storeFile file('../candroid.keystore')
-            storePassword System.getenv('KEYSTORE_PASSWORD')
-            keyAlias System.getenv('KEY_ALIAS')
-            keyPassword System.getenv('KEY_PASSWORD')
+            storeFile file(RELEASE_PROPERTIES['KEYSTORE_FILE'])
+            storePassword RELEASE_PROPERTIES['KEYSTORE_PASSWORD']
+            keyAlias RELEASE_PROPERTIES['KEY_ALIAS']
+            keyPassword RELEASE_PROPERTIES['KEY_PASSWORD']
+        }
+        debug {
+            storeFile file(DEBUG_PROPERTIES['KEYSTORE_FILE'])
+            storePassword DEBUG_PROPERTIES['KEYSTORE_PASSWORD']
+            keyAlias DEBUG_PROPERTIES['KEY_ALIAS']
+            keyPassword DEBUG_PROPERTIES['KEY_PASSWORD']
         }
     }
 
     buildTypes {
 
         debug {
+            signingConfig signingConfigs.debug
             testCoverageEnabled = coverageEnabled
             debuggable true
             minifyEnabled false
@@ -145,10 +158,10 @@ android {
                 nativeSymbolUploadEnabled true
             }
 
-            ndk {
-                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
-            }
+//            ndk {
+//                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
+//                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+//            }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
 
@@ -166,12 +179,37 @@ android {
         }
 
         qa {
+            applicationIdSuffix ".qa"
             buildConfigField "boolean", "IS_TESTING", "true"
             dimension 'default'
+            resValue "string", "student_app_name", "Emeritus Classroom (Debug)"
+
+            Properties devProps = new Properties()
+
+            devProps.load(new FileInputStream(file("$rootDir/student/qa.properties")))
+
+            buildConfigField "String", "PROTOCOL", "\"${devProps.getProperty('PROTOCOL')}\""
+            buildConfigField "String", "DOMAIN", "\"${devProps.getProperty('DOMAIN')}\""
+            buildConfigField "String", "BASE_URL", "\"${devProps.getProperty('BASE_URL')}\""
+            buildConfigField "String", "CLIENT_ID", "\"${devProps.getProperty('CLIENT_ID')}\""
+            buildConfigField "String", "CLIENT_SECRET", "\"${devProps.getProperty('CLIENT_SECRET')}\""
+
+
         }
 
         prod {
             dimension 'default'
+
+            resValue "string", "student_app_name", "Emeritus Classroom"
+
+            Properties devProps = new Properties()
+            devProps.load(new FileInputStream(file("$rootDir/student/prod.properties")))
+
+            buildConfigField "String", "PROTOCOL", "\"${devProps.getProperty('PROTOCOL')}\""
+            buildConfigField "String", "DOMAIN", "\"${devProps.getProperty('DOMAIN')}\""
+            buildConfigField "String", "BASE_URL", "\"${devProps.getProperty('BASE_URL')}\""
+            buildConfigField "String", "CLIENT_ID", "\"${devProps.getProperty('CLIENT_ID')}\""
+            buildConfigField "String", "CLIENT_SECRET", "\"${devProps.getProperty('CLIENT_SECRET')}\""
         }
     }
 
@@ -217,7 +255,7 @@ android {
     registerTransform(
             new ProjectTransformer(
                     android,
-                    new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
+                    new MasqueradeUITransformer('com.emeritus.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
                     new LocaleTransformer(project),
@@ -260,7 +298,7 @@ dependencies {
     implementation project(path: ':DocumentScanner')
 
     /* Flutter embed */
-    implementation (project(path: ':flutter-student-embed')) {
+    implementation(project(path: ':flutter-student-embed')) {
         exclude group: 'com.google.firebase'
         exclude group: 'com.google.android.gms'
     }
@@ -286,7 +324,7 @@ dependencies {
     }
     implementation Libs.FIREBASE_MESSAGING
     implementation Libs.FIREBASE_CRASHLYTICS_NDK
-    implementation (Libs.FIREBASE_CRASHLYTICS) {
+    implementation(Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
 
@@ -393,9 +431,10 @@ if (coverageEnabled) {
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
             html.enabled true
-            csv.enabled  false
-            xml.enabled  false
+            csv.enabled false
+            xml.enabled false
         }
     }
 
 }
+

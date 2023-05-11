@@ -109,8 +109,8 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
     }
 
     private fun applyTheme() {
-        val loadingView = findViewById<CanvasLoadingView>(R.id.progress_bar)
-        loadingView?.setOverrideColor(themeColor())
+//        val loadingView = findViewById<CanvasLoadingView>(R.id.progress_bar)
+//        loadingView?.setOverrideColor(themeColor())
     }
 
     companion object {

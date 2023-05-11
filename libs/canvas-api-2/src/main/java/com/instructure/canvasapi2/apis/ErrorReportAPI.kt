@@ -30,7 +30,7 @@ import retrofit2.http.Query
 
 object ErrorReportAPI {
 
-    const val DEFAULT_DOMAIN = "https://canvas.instructure.com"
+    var DEFAULT_DOMAIN = ""
 
     enum class Severity(val tag: String) {
         COMMENT("just_a_comment"),

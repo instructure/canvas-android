@@ -67,7 +67,7 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                 key: _formKey,
                 autofocus: true,
                 autocorrect: false,
-                autovalidate: false,
+                // autovalidate: false,
                 initialValue: widget._pairingCode,
                 onChanged: (value) {
                   _showPairingCodeError(false);

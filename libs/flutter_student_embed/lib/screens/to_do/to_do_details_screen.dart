@@ -54,7 +54,8 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color contextColor = StudentTheme.of(context).getCanvasContextColor(widget.toDo.contextCode());
+    Color contextColor = StudentTheme.of(context)
+        .getCanvasContextColor(widget.toDo.contextCode());
     return Scaffold(
       key: _scaffoldKey,
       appBar: dynamicStyleAppBar(
@@ -62,31 +63,34 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
         appBar: AppBar(
           title: Text(L10n(context).toDo),
           actions: <Widget>[
-            if (_deleting) Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 24.0,
-                  height: 24.0,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).scaffoldBackgroundColor),
-                    strokeWidth: 3.0,
+            if (_deleting)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 24.0,
+                    height: 24.0,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).scaffoldBackgroundColor),
+                      strokeWidth: 3.0,
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (!_deleting) PopupMenuButton<int>(
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(value: 0, child: Text(L10n(context).edit)),
-                  PopupMenuItem(value: 1, child: Text(L10n(context).delete)),
-                ];
-              },
-              onSelected: (option) {
-                if (option == 0) _edit(context);
-                if (option == 1) _delete(context);
-              },
-            ),
+            if (!_deleting)
+              PopupMenuButton<int>(
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(value: 0, child: Text(L10n(context).edit)),
+                    PopupMenuItem(value: 1, child: Text(L10n(context).delete)),
+                  ];
+                },
+                onSelected: (option) {
+                  if (option == 0) _edit(context);
+                  if (option == 1) _delete(context);
+                },
+              ),
           ],
         ),
       ),
@@ -106,7 +110,10 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     widget.toDo.contextName,
-                    style: Theme.of(context).textTheme.caption.copyWith(color: contextColor),
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(color: contextColor),
                   ),
                 ),
               Divider(height: 32),
@@ -116,7 +123,8 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
               ),
               SizedBox(height: 8),
               Text(
-                widget.toDo.plannable.toDoDate.l10nFormat(L10n(context).dateAtTime),
+                widget.toDo.plannable.toDoDate
+                    .l10nFormat(L10n(context).dateAtTime),
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               Divider(height: 32),
@@ -125,7 +133,8 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
                 style: Theme.of(context).textTheme.overline,
               ),
               SizedBox(height: 8),
-              if (widget.toDo.plannable.details == null || widget.toDo.plannable.details.isEmpty)
+              if (widget.toDo.plannable.details == null ||
+                  widget.toDo.plannable.details.isEmpty)
                 Container(
                   width: double.infinity,
                   height: 72,
@@ -137,11 +146,15 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
                   child: Center(
                     child: Text(
                       L10n(context).noToDoDescription,
-                      style: Theme.of(context).textTheme.caption.copyWith(color: StudentColors.textDarkest),
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(color: StudentColors.textDarkest),
                     ),
                   ),
                 ),
-              if (widget.toDo.plannable.details != null) Text(widget.toDo.plannable.details),
+              if (widget.toDo.plannable.details != null)
+                Text(widget.toDo.plannable.details),
             ],
           ),
         ),
@@ -150,7 +163,10 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
   }
 
   Future<void> _edit(BuildContext context) async {
-    var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(editToDo: widget.toDo, channelId: widget.channelId));
+    var updatedDates = await locator<QuickNav>().push(
+        context,
+        CreateUpdateToDoScreen(
+            editToDo: widget.toDo, channelId: widget.channelId));
     if (updatedDates != null) {
       // The planner API does not provide a way to got a single planner note with its surrounding PlannerItem
       // data (like context name), so rather than try cobble together updated information in this screen,
@@ -160,7 +176,11 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
   }
 
   void _delete(BuildContext context) async {
-    bool deleteClicked = await _channel.showDialog(L10n(context).areYouSure, L10n(context).deleteToDoConfirmationMessage, L10n(context).delete, L10n(context).cancel);
+    bool deleteClicked = await _channel.showDialog(
+        L10n(context).areYouSure,
+        L10n(context).deleteToDoConfirmationMessage,
+        L10n(context).delete,
+        L10n(context).cancel);
     if (deleteClicked) {
       setState(() {
         _deleting = true;
@@ -176,7 +196,8 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
         setState(() {
           _deleting = false;
         });
-        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(L10n(context).errorDeletingToDo)));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(L10n(context).errorDeletingToDo)));
       }
     }
   }

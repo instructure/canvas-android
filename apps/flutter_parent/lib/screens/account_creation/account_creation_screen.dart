@@ -46,14 +46,18 @@ class AccountCreationScreen extends StatefulWidget {
 }
 
 class _AccountCreationScreenState extends State<AccountCreationScreen> {
-  TextStyle _defaultSpanStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
-  TextStyle _linkSpanStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
+  TextStyle _defaultSpanStyle = TextStyle(
+      color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
+  TextStyle _linkSpanStyle = TextStyle(
+      color: ParentColors.parentApp,
+      fontSize: 14.0,
+      fontWeight: FontWeight.normal);
 
   Future<TermsOfService> _tosFuture;
 
   Future<TermsOfService> _getToS() {
-    return locator<AccountCreationInteractor>()
-        .getToSForAccount(widget.pairingInfo.accountId, widget.pairingInfo.domain);
+    return locator<AccountCreationInteractor>().getToSForAccount(
+        widget.pairingInfo.accountId, widget.pairingInfo.domain);
   }
 
   final FocusNode _nameFocus = FocusNode();
@@ -126,7 +130,11 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         alignment: Alignment.centerLeft,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
-          child: Text(text, style: TextStyle(color: ParentColors.licorice, fontSize: 16, fontWeight: FontWeight.w500)),
+          child: Text(text,
+              style: TextStyle(
+                  color: ParentColors.licorice,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500)),
         ));
   }
 
@@ -137,13 +145,19 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
       autocorrect: false,
       controller: _nameController,
       decoration: InputDecoration(
-          errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
+          errorStyle: TextStyle(
+              color: ParentColors.failure,
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
           errorBorder: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(color: ParentColors.failure),
           ),
           hintText: L10n(context).qrCreateAccountHintName,
-          hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
+          hintStyle: TextStyle(
+              color: ParentColors.tiara,
+              fontSize: 16,
+              fontWeight: FontWeight.normal),
           border: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(),
@@ -170,13 +184,19 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         controller: _emailController,
         decoration: InputDecoration(
             errorText: _emailErrorText,
-            errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
+            errorStyle: TextStyle(
+                color: ParentColors.failure,
+                fontSize: 14,
+                fontWeight: FontWeight.w500),
             errorBorder: OutlineInputBorder(
               borderRadius: new BorderRadius.circular(4.0),
               borderSide: new BorderSide(color: ParentColors.failure),
             ),
             hintText: L10n(context).qrCreateAccountHintEmail,
-            hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
+            hintStyle: TextStyle(
+                color: ParentColors.tiara,
+                fontSize: 16,
+                fontWeight: FontWeight.normal),
             border: OutlineInputBorder(
               borderRadius: new BorderRadius.circular(4.0),
               borderSide: new BorderSide(),
@@ -220,13 +240,19 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
               });
             },
           ),
-          errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
+          errorStyle: TextStyle(
+              color: ParentColors.failure,
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
           errorBorder: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(color: ParentColors.failure),
           ),
           hintText: L10n(context).qrCreateAccountHintPassword,
-          hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
+          hintStyle: TextStyle(
+              color: ParentColors.tiara,
+              fontSize: 16,
+              fontWeight: FontWeight.normal),
           border: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(),
@@ -249,7 +275,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   Widget _passwordIcon(bool obscurePassword) {
     if (obscurePassword) {
-      return Icon(CanvasIcons.eye, semanticLabel: L10n(context).qrCreateAccountEyeSemantics);
+      return Icon(CanvasIcons.eye,
+          semanticLabel: L10n(context).qrCreateAccountEyeSemantics);
     } else {
       return Padding(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
@@ -277,7 +304,9 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         future: _tosFuture,
         builder: (context, AsyncSnapshot<TermsOfService> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
+            return Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: LoadingIndicator());
           }
 
           if (snapshot.hasError || snapshot.data == null) {
@@ -307,8 +336,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     );
   }
 
-  TextSpan _getTosSpanHelper({@required String text, @required List<TextSpan> inputSpans}) {
-    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
+  TextSpan _getTosSpanHelper(
+      {@required String text, @required List<TextSpan> inputSpans}) {
+    var indexedSpans =
+        inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
     indexedSpans.sort((a, b) => a.key.compareTo(b.key));
 
     int index = 0;
@@ -343,7 +374,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                       locator<QuickNav>().pushRoute(
                           context,
                           PandaRouter.termsOfUse(
-                              accountId: widget.pairingInfo.accountId, domain: widget.pairingInfo.domain));
+                              accountId: widget.pairingInfo.accountId,
+                              domain: widget.pairingInfo.domain));
                     }
                   },
               ),
@@ -351,7 +383,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   text: privacyPolicy,
                   style: _linkSpanStyle,
                   recognizer: TapGestureRecognizer()
-                    ..onTap = () => locator<AccountCreationInteractor>().launchPrivacyPolicy()),
+                    ..onTap = () => locator<AccountCreationInteractor>()
+                        .launchPrivacyPolicy()),
             ]),
             style: _defaultSpanStyle,
             key: AccountCreationScreen.accountCreationTextSpanKey));
@@ -359,19 +392,21 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   Widget _createAccountButton() {
     return ButtonTheme(
-      child: RaisedButton(
+      child: ElevatedButton(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: _isLoading
-              ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
+              ? Center(
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
               : Text(
                   L10n(context).qrCreateAccount,
                   style: TextStyle(fontSize: 16),
                 ),
         ),
-        color: Theme.of(context).accentColor,
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        // color: Theme.of(context).accentColor,
+        // textColor: Colors.white,
+        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         onPressed: () {
           if (!_isLoading) _handleCreateAccount();
         },
@@ -382,7 +417,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   Widget _alreadyHaveAnAccount() {
     // Since this one is always alone, the touch target size has been boosted
     return GestureDetector(
-      onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain)),
+      onTap: () => locator<QuickNav>()
+          .pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 14, 0, 14),
         child: Center(
@@ -391,7 +427,9 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
               style: _defaultSpanStyle,
               children: <TextSpan>[
                 TextSpan(text: L10n(context).qrCreateAccountSignIn1),
-                TextSpan(text: L10n(context).qrCreateAccountSignIn2, style: _linkSpanStyle)
+                TextSpan(
+                    text: L10n(context).qrCreateAccountSignIn2,
+                    style: _linkSpanStyle)
               ],
             ),
           ),
@@ -404,37 +442,43 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     if (_formKey.currentState.validate()) {
       setState(() => _isLoading = true);
       try {
-        var response = await locator<AccountCreationInteractor>().createNewAccount(
-            widget.pairingInfo.accountId,
-            widget.pairingInfo.code,
-            _nameController.text,
-            _emailController.text,
-            _passwordController.text,
-            widget.pairingInfo.domain);
+        var response = await locator<AccountCreationInteractor>()
+            .createNewAccount(
+                widget.pairingInfo.accountId,
+                widget.pairingInfo.code,
+                _nameController.text,
+                _emailController.text,
+                _passwordController.text,
+                widget.pairingInfo.domain);
 
         if (response.statusCode == 200) {
           setState(() => _isLoading = false);
 
           locator<Analytics>().logEvent(
             AnalyticsEventConstants.QR_ACCOUNT_SUCCESS,
-            extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
+            extras: {
+              AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain
+            },
           );
 
           // Route them to the login page with their domain
-          locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain));
+          locator<QuickNav>().pushRoute(
+              context, PandaRouter.loginWeb(widget.pairingInfo.domain));
         }
       } catch (e) {
         setState(() => _isLoading = false);
 
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.QR_ACCOUNT_FAILURE,
-          extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
+          extras: {
+            AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain
+          },
         );
 
         if (e is DioError) {
           _handleDioError(e);
         } else {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(L10n(context).unexpectedError)),
           );
         }
@@ -446,7 +490,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     String emailError = '';
     String pairingError = '';
     try {
-      emailError = e.response.data['errors']['user']['pseudonyms'][0]['message'];
+      emailError =
+          e.response.data['errors']['user']['pseudonyms'][0]['message'];
       if (emailError.isNotEmpty) {
         setState(() {
           _emailErrorText = _validateEmail('', apiError: true);
@@ -457,9 +502,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
 
     try {
-      pairingError = e.response.data['errors']['pairing_code']['code'][0]['message'];
+      pairingError =
+          e.response.data['errors']['pairing_code']['code'][0]['message'];
       if (pairingError.isNotEmpty) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(L10n(context).errorPairingFailed)),
         );
       }
@@ -469,7 +515,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
     if (pairingError.isEmpty && emailError.isEmpty) {
       // Show generic error case
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(L10n(context).errorGenericPairingFailed)),
       );
     }

@@ -60,7 +60,7 @@
 
     </LinearLayout>
 
-    <com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentTextView
+    <com.emeritus.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentTextView
         android:id="@+id/commentTextView"
         style="@style/TextFont.Regular"
         android:layout_marginEnd="24dp"
