@@ -88,6 +88,7 @@ class ModuleUtilityTest : TestCase() {
         val expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putString(PageDetailsFragment.PAGE_NAME, "hello-world")
+        expectedBundle.putBoolean(PageDetailsFragment.NAVIGATED_FROM_MODULES, false)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
         TestCase.assertNotNull(parentFragment)
