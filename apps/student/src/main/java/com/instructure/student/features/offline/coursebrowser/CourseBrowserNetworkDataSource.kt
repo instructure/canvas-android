@@ -32,8 +32,8 @@ class CourseBrowserNetworkDataSource(
         return tabApi.getTabs(canvasContext.id, canvasContext.type.apiString, params).dataOrThrow
     }
 
-    suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page {
+    suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page? {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return pageApi.getFrontPage(canvasContext.apiContext(), canvasContext.id, params).dataOrThrow
+        return pageApi.getFrontPage(canvasContext.apiContext(), canvasContext.id, params).dataOrNull
     }
 }

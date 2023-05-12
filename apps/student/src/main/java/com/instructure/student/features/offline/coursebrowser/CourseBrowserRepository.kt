@@ -39,7 +39,7 @@ class CourseBrowserRepository(
         return tabs.filter { !(it.isExternal && it.isHidden) }
     }
 
-    suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page {
+    suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page? {
         return if (networkStateProvider.isOnline()) {
             networkDataSource.getFrontPage(canvasContext, forceNetwork)
         } else {

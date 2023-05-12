@@ -63,10 +63,11 @@ class CourseBrowserNetworkDataSourceTest {
         Assert.assertEquals(Page(title = "Front page"), frontPage)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `Get front page failure throws exception`() = runTest {
+    fun `Get front page failure returns null`() = runTest {
         coEvery { pageApi.getFrontPage(any(), any(), any()) } returns DataResult.Fail()
 
-        dataSource.getFrontPage(CanvasContext.emptyCourseContext(1), true)
+        val frontPage = dataSource.getFrontPage(CanvasContext.emptyCourseContext(1), true)
+
+        Assert.assertNull(frontPage)
     }
 }

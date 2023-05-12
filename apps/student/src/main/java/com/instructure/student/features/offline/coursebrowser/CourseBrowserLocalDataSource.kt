@@ -32,7 +32,7 @@ class CourseBrowserLocalDataSource(
         }
     }
 
-    suspend fun getFrontPage(canvasContext: CanvasContext): Page {
-        return pageDao.getFrontPage(canvasContext.id).toApiModel()
+    suspend fun getFrontPage(canvasContext: CanvasContext): Page? {
+        return pageDao.getFrontPage(canvasContext.id)?.toApiModel()
     }
 }

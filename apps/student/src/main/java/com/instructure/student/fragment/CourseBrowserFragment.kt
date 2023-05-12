@@ -207,7 +207,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
             if (isHomeAPage) {
                 val homePage = repository.getFrontPage(canvasContext, isRefresh)
-                homePageTitle = homePage.title
+                homePageTitle = homePage?.title
             }
 
             val tabs = repository.getTabs(canvasContext, isRefresh)
