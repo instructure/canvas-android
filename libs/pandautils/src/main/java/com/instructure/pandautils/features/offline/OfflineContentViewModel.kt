@@ -27,6 +27,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseTabViewModel
 import com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
@@ -45,7 +46,8 @@ class OfflineContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val offlineContentRepository: OfflineContentRepository,
-    private val storageUtils: StorageUtils
+    private val storageUtils: StorageUtils,
+    private val offlineSyncHelper: OfflineSyncHelper
 ) : ViewModel() {
 
     val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
@@ -134,7 +136,7 @@ class OfflineContentViewModel @Inject constructor(
 
     private fun onCourseCheckedChanged(checked: Boolean, courseItemViewModel: CourseItemViewModel) {
         val courseViewModel = data.value?.courseItems?.find { it == courseItemViewModel } ?: return
-        
+
         val newTabs = courseViewModel.data.tabs.map { tab ->
             val newFiles = tab.data.files.map { it.copy(data = it.data.copy(checked = checked)) }
             tab.copy(
@@ -294,7 +296,9 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     fun onSyncClicked() {
-
+        viewModelScope.launch {
+            offlineSyncHelper.syncCourses(syncSettings.keys.toList())
+        }
     }
 
     fun onRefresh() {
