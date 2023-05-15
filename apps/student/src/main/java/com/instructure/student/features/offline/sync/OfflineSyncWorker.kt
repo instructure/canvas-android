@@ -24,12 +24,16 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.PageEntity
+import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import dagger.assisted.Assisted
@@ -45,7 +49,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val pageDao: PageDao,
     private val courseFacade: CourseFacade,
-    private val assignmentFacade: AssignmentFacade
+    private val assignmentFacade: AssignmentFacade,
+    private val quizDao: QuizDao,
+    private val quizInterface: QuizAPI.QuizInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -86,6 +92,8 @@ class OfflineSyncWorker @AssistedInject constructor(
                 assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
             }.dataOrThrow
 
+        fetchQuizzes(assignmentGroups)
+
         assignmentFacade.insertAssignmentGroups(assignmentGroups)
     }
 
@@ -94,5 +102,17 @@ class OfflineSyncWorker @AssistedInject constructor(
         val course = courseApi.getFullCourseContent(courseId, params).dataOrThrow
 
         courseFacade.insertCourse(course)
+    }
+
+    private suspend fun fetchQuizzes(assignmentGroups: List<AssignmentGroup>) {
+        val params = RestParams(isForceReadFromNetwork = true)
+        assignmentGroups.forEach { group ->
+            group.assignments.forEach {
+                if (it.quizId != 0L) {
+                    val quiz = quizInterface.getQuiz(it.courseId, it.quizId, params).dataOrThrow
+                    quizDao.insert(QuizEntity(quiz))
+                }
+            }
+        }
     }
 }

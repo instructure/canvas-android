@@ -42,7 +42,7 @@ data class UserEntity(
     val rootAccount: String?,
     val isFakeStudent: Boolean
 ) {
-    constructor(user: User): this(
+    constructor(user: User) : this(
         user.id,
         user.name,
         user.shortName,
@@ -60,5 +60,27 @@ data class UserEntity(
         user.k5User,
         user.rootAccount,
         user.isFakeStudent
+    )
+
+    fun toApiModel() = User(
+        id = id,
+        name = name,
+        shortName = shortName,
+        loginId = loginId,
+        avatarUrl = avatarUrl,
+        primaryEmail = primaryEmail,
+        email = email,
+        sortableName = sortableName,
+        bio = bio,
+        enrollments = emptyList(),
+        enrollmentIndex = enrollmentIndex,
+        lastLogin = lastLogin,
+        locale = locale,
+        effective_locale = effective_locale,
+        pronouns = pronouns,
+        k5User = k5User,
+        rootAccount = rootAccount,
+        isFakeStudent = isFakeStudent,
+        calendar = null
     )
 }

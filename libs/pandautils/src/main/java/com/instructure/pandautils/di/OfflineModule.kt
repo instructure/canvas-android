@@ -154,13 +154,51 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideAssignmentScoreStatisticsDao(appDatabase: OfflineDatabase): AssignmentScoreStatisticsDao {
+        return appDatabase.assignmentScoreStatisticsDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionDao(appDatabase: OfflineDatabase): RubricCriterionDao {
+        return appDatabase.rubricCriterionDao()
+    }
+
+    @Provides
+    fun provideQuizDao(appDatabase: OfflineDatabase): QuizDao {
+        return appDatabase.quizDao()
+    }
+
+    @Provides
+    fun provideLockInfoDao(appDatabase: OfflineDatabase): LockInfoDao {
+        return appDatabase.lockInfoDao()
+    }
+
+    @Provides
+    fun provideLockedModuleDao(appDatabase: OfflineDatabase): LockedModuleDao {
+        return appDatabase.lockedModuleDao()
+    }
+
+    @Provides
+    fun provideModuleNameDao(appDatabase: OfflineDatabase): ModuleNameDao {
+        return appDatabase.moduleNameDao()
+    }
+
+    @Provides
+    fun provideModuleCompletionRequirementDao(appDatabase: OfflineDatabase): ModuleCompletionRequirementDao {
+        return appDatabase.moduleCompletionRequirementDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
         plannerOverrideDao: PlannerOverrideDao,
         rubricSettingsDao: RubricSettingsDao,
         submissionFacade: SubmissionFacade,
-        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+        assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
+        rubricCriterionDao: RubricCriterionDao,
+        lockInfoFacade: LockInfoFacade
     ): AssignmentFacade {
         return AssignmentFacade(
             assignmentGroupDao,
@@ -168,7 +206,10 @@ class OfflineModule {
             plannerOverrideDao,
             rubricSettingsDao,
             submissionFacade,
-            discussionTopicHeaderFacade
+            discussionTopicHeaderFacade,
+            assignmentScoreStatisticsDao,
+            rubricCriterionDao,
+            lockInfoFacade
         )
     }
 
@@ -230,5 +271,15 @@ class OfflineModule {
     @Provides
     fun provideSyncSettingsFacade(syncSettingsDao: SyncSettingsDao): SyncSettingsFacade {
         return SyncSettingsFacade(syncSettingsDao)
+    }
+
+    @Provides
+    fun provideLockInfoFacade(
+        lockInfoDao: LockInfoDao,
+        lockedModuleDao: LockedModuleDao,
+        moduleNameDao: ModuleNameDao,
+        completionRequirementDao: ModuleCompletionRequirementDao
+    ): LockInfoFacade {
+        return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao)
     }
 }

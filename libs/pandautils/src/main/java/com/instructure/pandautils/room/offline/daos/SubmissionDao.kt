@@ -31,4 +31,7 @@ interface SubmissionDao {
 
     @Update
     suspend fun update(entity: SubmissionEntity)
+
+    @Query("SELECT * FROM SubmissionEntity WHERE id = :id ORDER BY attempt ASC")
+    suspend fun findById(id: Long?): List<SubmissionEntity>
 }

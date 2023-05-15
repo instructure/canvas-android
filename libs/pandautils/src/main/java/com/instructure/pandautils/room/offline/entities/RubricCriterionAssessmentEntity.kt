@@ -18,18 +18,9 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 
 @Entity(
     primaryKeys = ["id", "submissionId"],
-    foreignKeys = [
-        ForeignKey(
-            entity = SubmissionEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["submissionId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
 )
 data class RubricCriterionAssessmentEntity(
     val id: String,

@@ -43,6 +43,7 @@ import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignmentdetails.AssignmentDetailAction
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsViewModel
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsRepository
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,6 +67,7 @@ class AssignmentDetailsViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
+    private val assignmentDetailsRepository: AssignmentDetailsRepository = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val assignmentManager: AssignmentManager = mockk(relaxed = true)
     private val quizManager: QuizManager = mockk(relaxed = true)
@@ -100,7 +102,7 @@ class AssignmentDetailsViewModelTest {
 
     private fun getViewModel() = AssignmentDetailsViewModel(
         savedStateHandle,
-        courseManager,
+        assignmentDetailsRepository,
         assignmentManager,
         quizManager,
         submissionManager,

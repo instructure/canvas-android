@@ -31,4 +31,7 @@ interface UserDao {
 
     @Update
     suspend fun update(entity: UserEntity)
+
+    @Query("SELECT * FROM UserEntity WHERE id = :id")
+    suspend fun findById(id: Long?): UserEntity?
 }

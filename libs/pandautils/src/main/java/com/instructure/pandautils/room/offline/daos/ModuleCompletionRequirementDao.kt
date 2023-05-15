@@ -18,20 +18,23 @@
 package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.offline.entities.RubricSettingsEntity
+import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirementEntity
 
 @Dao
-interface RubricSettingsDao {
+interface ModuleCompletionRequirementDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: RubricSettingsEntity): Long
+    suspend fun insert(entity: ModuleCompletionRequirementEntity)
+
+    @Insert
+    suspend fun insertAll(entities: List<ModuleCompletionRequirementEntity>)
 
     @Delete
-    suspend fun delete(entity: RubricSettingsEntity)
+    suspend fun delete(entity: ModuleCompletionRequirementEntity)
 
     @Update
-    suspend fun update(entity: RubricSettingsEntity)
+    suspend fun update(entity: ModuleCompletionRequirementEntity)
 
-    @Query("SELECT * FROM RubricSettingsEntity WHERE id = :id")
-    suspend fun findById(id: Long?): RubricSettingsEntity?
+    @Query("SELECT * FROM ModuleCompletionRequirementEntity WHERE lockedModuleId = :lockModuleId")
+    suspend fun findByLockModuleId(lockModuleId: Long?): List<ModuleCompletionRequirementEntity>
 }

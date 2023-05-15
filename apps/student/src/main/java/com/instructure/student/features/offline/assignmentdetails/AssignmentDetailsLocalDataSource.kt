@@ -17,18 +17,28 @@
 
 package com.instructure.student.features.offline.assignmentdetails
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.room.offline.daos.AssignmentDao
-import com.instructure.pandautils.room.offline.daos.CourseDao
-import com.instructure.pandautils.room.offline.daos.SubmissionDao
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.CourseFacade
 
 class AssignmentDetailsLocalDataSource(
-    private val courseDao: CourseDao,
-    private val assignmentDao: AssignmentDao,
-    private val submissionDao: SubmissionDao
+    private val courseFacade: CourseFacade,
+    private val assignmentFacade: AssignmentFacade,
+    private val quizDao: QuizDao
 ) {
 
     suspend fun getCourseWithGrade(courseId: Long): Course? {
-        return courseDao.findById(courseId)?.toApiModel()
+        return courseFacade.getCourseById(courseId)
+    }
+
+    suspend fun getAssignment(assignmentId: Long): Assignment? {
+        return assignmentFacade.getAssignmentById(assignmentId)
+    }
+
+    suspend fun getQuiz(quizId: Long): Quiz? {
+        return quizDao.findById(quizId)?.toApiModel()
     }
 }

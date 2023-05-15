@@ -22,7 +22,9 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 
 class AssignmentDetailsNetworkDataSource(
@@ -35,5 +37,20 @@ class AssignmentDetailsNetworkDataSource(
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): DataResult<Course> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return coursesInterface.getCourseWithGrade(courseId, params)
+    }
+
+    suspend fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment?> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return assignmentInterface.getAssignmentIncludeObservees(courseId, assignmentId, params).map { it.toAssignmentForObservee() }
+    }
+
+    suspend fun getAssignmentWithHistory(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return assignmentInterface.getAssignmentWithHistory(courseId, assignmentId, params)
+    }
+
+    suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): DataResult<Quiz> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return quizInterface.getQuiz(courseId, quizId, params)
     }
 }

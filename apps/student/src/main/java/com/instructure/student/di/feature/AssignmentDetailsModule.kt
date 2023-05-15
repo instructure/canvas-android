@@ -18,9 +18,9 @@
 package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.*
-import com.instructure.pandautils.room.offline.daos.AssignmentDao
-import com.instructure.pandautils.room.offline.daos.CourseDao
-import com.instructure.pandautils.room.offline.daos.SubmissionDao
+import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsNetworkDataSource
@@ -36,11 +36,11 @@ class AssignmentDetailsModule {
 
     @Provides
     fun provideAssignmentDetailsLocalDataSource(
-        courseDao: CourseDao,
-        assignmentDao: AssignmentDao,
-        submissionDao: SubmissionDao
+        courseFacade: CourseFacade,
+        assignmentFacade: AssignmentFacade,
+        quizDao: QuizDao
     ): AssignmentDetailsLocalDataSource {
-        return AssignmentDetailsLocalDataSource(courseDao, assignmentDao, submissionDao)
+        return AssignmentDetailsLocalDataSource(courseFacade, assignmentFacade, quizDao)
     }
 
     @Provides

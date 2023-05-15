@@ -55,17 +55,15 @@ data class TabEntity(
         courseId
     )
 
-    fun toApiModel(): Tab {
-        return Tab(
-            tabId = id,
-            label = label,
-            type = type,
-            htmlUrl = htmlUrl,
-            externalUrl = externalUrl,
-            visibility = visibility,
-            isHidden = isHidden,
-            position = position,
-            ltiUrl = ltiUrl
-        )
-    }
+    fun toApiModel() = Tab(
+        tabId = id,
+        label = label,
+        type = type,
+        htmlUrl = htmlUrl,
+        externalUrl = externalUrl,
+        visibility = visibility,
+        isHidden = isHidden,
+        position = position,
+        ltiUrl = ltiUrl
+    )
 }

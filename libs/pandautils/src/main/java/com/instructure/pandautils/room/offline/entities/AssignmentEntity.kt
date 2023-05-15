@@ -20,7 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.*
 
 @Entity(
     foreignKeys = [
@@ -131,5 +131,67 @@ data class AssignmentEntity(
         assignment.annotatableAttachmentId,
         assignment.anonymousSubmissions,
         assignment.omitFromFinalGrade
+    )
+
+    fun toApiModel(
+        rubric: List<RubricCriterion> = emptyList(),
+        rubricSettings: RubricSettings? = null,
+        submission: Submission? = null,
+        lockInfo: LockInfo? = null,
+        discussionTopicHeader: DiscussionTopicHeader? = null,
+        scoreStatistics: AssignmentScoreStatistics? = null,
+        plannerOverride: PlannerOverride? = null
+    ) = Assignment(
+        id = id,
+        name = name,
+        description = description,
+        submissionTypesRaw = submissionTypesRaw,
+        dueAt = dueAt,
+        pointsPossible = pointsPossible,
+        courseId = courseId,
+        isGradeGroupsIndividually = isGradeGroupsIndividually,
+        gradingType = gradingType,
+        needsGradingCount = needsGradingCount,
+        htmlUrl = htmlUrl,
+        url = url,
+        quizId = quizId,
+        rubric = rubric,
+        isUseRubricForGrading = isUseRubricForGrading,
+        rubricSettings = rubricSettings,
+        allowedExtensions = allowedExtensions,
+        submission = submission,
+        assignmentGroupId = assignmentGroupId,
+        position = position,
+        isPeerReviews = isPeerReviews,
+        lockInfo = lockInfo,
+        lockedForUser = lockedForUser,
+        lockAt = lockAt,
+        unlockAt = unlockAt,
+        lockExplanation = lockExplanation,
+        discussionTopicHeader = discussionTopicHeader,
+        //TODO
+        needsGradingCountBySection = emptyList(),
+        freeFormCriterionComments = freeFormCriterionComments,
+        published = published,
+        groupCategoryId = groupCategoryId,
+        //TODO
+        allDates = emptyList(),
+        userSubmitted = userSubmitted,
+        unpublishable = unpublishable,
+        //TODO
+        overrides = null,
+        onlyVisibleToOverrides = onlyVisibleToOverrides,
+        anonymousPeerReviews = anonymousPeerReviews,
+        moderatedGrading = moderatedGrading,
+        anonymousGrading = anonymousGrading,
+        scoreStatistics = scoreStatistics,
+        allowedAttempts = allowedAttempts,
+        externalToolAttributes = null,
+        plannerOverride = plannerOverride,
+        isStudioEnabled = isStudioEnabled,
+        inClosedGradingPeriod = inClosedGradingPeriod,
+        annotatableAttachmentId = annotatableAttachmentId,
+        anonymousSubmissions = anonymousSubmissions,
+        omitFromFinalGrade = omitFromFinalGrade
     )
 }

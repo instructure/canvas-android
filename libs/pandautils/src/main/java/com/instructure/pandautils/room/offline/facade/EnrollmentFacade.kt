@@ -54,6 +54,22 @@ class EnrollmentFacade(
                 observedUserId = enrollment.observedUser?.id
             )
         )
+
         enrollment.grades?.let { grades -> gradesDao.insert(GradesEntity(grades, enrollmentId)) }
+    }
+
+    suspend fun getEnrollmentsByCourseId(id: Long?): List<Enrollment> {
+        val enrollmentEntities = enrollmentDao.findByCourseId(id)
+        return enrollmentEntities.map {
+            val gradesEntity = gradesDao.findByEnrollmentId(it.id)
+            val observedUserEntity = userDao.findById(it.observedUserId)
+            val userEntity = userDao.findById(it.userId)
+
+            it.toApiModel(
+                grades = gradesEntity?.toApiModel(),
+                observedUser = observedUserEntity?.toApiModel(),
+                user = userEntity?.toApiModel()
+            )
+        }
     }
 }

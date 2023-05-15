@@ -31,4 +31,7 @@ interface TermDao {
 
     @Update
     suspend fun update(entity: TermEntity)
+
+    @Query("SELECT * FROM TermEntity WHERE id = :id")
+    suspend fun findById(id: Long?): TermEntity?
 }

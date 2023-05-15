@@ -17,7 +17,9 @@
 
 package com.instructure.student.features.offline.assignmentdetails
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.utils.NetworkStateProvider
 
 class AssignmentDetailsRepository(
@@ -26,12 +28,31 @@ class AssignmentDetailsRepository(
     private val networkDataSource: AssignmentDetailsNetworkDataSource
 ) {
 
-    @Throws(IllegalStateException::class)
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         return if (networkStateProvider.isOnline()) {
             networkDataSource.getCourseWithGrade(courseId, forceNetwork).dataOrThrow
         } else {
             localDataSource.getCourseWithGrade(courseId) ?: throw IllegalStateException("Could not load from DB")
+        }
+    }
+
+    suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+        return if (networkStateProvider.isOnline()) {
+            if (isObserver) {
+                networkDataSource.getAssignmentIncludeObservees(assignmentId, courseId, forceNetwork).dataOrThrow
+            } else {
+                networkDataSource.getAssignmentWithHistory(assignmentId, courseId, forceNetwork).dataOrThrow
+            }
+        } else {
+            localDataSource.getAssignment(assignmentId) ?: throw IllegalStateException("Could not load from DB")
+        }
+    }
+
+    suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
+        return if (networkStateProvider.isOnline()) {
+            networkDataSource.getQuiz(courseId, quizId, forceNetwork).dataOrThrow
+        } else {
+            localDataSource.getQuiz(quizId) ?: throw IllegalStateException("Could not load from DB")
         }
     }
 }

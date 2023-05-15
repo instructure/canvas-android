@@ -19,14 +19,36 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.RubricCriterion
 
 @Entity
 data class RubricCriterionEntity(
     @PrimaryKey
     val id: String,
+    val assignmentId: Long,
     val description: String?,
     val longDescription: String?,
     val points: Double,
     val criterionUseRange: Boolean,
     val ignoreForScoring: Boolean,
-)
+) {
+    constructor(rubricCriterion: RubricCriterion, assignmentId: Long) : this(
+        rubricCriterion.id.orEmpty(),
+        assignmentId,
+        rubricCriterion.description,
+        rubricCriterion.longDescription,
+        rubricCriterion.points,
+        rubricCriterion.criterionUseRange,
+        rubricCriterion.ignoreForScoring,
+    )
+
+    fun toApiModel() = RubricCriterion(
+        id = id,
+        description = description,
+        longDescription = longDescription,
+        points = points,
+        ratings = arrayListOf(),
+        criterionUseRange = criterionUseRange,
+        ignoreForScoring = ignoreForScoring
+    )
+}

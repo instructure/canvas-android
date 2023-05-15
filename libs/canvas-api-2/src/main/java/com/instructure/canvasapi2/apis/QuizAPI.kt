@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.QuizPostBodyWrapper
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 import java.util.*
@@ -49,6 +50,9 @@ object QuizAPI {
 
         @GET("courses/{courseId}/quizzes/{quizId}")
         fun getQuiz(@Path("courseId") courseId: Long, @Path("quizId") quizId: Long): Call<Quiz>
+
+        @GET("courses/{courseId}/quizzes/{quizId}")
+        suspend fun getQuiz(@Path("courseId") courseId: Long, @Path("quizId") quizId: Long, @Tag restParams: RestParams): DataResult<Quiz>
 
         @PUT("courses/{courseId}/quizzes/{quizId}")
         fun editQuiz(

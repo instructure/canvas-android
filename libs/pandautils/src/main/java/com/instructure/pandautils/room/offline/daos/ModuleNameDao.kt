@@ -18,20 +18,23 @@
 package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.offline.entities.RubricSettingsEntity
+import com.instructure.pandautils.room.offline.entities.ModuleNameEntity
 
 @Dao
-interface RubricSettingsDao {
+interface ModuleNameDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: RubricSettingsEntity): Long
+    suspend fun insert(entity: ModuleNameEntity)
+
+    @Insert
+    suspend fun insertAll(entities: List<ModuleNameEntity>)
 
     @Delete
-    suspend fun delete(entity: RubricSettingsEntity)
+    suspend fun delete(entity: ModuleNameEntity)
 
     @Update
-    suspend fun update(entity: RubricSettingsEntity)
+    suspend fun update(entity: ModuleNameEntity)
 
-    @Query("SELECT * FROM RubricSettingsEntity WHERE id = :id")
-    suspend fun findById(id: Long?): RubricSettingsEntity?
+    @Query("SELECT * FROM ModuleNameEntity WHERE lockedModuleId = :lockModuleId")
+    suspend fun findByLockModuleId(lockModuleId: Long?): List<ModuleNameEntity>
 }

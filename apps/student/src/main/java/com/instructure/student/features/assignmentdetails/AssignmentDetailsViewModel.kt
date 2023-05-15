@@ -22,7 +22,6 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -56,12 +55,12 @@ class AssignmentDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val assignmentManager: AssignmentManager,
-    private val quizManager: QuizManager,
     private val submissionManager: SubmissionManager,
     private val resources: Resources,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
     private val application: Application,
+    private val networkStateProvider: NetworkStateProvider,
     apiPrefs: ApiPrefs,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
@@ -119,26 +118,29 @@ class AssignmentDetailsViewModel @Inject constructor(
                 if (!isDraft && !isUploading) {
                     isUploading = true
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
-                        add(0, AssignmentDetailsAttemptItemViewModel(
-                            AssignmentDetailsAttemptViewData(
-                                resources.getString(R.string.attempt, attempts.size + 1),
-                                dateString,
-                                isUploading = true
+                        add(
+                            0, AssignmentDetailsAttemptItemViewModel(
+                                AssignmentDetailsAttemptViewData(
+                                    resources.getString(R.string.attempt, attempts.size + 1),
+                                    dateString,
+                                    isUploading = true
+                                )
                             )
-                        ))
+                        )
                     }.orEmpty()
                     _data.value?.notifyPropertyChanged(BR.attempts)
                 }
                 if (isUploading && submission.errorFlag) {
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         if (isNotEmpty()) removeFirst()
-                        add(0, AssignmentDetailsAttemptItemViewModel(
-                            AssignmentDetailsAttemptViewData(
-                                resources.getString(R.string.attempt, attempts.size),
-                                dateString,
-                                isFailed = true
+                        add(
+                            0, AssignmentDetailsAttemptItemViewModel(
+                                AssignmentDetailsAttemptViewData(
+                                    resources.getString(R.string.attempt, attempts.size),
+                                    dateString,
+                                    isFailed = true
+                                )
                             )
-                        )
                         )
                     }.orEmpty()
                     _data.value?.notifyPropertyChanged(BR.attempts)
@@ -166,22 +168,15 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
-                val assignmentResult = if (isObserver) {
-                    assignmentManager.getAssignmentIncludeObserveesAsync(
-                        assignmentId,
-                        course?.id.orDefault(),
-                        forceNetwork
-                    ).await().dataOrThrow.toAssignmentForObservee()
-                } else {
-                    assignmentManager.getAssignmentWithHistoryAsync(
-                        assignmentId,
-                        course?.id.orDefault(),
-                        forceNetwork
-                    ).await().dataOrThrow
-                } as Assignment
+                val assignmentResult = assignmentDetailsRepository.getAssignment(
+                    isObserver,
+                    assignmentId,
+                    course?.id.orDefault(),
+                    forceNetwork
+                )
 
                 quizResult = if (assignmentResult.turnInType == Assignment.TurnInType.QUIZ && assignmentResult.quizId != 0L) {
-                    quizManager.getQuizAsync(course?.id.orDefault(), assignmentResult.quizId, forceNetwork).await().dataOrThrow
+                    assignmentDetailsRepository.getQuiz(course?.id.orDefault(), assignmentResult.quizId, forceNetwork)
                 } else null
 
                 val ltiToolId = assignmentResult.externalToolAttributes?.contentId.orDefault()
@@ -220,12 +215,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun refreshAssignment() {
         viewModelScope.launch {
-            val assignmentResult = if (isObserver) {
-                assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), true)
-            } else {
-                assignmentManager.getAssignmentWithHistoryAsync(assignmentId, course?.id.orDefault(), true)
-            }.await().dataOrThrow as Assignment
-
+            val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, course?.id.orDefault(), true)
             _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))
         }
     }
@@ -423,7 +413,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             submissionStatusVisible = submissionStatusVisible,
             lockedMessage = partialLockedMessage,
             submitButtonText = submitButtonText,
-            submitEnabled = submitEnabled,
+            submitEnabled = submitEnabled && networkStateProvider.isOnline(),
             submitVisible = submitVisible,
             attempts = attempts,
             selectedGradeCellViewData = GradeCellViewData.fromSubmission(

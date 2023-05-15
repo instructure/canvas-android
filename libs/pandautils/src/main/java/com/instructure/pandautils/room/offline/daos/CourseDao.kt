@@ -19,7 +19,6 @@ package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.CourseEntity
-import com.instructure.pandautils.room.offline.model.FullCourseContent
 
 @Dao
 interface CourseDao {
@@ -33,6 +32,6 @@ interface CourseDao {
     @Update
     suspend fun update(entity: CourseEntity)
 
-    @Query("SELECT * FROM CourseEntity WHERE id = :courseId")
-    suspend fun findById(courseId: Long): FullCourseContent?
+    @Query("SELECT * FROM CourseEntity WHERE id = :id")
+    suspend fun findById(id: Long?): CourseEntity?
 }
