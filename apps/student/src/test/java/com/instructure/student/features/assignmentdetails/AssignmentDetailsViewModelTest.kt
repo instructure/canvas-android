@@ -194,15 +194,6 @@ class AssignmentDetailsViewModelTest {
         val assignment = Assignment(name = expected)
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
-//        every { assignmentManager.getAssignmentIncludeObserveesAsync(any(), any(), any()) } returns mockk {
-//            coEvery { await() } returns DataResult.Success(
-//                ObserveeAssignment(
-//                    submissionList = listOf(Submission()),
-//                    name = expected
-//                )
-//            )
-//        }
-
         val viewModel = getViewModel()
 
         Assert.assertEquals(ViewState.Success, viewModel.state.value)
