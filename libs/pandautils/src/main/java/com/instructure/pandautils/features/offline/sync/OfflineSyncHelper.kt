@@ -21,6 +21,7 @@ import androidx.work.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class OfflineSyncHelper(
@@ -33,8 +34,47 @@ class OfflineSyncHelper(
         if (isWorkScheduled()) {
             syncOnce(courseIds)
         } else {
-            scheduleSync()
+            scheduleWork()
         }
+    }
+
+    fun cancelWork() {
+        workManager.cancelUniqueWork(apiPrefs.user?.id.toString())
+    }
+
+    suspend fun updateWork() {
+        val id = workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await().firstOrNull()?.id
+        val workRequest = createWorkRequest(id)
+        workManager.updateWork(workRequest)
+    }
+
+    suspend fun scheduleWork() {
+        val workRequest = createWorkRequest()
+        workManager.enqueueUniquePeriodicWork(
+            apiPrefs.user?.id.toString(),
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+    }
+
+    private suspend fun createWorkRequest(id: UUID? = null): PeriodicWorkRequest {
+        val syncSettings = syncSettingsFacade.getSyncSettings()
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(if (syncSettings.wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val workRequestBuilder = PeriodicWorkRequest.Builder(
+            OfflineSyncWorker::class.java,
+            if (syncSettings.syncFrequency == SyncFrequency.DAILY) 1 else 7, TimeUnit.DAYS
+        )
+            .setConstraints(constraints)
+
+        id?.let {
+            workRequestBuilder.setId(it)
+        }
+
+        return workRequestBuilder.build()
     }
 
     private fun syncOnce(courseIds: List<Long>) {
@@ -48,25 +88,6 @@ class OfflineSyncHelper(
     }
 
     private suspend fun isWorkScheduled(): Boolean {
-        return workManager.getWorkInfosByTag(apiPrefs.user?.id.toString()).await().isNotEmpty()
+        return workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await().isNotEmpty()
     }
-
-    private suspend fun scheduleSync() {
-        val syncSettings = syncSettingsFacade.getSyncSettings()
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(if (syncSettings.wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val workRequest = PeriodicWorkRequest.Builder(
-            OfflineSyncWorker::class.java,
-            if (syncSettings.syncFrequency == SyncFrequency.DAILY) 1 else 7, TimeUnit.DAYS
-        )
-            .setConstraints(constraints)
-            .addTag(apiPrefs.user?.id.toString())
-            .build()
-
-        workManager.enqueueUniquePeriodicWork(apiPrefs.user?.id.toString(), ExistingPeriodicWorkPolicy.UPDATE, workRequest)
-    }
-
 }

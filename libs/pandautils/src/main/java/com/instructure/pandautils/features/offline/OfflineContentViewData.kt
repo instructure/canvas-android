@@ -40,5 +40,5 @@ enum class OfflineItemViewModelType(val viewType: Int) {
 }
 
 sealed class OfflineContentAction {
-
+    object Back : OfflineContentAction()
 }

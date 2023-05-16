@@ -57,6 +57,18 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
         viewModel.data.observe(viewLifecycleOwner) { data ->
             updateMenuText(data.selectedCount)
         }
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: OfflineContentAction) {
+        when (action) {
+            is OfflineContentAction.Back -> requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     override val navigation: Navigation?

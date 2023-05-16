@@ -298,6 +298,7 @@ class OfflineContentViewModel @Inject constructor(
     fun onSyncClicked() {
         viewModelScope.launch {
             offlineSyncHelper.syncCourses(syncSettings.keys.toList())
+            _events.postValue(Event(OfflineContentAction.Back))
         }
     }
 
