@@ -89,6 +89,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var assetId: String by StringArg(key = ASSET_ID)
     private var assetType: String by StringArg(key = ASSET_TYPE, default = ModuleItemAsset.MODULE_ITEM.assetType)
     private var route: Route by ParcelableArg(key = ROUTE)
+    private var navigatedFromModules: Boolean by BooleanArg(key = NAVIGATED_FROM_MODULES)
 
     // Default number will get reset
     private var itemsCount = 3
@@ -635,7 +636,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         // so we need to find the correct one overall
         val moduleItem = getCurrentModuleItem(position) ?: getCurrentModuleItem(0) // Default to the first item, band-aid for NPE
 
-        val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos], isDiscussionRedesignEnabled)
+        val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos], isDiscussionRedesignEnabled, navigatedFromModules)
         var args: Bundle? = fragment!!.arguments
         if (args == null) {
             args = Bundle()
@@ -748,6 +749,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         private const val ASSET_ID = "asset_id"
         private const val ASSET_TYPE = "asset_type"
         private const val ROUTE = "route"
+        private const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
 
 
         //we don't want to add subheaders or external tools into the list. subheaders don't do anything and we
@@ -762,6 +764,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             return Route(null, CourseModuleProgressionFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
                 putInt(GROUP_POSITION, groupPos)
                 putInt(CHILD_POSITION, childPos)
+                putBoolean(NAVIGATED_FROM_MODULES, true)
             }))
         }
 
