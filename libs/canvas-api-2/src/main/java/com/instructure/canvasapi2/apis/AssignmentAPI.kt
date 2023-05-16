@@ -32,6 +32,15 @@ object AssignmentAPI {
         @GET("courses/{courseId}/external_tools/sessionless_launch")
         fun getExternalToolLaunchUrl(@Path("courseId") courseId: Long, @Query("id") externalToolId: Long, @Query("assignment_id") assignmentId: Long, @Query("launch_type") launchType: String = "assessment"): Call<LTITool>
 
+        @GET("courses/{courseId}/external_tools/sessionless_launch")
+        suspend fun getExternalToolLaunchUrl(
+            @Path("courseId") courseId: Long,
+            @Query("id") externalToolId: Long,
+            @Query("assignment_id") assignmentId: Long,
+            @Query("launch_type") launchType: String = "assessment",
+            @Tag restParams: RestParams
+        ): DataResult<LTITool>
+
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics")
         fun getAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 

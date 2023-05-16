@@ -19,6 +19,7 @@ package com.instructure.student.features.offline.assignmentdetails
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.utils.NetworkStateProvider
 
@@ -27,6 +28,8 @@ class AssignmentDetailsRepository(
     private val localDataSource: AssignmentDetailsLocalDataSource,
     private val networkDataSource: AssignmentDetailsNetworkDataSource
 ) {
+
+    fun isOnline() = networkStateProvider.isOnline()
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         return if (networkStateProvider.isOnline()) {
@@ -53,6 +56,22 @@ class AssignmentDetailsRepository(
             networkDataSource.getQuiz(courseId, quizId, forceNetwork).dataOrThrow
         } else {
             localDataSource.getQuiz(quizId) ?: throw IllegalStateException("Could not load from DB")
+        }
+    }
+
+    suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
+        return if (networkStateProvider.isOnline()) {
+            networkDataSource.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork).dataOrThrow
+        } else {
+            null
+        }
+    }
+
+    suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
+        return if (networkStateProvider.isOnline()) {
+            networkDataSource.getLtiFromAuthenticationUrl(url, forceNetwork).dataOrThrow
+        } else {
+            null
         }
     }
 }

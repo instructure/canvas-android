@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.assignmentdetail
+package com.instructure.student.features.assignmentdetails
 
 import android.app.Application
 import android.content.res.Resources
@@ -25,14 +25,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.QuizManager
-import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
@@ -40,8 +35,6 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.student.db.StudentDb
-import com.instructure.student.features.assignmentdetails.AssignmentDetailAction
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsViewModel
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsRepository
 import io.mockk.*
@@ -68,10 +61,6 @@ class AssignmentDetailsViewModelTest {
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val assignmentDetailsRepository: AssignmentDetailsRepository = mockk(relaxed = true)
-    private val courseManager: CourseManager = mockk(relaxed = true)
-    private val assignmentManager: AssignmentManager = mockk(relaxed = true)
-    private val quizManager: QuizManager = mockk(relaxed = true)
-    private val submissionManager: SubmissionManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
@@ -103,9 +92,6 @@ class AssignmentDetailsViewModelTest {
     private fun getViewModel() = AssignmentDetailsViewModel(
         savedStateHandle,
         assignmentDetailsRepository,
-        assignmentManager,
-        quizManager,
-        submissionManager,
         resources,
         htmlContentFormatter,
         colorKeeper,
@@ -138,9 +124,7 @@ class AssignmentDetailsViewModelTest {
 
         every { resources.getString(R.string.errorLoadingAssignment) } returns expected
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail()
-        }
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } throws IllegalStateException()
 
         val viewModel = getViewModel()
 
@@ -150,19 +134,11 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Load fully locked assignment`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                Assignment(
-                    lockInfo = LockInfo(
-                        unlockAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
-                    )
-                )
-            )
-        }
+        val assignment = Assignment(lockInfo = LockInfo(unlockAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -176,18 +152,14 @@ class AssignmentDetailsViewModelTest {
 
         every { resources.getString(R.string.errorLoadingAssignment) } returns lockedExplanation
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                Assignment(
-                    lockExplanation = lockedExplanation,
-                    lockAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) }.time.toApiString()
-                )
-            )
-        }
+        val assignment = Assignment(
+            lockExplanation = lockedExplanation,
+            lockAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -200,13 +172,11 @@ class AssignmentDetailsViewModelTest {
     fun `Load assignment as Student`() {
         val expected = "Test name"
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(name = expected))
-        }
+        val assignment = Assignment(name = expected)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -218,18 +188,20 @@ class AssignmentDetailsViewModelTest {
     fun `Load assignment as Parent`() {
         val expected = "Test name"
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentIncludeObserveesAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                ObserveeAssignment(
-                    submissionList = listOf(Submission()),
-                    name = expected
-                )
-            )
-        }
+        val assignment = Assignment(name = expected)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+//        every { assignmentManager.getAssignmentIncludeObserveesAsync(any(), any(), any()) } returns mockk {
+//            coEvery { await() } returns DataResult.Success(
+//                ObserveeAssignment(
+//                    submissionList = listOf(Submission()),
+//                    name = expected
+//                )
+//            )
+//        }
 
         val viewModel = getViewModel()
 
@@ -239,13 +211,10 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Load assignment with draft`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
@@ -259,23 +228,19 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Map attempts`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                Assignment(
-                    submission = Submission(
-                        submissionHistory = listOf(
-                            Submission(submittedAt = Date()),
-                            Submission(submittedAt = Date()),
-                            Submission(submittedAt = Date())
-                        )
-                    )
+        val assignment = Assignment(
+            submission = Submission(
+                submissionHistory = listOf(
+                    Submission(submittedAt = Date()),
+                    Submission(submittedAt = Date()),
+                    Submission(submittedAt = Date())
                 )
             )
-        }
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -291,13 +256,11 @@ class AssignmentDetailsViewModelTest {
             Submission()
         )
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submission = Submission()))
-        }
+        val assignment = Assignment(submission = Submission())
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -313,18 +276,14 @@ class AssignmentDetailsViewModelTest {
 
         every { resources.getString(R.string.missingAssignment) } returns expectedLabelText
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                Assignment(
-                    submission = Submission(missing = true),
-                    submissionTypesRaw = listOf("media_recording")
-                )
-            )
-        }
+        val assignment = Assignment(
+            submission = Submission(missing = true),
+            submissionTypesRaw = listOf("media_recording")
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -342,13 +301,11 @@ class AssignmentDetailsViewModelTest {
 
         every { resources.getString(R.string.notSubmitted) } returns expectedLabelText
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("media_recording")))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("media_recording"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -366,21 +323,17 @@ class AssignmentDetailsViewModelTest {
 
         every { resources.getString(R.string.gradedSubmissionLabel) } returns expectedLabelText
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                Assignment(
-                    submission = Submission(
-                        submittedAt = Date(),
-                        grade = "A",
-                        postedAt = Date()
-                    )
-                )
+        val assignment = Assignment(
+            submission = Submission(
+                submittedAt = Date(),
+                grade = "A",
+                postedAt = Date()
             )
-        }
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -398,18 +351,14 @@ class AssignmentDetailsViewModelTest {
 
         every { resources.getString(R.string.submitted) } returns expectedLabelText
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                Assignment(
-                    submissionTypesRaw = listOf("media_recording"),
-                    submission = Submission(submittedAt = Date())
-                )
-            )
-        }
+        val assignment = Assignment(
+            submissionTypesRaw = listOf("media_recording"),
+            submission = Submission(submittedAt = Date())
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
 
@@ -440,13 +389,10 @@ class AssignmentDetailsViewModelTest {
             firstSubmission
         )
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(assignment)
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onAttemptSelected(2)
@@ -459,13 +405,10 @@ class AssignmentDetailsViewModelTest {
     fun `LTI button click`() {
         val expected = "test"
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         val viewModel = getViewModel()
         viewModel.onLtiButtonPressed(expected)
@@ -475,13 +418,10 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Grade cell click`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         val viewModel = getViewModel()
         viewModel.onGradeCellClicked()
@@ -491,13 +431,10 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Grade cell click while uploading text`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
@@ -512,13 +449,10 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Grade cell click while uploading file`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
@@ -533,13 +467,10 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Grade cell click while uploading url`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
@@ -554,17 +485,13 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - quiz`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_quiz"), quizId = 1))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("online_quiz"), quizId = 1)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
-        every { quizManager.getQuizAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Quiz())
-        }
+        coEvery { assignmentDetailsRepository.getQuiz(any(), any(), any()) } returns Quiz()
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -574,13 +501,11 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - discussion`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("discussion_topic")))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("discussion_topic"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -590,21 +515,17 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - multiple submission types`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(
-                Assignment(
-                    submissionTypesRaw = listOf(
-                        "online_text_entry",
-                        "online_url",
-                        "media_recording"
-                    )
-                )
+        val assignment = Assignment(
+            submissionTypesRaw = listOf(
+                "online_text_entry",
+                "online_url",
+                "media_recording"
             )
-        }
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -614,13 +535,11 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - text`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_text_entry")))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("online_text_entry"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -630,13 +549,11 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - url`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("online_url")))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("online_url"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -646,13 +563,11 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - annotation`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("student_annotation")))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("student_annotation"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -662,13 +577,11 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - media recoding`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("media_recording")))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("media_recording"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -678,13 +591,11 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Submit button click - external tool`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submissionTypesRaw = listOf("external_tool")))
-        }
+        val assignment = Assignment(submissionTypesRaw = listOf("external_tool"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
@@ -694,13 +605,10 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Upload fail`() {
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
@@ -724,13 +632,10 @@ class AssignmentDetailsViewModelTest {
     fun `Upload success`() {
         val expected = Submission(submittedAt = Date())
 
-        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-        }
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment())
-        }
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
@@ -745,9 +650,8 @@ class AssignmentDetailsViewModelTest {
             database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
         } returns listOf()
 
-        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Assignment(submission = Submission(submissionHistory = listOf(expected))))
-        }
+        val assignment = Assignment(submission = Submission(submissionHistory = listOf(expected)))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         viewModel.queryResultsChanged()
 

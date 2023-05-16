@@ -21,7 +21,6 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.*
-import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -54,13 +53,10 @@ import com.instructure.student.Submission as DatabaseSubmission
 class AssignmentDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
-    private val assignmentManager: AssignmentManager,
-    private val submissionManager: SubmissionManager,
     private val resources: Resources,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
     private val application: Application,
-    private val networkStateProvider: NetworkStateProvider,
     apiPrefs: ApiPrefs,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
@@ -181,10 +177,10 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 val ltiToolId = assignmentResult.externalToolAttributes?.contentId.orDefault()
                 externalLTITool = if (ltiToolId != 0L) {
-                    assignmentManager.getExternalToolLaunchUrlAsync(course?.id.orDefault(), ltiToolId, assignmentId).await().dataOrThrow
+                    assignmentDetailsRepository.getExternalToolLaunchUrl(course?.id.orDefault(), ltiToolId, assignmentId, forceNetwork)
                 } else {
                     if (!assignmentResult.url.isNullOrEmpty() && assignmentResult.getSubmissionTypes().contains(SubmissionType.EXTERNAL_TOOL)) {
-                        submissionManager.getLtiFromAuthenticationUrlAsync(assignmentResult.url.orEmpty(), forceNetwork).await().dataOrThrow
+                        assignmentDetailsRepository.getLtiFromAuthenticationUrl(assignmentResult.url.orEmpty(), forceNetwork)
                     } else {
                         null
                     }
@@ -413,7 +409,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             submissionStatusVisible = submissionStatusVisible,
             lockedMessage = partialLockedMessage,
             submitButtonText = submitButtonText,
-            submitEnabled = submitEnabled && networkStateProvider.isOnline(),
+            submitEnabled = submitEnabled && assignmentDetailsRepository.isOnline(),
             submitVisible = submitVisible,
             attempts = attempts,
             selectedGradeCellViewData = GradeCellViewData.fromSubmission(

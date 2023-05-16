@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 
@@ -52,5 +53,15 @@ class AssignmentDetailsNetworkDataSource(
     suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): DataResult<Quiz> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return quizInterface.getQuiz(courseId, quizId, params)
+    }
+
+    suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): DataResult<LTITool> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return assignmentInterface.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params)
+    }
+
+    suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): DataResult<LTITool> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return submissionInterface.getLtiFromAuthenticationUrl(url, params)
     }
 }
