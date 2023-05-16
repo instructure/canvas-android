@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.ApiValues
@@ -60,8 +61,9 @@ import org.greenrobot.eventbus.ThreadMode
 class PdfStudentSubmissionView(
         context: Context,
         private val pdfUrl: String,
+        private val fragmentManager: FragmentManager,
         private val studentAnnotationSubmit: Boolean = false,
-        private val studentAnnotationView: Boolean = false
+        private val studentAnnotationView: Boolean = false,
 ) : PdfSubmissionView(context, studentAnnotationView), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewPdfStudentSubmissionBinding
@@ -124,7 +126,7 @@ class PdfStudentSubmissionView(
     }
 
     override fun showNoInternetDialog() {
-        NoInternetConnectionDialog.show(supportFragmentManager)
+        NoInternetConnectionDialog.show(fragmentManager)
     }
 
     init {
@@ -178,13 +180,13 @@ class PdfStudentSubmissionView(
 
     @SuppressLint("CommitTransaction")
     override fun setFragment(fragment: Fragment) {
-        if (isAttachedToWindow) supportFragmentManager.beginTransaction().replace(binding.content.id, fragment).commitNowAllowingStateLoss()
+        if (isAttachedToWindow) fragmentManager.beginTransaction().replace(binding.content.id, fragment).commitNowAllowingStateLoss()
     }
 
     override fun removeContentFragment() {
-        val contentFragment = supportFragmentManager.findFragmentById(binding.content.id)
+        val contentFragment = fragmentManager.findFragmentById(binding.content.id)
         if (contentFragment != null) {
-            supportFragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
+            fragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
         }
     }
 
