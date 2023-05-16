@@ -29,6 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.*
@@ -43,6 +44,7 @@ class SyncSettingsViewModelTest {
     private lateinit var viewModel: SyncSettingsViewModel
 
     private val syncSettingsFacade: SyncSettingsFacade = mockk(relaxed = true)
+    private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
@@ -56,7 +58,7 @@ class SyncSettingsViewModelTest {
 
         setupStrings()
 
-        viewModel = SyncSettingsViewModel(syncSettingsFacade, resources)
+        viewModel = SyncSettingsViewModel(syncSettingsFacade, offlineSyncHelper, resources)
     }
 
     @Test

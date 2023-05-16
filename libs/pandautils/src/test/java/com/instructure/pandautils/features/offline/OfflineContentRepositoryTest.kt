@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,8 +41,9 @@ class OfflineContentRepositoryTest {
 
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
+    private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
 
-    private val repository = OfflineContentRepository(coursesApi, fileFolderApi)
+    private val repository = OfflineContentRepository(coursesApi, fileFolderApi, courseSyncSettingsDao)
 
     @Test
     fun `Returns course`() = runBlockingTest {

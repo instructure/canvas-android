@@ -31,7 +31,7 @@ class OfflineSyncHelper(
 ) {
 
     suspend fun syncCourses(courseIds: List<Long>) {
-        if (isWorkScheduled()) {
+        if (isWorkScheduled() || !syncSettingsFacade.getSyncSettings().autoSyncEnabled) {
             syncOnce(courseIds)
         } else {
             scheduleWork()
@@ -57,6 +57,20 @@ class OfflineSyncHelper(
         )
     }
 
+    fun syncOnce(courseIds: List<Long>) {
+        val inputData = Data.Builder()
+            .putLongArray(COURSE_IDS, courseIds.toLongArray())
+            .build()
+        val workRequest = OneTimeWorkRequest.Builder(OfflineSyncWorker::class.java)
+            .setInputData(inputData)
+            .build()
+        workManager.enqueue(workRequest)
+    }
+
+    private suspend fun isWorkScheduled(): Boolean {
+        return workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await().isNotEmpty()
+    }
+
     private suspend fun createWorkRequest(id: UUID? = null): PeriodicWorkRequest {
         val syncSettings = syncSettingsFacade.getSyncSettings()
         val constraints = Constraints.Builder()
@@ -75,19 +89,5 @@ class OfflineSyncHelper(
         }
 
         return workRequestBuilder.build()
-    }
-
-    private fun syncOnce(courseIds: List<Long>) {
-        val inputData = Data.Builder()
-            .putLongArray(COURSE_IDS, courseIds.toLongArray())
-            .build()
-        val workRequest = OneTimeWorkRequest.Builder(OfflineSyncWorker::class.java)
-            .setInputData(inputData)
-            .build()
-        workManager.enqueue(workRequest)
-    }
-
-    private suspend fun isWorkScheduled(): Boolean {
-        return workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await().isNotEmpty()
     }
 }

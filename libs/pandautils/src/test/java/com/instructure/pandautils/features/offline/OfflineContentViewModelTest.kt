@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
@@ -50,6 +51,8 @@ class OfflineContentViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val offlineContentRepository: OfflineContentRepository = mockk(relaxed = true)
     private val storageUtils: StorageUtils = mockk(relaxed = true)
+    private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
+
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
     private val testDispatcher = TestCoroutineDispatcher()
@@ -231,7 +234,7 @@ class OfflineContentViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = OfflineContentViewModel(savedStateHandle, context, offlineContentRepository, storageUtils)
+        viewModel = OfflineContentViewModel(savedStateHandle, context, offlineContentRepository, storageUtils, offlineSyncHelper)
         viewModel.data.observe(lifecycleOwner) {}
     }
 
