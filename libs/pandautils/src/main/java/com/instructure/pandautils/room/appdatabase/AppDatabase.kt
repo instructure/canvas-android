@@ -6,7 +6,6 @@ import androidx.room.TypeConverters
 import com.instructure.pandautils.room.Converters
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.appdatabase.entities.*
-import com.instructure.pandautils.room.daos.*
 
 @Database(
     entities = [
