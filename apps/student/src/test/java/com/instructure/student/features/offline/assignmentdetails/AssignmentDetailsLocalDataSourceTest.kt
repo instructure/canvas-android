@@ -45,7 +45,7 @@ class AssignmentDetailsLocalDataSourceTest {
         val expected = Course(1)
         coEvery { courseFacade.getCourseById(any()) } returns expected
 
-        val course = dataSource.getCourseWithGrade(1)
+        val course = dataSource.getCourseWithGrade(1, true)
 
         Assert.assertEquals(expected, course)
     }
@@ -55,7 +55,7 @@ class AssignmentDetailsLocalDataSourceTest {
         val expected = Assignment(1)
         coEvery { assignmentFacade.getAssignmentById(any()) } returns expected
 
-        val assignment = dataSource.getAssignment(1)
+        val assignment = dataSource.getAssignment(false, 1, 1, true)
 
         Assert.assertEquals(expected, assignment)
     }
@@ -65,7 +65,7 @@ class AssignmentDetailsLocalDataSourceTest {
         val expected = Quiz(1)
         coEvery { quizDao.findById(any()) } returns QuizEntity(expected)
 
-        val quiz = dataSource.getQuiz(1)
+        val quiz = dataSource.getQuiz(1, 1, true)
 
         Assert.assertEquals(expected, quiz)
     }

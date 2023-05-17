@@ -21,57 +21,34 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
 
 class AssignmentDetailsRepository(
-    private val networkStateProvider: NetworkStateProvider,
-    private val localDataSource: AssignmentDetailsLocalDataSource,
-    private val networkDataSource: AssignmentDetailsNetworkDataSource
-) {
+    localDataSource: AssignmentDetailsLocalDataSource,
+    networkDataSource: AssignmentDetailsNetworkDataSource,
+    private val networkStateProvider: NetworkStateProvider
+) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
     fun isOnline() = networkStateProvider.isOnline()
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
-        return if (networkStateProvider.isOnline()) {
-            networkDataSource.getCourseWithGrade(courseId, forceNetwork).dataOrThrow
-        } else {
-            localDataSource.getCourseWithGrade(courseId) ?: throw IllegalStateException("Could not load from DB")
-        }
+        return dataSource.getCourseWithGrade(courseId, forceNetwork)
     }
 
     suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
-        return if (networkStateProvider.isOnline()) {
-            if (isObserver) {
-                networkDataSource.getAssignmentIncludeObservees(assignmentId, courseId, forceNetwork).dataOrThrow
-            } else {
-                networkDataSource.getAssignmentWithHistory(assignmentId, courseId, forceNetwork).dataOrThrow
-            }
-        } else {
-            localDataSource.getAssignment(assignmentId) ?: throw IllegalStateException("Could not load from DB")
-        }
+        return dataSource.getAssignment(isObserver, assignmentId, courseId, forceNetwork)
     }
 
     suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
-        return if (networkStateProvider.isOnline()) {
-            networkDataSource.getQuiz(courseId, quizId, forceNetwork).dataOrThrow
-        } else {
-            localDataSource.getQuiz(quizId) ?: throw IllegalStateException("Could not load from DB")
-        }
+        return dataSource.getQuiz(courseId, quizId, forceNetwork)
     }
 
     suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
-        return if (networkStateProvider.isOnline()) {
-            networkDataSource.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork).dataOrThrow
-        } else {
-            null
-        }
+        return dataSource.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork)
     }
 
     suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
-        return if (networkStateProvider.isOnline()) {
-            networkDataSource.getLtiFromAuthenticationUrl(url, forceNetwork).dataOrThrow
-        } else {
-            null
-        }
+        return dataSource.getLtiFromAuthenticationUrl(url, forceNetwork)
     }
 }

@@ -59,6 +59,6 @@ class AssignmentDetailsModule {
         localDataSource: AssignmentDetailsLocalDataSource,
         networkDataSource: AssignmentDetailsNetworkDataSource
     ): AssignmentDetailsRepository {
-        return AssignmentDetailsRepository(networkStateProvider, localDataSource, networkDataSource)
+        return AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
     }
 }

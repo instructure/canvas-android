@@ -26,42 +26,49 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.utils.DataResult
 
 class AssignmentDetailsNetworkDataSource(
     private val coursesInterface: CourseAPI.CoursesInterface,
     private val assignmentInterface: AssignmentAPI.AssignmentInterface,
     private val quizInterface: QuizAPI.QuizInterface,
     private val submissionInterface: SubmissionAPI.SubmissionInterface
-) {
+) : AssignmentDetailsDataSource {
 
-    suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): DataResult<Course> {
+    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return coursesInterface.getCourseWithGrade(courseId, params)
+        return coursesInterface.getCourseWithGrade(courseId, params).dataOrThrow
     }
 
-    suspend fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment?> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentInterface.getAssignmentIncludeObservees(courseId, assignmentId, params).map { it.toAssignmentForObservee() }
+    override suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+        return if (isObserver) {
+            getAssignmentIncludeObservees(assignmentId, courseId, forceNetwork)
+        } else {
+            getAssignmentWithHistory(assignmentId, courseId, forceNetwork)
+        }
     }
 
-    suspend fun getAssignmentWithHistory(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment> {
+    override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentInterface.getAssignmentWithHistory(courseId, assignmentId, params)
+        return quizInterface.getQuiz(courseId, quizId, params).dataOrThrow
     }
 
-    suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): DataResult<Quiz> {
+    override suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return quizInterface.getQuiz(courseId, quizId, params)
+        return assignmentInterface.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params).dataOrThrow
     }
 
-    suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): DataResult<LTITool> {
+    override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentInterface.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params)
+        return submissionInterface.getLtiFromAuthenticationUrl(url, params).dataOrThrow
     }
 
-    suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): DataResult<LTITool> {
+    private suspend fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return submissionInterface.getLtiFromAuthenticationUrl(url, params)
+        return assignmentInterface.getAssignmentIncludeObservees(courseId, assignmentId, params).map { it.toAssignmentForObservee() }.dataOrThrow
+    }
+
+    private suspend fun getAssignmentWithHistory(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return assignmentInterface.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
     }
 }

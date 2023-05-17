@@ -19,6 +19,7 @@ package com.instructure.student.features.offline.assignmentdetails
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -28,17 +29,25 @@ class AssignmentDetailsLocalDataSource(
     private val courseFacade: CourseFacade,
     private val assignmentFacade: AssignmentFacade,
     private val quizDao: QuizDao
-) {
+) : AssignmentDetailsDataSource {
 
-    suspend fun getCourseWithGrade(courseId: Long): Course? {
-        return courseFacade.getCourseById(courseId)
+    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
+        return courseFacade.getCourseById(courseId) ?: throw IllegalStateException("Could not load from DB")
     }
 
-    suspend fun getAssignment(assignmentId: Long): Assignment? {
-        return assignmentFacade.getAssignmentById(assignmentId)
+    override suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+        return assignmentFacade.getAssignmentById(assignmentId) ?: throw IllegalStateException("Could not load from DB")
     }
 
-    suspend fun getQuiz(quizId: Long): Quiz? {
-        return quizDao.findById(quizId)?.toApiModel()
+    override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
+        return quizDao.findById(quizId)?.toApiModel() ?: throw IllegalStateException("Could not load from DB")
+    }
+
+    override suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
+        return null
+    }
+
+    override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
+        return null
     }
 }

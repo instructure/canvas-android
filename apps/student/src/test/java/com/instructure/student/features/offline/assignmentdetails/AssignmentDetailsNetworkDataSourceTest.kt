@@ -42,112 +42,97 @@ class AssignmentDetailsNetworkDataSourceTest {
 
     @Test
     fun `Get course successfully returns data`() = runTest {
-        val expected = DataResult.Success(Course(1))
-        coEvery { coursesInterface.getCourseWithGrade(any(), any()) } returns expected
+        val expected = Course(1)
+        coEvery { coursesInterface.getCourseWithGrade(any(), any()) } returns DataResult.Success(expected)
 
         val courseResult = dataSource.getCourseWithGrade(1, true)
 
         Assert.assertEquals(expected, courseResult)
     }
 
-    @Test
-    fun `Get course failure returns failed result`() = runTest {
-        val expected = DataResult.Fail()
-        coEvery { coursesInterface.getCourseWithGrade(any(), any()) } returns expected
+    @Test(expected = IllegalStateException::class)
+    fun `Get course failure throws exception`() = runTest {
+        coEvery { coursesInterface.getCourseWithGrade(any(), any()) } returns DataResult.Fail()
 
-        val courseResult = dataSource.getCourseWithGrade(1, true)
-
-        Assert.assertEquals(expected, courseResult)
+        dataSource.getCourseWithGrade(1, true)
     }
 
     @Test
     fun `Get assignment as student successfully returns data`() = runTest {
-        val expected = DataResult.Success(Assignment(1))
-        coEvery { assignmentInterface.getAssignmentWithHistory(any(), any(), any()) } returns expected
+        val expected = Assignment(1)
+        coEvery { assignmentInterface.getAssignmentWithHistory(any(), any(), any()) } returns DataResult.Success(expected)
 
-        val assignmentResult = dataSource.getAssignmentWithHistory(1, 1, true)
+        val assignmentResult = dataSource.getAssignment(false, 1, 1, true)
 
         Assert.assertEquals(expected, assignmentResult)
     }
 
     @Test
     fun `Get assignment as observer successfully returns data`() = runTest {
-        val observeeAssignment = ObserveeAssignment(1)
-        val expected = DataResult.Success(observeeAssignment.toAssignmentForObservee())
+        val observeeAssignment = ObserveeAssignment(1, submissionList = listOf(Submission()))
+        val expected = observeeAssignment.toAssignmentForObservee()
         coEvery { assignmentInterface.getAssignmentIncludeObservees(any(), any(), any()) } returns DataResult.Success(observeeAssignment)
 
-        val assignmentResult = dataSource.getAssignmentIncludeObservees(1, 1, true)
+        val assignmentResult = dataSource.getAssignment(true, 1, 1, true)
 
         Assert.assertEquals(expected, assignmentResult)
     }
 
-    @Test
-    fun `Get assignment failure returns failed result`() = runTest {
-        val expected = DataResult.Fail()
-        coEvery { assignmentInterface.getAssignmentWithHistory(any(), any(), any()) } returns expected
+    @Test(expected = IllegalStateException::class)
+    fun `Get assignment failure throws exception`() = runTest {
+        coEvery { assignmentInterface.getAssignmentWithHistory(any(), any(), any()) } returns DataResult.Fail()
 
-        val assignmentResult = dataSource.getAssignmentWithHistory(1, 1, true)
-
-        Assert.assertEquals(expected, assignmentResult)
+        dataSource.getAssignment(false, 1, 1, true)
     }
 
     @Test
     fun `Get quiz successfully returns data`() = runTest {
-        val expected = DataResult.Success(Quiz())
-        coEvery { quizInterface.getQuiz(any(), any(), any()) } returns expected
+        val expected = Quiz()
+        coEvery { quizInterface.getQuiz(any(), any(), any()) } returns DataResult.Success(expected)
 
         val assignmentResult = dataSource.getQuiz(1, 1, true)
 
         Assert.assertEquals(expected, assignmentResult)
     }
 
-    @Test
-    fun `Get quiz failure returns failed result`() = runTest {
-        val expected = DataResult.Fail()
-        coEvery { quizInterface.getQuiz(any(), any(), any()) } returns expected
+    @Test(expected = IllegalStateException::class)
+    fun `Get quiz failure throws exception`() = runTest {
+        coEvery { quizInterface.getQuiz(any(), any(), any()) } returns DataResult.Fail()
 
-        val assignmentResult = dataSource.getQuiz(1, 1, true)
-
-        Assert.assertEquals(expected, assignmentResult)
+        dataSource.getQuiz(1, 1, true)
     }
 
     @Test
     fun `Get LTI by launch url successfully returns data`() = runTest {
-        val expected = DataResult.Success(LTITool())
-        coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns expected
+        val expected = LTITool()
+        coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns DataResult.Success(expected)
 
         val assignmentResult = dataSource.getExternalToolLaunchUrl(1, 1, 1, true)
 
         Assert.assertEquals(expected, assignmentResult)
     }
 
-    @Test
-    fun `Get LTI by launch url failure returns failed result`() = runTest {
-        val expected = DataResult.Fail()
-        coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns expected
+    @Test(expected = IllegalStateException::class)
+    fun `Get LTI by launch url failure throws exception`() = runTest {
+        coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
-        val assignmentResult = dataSource.getExternalToolLaunchUrl(1, 1, 1, true)
-
-        Assert.assertEquals(expected, assignmentResult)
+        dataSource.getExternalToolLaunchUrl(1, 1, 1, true)
     }
 
     @Test
     fun `Get LTI by auth url successfully returns data`() = runTest {
-        val expected = DataResult.Success(LTITool())
-        coEvery { submissionInterface.getLtiFromAuthenticationUrl(any(), any()) } returns expected
+        val expected = LTITool()
+        coEvery { submissionInterface.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(expected)
 
         val assignmentResult = dataSource.getLtiFromAuthenticationUrl("", true)
 
         Assert.assertEquals(expected, assignmentResult)
     }
 
-    @Test
-    fun `Get LTI by auth url failure returns failed result`() = runTest {
-        val expected = DataResult.Fail()
-        coEvery { submissionInterface.getLtiFromAuthenticationUrl(any(), any()) } returns expected
+    @Test(expected = IllegalStateException::class)
+    fun `Get LTI by auth url failure throws exception`() = runTest {
+        coEvery { submissionInterface.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Fail()
 
-        val assignmentResult = dataSource.getLtiFromAuthenticationUrl("", true)
-
-        Assert.assertEquals(expected, assignmentResult)
+        dataSource.getLtiFromAuthenticationUrl("", true)
     }
 }

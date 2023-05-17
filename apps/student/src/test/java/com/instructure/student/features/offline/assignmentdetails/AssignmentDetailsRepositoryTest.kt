@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -39,13 +38,13 @@ class AssignmentDetailsRepositoryTest {
     private val localDataSource: AssignmentDetailsLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
 
-    private val repository = AssignmentDetailsRepository(networkStateProvider, localDataSource, networkDataSource)
+    private val repository = AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
 
     @Test
     fun `Get course if device is online`() = runTest {
         val expected = Course(1)
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns expected
 
         val course = repository.getCourseWithGrade(1, true)
 
@@ -57,11 +56,11 @@ class AssignmentDetailsRepositoryTest {
     fun `Get course if device is offline`() = runTest {
         val expected = Course(1)
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.getCourseWithGrade(any()) } returns expected
+        coEvery { localDataSource.getCourseWithGrade(any(), any()) } returns expected
 
         val course = repository.getCourseWithGrade(1, true)
 
-        coVerify { localDataSource.getCourseWithGrade(any()) }
+        coVerify { localDataSource.getCourseWithGrade(any(), any()) }
         Assert.assertEquals(expected, course)
     }
 
@@ -69,11 +68,11 @@ class AssignmentDetailsRepositoryTest {
     fun `Get assignment as observer if device is online`() = runTest {
         val expected = Assignment(1)
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getAssignmentIncludeObservees(any(), any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getAssignment(true, any(), any(), any()) } returns expected
 
         val assignment = repository.getAssignment(true, 1, 1, true)
 
-        coVerify { networkDataSource.getAssignmentIncludeObservees(any(), any(), any()) }
+        coVerify { networkDataSource.getAssignment(true, any(), any(), any()) }
         Assert.assertEquals(expected, assignment)
     }
 
@@ -81,11 +80,11 @@ class AssignmentDetailsRepositoryTest {
     fun `Get assignment as student if device is online`() = runTest {
         val expected = Assignment(1)
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getAssignmentWithHistory(any(), any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getAssignment(false, any(), any(), any()) } returns expected
 
         val assignment = repository.getAssignment(false, 1, 1, true)
 
-        coVerify { networkDataSource.getAssignmentWithHistory(any(), any(), any()) }
+        coVerify { networkDataSource.getAssignment(false, any(), any(), any()) }
         Assert.assertEquals(expected, assignment)
     }
 
@@ -93,11 +92,11 @@ class AssignmentDetailsRepositoryTest {
     fun `Get assignment if device is offline`() = runTest {
         val expected = Assignment(1)
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.getAssignment(any()) } returns expected
+        coEvery { localDataSource.getAssignment(any(), any(), any(), any()) } returns expected
 
         val assignment = repository.getAssignment(false, 1, 1, true)
 
-        coVerify { localDataSource.getAssignment(any()) }
+        coVerify { localDataSource.getAssignment(any(), any(), any(), any()) }
         Assert.assertEquals(expected, assignment)
     }
 
@@ -105,7 +104,7 @@ class AssignmentDetailsRepositoryTest {
     fun `Get quiz if device is online`() = runTest {
         val expected = Quiz(1)
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getQuiz(any(), any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getQuiz(any(), any(), any()) } returns expected
 
         val quiz = repository.getQuiz(1, 1, true)
 
@@ -117,11 +116,11 @@ class AssignmentDetailsRepositoryTest {
     fun `Get quiz if device is offline`() = runTest {
         val expected = Quiz(1)
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.getQuiz(any()) } returns expected
+        coEvery { localDataSource.getQuiz(any(), any(), any()) } returns expected
 
         val assignment = repository.getQuiz(1, 1, true)
 
-        coVerify { localDataSource.getQuiz(any()) }
+        coVerify { localDataSource.getQuiz(any(), any(), any()) }
         Assert.assertEquals(expected, assignment)
     }
 
@@ -129,7 +128,7 @@ class AssignmentDetailsRepositoryTest {
     fun `Get external tool by launch url if device is online`() = runTest {
         val expected = LTITool(1)
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns expected
 
         val ltiTool = repository.getExternalToolLaunchUrl(1, 1, 1, true)
 
@@ -140,6 +139,7 @@ class AssignmentDetailsRepositoryTest {
     @Test
     fun `Get external tool by launch url if device is offline`() = runTest {
         every { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns null
 
         val ltiTool = repository.getExternalToolLaunchUrl(1, 1, 1, true)
 
@@ -150,7 +150,7 @@ class AssignmentDetailsRepositoryTest {
     fun `Get external tool by authentication url if device is online`() = runTest {
         val expected = LTITool(1)
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getLtiFromAuthenticationUrl(any(), any()) } returns expected
 
         val ltiTool = repository.getLtiFromAuthenticationUrl("", true)
 
@@ -161,6 +161,7 @@ class AssignmentDetailsRepositoryTest {
     @Test
     fun `Get external tool by authentication url if device is offline`() = runTest {
         every { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.getLtiFromAuthenticationUrl(any(), any()) } returns null
 
         val ltiTool = repository.getLtiFromAuthenticationUrl("", true)
 
