@@ -65,4 +65,21 @@ data class PageEntity(
         page.htmlUrl,
         courseId
     )
+
+    fun toApiModel(): Page {
+        return Page(
+            id = id,
+            url = url,
+            title = title,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            hideFromStudents = hideFromStudents,
+            status = status,
+            body = body,
+            frontPage = frontPage,
+            published = published,
+            editingRoles = editingRoles,
+            htmlUrl = htmlUrl
+        )
+    }
 }
