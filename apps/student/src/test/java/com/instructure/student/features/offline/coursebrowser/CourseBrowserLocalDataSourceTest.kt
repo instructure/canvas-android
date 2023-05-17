@@ -42,7 +42,7 @@ class CourseBrowserLocalDataSourceTest {
     fun `Get tabs successfully returns api model`() = runTest {
         coEvery { tabDao.findByCourseId(any()) } returns listOf(TabEntity(Tab(label = "Tab", tabId = "123"), 1))
 
-        val tabs = dataSource.getTabs(CanvasContext.emptyCourseContext(1))
+        val tabs = dataSource.getTabs(CanvasContext.emptyCourseContext(1), false)
 
         Assert.assertEquals(listOf(Tab(label = "Tab", tabId = "123")), tabs)
     }
@@ -51,7 +51,7 @@ class CourseBrowserLocalDataSourceTest {
     fun `Get front page successfully returns api model`() = runTest {
         coEvery { pageDao.getFrontPage(any()) } returns PageEntity(Page(id = 12, title = "Page title", frontPage = true), 1)
 
-        val frontPage = dataSource.getFrontPage(CanvasContext.emptyCourseContext(1))
+        val frontPage = dataSource.getFrontPage(CanvasContext.emptyCourseContext(1), false)
 
         Assert.assertEquals(Page(id = 12, title = "Page title", frontPage = true), frontPage)
     }

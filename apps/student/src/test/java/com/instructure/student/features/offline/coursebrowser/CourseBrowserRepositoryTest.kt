@@ -42,9 +42,9 @@ class CourseBrowserRepositoryTest {
     @Before
     fun setUp() {
         coEvery { networkDataSource.getTabs(any(), any()) } returns listOf(Tab(label = "Online"))
-        coEvery { localDataSource.getTabs(any()) } returns listOf(Tab(label = "Offline"))
+        coEvery { localDataSource.getTabs(any(), any()) } returns listOf(Tab(label = "Offline"))
         coEvery { networkDataSource.getFrontPage(any(), any()) } returns Page(title = "Online front page")
-        coEvery { localDataSource.getFrontPage(any()) } returns Page(title = "Offline front page")
+        coEvery { localDataSource.getFrontPage(any(), any()) } returns Page(title = "Offline front page")
     }
 
     @Test
@@ -63,14 +63,14 @@ class CourseBrowserRepositoryTest {
 
         val tabs = courseBrowserRepository.getTabs(CanvasContext.emptyCourseContext(1), true)
 
-        coVerify { localDataSource.getTabs(any()) }
+        coVerify { localDataSource.getTabs(any(), any()) }
         Assert.assertEquals(listOf(Tab(label = "Offline")), tabs)
     }
 
     @Test
     fun `Get tabs filters external and local tabs`() = runTest {
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.getTabs(any()) } returns listOf(
+        coEvery { localDataSource.getTabs(any(), any()) } returns listOf(
             Tab(label = "Offline"),
             Tab(label = "External Hidden tab", type = Tab.TYPE_EXTERNAL, isHidden = true),
         )
@@ -96,7 +96,7 @@ class CourseBrowserRepositoryTest {
 
         val frontPage = courseBrowserRepository.getFrontPage(CanvasContext.emptyCourseContext(1), true)
 
-        coVerify { localDataSource.getFrontPage(any()) }
+        coVerify { localDataSource.getFrontPage(any(), any()) }
         Assert.assertEquals(Page(title = "Offline front page"), frontPage)
     }
 }
