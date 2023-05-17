@@ -16,23 +16,14 @@
  */
 package com.instructure.student.features.offline.coursebrowser
 
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.room.offline.daos.PageDao
-import com.instructure.pandautils.room.offline.daos.TabDao
 
-class CourseBrowserLocalDataSource(
-    private val tabDao: TabDao,
-    private val pageDao: PageDao
-) : CourseBrowserDataSource {
-    override suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
-        return tabDao.findByCourseId(canvasContext.id).map {
-            it.toApiModel()
-        }
-    }
+interface CourseBrowserDataSource {
 
-    override suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page? {
-        return pageDao.getFrontPage(canvasContext.id)?.toApiModel()
-    }
+    suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab>
+
+    suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page?
 }

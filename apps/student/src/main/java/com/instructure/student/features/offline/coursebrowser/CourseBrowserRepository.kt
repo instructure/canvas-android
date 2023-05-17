@@ -20,30 +20,22 @@ package com.instructure.student.features.offline.coursebrowser
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
 import java.lang.IllegalStateException
-
 
 class CourseBrowserRepository(
     private val networkDataSource: CourseBrowserNetworkDataSource,
     private val localDataSource: CourseBrowserLocalDataSource,
     private val networkStateProvider: NetworkStateProvider
-) {
+) : Repository<CourseBrowserDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
     suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
-        val tabs = if (networkStateProvider.isOnline()) {
-            networkDataSource.getTabs(canvasContext, forceNetwork)
-        } else {
-            localDataSource.getTabs(canvasContext)
-        }
+        val tabs = dataSource.getTabs(canvasContext, forceNetwork)
         return tabs.filter { !(it.isExternal && it.isHidden) }
     }
 
     suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page? {
-        return if (networkStateProvider.isOnline()) {
-            networkDataSource.getFrontPage(canvasContext, forceNetwork)
-        } else {
-            localDataSource.getFrontPage(canvasContext)
-        }
+        return dataSource.getFrontPage(canvasContext, forceNetwork)
     }
 }
