@@ -39,8 +39,9 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
+import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.room.daos.*
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R

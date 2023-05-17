@@ -40,7 +40,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.room.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter

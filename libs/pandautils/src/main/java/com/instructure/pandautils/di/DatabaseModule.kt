@@ -1,6 +1,7 @@
 package com.instructure.pandautils.di
 
-import com.instructure.pandautils.room.AppDatabase
+import com.instructure.pandautils.room.appdatabase.AppDatabase
+import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.daos.*
 import dagger.Module
 import dagger.Provides
