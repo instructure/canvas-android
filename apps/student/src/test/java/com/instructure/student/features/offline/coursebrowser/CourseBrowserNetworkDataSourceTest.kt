@@ -28,7 +28,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
-import java.lang.IllegalStateException
 
 @ExperimentalCoroutinesApi
 class CourseBrowserNetworkDataSourceTest {
@@ -63,6 +62,7 @@ class CourseBrowserNetworkDataSourceTest {
         Assert.assertEquals(Page(title = "Front page"), frontPage)
     }
 
+    @Test
     fun `Get front page failure returns null`() = runTest {
         coEvery { pageApi.getFrontPage(any(), any(), any()) } returns DataResult.Fail()
 
