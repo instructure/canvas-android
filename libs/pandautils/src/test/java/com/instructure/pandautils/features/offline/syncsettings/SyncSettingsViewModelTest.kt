@@ -29,6 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.*
@@ -43,6 +44,7 @@ class SyncSettingsViewModelTest {
     private lateinit var viewModel: SyncSettingsViewModel
 
     private val syncSettingsFacade: SyncSettingsFacade = mockk(relaxed = true)
+    private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
@@ -56,7 +58,10 @@ class SyncSettingsViewModelTest {
 
         setupStrings()
 
-        viewModel = SyncSettingsViewModel(syncSettingsFacade, resources)
+        coEvery { syncSettingsFacade.update(any()) } just runs
+        coEvery { offlineSyncHelper.updateWork() } just runs
+
+        viewModel = SyncSettingsViewModel(syncSettingsFacade, offlineSyncHelper, resources)
     }
 
     @Test
@@ -79,13 +84,13 @@ class SyncSettingsViewModelTest {
         val updated = syncSettings.copy(autoSyncEnabled = true)
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns syncSettings
-        coEvery { syncSettingsFacade.update(updated) } just runs
 
         viewModel.loadData()
         viewModel.onAutoSyncChanged(true)
 
         coVerify {
             syncSettingsFacade.update(updated)
+            offlineSyncHelper.scheduleWork()
         }
     }
 
@@ -111,7 +116,6 @@ class SyncSettingsViewModelTest {
         val updated = syncSettings.copy(syncFrequency = SyncFrequency.DAILY)
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns syncSettings
-        coEvery { syncSettingsFacade.update(updated) } just runs
 
         viewModel.loadData()
         viewModel.showFrequencySelector()
@@ -124,6 +128,7 @@ class SyncSettingsViewModelTest {
 
         coVerify {
             syncSettingsFacade.update(updated)
+            offlineSyncHelper.updateWork()
         }
     }
 
@@ -148,7 +153,6 @@ class SyncSettingsViewModelTest {
         val updated = syncSettings.copy(wifiOnly = false)
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns syncSettings
-        coEvery { syncSettingsFacade.update(updated) } just runs
 
         viewModel.loadData()
         viewModel.onWifiOnlyChanged(false)
@@ -159,6 +163,7 @@ class SyncSettingsViewModelTest {
 
         coVerify {
             syncSettingsFacade.update(updated)
+            offlineSyncHelper.updateWork()
         }
     }
 
@@ -169,7 +174,6 @@ class SyncSettingsViewModelTest {
         val updated = syncSettings.copy(wifiOnly = false)
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns syncSettings
-        coEvery { syncSettingsFacade.update(updated) } just runs
 
         viewModel.loadData()
         viewModel.onWifiOnlyChanged(false)
@@ -180,6 +184,7 @@ class SyncSettingsViewModelTest {
 
         coVerify(exactly = 0) {
             syncSettingsFacade.update(updated)
+            offlineSyncHelper.updateWork()
         }
     }
 
@@ -190,13 +195,30 @@ class SyncSettingsViewModelTest {
         val updated = syncSettings.copy(wifiOnly = true)
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns syncSettings
-        coEvery { syncSettingsFacade.update(updated) } just runs
 
         viewModel.loadData()
         viewModel.onWifiOnlyChanged(true)
 
         coVerify {
             syncSettingsFacade.update(updated)
+            offlineSyncHelper.updateWork()
+        }
+    }
+
+    @Test
+    fun `Disabling auto sync cancels work`() {
+        val syncSettings =
+            SyncSettingsEntity(autoSyncEnabled = true, syncFrequency = SyncFrequency.WEEKLY, wifiOnly = false)
+        val updated = syncSettings.copy(autoSyncEnabled = false)
+
+        coEvery { syncSettingsFacade.getSyncSettings() } returns syncSettings
+
+        viewModel.loadData()
+        viewModel.onAutoSyncChanged(false)
+
+        coVerify {
+            syncSettingsFacade.update(updated)
+            offlineSyncHelper.cancelWork()
         }
     }
 

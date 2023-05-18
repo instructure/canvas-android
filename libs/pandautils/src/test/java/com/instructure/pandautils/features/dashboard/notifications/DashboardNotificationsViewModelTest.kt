@@ -478,6 +478,7 @@ class DashboardNotificationsViewModelTest {
                     .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
                     .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                     .build(),
+                1,
                 1
             )
         )
@@ -494,6 +495,7 @@ class DashboardNotificationsViewModelTest {
                     .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
                     .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                     .build(),
+                1,
                 1
             )
         )
@@ -510,6 +512,7 @@ class DashboardNotificationsViewModelTest {
                     .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
                     .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                     .build(),
+                1,
                 1
             )
         )
@@ -550,6 +553,7 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
+                1,
                 1
             )
         )
@@ -566,6 +570,7 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
+                1,
                 1
             )
         )
@@ -593,6 +598,7 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
+                1,
                 1
             )
         )
@@ -627,6 +633,7 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
+                1,
                 1
             )
         )
@@ -667,6 +674,7 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
+                1,
                 1
             )
         )
