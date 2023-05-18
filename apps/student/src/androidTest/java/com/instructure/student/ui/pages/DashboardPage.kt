@@ -27,8 +27,8 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
@@ -93,6 +93,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         assertDisplaysGroupCommon(group.name, course.name)
     }
 
+    fun assertDisplaysGroup(group: GroupApiModel, courseName: String) {
+        assertDisplaysGroupCommon(group.name, courseName)
+    }
+
     fun assertDisplaysGroup(group: Group, course: Course) {
         assertDisplaysGroupCommon(group.name!!, course.name)
     }
@@ -100,7 +104,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
         onView(groupNameMatcher).scrollTo().assertDisplayed()
-        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView))
+        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView), hasSibling(groupNameMatcher))
         onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
@@ -241,16 +245,27 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun switchCourseView() {
-        onView(ViewMatchers.withId(R.id.menu_dashboard_cards)).click()
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        onView(withText(containsString("Switch to")))
+            .perform(click());
     }
 
     fun clickEditDashboard() {
-        onView(withId(R.id.editDashboardTextView)).click()
+        onView(withId(R.id.editDashboardTextView)).scrollTo().click()
     }
 
     fun assertCourseNotDisplayed(course: CourseApiModel) {
         val matcher = allOf(
             withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
+    fun assertGroupNotDisplayed(group: GroupApiModel) {
+        val matcher = allOf(
+            withText(group.name),
             withId(R.id.titleTextView),
             withAncestor(R.id.swipeRefreshLayout)
         )
@@ -264,7 +279,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
         val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
-        onView(courseOverflowMatcher).click()
+        onView(courseOverflowMatcher).scrollTo().click()
         waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
 
@@ -272,7 +287,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
         val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
 
-        onView(matcher).assertDisplayed()
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertCourseGradeNotDisplayed(courseName: String, courseGrade: String) {

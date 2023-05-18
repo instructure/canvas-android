@@ -57,10 +57,13 @@ class DashboardE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG,"Seed some group info.")
         val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
+        val groupCategory2 = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
+        val group2 = GroupsApi.createGroup(groupCategory2.id, teacher.token)
 
         Log.d(PREPARATION_TAG,"Create group membership for ${student.name} student.")
         GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
+        GroupsApi.createGroupMembership(group2.id, student.id, teacher.token)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -85,13 +88,17 @@ class DashboardE2ETest : StudentTest() {
             dashboardPage.assertDisplaysCourse(course)
         }
 
-        Log.d(STEP_TAG, "Switch to back to Card View.")
+        Log.d(STEP_TAG, "Switch to back to Grid View.")
         dashboardPage.switchCourseView()
 
         for(course in data.coursesList) {
             Log.d(STEP_TAG,"Assert that ${course.name} course is displayed.")
             dashboardPage.assertDisplaysCourse(course)
         }
+
+        Log.d(STEP_TAG, "Assert that both of the groups '${group.name}' and '${group2.name}' are displayed because they are independent from the courses.")
+        dashboardPage.assertDisplaysGroup(group, course1)
+        dashboardPage.assertDisplaysGroup(group2, course1)
 
         Log.d(STEP_TAG,"Click on 'Edit Dashboard' button. Assert that the Edit Dashboard Page is loaded.")
         dashboardPage.clickEditDashboard()
@@ -105,6 +112,10 @@ class DashboardE2ETest : StudentTest() {
                 "Assert that the other course, '${course2.name}' is not displayed since it's not favoured.")
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertCourseNotDisplayed(course2)
+
+        Log.d(STEP_TAG, "Assert that both of the groups '${group.name}' and '${group2.name}' are displayed because they are independent from the courses.")
+        dashboardPage.assertDisplaysGroup(group, course1)
+        dashboardPage.assertDisplaysGroup(group2, course1)
 
         Log.d(STEP_TAG,"Opens ${course1.name} course and assert if Course Details Page has been opened. Navigate back to Dashboard Page.")
         dashboardPage.selectCourse(course1)
@@ -144,6 +155,9 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertPageObjects()
         dashboardPage.assertDisplaysCourse(newNickname)
 
+        Log.d(STEP_TAG,"Assert that ${group.name} groups is displayed and the '$newNickname' is displayed as the corresponding course name of the group.")
+        dashboardPage.assertDisplaysGroup(group, newNickname)
+
         Log.d(STEP_TAG, "Click on 'Edit nickname' menu of '$newNickname' course.")
         dashboardPage.clickCourseOverflowMenu(newNickname, "Edit nickname")
 
@@ -153,6 +167,9 @@ class DashboardE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Wait for Dashboard Page to be reloaded. Assert that if there is no nickname for a course, the course's full name, '${course1.name}' will be displayed.")
         dashboardPage.assertPageObjects()
         dashboardPage.assertDisplaysCourse(course1.name)
+
+        Log.d(STEP_TAG,"Assert that ${group.name} groups is displayed and the '${data.coursesList[0]}' is displayed as the corresponding course name of the group.")
+        dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
 
         Log.d(STEP_TAG, "Toggle OFF 'Show Grades' and navigate back to Dashboard Page.")
         leftSideNavigationDrawerPage.setShowGrades(false)
@@ -168,6 +185,44 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertCourseGrade(course1.name, "N/A")
         dashboardPage.assertCourseGrade(course2.name, "N/A")
 
+        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button.")
+        dashboardPage.clickEditDashboard()
+        editDashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the group 'mass' select button's label is 'Select All'.")
+        editDashboardPage.swipeUp()
+        editDashboardPage.assertGroupMassSelectButtonIsDisplayed(false)
+
+        Log.d(STEP_TAG, "Favorite '${group.name}' course and navigate back to Dashboard Page.")
+        editDashboardPage.favoriteGroup(group.name)
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Assert that only the favoured group, '${group.name}' is displayed." +
+                "Assert that the other group, '${group2.name}' is not displayed since it's not favoured.")
+        dashboardPage.assertDisplaysGroup(group, course1)
+        dashboardPage.assertGroupNotDisplayed(group2)
+
+        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button.")
+        dashboardPage.clickEditDashboard()
+        editDashboardPage.assertPageObjects()
+        Thread.sleep(2000) //It can be flaky without this 2 seconds
+        editDashboardPage.swipeUp()
+
+        Log.d(STEP_TAG, "Assert that the group 'mass' select button's label is 'Unselect All'.")
+        editDashboardPage.assertGroupMassSelectButtonIsDisplayed(true)
+
+        Log.d(STEP_TAG, "Toggle off favourite star icon of '${group.name}' group." +
+                "Assert that the 'mass' select button's label is 'Select All'.")
+        editDashboardPage.unfavoriteGroup(group.name)
+        editDashboardPage.assertGroupMassSelectButtonIsDisplayed(false)
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Assert that both of the groups, '${group.name}' and '${group2.name}' are displayed" +
+                "since if there is no group selected on the Edit Dashboard page, we are showing all of them (this is the same logics as with the courses).")
+        dashboardPage.assertDisplaysGroup(group, course1)
+        dashboardPage.assertDisplaysGroup(group2, course1)
     }
 
     @E2E

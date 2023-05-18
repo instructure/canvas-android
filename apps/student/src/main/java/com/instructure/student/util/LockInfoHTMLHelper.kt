@@ -25,7 +25,7 @@ import com.instructure.student.R
 import java.util.*
 
 object LockInfoHTMLHelper {
-    fun getLockedInfoHTML(lockInfo: LockInfo, context: Context, explanationFirstLine: Int): String {
+    fun getLockedInfoHTML(lockInfo: LockInfo, context: Context, explanationFirstLine: Int, addModulesLink: Boolean = true): String {
         /* Note: if the html that this is going in isn't based on html_wrapper.html (it will have something
         like -- String html = CanvasAPI.getAssetsFile(getSherlockActivity(), "html_wrapper.html");) this will
         not look as good. The blue button will just be a link. */
@@ -55,11 +55,13 @@ object LockInfoHTMLHelper {
         }
 
         // Make sure we know what the protocol is (http or https)
-        lockInfo.contextModule?.let { module ->
-            // Create the url to modules for this course
-            val url = "$protocol://$domain/courses/${module.contextId}/modules"
-            // Create the button and link it to modules
-            lockedMessage += """<center><a href="$url" class="button blue">${context.resources.getString(R.string.goToModules)}</a></center>"""
+        if (addModulesLink) {
+            lockInfo.contextModule?.let { module ->
+                // Create the url to modules for this course
+                val url = "$protocol://$domain/courses/${module.contextId}/modules"
+                // Create the button and link it to modules
+                lockedMessage += """<center><a href="$url" class="button blue">${context.resources.getString(R.string.goToModules)}</a></center>"""
+            }
         }
         return lockedMessage
     }

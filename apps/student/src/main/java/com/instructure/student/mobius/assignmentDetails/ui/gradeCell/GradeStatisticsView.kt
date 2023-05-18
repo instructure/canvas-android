@@ -2,7 +2,6 @@ package com.instructure.student.mobius.assignmentDetails.ui.gradeCell
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
@@ -14,7 +13,7 @@ import com.instructure.student.R
 class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var stats: GradeCellViewState.GradeStats? = null
 
-    private val sidePadding: Float = context.DP(16)
+    private val sidePadding: Float = context.DP(2)
     private val endMarkerHeight: Float = context.DP(16)
     private val minMaxHeight: Float = context.DP(16)
     private val scoreCircleRadius: Float = context.DP(7)
@@ -22,7 +21,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
 
     private val linePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
+        strokeCap = Paint.Cap.SQUARE
         isAntiAlias = true
         strokeWidth = context.DP(2)
         color = ContextCompat.getColor(context, R.color.backgroundMedium)
@@ -30,7 +29,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
 
     private val darkLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
+        strokeCap = Paint.Cap.SQUARE
         isAntiAlias = true
         strokeWidth = context.DP(3)
         color = ContextCompat.getColor(context, R.color.textDark)
@@ -38,7 +37,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
 
     private val meanLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
+        strokeCap = Paint.Cap.SQUARE
         isAntiAlias = true
         strokeWidth = context.DP(3)
         color = ContextCompat.getColor(context, R.color.textDarkest)

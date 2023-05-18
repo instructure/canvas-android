@@ -56,7 +56,7 @@ val Attachment.isMediaSubmissionPlaceholder: Boolean get() = id == MEDIA_PLACEHO
 
 @JvmName("viewAttachment")
 fun Attachment.view(context: Context) {
-    viewMedia(context, filename!!, contentType!!, url, thumbnailUrl, displayName, iconRes)
+    viewMedia(context, filename!!, contentType!!, url, thumbnailUrl, displayName, iconRes, fullScreen = true)
 }
 
 /**
@@ -65,14 +65,18 @@ fun Attachment.view(context: Context) {
  * file list)
  */
 
-fun viewMedia(context: Context, filename: String, contentType: String, url: String?, thumbnailUrl: String?, displayName: String?, iconRes: Int, toolbarColor: Int = 0, editableFile: EditableFile? = null) {
+fun viewMedia(context: Context, filename: String, contentType: String, url: String?, thumbnailUrl: String?, displayName: String?, iconRes: Int, toolbarColor: Int = 0, editableFile: EditableFile? = null, fullScreen: Boolean = false) {
     val extension = filename.substringAfterLast('.')
     when {
     // PDF
         contentType == "application/pdf" -> {
             PdfFragment()
             val bundle = ViewPdfFragment.newInstance(url ?: "", toolbarColor, editableFile).nonNullArgs
-            RouteMatcher.route(context, Route(null, ViewPdfFragment::class.java, null, bundle))
+            if (fullScreen) {
+                RouteMatcher.route(context, Route(ViewPdfFragment::class.java, null, bundle))
+            } else {
+                RouteMatcher.route(context, Route(null, ViewPdfFragment::class.java, null, bundle))
+            }
         }
     // Audio/Video
         contentType.startsWith("video") || contentType.startsWith("audio") -> {
@@ -83,12 +87,20 @@ fun viewMedia(context: Context, filename: String, contentType: String, url: Stri
         contentType.startsWith("image") -> {
             val title = displayName ?: filename
             val bundle = ViewImageFragment.newInstance(title, Uri.parse(url), contentType, true, toolbarColor, editableFile).nonNullArgs
-            RouteMatcher.route(context, Route(null, ViewImageFragment::class.java, null, bundle))
+            if (fullScreen) {
+                RouteMatcher.route(context, Route(ViewImageFragment::class.java, null, bundle))
+            } else {
+                RouteMatcher.route(context, Route(null, ViewImageFragment::class.java, null, bundle))
+            }
         }
     // HTML
         contentType == "text/html" || extension == "htm" || extension == "html" -> {
             val bundle = ViewHtmlFragment.makeDownloadBundle(url ?: "", filename, toolbarColor, editableFile)
-            RouteMatcher.route(context, Route(null, ViewHtmlFragment::class.java, null, bundle))
+            if (fullScreen) {
+                RouteMatcher.route(context, Route(ViewHtmlFragment::class.java, null, bundle))
+            } else {
+                RouteMatcher.route(context, Route(null, ViewHtmlFragment::class.java, null, bundle))
+            }
         }
     // Multipart (Unknown)
         contentType == "multipart/form-data" -> {
