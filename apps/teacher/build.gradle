@@ -16,6 +16,7 @@
 
 import com.instructure.android.buildtools.transform.LocaleTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
+import com.instructure.android.buildtools.transform.PageViewTransformer
 import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.ScreenViewTransformer
 
@@ -189,6 +190,7 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
+                    new PageViewTransformer(),
                     new LocaleTransformer(project),
                     new ScreenViewTransformer("teacher")
             )

@@ -43,6 +43,8 @@ import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import com.instructure.canvasapi2.utils.pageview.PandataManager
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -79,6 +81,7 @@ import com.instructure.teacher.fragments.*
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
+import com.instructure.teacher.services.TeacherPageViewService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
@@ -189,6 +192,18 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             val themeSelector = ThemeSelectorBottomSheet()
             themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
             ThemePrefs.themeSelectionShown = true
+        }
+
+        lifecycleScope.launch {
+            if (ApiPrefs.pandataInfo?.isValid != true) {
+                try {
+                    ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
+                        PandataManager.getToken(TeacherPageViewService.pandataAppKey, it)
+                    }
+                } catch (ignore: Throwable) {
+                    Logger.w("Unable to refresh pandata info")
+                }
+            }
         }
 
         requestNotificationsPermission()

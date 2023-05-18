@@ -22,6 +22,7 @@ import android.view.View
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE
 import com.instructure.pandautils.analytics.ScreenView
@@ -36,6 +37,7 @@ import com.instructure.teacher.utils.adoptToolbarStyle
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 
+@PageView(url = "profile")
 @ScreenView(SCREEN_VIEW_PROFILE)
 class ProfileFragment : BaseFragment() {
 
