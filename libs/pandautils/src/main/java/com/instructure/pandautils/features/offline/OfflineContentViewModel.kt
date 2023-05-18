@@ -27,8 +27,10 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseTabViewModel
 import com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
@@ -44,7 +46,8 @@ class OfflineContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val offlineContentRepository: OfflineContentRepository,
-    private val storageUtils: StorageUtils
+    private val storageUtils: StorageUtils,
+    private val offlineSyncHelper: OfflineSyncHelper
 ) : ViewModel() {
 
     val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
@@ -60,6 +63,8 @@ class OfflineContentViewModel @Inject constructor(
     val events: LiveData<Event<OfflineContentAction>>
         get() = _events
     private val _events = MutableLiveData<Event<OfflineContentAction>>()
+
+    private val syncSettings = mutableMapOf<Long, CourseSyncSettingsEntity>()
 
     init {
         loadData()
@@ -80,6 +85,12 @@ class OfflineContentViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getCourseSyncSettings(courseId: Long): CourseSyncSettingsEntity {
+        val courseSettings = offlineContentRepository.findCourseSyncSettings(courseId)
+        syncSettings[courseSettings.courseId] = courseSettings
+        return courseSettings
+    }
+
     private suspend fun getCoursesData(courseId: Long? = null): List<CourseItemViewModel> {
         val courses = if (courseId == null) {
             offlineContentRepository.getCourses()
@@ -88,44 +99,160 @@ class OfflineContentViewModel @Inject constructor(
         }
 
         return courses.map { course ->
+            val courseSettings = getCourseSyncSettings(course.id)
             val tabs = course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }.orEmpty()
             val files = if (tabs.any { it.tabId == Tab.FILES_ID }) offlineContentRepository.getCourseFiles(course.id) else emptyList()
             val size = Formatter.formatShortFileSize(context, files.sumOf { it.size })
-            createCourseItemViewModel(course, size, tabs, files)
+            createCourseItemViewModel(course, size, tabs, files, courseSettings)
         }
     }
 
-    private fun createCourseItemViewModel(course: Course, size: String, tabs: List<Tab>, files: List<FileFolder>) = CourseItemViewModel(
-        CourseItemViewData(false, course.name, size, tabs.map { tab ->
-            val isFilesTab = tab.tabId == Tab.FILES_ID
-            createTabViewModel(course.id, tab, if (isFilesTab) size else "", if (isFilesTab) files else emptyList())
-        }), course.id, this.course == null
-    ) { checked, item ->
-        val courseViewModel = data.value?.courseItems?.find { it == item } ?: return@CourseItemViewModel
+    private fun createCourseItemViewModel(
+        course: Course,
+        size: String,
+        tabs: List<Tab>,
+        files: List<FileFolder>,
+        courseSyncSettingsEntity: CourseSyncSettingsEntity
+    ) = CourseItemViewModel(
+        data = CourseItemViewData(
+            checked = courseSyncSettingsEntity.fullContentSync,
+            title = course.name,
+            size = size,
+            tabs = tabs.map { tab ->
+                val isFilesTab = tab.tabId == Tab.FILES_ID
+                createTabViewModel(
+                    course.id,
+                    tab,
+                    if (isFilesTab) size else "",
+                    if (isFilesTab) files else emptyList(),
+                    courseSyncSettingsEntity
+                )
+            }
+        ),
+        courseId = course.id,
+        collapsed = this.course == null,
+        onCheckedChanged = this::onCourseCheckedChanged
+    )
+
+    private fun onCourseCheckedChanged(checked: Boolean, courseItemViewModel: CourseItemViewModel) {
+        val courseViewModel = data.value?.courseItems?.find { it == courseItemViewModel } ?: return
+
         val newTabs = courseViewModel.data.tabs.map { tab ->
             val newFiles = tab.data.files.map { it.copy(data = it.data.copy(checked = checked)) }
-            tab.copy(data = tab.data.copy(checked = checked, files = newFiles))
+            tab.copy(
+                data = tab.data.copy(
+                    checked = checked,
+                    files = newFiles
+                )
+            )
         }
-        val newCourseViewModel = courseViewModel.copy(data = item.data.copy(checked = checked, tabs = newTabs))
-        val newList = _data.value?.courseItems?.map { if (it == item) newCourseViewModel else it }.orEmpty()
+
+        val newCourseViewModel =
+            courseViewModel.copy(
+                data = courseItemViewModel.data.copy(
+                    checked = checked,
+                    tabs = newTabs
+                )
+            )
+
+        val newList =
+            _data.value?.courseItems?.map { if (it == courseItemViewModel) newCourseViewModel else it }
+                .orEmpty()
+
         val selectedCount = getSelectedItemCount(newList)
+
         _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
+
+        viewModelScope.launch {
+            updateCourse(courseItemViewModel.courseId, checked)
+        }
     }
 
-    private fun createTabViewModel(courseId: Long, tab: Tab, size: String, files: List<FileFolder>) = CourseTabViewModel(
-        CourseTabViewData(false, tab.label.orEmpty(), size, files.map { fileFolder ->
-            createFileViewModel(fileFolder, courseId, tab.tabId)
-        }), courseId, tab.tabId, false
-    ) { checked, item ->
-        val courseViewModel = data.value?.courseItems?.find { it.courseId == item.courseId } ?: return@CourseTabViewModel
-        val tabViewModel = courseViewModel.data.tabs.find { it == item } ?: return@CourseTabViewModel
+    private suspend fun updateCourse(courseId: Long, checked: Boolean) {
+        val courseSyncSettings = syncSettings[courseId]
+        val updated = courseSyncSettings?.copy(
+            fullContentSync = checked,
+            assignments = checked,
+            pages = checked,
+            grades = checked
+        )
+
+        if (updated != null) {
+            updateCourseSettings(updated)
+        }
+    }
+
+    private fun createTabViewModel(
+        courseId: Long,
+        tab: Tab,
+        size: String,
+        files: List<FileFolder>,
+        courseSyncSettingsEntity: CourseSyncSettingsEntity
+    ) =
+        CourseTabViewModel(
+            data = CourseTabViewData(
+                checked = courseSyncSettingsEntity.isTabSelected(tab.tabId),
+                title = tab.label.orEmpty(),
+                size = size,
+                files = files.map { fileFolder ->
+                    createFileViewModel(fileFolder, courseId, tab.tabId)
+                }),
+            courseId = courseId,
+            tabId = tab.tabId,
+            collapsed = false,
+            onCheckedChanged = this::onTabCheckedChanged
+        )
+
+    private fun onTabCheckedChanged(checked: Boolean, tabItemViewModel: CourseTabViewModel) {
+        val courseViewModel = data.value?.courseItems?.find { it.courseId == tabItemViewModel.courseId } ?: return
+        val tabViewModel = courseViewModel.data.tabs.find { it == tabItemViewModel } ?: return
+
         val newFiles = tabViewModel.data.files.map { it.copy(data = it.data.copy(checked = checked)) }
+
         val newTabViewModel = tabViewModel.copy(data = tabViewModel.data.copy(checked = checked, files = newFiles))
-        val newTabs = courseViewModel.data.tabs.map { if (it == item) newTabViewModel else it }
-        val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(checked = newTabs.all { it.data.checked }, tabs = newTabs))
+
+        val newTabs = courseViewModel.data.tabs.map { if (it == tabItemViewModel) newTabViewModel else it }
+
+        val newCourseViewModel = courseViewModel.copy(
+            data = courseViewModel.data.copy(
+                checked = newTabs.all { it.data.checked },
+                tabs = newTabs
+            )
+        )
+
         val newList = _data.value?.courseItems?.map { if (it == courseViewModel) newCourseViewModel else it }.orEmpty()
+
         val selectedCount = getSelectedItemCount(newList)
+
         _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
+
+        viewModelScope.launch {
+            syncSettings[tabItemViewModel.courseId]?.copy(
+                fullContentSync = newTabs.all { it.data.checked }
+            )?.let {
+                updateCourseSettings(it)
+            }
+            updateTab(tabItemViewModel.courseId, tabItemViewModel.tabId, checked)
+        }
+    }
+
+    private suspend fun updateTab(courseId: Long, tabId: String, checked: Boolean) {
+        val courseSyncSettings = syncSettings[courseId]
+        val updated = when (tabId) {
+            Tab.GRADES_ID -> courseSyncSettings?.copy(grades = checked)
+            Tab.PAGES_ID -> courseSyncSettings?.copy(pages = checked)
+            Tab.ASSIGNMENTS_ID -> courseSyncSettings?.copy(assignments = checked)
+            else -> courseSyncSettings
+        }
+
+        if (updated != null) {
+            updateCourseSettings(updated)
+        }
+    }
+
+    private suspend fun updateCourseSettings(updated: CourseSyncSettingsEntity) {
+        offlineContentRepository.updateCourseSyncSettings(updated)
+        syncSettings[updated.courseId] = offlineContentRepository.findCourseSyncSettings(updated.courseId)
     }
 
     private fun createFileViewModel(fileFolder: FileFolder, courseId: Long, tabId: String): FileViewModel {
@@ -169,7 +296,10 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     fun onSyncClicked() {
-
+        viewModelScope.launch {
+            offlineSyncHelper.syncCourses(syncSettings.keys.toList())
+            _events.postValue(Event(OfflineContentAction.Back))
+        }
     }
 
     fun onRefresh() {

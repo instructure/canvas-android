@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
@@ -32,6 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncSettingsViewModel @Inject constructor(
     private val syncSettingsFacade: SyncSettingsFacade,
+    private val offlineSyncHelper: OfflineSyncHelper,
     private val resources: Resources
 ) : ViewModel() {
 
@@ -68,6 +70,11 @@ class SyncSettingsViewModel @Inject constructor(
                 autoSyncEnabled = checked
             )
             syncSettingsFacade.update(updated)
+            if (checked) {
+                offlineSyncHelper.scheduleWork()
+            } else {
+                offlineSyncHelper.cancelWork()
+            }
             loadData()
         }
     }
@@ -92,6 +99,7 @@ class SyncSettingsViewModel @Inject constructor(
                 wifiOnly = enabled
             )
             syncSettingsFacade.update(updated)
+            offlineSyncHelper.updateWork()
             loadData()
         }
     }
@@ -116,6 +124,7 @@ class SyncSettingsViewModel @Inject constructor(
                 syncFrequency = syncFrequency
             )
             syncSettingsFacade.update(updated)
+            offlineSyncHelper.updateWork()
             loadData()
         }
     }

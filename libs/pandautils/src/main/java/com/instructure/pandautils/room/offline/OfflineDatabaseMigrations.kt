@@ -62,5 +62,9 @@ val offlineDatabaseMigrations = arrayOf(
 
     createMigration(2, 3) { _db ->
         _db.execSQL("CREATE TABLE IF NOT EXISTS `SyncSettingsEntity` (`id` INTEGER NOT NULL, `autoSyncEnabled` INTEGER NOT NULL, `syncFrequency` TEXT NOT NULL, `wifiOnly` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+    },
+
+    createMigration(3, 4) { _db ->
+        _db.execSQL("ALTER TABLE CourseSyncSettingsEntity ADD COLUMN fullContentSync INTEGER NOT NULL")
     }
 )

@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.offline.sync
+package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
@@ -39,6 +39,8 @@ import com.instructure.pandautils.room.offline.facade.CourseFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
+const val COURSE_IDS = "course-ids"
+
 @HiltWorker
 class OfflineSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
@@ -56,7 +58,11 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         try {
-            val courses = courseSyncSettingsDao.findAll()
+            val courseIds = inputData.getLongArray(COURSE_IDS)
+            val courses = courseIds?.let {
+                courseSyncSettingsDao.findByIds(courseIds.toList())
+            } ?: courseSyncSettingsDao.findAll()
+
             courses.forEach { courseSettings ->
                 fetchCourseDetails(courseSettings.courseId)
                 if (courseSettings.pages) {
@@ -74,9 +80,10 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     private suspend fun fetchPages(courseId: Long) {
         val params = RestParams(isForceReadFromNetwork = true)
-        val pages = pageApi.getFirstPagePages(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
-            pageApi.getNextPagePagesList(nextUrl, params)
-        }.dataOrThrow
+        val pages =
+            pageApi.getFirstPagePages(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
+                pageApi.getNextPagePagesList(nextUrl, params)
+            }.dataOrThrow
 
         val entities = pages.map {
             PageEntity(it, courseId)

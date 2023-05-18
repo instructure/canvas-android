@@ -50,7 +50,7 @@ import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.features.offline.coursebrowser.CourseBrowserRepository
-import com.instructure.student.features.offline.sync.OfflineSyncWorker
+import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.DisableableAppBarLayoutBehavior

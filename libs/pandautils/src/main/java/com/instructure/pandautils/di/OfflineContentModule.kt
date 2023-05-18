@@ -20,6 +20,7 @@ package com.instructure.pandautils.di
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.pandautils.features.offline.OfflineContentRepository
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,8 +33,9 @@ class OfflineContentModule {
     @Provides
     fun provideOfflineContentRepository(
         coursesApi: CourseAPI.CoursesInterface,
-        filesFoldersInterface: FileFolderAPI.FilesFoldersInterface
+        filesFoldersInterface: FileFolderAPI.FilesFoldersInterface,
+        courseSyncSettingsDao: CourseSyncSettingsDao
     ): OfflineContentRepository {
-        return OfflineContentRepository(coursesApi, filesFoldersInterface)
+        return OfflineContentRepository(coursesApi, filesFoldersInterface, courseSyncSettingsDao)
     }
 }

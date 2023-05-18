@@ -19,12 +19,26 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Tab
 
 @Entity
 data class CourseSyncSettingsEntity(
     @PrimaryKey
     val courseId: Long,
+    val fullContentSync: Boolean,
     val assignments: Boolean,
     val pages: Boolean,
     val grades: Boolean
-)
+) {
+
+    fun isTabSelected(tabId: String): Boolean {
+        val isSelected =  when (tabId) {
+            Tab.ASSIGNMENTS_ID -> assignments
+            Tab.PAGES_ID -> pages
+            Tab.GRADES_ID -> grades
+            else -> false
+        }
+
+        return fullContentSync || isSelected
+    }
+}
