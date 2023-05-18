@@ -37,10 +37,6 @@ import kotlin.properties.Delegates
 @ScreenView(SCREEN_VIEW_WHAT_IF)
 class WhatIfDialogStyled : DialogFragment() {
 
-    init {
-        retainInstance = true
-    }
-
     private var callback: (Double?, Double) -> Unit by Delegates.notNull()
     private var assignment: Assignment by ParcelableArg()
     private var textButtonColor: Int by IntArg()
@@ -49,11 +45,6 @@ class WhatIfDialogStyled : DialogFragment() {
 
     interface WhatIfDialogCallback {
         fun onClick(assignment: Assignment, position: Int)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

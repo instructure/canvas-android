@@ -175,7 +175,7 @@ class PageDetailsFragment : BasePresenterFragment<
     override fun populatePageDetails(page: Page) {
         mPage = page
         loadHtmlJob = binding.canvasWebViewWraper.webView.loadHtmlWithIframes(requireContext(), page.body, {
-            binding.canvasWebViewWraper.loadHtml(it, page.title, baseUrl = mPage.htmlUrl)
+            if (view != null) binding.canvasWebViewWraper.loadHtml(it, page.title, baseUrl = mPage.htmlUrl)
         }) {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCanvasContext, it)
         }

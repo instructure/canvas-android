@@ -22,8 +22,10 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -36,7 +38,12 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.seedAssignmentSubmission
+import com.instructure.teacher.ui.utils.seedAssignments
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
+import com.instructure.teacher.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -285,6 +292,61 @@ class AssignmentE2ETest : TeacherTest() {
 
     }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)
+    fun testAddFileCommentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seed a text assignment/file/submission.")
+        val assignment = createAssignment(course, teacher)
+
+        Log.d(PREPARATION_TAG, "Seed a text file.")
+        val submissionUploadInfo = uploadTextFile(
+            assignmentId = assignment.id,
+            courseId = course.id,
+            token = student.token,
+            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
+        )
+
+        Log.d(PREPARATION_TAG, "Submit the ${assignment.name} assignment.")
+        submitCourseAssignment(course, assignment, submissionUploadInfo, student)
+
+        Log.d(PREPARATION_TAG,"Seed a comment attachment upload.")
+        val commentUploadInfo = uploadTextFile(
+            assignmentId = assignment.id,
+            courseId = course.id,
+            token = student.token,
+            fileUploadType = FileUploadType.COMMENT_ATTACHMENT
+        )
+
+        commentOnSubmission(student, course, assignment, commentUploadInfo)
+
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG,"Click on ${assignment.name} assignment and navigate to Submissions Page.")
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.openSubmissionsPage()
+
+        Log.d(STEP_TAG,"Click on ${student.name} student's submission.")
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(STEP_TAG,"Assert that ${submissionUploadInfo.fileName} file. Navigate to Comments Tab and ${commentUploadInfo.fileName} comment attachment is displayed.")
+        speedGraderPage.selectCommentsTab()
+        assignmentSubmissionListPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
+    }
+
     private fun gradeSubmission(
         teacher: CanvasUserApiModel,
         course: CourseApiModel,
@@ -298,6 +360,50 @@ class AssignmentE2ETest : TeacherTest() {
             studentId = gradedStudent.id,
             postedGrade = "15",
             excused = false
+        )
+    }
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                withDescription = false,
+                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+                allowedExtensions = listOf("txt"),
+                teacherToken = teacher.token
+            )
+        )
+    }
+
+    private fun submitCourseAssignment(
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        submissionUploadInfo: AttachmentApiModel,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_UPLOAD,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(submissionUploadInfo.id),
+            studentToken = student.token
+        )
+    }
+
+    private fun commentOnSubmission(
+        student: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        commentUploadInfo: AttachmentApiModel
+    ) {
+        SubmissionsApi.commentOnSubmission(
+            studentToken = student.token,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(commentUploadInfo.id)
         )
     }
 
