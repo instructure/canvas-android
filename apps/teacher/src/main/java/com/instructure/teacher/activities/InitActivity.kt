@@ -198,7 +198,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             if (ApiPrefs.pandataInfo?.isValid != true) {
                 try {
                     ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
-                        PandataManager.getToken(TeacherPageViewService.pandataAppKey.key, it)
+                        PandataManager.getToken(TeacherPageViewService.pandataAppKey, it)
                     }
                 } catch (ignore: Throwable) {
                     Logger.w("Unable to refresh pandata info")

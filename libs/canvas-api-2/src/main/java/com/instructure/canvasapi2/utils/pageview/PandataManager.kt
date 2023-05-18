@@ -22,7 +22,7 @@ import retrofit2.http.*
 
 object PandataManager {
 
-    fun getToken(appKey: String, callback: StatusCallback<PandataInfo>) {
+    fun getToken(appKey: PandataInfo.AppKey, callback: StatusCallback<PandataInfo>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
 
@@ -53,12 +53,12 @@ object PandataApi {
     }
 
     fun getPandataToken(
-            appKey: String,
+            appKey: PandataInfo.AppKey,
             adapter: RestBuilder,
             params: RestParams,
             callback: StatusCallback<PandataInfo>
     ) {
-        callback.addCall(adapter.build(PandataInterface::class.java, params).getPandataToken(appKey))
+        callback.addCall(adapter.build(PandataInterface::class.java, params).getPandataToken(appKey.key))
                 .enqueue(callback)
     }
 

@@ -68,7 +68,7 @@ abstract class PageViewUploadService : JobService() {
 
             // Refresh pandata token if null or expired
             if (ApiPrefs.pandataInfo?.isValid != true) {
-                ApiPrefs.pandataInfo = awaitApi<PandataInfo> { PandataManager.getToken(appKey.key, it) }
+                ApiPrefs.pandataInfo = awaitApi<PandataInfo> { PandataManager.getToken(appKey, it) }
             }
 
             // Grab completed events (i.e. have a duration) and events which have passed the max orphan age
@@ -187,7 +187,7 @@ abstract class PageViewUploadService : JobService() {
 
 
                     setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    setPeriodic(TimeUnit.SECONDS.toMillis(10))
+                    setPeriodic(TimeUnit.MINUTES.toMillis(2))
 
             }.build()
 

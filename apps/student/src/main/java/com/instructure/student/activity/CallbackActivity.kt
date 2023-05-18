@@ -101,7 +101,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             if (ApiPrefs.pandataInfo?.isValid != true) {
                 try {
                     ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
-                        PandataManager.getToken(StudentPageViewService.pandataTokenKey, it)
+                        PandataManager.getToken(StudentPageViewService.pandataAppKey, it)
                     }
                 } catch (ignore: Throwable) {
                     Logger.w("Unable to refresh pandata info")
