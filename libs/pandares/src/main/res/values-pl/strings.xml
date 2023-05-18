@@ -1328,6 +1328,8 @@
     <string name="fileUploadProgressSubtitle">Przesyłanie do Plików</string>
     <string name="submissionProgressSubtitle">Przesyłanie materiałów do \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Trwa przesyłanie zadania</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Przesłano pomyślnie</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Przesyłanie nie powiodło się</string>
     <string name="dashboardNotificationUploadingFilesTitle">Przesyłanie plików</string>
     <string name="cancelSubmissionDialogTitle">Anuluj przesyłkę</string>
     <string name="cancelSubmissionDialogMessage">Spowoduje to anulowanie i usunięcie przesyłki.</string>
@@ -1407,4 +1409,6 @@
     <string name="a11y_conversationDeselected">Anulowano wybór rozmowy.</string>
     <string name="a11y_exitSelectionMode">Zamknij tryb wyboru.</string>
     <string name="a11y_selectionModeDeactivated">Dezaktywowano tryb wyboru.</string>
+    <string name="a11y_avatarContentDescription">Awatar %s</string>
+    <string name="inboxUndo">Cofnij</string>
 </resources>

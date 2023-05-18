@@ -1302,6 +1302,8 @@
     <string name="fileUploadProgressSubtitle">Memuat Naik ke Fail</string>
     <string name="submissionProgressSubtitle">Memuat naik serahan ke \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Memuat Naik Serahan</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Serahan Berjaya</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Serahan Gagal</string>
     <string name="dashboardNotificationUploadingFilesTitle">Memuat Naik Fail</string>
     <string name="cancelSubmissionDialogTitle">Batal Serahan</string>
     <string name="cancelSubmissionDialogMessage">Ini akan membatalkan dan memadamkan serahan anda.</string>
@@ -1379,4 +1381,6 @@
     <string name="a11y_conversationDeselected">Perbualan dinyahpilih</string>
     <string name="a11y_exitSelectionMode">Keluar mod pilihan</string>
     <string name="a11y_selectionModeDeactivated">Mod pilihan diaktifkan.</string>
+    <string name="a11y_avatarContentDescription">Avatar %s</string>
+    <string name="inboxUndo">Buat asal</string>
 </resources>

@@ -18,7 +18,11 @@
 package com.instructure.teacher.ui
 
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addConversation
+import com.instructure.canvas.espresso.mockCanvas.addConversations
+import com.instructure.canvas.espresso.mockCanvas.createBasicConversation
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
@@ -79,7 +83,7 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun archiveMultipleConversations() {
         val data = createInitialData()
-        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
+
         val conversation1 = data.addConversation(
             senderId = data.students.first().id,
             receiverIds = listOf(data.teachers.first().id),
@@ -90,6 +94,7 @@ class InboxPageTest: TeacherTest() {
             receiverIds = listOf(data.teachers.first().id),
             messageBody = "Body 2",
             messageSubject = "Subject 2")
+        data.addConversations(userId = data.teachers.first().id, messageBody = "Short body")
 
         navigateToInbox(data, data.teachers.first())
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))

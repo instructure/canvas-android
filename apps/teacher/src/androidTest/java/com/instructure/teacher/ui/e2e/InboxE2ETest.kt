@@ -123,8 +123,8 @@ class InboxE2ETest : TeacherTest() {
         inboxMessagePage.clickOnStarConversation()
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Assert that the '${seedConversation[0]}' conversation has been starred.")
-        inboxPage.assertConversationStarred(student1.name + ", " + student2.name)
+        Log.d(STEP_TAG, "Assert that the '${seedConversation[0].subject}' conversation has been starred.")
+        inboxPage.assertConversationStarred(seedConversation[0].subject)
 
         Log.d(STEP_TAG,"Click on the conversation. Write a reply with the message: '$replyMessage'.")
         inboxPage.clickConversation(seedConversation[0])

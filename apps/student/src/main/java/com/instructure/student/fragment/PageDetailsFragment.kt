@@ -61,6 +61,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
     private var page: Page by ParcelableArg(default = Page(), key = PAGE)
     private var pageUrl: String? by NullableStringArg(key = PAGE_URL)
+    private var navigatedFromModules: Boolean by BooleanArg(key = NAVIGATED_FROM_MODULES)
 
     // Flag for the webview client to know whether or not we should clear the history
     private var isUpdated = false
@@ -102,19 +103,19 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getCanvasWebView().canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        getCanvasWebView()?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
             override fun launchInternalWebViewFragment(url: String) = InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, isLTITool))
         }
 
         // Add to the webview client for clearing webview history after an update to prevent going back to old data
-        val callback = getCanvasWebView().canvasWebViewClientCallback
+        val callback = getCanvasWebView()?.canvasWebViewClientCallback
         callback?.let {
-            getCanvasWebView().canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by it {
+            getCanvasWebView()?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by it {
                 override fun onPageFinishedCallback(webView: WebView, url: String) {
                     it.onPageFinishedCallback(webView, url)
                     // Only clear history after an update
-                    if (isUpdated) getCanvasWebView().clearHistory()
+                    if (isUpdated) getCanvasWebView()?.clearHistory()
                 }
 
                 override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -185,7 +186,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         setPageObject(page)
 
         if (page.lockInfo != null) {
-            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(page.lockInfo!!, requireContext(), R.string.lockedPageDesc)
+            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(page.lockInfo!!, requireContext(), R.string.lockedPageDesc, !navigatedFromModules)
             populateWebView(lockedMessage, getString(R.string.pages))
             return
         }
@@ -289,12 +290,16 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     private fun checkCanEdit() = with(binding) {
-        if (page.editingRoles?.contains("public") == true) {
-            toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
-        } else if (page.editingRoles?.contains("student") == true && (canvasContext as? Course)?.isStudent == true) {
-            toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
-        } else if (page.editingRoles?.contains("teacher") == true && (canvasContext as? Course)?.isTeacher == true) {
-            toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
+        val course = canvasContext as? Course
+        val editingRoles = page.editingRoles.orEmpty()
+        if (course?.isStudent == true) {
+            if (page.lockInfo == null && (editingRoles.contains("public") || editingRoles.contains("student"))) {
+                toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
+            }
+        } else if (course?.isTeacher == true) {
+            if ((editingRoles.contains("public") || editingRoles.contains("teacher"))) {
+                toolbar.menu?.findItem(R.id.menu_edit)?.isVisible = true
+            }
         }
     }
 
@@ -319,6 +324,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         const val PAGE_NAME = "pageDetailsName"
         const val PAGE = "pageDetails"
         const val PAGE_URL = "pageUrl"
+        const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
 
         fun newInstance(route: Route): PageDetailsFragment? {
             return if (validRoute(route)) PageDetailsFragment().apply {
@@ -341,8 +347,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { if (pageName != null) putString(PAGE_NAME, pageName) }))
         }
 
-        fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?): Route {
+        fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?, navigatedFromModules: Boolean): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
+                putBoolean(NAVIGATED_FROM_MODULES, navigatedFromModules)
                 if (pageName != null)
                     putString(PAGE_NAME, pageName)
                 if (pageUrl != null)

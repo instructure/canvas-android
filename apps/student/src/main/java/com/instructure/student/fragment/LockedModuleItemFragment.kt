@@ -33,7 +33,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -72,7 +71,6 @@ class LockedModuleItemFragment : ParentFragment() {
     override fun applyTheme() { }
 
     private fun setupWebView(canvasWebView: CanvasWebView) {
-        canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
         canvasWebView.settings.loadWithOverviewMode = true
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)

@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.databinding.BaseObservable
@@ -56,13 +55,22 @@ data class AnnouncementViewData(
 )
 
 data class UploadViewData(
-    var title: String = "",
-    var subTitle: String = ""
+    val title: String,
+    val subTitle: String,
+    @DrawableRes val icon: Int,
+    @ColorRes val backgroundColorTint: Int,
+    val isUploading: Boolean
 )
 
 sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String) : DashboardNotificationsActions()
     data class LaunchConference(val canvasContext: CanvasContext, val url: String) : DashboardNotificationsActions()
     data class OpenAnnouncement(val subject: String, val message: String) : DashboardNotificationsActions()
-    data class OpenProgressDialog(val uuid: UUID): DashboardNotificationsActions()
+    data class OpenProgressDialog(val uuid: UUID) : DashboardNotificationsActions()
+    data class NavigateToSubmissionDetails(
+        val canvasContext: CanvasContext,
+        val assignmentId: Long,
+        val attemptId: Long
+    ) : DashboardNotificationsActions()
+    data class NavigateToMyFiles(val canvasContext: CanvasContext, val folderId: Long) : DashboardNotificationsActions()
 }

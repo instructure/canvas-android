@@ -18,7 +18,6 @@ package com.instructure.loginapi.login.activities
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.net.Uri
@@ -35,7 +34,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.OAuthManager.getToken
@@ -60,7 +58,6 @@ import com.instructure.loginapi.login.databinding.ActivitySignInBinding
 import com.instructure.loginapi.login.dialog.AuthenticationDialog
 import com.instructure.loginapi.login.dialog.AuthenticationDialog.Companion.newInstance
 import com.instructure.loginapi.login.dialog.AuthenticationDialog.OnAuthenticationSet
-import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyActivity
 import com.instructure.loginapi.login.model.DomainVerificationResult
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.snicker.SnickerDoodle
@@ -74,7 +71,6 @@ import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
 import retrofit2.Call
@@ -138,10 +134,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         @Suppress("DEPRECATION")
         webView.settings.saveFormData = false
         webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-        webView.settings.setAppCacheEnabled(false)
         webView.settings.domStorageEnabled = true
         webView.settings.userAgentString = Utils.generateUserAgent(this, userAgent())
-        webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webView.webViewClient = mWebViewClient
         if (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             WebView.setWebContentsDebuggingEnabled(true)

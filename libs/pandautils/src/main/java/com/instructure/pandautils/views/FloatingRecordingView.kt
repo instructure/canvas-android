@@ -85,8 +85,8 @@ class FloatingRecordingView @JvmOverloads constructor(
         /* CameraView will throw an exception during inflation on some devices. We capture
            that exception here and show an error view instead when we try to record video. */
         try {
-            videoViewBinding = ViewFloatingMediaRecorderVideoBinding.inflate(LayoutInflater.from(context), binding.dragView, false)
-            binding.dragView.addView(videoViewBinding?.root)
+            videoViewBinding = ViewFloatingMediaRecorderVideoBinding.inflate(LayoutInflater.from(context), binding.dragDetectLayout, false)
+            binding.dragDetectLayout.addView(videoViewBinding?.root)
         } catch (e: InflateException) {
             hasVideoError = true
             videoViewBinding = null
@@ -105,6 +105,7 @@ class FloatingRecordingView @JvmOverloads constructor(
         when(mediaType) {
             is RecordingMediaType.Video -> stopVideoView()
             is RecordingMediaType.Audio -> cleanupMediaObjects()
+            else -> {}
         }
     }
 
@@ -146,7 +147,7 @@ class FloatingRecordingView @JvmOverloads constructor(
     }
 
     private fun setupFloatingAction() {
-        binding.dragView.setOnTouchListener(object : View.OnTouchListener {
+        binding.dragDetectLayout.setOnTouchListener(object : View.OnTouchListener {
             private var lastAction: Int = 0
             var windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             var display = windowManager.defaultDisplay

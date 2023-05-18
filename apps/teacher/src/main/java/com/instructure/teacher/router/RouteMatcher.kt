@@ -122,6 +122,8 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(LtiLaunchFragment::class.java)
         fullscreenFragments.add(SpeedGraderQuizWebViewFragment::class.java)
         fullscreenFragments.add(HtmlContentFragment::class.java)
+        fullscreenFragments.add(ViewPdfFragment::class.java)
+        fullscreenFragments.add(ViewHtmlFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)

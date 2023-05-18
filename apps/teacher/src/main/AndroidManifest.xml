@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- For Studio -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -209,6 +210,10 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".activities.TeacherLoginWithQRActivity"
             android:theme="@style/LoginFlowTheme.NoActionBar"/>
+
+        <activity
+            android:name="com.instructure.teacher.features.shareextension.TeacherShareExtensionActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.dashboard.notifications
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Color
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.*
 import androidx.work.Data
@@ -36,10 +35,16 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
-import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
-import io.mockk.*
+import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -73,6 +78,10 @@ class DashboardNotificationsViewModelTest {
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
+    private val fileUploadInputDao: FileUploadInputDao = mockk(relaxed = true)
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
+    private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
+    private lateinit var uploadsLiveData: MutableLiveData<List<DashboardFileUploadEntity>>
 
     private lateinit var viewModel: DashboardNotificationsViewModel
 
@@ -109,9 +118,10 @@ class DashboardNotificationsViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
-        mockkObject(FileUploadPreferences)
-        every { FileUploadPreferences.getRunningWorkerIds() } returns emptyList()
-        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(emptyList())
+        every { apiPrefs.user } returns User(id = 1)
+
+        uploadsLiveData = MutableLiveData(emptyList())
+        every { dashboardFileUploadDao.getAll(1) } returns uploadsLiveData
 
         viewModel = DashboardNotificationsViewModel(
             resources,
@@ -124,7 +134,9 @@ class DashboardNotificationsViewModelTest {
             conferenceDashboardBlacklist,
             apiPrefs,
             workManager,
-            FileUploadPreferences
+            dashboardFileUploadDao,
+            fileUploadInputDao,
+            fileUploadUtilsHelper
         )
 
         viewModel.data.observe(lifecycleOwner, {})
@@ -132,9 +144,7 @@ class DashboardNotificationsViewModelTest {
     }
 
     @After
-    fun tearDown() {
-        unmockkObject(FileUploadPreferences)
-    }
+    fun tearDown() {}
 
     private fun setupResources() {
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"
@@ -442,64 +452,140 @@ class DashboardNotificationsViewModelTest {
         val title = "Title"
         val subTitle = "SubTitle"
 
-        every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
-        every { workManager.getWorkInfoById(workerId).get() } returns WorkInfo(
-            workerId,
-            WorkInfo.State.RUNNING,
-            Data.EMPTY,
-            emptyList(),
-            Data.Builder()
-                .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title)
-                .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle)
-                .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
-                .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
-                .build(),
-            1
+        val workerId2 = UUID.randomUUID()
+        val title2 = "Title"
+        val subTitle2 = "SubTitle"
+
+        val workerId3 = UUID.randomUUID()
+        val title3 = "Title"
+        val subTitle3 = "SubTitle"
+
+        uploadsLiveData.value = listOf(
+            DashboardFileUploadEntity(workerId.toString(), 1, title, subTitle, null, null, null, null),
+            DashboardFileUploadEntity(workerId2.toString(), 1, title2, subTitle2, null, null, null, null),
+            DashboardFileUploadEntity(workerId3.toString(), 1, title3, subTitle3, null, null, null, null)
+        )
+
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId,
+                WorkInfo.State.RUNNING,
+                Data.EMPTY,
+                emptyList(),
+                Data.Builder()
+                    .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title)
+                    .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle)
+                    .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+                    .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
+                    .build(),
+                1
+            )
+        )
+
+        every { workManager.getWorkInfoById(workerId2) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId2,
+                WorkInfo.State.SUCCEEDED,
+                Data.EMPTY,
+                emptyList(),
+                Data.Builder()
+                    .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title2)
+                    .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle2)
+                    .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+                    .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
+                    .build(),
+                1
+            )
+        )
+
+        every { workManager.getWorkInfoById(workerId3) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId3,
+                WorkInfo.State.FAILED,
+                Data.EMPTY,
+                emptyList(),
+                Data.Builder()
+                    .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title3)
+                    .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle3)
+                    .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+                    .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
+                    .build(),
+                1
+            )
         )
 
         val expectedData = listOf(
-            UploadViewData(title, subTitle)
+            UploadViewData(title, subTitle, R.drawable.ic_upload, R.color.backgroundInfo, true),
+            UploadViewData(title2, subTitle2, R.drawable.ic_check_white_24dp, R.color.backgroundSuccess, false),
+            UploadViewData(title3, subTitle3, R.drawable.ic_exclamation_mark, R.color.backgroundDanger, false),
         )
 
         viewModel.loadData()
 
-        viewModel.data.value?.uploadItems?.forEachIndexed { index, itemViewModel ->
-            assertEquals(0, itemViewModel.progress)
-            assertEquals(expectedData[index], itemViewModel.data)
-        }
+        assertEquals(3, viewModel.data.value?.uploadItems?.size)
+        assertEquals(0, viewModel.data.value?.uploadItems?.get(0)?.progress)
+        assertEquals(expectedData[0], viewModel.data.value?.uploadItems?.get(0)?.data)
+        assertEquals(expectedData[1], viewModel.data.value?.uploadItems?.get(1)?.data)
+        assertEquals(expectedData[2], viewModel.data.value?.uploadItems?.get(2)?.data)
     }
 
     @Test
-    fun `Upload notification shows up and disappears when it's finished`() {
+    fun `Upload notification shows up and updates when it's finished`() {
         val workerId = UUID.randomUUID()
+        val title = "Title"
+        val title2 = "Title"
+        val subTitle = "SubTitle"
 
-        every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
-        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(listOf(workerId))
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(WorkInfo(
-            workerId,
-            WorkInfo.State.RUNNING,
-            Data.EMPTY,
-            emptyList(),
-            Data.EMPTY,
-            1
-        ))
+        val expectedRunning = UploadViewData(title, subTitle, R.drawable.ic_upload, R.color.backgroundInfo, true)
+        val expectedFinished = UploadViewData(title2, subTitle, R.drawable.ic_check_white_24dp, R.color.backgroundSuccess, false)
+
+        uploadsLiveData.value = listOf(
+            DashboardFileUploadEntity(workerId.toString(), 1, title, subTitle, null, null, null, null)
+        )
+
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId,
+                WorkInfo.State.RUNNING,
+                Data.EMPTY,
+                emptyList(),
+                Data.EMPTY,
+                1
+            )
+        )
 
         viewModel.loadData()
-        assertEquals(false, viewModel.data.value?.uploadItems?.isEmpty())
 
-        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(emptyList())
-        every { FileUploadPreferences.getRunningWorkerIds() } returns emptyList()
+        assertEquals(1, viewModel.data.value?.uploadItems?.size)
+        assertEquals(expectedRunning, viewModel.data.value?.uploadItems?.first()?.data)
 
-        viewModel.loadData()
-        assertEquals(true, viewModel.data.value?.uploadItems?.isEmpty())
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId,
+                WorkInfo.State.SUCCEEDED,
+                Data.EMPTY,
+                emptyList(),
+                Data.EMPTY,
+                1
+            )
+        )
+
+        uploadsLiveData.value = listOf(
+            DashboardFileUploadEntity(workerId.toString(), 1, title2, subTitle, null, null, null, null)
+        )
+
+        assertEquals(1, viewModel.data.value?.uploadItems?.size)
+        assertEquals(expectedFinished, viewModel.data.value?.uploadItems?.first()?.data)
     }
 
     @Test
     fun `Open progress dialog`() {
         val workerId = UUID.randomUUID()
 
-        every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
-        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(listOf(workerId))
+        uploadsLiveData.value = listOf(
+            DashboardFileUploadEntity(workerId.toString(), 1, "", "", null, null, null, null)
+        )
+
         every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
             WorkInfo(
                 workerId,
@@ -524,5 +610,79 @@ class DashboardNotificationsViewModelTest {
 
         event as DashboardNotificationsActions.OpenProgressDialog
         assertEquals(workerId, event.uuid)
+    }
+
+    @Test
+    fun `Success notification click opens submission details if it has the data`() {
+        val workerId = UUID.randomUUID()
+
+        uploadsLiveData.value = listOf(
+            DashboardFileUploadEntity(workerId.toString(), 1, "", "", 1, 2, 3, null)
+        )
+
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId,
+                WorkInfo.State.SUCCEEDED,
+                Data.EMPTY,
+                emptyList(),
+                Data.EMPTY,
+                1
+            )
+        )
+
+        every { courseManager.getCourseAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(id = 1))
+        }
+
+        viewModel.loadData()
+
+        val itemViewModel = viewModel.data.value?.uploadItems?.first()
+
+        itemViewModel as UploadItemViewModel
+        itemViewModel.open(workerId)
+
+        val event = viewModel.events.value?.getContentIfNotHandled()
+
+        assert(event is DashboardNotificationsActions.NavigateToSubmissionDetails)
+
+        event as DashboardNotificationsActions.NavigateToSubmissionDetails
+        assertEquals(1, event.canvasContext.id)
+        assertEquals(2, event.assignmentId)
+        assertEquals(3, event.attemptId)
+    }
+
+    @Test
+    fun `Success notification click opens my files if it has the data`() {
+        val workerId = UUID.randomUUID()
+
+        uploadsLiveData.value = listOf(
+            DashboardFileUploadEntity(workerId.toString(), 1, "", "", null, null, null, 0)
+        )
+
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId,
+                WorkInfo.State.SUCCEEDED,
+                Data.EMPTY,
+                emptyList(),
+                Data.EMPTY,
+                1
+            )
+        )
+
+        viewModel.loadData()
+
+        val itemViewModel = viewModel.data.value?.uploadItems?.first()
+
+        itemViewModel as UploadItemViewModel
+        itemViewModel.open(workerId)
+
+        val event = viewModel.events.value?.getContentIfNotHandled()
+
+        assert(event is DashboardNotificationsActions.NavigateToMyFiles)
+
+        event as DashboardNotificationsActions.NavigateToMyFiles
+        assertEquals(0, event.folderId)
     }
 }

@@ -1296,6 +1296,8 @@
     <string name="fileUploadProgressSubtitle">Téléversement des fichiers</string>
     <string name="submissionProgressSubtitle">Téléversement de l’envoi vers \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Téléversement de l’envoi</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Succès de l’envoi</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Échec de l’envoi</string>
     <string name="dashboardNotificationUploadingFilesTitle">Téléversement des fichiers</string>
     <string name="cancelSubmissionDialogTitle">Annuler l\'envoi</string>
     <string name="cancelSubmissionDialogMessage">Cela annulera et supprimera votre envoi.</string>
@@ -1373,4 +1375,6 @@
     <string name="a11y_conversationDeselected">Conversation désélectionnée</string>
     <string name="a11y_exitSelectionMode">Quitter le mode de sélection</string>
     <string name="a11y_selectionModeDeactivated">Mode de sélection désactivé.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Annuler</string>
 </resources>

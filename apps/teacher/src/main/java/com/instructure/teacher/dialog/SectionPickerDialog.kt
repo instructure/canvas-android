@@ -122,12 +122,10 @@ class SectionRecyclerViewAdapter(
     private val updatedCallback: (MutableList<Section>) -> Unit
 ) : RecyclerView.Adapter<SectionRecyclerViewAdapter.SectionViewHolder>() {
 
-    private lateinit var binding: ViewSectionListItemBinding
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder {
-        binding = ViewSectionListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ViewSectionListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.checkbox.applyTheme(ThemePrefs.brandColor)
-        return SectionViewHolder(binding.root)
+        return SectionViewHolder(binding)
     }
 
     override fun getItemCount(): Int = sections.size
@@ -164,7 +162,8 @@ class SectionRecyclerViewAdapter(
         }
     }
 
-    inner class SectionViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class SectionViewHolder(val binding: ViewSectionListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(sectionName: String, checked: Boolean, callback: (Boolean) -> Unit) {
             binding.sectionName.text = sectionName
 
@@ -174,7 +173,7 @@ class SectionRecyclerViewAdapter(
             }
 
             binding.checkbox.setOnClickListener { callback(binding.checkbox.isChecked); (it as CheckBox).toggle() }
-            view.setOnClickListener { binding.checkbox.performClick(); }
+            binding.root.setOnClickListener { binding.checkbox.performClick() }
         }
     }
 }

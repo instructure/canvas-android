@@ -1301,10 +1301,18 @@
     <string name="a11y_closeProgress">Close progress dialog</string>
     <string name="fileUploadProgress">%1$s of %2$s</string>
     <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="fileUploadFailedSubtitle">One or more files failed to upload. Check your internet connection and retry to submit.</string>
     <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
 
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submission Successful</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Submission Failed</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Uploading File</item>
+        <item quantity="other">Uploading Files</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">File Upload Successful</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">File Upload Failed</string>
     <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
     <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
     <string name="fileUploadError">File Upload Failed</string>
@@ -1384,4 +1392,10 @@
     <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
     <string name="a11y_avatarContentDescription">Avatar of %s</string>
     <string name="inboxUndo">Undo</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domain</string>
+    <string name="aboutLoginTitle">Login ID</string>
+    <string name="aboutEmailTitle">Email</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
 </resources>

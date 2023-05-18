@@ -80,6 +80,7 @@ class AcceptableUsePolicyActivity : AppCompatActivity() {
                 finish()
             }
             AcceptableUsePolicyAction.AcceptFailure -> Snackbar.make(binding.root, R.string.acceptFail, Snackbar.LENGTH_SHORT).show()
+            AcceptableUsePolicyAction.PolicyOpenFailed -> {}
         }
     }
 

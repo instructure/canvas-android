@@ -22,6 +22,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.type.SubmissionType
 import java.util.*
+import kotlin.random.Random
 
 /**
  * Submission index for a specific course/assignment
@@ -67,7 +68,8 @@ object SubmissionIndexEndpoint : Endpoint(
                     type = submissionType!!,
                     body = submissionBody,
                     url = submissionUrl,
-                    attachment = attachment
+                    attachment = attachment,
+                    attempt = Random.nextLong()
             )
 
             assignment.submission = submission

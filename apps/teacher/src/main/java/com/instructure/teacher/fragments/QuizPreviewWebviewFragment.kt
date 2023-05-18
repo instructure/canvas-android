@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_PREVIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setDarkModeSupport
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
@@ -42,7 +42,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
 
         // Try to automatically tap the Preview button so we take them directly into the quiz preview
         Handler().postDelayed({
-            requireActivity().runOnUiThread {
+            activity?.runOnUiThread {
                 mClickedPreview = true
                 val js = "javascript: { " +
                         "document.getElementById('preview_quiz_button').click();" +
@@ -56,7 +56,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         setShouldLoadUrl(false)
         super.onActivityCreated(savedInstanceState)
-        canvasWebView.setDarkModeSupport()
+        canvasWebView.enableAlgorithmicDarkening()
 
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) =

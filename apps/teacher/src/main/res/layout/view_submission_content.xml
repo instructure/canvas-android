@@ -154,6 +154,13 @@
                     android:visibility="gone"
                     tools:visibility="visible" />
 
+                <include
+                    android:id="@+id/attemptView"
+                    layout="@layout/item_submission_attempt_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
                 <View
                     android:id="@+id/topDivider"
                     android:layout_width="match_parent"

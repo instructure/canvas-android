@@ -7,10 +7,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.model.QuizAnswer
-import com.instructure.dataseeding.model.QuizQuestion
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -27,13 +24,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class GradesE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -47,40 +40,10 @@ class GradesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = true,
-                dueAt = 1.days.fromNow.iso8601,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                teacherToken = teacher.token,
-                gradingType = GradingType.PERCENT,
-                pointsPossible = 15.0
-        ))
+        val assignment = createAssignment(course, teacher)
 
         Log.d(PREPARATION_TAG,"Create a quiz with some questions.")
-        val quizQuestions = listOf(
-                QuizQuestion(
-                        pointsPossible = 5,
-                        questionType = "multiple_choice_question",
-                        questionText = "Odd or even?",
-                        answers = listOf(
-                                QuizAnswer(id = 1, weight = 1, text = "Odd"),
-                                QuizAnswer(id = 1, weight = 1, text = "Even")
-                        )
-
-                ),
-                QuizQuestion(
-                        pointsPossible = 5,
-                        questionType = "multiple_choice_question",
-                        questionText = "How many roads must a man walk down?",
-                        answers = listOf(
-                                QuizAnswer(id = 1, weight = 1, text = "42"),
-                                QuizAnswer(id = 1, weight = 1, text = "A Gazillion"),
-                                QuizAnswer(id = 1, weight = 1, text = "13")
-                        )
-
-                )
-        )
+        val quizQuestions = makeQuizQuestions()
 
         Log.d(STEP_TAG,"Publish the previously made quiz.")
         val quiz = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
@@ -123,22 +86,10 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.assertTotalGrade(withText(R.string.noGradeText))
 
         Log.d(PREPARATION_TAG,"Seed a submission for ${assignment.name} assignment.")
-        SubmissionsApi.submitCourseAssignment(
-                submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(),
-                studentToken = student.token
-        )
+        submitAssignment(course, assignment, student)
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${assignment.name} assignment.")
-        SubmissionsApi.gradeSubmission(
-                teacherToken = teacher.token,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                studentId = student.id,
-                postedGrade="9",
-                excused = false)
+        gradeSubmission(teacher, course, assignment, student)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the assignment's score is '60'.")
         courseGradesPage.refresh()
@@ -168,6 +119,77 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.assertGradeDisplayed(quizMatcher, containsTextCaseInsensitive("10/10"))
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("76"))
         */
+    }
+
+    private fun makeQuizQuestions() = listOf(
+        QuizQuestion(
+            pointsPossible = 5,
+            questionType = "multiple_choice_question",
+            questionText = "Odd or even?",
+            answers = listOf(
+                QuizAnswer(id = 1, weight = 1, text = "Odd"),
+                QuizAnswer(id = 1, weight = 1, text = "Even")
+            )
+
+        ),
+        QuizQuestion(
+            pointsPossible = 5,
+            questionType = "multiple_choice_question",
+            questionText = "How many roads must a man walk down?",
+            answers = listOf(
+                QuizAnswer(id = 1, weight = 1, text = "42"),
+                QuizAnswer(id = 1, weight = 1, text = "A Gazillion"),
+                QuizAnswer(id = 1, weight = 1, text = "13")
+            )
+
+        )
+    )
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                withDescription = true,
+                dueAt = 1.days.fromNow.iso8601,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                teacherToken = teacher.token,
+                gradingType = GradingType.PERCENT,
+                pointsPossible = 15.0
+            )
+        )
+    }
+
+    private fun submitAssignment(
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(),
+            studentToken = student.token
+        )
+    }
+
+    private fun gradeSubmission(
+        teacher: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            studentId = student.id,
+            postedGrade = "9",
+            excused = false
+        )
     }
 
 }

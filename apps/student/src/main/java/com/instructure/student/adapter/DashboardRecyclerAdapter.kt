@@ -20,7 +20,6 @@ package com.instructure.student.adapter
 import android.app.Activity
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.isValidTerm
@@ -30,7 +29,6 @@ import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.holders.*
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
-import com.instructure.student.util.StudentPrefs
 import org.threeten.bp.OffsetDateTime
 import java.util.*
 
@@ -140,8 +138,8 @@ class DashboardRecyclerAdapter(
             // Filter groups
             val allActiveGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
 
-            val isAnyFavoritePresent = visibleCourses.any { it.isFavorite } || allActiveGroups.any { it.isFavorite }
-            val visibleGroups = if (isAnyFavoritePresent) allActiveGroups.filter { it.isFavorite } else allActiveGroups
+            val isAnyGroupFavorited = allActiveGroups.any { it.isFavorite }
+            val visibleGroups = if (isAnyGroupFavorited) allActiveGroups.filter { it.isFavorite } else allActiveGroups
 
             // Add courses
             addOrUpdateAllItems(ItemType.COURSE_HEADER, visibleCourses)

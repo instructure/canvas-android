@@ -31,7 +31,7 @@ class ContextKeeper : ContentProvider() {
         fun updateLocale(config: Configuration) {
             val cachedLocale = ConfigurationCompat.getLocales(appContext.resources.configuration)[0]
             val expectedLocale = ConfigurationCompat.getLocales(config)[0]
-            if (cachedLocale.toLanguageTag() != expectedLocale.toLanguageTag()) {
+            if (cachedLocale?.toLanguageTag() != expectedLocale?.toLanguageTag()) {
                 ContextKeeper.appContext = ContextKeeper.appContext.createConfigurationContext(config)
             }
         }

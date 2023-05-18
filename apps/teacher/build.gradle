@@ -42,8 +42,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 55
-        versionName = '1.22.0'
+        versionCode = 57
+        versionName = '1.23.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -133,6 +133,12 @@ android {
             ext {
                 heapEnabled = true
             }
+
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
+                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+            }
         }
     }
 
@@ -141,6 +147,8 @@ android {
             force 'android.arch.lifecycle:runtime:1.0.3'
 
             force Libs.KOTLIN_COROUTINES_CORE
+
+            force Libs.KOTLIN_STD_LIB
         }
     }
 
@@ -263,8 +271,7 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
-    implementation Libs.PLAY_CORE
-    implementation Libs.PLAY_CORE_KTX
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Firebase */
     implementation platform(Libs.FIREBASE_BOM) {

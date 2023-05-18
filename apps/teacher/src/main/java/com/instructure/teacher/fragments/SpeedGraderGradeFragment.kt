@@ -207,6 +207,8 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             speedGraderSlider.onGradeChanged = { grade, isExcused -> presenter.updateGrade(grade, isExcused) }
             speedGraderSlider.setVisible()
         }
+
+        editGradeIcon.onClick { showCustomizeGradeDialog() }
     }
 
     private fun shouldShowSliderView(assignment: Assignment): Boolean = (assignment.rubric == null || assignment.rubric!!.isEmpty())
@@ -241,16 +243,16 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         dialog.show(requireActivity().supportFragmentManager, PassFailGradeDailog::class.java.simpleName)
     }
 
-    override fun onRefreshStarted() {
-        binding.gradeValueText.setGone()
-        binding.addGradeIcon.setGone()
-        binding.editGradeIcon.setGone()
-        binding.gradeProgressSpinner.announceForAccessibility(getString(R.string.loading))
-        binding.gradeProgressSpinner.setVisible()
-        binding.hiddenIcon.setGone()
+    override fun onRefreshStarted(): Unit = with(binding) {
+        gradeValueText.setGone()
+        addGradeIcon.setGone()
+        editGradeIcon.setGone()
+        gradeProgressSpinner.announceForAccessibility(getString(R.string.loading))
+        gradeProgressSpinner.setVisible()
+        hiddenIcon.setGone()
     }
 
-    val hasUnsavedChanges: Boolean get() = binding.rubricEditView.hasUnsavedChanges
+    val hasUnsavedChanges: Boolean get() = if (view != null) binding.rubricEditView.hasUnsavedChanges else false
 
     override fun onRefreshFinished() = with(binding) {
         gradeProgressSpinner.setGone()

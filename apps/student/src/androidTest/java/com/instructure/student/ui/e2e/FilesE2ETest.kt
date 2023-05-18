@@ -28,8 +28,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.FileUploadType
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -43,13 +42,9 @@ import java.io.FileWriter
 
 @HiltAndroidTest
 class FilesE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -63,13 +58,7 @@ class FilesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = false,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                allowedExtensions = listOf("txt"),
-                teacherToken = teacher.token
-        ))
+        val assignment = createAssignment(course, teacher)
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
@@ -80,13 +69,7 @@ class FilesE2ETest: StudentTest() {
         )
 
         Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
-        SubmissionsApi.submitCourseAssignment(
-                submissionType = SubmissionType.ONLINE_UPLOAD,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(submissionUploadInfo.id),
-                studentToken = student.token
-        )
+        submitAssignment(course, assignment, submissionUploadInfo, student)
 
         Log.d(STEP_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
@@ -95,19 +78,10 @@ class FilesE2ETest: StudentTest() {
                 token = student.token,
                 fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
-
-        SubmissionsApi.commentOnSubmission(
-                studentToken = student.token,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(commentUploadInfo.id)
-        )
+        commentOnSubmission(student, course, assignment, commentUploadInfo)
 
         Log.d(STEP_TAG,"Seed a discussion for ${course.name} course.")
-        val discussionTopic = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = student.token
-        )
+        val discussionTopic = createDiscussion(course, student)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -217,4 +191,54 @@ class FilesE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
         fileListPage.assertViewEmpty()
     }
+
+    private fun commentOnSubmission(
+        student: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        commentUploadInfo: AttachmentApiModel
+    ) {
+        SubmissionsApi.commentOnSubmission(
+            studentToken = student.token,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(commentUploadInfo.id)
+        )
+    }
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = AssignmentsApi.createAssignment(
+        AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            withDescription = false,
+            submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+            allowedExtensions = listOf("txt"),
+            teacherToken = teacher.token
+        )
+    )
+
+    private fun submitAssignment(
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        submissionUploadInfo: AttachmentApiModel,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_UPLOAD,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(submissionUploadInfo.id),
+            studentToken = student.token
+        )
+    }
+
+    private fun createDiscussion(
+        course: CourseApiModel,
+        student: CanvasUserApiModel
+    ) = DiscussionTopicsApi.createDiscussion(
+        courseId = course.id,
+        token = student.token
+    )
 }
