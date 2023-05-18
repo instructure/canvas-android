@@ -33,5 +33,5 @@ interface SectionDao {
     suspend fun update(entity: SectionEntity)
 
     @Query("SELECT * FROM SectionEntity WHERE courseId = :courseId")
-    suspend fun findByCourseId(courseId: Long?): List<SectionEntity>
+    suspend fun findByCourseId(courseId: Long): List<SectionEntity>
 }

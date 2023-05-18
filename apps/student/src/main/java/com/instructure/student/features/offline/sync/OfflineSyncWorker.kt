@@ -51,7 +51,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseFacade: CourseFacade,
     private val assignmentFacade: AssignmentFacade,
     private val quizDao: QuizDao,
-    private val quizInterface: QuizAPI.QuizInterface
+    private val quizApi: QuizAPI.QuizInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -109,7 +109,7 @@ class OfflineSyncWorker @AssistedInject constructor(
         assignmentGroups.forEach { group ->
             group.assignments.forEach {
                 if (it.quizId != 0L) {
-                    val quiz = quizInterface.getQuiz(it.courseId, it.quizId, params).dataOrThrow
+                    val quiz = quizApi.getQuiz(it.courseId, it.quizId, params).dataOrThrow
                     quizDao.insert(QuizEntity(quiz))
                 }
             }

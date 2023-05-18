@@ -50,6 +50,13 @@ class AssignmentDetailsLocalDataSourceTest {
         Assert.assertEquals(expected, course)
     }
 
+    @Test(expected = IllegalStateException::class)
+    fun `Get course failure throws exception`() = runTest {
+        coEvery { courseFacade.getCourseById(any()) } returns null
+
+        dataSource.getCourseWithGrade(1, true)
+    }
+
     @Test
     fun `Get assignment successfully returns api model`() = runTest {
         val expected = Assignment(1)
@@ -60,6 +67,13 @@ class AssignmentDetailsLocalDataSourceTest {
         Assert.assertEquals(expected, assignment)
     }
 
+    @Test(expected = IllegalStateException::class)
+    fun `Get assignment failure throws exception`() = runTest {
+        coEvery { assignmentFacade.getAssignmentById(any()) } returns null
+
+        dataSource.getAssignment(false, 1, 1, true)
+    }
+
     @Test
     fun `Get quiz successfully returns api model`() = runTest {
         val expected = Quiz(1)
@@ -68,5 +82,12 @@ class AssignmentDetailsLocalDataSourceTest {
         val quiz = dataSource.getQuiz(1, 1, true)
 
         Assert.assertEquals(expected, quiz)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `Get quiz failure throws exception`() = runTest {
+        coEvery { quizDao.findById(any()) } returns null
+
+        dataSource.getQuiz(1, 1, true)
     }
 }

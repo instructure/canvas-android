@@ -83,12 +83,12 @@ class SubmissionFacade(
         return submissionDao.insert(SubmissionEntity(submission, groupId, submission.mediaComment?.mediaId))
     }
 
-    suspend fun getSubmissionById(id: Long?): Submission? {
+    suspend fun getSubmissionById(id: Long): Submission? {
         val submissionHistoryEntities = submissionDao.findById(id)
         val submissionEntity = submissionHistoryEntities.lastOrNull()
         val mediaCommentEntity = mediaCommentDao.findById(submissionEntity?.mediaCommentId)
-        val userEntity = userDao.findById(submissionEntity?.userId)
-        val groupEntity = groupDao.findById(submissionEntity?.groupId)
+        val userEntity = submissionEntity?.userId?.let { userDao.findById(it) }
+        val groupEntity = submissionEntity?.groupId?.let { groupDao.findById(it) }
 
         return submissionEntity?.toApiModel(
             submissionHistory = submissionHistoryEntities.map { it.toApiModel() },

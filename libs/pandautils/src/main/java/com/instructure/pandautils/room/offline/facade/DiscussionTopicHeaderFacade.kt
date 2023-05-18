@@ -33,9 +33,9 @@ class DiscussionTopicHeaderFacade(
         return discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader))
     }
 
-    suspend fun getDiscussionTopicHeaderById(id: Long?): DiscussionTopicHeader? {
+    suspend fun getDiscussionTopicHeaderById(id: Long): DiscussionTopicHeader? {
         val discussionTopicHeaderEntity = discussionTopicHeaderDao.findById(id)
-        val authorEntity = discussionParticipantDao.findById(discussionTopicHeaderEntity?.authorId)
+        val authorEntity = discussionTopicHeaderEntity?.authorId?.let { discussionParticipantDao.findById(it) }
 
         return discussionTopicHeaderEntity?.toApiModel(
             author = authorEntity?.toApiModel()

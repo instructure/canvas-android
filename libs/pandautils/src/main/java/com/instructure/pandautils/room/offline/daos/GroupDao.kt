@@ -33,5 +33,5 @@ interface GroupDao {
     suspend fun update(entity: GroupEntity)
 
     @Query("SELECT * FROM GroupEntity WHERE id = :id")
-    suspend fun findById(id: Long?): GroupEntity?
+    suspend fun findById(id: Long): GroupEntity?
 }

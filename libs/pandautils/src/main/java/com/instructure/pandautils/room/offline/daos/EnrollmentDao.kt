@@ -33,5 +33,5 @@ interface EnrollmentDao {
     suspend fun update(entity: EnrollmentEntity)
 
     @Query("SELECT * FROM EnrollmentEntity WHERE courseId = :courseId")
-    suspend fun findByCourseId(courseId: Long?): List<EnrollmentEntity>
+    suspend fun findByCourseId(courseId: Long): List<EnrollmentEntity>
 }

@@ -33,5 +33,5 @@ interface LockedModuleDao {
     suspend fun update(entity: LockedModuleEntity)
 
     @Query("SELECT * FROM LockedModuleEntity WHERE lockInfoId = :lockInfoId")
-    suspend fun findByLockInfoId(lockInfoId: Long?): LockedModuleEntity?
+    suspend fun findByLockInfoId(lockInfoId: Long): LockedModuleEntity?
 }

@@ -33,5 +33,5 @@ interface DiscussionParticipantDao {
     suspend fun update(entity: DiscussionParticipantEntity)
 
     @Query("SELECT * FROM DiscussionParticipantEntity WHERE id = :id")
-    suspend fun findById(id: Long?): DiscussionParticipantEntity?
+    suspend fun findById(id: Long): DiscussionParticipantEntity?
 }

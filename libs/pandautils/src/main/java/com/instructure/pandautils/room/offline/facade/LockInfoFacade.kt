@@ -45,16 +45,16 @@ class LockInfoFacade(
         }
     }
 
-    suspend fun getLockInfoByAssignmentId(assignmentId: Long?): LockInfo? {
+    suspend fun getLockInfoByAssignmentId(assignmentId: Long): LockInfo? {
         val lockInfoEntity = lockInfoDao.findByAssignmentId(assignmentId)
-        val lockedModuleEntity = lockedModuleDao.findByLockInfoId(lockInfoEntity?.id)
-        val moduleNameEntities = moduleNameDao.findByLockModuleId(lockedModuleEntity?.id)
-        val completionRequirementEntities = completionRequirementDao.findByLockModuleId(lockedModuleEntity?.id)
+        val lockedModuleEntity = lockInfoEntity?.id?.let { lockedModuleDao.findByLockInfoId(it) }
+        val moduleNameEntities = lockedModuleEntity?.id?.let { moduleNameDao.findByLockModuleId(it) }
+        val completionRequirementEntities = lockedModuleEntity?.id?.let { completionRequirementDao.findByLockModuleId(it) }
 
         return lockInfoEntity?.toApiModel(
             lockedModule = lockedModuleEntity?.toApiModel(
-                prerequisites = moduleNameEntities.map { it.toApiModel() },
-                completionRequirements = completionRequirementEntities.map { it.toApiModel() }
+                prerequisites = moduleNameEntities?.map { it.toApiModel() },
+                completionRequirements = completionRequirementEntities?.map { it.toApiModel() }.orEmpty()
             )
         )
     }

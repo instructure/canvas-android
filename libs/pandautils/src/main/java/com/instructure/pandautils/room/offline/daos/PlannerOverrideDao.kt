@@ -33,5 +33,5 @@ interface PlannerOverrideDao {
     suspend fun update(entity: PlannerOverrideEntity)
 
     @Query("SELECT * FROM PlannerOverrideEntity WHERE id = :id")
-    suspend fun findById(id: Long?): PlannerOverrideEntity?
+    suspend fun findById(id: Long): PlannerOverrideEntity?
 }

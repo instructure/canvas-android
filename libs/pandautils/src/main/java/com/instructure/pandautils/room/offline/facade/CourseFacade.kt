@@ -58,7 +58,7 @@ class CourseFacade(
 
     suspend fun getCourseById(id: Long): Course? {
         val courseEntity = courseDao.findById(id)
-        val termEntity = termDao.findById(courseEntity?.termId)
+        val termEntity = courseEntity?.termId?.let { termDao.findById(it) }
         val enrollments = enrollmentFacade.getEnrollmentsByCourseId(id)
         val sectionEntities = sectionDao.findByCourseId(id)
         val courseGradingPeriodEntities = courseGradingPeriodDao.findByCourseId(id)

@@ -89,12 +89,12 @@ class AssignmentFacade(
     suspend fun getAssignmentById(id: Long): Assignment? {
         val assignmentEntity = assignmentDao.findById(id)
         val rubricCriterionEntities = rubricCriterionDao.findByAssignmentId(id)
-        val rubricSettingEntity = rubricSettingsDao.findById(assignmentEntity?.rubricSettingsId)
-        val submission = submissionFacade.getSubmissionById(assignmentEntity?.submissionId)
-        val discussionTopicHeader = discussionTopicHeaderFacade.getDiscussionTopicHeaderById(assignmentEntity?.discussionTopicHeaderId)
+        val rubricSettingEntity = assignmentEntity?.rubricSettingsId?.let { rubricSettingsDao.findById(it) }
+        val submission = assignmentEntity?.submissionId?.let { submissionFacade.getSubmissionById(it) }
+        val discussionTopicHeader = assignmentEntity?.discussionTopicHeaderId?.let { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(it) }
         val lockInfo = lockInfoFacade.getLockInfoByAssignmentId(id)
         val scoreStatisticsEntity = assignmentScoreStatisticsDao.findByAssignmentId(id)
-        val plannerOverrideEntity = plannerOverrideDao.findById(assignmentEntity?.plannerOverrideId)
+        val plannerOverrideEntity = assignmentEntity?.plannerOverrideId?.let { plannerOverrideDao.findById(it) }
 
         return assignmentEntity?.toApiModel(
             rubric = rubricCriterionEntities.map { it.toApiModel() },

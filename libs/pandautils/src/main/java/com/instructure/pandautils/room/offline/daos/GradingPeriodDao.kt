@@ -33,5 +33,5 @@ interface GradingPeriodDao {
     suspend fun update(entity: GradingPeriodEntity)
 
     @Query("SELECT * FROM GradingPeriodEntity WHERE id = :id")
-    suspend fun findById(id: Long?): GradingPeriodEntity
+    suspend fun findById(id: Long): GradingPeriodEntity
 }
