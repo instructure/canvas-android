@@ -40,13 +40,13 @@ import java.util.*
 @AndroidEntryPoint
 class DocumentScanningActivity : ScanActivity() {
 
-    private val binding by viewBinding(ActivityDocumentScanningBinding::inflate)
+    private lateinit var binding: ActivityDocumentScanningBinding
 
     private val viewModel: DocumentScanningViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityDocumentScanningBinding>(this, R.layout.activity_document_scanning)
+        binding = DataBindingUtil.setContentView<ActivityDocumentScanningBinding>(this, R.layout.activity_document_scanning)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 

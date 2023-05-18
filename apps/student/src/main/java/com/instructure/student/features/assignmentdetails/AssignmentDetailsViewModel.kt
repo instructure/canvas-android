@@ -211,8 +211,12 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun refreshAssignment() {
         viewModelScope.launch {
-            val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, course?.id.orDefault(), true)
-            _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))
+            try {
+                val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, course?.id.orDefault(), true)
+                _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))
+            } catch (e: Exception) {
+                _events.value = Event(AssignmentDetailAction.ShowToast(resources.getString(R.string.assignmentRefreshError)))
+            }
         }
     }
 

@@ -30,12 +30,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.material.appbar.AppBarLayout
-import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.FragmentInteractions
@@ -208,8 +206,8 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
                 if (canvasContext is Course) TabHelper.isHomeTabAPage(canvasContext as Course) else false // Courses are the only CanvasContext that have settable home pages
 
             if (isHomeAPage) {
-                val homePage = awaitApi<Page> { PageManager.getFrontPage(canvasContext, isRefresh, it) }
-                homePageTitle = homePage.title
+                val homePage = repository.getFrontPage(canvasContext, isRefresh)
+                homePageTitle = homePage?.title
             }
 
             val tabs = repository.getTabs(canvasContext, isRefresh)
@@ -254,6 +252,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
      * Manages state of titles & subtitles when users scrolls
      */
     override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        if (view == null) return
 
         val percentage = Math.abs(verticalOffset).div(appBarLayout?.totalScrollRange?.toFloat() ?: 1F)
 

@@ -60,6 +60,9 @@ object PageAPI {
         fun getFrontPage(
                 @Path("contextId") contextId: Long): Call<Page>
 
+        @GET("{contextType}/{contextId}/front_page")
+        suspend fun getFrontPage(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<Page>
+
         @PUT("{contextId}/pages/{pageUrl}")
         fun editPage(
                 @Path("contextId") contextId: Long,

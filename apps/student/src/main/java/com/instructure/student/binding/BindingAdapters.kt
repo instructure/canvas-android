@@ -21,6 +21,8 @@ import androidx.databinding.BindingAdapter
 import com.google.android.material.tabs.TabLayout
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.DonutChartView
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView
 
 @BindingAdapter("tabs")
 fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
@@ -38,4 +40,12 @@ fun DonutChartView.setProgress(progress: Float, @ColorInt color: Int, @ColorInt 
     setColor(color)
     setTrackColor(trackColor)
     setPercentage(progress, true)
+}
+
+@BindingAdapter("stats", "color")
+fun GradeStatisticsView.setStatistics(stats: GradeCellViewState.GradeStats?, @ColorInt color: Int) {
+    stats?.let {
+        setStats(stats)
+        setAccentColor(color)
+    }
 }

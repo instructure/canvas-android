@@ -241,6 +241,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     private val gradingPeriodsCallback = object : StatusCallback<GradingPeriodResponse>() {
 
         override fun onResponse(response: Response<GradingPeriodResponse>, linkHeaders: LinkHeaders, type: ApiType) {
+            if (view == null) return
             with(binding) {
                 gradingPeriodsList = ArrayList()
                 gradingPeriodsList.addAll(response.body()!!.gradingPeriodList)

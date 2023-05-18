@@ -17,33 +17,25 @@
 
 package com.instructure.student.features.offline.coursebrowser
 
-import com.instructure.canvasapi2.apis.TabAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
-
+import java.lang.IllegalStateException
 
 class CourseBrowserRepository(
-    private val tabApi: TabAPI.TabsInterface,
-    private val tabDao: TabDao,
+    private val networkDataSource: CourseBrowserNetworkDataSource,
+    private val localDataSource: CourseBrowserLocalDataSource,
     private val networkStateProvider: NetworkStateProvider
-) {
+) : Repository<CourseBrowserDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
     suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
-        val tabs = if (networkStateProvider.isOnline()) {
-            fetchTabs(canvasContext, forceNetwork)
-        } else {
-            tabDao.findByCourseId(canvasContext.id).map {
-                it.toApiModel()
-            }
-        }
+        val tabs = dataSource.getTabs(canvasContext, forceNetwork)
         return tabs.filter { !(it.isExternal && it.isHidden) }
     }
 
-    private suspend fun fetchTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return tabApi.getTabs(canvasContext.id, canvasContext.type.apiString, params).dataOrThrow
+    suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page? {
+        return dataSource.getFrontPage(canvasContext, forceNetwork)
     }
 }

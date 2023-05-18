@@ -1,25 +1,28 @@
 /*
  * Copyright (C) 2023 - present Instructure, Inc.
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.student.di.feature
 
+import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.offline.coursebrowser.CourseBrowserLocalDataSource
+import com.instructure.student.features.offline.coursebrowser.CourseBrowserNetworkDataSource
 import com.instructure.student.features.offline.coursebrowser.CourseBrowserRepository
 import dagger.Module
 import dagger.Provides
@@ -31,7 +34,19 @@ import dagger.hilt.android.components.FragmentComponent
 class CourseBrowserModule {
 
     @Provides
-    fun provideCourseBrowserRepository(tabApi: TabAPI.TabsInterface, tabDao: TabDao, networkStateProvider: NetworkStateProvider): CourseBrowserRepository {
-        return CourseBrowserRepository(tabApi, tabDao, networkStateProvider)
+    fun provideCourseBrowserLocalDataSource(tabDao: TabDao, pageDao: PageDao): CourseBrowserLocalDataSource {
+        return CourseBrowserLocalDataSource(tabDao, pageDao)
     }
+
+    @Provides
+    fun provideCourseBrowserNetworkDataSource(tabApi: TabAPI.TabsInterface, pageApi: PageAPI.PagesInterface): CourseBrowserNetworkDataSource {
+        return CourseBrowserNetworkDataSource(tabApi, pageApi)
+    }
+
+    @Provides
+    fun provideCourseBrowserRepository(networkDataSource: CourseBrowserNetworkDataSource, localDataSource: CourseBrowserLocalDataSource, networkStateProvider: NetworkStateProvider): CourseBrowserRepository {
+        return CourseBrowserRepository(networkDataSource, localDataSource, networkStateProvider)
+    }
+
+
 }
