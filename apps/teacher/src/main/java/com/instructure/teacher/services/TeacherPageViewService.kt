@@ -5,10 +5,15 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.teacher.BuildConfig
 
+/**
+ * A [PageViewUploadService] specific to the Teacher application.
+ *
+ * To test this service, install the app on a device running Android 7.1+ and run the following command:
+ *     adb shell cmd jobscheduler run -f com.instructure.teacher 188372
+ */
 class TeacherPageViewService : PageViewUploadService() {
 
     override val appKey = pandataAppKey
-    override val tokenAppKey = pandataTokenKey
 
     override fun onException(e: Throwable) = FirebaseCrashlytics.getInstance().recordException(e)
 
@@ -18,8 +23,5 @@ class TeacherPageViewService : PageViewUploadService() {
             "CANVAS_TEACHER_ANDROID",
             "Canvas Teacher for Android - ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         )
-
-        val pandataTokenKey = "CANVAS_STUDENT_ANDROID"
-
     }
 }

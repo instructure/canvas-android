@@ -50,9 +50,6 @@ abstract class PageViewUploadService : JobService() {
      * which a concrete implementation of this [PageViewUploadService] is declared.
      */
     abstract val appKey: PandataInfo.AppKey
-
-    abstract val tokenAppKey: String
-
     /**
      * Called if an exception occurs while uploading events. It is recommended to log these exceptions in a
      * highly visible location (e.g. Crashlytics).
@@ -71,7 +68,7 @@ abstract class PageViewUploadService : JobService() {
 
             // Refresh pandata token if null or expired
             if (ApiPrefs.pandataInfo?.isValid != true) {
-                ApiPrefs.pandataInfo = awaitApi<PandataInfo> { PandataManager.getToken(tokenAppKey, it) }
+                ApiPrefs.pandataInfo = awaitApi<PandataInfo> { PandataManager.getToken(appKey.key, it) }
             }
 
             // Grab completed events (i.e. have a duration) and events which have passed the max orphan age
