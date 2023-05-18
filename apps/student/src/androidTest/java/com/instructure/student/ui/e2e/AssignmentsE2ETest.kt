@@ -450,6 +450,52 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)
+    fun testAddFileCommentE2E() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
+        val assignment = createAssignment(course.id, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
+        submitAssignment(assignment, course, student)
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Seed a comment attachment upload.")
+        val commentUploadInfo = uploadTextFile(
+            assignmentId = assignment.id,
+            courseId = course.id,
+            token = student.token,
+            fileUploadType = FileUploadType.COMMENT_ATTACHMENT
+        )
+        commentOnSubmission(student, course, assignment, commentUploadInfo)
+
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG,"Click on ${assignment.name} assignment.")
+        assignmentListPage.clickAssignment(assignment)
+
+        Log.d(STEP_TAG,"Assert that ${commentUploadInfo.fileName} file is displayed as a comment by ${student.name} student.")
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentAttachmentDisplayed(commentUploadInfo.fileName, student)
+
+        Log.d(STEP_TAG,"Navigate to Submission Details Page and open Files Tab.")
+        submissionDetailsPage.openFiles()
+    }
+
+    @E2E
+    @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testSubmissionAttemptSelection() {
 

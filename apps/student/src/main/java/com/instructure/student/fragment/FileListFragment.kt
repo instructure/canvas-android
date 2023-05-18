@@ -211,7 +211,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             override fun onRefreshFinished() {
                 setRefreshing(false)
 
-                if (recyclerAdapter?.size() == 0) {
+                if (recyclerAdapter?.size() == 0 && view != null) {
                     setEmptyView(binding.emptyView, R.drawable.ic_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
                 }
             }
