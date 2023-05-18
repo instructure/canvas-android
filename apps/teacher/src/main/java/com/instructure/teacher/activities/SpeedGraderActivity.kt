@@ -76,7 +76,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-///courses/20820/gradebook/speed_grader?assignment_id=64155&student_id=96471
 @PageView("courses/{courseId}/gradebook/speed_grader?assignment_id={assignmentId}")
 @ScreenView(SCREEN_VIEW_SPEED_GRADER)
 @AndroidEntryPoint
