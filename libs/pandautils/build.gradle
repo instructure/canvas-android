@@ -38,6 +38,13 @@ android {
         targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
     }
 
     buildTypes {
