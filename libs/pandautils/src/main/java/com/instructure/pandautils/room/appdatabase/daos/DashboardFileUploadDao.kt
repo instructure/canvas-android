@@ -1,8 +1,8 @@
-package com.instructure.pandautils.room.daos
+package com.instructure.pandautils.room.appdatabase.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 
 @Dao
 interface DashboardFileUploadDao {

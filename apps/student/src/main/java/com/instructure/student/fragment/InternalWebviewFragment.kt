@@ -344,8 +344,8 @@ open class InternalWebviewFragment : ParentFragment() {
         } else false
     }
 
-    fun getCanvasLoading(): ProgressBar = binding.webViewLoading
-    fun getCanvasWebView(): CanvasWebView = binding.canvasWebViewWrapper.webView
+    fun getCanvasLoading(): ProgressBar? = if (view != null) binding.webViewLoading else null
+    fun getCanvasWebView(): CanvasWebView? = if (view != null) binding.canvasWebViewWrapper.webView else null
     fun getIsUnsupportedFeature(): Boolean = isUnsupportedFeature
     private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
 
@@ -408,7 +408,7 @@ open class InternalWebviewFragment : ParentFragment() {
                         .build().toString()
                 }
 
-                binding.canvasWebViewWrapper.webView.loadUrl(url!!, getReferer())
+                if (view != null) binding.canvasWebViewWrapper.webView.loadUrl(url!!, getReferer())
             }
         }
     }

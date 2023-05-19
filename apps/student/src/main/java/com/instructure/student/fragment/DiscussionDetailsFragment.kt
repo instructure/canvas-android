@@ -248,7 +248,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             successfullyMarkedAsReadIds.forEach {
                 binding.discussionRepliesWebViewWrapper.post {
                     // Posting lets this escape Weave's lifecycle, so use a null-safe call on the webview here
-                    binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
+                    if (view != null) binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
                 }
             }
             if (!groupDiscussion) {
@@ -696,7 +696,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
         loadHeaderHtmlJob = discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
-            loadHTMLTopic(it, discussionTopicHeader.title)
+            if (view != null) loadHTMLTopic(it, discussionTopicHeader.title)
         })
 
         attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())

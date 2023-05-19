@@ -41,9 +41,9 @@ import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.room.daos.DashboardFileUploadDao
-import com.instructure.pandautils.room.daos.FileUploadInputDao
-import com.instructure.pandautils.room.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -258,16 +258,8 @@ class DashboardNotificationsViewModel @Inject constructor(
                 workerId = workerId,
                 workManager = workManager,
                 data = uploadViewData,
-                open = { uuid -> _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid))) },
-                remove = {
-                    viewModelScope.launch {
-                        dashboardFileUploadDao.delete(fileUploadEntity)
-                        fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
-                            fileUploadUtilsHelper.deleteCachedFiles(it.filePaths)
-                            fileUploadInputDao.delete(it)
-                        }
-                    }
-                }
+                open = { uuid -> openUploadNotification(workInfo.state, uuid, fileUploadEntity) },
+                remove = { removeUploadNotification(fileUploadEntity, workerId) }
             )
         }
     }.orEmpty()
@@ -286,6 +278,56 @@ class DashboardNotificationsViewModel @Inject constructor(
         } ?: true // Case when the course has no end date
 
         return !course.restrictEnrollmentsToCourseDate || isBeforeEndDate
+    }
+
+    private fun openUploadNotification(state: WorkInfo.State, uuid: UUID, fileUploadEntity: DashboardFileUploadEntity) {
+        if (state == WorkInfo.State.SUCCEEDED) {
+            viewModelScope.launch {
+                val uploadItemViewModel = _data.value?.uploadItems?.find { it.workerId == uuid }
+                uploadItemViewModel?.apply {
+                    loading = true
+                    notifyPropertyChanged(BR.loading)
+                }
+                if (fileUploadEntity.courseId != null && fileUploadEntity.assignmentId != null && fileUploadEntity.attemptId != null) {
+                    courseManager.getCourseAsync(fileUploadEntity.courseId, false).await().dataOrNull?.let {
+                        dashboardFileUploadDao.delete(fileUploadEntity)
+                        _events.postValue(
+                            Event(
+                                DashboardNotificationsActions.NavigateToSubmissionDetails(
+                                    it,
+                                    fileUploadEntity.assignmentId,
+                                    fileUploadEntity.attemptId
+                                )
+                            )
+                        )
+                    }
+                } else if (fileUploadEntity.folderId != null) {
+                    dashboardFileUploadDao.delete(fileUploadEntity)
+                    apiPrefs.user?.let {
+                        _events.postValue(Event(DashboardNotificationsActions.NavigateToMyFiles(it, fileUploadEntity.folderId)))
+                    }
+                } else {
+                    dashboardFileUploadDao.delete(fileUploadEntity)
+                    _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+                }
+                uploadItemViewModel?.apply {
+                    loading = false
+                    notifyPropertyChanged(BR.loading)
+                }
+            }
+        } else {
+            _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+        }
+    }
+
+    private fun removeUploadNotification(fileUploadEntity: DashboardFileUploadEntity, workerId: UUID) {
+        viewModelScope.launch {
+            dashboardFileUploadDao.delete(fileUploadEntity)
+            fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
+                fileUploadUtilsHelper.deleteCachedFiles(it.filePaths)
+                fileUploadInputDao.delete(it)
+            }
+        }
     }
 
     private fun handleInvitation(

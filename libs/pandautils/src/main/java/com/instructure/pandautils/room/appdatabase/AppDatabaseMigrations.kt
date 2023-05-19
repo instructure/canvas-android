@@ -15,18 +15,9 @@
  *
  */
 
-package com.instructure.pandautils.room
+package com.instructure.pandautils.room.appdatabase
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-
-fun createMigration(from: Int, to: Int, migrationBlock: (SupportSQLiteDatabase) -> Unit): Migration {
-    return object : Migration(from, to) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            migrationBlock(database)
-        }
-    }
-}
+import com.instructure.pandautils.room.createMigration
 
 val appDatabaseMigrations = arrayOf(
 
@@ -42,7 +33,12 @@ val appDatabaseMigrations = arrayOf(
 
     createMigration(3, 4) { database ->
         database.execSQL("ALTER TABLE FileUploadInputEntity ADD COLUMN notificationId INTEGER")
+    },
+
+    createMigration(4, 5) { database ->
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN courseId INTEGER")
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN assignmentId INTEGER")
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN attemptId INTEGER")
+        database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN folderId INTEGER")
     }
-
 )
-

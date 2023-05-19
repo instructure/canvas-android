@@ -17,16 +17,18 @@
 package com.instructure.teacher.fragments
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOUNCEMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 
+@PageView(url = "{canvasContext}/announcements")
 @ScreenView(SCREEN_VIEW_ANNOUNCEMENT_LIST)
 class AnnouncementListFragment : DiscussionsListFragment() {
 
     companion object {
         fun newInstance(canvasContext: CanvasContext) = AnnouncementListFragment().apply {
-            mCanvasContext = canvasContext
-            mIsAnnouncements = true
+            this.canvasContext = canvasContext
+            isAnnouncements = true
         }
     }
 }

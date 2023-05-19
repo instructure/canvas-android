@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2023-02-17T11:03:20.619429",
+  "@@last_modified": "2023-04-14T11:04:46.988317",
   "alertsLabel": "Alertas",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -180,6 +180,19 @@
     ],
     "placeholders": {
       "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}, {eventCount} evento}other{{date}, {eventCount} eventos}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
     }
   },
   "No Events Today!": "No hay ningún evento hoy",
@@ -2691,6 +2704,41 @@
   "I agree to the Acceptable Use Policy.": "Acepto la política de uso aceptable.",
   "@I agree to the Acceptable Use Policy.": {
     "description": "acceptable use policy switch title",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "About": "Acerca de",
+  "@About": {
+    "description": "Title for about menu item in settings",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "App": "Aplicación",
+  "@App": {
+    "description": "Title for App field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login ID": "Identificación de inicio de sesión",
+  "@Login ID": {
+    "description": "Title for Login ID field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email": "Correo electrónico",
+  "@Email": {
+    "description": "Title for Email field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version": "Versión",
+  "@Version": {
+    "description": "Title for Version field on about page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

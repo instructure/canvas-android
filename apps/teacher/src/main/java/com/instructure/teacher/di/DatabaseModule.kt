@@ -2,8 +2,8 @@ package com.instructure.teacher.di
 
 import android.content.Context
 import androidx.room.Room
-import com.instructure.pandautils.room.AppDatabase
-import com.instructure.pandautils.room.appDatabaseMigrations
+import com.instructure.pandautils.room.appdatabase.AppDatabase
+import com.instructure.pandautils.room.appdatabase.appDatabaseMigrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
