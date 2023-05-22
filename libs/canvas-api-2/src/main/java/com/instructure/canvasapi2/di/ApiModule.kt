@@ -187,4 +187,14 @@ class ApiModule {
     fun provideFileFolderApi(): FileFolderAPI.FilesFoldersInterface {
         return RestBuilder().build(FileFolderAPI.FilesFoldersInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideQuizApi(): QuizAPI.QuizInterface {
+        return RestBuilder().build(QuizAPI.QuizInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideSubmissionApi(): SubmissionAPI.SubmissionInterface {
+        return RestBuilder().build(SubmissionAPI.SubmissionInterface::class.java, RestParams())
+    }
 }

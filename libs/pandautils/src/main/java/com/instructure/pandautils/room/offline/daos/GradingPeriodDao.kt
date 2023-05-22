@@ -17,10 +17,7 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.GradingPeriodEntity
 
 @Dao
@@ -34,4 +31,7 @@ interface GradingPeriodDao {
 
     @Update
     suspend fun update(entity: GradingPeriodEntity)
+
+    @Query("SELECT * FROM GradingPeriodEntity WHERE id = :id")
+    suspend fun findById(id: Long): GradingPeriodEntity
 }

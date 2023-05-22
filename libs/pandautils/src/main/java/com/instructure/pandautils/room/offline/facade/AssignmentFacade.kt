@@ -17,16 +17,11 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.PlannerOverride
-import com.instructure.pandautils.room.offline.daos.AssignmentDao
-import com.instructure.pandautils.room.offline.daos.AssignmentGroupDao
-import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
-import com.instructure.pandautils.room.offline.daos.RubricSettingsDao
-import com.instructure.pandautils.room.offline.entities.AssignmentEntity
-import com.instructure.pandautils.room.offline.entities.AssignmentGroupEntity
-import com.instructure.pandautils.room.offline.entities.PlannerOverrideEntity
-import com.instructure.pandautils.room.offline.entities.RubricSettingsEntity
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
 
 class AssignmentFacade(
     private val assignmentGroupDao: AssignmentGroupDao,
@@ -34,7 +29,10 @@ class AssignmentFacade(
     private val plannerOverrideDao: PlannerOverrideDao,
     private val rubricSettingsDao: RubricSettingsDao,
     private val submissionFacade: SubmissionFacade,
-    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+    private val assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
+    private val rubricCriterionDao: RubricCriterionDao,
+    private val lockInfoFacade: LockInfoFacade
 ) {
 
     suspend fun insertAssignmentGroups(assignmentGroups: List<AssignmentGroup>) {
@@ -42,16 +40,32 @@ class AssignmentFacade(
             assignmentGroupDao.insert(AssignmentGroupEntity(assignmentGroup))
 
             assignmentGroup.assignments.forEach { assignment ->
-                val rubricSettingsId =
-                    assignment.rubricSettings?.let { rubricSettingsDao.insert(RubricSettingsEntity(it)) }
+                val rubricSettingsId = assignment.rubricSettings?.let {
+                    rubricSettingsDao.insert(RubricSettingsEntity(it))
+                }
+
                 val submissionId = assignment.submission?.let { submission ->
                     submissionFacade.insertSubmission(submission)
+                    submission.id
                 }
 
                 val plannerOverrideId = insertPlannerOverride(assignment.plannerOverride)
 
-                val discussionTopicHeaderId =
-                    assignment.discussionTopicHeader?.let { discussionTopicHeaderFacade.insertDiscussion(it) }
+                val discussionTopicHeaderId = assignment.discussionTopicHeader?.let {
+                    discussionTopicHeaderFacade.insertDiscussion(it)
+                }
+
+                assignment.scoreStatistics?.let {
+                    assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
+                }
+
+                assignment.rubric?.forEach {
+                    rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id))
+                }
+
+                assignment.lockInfo?.let {
+                    lockInfoFacade.insertLockInfo(it, assignment.id)
+                }
 
                 val assignmentEntity = AssignmentEntity(
                     assignment = assignment,
@@ -72,4 +86,27 @@ class AssignmentFacade(
         }
     }
 
+    suspend fun getAssignmentById(id: Long): Assignment? {
+        val assignmentEntity = assignmentDao.findById(id)
+        val rubricCriterionEntities = rubricCriterionDao.findByAssignmentId(id)
+        val rubricSettingEntity = assignmentEntity?.rubricSettingsId?.let { rubricSettingsDao.findById(it) }
+        val submission = assignmentEntity?.submissionId?.let { submissionFacade.getSubmissionById(it) }
+        val discussionTopicHeader = assignmentEntity?.discussionTopicHeaderId?.let { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(it) }
+        val lockInfo = lockInfoFacade.getLockInfoByAssignmentId(id)
+        val scoreStatisticsEntity = assignmentScoreStatisticsDao.findByAssignmentId(id)
+        val plannerOverrideEntity = assignmentEntity?.plannerOverrideId?.let { plannerOverrideDao.findById(it) }
+
+        return assignmentEntity?.toApiModel(
+            rubric = rubricCriterionEntities.map { it.toApiModel() },
+            rubricSettings = rubricSettingEntity?.toApiModel(),
+            submission = submission,
+            lockInfo = lockInfo,
+            discussionTopicHeader = discussionTopicHeader,
+            scoreStatistics = scoreStatisticsEntity?.toApiModel(),
+            plannerOverride = plannerOverrideEntity?.toApiModel()
+        )?.apply {
+            this.submission = submission?.copy(assignment = this)
+            this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this)
+        }
+    }
 }

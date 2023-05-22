@@ -32,14 +32,37 @@ object AssignmentAPI {
         @GET("courses/{courseId}/external_tools/sessionless_launch")
         fun getExternalToolLaunchUrl(@Path("courseId") courseId: Long, @Query("id") externalToolId: Long, @Query("assignment_id") assignmentId: Long, @Query("launch_type") launchType: String = "assessment"): Call<LTITool>
 
+        @GET("courses/{courseId}/external_tools/sessionless_launch")
+        suspend fun getExternalToolLaunchUrl(
+            @Path("courseId") courseId: Long,
+            @Query("id") externalToolId: Long,
+            @Query("assignment_id") assignmentId: Long,
+            @Query("launch_type") launchType: String = "assessment",
+            @Tag restParams: RestParams
+        ): DataResult<LTITool>
+
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics")
         fun getAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=submission_history")
         fun getAssignmentWithHistory(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics[]=submission_history")
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=submission_history")
+        suspend fun getAssignmentWithHistory(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<Assignment>
+
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
         fun getAssignmentIncludeObservees(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<ObserveeAssignment>
+
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
+        suspend fun getAssignmentIncludeObservees(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<ObserveeAssignment>
 
         @GET("courses/{courseId}/assignment_groups/{assignmentGroupId}")
         fun getAssignmentGroup(
@@ -49,7 +72,7 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long): Call<List<AssignmentGroup>>
 
-        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=submission_history")
         suspend fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<List<AssignmentGroup>>
 
         @GET

@@ -21,9 +21,6 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.*
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -39,6 +36,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsRepository
 import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.util.getStudioLTITool
@@ -54,10 +52,7 @@ import com.instructure.student.Submission as DatabaseSubmission
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val courseManager: CourseManager,
-    private val assignmentManager: AssignmentManager,
-    private val quizManager: QuizManager,
-    private val submissionManager: SubmissionManager,
+    private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val resources: Resources,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
@@ -119,26 +114,29 @@ class AssignmentDetailsViewModel @Inject constructor(
                 if (!isDraft && !isUploading) {
                     isUploading = true
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
-                        add(0, AssignmentDetailsAttemptItemViewModel(
-                            AssignmentDetailsAttemptViewData(
-                                resources.getString(R.string.attempt, attempts.size + 1),
-                                dateString,
-                                isUploading = true
+                        add(
+                            0, AssignmentDetailsAttemptItemViewModel(
+                                AssignmentDetailsAttemptViewData(
+                                    resources.getString(R.string.attempt, attempts.size + 1),
+                                    dateString,
+                                    isUploading = true
+                                )
                             )
-                        ))
+                        )
                     }.orEmpty()
                     _data.value?.notifyPropertyChanged(BR.attempts)
                 }
                 if (isUploading && submission.errorFlag) {
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         if (isNotEmpty()) removeFirst()
-                        add(0, AssignmentDetailsAttemptItemViewModel(
-                            AssignmentDetailsAttemptViewData(
-                                resources.getString(R.string.attempt, attempts.size),
-                                dateString,
-                                isFailed = true
+                        add(
+                            0, AssignmentDetailsAttemptItemViewModel(
+                                AssignmentDetailsAttemptViewData(
+                                    resources.getString(R.string.attempt, attempts.size),
+                                    dateString,
+                                    isFailed = true
+                                )
                             )
-                        )
                         )
                     }.orEmpty()
                     _data.value?.notifyPropertyChanged(BR.attempts)
@@ -162,34 +160,27 @@ class AssignmentDetailsViewModel @Inject constructor(
         _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
-                val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), forceNetwork).await().dataOrThrow
+                val courseResult = assignmentDetailsRepository.getCourseWithGrade(course?.id.orDefault(), forceNetwork)
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
-                val assignmentResult = if (isObserver) {
-                    assignmentManager.getAssignmentIncludeObserveesAsync(
-                        assignmentId,
-                        course?.id.orDefault(),
-                        forceNetwork
-                    ).await().dataOrThrow.toAssignmentForObservee()
-                } else {
-                    assignmentManager.getAssignmentWithHistoryAsync(
-                        assignmentId,
-                        course?.id.orDefault(),
-                        forceNetwork
-                    ).await().dataOrThrow
-                } as Assignment
+                val assignmentResult = assignmentDetailsRepository.getAssignment(
+                    isObserver,
+                    assignmentId,
+                    course?.id.orDefault(),
+                    forceNetwork
+                )
 
                 quizResult = if (assignmentResult.turnInType == Assignment.TurnInType.QUIZ && assignmentResult.quizId != 0L) {
-                    quizManager.getQuizAsync(course?.id.orDefault(), assignmentResult.quizId, forceNetwork).await().dataOrThrow
+                    assignmentDetailsRepository.getQuiz(course?.id.orDefault(), assignmentResult.quizId, forceNetwork)
                 } else null
 
                 val ltiToolId = assignmentResult.externalToolAttributes?.contentId.orDefault()
                 externalLTITool = if (ltiToolId != 0L) {
-                    assignmentManager.getExternalToolLaunchUrlAsync(course?.id.orDefault(), ltiToolId, assignmentId).await().dataOrThrow
+                    assignmentDetailsRepository.getExternalToolLaunchUrl(course?.id.orDefault(), ltiToolId, assignmentId, forceNetwork)
                 } else {
                     if (!assignmentResult.url.isNullOrEmpty() && assignmentResult.getSubmissionTypes().contains(SubmissionType.EXTERNAL_TOOL)) {
-                        submissionManager.getLtiFromAuthenticationUrlAsync(assignmentResult.url.orEmpty(), forceNetwork).await().dataOrThrow
+                        assignmentDetailsRepository.getLtiFromAuthenticationUrl(assignmentResult.url.orEmpty(), forceNetwork)
                     } else {
                         null
                     }
@@ -221,12 +212,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun refreshAssignment() {
         viewModelScope.launch {
             try {
-                val assignmentResult = if (isObserver) {
-                    assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), true)
-                } else {
-                    assignmentManager.getAssignmentWithHistoryAsync(assignmentId, course?.id.orDefault(), true)
-                }.await().dataOrThrow as Assignment
-
+                val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, course?.id.orDefault(), true)
                 _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))
             } catch (e: Exception) {
                 _events.value = Event(AssignmentDetailAction.ShowToast(resources.getString(R.string.assignmentRefreshError)))
@@ -427,7 +413,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             submissionStatusVisible = submissionStatusVisible,
             lockedMessage = partialLockedMessage,
             submitButtonText = submitButtonText,
-            submitEnabled = submitEnabled,
+            submitEnabled = submitEnabled && assignmentDetailsRepository.isOnline(),
             submitVisible = submitVisible,
             attempts = attempts,
             selectedGradeCellViewData = GradeCellViewData.fromSubmission(

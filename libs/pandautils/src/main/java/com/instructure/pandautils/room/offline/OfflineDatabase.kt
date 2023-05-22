@@ -60,12 +60,16 @@ import com.instructure.pandautils.room.offline.entities.*
         SectionEntity::class,
         SubmissionDiscussionEntryEntity::class,
         SubmissionEntity::class,
-        SubmissionHistoryEntity::class,
         SyncSettingsEntity::class,
         TabEntity::class,
         TermEntity::class,
         UserCalendarEntity::class,
-        UserEntity::class
+        UserEntity::class,
+        QuizEntity::class,
+        LockInfoEntity::class,
+        LockedModuleEntity::class,
+        ModuleNameEntity::class,
+        ModuleCompletionRequirementEntity::class
     ], version = 3
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -112,4 +116,18 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun discussionParticipantDao(): DiscussionParticipantDao
 
     abstract fun syncSettingsDao(): SyncSettingsDao
+
+    abstract fun assignmentScoreStatisticsDao(): AssignmentScoreStatisticsDao
+
+    abstract fun rubricCriterionDao(): RubricCriterionDao
+
+    abstract fun quizDao(): QuizDao
+
+    abstract fun lockInfoDao(): LockInfoDao
+
+    abstract fun lockedModuleDao(): LockedModuleDao
+
+    abstract fun moduleNameDao(): ModuleNameDao
+
+    abstract fun moduleCompletionRequirementDao(): ModuleCompletionRequirementDao
 }

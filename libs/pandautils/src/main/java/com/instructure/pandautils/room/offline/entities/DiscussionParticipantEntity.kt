@@ -30,11 +30,19 @@ data class DiscussionParticipantEntity(
     var avatarImageUrl: String?,
     var htmlUrl: String?
 ) {
-    constructor(discussionParticipant: DiscussionParticipant): this(
+    constructor(discussionParticipant: DiscussionParticipant) : this(
         discussionParticipant.id,
         discussionParticipant.displayName,
         discussionParticipant.pronouns,
         discussionParticipant.avatarImageUrl,
         discussionParticipant.htmlUrl
+    )
+
+    fun toApiModel() = DiscussionParticipant(
+        id = id,
+        displayName = displayName,
+        pronouns = pronouns,
+        avatarImageUrl = avatarImageUrl,
+        htmlUrl = htmlUrl
     )
 }

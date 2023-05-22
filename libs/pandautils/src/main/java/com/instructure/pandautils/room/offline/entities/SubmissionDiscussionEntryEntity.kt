@@ -24,12 +24,6 @@ import androidx.room.ForeignKey
     primaryKeys = ["submissionId", "discussionEntryId"],
     foreignKeys = [
         ForeignKey(
-            entity = SubmissionEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["submissionId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
             entity = DiscussionEntryEntity::class,
             parentColumns = ["id"],
             childColumns = ["discussionEntryId"],

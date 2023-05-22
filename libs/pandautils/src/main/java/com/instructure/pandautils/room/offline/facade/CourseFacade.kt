@@ -48,11 +48,31 @@ class CourseFacade(
         }
 
         course.sections.forEach { section ->
-            sectionDao.insert(SectionEntity(section))
+            sectionDao.insert(SectionEntity(section, course.id))
         }
 
         course.tabs?.forEach { tab ->
             tabDao.insert(TabEntity(tab, course.id))
         }
+    }
+
+    suspend fun getCourseById(id: Long): Course? {
+        val courseEntity = courseDao.findById(id)
+        val termEntity = courseEntity?.termId?.let { termDao.findById(it) }
+        val enrollments = enrollmentFacade.getEnrollmentsByCourseId(id)
+        val sectionEntities = sectionDao.findByCourseId(id)
+        val courseGradingPeriodEntities = courseGradingPeriodDao.findByCourseId(id)
+        val gradingPeriods = courseGradingPeriodEntities.map {
+            gradingPeriodDao.findById(it.gradingPeriodId).toApiModel()
+        }
+        val tabEntities = tabDao.findByCourseId(id)
+
+        return courseEntity?.toApiModel(
+            term = termEntity?.toApiModel(),
+            enrollments = enrollments.toMutableList(),
+            sections = sectionEntities.map { it.toApiModel() },
+            gradingPeriods = gradingPeriods,
+            tabs = tabEntities.map { it.toApiModel() }
+        )
     }
 }

@@ -57,4 +57,22 @@ data class GroupEntity(
         group.concluded,
         group.canAccess
     )
+
+    fun toApiModel() = Group(
+        id = id,
+        name = name,
+        description = description,
+        avatarUrl = avatarUrl,
+        isPublic = isPublic,
+        membersCount = membersCount,
+        joinLevel = joinLevel?.let { Group.JoinLevel.valueOf(it) },
+        courseId = courseId,
+        accountId = accountId,
+        role = role?.let { Group.GroupRole.valueOf(it) },
+        groupCategoryId = groupCategoryId,
+        storageQuotaMb = storageQuotaMb,
+        isFavorite = isFavorite,
+        concluded = concluded,
+        canAccess = canAccess
+    )
 }

@@ -31,4 +31,7 @@ interface CourseDao {
 
     @Update
     suspend fun update(entity: CourseEntity)
+
+    @Query("SELECT * FROM CourseEntity WHERE id = :id")
+    suspend fun findById(id: Long): CourseEntity?
 }

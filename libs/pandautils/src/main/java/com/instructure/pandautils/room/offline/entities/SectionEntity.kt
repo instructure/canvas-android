@@ -21,6 +21,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.utils.orDefault
 
 @Entity(
     foreignKeys = [
@@ -50,5 +52,18 @@ data class SectionEntity(
         section.endAt,
         section.totalStudents,
         section.restrictEnrollmentsToSectionDates
+    )
+
+    fun toApiModel(
+        students: List<User>? = null
+    ) = Section(
+        id = id,
+        name = name,
+        courseId = courseId.orDefault(),
+        startAt = startAt,
+        endAt = endAt,
+        students = students,
+        totalStudents = totalStudents,
+        restrictEnrollmentsToSectionDates = restrictEnrollmentsToSectionDates
     )
 }

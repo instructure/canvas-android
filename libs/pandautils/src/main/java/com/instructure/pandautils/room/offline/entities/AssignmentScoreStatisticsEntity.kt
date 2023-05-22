@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.AssignmentScoreStatistics
 
 @Entity(
     foreignKeys = [
@@ -37,4 +38,17 @@ data class AssignmentScoreStatisticsEntity(
     val mean: Double,
     val min: Double,
     val max: Double
-)
+) {
+    constructor(assignmentScoreStatistics: AssignmentScoreStatistics, assignmentId: Long) : this(
+        assignmentId,
+        assignmentScoreStatistics.mean,
+        assignmentScoreStatistics.min,
+        assignmentScoreStatistics.max
+    )
+
+    fun toApiModel() = AssignmentScoreStatistics(
+        mean = mean,
+        min = min,
+        max = max
+    )
+}

@@ -49,4 +49,18 @@ data class RubricSettingsEntity(
         rubricSettings.hideScoreTotal,
         rubricSettings.hidePoints
     )
+
+    fun toApiModel() = RubricSettings(
+        id = id,
+        contextId = contextId,
+        contextType = contextType,
+        pointsPossible = pointsPossible,
+        title = title,
+        isReusable = isReusable,
+        isPublic = isPublic,
+        isReadOnly = isReadOnly,
+        freeFormCriterionComments = freeFormCriterionComments,
+        hideScoreTotal = hideScoreTotal,
+        hidePoints = hidePoints
+    )
 }

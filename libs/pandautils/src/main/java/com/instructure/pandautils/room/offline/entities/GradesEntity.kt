@@ -49,4 +49,12 @@ class GradesEntity(
         grades.currentGrade,
         grades.finalGrade
     )
+
+    fun toApiModel() = Grades(
+        htmlUrl = htmlUrl,
+        currentScore = currentScore,
+        finalScore = finalScore,
+        currentGrade = currentGrade,
+        finalGrade = finalGrade
+    )
 }

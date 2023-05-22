@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -32,7 +33,7 @@ object SubmissionAPI {
     private const val pointsPostFix = "][points]"
     private const val commentsPostFix = "][comments]"
 
-    internal interface SubmissionInterface {
+    interface SubmissionInterface {
 
         @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getSingleSubmission(
@@ -128,6 +129,9 @@ object SubmissionAPI {
 
         @GET
         fun getLtiFromAuthenticationUrl(@Url url: String): Call<LTITool>
+
+        @GET
+        suspend fun getLtiFromAuthenticationUrl(@Url url: String, @Tag restParams: RestParams): DataResult<LTITool>
 
         @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionGrade(@Path("contextId") contextId: Long,

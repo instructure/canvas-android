@@ -1,0 +1,169 @@
+/*
+ * Copyright (C) 2023 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+package com.instructure.pandautils.room.offline.facade
+
+import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
+import com.instructure.pandautils.utils.orDefault
+import io.mockk.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
+import org.junit.Test
+
+@ExperimentalCoroutinesApi
+class AssignmentFacadeTest {
+
+    private val assignmentGroupDao: AssignmentGroupDao = mockk(relaxed = true)
+    private val assignmentDao: AssignmentDao = mockk(relaxed = true)
+    private val plannerOverrideDao: PlannerOverrideDao = mockk(relaxed = true)
+    private val rubricSettingsDao: RubricSettingsDao = mockk(relaxed = true)
+    private val submissionFacade: SubmissionFacade = mockk(relaxed = true)
+    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade = mockk(relaxed = true)
+    private val assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao = mockk(relaxed = true)
+    private val rubricCriterionDao: RubricCriterionDao = mockk(relaxed = true)
+    private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
+
+    private val facade = AssignmentFacade(
+        assignmentGroupDao,
+        assignmentDao,
+        plannerOverrideDao,
+        rubricSettingsDao,
+        submissionFacade,
+        discussionTopicHeaderFacade,
+        assignmentScoreStatisticsDao,
+        rubricCriterionDao,
+        lockInfoFacade
+    )
+
+    @Test
+    fun `Calling insertAssignmentGroups should insert assignment groups and related entities`() = runTest {
+        val rubricSettings = RubricSettings(id = 1L)
+        val submission = Submission(id = 1L)
+        val plannedOverride = PlannerOverride(id = 1L, plannableType = PlannableType.ASSIGNMENT, plannableId = 1L)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 1L)
+        val scoreStatistics = AssignmentScoreStatistics(0.0, 0.0, 0.0)
+        val rubricCriterions = listOf(RubricCriterion())
+        val lockInfo = LockInfo()
+        val assignments = listOf(
+            Assignment(
+                rubricSettings = rubricSettings,
+                submission = submission,
+                plannerOverride = plannedOverride,
+                discussionTopicHeader = discussionTopicHeader,
+                scoreStatistics = scoreStatistics,
+                rubric = rubricCriterions,
+                lockInfo = lockInfo
+            )
+        )
+        val assignmentGroups = listOf(AssignmentGroup(assignments = assignments))
+
+        coEvery { assignmentGroupDao.insert(any()) } just Runs
+        coEvery { assignmentDao.insert(any()) } just Runs
+        coEvery { plannerOverrideDao.insert(any()) } returns 1L
+        coEvery { rubricSettingsDao.insert(any()) } returns 1L
+        coEvery { submissionFacade.insertSubmission(any()) } returns 1L
+        coEvery { discussionTopicHeaderFacade.insertDiscussion(any()) } returns 1L
+        coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
+        coEvery { rubricCriterionDao.insert(any()) } just Runs
+        coEvery { lockInfoFacade.insertLockInfo(any(), any()) } just Runs
+
+        facade.insertAssignmentGroups(assignmentGroups)
+
+        assignmentGroups.forEach { group ->
+            coVerify { assignmentGroupDao.insert(AssignmentGroupEntity(group)) }
+            assignments.forEach { assignment ->
+                coVerify { rubricSettingsDao.insert(RubricSettingsEntity(rubricSettings)) }
+                coVerify { submissionFacade.insertSubmission(submission) }
+                coVerify { plannerOverrideDao.insert(PlannerOverrideEntity(plannedOverride)) }
+                coVerify { discussionTopicHeaderFacade.insertDiscussion(discussionTopicHeader) }
+                coVerify { assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(scoreStatistics, assignment.id)) }
+                rubricCriterions.forEach {
+                    coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
+                }
+                coVerify { lockInfoFacade.insertLockInfo(lockInfo, assignment.id) }
+                coVerify {
+                    assignmentDao.insert(
+                        AssignmentEntity(
+                            assignment = assignment,
+                            1L,
+                            1L,
+                            1L,
+                            1L
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `Calling getCourseById should return the course with the specified ID`() = runTest {
+        val assignmentId = 1L
+        val rubricSettings = RubricSettings(id = 1L, title = "RubricSettings")
+        val submission = Submission(id = 1L, grade = "Grade")
+        val discussionTopicHeader = DiscussionTopicHeader(id = 1L, title = "DiscussionTopicHeader")
+        val plannedOverride = PlannerOverride(id = 1L, plannableType = PlannableType.ASSIGNMENT, plannableId = 1L)
+        val scoreStatistics = AssignmentScoreStatistics(0.0, 0.0, 0.0)
+        val rubricCriterions = listOf(RubricCriterion(id = "id"))
+        val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"))
+        val assignment = Assignment(
+            id = assignmentId,
+            rubricSettings = rubricSettings,
+            submission = submission,
+            discussionTopicHeader = discussionTopicHeader,
+            plannerOverride = plannedOverride,
+            scoreStatistics = scoreStatistics,
+            rubric = rubricCriterions,
+            lockInfo = lockInfo
+        )
+        val assignmentEntity = AssignmentEntity(
+            assignment = assignment,
+            rubricSettingsId = rubricSettings.id,
+            submissionId = submission.id,
+            discussionTopicHeaderId = discussionTopicHeader.id,
+            plannerOverrideId = plannedOverride.id
+        )
+
+        coEvery { assignmentDao.findById(assignmentId) } returns assignmentEntity
+        coEvery { rubricCriterionDao.findByAssignmentId(assignmentId) } returns rubricCriterions.map { RubricCriterionEntity(it, assignmentId) }
+        coEvery { rubricSettingsDao.findById(rubricSettings.id.orDefault()) } returns RubricSettingsEntity(rubricSettings)
+        coEvery { submissionFacade.getSubmissionById(submission.id) } returns submission
+        coEvery { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(discussionTopicHeader.id) } returns discussionTopicHeader
+        coEvery { lockInfoFacade.getLockInfoByAssignmentId(assignmentId) } returns lockInfo
+        coEvery { assignmentScoreStatisticsDao.findByAssignmentId(assignmentId) } returns AssignmentScoreStatisticsEntity(
+            scoreStatistics,
+            assignmentId
+        )
+        coEvery { plannerOverrideDao.findById(plannedOverride.id.orDefault()) } returns PlannerOverrideEntity(plannedOverride)
+
+        val result = facade.getAssignmentById(assignmentId)!!
+
+        Assert.assertEquals(assignmentId, result.id)
+        Assert.assertEquals(rubricSettings, result.rubricSettings)
+        Assert.assertEquals(submission.id, result.submission?.id)
+        Assert.assertEquals(discussionTopicHeader.id, result.discussionTopicHeader?.id)
+        Assert.assertEquals(plannedOverride, result.plannerOverride)
+        Assert.assertEquals(scoreStatistics, result.scoreStatistics)
+        Assert.assertEquals(rubricCriterions, result.rubric)
+        Assert.assertEquals(lockInfo, result.lockInfo)
+        Assert.assertEquals(assignmentId, result.submission?.assignment?.id)
+        Assert.assertEquals(assignmentId, result.discussionTopicHeader?.assignment?.id)
+    }
+}
