@@ -37,6 +37,14 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.appdatabase.entities.*
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.common.entities.AttachmentEntity
+import com.instructure.pandautils.room.common.entities.AuthorEntity
+import com.instructure.pandautils.room.common.entities.MediaCommentEntity
+import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toJson

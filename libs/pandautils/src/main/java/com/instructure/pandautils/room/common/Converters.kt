@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room
+package com.instructure.pandautils.room.common
 
 import androidx.room.TypeConverter
 import java.util.*

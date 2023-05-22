@@ -44,12 +44,12 @@ class AppDatabaseMigrationTest {
     @Throws(IOException::class)
     fun migrateAll() {
         // Create earliest version of the database.
+        // We don't have the schemas for version 1,2 so we only start testing from version 3.
         helper.createDatabase(TEST_DB, 3).apply {
             close()
         }
 
-        // Open latest version of the database. Room validates the schema
-        // once all migrations execute.
+        // Open latest version of the database. Room validates the schema once all migrations execute.
         Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, AppDatabase::class.java, TEST_DB)
             .addMigrations(*ALL_MIGRATIONS).build().apply {
             openHelper.writableDatabase.close()
