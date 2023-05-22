@@ -90,6 +90,10 @@ android {
     hilt {
         enableAggregatingTask = false
     }
+
+    sourceSets {
+        debug.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
 }
 
 tasks.withType(Test) {
@@ -188,7 +192,6 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
-    testImplementation Libs.ROOM_TEST
 
     implementation Libs.FLEXBOX_LAYOUT
 
@@ -204,4 +207,5 @@ dependencies {
     }
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     androidTestImplementation Libs.ANDROIDX_CORE_TESTING
+    androidTestImplementation Libs.ROOM_TEST
 }
