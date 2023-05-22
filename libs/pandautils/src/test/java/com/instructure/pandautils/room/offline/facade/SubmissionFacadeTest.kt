@@ -18,13 +18,22 @@
 package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.MediaComment
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
-import io.mockk.mockk
+import com.instructure.pandautils.room.offline.entities.GroupEntity
+import com.instructure.pandautils.room.offline.entities.SubmissionEntity
+import com.instructure.pandautils.room.offline.entities.UserEntity
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -40,11 +49,53 @@ class SubmissionFacadeTest {
 
     @Test
     fun `Calling insertSubmission should insert submission and related entities`() = runTest {
+        val group = Group(id = 1L)
+        val mediaComment = MediaComment(mediaId = "mediaId")
+        val user = User(id = 1L)
+        val submissionHistory = listOf(Submission(id = 2L), Submission(id = 3L))
+        val submission = Submission(
+            id = 1L,
+            group = group,
+            mediaComment = mediaComment,
+            user = user,
+            userId = user.id,
+            graderId = user.id,
+            submissionHistory = submissionHistory
+        )
 
+        coEvery { groupDao.insert(any()) } returns 1L
+        coEvery { mediaCommentDao.insert(any()) } just Runs
+        coEvery { userDao.insert(any()) } just Runs
+        coEvery { submissionDao.insert(any()) } returns 1L
+
+        facade.insertSubmission(submission)
+
+        coVerify { groupDao.insert(GroupEntity(group)) }
+        coVerify { mediaCommentDao.insert(MediaCommentEntity(mediaComment)) }
+        coVerify { userDao.insert(UserEntity(user)) }
+        coVerify { submissionDao.insert(SubmissionEntity(submission, group.id, mediaComment.mediaId)) }
     }
 
     @Test
     fun `Calling getSubmissionById should return the submission with the specified ID`() = runTest {
+        val submissionId = 1L
+        val group = Group(id = 1, name = "name")
+        val mediaComment = MediaComment(mediaId = "mediaId")
+        val user = User(id = 1L)
+        val submission = Submission(id = submissionId, attempt = 3, group = group, mediaComment = mediaComment, userId = user.id, user = user)
+        val submissionHistory = listOf(Submission(id = submissionId, attempt = 1), Submission(id = submissionId, attempt = 2), submission)
 
+        coEvery { groupDao.findById(any()) } returns GroupEntity(group)
+        coEvery { mediaCommentDao.findById(any()) } returns MediaCommentEntity(mediaComment)
+        coEvery { userDao.findById(any()) } returns UserEntity(user)
+        coEvery { submissionDao.findById(any()) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
+
+        val result = facade.getSubmissionById(submissionId)!!
+
+        Assert.assertEquals(submissionId, result.id)
+        Assert.assertEquals(group, result.group)
+        Assert.assertEquals(mediaComment, result.mediaComment)
+        Assert.assertEquals(user, result.user)
+        Assert.assertEquals(submissionHistory.size, result.submissionHistory.size)
     }
 }

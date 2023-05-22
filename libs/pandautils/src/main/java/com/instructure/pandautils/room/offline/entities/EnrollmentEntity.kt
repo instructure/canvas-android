@@ -111,7 +111,7 @@ data class EnrollmentEntity(
         observedUser: User? = null,
         user: User? = null
     ) = Enrollment(
-        id = 0,
+        id = id,
         role = Enrollment.EnrollmentType.valueOf(role),
         type = Enrollment.EnrollmentType.valueOf(type),
         courseId = courseId.orDefault(),
