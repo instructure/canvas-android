@@ -16,6 +16,7 @@
 
 import com.instructure.android.buildtools.transform.LocaleTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
+import com.instructure.android.buildtools.transform.PageViewTransformer
 import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.ScreenViewTransformer
 
@@ -41,8 +42,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 55
-        versionName = '1.22.0'
+        versionCode = 57
+        versionName = '1.23.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -189,6 +190,7 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
+                    new PageViewTransformer(),
                     new LocaleTransformer(project),
                     new ScreenViewTransformer("teacher")
             )

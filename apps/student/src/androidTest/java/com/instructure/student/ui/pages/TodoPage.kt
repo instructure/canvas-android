@@ -16,9 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
-import android.widget.Button
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Quiz
@@ -27,7 +25,13 @@ import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.Matchers
@@ -77,8 +81,8 @@ class TodoPage: BasePage(R.id.todoPage) {
 
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
-        onView(withText(R.string.favoritedCoursesLabel)).click()
-        onView(allOf(isAssignableFrom(Button::class.java), withText(R.string.ok))).click()
+        onView(withText(R.string.favoritedCoursesLabel) + withParent(R.id.select_dialog_listview)).click()
+        onView(withText(R.string.ok)).click()
     }
 
     fun clearFilter() {

@@ -1357,11 +1357,21 @@
     <string name="a11y_closeProgress">إغلاق مربع حوار التقدم</string>
     <string name="fileUploadProgress">%1$s من %2$s</string>
     <string name="fileUploadProgressSubtitle">جارٍ التحميل إلى الملفات</string>
+    <string name="fileUploadFailedSubtitle">تعذر تحميل ملف أو أكثر. تحقق من اتصالك بالإنترنت وأعد محاولة الإرسال.</string>
     <string name="submissionProgressSubtitle">جارٍ تحميل الإرسال إلى \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">جارٍ تحميل الإرسال</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">نجح الإرسال</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">فشل الإرسال</string>
-    <string name="dashboardNotificationUploadingFilesTitle">جارٍ تحميل الملفات</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="zero">جارٍ تحميل الملفات</item>
+        <item quantity="one">جارٍ تحميل الملف</item>
+        <item quantity="two">جارٍ تحميل الملفات</item>
+        <item quantity="few">جارٍ تحميل الملفات</item>
+        <item quantity="many">جارٍ تحميل الملفات</item>
+        <item quantity="other">جارٍ تحميل الملفات</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">تم تحميل الملف بنجاح</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">فشل تحميل الملف</string>
     <string name="cancelSubmissionDialogTitle">إلغاء الإرسال</string>
     <string name="cancelSubmissionDialogMessage">سيؤدي هذا إلى إلغاء وحذف إرسالك.</string>
     <string name="fileUploadError">تعذر تحميل الملف</string>
@@ -1444,4 +1454,9 @@
     <string name="a11y_selectionModeDeactivated">تم إلغاء تنشيط وضع التحديد.</string>
     <string name="a11y_avatarContentDescription">صورة رمزية %s</string>
     <string name="inboxUndo">تراجع</string>
+    <string name="aboutAppTitle">التطبيق</string>
+    <string name="aboutDomainTitle">المجال</string>
+    <string name="aboutLoginTitle">معرف تسجيل الدخول</string>
+    <string name="aboutEmailTitle">البريد الإلكتروني</string>
+    <string name="aboutVersionTitle">الإصدار</string>
 </resources>

@@ -20,7 +20,7 @@
     android:layout_width="wrap_content">
 
     <com.instructure.pandautils.views.DragDetectLinearLayout
-        android:id="@+id/dragView"
+        android:id="@+id/dragDetectLayout"
         android:layout_width="@dimen/recordingViewWidth"
         android:layout_height="wrap_content"
         android:orientation="vertical">

@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Voortgangsdialoogvenster sluiten</string>
     <string name="fileUploadProgress">%1$s van %2$s</string>
     <string name="fileUploadProgressSubtitle">Uploaden naar bestanden</string>
+    <string name="fileUploadFailedSubtitle">Er kunnen een of meer bestanden niet worden geüpload. Controleer je internetverbinding en probeer opnieuw in te leveren.</string>
     <string name="submissionProgressSubtitle">Inlevering uploaden naar \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Inlevering wordt geüpload</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Inlevering is gelukt</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Inlevering gelukt</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Inlevering is mislukt</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Bestanden uploaden</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Bestanden worden geüpload</item>
+        <item quantity="other">Bestanden uploaden</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Bestand uploaden gelukt</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Bestand uploaden is mislukt</string>
     <string name="cancelSubmissionDialogTitle">Inlevering annuleren</string>
     <string name="cancelSubmissionDialogMessage">Hiermee wordt je inlevering geannuleerd en verwijderd.</string>
     <string name="fileUploadError">Bestand uploaden is mislukt</string>
@@ -1377,4 +1383,9 @@
     <string name="a11y_selectionModeDeactivated">Selectiemodus gedeactiveerd.</string>
     <string name="a11y_avatarContentDescription">Avatar van %s</string>
     <string name="inboxUndo">Ongedaan maken</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domein</string>
+    <string name="aboutLoginTitle">Aanmeldings-ID</string>
+    <string name="aboutEmailTitle">E-mail</string>
+    <string name="aboutVersionTitle">Versie</string>
 </resources>

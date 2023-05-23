@@ -172,6 +172,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.selectConversation(seededConversation)
         inboxPage.assertSelectedConversationNumber("1")
         inboxPage.clickUnArchive()
+        inboxPage.assertInboxEmpty()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         sleep(2000)

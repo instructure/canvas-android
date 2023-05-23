@@ -18,8 +18,8 @@ import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.room.daos.DashboardFileUploadDao
-import com.instructure.pandautils.room.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault

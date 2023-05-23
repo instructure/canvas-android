@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-03-31T11:03:36.613144",
+  "@@last_modified": "2023-04-14T11:04:46.988317",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -2704,6 +2704,41 @@
   "I agree to the Acceptable Use Policy.": "I agree to the Acceptable Use Policy.",
   "@I agree to the Acceptable Use Policy.": {
     "description": "acceptable use policy switch title",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "About": "About",
+  "@About": {
+    "description": "Title for about menu item in settings",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "App": "App",
+  "@App": {
+    "description": "Title for App field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login ID": "Login ID",
+  "@Login ID": {
+    "description": "Title for Login ID field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email": "Email",
+  "@Email": {
+    "description": "Title for Email field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version": "Version",
+  "@Version": {
+    "description": "Title for Version field on about page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

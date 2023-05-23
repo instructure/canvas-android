@@ -83,7 +83,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        binding.canvasWebView?.saveState(outState)
+        if (view != null) binding.canvasWebView.saveState(outState)
     }
 
     override fun onCreateView(view: View) = Unit

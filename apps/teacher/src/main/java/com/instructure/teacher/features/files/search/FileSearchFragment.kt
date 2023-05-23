@@ -45,6 +45,8 @@ class FileSearchFragment : BaseSyncFragment<
 
     private val binding by viewBinding(FragmentFileSearchBinding::bind)
 
+    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
+
     private val searchAdapter by lazy {
         FileSearchAdapter(requireContext(), canvasContext.textAndIconColor, presenter) {
             val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.backgroundColor, presenter.canvasContext, R.drawable.ic_document)

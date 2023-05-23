@@ -50,10 +50,10 @@ class StudioWebViewFragment : InternalWebviewFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getCanvasWebView().enableAlgorithmicDarkening()
-        getCanvasWebView().addJavascriptInterface(JSInterface(), "HtmlViewer")
+        getCanvasWebView()?.enableAlgorithmicDarkening()
+        getCanvasWebView()?.addJavascriptInterface(JSInterface(), "HtmlViewer")
 
-        getCanvasWebView().canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        getCanvasWebView()?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 openMedia(mime, url, filename, canvasContext)
             }
@@ -80,7 +80,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
             }
         }
 
-        getCanvasWebView().setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+        getCanvasWebView()?.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
             override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
                 startActivityForResult(intent, requestCode)
             }
@@ -99,8 +99,8 @@ class StudioWebViewFragment : InternalWebviewFragment() {
     override fun handleBackPressed(): Boolean {
         if (canGoBack()) {
             // This prevents a silly bug where the Studio WebView cannot go back far enough to pop its fragment
-            val webBackForwardList = getCanvasWebView().copyBackForwardList()
-            val historyUrl = webBackForwardList.getItemAtIndex(webBackForwardList.currentIndex - 1)?.url
+            val webBackForwardList = getCanvasWebView()?.copyBackForwardList()
+            val historyUrl = webBackForwardList?.getItemAtIndex(webBackForwardList.currentIndex - 1)?.url
             if (historyUrl != null && historyUrl.contains("external_tools/") && historyUrl.contains("resource_selection")) {
                 navigation?.popCurrentFragment()
                 return true
@@ -116,7 +116,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (PermissionUtils.allPermissionsGrantedResultSummary(grantResults)) {
-            getCanvasWebView().clearPickerCallback()
+            getCanvasWebView()?.clearPickerCallback()
             Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -143,7 +143,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if ((getCanvasWebView().handleOnActivityResult(requestCode, resultCode, data)) != true) {
+        if ((getCanvasWebView()?.handleOnActivityResult(requestCode, resultCode, data)) != true) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }

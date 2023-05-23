@@ -247,20 +247,23 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         private var triggered = false
         private val touchSlop by lazy { ViewConfiguration.get(requireContext()).scaledTouchSlop }
 
-        override fun onScrollChanged() = with(binding) {
-            if (!isAdded || contentContainer.height == 0 || scrollContent.height == 0 || loadMoreContainer.height == 0) return
-            val threshold = scrollContent.height - loadMoreContainer.top
-            val bottomOffset = contentContainer.height + contentContainer.scrollY - scrollContent.bottom
-            if (scrollContent.height <= contentContainer.height) {
-                presenter.loadMoreSubmissions()
-            } else if (triggered && (threshold + touchSlop + bottomOffset < 0)) {
-                triggered = false
-            } else if (!triggered && (threshold + bottomOffset > 0)) {
-                triggered = true
-                presenter.loadMoreSubmissions()
+        override fun onScrollChanged() {
+            if (view == null) return // To prevent binding crashes is split view.
+
+            with(binding) {
+                if (!isAdded || contentContainer.height == 0 || scrollContent.height == 0 || loadMoreContainer.height == 0) return
+                val threshold = scrollContent.height - loadMoreContainer.top
+                val bottomOffset = contentContainer.height + contentContainer.scrollY - scrollContent.bottom
+                if (scrollContent.height <= contentContainer.height) {
+                    presenter.loadMoreSubmissions()
+                } else if (triggered && (threshold + touchSlop + bottomOffset < 0)) {
+                    triggered = false
+                } else if (!triggered && (threshold + bottomOffset > 0)) {
+                    triggered = true
+                    presenter.loadMoreSubmissions()
+                }
             }
         }
-
     }
 
     override fun addSubmissions(submissions: List<Submission>, course: AsCourse, student: User) {

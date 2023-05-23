@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
@@ -31,11 +32,12 @@ import com.instructure.teacher.features.modules.list.*
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 import com.instructure.teacher.mobius.common.ui.Presenter
 
+@PageView(url = "{canvasContext}/modules")
 @ScreenView(SCREEN_VIEW_MODULE_LIST)
 class ModuleListFragment : MobiusFragment<ModuleListModel, ModuleListEvent, ModuleListEffect,
         ModuleListView, ModuleListViewState, FragmentModuleListBinding>() {
 
-    val course by ParcelableArg<CanvasContext>(key = Const.COURSE)
+    val canvasContext by ParcelableArg<CanvasContext>(key = Const.COURSE)
 
     private val scrollToItemId by NLongArg(key = Const.MODULE_ITEM_ID)
 
@@ -43,11 +45,11 @@ class ModuleListFragment : MobiusFragment<ModuleListModel, ModuleListEvent, Modu
 
     override fun makeUpdate() = ModuleListUpdate()
 
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = ModuleListView(inflater, parent, course)
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = ModuleListView(inflater, parent, canvasContext)
 
     override fun makePresenter(): Presenter<ModuleListModel, ModuleListViewState> = ModuleListPresenter
 
-    override fun makeInitModel(): ModuleListModel = ModuleListModel(course = course, scrollToItemId = scrollToItemId)
+    override fun makeInitModel(): ModuleListModel = ModuleListModel(course = canvasContext, scrollToItemId = scrollToItemId)
 
     override val eventSources = listOf(ModuleListEventBusSource())
 

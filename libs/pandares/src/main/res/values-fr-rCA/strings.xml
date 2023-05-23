@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Fermer le dialogue de progression</string>
     <string name="fileUploadProgress">%1$s sur %2$s</string>
     <string name="fileUploadProgressSubtitle">Téléversement des fichiers</string>
+    <string name="fileUploadFailedSubtitle">Le téléversement d’un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
     <string name="submissionProgressSubtitle">Téléversement de l’envoi vers \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Téléversement de l’envoi</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Succès de l’envoi</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Envoi réussi</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Échec de l’envoi</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Téléversement des fichiers</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Téléversement du fichier</item>
+        <item quantity="other">Téléversement des fichiers</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Le téléversement du fichier a réussi</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Le téléversement du fichier a échoué</string>
     <string name="cancelSubmissionDialogTitle">Annuler l\'envoi</string>
     <string name="cancelSubmissionDialogMessage">Cela annulera et supprimera votre envoi.</string>
     <string name="fileUploadError">Le téléversement du fichier a échoué</string>
@@ -1377,4 +1383,9 @@
     <string name="a11y_selectionModeDeactivated">Mode de sélection désactivé.</string>
     <string name="a11y_avatarContentDescription">Avatar de %s</string>
     <string name="inboxUndo">Annuler</string>
+    <string name="aboutAppTitle">Appl.</string>
+    <string name="aboutDomainTitle">Domaine</string>
+    <string name="aboutLoginTitle">Identifiant de connexion</string>
+    <string name="aboutEmailTitle">Adresse électronique</string>
+    <string name="aboutVersionTitle">Version</string>
 </resources>
