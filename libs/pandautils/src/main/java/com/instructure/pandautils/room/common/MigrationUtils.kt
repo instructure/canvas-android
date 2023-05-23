@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.room
+package com.instructure.pandautils.room.common
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase

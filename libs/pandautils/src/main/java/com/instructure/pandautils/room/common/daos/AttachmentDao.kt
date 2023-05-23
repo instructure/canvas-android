@@ -1,7 +1,7 @@
-package com.instructure.pandautils.room.appdatabase.daos
+package com.instructure.pandautils.room.common.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
+import com.instructure.pandautils.room.common.entities.AttachmentEntity
 
 @Dao
 interface AttachmentDao {

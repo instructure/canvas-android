@@ -1,10 +1,10 @@
-package com.instructure.pandautils.room.appdatabase.daos
+package com.instructure.pandautils.room.common.daos
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
-import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
+import com.instructure.pandautils.room.common.entities.MediaCommentEntity
 
 @Dao
 interface MediaCommentDao {
