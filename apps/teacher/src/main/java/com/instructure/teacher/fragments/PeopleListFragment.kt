@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -47,6 +48,7 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.PeopleListView
 import java.util.*
 
+@PageView(url = "{canvasContext}/users")
 @ScreenView(SCREEN_VIEW_PEOPLE_LIST)
 class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleListView, UserViewHolder, PeopleListRecyclerAdapter>(), PeopleListView, SearchView.OnQueryTextListener {
 
@@ -54,7 +56,8 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
 
-    private var mCanvasContextsSelected: ArrayList<CanvasContext>? = null
+    private val canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    private var canvasContextsSelected: ArrayList<CanvasContext>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
@@ -107,10 +110,10 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         peopleListToolbar.menu.findItem(R.id.peopleFilterMenuItem)?.setOnMenuItemClickListener {
             //let the user select the course/group they want to see
             PeopleListFilterDialog.getInstance(requireActivity().supportFragmentManager, presenter.canvasContextListIds, canvasContext, true) { canvasContexts ->
-                mCanvasContextsSelected = ArrayList()
-                mCanvasContextsSelected!!.addAll(canvasContexts)
+                canvasContextsSelected = ArrayList()
+                canvasContextsSelected!!.addAll(canvasContexts)
 
-                presenter.canvasContextList = mCanvasContextsSelected as ArrayList<CanvasContext>
+                presenter.canvasContextList = canvasContextsSelected as ArrayList<CanvasContext>
                 setupTitle(canvasContexts)
             }.show(requireActivity().supportFragmentManager, PeopleListFilterDialog::class.java.simpleName)
             false

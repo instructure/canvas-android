@@ -29,11 +29,14 @@ import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.models.Page.Companion.ANYONE
 import com.instructure.canvasapi2.models.Page.Companion.GROUP_MEMBERS
 import com.instructure.canvasapi2.models.Page.Companion.STUDENTS
 import com.instructure.canvasapi2.models.Page.Companion.TEACHERS
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS
@@ -53,6 +56,7 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditPageView
 
+@PageView
 @ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS)
 class CreateOrEditPageDetailsFragment :
         BasePresenterFragment<CreateOrEditPagePresenter, CreateOrEditPageView>(),
@@ -62,14 +66,14 @@ class CreateOrEditPageDetailsFragment :
     private val binding by viewBinding(FragmentCreateOrEditPageBinding::bind)
 
     /* The course this page belongs to */
-    private var mCanvasContext by ParcelableArg<CanvasContext>(Course())
+    private var canvasContext by ParcelableArg<CanvasContext>(Course())
 
     /* The page to be edited. This will be null if we're creating a new page */
-    private var mPage by NullableParcelableArg<Page>()
+    private var page by NullableParcelableArg<Page>()
 
     /* Menu buttons. We don't cache these because the toolbar is reconstructed on configuration change. */
-    private val mSaveMenuButton get() = binding.toolbar.menu.findItem(R.id.menuSavePage)
-    private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSavePage)
+    private val saveMenuButton get() = binding.toolbar.menu.findItem(R.id.menuSavePage)
+    private val saveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSavePage)
 
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
     private var forceQuit = false
@@ -82,7 +86,18 @@ class CreateOrEditPageDetailsFragment :
     override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_page
 
-    override fun getPresenterFactory() = CreateOrEditPagePresenterFactory(mCanvasContext, mPage?.parcelCopy())
+    @PageViewUrl
+    @Suppress("unused")
+    private fun makePageViewUrl(): String {
+        val url = StringBuilder(ApiPrefs.fullDomain)
+        page.let {
+            url.append(canvasContext.toAPIString())
+            if (it?.frontPage == false) url.append("/pages/${it.url}/edit")
+        }
+        return url.toString()
+    }
+
+    override fun getPresenterFactory() = CreateOrEditPagePresenterFactory(canvasContext, page?.parcelCopy())
 
     override fun onReadySetGo(presenter: CreateOrEditPagePresenter) {
         setupViews()
@@ -101,11 +116,11 @@ class CreateOrEditPageDetailsFragment :
         }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-        with(mSaveMenuButton) {
+        with(saveMenuButton) {
             setIcon(0)
             setTitle(R.string.save)
         }
-        mSaveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
+        saveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun shouldAllowExit() : Boolean = with(binding) {
@@ -116,12 +131,11 @@ class CreateOrEditPageDetailsFragment :
             return true
         }
         // Check if edited page has changes
-        if (presenter.page.id != 0L &&
-            (presenter.page.body.orEmpty()) == pageRCEView.html &&
-            (mPage?.title.orEmpty()) == pageNameEditText.text.toString() &&
-            mPage?.frontPage == frontPageSwitch.isChecked &&
-            mPage?.published == publishSwitch.isChecked
-        ) {
+        if(presenter.page.id != 0L &&
+                presenter.page.body.orEmpty() == pageRCEView.html &&
+                page?.title.orEmpty() == pageNameEditText.text.toString() &&
+                page?.frontPage == frontPageSwitch.isChecked &&
+                page?.published == publishSwitch.isChecked) {
             return true
         }
         return false
@@ -196,7 +210,7 @@ class CreateOrEditPageDetailsFragment :
     }
 
     private fun setupCanEditSpinner() = with(binding) {
-        val spinnerAdapter =  if(mCanvasContext.type == CanvasContext.Type.GROUP) {
+        val spinnerAdapter =  if(canvasContext.type == CanvasContext.Type.GROUP) {
             ArrayAdapter.createFromResource(requireContext(), R.array.canEditRolesWithGroups, R.layout.simple_spinner_item)
         } else {
             ArrayAdapter.createFromResource(requireContext(), R.array.canEditRolesNoGroups, R.layout.simple_spinner_item)
@@ -236,7 +250,7 @@ class CreateOrEditPageDetailsFragment :
 
     private fun setupPublishSwitch() = with(binding) {
         // If it's the front page we can't unpublish it
-        publishWrapper.setVisible(!(mPage != null && (mPage as Page).frontPage))
+        publishWrapper.setVisible(!(page != null && (page as Page).frontPage))
 
         // Publish status
         publishSwitch.applyTheme()
@@ -246,14 +260,14 @@ class CreateOrEditPageDetailsFragment :
     }
 
     private fun setupDelete() {
-        binding.deleteWrapper.setVisible((mPage != null && !(mPage as Page).frontPage))
+        binding.deleteWrapper.setVisible((page != null && !(page as Page).frontPage))
         binding.deleteWrapper.onClickWithRequireNetwork {
             AlertDialog.Builder(requireContext())
                     .setTitle(R.string.pageDeleteTitle)
                     .setMessage(R.string.pageDeleteMessage)
                     .setPositiveButton(R.string.delete) { _, _ ->
-                        if(mPage != null) {
-                            presenter.deletePage(mPage!!.url!!)
+                        if(page != null) {
+                            presenter.deletePage(page!!.url!!)
                         }
                     }
                     .setNegativeButton(R.string.cancel) { _, _ -> }
@@ -285,13 +299,13 @@ class CreateOrEditPageDetailsFragment :
     }
 
     override fun onSaveStarted() {
-        mSaveMenuButton.isVisible = false
+        saveMenuButton.isVisible = false
         binding.savingProgressBar.announceForAccessibility(getString(R.string.saving))
         binding.savingProgressBar.setVisible()
     }
 
     override fun onSaveError() {
-        mSaveMenuButton.isVisible = true
+        saveMenuButton.isVisible = true
         binding.savingProgressBar.setGone()
         toast(R.string.errorSavingPage)
     }
@@ -329,13 +343,13 @@ class CreateOrEditPageDetailsFragment :
         }
 
         fun newInstanceCreate(canvasContext: CanvasContext) = CreateOrEditPageDetailsFragment().apply {
-            mCanvasContext = canvasContext
+            this.canvasContext = canvasContext
         }
 
         fun newInstanceEdit(canvasContext: CanvasContext, page: Page)
                 = CreateOrEditPageDetailsFragment().apply {
-            mCanvasContext = canvasContext
-            mPage = page
+            this.canvasContext = canvasContext
+            this.page = page
         }
     }
 }

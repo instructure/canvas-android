@@ -37,6 +37,14 @@ android {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -81,6 +89,10 @@ android {
 
     hilt {
         enableAggregatingTask = false
+    }
+
+    sourceSets {
+        debug.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
 
@@ -180,7 +192,6 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
-    testImplementation Libs.ROOM_TEST
 
     implementation Libs.FLEXBOX_LAYOUT
 
@@ -189,4 +200,12 @@ dependencies {
     implementation 'com.google.guava:guava:29.0-android'
 
     kaptTest Libs.ANDROIDX_DATABINDING_COMPILER
+
+    androidTestImplementation Libs.KOTLIN_COROUTINES_TEST
+    androidTestImplementation (project(':espresso')) {
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
+    androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
+    androidTestImplementation Libs.ANDROIDX_CORE_TESTING
+    androidTestImplementation Libs.ROOM_TEST
 }

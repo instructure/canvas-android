@@ -129,14 +129,13 @@ class AssignmentDetailsViewModel @Inject constructor(
                 if (isUploading && submission.errorFlag) {
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         if (isNotEmpty()) removeFirst()
-                        add(
-                            0, AssignmentDetailsAttemptItemViewModel(
-                                AssignmentDetailsAttemptViewData(
-                                    resources.getString(R.string.attempt, attempts.size),
-                                    dateString,
-                                    isFailed = true
-                                )
+                        add(0, AssignmentDetailsAttemptItemViewModel(
+                            AssignmentDetailsAttemptViewData(
+                                resources.getString(R.string.attempt, attempts.size),
+                                dateString,
+                                isFailed = true
                             )
+                        )
                         )
                     }.orEmpty()
                     _data.value?.notifyPropertyChanged(BR.attempts)

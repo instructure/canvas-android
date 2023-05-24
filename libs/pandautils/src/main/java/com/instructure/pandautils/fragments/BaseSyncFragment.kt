@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.NullableParcelableArg
 import instructure.androidblueprint.SyncFragment
 import instructure.androidblueprint.SyncManager
 import instructure.androidblueprint.SyncPresenter
@@ -40,7 +39,6 @@ abstract class BaseSyncFragment<
         HOLDER : RecyclerView.ViewHolder,
         ADAPTER : SyncRecyclerAdapter<MODEL, HOLDER, VIEW>>
     : SyncFragment<MODEL, PRESENTER, VIEW, HOLDER, ADAPTER>(), NavigationCallbacks {
-    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
     protected lateinit var rootView: View
 
     abstract fun layoutResId(): Int

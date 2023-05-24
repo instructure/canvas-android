@@ -1278,11 +1278,16 @@
     <string name="a11y_closeProgress">進捗状況ダイアログを閉じる</string>
     <string name="fileUploadProgress">%1$s / %2$s</string>
     <string name="fileUploadProgressSubtitle">ファイルアップロード中</string>
+    <string name="fileUploadFailedSubtitle">1つ以上のファイルのアップロードに失敗しました。インターネット接続をチェックしてから、提出を再試行してください。</string>
     <string name="submissionProgressSubtitle">提出物を\"%s\"にアップロード中</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">提出物をアップロードしています</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提出に成功しました</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">正常に提出しました</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">提出に失敗しました</string>
-    <string name="dashboardNotificationUploadingFilesTitle">ファイルアップロード中</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="other">ファイルアップロード中</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">ファイルのアップロードに成功しました</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">ファイルのアップロードに失敗しました</string>
     <string name="cancelSubmissionDialogTitle">提出をキャンセル</string>
     <string name="cancelSubmissionDialogMessage">これにより、送信がキャンセルおよび削除されます。</string>
     <string name="fileUploadError">ファイルのアップロードに失敗しました</string>
@@ -1360,4 +1365,9 @@
     <string name="a11y_selectionModeDeactivated">選択モードが解除されました。</string>
     <string name="a11y_avatarContentDescription">%sのアバター</string>
     <string name="inboxUndo">アンドゥーする</string>
+    <string name="aboutAppTitle">アプリ</string>
+    <string name="aboutDomainTitle">ドメイン</string>
+    <string name="aboutLoginTitle">ログイン ID</string>
+    <string name="aboutEmailTitle">E メール</string>
+    <string name="aboutVersionTitle">バージョン</string>
 </resources>

@@ -71,7 +71,7 @@ class ShareExtensionProgressViewModelTest {
     @Test
     fun `Show success dialog after uploading`() {
         viewModel.setUUID(uuid)
-        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.SUCCEEDED, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1))
+        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.SUCCEEDED, Data.EMPTY, emptyList(), Data.EMPTY, 1))
 
         viewModel.events.observe(lifecycleOwner) {}
         assertEquals(ShareExtensionProgressAction.ShowSuccessDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
@@ -86,7 +86,7 @@ class ShareExtensionProgressViewModelTest {
             .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, emptyArray())
             .build()
 
-        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, outputData, emptyList(), Data.EMPTY, 1, 1))
+        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, outputData, emptyList(), Data.EMPTY, 1))
 
         assertEquals("Error", viewModel.data.value?.subtitle)
     }
@@ -127,7 +127,6 @@ class ShareExtensionProgressViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 progressData,
-                1,
                 1
             )
         )
@@ -159,7 +158,6 @@ class ShareExtensionProgressViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 progressData,
-                1,
                 1
             )
         )
@@ -216,7 +214,6 @@ class ShareExtensionProgressViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 progressData.build(),
-                1,
                 1
             )
         )
@@ -251,7 +248,6 @@ class ShareExtensionProgressViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 progressData.build(),
-                1,
                 1
             )
         )
@@ -293,7 +289,6 @@ class ShareExtensionProgressViewModelTest {
                 progressData,
                 emptyList(),
                 Data.EMPTY,
-                1,
                 1
             )
         )
@@ -345,7 +340,6 @@ class ShareExtensionProgressViewModelTest {
                 failedOutputData,
                 emptyList(),
                 Data.EMPTY,
-                1,
                 1
             )
         )
@@ -382,7 +376,6 @@ class ShareExtensionProgressViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 successProgressData,
-                1,
                 1
             )
         )
@@ -398,7 +391,6 @@ class ShareExtensionProgressViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 successProgressData,
-                1,
                 1
             )
         )

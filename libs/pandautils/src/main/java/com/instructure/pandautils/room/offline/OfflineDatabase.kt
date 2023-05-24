@@ -20,7 +20,7 @@ package com.instructure.pandautils.room.offline
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.instructure.pandautils.room.Converters
+import com.instructure.pandautils.room.common.Converters
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 

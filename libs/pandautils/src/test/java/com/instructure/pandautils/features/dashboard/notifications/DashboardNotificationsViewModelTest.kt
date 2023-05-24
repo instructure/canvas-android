@@ -121,7 +121,7 @@ class DashboardNotificationsViewModelTest {
         every { apiPrefs.user } returns User(id = 1)
 
         uploadsLiveData = MutableLiveData(emptyList())
-        every { dashboardFileUploadDao.getAll(1) } returns uploadsLiveData
+        every { dashboardFileUploadDao.getAllForUser(1) } returns uploadsLiveData
 
         viewModel = DashboardNotificationsViewModel(
             resources,
@@ -478,7 +478,6 @@ class DashboardNotificationsViewModelTest {
                     .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
                     .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                     .build(),
-                1,
                 1
             )
         )
@@ -495,7 +494,6 @@ class DashboardNotificationsViewModelTest {
                     .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
                     .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                     .build(),
-                1,
                 1
             )
         )
@@ -512,7 +510,6 @@ class DashboardNotificationsViewModelTest {
                     .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
                     .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                     .build(),
-                1,
                 1
             )
         )
@@ -553,7 +550,6 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
-                1,
                 1
             )
         )
@@ -570,7 +566,6 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
-                1,
                 1
             )
         )
@@ -598,7 +593,6 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
-                1,
                 1
             )
         )
@@ -633,7 +627,6 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
-                1,
                 1
             )
         )
@@ -674,7 +667,6 @@ class DashboardNotificationsViewModelTest {
                 Data.EMPTY,
                 emptyList(),
                 Data.EMPTY,
-                1,
                 1
             )
         )

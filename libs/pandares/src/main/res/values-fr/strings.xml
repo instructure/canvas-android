@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Fermer la boîte de dialogue de progression</string>
     <string name="fileUploadProgress">%1$s sur %2$s</string>
     <string name="fileUploadProgressSubtitle">Envoi vers les fichiers...</string>
+    <string name="fileUploadFailedSubtitle">L’envoi d\'un ou plusieurs fichiers a échoué. Vérifiez l’état de votre connexion internet, puis réessayez.</string>
     <string name="submissionProgressSubtitle">Envoi de la soumission vers \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Envoi en cours</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Envoi réussi</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Soumission réussie</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Échec de l’envoi</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Envoi des fichiers...</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Envoi du fichier...</item>
+        <item quantity="other">Envoi des fichiers...</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Fichier envoyé avec succès</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Échec de l’envoi de fichier</string>
     <string name="cancelSubmissionDialogTitle">Annuler la soumission</string>
     <string name="cancelSubmissionDialogMessage">Ceci annulera et supprimera votre soumission.</string>
     <string name="fileUploadError">Échec de l’envoi de fichier</string>
@@ -1377,4 +1383,9 @@
     <string name="a11y_selectionModeDeactivated">Mode sélection désactivé.</string>
     <string name="a11y_avatarContentDescription">Avatar de %s</string>
     <string name="inboxUndo">Annuler</string>
+    <string name="aboutAppTitle">Application</string>
+    <string name="aboutDomainTitle">Domaine</string>
+    <string name="aboutLoginTitle">ID d’authentification</string>
+    <string name="aboutEmailTitle">Email</string>
+    <string name="aboutVersionTitle">Version</string>
 </resources>
