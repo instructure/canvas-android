@@ -38,6 +38,7 @@ android {
         targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testApplicationId System.getProperty("testApplicationId", "com.instructure.pandautils.test")
         javaCompileOptions {
             annotationProcessorOptions {
                 compilerArgumentProviders(
