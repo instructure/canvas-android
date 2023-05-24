@@ -39,6 +39,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_EDIT
 import com.instructure.pandautils.analytics.ScreenView
@@ -57,6 +58,7 @@ import com.instructure.teacher.viewinterface.ProfileEditFragmentView
 import retrofit2.Response
 import java.io.File
 
+@PageView(url = "profile/edit")
 @ScreenView(SCREEN_VIEW_PROFILE_EDIT)
 class ProfileEditFragment : BasePresenterFragment<
         ProfileEditFragmentPresenter,

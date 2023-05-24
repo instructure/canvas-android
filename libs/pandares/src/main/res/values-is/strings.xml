@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Lokaðu framvinduglugganum</string>
     <string name="fileUploadProgress">%1$s af %2$s</string>
     <string name="fileUploadProgressSubtitle">Hleð upp í Skrár</string>
+    <string name="fileUploadFailedSubtitle">Ekki tókst að hlaða upp einni eða fleiri skrám. Athugaðu nettenginguna þína og reyndu aftur að skila.</string>
     <string name="submissionProgressSubtitle">Hlaða upp skilum í \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Hlaða upp skilum</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Skil tókust</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Mistókst að skila</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Hleður upp skrám</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Hleður upp skrá</item>
+        <item quantity="other">Hleður upp skrám</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Upphleðsla skrár tókst</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Upphleðsla skrár mistókst</string>
     <string name="cancelSubmissionDialogTitle">Hætta við skil</string>
     <string name="cancelSubmissionDialogMessage">Þetta hættir við og eyðir skilunum þínum.</string>
     <string name="fileUploadError">Upphleðsla skrár mistókst</string>
@@ -1377,4 +1383,9 @@
     <string name="a11y_selectionModeDeactivated">Valhamur afvirkjaður.</string>
     <string name="a11y_avatarContentDescription">Gengill %s</string>
     <string name="inboxUndo">Hætta við</string>
+    <string name="aboutAppTitle">Smáforrit</string>
+    <string name="aboutDomainTitle">Lén</string>
+    <string name="aboutLoginTitle">Innskráningarauðkenni</string>
+    <string name="aboutEmailTitle">Tölvupóstur</string>
+    <string name="aboutVersionTitle">Útgáfa</string>
 </resources>

@@ -24,7 +24,14 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow

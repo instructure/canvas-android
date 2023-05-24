@@ -121,7 +121,7 @@ class DashboardNotificationsViewModelTest {
         every { apiPrefs.user } returns User(id = 1)
 
         uploadsLiveData = MutableLiveData(emptyList())
-        every { dashboardFileUploadDao.getAll(1) } returns uploadsLiveData
+        every { dashboardFileUploadDao.getAllForUser(1) } returns uploadsLiveData
 
         viewModel = DashboardNotificationsViewModel(
             resources,

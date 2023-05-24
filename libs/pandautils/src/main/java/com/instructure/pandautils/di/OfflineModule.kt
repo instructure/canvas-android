@@ -20,7 +20,7 @@ package com.instructure.pandautils.di
 import android.content.Context
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
 import com.instructure.pandautils.room.offline.daos.*

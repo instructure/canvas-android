@@ -22,8 +22,8 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
-import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao

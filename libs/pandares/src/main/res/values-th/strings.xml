@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">ปิดกล่องโต้ตอบแสดงความคืบหน้า</string>
     <string name="fileUploadProgress">%1$s จาก %2$s</string>
     <string name="fileUploadProgressSubtitle">กำลังอัพโหลดไปที่ไฟล์ (Files)</string>
+    <string name="fileUploadFailedSubtitle">ไฟล์บางส่วนไม่สามารถอัพโหลดได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณแล้วลองส่งใหม่อีกครั้ง</string>
     <string name="submissionProgressSubtitle">กำลังอัพโหลดผลงานจัดส่งไปยัง \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">กำลังอัพโหลดผลงานจัดส่ง</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">จัดส่งเสร็จสิ้น</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">จัดส่งล้มเหลว</string>
-    <string name="dashboardNotificationUploadingFilesTitle">กำลังอัพโหลดไฟล์</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">กำลังอัพโหลดไฟล์</item>
+        <item quantity="other">กำลังอัพโหลดไฟล์</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">อัพโหลดไฟล์เสร็จสิ้น</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">อัพโหลดไฟล์ล้มเหลว</string>
     <string name="cancelSubmissionDialogTitle">ยกเลิกการจัดส่ง</string>
     <string name="cancelSubmissionDialogMessage">นี่จะเป็นการยกเลิกและลบผลงานจัดส่งของคุณ</string>
     <string name="fileUploadError">อัพโหลดไฟล์ล้มเหลว</string>
@@ -1377,4 +1383,9 @@
     <string name="a11y_selectionModeDeactivated">ปิดใช้งานโหมดเลือกรายการแล้ว</string>
     <string name="a11y_avatarContentDescription">ภาพประจำตัวของ %s</string>
     <string name="inboxUndo">เลิกทำ</string>
+    <string name="aboutAppTitle">แอพ</string>
+    <string name="aboutDomainTitle">โดเมน</string>
+    <string name="aboutLoginTitle">ID ล็อกอิน</string>
+    <string name="aboutEmailTitle">อีเมล</string>
+    <string name="aboutVersionTitle">เวอร์ชั่น</string>
 </resources>

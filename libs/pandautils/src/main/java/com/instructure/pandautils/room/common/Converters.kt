@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room
+package com.instructure.pandautils.room.common
 
 import androidx.room.TypeConverter
 import java.util.*
@@ -34,7 +34,6 @@ class Converters {
         return timestamp?.let { Date(it) }
     }
 
-    @TypeConverter
     fun fromIntList(list: List<Int>?): String? {
         return list?.joinToString(",")
     }

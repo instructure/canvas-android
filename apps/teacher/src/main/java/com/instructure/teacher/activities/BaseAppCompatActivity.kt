@@ -20,13 +20,15 @@ package com.instructure.teacher.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.instructure.pandautils.utils.ActivityResult
-import com.instructure.pandautils.utils.OnActivityResults
-import com.instructure.pandautils.utils.PermissionReceiver
+import com.instructure.canvasapi2.models.StorageQuotaExceededError
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
 import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
-import com.instructure.pandautils.utils.postSticky
+import com.instructure.teacher.R
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 abstract class BaseAppCompatActivity : AppCompatActivity(),
@@ -41,5 +43,21 @@ abstract class BaseAppCompatActivity : AppCompatActivity(),
             //File Dialog Fragment will not be notified of onActivityResult(), alert manually
             OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onQuotaExceeded(errorCode: StorageQuotaExceededError) {
+        toast(R.string.fileQuotaExceeded)
     }
 }
