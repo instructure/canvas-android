@@ -95,15 +95,19 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
         ViewStyler.setStatusBarDark(this, color)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        super.onPrepareOptionsMenu(menu)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.pspdf_activity_menu, menu)
         if (submissionTarget != null) {
             // If targeted for submission, change the menu item title from "Upload to Canvas" to "Submit Assignment"
-            val item = menu.findItem(R.id.upload_item)
-            item.title = getString(R.string.submitAssignment)
+            val item = menu?.findItem(R.id.upload_item)
+            item?.title = getString(R.string.submitAssignment)
         }
         return true
+    }
+
+    override fun onGetShowAsAction(menuItemId: Int, defaultShowAsAction: Int): Int {
+        return if (menuItemId != R.id.upload_item) MenuItem.SHOW_AS_ACTION_ALWAYS else super.onGetShowAsAction(menuItemId, defaultShowAsAction)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
