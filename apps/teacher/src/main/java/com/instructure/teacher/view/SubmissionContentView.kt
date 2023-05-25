@@ -892,14 +892,6 @@ class SubmissionContentView(
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCommentTextFocused(event: CommentTextFocusedEvent) {
-        if (event.assigneeId == mAssignee.id) {
-            pdfFragment?.exitCurrentlyActiveMode()
-            activity.isCurrentlyAnnotating = false
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAnnotationCommentAdded(event: AnnotationCommentAdded) {
         if (event.assigneeId == mAssignee.id) {
             //add the comment to the hashmap
@@ -977,7 +969,6 @@ class SubmissionSelectedEvent(val submission: Submission?)
 class SubmissionFileSelectedEvent(val submissionId: Long, val attachment: Attachment)
 class QuizSubmissionGradedEvent(submission: Submission) : RationedBusEvent<Submission>(submission)
 class SlidingPanelAnchorEvent(val anchorPosition: SlidingUpPanelLayout.PanelState, val offset: Float)
-class CommentTextFocusedEvent(val assigneeId: Long)
 class AnnotationCommentAdded(val annotation: CanvaDocAnnotation, val assigneeId: Long)
 class AnnotationCommentEdited(val annotation: CanvaDocAnnotation, val assigneeId: Long)
 class AnnotationCommentDeleted(val annotation: CanvaDocAnnotation, val isHeadAnnotation: Boolean, val assigneeId: Long)
