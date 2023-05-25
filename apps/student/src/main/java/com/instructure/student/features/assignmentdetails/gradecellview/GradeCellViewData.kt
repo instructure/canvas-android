@@ -188,6 +188,6 @@ data class GradeCellViewData(
                 System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHint)
 
         private val Submission.isSubmitted
-            get() = workflowState == "submitted"
+            get() = submittedAt != null && !isGraded && !excused
     }
 }
