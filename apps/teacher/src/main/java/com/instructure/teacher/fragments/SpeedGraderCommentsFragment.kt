@@ -64,6 +64,7 @@ import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.view
+import com.instructure.teacher.view.CommentTextFocusedEvent
 import com.instructure.teacher.view.MediaCommentDialogClosedEvent
 import com.instructure.teacher.view.SubmissionSelectedEvent
 import com.instructure.teacher.view.UploadMediaCommentEvent
@@ -207,6 +208,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         commentEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 (requireActivity() as SpeedGraderActivity).openCommentLibrary(mSubmissionId)
+                EventBus.getDefault().post(CommentTextFocusedEvent(mAssignee.id))
             }
         }
 
