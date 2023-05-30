@@ -17,6 +17,7 @@
 
 package com.instructure.teacher.fragments
 
+import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -87,6 +88,16 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
         })
 
         setupViews()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        needToForceNetwork = savedInstanceState?.getBoolean(NEED_FORCE_REFRESH_KEY).orDefault()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(NEED_FORCE_REFRESH_KEY, needToForceNetwork)
     }
 
     override fun onCreateView(view: View) {
@@ -207,6 +218,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     override fun onHandleBackPressed() = binding.pageListToolbar.closeSearch()
 
     companion object {
+        private const val NEED_FORCE_REFRESH_KEY = "need_force_refresh_key"
 
         fun newInstance(canvasContext: CanvasContext) = PageListFragment().apply {
             this.canvasContext = canvasContext
