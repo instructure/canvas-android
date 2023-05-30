@@ -22,6 +22,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -63,7 +64,7 @@ class FileUploadPage : BasePage() {
     }
 
     fun removeFile(filename: String) {
-        val fileItemMatcher = withId(R.id.fileItem) + withDescendant(withId(R.id.fileName) + withText(filename))
+        val fileItemMatcher = withId(R.id.fileItem) + withDescendant(withId(R.id.fileName) + containsTextCaseInsensitive(filename))
 
         val removeMatcher = withId(R.id.removeFile) + ViewMatchers.isDescendantOfA(fileItemMatcher)
         waitForViewToBeClickable(removeMatcher).scrollTo().click()

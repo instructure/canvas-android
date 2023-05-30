@@ -20,12 +20,17 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
+import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -114,8 +119,20 @@ class ShareExtensionE2ETest: StudentTest() {
         device.pressRecentApps()
         device.findObject(UiSelector().descriptionContains("Canvas")).click()
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is displayed. Select ${course.name} and navigate to Assignments Page.")
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is displayed.")
         dashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the 'Submission Successful' titled dashboard notification is displayed," +
+                "and the '${testAssignmentOne.name}' assignment's name is displayed as the subtitle of the notification. ")
+        dashboardPage.assertDashboardNotificationDisplayed("Submission Successful", testAssignmentOne.name)
+
+        Log.d(STEP_TAG, "Click on the dashboard notification and assert if it's navigating to the Submission Details Page." +
+                "Press back then to navigate back to the Dashboard Page.")
+        dashboardPage.clickOnDashboardNotification(testAssignmentOne.name)
+        submissionDetailsPage.assertPageObjects()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Select ${course.name} and navigate to Assignments Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
 
@@ -177,7 +194,12 @@ class ShareExtensionE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Navigate to (Global) Files Page.")
         dashboardPage.assertPageObjects()
         Thread.sleep(4000) //Make sure that the toast message has disappeared.
-        leftSideNavigationDrawerPage.clickFilesMenu()
+
+        Log.d(STEP_TAG, "Assert that the 'File Upload Successful' titled dashboard notification is displayed and the subtitle is the uploaded file(s) name (${jpgTestFileName}).")
+        dashboardPage.assertDashboardNotificationDisplayed("File Upload Successful", jpgTestFileName)
+
+        Log.d(STEP_TAG, "Click on the 'File Upload Successful' dashboard notification. Assert that it's navigating to the (Global) Files menu. Press bacck to navigate back to the Dashboard Page.")
+        dashboardPage.clickOnDashboardNotification(jpgTestFileName)
 
         Log.d(STEP_TAG, "Assert that the 'unfiled' directory is displayed." +
                 "Click on it, and assert that the previously uploaded file ($jpgTestFileName) is displayed within the folder.")
