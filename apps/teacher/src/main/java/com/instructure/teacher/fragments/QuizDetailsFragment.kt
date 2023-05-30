@@ -102,6 +102,8 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         setupToolbar()
+
+        binding.swipeRefreshLayout.isRefreshing = true
     }
 
     override fun onPresenterPrepared(presenter: QuizDetailsPresenter) = Unit
@@ -109,6 +111,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     override fun onRefreshFinished() = Unit
 
     override fun onRefreshStarted() {
+        binding.swipeRefreshLayout.isRefreshing = true
         binding.toolbar.menu.clear()
         clearListeners()
     }
