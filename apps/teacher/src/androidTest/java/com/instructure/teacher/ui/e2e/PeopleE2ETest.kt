@@ -33,7 +33,11 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.pages.PersonContextPage
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.seedAssignmentSubmission
+import com.instructure.teacher.ui.utils.seedAssignments
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -140,9 +144,9 @@ class PeopleE2ETest: TeacherTest() {
         peopleListPage.assertSearchResultCount(1)
         peopleListPage.assertPersonListed(gradedStudent)
 
-        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that the empty view is displayed.")
+        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that all the poeple are displayed (5).")
         peopleListPage.clickResetSearchText()
-        peopleListPage.assertEmptyViewIsDisplayed()
+        peopleListPage.assertSearchResultCount(5)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Click on the Inbox bottom menu. Assert that the 'All' section is empty.")
         ViewUtils.pressBackButton(4)
