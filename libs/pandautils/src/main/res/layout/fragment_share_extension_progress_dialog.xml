@@ -164,7 +164,7 @@
                 android:id="@+id/itemsDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="4dp"
                 android:background="@color/backgroundMedium"
                 app:layout_constraintTop_toBottomOf="@id/cancel" />
 
