@@ -168,7 +168,7 @@ class ShareExtensionE2ETest: StudentTest() {
         fileUploadPage.assertFileDisplayed(pdfTestFileName)
 
         Log.d(STEP_TAG,"Remove '$pdfTestFileName' file and assert that it's not displayed any more on the list but the other file is displayed.")
-        fileUploadPage.removeFile(pdfTestFileName)
+        fileUploadPage.removeFile("samplepdf")
         fileUploadPage.assertFileNotDisplayed(pdfTestFileName)
         fileUploadPage.assertFileDisplayed("$pdfTestFileName.jpg")
 
