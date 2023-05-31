@@ -237,7 +237,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun discussionDeletedSuccessfully(discussionTopicHeader: DiscussionTopicHeader) {
-        adapter.removeItem(discussionTopicHeader, false)
         DiscussionTopicHeaderDeletedEvent(discussionTopicHeader.id, (DiscussionsDetailsFragment::class.java.toString() + ".onPost()")).post()
     }
 
@@ -279,9 +278,12 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     fun onDiscussionTopicHeaderDeleted(event: DiscussionTopicHeaderDeletedEvent) {
         event.get {
             val discussionTopicHeader = adapter.getItem(it)
-            if(discussionTopicHeader != null) {
-                adapter.removeItem(discussionTopicHeader, false)
+            if (discussionTopicHeader != null) {
+                adapter.removeItem(discussionTopicHeader, true)
                 needToForceNetwork = true
+                if (adapter.itemCount == 0) {
+                    presenter.refresh(true)
+                }
             }
         }
     }

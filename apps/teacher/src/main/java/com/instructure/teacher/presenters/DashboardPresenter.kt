@@ -62,14 +62,21 @@ class DashboardPresenter : SyncPresenter<Course, CoursesView>(Course::class.java
         apiAsync<List<DashboardCard>> { CourseManager.getDashboardCourses(forceNetwork, it) }.await()
             .onFailure { notifyRefreshFinished() }
             .onSuccess { dashboardCourses ->
-                val filteredCourses = courses.filter {
-                    (it.isTeacher || it.isTA || it.isDesigner) && it.hasActiveEnrollment() && !it.isPastEnrolment()
-                }
-                val courseMap = filteredCourses.associateBy { it.id }
-                val validCourses = dashboardCourses.mapNotNull { courseMap[it.id] }
-                data.addOrUpdate(validCourses.ifEmpty { filteredCourses })
+                val courseMap = courses.associateBy { it.id }
+                val validCourses = dashboardCourses.map { createCourseFromDashboardCard(it, courseMap) }
+                    .filter { (it.isTeacher || it.isTA || it.isDesigner) }
+                data.addOrUpdate(validCourses)
                 notifyRefreshFinished()
             }
+    }
+
+    private fun createCourseFromDashboardCard(dashboardCard: DashboardCard, courseMap: Map<Long, Course>): Course {
+        val course = courseMap[dashboardCard.id]
+        return if (course != null) {
+            course
+        } else {
+            Course(id = dashboardCard.id, name = dashboardCard.shortName ?: "", originalName = dashboardCard.originalName, courseCode = dashboardCard.courseCode)
+        }
     }
 
     override fun onDestroyed() {
