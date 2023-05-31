@@ -75,7 +75,7 @@ class FileUploadPage : BasePage() {
     }
 
     fun assertFileDisplayed(filename: String) {
-        onView(withId(R.id.fileName) + withText(filename))
+        onView(withId(R.id.fileName) + containsTextCaseInsensitive(filename)).assertDisplayed()
     }
 
     fun assertFileNotDisplayed(filename: String) {

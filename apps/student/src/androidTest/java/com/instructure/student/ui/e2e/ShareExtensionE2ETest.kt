@@ -165,12 +165,12 @@ class ShareExtensionE2ETest: StudentTest() {
         fileUploadPage.assertPageObjects()
         fileUploadPage.assertDialogTitle("Upload To My Files")
         fileUploadPage.assertFileDisplayed(jpgTestFileName)
-        fileUploadPage.assertFileDisplayed(pdfTestFileName)
+        fileUploadPage.assertFileDisplayed("samplepdf")
 
         Log.d(STEP_TAG,"Remove '$pdfTestFileName' file and assert that it's not displayed any more on the list but the other file is displayed.")
         fileUploadPage.removeFile("samplepdf")
-        fileUploadPage.assertFileNotDisplayed(pdfTestFileName)
-        fileUploadPage.assertFileDisplayed("$pdfTestFileName.jpg")
+        fileUploadPage.assertFileNotDisplayed("samplepdf")
+        fileUploadPage.assertFileDisplayed(jpgTestFileName)
 
         Log.d(STEP_TAG, "Click on 'Upload' button to upload the file.")
         fileUploadPage.clickUpload()
