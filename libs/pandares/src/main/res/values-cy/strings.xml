@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Cau’r deialog cynnydd</string>
     <string name="fileUploadProgress">%1$s o %2$s</string>
     <string name="fileUploadProgressSubtitle">Wrthi’n llwytho i fyny i Ffeiliau</string>
+    <string name="fileUploadFailedSubtitle">Wedi methu llwytho un neu ragor o ffeiliau i fyny. Gwiriwch eich cysylltiad rhyngrwyd a rhoi cynnig arall ar gyflwyno.</string>
     <string name="submissionProgressSubtitle">Wrthi’n llwytho cyflwyniad i fyny i \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Llwytho cyflwyniad i fyny</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Wedi Llwyddo i Gyflwyno</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Wedi llwyddo i gyflwyno</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Cyflwyniad wedi methu</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Wrthi’n llwytho ffeiliau i fyny</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Wrthi’n llwytho ffeil i fyny</item>
+        <item quantity="other">Wrthi’n llwytho ffeiliau i fyny</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Wedi llwyddo i lwytho ffeil i fyny</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Wedi methu llwytho ffeil i fyny</string>
     <string name="cancelSubmissionDialogTitle">Canslo Cyflwyniad</string>
     <string name="cancelSubmissionDialogMessage">Bydd hyn yn canslo ac yn dileu eich cyflwyniad.</string>
     <string name="fileUploadError">Wedi methu llwytho ffeil i fyny</string>
@@ -1377,4 +1383,9 @@
     <string name="a11y_selectionModeDeactivated">Modd dewis ddim ar waith.</string>
     <string name="a11y_avatarContentDescription">Afatar o %s</string>
     <string name="inboxUndo">Dad-wneud</string>
+    <string name="aboutAppTitle">Ap</string>
+    <string name="aboutDomainTitle">Parth</string>
+    <string name="aboutLoginTitle">ID Mewngofnodi</string>
+    <string name="aboutEmailTitle">E-bost</string>
+    <string name="aboutVersionTitle">Fersiwn</string>
 </resources>

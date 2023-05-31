@@ -52,7 +52,8 @@ class AnnotationSubmissionViewFragment : Fragment() {
                 PdfStudentSubmissionView(
                     requireActivity(),
                     it,
-                    studentAnnotationView = true
+                    childFragmentManager,
+                    studentAnnotationView = true,
                 )
             )
         }

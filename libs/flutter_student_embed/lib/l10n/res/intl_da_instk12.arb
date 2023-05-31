@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2022-10-28T11:03:17.232435",
+  "@@last_modified": "2023-03-31T11:03:46.341309",
   "coursesLabel": "Fag",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
@@ -99,6 +99,19 @@
     ],
     "placeholders": {
       "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}, {eventCount} begivenhed}other{{date}, {eventCount} begivenheder}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
     }
   },
   "No Events Today!": "Ingen begivenheder i dag!",

@@ -22,7 +22,7 @@ import android.content.Intent
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
-import com.instructure.pandautils.room.daos.PendingSubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.events.UploadMediaCommentUpdateEvent
 import com.instructure.teacher.events.post

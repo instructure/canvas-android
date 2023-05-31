@@ -222,6 +222,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
      * Manages state of titles & subtitles when users scrolls
      */
     override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        if (view == null) return
 
         val percentage = Math.abs(verticalOffset).div(appBarLayout?.totalScrollRange?.toFloat() ?: 1F)
 

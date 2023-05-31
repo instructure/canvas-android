@@ -9,6 +9,7 @@ import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 
 data class GradeCellViewData(
     val courseColor: ThemedColor,
@@ -22,7 +23,8 @@ data class GradeCellViewData(
     val gradeCellContentDescription: String = "",
     val outOf: String = "",
     val latePenalty: String = "",
-    val finalGrade: String = ""
+    val finalGrade: String = "",
+    val stats: GradeCellViewState.GradeStats? = null
 ) {
     val backgroundColorWithAlpha = ColorUtils.setAlphaComponent(courseColor.backgroundColor(), (.25 * 255).toInt())
 
@@ -143,6 +145,28 @@ data class GradeCellViewData(
                         finalGrade = resources.getString(R.string.finalGradeFormatted, submission.grade)
                     }
 
+                    val stats = assignment.scoreStatistics?.let { stats ->
+                        GradeCellViewState.GradeStats(
+                            score = submission.score,
+                            outOf = assignment.pointsPossible,
+                            min = stats.min,
+                            max = stats.max,
+                            mean = stats.mean,
+                            minText = resources.getString(
+                                R.string.scoreStatisticsLow,
+                                NumberHelper.formatDecimal(stats.min, 1, true)
+                            ),
+                            maxText = resources.getString(
+                                R.string.scoreStatisticsHigh,
+                                NumberHelper.formatDecimal(stats.max, 1, true)
+                            ),
+                            meanText = resources.getString(
+                                R.string.scoreStatisticsMean,
+                                NumberHelper.formatDecimal(stats.mean, 1, true)
+                            )
+                        )
+                    }
+
                     GradeCellViewData(
                         courseColor = courseColor,
                         state = State.GRADED,
@@ -153,7 +177,8 @@ data class GradeCellViewData(
                         gradeCellContentDescription = gradeCellContentDescription,
                         outOf = outOfText,
                         latePenalty = latePenalty,
-                        finalGrade = finalGrade
+                        finalGrade = finalGrade,
+                        stats = stats
                     )
                 }
             }
@@ -163,6 +188,6 @@ data class GradeCellViewData(
                 System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHint)
 
         private val Submission.isSubmitted
-            get() = workflowState == "submitted"
+            get() = submittedAt != null && !isGraded && !excused
     }
 }

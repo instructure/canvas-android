@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -44,6 +45,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView("{canvasContext}/quizzes")
 @ScreenView(SCREEN_VIEW_QUIZ_LIST)
 class QuizListFragment : BaseExpandableSyncFragment<
         String,
@@ -54,18 +56,18 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     private val binding by viewBinding(FragmentQuizListBinding::bind)
 
-    private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
-    private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
+    private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
 
-    private var mGradingPeriodMenu: PopupMenu? = null
+    private var gradingPeriodMenu: PopupMenu? = null
 
-    private var mNeedToForceNetwork = false
+    private var needToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_quiz_list
     override val recyclerView: RecyclerView get() = binding.quizRecyclerView
-    override fun getPresenterFactory() = QuizListPresenterFactory(mCanvasContext)
+    override fun getPresenterFactory() = QuizListPresenterFactory(canvasContext)
     override fun onPresenterPrepared(presenter: QuizListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
             rootView = rootView,
@@ -80,14 +82,14 @@ class QuizListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onCreateView(view: View) {
-        mLinearLayoutManager.orientation = RecyclerView.VERTICAL
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
     }
 
     override fun onReadySetGo(presenter: QuizListPresenter) {
         if(recyclerView.adapter == null) {
             mRecyclerView.adapter = adapter
         }
-        presenter.loadData(mNeedToForceNetwork)
+        presenter.loadData(needToForceNetwork)
     }
 
     override fun onResume() {
@@ -106,19 +108,19 @@ class QuizListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onPause() {
-        if(mGradingPeriodMenu != null) {
-            mGradingPeriodMenu?.dismiss()
+        if(gradingPeriodMenu != null) {
+            gradingPeriodMenu?.dismiss()
         }
         super.onPause()
     }
 
     override fun createAdapter(): QuizListAdapter {
-        return QuizListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor) { quiz ->
+        return QuizListAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { quiz ->
             if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl, ApiPrefs.domain, false)) {
                 RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain)
             } else {
                 val args = QuizDetailsFragment.makeBundle(quiz)
-                RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
+                RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
             }
         }
     }
@@ -146,7 +148,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     private fun setupToolbar() = with(binding) {
         quizListToolbar.title = getString(R.string.tab_quizzes)
-        quizListToolbar.subtitle = mCanvasContext.name
+        quizListToolbar.subtitle = canvasContext.name
         quizListToolbar.setupBackButton(this@QuizListFragment)
         quizListToolbar.addSearch(getString(R.string.searchQuizzesHint)) { query ->
             if (query.isBlank()) {
@@ -156,7 +158,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), quizListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), quizListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)
@@ -168,14 +170,14 @@ class QuizListFragment : BaseExpandableSyncFragment<
             // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
             // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
             // overwrite the data from the network if we refresh the presenter from here.
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
         }
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizGraded(event: QuizSubmissionGradedEvent) {
-        event.once(javaClass.simpleName) { mNeedToForceNetwork = true }
+        event.once(javaClass.simpleName) { needToForceNetwork = true }
     }
 
     override fun onHandleBackPressed() = binding.quizListToolbar.closeSearch()
@@ -183,7 +185,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
     companion object {
 
         fun newInstance(canvasContext: CanvasContext) = QuizListFragment().apply {
-            mCanvasContext = canvasContext
+            this.canvasContext = canvasContext
         }
     }
 }

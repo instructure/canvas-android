@@ -208,6 +208,18 @@ class SubmissionCommentsPresenterTest : Assert() {
         }
     }
 
+    @Test
+    fun `Always show comments when attemptId is null`() {
+        val comments = listOf(
+            submissionComment,
+            SubmissionComment(id=1, comment="No attempt", attempt = null)
+        )
+        val model = baseModel.copy(comments = comments)
+        val actualState = SubmissionCommentsPresenter.present(model, context)
+        assertEquals(3, actualState.commentStates.size)
+        assertEquals("No attempt", (actualState.commentStates[1] as CommentItemState.CommentItem).message)
+    }
+
     private fun dateFromCommentState(state: CommentItemState) : Date {
         return when(state) {
             is CommentItemState.CommentItem -> state.sortDate

@@ -22,6 +22,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
@@ -42,6 +43,8 @@ import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import com.instructure.canvasapi2.utils.pageview.PandataManager
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -78,6 +81,7 @@ import com.instructure.teacher.fragments.*
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
+import com.instructure.teacher.services.TeacherPageViewService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
@@ -87,6 +91,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okio.IOException
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -189,6 +194,18 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             ThemePrefs.themeSelectionShown = true
         }
 
+        lifecycleScope.launch {
+            if (ApiPrefs.pandataInfo?.isValid != true) {
+                try {
+                    ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
+                        PandataManager.getToken(TeacherPageViewService.pandataAppKey, it)
+                    }
+                } catch (ignore: Throwable) {
+                    Logger.w("Unable to refresh pandata info")
+                }
+            }
+        }
+
         requestNotificationsPermission()
     }
 
@@ -200,9 +217,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private fun updateTheme() {
         lifecycleScope.launch {
-            val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, false) }
-            ThemePrefs.applyCanvasTheme(theme, this@InitActivity)
-            binding.bottomBar.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
+            try {
+                val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, false) }
+                ThemePrefs.applyCanvasTheme(theme, this@InitActivity)
+                binding.bottomBar.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
+            } catch(e: IOException) {
+                LoggingUtility.log(e.stackTrace.toString(), Log.WARN)
+            }
         }
     }
 
@@ -450,6 +471,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         addDetailFragment(RouteResolver.getDetailFragment(route.canvasContext, route))
     }
 
+    // This case can only happen in Inbox, there is no other master/detial interaction on this Activity.
+    // Detail fragments are intentionally not added to the back stack, because back navigation would be confusing.
     private fun addDetailFragment(fragment: Fragment?) {
         if (fragment == null) throw IllegalStateException("InitActivity.class addDetailFragment was null")
 
@@ -462,10 +485,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         if (identityMatch(currentFragment, fragment)) return
 
         ft.replace(R.id.detail, fragment, fragment.javaClass.simpleName)
-        if (currentFragment != null && currentFragment !is EmptyFragment) {
-            //Add to back stack if not empty fragment and a fragment exists
-            ft.addToBackStack(fragment.javaClass.simpleName)
-        }
         ft.commit()
     }
 
@@ -518,8 +537,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         binding.container.setGone()
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
-        if (clearBackStack && fm.backStackEntryCount > 0) {
-            fm.popBackStackImmediate(fm.getBackStackEntryAt(0).id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        if (clearBackStack) {
+            if (fm.backStackEntryCount > 0) {
+                fm.popBackStackImmediate(fm.getBackStackEntryAt(0).id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            }
         } else {
             ft.addToBackStack(null)
         }
@@ -574,7 +595,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         } else {
             if (binding.masterDetailContainer.isVisible) {
                 if ((supportFragmentManager.findFragmentById(R.id.master) as? NavigationCallbacks)?.onHandleBackPressed() == true) return
-                super.onBackPressed()
             }
             super.onBackPressed()
         }
