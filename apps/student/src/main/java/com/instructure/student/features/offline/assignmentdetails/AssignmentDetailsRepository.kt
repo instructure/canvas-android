@@ -27,10 +27,8 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 class AssignmentDetailsRepository(
     localDataSource: AssignmentDetailsLocalDataSource,
     networkDataSource: AssignmentDetailsNetworkDataSource,
-    private val networkStateProvider: NetworkStateProvider
+    networkStateProvider: NetworkStateProvider
 ) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider) {
-
-    fun isOnline() = networkStateProvider.isOnline()
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         return dataSource.getCourseWithGrade(courseId, forceNetwork)

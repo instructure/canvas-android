@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.dashboard.DashboardLocalDataSource
@@ -67,8 +68,9 @@ class DashboardModule {
         networkDataSource: DashboardNetworkDataSource,
         localDataSource: DashboardLocalDataSource,
         networkStateProvider: NetworkStateProvider,
-        courseApi: CourseAPI.CoursesInterface
+        courseApi: CourseAPI.CoursesInterface,
+        courseSyncSettingsDao: CourseSyncSettingsDao
     ): DashboardRepository {
-        return DashboardRepository(localDataSource, networkDataSource, networkStateProvider, courseApi)
+        return DashboardRepository(localDataSource, networkDataSource, networkStateProvider, courseApi, courseSyncSettingsDao)
     }
 }

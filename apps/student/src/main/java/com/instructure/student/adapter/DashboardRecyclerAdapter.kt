@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.pandarecycler.util.GroupSortedList
+import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.student.features.dashboard.DashboardRepository
 import com.instructure.student.flutterChannels.FlutterComm
@@ -67,7 +68,7 @@ class DashboardRecyclerAdapter(
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, header: ItemType, item: Any) {
         when {
-            holder is CourseViewHolder && item is Course -> holder.bind(item, mAdapterToFragmentCallback)
+            holder is CourseViewHolder && item is DashboardCourseItem -> holder.bind(item, mAdapterToFragmentCallback)
             holder is GroupViewHolder && item is Group -> holder.bind(item, mCourseMap, mAdapterToFragmentCallback)
         }
     }
@@ -79,7 +80,7 @@ class DashboardRecyclerAdapter(
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<ItemType, Any> {
         return object : GroupSortedList.ItemComparatorCallback<ItemType, Any> {
             override fun compare(group: ItemType, o1: Any, o2: Any) = when {
-                o1 is Course && o2 is Course -> -1 // Don't sort courses, the api returns in the users order
+                o1 is DashboardCourseItem && o2 is DashboardCourseItem -> -1 // Don't sort courses, the api returns in the users order
                 o1 is Group && o2 is Group -> o1.compareTo(o2)
                 else -> -1
             }
@@ -87,19 +88,19 @@ class DashboardRecyclerAdapter(
             override fun areContentsTheSame(oldItem: Any, newItem: Any) = false
 
             override fun areItemsTheSame(item1: Any, item2: Any) = when {
-                item1 is Course && item2 is Course -> item1.contextId.hashCode() == item2.contextId.hashCode()
+                item1 is DashboardCourseItem && item2 is DashboardCourseItem -> item1.course.contextId.hashCode() == item2.course.contextId.hashCode()
                 item1 is Group && item2 is Group -> item1.contextId.hashCode() == item2.contextId.hashCode()
                 else -> false
             }
 
             override fun getUniqueItemId(item: Any) = when (item) {
-                is Course -> item.contextId.hashCode().toLong()
+                is DashboardCourseItem -> item.course.contextId.hashCode().toLong()
                 is Group -> item.contextId.hashCode().toLong()
                 else -> -1L
             }
 
             override fun getChildType(group: ItemType, item: Any) = when (item) {
-                is Course -> ItemType.COURSE.ordinal
+                is DashboardCourseItem -> ItemType.COURSE.ordinal
                 is Group -> ItemType.GROUP.ordinal
                 else -> -1
             }
@@ -125,11 +126,12 @@ class DashboardRecyclerAdapter(
                 FlutterComm.sendUpdatedTheme()
             }
 
-            val rawCourses = repository.getCourses(isRefresh)
+            val courses = repository.getCourses(isRefresh)
             val groups = repository.getGroups(isRefresh)
             val dashboardCards = repository.getDashboardCourses(isRefresh)
+            val syncedCourseIds = repository.getSyncedCourseIds()
 
-            mCourseMap = rawCourses.associateBy { it.id }
+            mCourseMap = courses.associateBy { it.id }
 
             // Map not null is needed because the dashboard api can return unpublished courses
             val visibleCourses = dashboardCards.map { createCourseFromDashboardCard(it, mCourseMap) }
@@ -141,7 +143,11 @@ class DashboardRecyclerAdapter(
             val visibleGroups = if (isAnyGroupFavorited) allActiveGroups.filter { it.isFavorite } else allActiveGroups
 
             // Add courses
-            addOrUpdateAllItems(ItemType.COURSE_HEADER, visibleCourses)
+            val isOnline = repository.isOnline()
+            val courseItems = visibleCourses.map {
+                DashboardCourseItem(it, syncedCourseIds.contains(it.id), isOnline || mCourseMap.containsKey(it.id))
+            }
+            addOrUpdateAllItems(ItemType.COURSE_HEADER, courseItems)
 
             // Add groups
             addOrUpdateAllItems(ItemType.GROUP_HEADER, visibleGroups)

@@ -8,6 +8,8 @@ abstract class Repository<T>(
     private val networkStateProvider: NetworkStateProvider
 ) {
 
+    fun isOnline() = networkStateProvider.isOnline()
+
     val dataSource: T
         get() {
             return if (networkStateProvider.isOnline()) {
