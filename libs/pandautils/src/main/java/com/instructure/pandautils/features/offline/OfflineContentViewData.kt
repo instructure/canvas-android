@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.offline
 
 import androidx.databinding.BaseObservable
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.itemviewmodels.CourseTabViewModel
 import com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel
@@ -14,11 +15,19 @@ data class OfflineContentViewData(
 data class StorageInfo(val otherAppsReservedPercent: Int, val allAppsReservedPercent: Int, val storageInfoText: String)
 
 data class CourseItemViewData(
-    val checked: Boolean,
     val title: String,
     val size: String,
     val tabs: List<CourseTabViewModel>
-) : BaseObservable()
+) : BaseObservable() {
+
+    fun checkedState(): Int {
+        return when {
+            tabs.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
+            tabs.any { it.data.checked } -> MaterialCheckBox.STATE_INDETERMINATE
+            else -> MaterialCheckBox.STATE_UNCHECKED
+        }
+    }
+}
 
 data class CourseTabViewData(
     val checked: Boolean,

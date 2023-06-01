@@ -20,6 +20,7 @@ package com.instructure.pandautils.features.offline
 import android.content.Context
 import android.text.format.Formatter
 import androidx.lifecycle.*
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
@@ -40,7 +41,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
-
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -113,26 +113,29 @@ class OfflineContentViewModel @Inject constructor(
         tabs: List<Tab>,
         files: List<FileFolder>,
         courseSyncSettingsEntity: CourseSyncSettingsEntity
-    ) = CourseItemViewModel(
-        data = CourseItemViewData(
-            checked = courseSyncSettingsEntity.fullContentSync,
-            title = course.name,
-            size = size,
-            tabs = tabs.map { tab ->
-                val isFilesTab = tab.tabId == Tab.FILES_ID
-                createTabViewModel(
-                    course.id,
-                    tab,
-                    if (isFilesTab) size else "",
-                    if (isFilesTab) files else emptyList(),
-                    courseSyncSettingsEntity
-                )
-            }
-        ),
-        courseId = course.id,
-        collapsed = this.course == null,
-        onCheckedChanged = this::onCourseCheckedChanged
-    )
+    ): CourseItemViewModel {
+        val tabViewModels = tabs.map { tab ->
+            val isFilesTab = tab.tabId == Tab.FILES_ID
+            createTabViewModel(
+                course.id,
+                tab,
+                if (isFilesTab) size else "",
+                if (isFilesTab) files else emptyList(),
+                courseSyncSettingsEntity
+            )
+        }
+
+        return CourseItemViewModel(
+            data = CourseItemViewData(
+                title = course.name,
+                size = size,
+                tabs = tabViewModels
+            ),
+            courseId = course.id,
+            collapsed = this.course == null,
+            onCheckedChanged = this::onCourseCheckedChanged
+        )
+    }
 
     private fun onCourseCheckedChanged(checked: Boolean, courseItemViewModel: CourseItemViewModel) {
         val courseViewModel = data.value?.courseItems?.find { it == courseItemViewModel } ?: return
@@ -150,7 +153,6 @@ class OfflineContentViewModel @Inject constructor(
         val newCourseViewModel =
             courseViewModel.copy(
                 data = courseItemViewModel.data.copy(
-                    checked = checked,
                     tabs = newTabs
                 )
             )
@@ -213,9 +215,14 @@ class OfflineContentViewModel @Inject constructor(
 
         val newTabs = courseViewModel.data.tabs.map { if (it == tabItemViewModel) newTabViewModel else it }
 
+        val checkedState = when {
+            newTabs.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
+            newTabs.any { it.data.checked } -> MaterialCheckBox.STATE_INDETERMINATE
+            else -> MaterialCheckBox.STATE_UNCHECKED
+        }
+
         val newCourseViewModel = courseViewModel.copy(
             data = courseViewModel.data.copy(
-                checked = newTabs.all { it.data.checked },
                 tabs = newTabs
             )
         )
@@ -265,7 +272,7 @@ class OfflineContentViewModel @Inject constructor(
             val newFiles = tabViewModel.data.files.map { if (it == item) newFile else it }
             val newTabViewModel = tabViewModel.copy(data = tabViewModel.data.copy(checked = newFiles.all { it.data.checked }, files = newFiles))
             val newTabs = courseViewModel.data.tabs.map { if (it.tabId == item.tabId) newTabViewModel else it }
-            val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(checked = newTabs.all { it.data.checked }, tabs = newTabs))
+            val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(tabs = newTabs))
             val newList = _data.value?.courseItems?.map { if (it == courseViewModel) newCourseViewModel else it }.orEmpty()
             val selectedCount = getSelectedItemCount(newList)
             _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
@@ -282,7 +289,6 @@ class OfflineContentViewModel @Inject constructor(
         val shouldCheck = _data.value?.selectedCount.orDefault() == 0
         val newList = _data.value?.courseItems?.map { courseItemViewModel ->
             courseItemViewModel.copy(data = courseItemViewModel.data.copy(
-                checked = shouldCheck,
                 tabs = courseItemViewModel.data.tabs.map { tab ->
                     tab.copy(data = tab.data.copy(
                         checked = shouldCheck,
@@ -322,3 +328,4 @@ class OfflineContentViewModel @Inject constructor(
         return StorageInfo(otherPercent, canvasPercent, storageInfoText)
     }
 }
+

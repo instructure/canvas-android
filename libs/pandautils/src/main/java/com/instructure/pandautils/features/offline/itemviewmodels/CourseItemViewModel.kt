@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.offline.itemviewmodels
 
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.databinding.Bindable
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.offline.CourseItemViewData
