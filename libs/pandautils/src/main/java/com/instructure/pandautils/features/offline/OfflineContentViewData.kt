@@ -24,15 +24,15 @@ data class CourseItemViewData(
     fun checkedState(): Int {
         return when {
             fullContentSync -> MaterialCheckBox.STATE_CHECKED
-            tabs.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
-            tabs.any { it.data.checked } -> MaterialCheckBox.STATE_INDETERMINATE
+            tabs.isNotEmpty() && tabs.all { it.data.synced } -> MaterialCheckBox.STATE_CHECKED
+            tabs.any { it.data.synced || it.data.files.any { file -> file.data.checked } } -> MaterialCheckBox.STATE_INDETERMINATE
             else -> MaterialCheckBox.STATE_UNCHECKED
         }
     }
 }
 
 data class CourseTabViewData(
-    val checked: Boolean,
+    val synced: Boolean,
     val title: String,
     val size: String,
     val files: List<FileViewModel>
@@ -40,8 +40,8 @@ data class CourseTabViewData(
 
     fun checkedState(): Int {
         return when{
-            checked -> MaterialCheckBox.STATE_CHECKED
-            files.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
+            synced -> MaterialCheckBox.STATE_CHECKED
+            files.isNotEmpty() && files.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
             files.any { it.data.checked } -> MaterialCheckBox.STATE_INDETERMINATE
             else -> MaterialCheckBox.STATE_UNCHECKED
         }

@@ -163,7 +163,7 @@ class OfflineContentViewModelTest {
 
         Assert.assertEquals(3, viewModel.data.value?.selectedCount)
         Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checked.orDefault())
-        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.checked.orDefault())
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
         Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.data?.checked.orDefault())
 
         viewModel.data.value?.courseItems?.first()?.apply {
@@ -172,7 +172,7 @@ class OfflineContentViewModelTest {
 
         Assert.assertEquals(0, viewModel.data.value?.selectedCount)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checked.orDefault())
-        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.checked.orDefault())
+        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.data?.checked.orDefault())
     }
 
@@ -215,7 +215,7 @@ class OfflineContentViewModelTest {
 
         Assert.assertEquals(2, viewModel.data.value?.selectedCount)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checked.orDefault())
-        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.checked.orDefault())
+        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
     }
 
     @Test
