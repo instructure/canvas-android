@@ -70,7 +70,7 @@ import com.instructure.pandautils.room.offline.entities.*
         LockedModuleEntity::class,
         ModuleNameEntity::class,
         ModuleCompletionRequirementEntity::class
-    ], version = 3
+    ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
