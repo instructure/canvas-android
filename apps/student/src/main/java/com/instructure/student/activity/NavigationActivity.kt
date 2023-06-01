@@ -47,6 +47,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -129,6 +130,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var updateManager: UpdateManager
+
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -278,6 +282,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         requestNotificationsPermission()
+
+        if (!networkStateProvider.isOnline()) {
+            Snackbar.make(binding.fullScreenCoordinatorLayout, R.string.offlineModeSnackbar, Snackbar.LENGTH_LONG).show()
+        }
     }
 
     private fun requestNotificationsPermission() {
