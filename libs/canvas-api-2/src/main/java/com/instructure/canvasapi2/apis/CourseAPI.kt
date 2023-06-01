@@ -39,6 +39,9 @@ object CourseAPI {
         @get:GET("dashboard/dashboard_cards")
         val dashboardCourses: Call<List<DashboardCard>>
 
+        @GET("dashboard/dashboard_cards")
+        suspend fun getDashboardCourses(@Tag params: RestParams): DataResult<List<DashboardCard>>
+
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available")
         val firstPageCourses: Call<List<Course>>
 

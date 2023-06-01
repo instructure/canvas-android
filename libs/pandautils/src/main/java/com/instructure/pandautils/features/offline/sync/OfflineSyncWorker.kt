@@ -58,6 +58,9 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         try {
+            // Cache the dashboard courses on sync. We use cache for this instead of db so it would be more up to date.
+            courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true))
+
             val courseIds = inputData.getLongArray(COURSE_IDS)
             val courses = courseIds?.let {
                 courseSyncSettingsDao.findByIds(courseIds.toList())

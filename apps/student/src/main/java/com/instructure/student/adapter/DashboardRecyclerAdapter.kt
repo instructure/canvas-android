@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.student.features.dashboard.DashboardRepository
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.holders.*
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
@@ -34,7 +35,8 @@ import java.util.*
 
 class DashboardRecyclerAdapter(
         context: Activity,
-        private val mAdapterToFragmentCallback: CourseAdapterToFragmentCallback
+        private val mAdapterToFragmentCallback: CourseAdapterToFragmentCallback,
+        private val repository: DashboardRepository
 ) : ExpandableRecyclerAdapter<DashboardRecyclerAdapter.ItemType, Any, RecyclerView.ViewHolder>(
         context,
         ItemType::class.java,
@@ -122,11 +124,10 @@ class DashboardRecyclerAdapter(
                 ColorApiHelper.awaitSync()
                 FlutterComm.sendUpdatedTheme()
             }
-            val (rawCourses, groups) = awaitApis<List<Course>, List<Group>>(
-                    { CourseManager.getCourses(isRefresh, it) },
-                    { GroupManager.getAllGroups(it, isRefresh) }
-            )
-            val dashboardCards = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
+
+            val rawCourses = repository.getCourses(isRefresh)
+            val groups = repository.getGroups(isRefresh)
+            val dashboardCards = repository.getDashboardCourses(isRefresh)
 
             mCourseMap = rawCourses.associateBy { it.id }
 
