@@ -127,6 +127,7 @@ class OfflineContentViewModel @Inject constructor(
 
         return CourseItemViewModel(
             data = CourseItemViewData(
+                fullContentSync = courseSyncSettingsEntity.fullContentSync,
                 title = course.name,
                 size = size,
                 tabs = tabViewModels

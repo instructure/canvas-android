@@ -15,6 +15,7 @@ data class OfflineContentViewData(
 data class StorageInfo(val otherAppsReservedPercent: Int, val allAppsReservedPercent: Int, val storageInfoText: String)
 
 data class CourseItemViewData(
+    val fullContentSync: Boolean,
     val title: String,
     val size: String,
     val tabs: List<CourseTabViewModel>
@@ -22,6 +23,7 @@ data class CourseItemViewData(
 
     fun checkedState(): Int {
         return when {
+            fullContentSync -> MaterialCheckBox.STATE_CHECKED
             tabs.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
             tabs.any { it.data.checked } -> MaterialCheckBox.STATE_INDETERMINATE
             else -> MaterialCheckBox.STATE_UNCHECKED
@@ -34,7 +36,17 @@ data class CourseTabViewData(
     val title: String,
     val size: String,
     val files: List<FileViewModel>
-) : BaseObservable()
+) : BaseObservable() {
+
+    fun checkedState(): Int {
+        return when{
+            checked -> MaterialCheckBox.STATE_CHECKED
+            files.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
+            files.any { it.data.checked } -> MaterialCheckBox.STATE_INDETERMINATE
+            else -> MaterialCheckBox.STATE_UNCHECKED
+        }
+    }
+}
 
 data class FileViewData(
     val checked: Boolean,
