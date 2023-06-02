@@ -42,7 +42,7 @@ class DashboardRepository(
     }
 
     suspend fun getDashboardCourses(forceNetwork: Boolean): List<DashboardCard> {
-        return courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull ?: emptyList()
+        return courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull.orEmpty()
     }
 
     suspend fun getSyncedCourseIds(): Set<Long> {

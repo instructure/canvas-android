@@ -38,7 +38,7 @@ class DashboardNetworkDataSource(
             courseApi.getFirstPageCourses(params).depaginate { nextUrl -> courseApi.next(nextUrl, params) }
         }
 
-        return coursesResult.dataOrNull ?: emptyList()
+        return coursesResult.dataOrNull.orEmpty()
     }
 
     override suspend fun getGroups(forceNetwork: Boolean): List<Group> {
