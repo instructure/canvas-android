@@ -17,11 +17,15 @@
 package com.instructure.student.features.dashboard
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 
 class DashboardLocalDataSource(
-    private val courseFacade: CourseFacade
+    private val courseFacade: CourseFacade,
+    private val dashboardCardDao: DashboardCardDao
 ) : DashboardDataSource {
 
     override suspend fun getCourses(forceNetwork: Boolean): List<Course> {
@@ -30,5 +34,13 @@ class DashboardLocalDataSource(
 
     override suspend fun getGroups(forceNetwork: Boolean): List<Group> {
         return emptyList()
+    }
+
+    override suspend fun getDashboardCards(forceNetwork: Boolean): List<DashboardCard> {
+        return dashboardCardDao.findAll().map { it.toApiModel() }
+    }
+
+    suspend fun saveDashboardCards(dashboardCards: List<DashboardCard>) {
+        dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
     }
 }

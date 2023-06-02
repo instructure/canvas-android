@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
@@ -100,22 +101,31 @@ class DashboardRepositoryTest {
     }
 
     @Test
-    fun `Returns list of Dashboard cards if getDashboardCourses is successful`() = runTest {
-        val expected = listOf(DashboardCard(id = 1), DashboardCard(id = 2))
-        coEvery { courseApi.getDashboardCourses(any()) } returns DataResult.Success(expected)
+    fun `Returns list of Dashboard cards from local database if device is offline`() = runTest {
+        val onlineCards = listOf(DashboardCard(1), DashboardCard(2))
+        val offlineCards = listOf(DashboardCard(3), DashboardCard(4))
 
-        val result = repository.getDashboardCourses(true)
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { networkDataSource.getDashboardCards(any()) } returns onlineCards
+        coEvery { localDataSource.getDashboardCards(any()) } returns offlineCards
 
-        Assert.assertEquals(expected, result)
+        val groups = repository.getDashboardCourses(true)
+
+        Assert.assertEquals(offlineCards, groups)
     }
 
     @Test
-    fun `Returns empty list if getDashboardCourses is failed`() = runTest {
-        coEvery { courseApi.getDashboardCourses(any()) } returns DataResult.Fail()
+    fun `Returns list of Dashboard cards from network if device is online`() = runTest {
+        val onlineCards = listOf(DashboardCard(1), DashboardCard(2))
+        val offlineCards = listOf(DashboardCard(3), DashboardCard(4))
 
-        val result = repository.getDashboardCourses(true)
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getDashboardCards(any()) } returns onlineCards
+        coEvery { localDataSource.getDashboardCards(any()) } returns offlineCards
 
-        Assert.assertEquals(emptyList<DashboardCard>(), result)
+        val groups = repository.getDashboardCourses(true)
+
+        Assert.assertEquals(onlineCards, groups)
     }
 
     @Test

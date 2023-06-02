@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
@@ -47,5 +48,9 @@ class DashboardNetworkDataSource(
             .depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }
 
         return groupsResult.dataOrNull ?: emptyList()
+    }
+
+    override suspend fun getDashboardCards(forceNetwork: Boolean): List<DashboardCard> {
+        return courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull.orEmpty()
     }
 }

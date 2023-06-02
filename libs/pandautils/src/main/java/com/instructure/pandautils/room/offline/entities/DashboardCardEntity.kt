@@ -14,17 +14,36 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.features.dashboard
+package com.instructure.pandautils.room.offline.entities
 
-import com.instructure.canvasapi2.models.Course
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.DashboardCard
-import com.instructure.canvasapi2.models.Group
 
-interface DashboardDataSource {
+@Entity
+data class DashboardCardEntity(
+    @PrimaryKey
+    val id: Long,
+    val isK5Subject: Boolean,
+    val shortName: String?,
+    val originalName: String?,
+    val courseCode: String?
+) {
+    constructor(dashboardCard: DashboardCard) : this(
+        dashboardCard.id,
+        dashboardCard.isK5Subject,
+        dashboardCard.shortName,
+        dashboardCard.originalName,
+        dashboardCard.courseCode,
+    )
 
-    suspend fun getCourses(forceNetwork: Boolean): List<Course>
-
-    suspend fun getGroups(forceNetwork: Boolean): List<Group>
-
-    suspend fun getDashboardCards(forceNetwork: Boolean): List<DashboardCard>
+    fun toApiModel(): DashboardCard {
+        return DashboardCard(
+            id,
+            isK5Subject,
+            shortName,
+            originalName,
+            courseCode
+        )
+    }
 }

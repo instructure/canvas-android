@@ -26,7 +26,7 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.NetworkStateProvider
 
 class DashboardRepository(
-    localDataSource: DashboardLocalDataSource,
+    private val localDataSource: DashboardLocalDataSource,
     networkDataSource: DashboardNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     private val courseApi: CourseAPI.CoursesInterface,
@@ -42,7 +42,9 @@ class DashboardRepository(
     }
 
     suspend fun getDashboardCourses(forceNetwork: Boolean): List<DashboardCard> {
-        return courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull.orEmpty()
+        val dashboardCards = dataSource.getDashboardCards(forceNetwork)
+        localDataSource.saveDashboardCards(dashboardCards)
+        return dashboardCards
     }
 
     suspend fun getSyncedCourseIds(): Set<Long> {

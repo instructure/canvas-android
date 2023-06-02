@@ -17,6 +17,7 @@
 package com.instructure.student.features.dashboard
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -29,8 +30,9 @@ import org.junit.Test
 class DashboardLocalDataSourceTest {
 
     private val courseFacade: CourseFacade = mockk(relaxed = true)
+    private val dashboardCardDao: DashboardCardDao = mockk(relaxed = true)
 
-    private val dataSource = DashboardLocalDataSource(courseFacade)
+    private val dataSource = DashboardLocalDataSource(courseFacade, dashboardCardDao)
 
     @Test
     fun `GetCourses returns all courses`() = runTest {

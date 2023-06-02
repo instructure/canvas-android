@@ -36,6 +36,7 @@ import com.instructure.pandautils.room.offline.entities.*
         CourseFilesEntity::class,
         CourseGradingPeriodEntity::class,
         CourseSyncSettingsEntity::class,
+        DashboardCardEntity::class,
         DiscussionEntryAttachmentEntity::class,
         DiscussionEntryEntity::class,
         DiscussionParticipantEntity::class,
@@ -130,4 +131,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun moduleNameDao(): ModuleNameDao
 
     abstract fun moduleCompletionRequirementDao(): ModuleCompletionRequirementDao
+
+    abstract fun dashboardCardDao(): DashboardCardDao
 }

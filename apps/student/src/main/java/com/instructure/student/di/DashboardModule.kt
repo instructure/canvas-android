@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.dashboard.DashboardLocalDataSource
@@ -59,8 +60,8 @@ class DashboardModule {
     }
 
     @Provides
-    fun provideDashboardLocalDataSource(courseFacade: CourseFacade): DashboardLocalDataSource {
-        return DashboardLocalDataSource(courseFacade)
+    fun provideDashboardLocalDataSource(courseFacade: CourseFacade, dashboardCardDao: DashboardCardDao): DashboardLocalDataSource {
+        return DashboardLocalDataSource(courseFacade, dashboardCardDao)
     }
 
     @Provides

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "321e391c9b0bc3cb1cf1f28ee13c2076",
+    "identityHash": "1b1eafa96cb51159cad1da7539fdfe5b",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -907,6 +907,50 @@
           "autoGenerate": false,
           "columnNames": [
             "courseId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "DashboardCardEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isK5Subject` INTEGER NOT NULL, `shortName` TEXT, `originalName` TEXT, `courseCode` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isK5Subject",
+            "columnName": "isK5Subject",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shortName",
+            "columnName": "shortName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "originalName",
+            "columnName": "originalName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "courseCode",
+            "columnName": "courseCode",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
           ]
         },
         "indices": [],
@@ -3577,7 +3621,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '321e391c9b0bc3cb1cf1f28ee13c2076')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b1eafa96cb51159cad1da7539fdfe5b')"
     ]
   }
 }
