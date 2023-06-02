@@ -31,7 +31,8 @@
         android:clipToPadding="false"
         android:orientation="vertical">
 
-        <FrameLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/fullScreenCoordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -43,7 +44,7 @@
 
             <include layout="@layout/loading_canvas_view"/>
 
-        </FrameLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"

@@ -58,16 +58,26 @@ class CourseFacade(
 
     suspend fun getCourseById(id: Long): Course? {
         val courseEntity = courseDao.findById(id)
-        val termEntity = courseEntity?.termId?.let { termDao.findById(it) }
-        val enrollments = enrollmentFacade.getEnrollmentsByCourseId(id)
-        val sectionEntities = sectionDao.findByCourseId(id)
-        val courseGradingPeriodEntities = courseGradingPeriodDao.findByCourseId(id)
+        return if (courseEntity != null) createFullApiModelFromEntity(courseEntity) else null
+    }
+
+    suspend fun getAllCourses(): List<Course> {
+        return courseDao.findAll().map {
+            createFullApiModelFromEntity(it)
+        }
+    }
+
+    private suspend fun createFullApiModelFromEntity(courseEntity: CourseEntity): Course {
+        val termEntity = courseEntity.termId?.let { termDao.findById(it) }
+        val enrollments = enrollmentFacade.getEnrollmentsByCourseId(courseEntity.id)
+        val sectionEntities = sectionDao.findByCourseId(courseEntity.id)
+        val courseGradingPeriodEntities = courseGradingPeriodDao.findByCourseId(courseEntity.id)
         val gradingPeriods = courseGradingPeriodEntities.map {
             gradingPeriodDao.findById(it.gradingPeriodId).toApiModel()
         }
-        val tabEntities = tabDao.findByCourseId(id)
+        val tabEntities = tabDao.findByCourseId(courseEntity.id)
 
-        return courseEntity?.toApiModel(
+        return courseEntity.toApiModel(
             term = termEntity?.toApiModel(),
             enrollments = enrollments.toMutableList(),
             sections = sectionEntities.map { it.toApiModel() },

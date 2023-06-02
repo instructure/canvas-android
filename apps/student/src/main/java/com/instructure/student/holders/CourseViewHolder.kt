@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderCourseCardBinding
@@ -41,7 +42,9 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(course: Course, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
+    fun bind(courseItem: DashboardCourseItem, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
+        val course = courseItem.course
+
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
@@ -55,6 +58,18 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
         courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
+
+        if (courseItem.available) {
+            cardView.alpha = 1f
+            cardView.isEnabled = true
+            overflow.isEnabled = true
+        } else {
+            cardView.alpha = 0.5f
+            cardView.isEnabled = false
+            overflow.isEnabled = false
+        }
+
+        offlineSyncIcon.setVisible(courseItem.availableOffline)
 
         cardView.setOnClickListener { callback.onCourseSelected(course)}
 
