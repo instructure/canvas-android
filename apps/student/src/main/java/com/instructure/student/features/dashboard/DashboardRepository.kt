@@ -43,7 +43,9 @@ class DashboardRepository(
 
     suspend fun getDashboardCourses(forceNetwork: Boolean): List<DashboardCard> {
         val dashboardCards = dataSource.getDashboardCards(forceNetwork)
-        localDataSource.saveDashboardCards(dashboardCards)
+        if (isOnline()) {
+            localDataSource.saveDashboardCards(dashboardCards)
+        }
         return dashboardCards
     }
 

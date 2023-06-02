@@ -17,9 +17,13 @@
 package com.instructure.student.features.dashboard
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -49,5 +53,24 @@ class DashboardLocalDataSourceTest {
         val result = dataSource.getGroups(false)
 
         Assert.assertEquals(emptyList<Course>(), result)
+    }
+
+    @Test
+    fun `getDashboardCourses returns list of Dashboard cards if getDashboardCourses is successful`() = runTest {
+        val dashboardCards = listOf(DashboardCardEntity(DashboardCard(1)), DashboardCardEntity(DashboardCard(2)))
+        coEvery { dashboardCardDao.findAll() } returns dashboardCards
+
+        val result = dataSource.getDashboardCards(true)
+
+        Assert.assertEquals(listOf(DashboardCard(1), DashboardCard(2)), result)
+    }
+
+    @Test
+    fun `saveDashboardCards saves entities to the dao`() = runTest {
+        val dashboardCards = listOf(DashboardCard(1), DashboardCard(2))
+
+        dataSource.saveDashboardCards(dashboardCards)
+
+        coVerify { dashboardCardDao.updateEntities(listOf(DashboardCardEntity(DashboardCard(1)), DashboardCardEntity(DashboardCard(2)))) }
     }
 }

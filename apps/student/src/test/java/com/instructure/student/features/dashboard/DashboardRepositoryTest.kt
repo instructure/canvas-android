@@ -20,12 +20,11 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -109,9 +108,9 @@ class DashboardRepositoryTest {
         coEvery { networkDataSource.getDashboardCards(any()) } returns onlineCards
         coEvery { localDataSource.getDashboardCards(any()) } returns offlineCards
 
-        val groups = repository.getDashboardCourses(true)
+        val result = repository.getDashboardCourses(true)
 
-        Assert.assertEquals(offlineCards, groups)
+        Assert.assertEquals(offlineCards, result)
     }
 
     @Test
@@ -123,9 +122,21 @@ class DashboardRepositoryTest {
         coEvery { networkDataSource.getDashboardCards(any()) } returns onlineCards
         coEvery { localDataSource.getDashboardCards(any()) } returns offlineCards
 
-        val groups = repository.getDashboardCourses(true)
+        val result = repository.getDashboardCourses(true)
 
-        Assert.assertEquals(onlineCards, groups)
+        Assert.assertEquals(onlineCards, result)
+    }
+
+    @Test
+    fun `Returned dashboard courses are saved to the local store`() = runTest {
+        val onlineCards = listOf(DashboardCard(1), DashboardCard(2))
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getDashboardCards(any()) } returns onlineCards
+
+        repository.getDashboardCourses(true)
+
+        coVerify { localDataSource.saveDashboardCards(onlineCards) }
     }
 
     @Test

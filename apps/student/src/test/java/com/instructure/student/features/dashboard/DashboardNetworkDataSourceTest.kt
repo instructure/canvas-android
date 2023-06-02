@@ -19,6 +19,7 @@ package com.instructure.student.features.dashboard
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -92,5 +93,24 @@ class DashboardNetworkDataSourceTest {
         val result = dataSource.getGroups(true)
 
         Assert.assertEquals(groups, result)
+    }
+
+    @Test
+    fun `Returns list of Dashboard cards if getDashboardCourses is successful`() = runTest {
+        val expected = listOf(DashboardCard(id = 1), DashboardCard(id = 2))
+        coEvery { courseApi.getDashboardCourses(any()) } returns DataResult.Success(expected)
+
+        val result = dataSource.getDashboardCards(true)
+
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Returns empty list if getDashboardCourses is failed`() = runTest {
+        coEvery { courseApi.getDashboardCourses(any()) } returns DataResult.Fail()
+
+        val result = dataSource.getDashboardCards(true)
+
+        Assert.assertEquals(emptyList<DashboardCard>(), result)
     }
 }
