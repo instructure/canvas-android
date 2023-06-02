@@ -26,6 +26,8 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 data class FileViewModel(
     val data: FileViewData,
     val courseId: Long,
+    val fileId: Long,
+    val fileUrl: String?,
     val tabId: String,
     val onCheckedChanged: (Boolean, FileViewModel) -> Unit
 ) : ItemViewModel {

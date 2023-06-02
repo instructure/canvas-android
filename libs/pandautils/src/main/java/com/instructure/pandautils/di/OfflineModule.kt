@@ -282,4 +282,9 @@ class OfflineModule {
     ): LockInfoFacade {
         return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao)
     }
+
+    @Provides
+    fun provideFileSyncSettingsDao(appDatabase: OfflineDatabase): FileSyncSettingsDao {
+        return appDatabase.fileSyncSettingsDao()
+    }
 }

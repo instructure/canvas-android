@@ -28,7 +28,8 @@ data class CourseSyncSettingsEntity(
     val fullContentSync: Boolean,
     val assignments: Boolean,
     val pages: Boolean,
-    val grades: Boolean
+    val grades: Boolean,
+    val fullFileSync: Boolean
 ) {
 
     fun isTabSelected(tabId: String): Boolean {
@@ -36,6 +37,7 @@ data class CourseSyncSettingsEntity(
             Tab.ASSIGNMENTS_ID -> assignments
             Tab.PAGES_ID -> pages
             Tab.GRADES_ID -> grades
+            Tab.FILES_ID -> fullFileSync
             else -> false
         }
 

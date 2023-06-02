@@ -69,7 +69,8 @@ import com.instructure.pandautils.room.offline.entities.*
         LockInfoEntity::class,
         LockedModuleEntity::class,
         ModuleNameEntity::class,
-        ModuleCompletionRequirementEntity::class
+        ModuleCompletionRequirementEntity::class,
+        FileSyncSettingsEntity::class
     ], version = 3
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -130,4 +131,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun moduleNameDao(): ModuleNameDao
 
     abstract fun moduleCompletionRequirementDao(): ModuleCompletionRequirementDao
+
+    abstract fun fileSyncSettingsDao(): FileSyncSettingsDao
 }

@@ -27,12 +27,16 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 
 class OfflineContentRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
-    private val courseSyncSettingsDao: CourseSyncSettingsDao
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val fileSyncSettingsDao: FileSyncSettingsDao
 ) {
     suspend fun getCourse(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -96,22 +100,33 @@ class OfflineContentRepository(
         !it.isHidden && !it.isLocked && !it.isHiddenForUser && !it.isLockedForUser
     }
 
-    suspend fun findCourseSyncSettings(courseId: Long): CourseSyncSettingsEntity {
-        var courseSettingsEntity = courseSyncSettingsDao.findById(courseId)
-        if (courseSettingsEntity == null) {
-            courseSettingsEntity = CourseSyncSettingsEntity(
+    suspend fun findCourseSyncSettings(courseId: Long): CourseSyncSettingsWithFiles {
+        var courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(courseId)
+        if (courseSettingsWithFiles == null) {
+            val default = CourseSyncSettingsEntity(
                 courseId,
+                false,
                 false,
                 false,
                 false,
                 false
             )
-            courseSyncSettingsDao.insert(courseSettingsEntity)
+            courseSyncSettingsDao.insert(default)
+
+            courseSettingsWithFiles = CourseSyncSettingsWithFiles(
+                default,
+                emptyList()
+            )
+
         }
-        return courseSettingsEntity
+        return courseSettingsWithFiles
     }
 
     suspend fun updateCourseSyncSettings(courseSyncSettingsEntity: CourseSyncSettingsEntity) {
         courseSyncSettingsDao.update(courseSyncSettingsEntity)
+    }
+
+    suspend fun saveFileSettings(fileSyncSettingsEntity: FileSyncSettingsEntity) {
+        fileSyncSettingsDao.insert(fileSyncSettingsEntity)
     }
 }
