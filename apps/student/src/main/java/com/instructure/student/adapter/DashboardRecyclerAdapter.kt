@@ -129,11 +129,9 @@ class DashboardRecyclerAdapter(
             val dashboardCards = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
 
             mCourseMap = rawCourses.associateBy { it.id }
-            val groupMap = groups.associateBy { it.id }
 
             // Map not null is needed because the dashboard api can return unpublished courses
-            val visibleCourses = dashboardCards.mapNotNull { mCourseMap[it.id] }
-                    .filter { it.isCurrentEnrolment() || it.isFutureEnrolment() }
+            val visibleCourses = dashboardCards.map { createCourseFromDashboardCard(it, mCourseMap) }
 
             // Filter groups
             val allActiveGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
@@ -154,6 +152,15 @@ class DashboardRecyclerAdapter(
         } catch {
             adapterToRecyclerViewCallback.setDisplayNoConnection(true)
             mAdapterToFragmentCallback.onRefreshFinished()
+        }
+    }
+
+    private fun createCourseFromDashboardCard(dashboardCard: DashboardCard, courseMap: Map<Long, Course>): Course {
+        val course = courseMap[dashboardCard.id]
+        return if (course != null) {
+            course
+        } else {
+            Course(id = dashboardCard.id, name = dashboardCard.shortName ?: "", originalName = dashboardCard.originalName, courseCode = dashboardCard.courseCode)
         }
     }
 
