@@ -68,4 +68,16 @@ class DashboardPageTest : TeacherTest() {
 
         dashboardPage.assertHasCourses(data.courses.values.toList())
     }
+
+    @Test
+    fun testGlobalAnnouncementInDashboard() {
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, accountNotificationCount = 1)
+
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+        val accountNotification = data.accountNotifications.values.first()
+
+        dashboardPage.assertNotificationDisplayed(accountNotification)
+    }
 }
