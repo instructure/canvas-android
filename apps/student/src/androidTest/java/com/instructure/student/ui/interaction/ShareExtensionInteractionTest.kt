@@ -24,6 +24,7 @@ import androidx.core.content.FileProvider
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.Stub
@@ -207,6 +208,8 @@ class ShareExtensionInteractionTest : StudentTest() {
     fun shareExtensionShowsUpCorrectlyWhenSharingMultipleFiles() {
         val data = createMockData()
         val student = data.students[0]
+
+        File(getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
         val uri = setupFileOnDevice("sample.jpg")
         val uri2 = setupFileOnDevice("samplepdf.pdf")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
