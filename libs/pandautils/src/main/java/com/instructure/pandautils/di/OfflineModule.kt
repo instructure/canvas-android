@@ -189,6 +189,11 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideDashboardCardDao(offlineDatabase: OfflineDatabase): DashboardCardDao {
+        return offlineDatabase.dashboardCardDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,

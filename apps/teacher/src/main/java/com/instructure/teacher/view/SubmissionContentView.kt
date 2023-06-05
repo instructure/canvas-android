@@ -894,7 +894,6 @@ class SubmissionContentView(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCommentTextFocused(event: CommentTextFocusedEvent) {
         if (event.assigneeId == mAssignee.id) {
-            pdfFragment?.exitCurrentlyActiveMode()
             activity.isCurrentlyAnnotating = false
         }
     }

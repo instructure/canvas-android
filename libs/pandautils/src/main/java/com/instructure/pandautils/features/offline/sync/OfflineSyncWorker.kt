@@ -30,8 +30,10 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.PageEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -53,11 +55,15 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseFacade: CourseFacade,
     private val assignmentFacade: AssignmentFacade,
     private val quizDao: QuizDao,
-    private val quizApi: QuizAPI.QuizInterface
+    private val quizApi: QuizAPI.QuizInterface,
+    private val dashboardCardDao: DashboardCardDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
         try {
+            val dashboardCards = courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
+            dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
+
             val courseIds = inputData.getLongArray(COURSE_IDS)
             val courses = courseIds?.let {
                 courseSyncSettingsDao.findByIds(courseIds.toList())

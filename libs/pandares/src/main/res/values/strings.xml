@@ -1430,4 +1430,5 @@
     <string name="synySettings_wifiConfirmationMessage">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
     <string name="syncSettings_wifiConfirmationPositiveButton">Turn Off</string>
     <string name="syncSettings_manualDescription">Manual</string>
+    <string name="offlineModeSnackbar">Offline Mode</string>
 </resources>

@@ -108,4 +108,39 @@ class CourseFacadeTest {
         Assert.assertEquals(gradingPeriod, result.gradingPeriods?.first())
         Assert.assertEquals(tab, result.tabs?.first())
     }
+
+    @Test
+    fun `getAllCourses should return the list of courses mapped correctly to api model`() = runTest {
+        val courseId = 1L
+        val term = Term(id = 1L, name = "Term")
+        val course = Course(id = courseId, term = term)
+        val courseEntity = CourseEntity(course)
+        val termEntity = TermEntity(term)
+        val enrollments = listOf(Enrollment(id = 1L, role = Enrollment.EnrollmentType.Student))
+        val section = Section(courseId = courseId, students = null)
+        val sectionEntities = listOf(SectionEntity(section, courseId))
+        val gradingPeriod = GradingPeriod(id = 1L, title = "Grading period")
+        val gradingPeriodEntity = GradingPeriodEntity(gradingPeriod)
+        val courseGradingPeriodEntities = listOf(CourseGradingPeriodEntity(courseId, gradingPeriod.id))
+        val tab = Tab(tabId = "tabId", label = "Label")
+        val tabEntities = listOf(TabEntity(tab, courseId))
+
+        coEvery { courseDao.findAll() } returns listOf(courseEntity)
+        coEvery { termDao.findById(any()) } returns termEntity
+        coEvery { enrollmentFacade.getEnrollmentsByCourseId(courseId) } returns enrollments
+        coEvery { sectionDao.findByCourseId(courseId) } returns sectionEntities
+        coEvery { courseGradingPeriodDao.findByCourseId(courseId) } returns courseGradingPeriodEntities
+        coEvery { gradingPeriodDao.findById(any()) } returns gradingPeriodEntity
+        coEvery { tabDao.findByCourseId(courseId) } returns tabEntities
+
+        val result = facade.getAllCourses()
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals(courseId, result.first().id)
+        Assert.assertEquals(term, result.first().term)
+        Assert.assertEquals(enrollments, result.first().enrollments)
+        Assert.assertEquals(section, result.first().sections.first())
+        Assert.assertEquals(gradingPeriod, result.first().gradingPeriods?.first())
+        Assert.assertEquals(tab, result.first().tabs?.first())
+    }
 }

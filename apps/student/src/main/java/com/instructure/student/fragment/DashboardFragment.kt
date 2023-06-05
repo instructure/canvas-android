@@ -57,18 +57,25 @@ import com.instructure.student.dialog.EditCourseNicknameDialog
 import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
+import com.instructure.student.features.dashboard.DashboardRepository
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import javax.inject.Inject
 
 private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
+@AndroidEntryPoint
 class DashboardFragment : ParentFragment() {
+
+    @Inject
+    lateinit var repository: DashboardRepository
 
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
@@ -161,7 +168,7 @@ class DashboardFragment : ParentFragment() {
             override fun onManageOfflineContent(course: Course) {
                 RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute(course))
             }
-        })
+        }, repository)
 
         configureRecyclerView()
         recyclerBinding.listView.isSelectionEnabled = false
