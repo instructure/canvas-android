@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.offline
+package com.instructure.pandautils.features.offline.offlinecontent
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
@@ -128,5 +128,13 @@ class OfflineContentRepository(
 
     suspend fun saveFileSettings(fileSyncSettingsEntity: FileSyncSettingsEntity) {
         fileSyncSettingsDao.insert(fileSyncSettingsEntity)
+    }
+
+    suspend fun deleteFileSettings(fileId: Long) {
+        fileSyncSettingsDao.deleteById(fileId)
+    }
+
+    suspend fun deleteFileSettings(fileIds: List<Long>) {
+        fileSyncSettingsDao.deleteByIds(fileIds)
     }
 }

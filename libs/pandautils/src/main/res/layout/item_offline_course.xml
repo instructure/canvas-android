@@ -11,7 +11,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel" />
+            type="com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

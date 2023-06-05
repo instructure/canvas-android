@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.offline
+package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
@@ -24,10 +24,9 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
-import com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel
-import com.instructure.pandautils.features.offline.itemviewmodels.CourseTabViewModel
-import com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel
+import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
+import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
+import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.FileViewModel
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
@@ -43,6 +42,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
+
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -103,7 +103,8 @@ class OfflineContentViewModel @Inject constructor(
         return courses.map { course ->
             val courseSettings = getCourseSyncSettings(course.id)
             val tabs = course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }.orEmpty()
-            val files = if (tabs.any { it.tabId == Tab.FILES_ID }) offlineContentRepository.getCourseFiles(course.id) else emptyList()
+            val files =
+                if (tabs.any { it.tabId == Tab.FILES_ID }) offlineContentRepository.getCourseFiles(course.id) else emptyList()
             val size = Formatter.formatShortFileSize(context, files.sumOf { it.size })
             createCourseItemViewModel(course, size, tabs, files, courseSettings)
         }
@@ -196,7 +197,12 @@ class OfflineContentViewModel @Inject constructor(
                 title = tab.label.orEmpty(),
                 size = size,
                 files = files.map { fileFolder ->
-                    createFileViewModel(courseSyncSettingsWithFiles.isFileSelected(fileFolder.id), fileFolder, courseId, tab.tabId)
+                    createFileViewModel(
+                        courseSyncSettingsWithFiles.isFileSelected(fileFolder.id),
+                        fileFolder,
+                        courseId,
+                        tab.tabId
+                    )
                 }),
             courseId = courseId,
             tabId = tab.tabId,
@@ -242,7 +248,14 @@ class OfflineContentViewModel @Inject constructor(
             Tab.GRADES_ID -> courseSyncSettings?.copy(grades = checked)
             Tab.PAGES_ID -> courseSyncSettings?.copy(pages = checked)
             Tab.ASSIGNMENTS_ID -> courseSyncSettings?.copy(assignments = checked)
-            Tab.FILES_ID -> courseSyncSettings?.copy(fullFileSync = checked)
+            Tab.FILES_ID -> {
+                _data.value?.courseItems?.find { it.courseId == courseId }?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.map {
+                    it.fileId
+                }?.let {
+                    offlineContentRepository.deleteFileSettings(it)
+                }
+                courseSyncSettings?.copy(fullFileSync = checked)
+            }
             else -> courseSyncSettings
         }
 
@@ -283,7 +296,12 @@ class OfflineContentViewModel @Inject constructor(
         val fileViewModel = tabViewModel.data.files.find { it == item } ?: return
         val newFile = fileViewModel.copy(data = fileViewModel.data.copy(checked = checked))
         val newFiles = tabViewModel.data.files.map { if (it == item) newFile else it }
-        val newTabViewModel = tabViewModel.copy(data = tabViewModel.data.copy(synced = newFiles.all { it.data.checked }, files = newFiles))
+        val newTabViewModel = tabViewModel.copy(
+            data = tabViewModel.data.copy(
+                synced = newFiles.all { it.data.checked },
+                files = newFiles
+            )
+        )
         val newTabs = courseViewModel.data.tabs.map { if (it.tabId == item.tabId) newTabViewModel else it }
         val newCourseViewModel = courseViewModel.copy(data = courseViewModel.data.copy(tabs = newTabs))
         val newList = _data.value?.courseItems?.map { if (it == courseViewModel) newCourseViewModel else it }.orEmpty()
@@ -291,7 +309,23 @@ class OfflineContentViewModel @Inject constructor(
         _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
 
         viewModelScope.launch {
-            offlineContentRepository.saveFileSettings(FileSyncSettingsEntity(item.fileId, item.courseId, item.fileUrl))
+            if (checked) {
+                offlineContentRepository.saveFileSettings(
+                    FileSyncSettingsEntity(
+                        item.fileId,
+                        item.courseId,
+                        item.fileUrl
+                    )
+                )
+            } else {
+                offlineContentRepository.deleteFileSettings(item.fileId)
+            }
+
+            syncSettings[newTabViewModel.courseId]?.let {
+                val updated =
+                    it.courseSyncSettings.copy(fullFileSync = newTabViewModel.data.files.all { it.data.checked })
+                updateCourseSettings(updated)
+            }
         }
     }
 
@@ -334,7 +368,8 @@ class OfflineContentViewModel @Inject constructor(
         val usedSpace = totalSpace - storageUtils.getFreeSpace()
         val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
-        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
+        val canvasPercent =
+            if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
         val storageInfoText = context.getString(
             R.string.offline_content_storage_info,
             Formatter.formatShortFileSize(context, usedSpace),

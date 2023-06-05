@@ -1,10 +1,10 @@
-package com.instructure.pandautils.features.offline
+package com.instructure.pandautils.features.offline.offlinecontent
 
 import androidx.databinding.BaseObservable
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel
-import com.instructure.pandautils.features.offline.itemviewmodels.CourseTabViewModel
-import com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel
+import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
+import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
+import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.FileViewModel
 
 data class OfflineContentViewData(
     val storageInfo: StorageInfo,

@@ -15,37 +15,40 @@
  *
  */
 
-package com.instructure.pandautils.features.offline.itemviewmodels
+package com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels
 
-import android.widget.CompoundButton.OnCheckedChangeListener
+import android.widget.CompoundButton
 import androidx.databinding.Bindable
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
-import com.instructure.pandautils.features.offline.CourseItemViewData
-import com.instructure.pandautils.features.offline.OfflineItemViewModelType
+import com.instructure.pandautils.features.offline.offlinecontent.CourseTabViewData
+import com.instructure.pandautils.features.offline.offlinecontent.OfflineItemViewModelType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class CourseItemViewModel(
-    val data: CourseItemViewData,
+data class CourseTabViewModel(
+    val data: CourseTabViewData,
     val courseId: Long,
+    val tabId: String,
     @get:Bindable override var collapsed: Boolean,
-    val onCheckedChanged: (Boolean, CourseItemViewModel) -> Unit
-) : GroupItemViewModel(collapsable = true, items = data.tabs) {
-    override val layoutId = R.layout.item_offline_course
-    override val viewType = OfflineItemViewModelType.COURSE.viewType
+    val onCheckedChanged: (Boolean, CourseTabViewModel) -> Unit
+) : GroupItemViewModel(collapsable = true, items = data.files) {
+    override val layoutId = R.layout.item_offline_tab
+    override val viewType = OfflineItemViewModelType.COURSE_TAB.viewType
 
-    val onCheckChanged = OnCheckedChangeListener { cb, checked ->
+    val onCheckChanged = CompoundButton.OnCheckedChangeListener { cb, checked ->
         if (cb.isPressed) onCheckedChanged(checked, this)
     }
 
     override fun areContentsTheSame(other: ItemViewModel): Boolean {
-        return other is CourseItemViewModel
+        return other is CourseTabViewModel
                 && other.courseId == this.courseId
+                && other.tabId == this.tabId
                 && other.data == this.data
     }
 
     override fun areItemsTheSame(other: ItemViewModel): Boolean {
-        return other is CourseItemViewModel && other.courseId == this.courseId
+        return other is CourseTabViewModel
+                && other.courseId == this.courseId
+                && other.tabId == this.tabId
     }
 }

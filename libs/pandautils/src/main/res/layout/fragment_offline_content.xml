@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.pandautils.features.offline.OfflineContentViewModel" />
+            type="com.instructure.pandautils.features.offline.offlinecontent.OfflineContentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

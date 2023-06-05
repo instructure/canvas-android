@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.offline
+package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -14,4 +14,10 @@ interface FileSyncSettingsDao {
 
     @Update
     suspend fun update(entity: FileSyncSettingsEntity)
+
+    @Query("DELETE FROM FileSyncSettingsEntity WHERE id=:fileId")
+    suspend fun deleteById(fileId: Long)
+
+    @Query("DELETE FROM FileSyncSettingsEntity WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<Long>)
 }

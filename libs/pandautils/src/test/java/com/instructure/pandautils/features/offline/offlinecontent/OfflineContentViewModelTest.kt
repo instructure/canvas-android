@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.offline
+package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
@@ -24,19 +24,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.*
@@ -55,7 +57,7 @@ class OfflineContentViewModelTest {
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: OfflineContentViewModel
 
@@ -72,7 +74,6 @@ class OfflineContentViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
 
         unmockkAll()
     }
@@ -133,7 +134,9 @@ class OfflineContentViewModelTest {
         val firstCourseTabs = viewModel.data.value?.courseItems?.first()?.data?.tabs
         Assert.assertEquals(arrayListOf("Pages", "Files"), firstCourseTabs?.map { it.data.title })
         Assert.assertTrue(firstCourseTabs?.first()?.data?.files.isNullOrEmpty())
-        Assert.assertEquals(arrayListOf("File 1", "File 2"), firstCourseTabs?.last()?.data?.files?.map { it.data.title })
+        Assert.assertEquals(
+            arrayListOf("File 1", "File 2"),
+            firstCourseTabs?.last()?.data?.files?.map { it.data.title })
     }
 
     @Test
@@ -162,7 +165,7 @@ class OfflineContentViewModelTest {
         }
 
         Assert.assertEquals(3, viewModel.data.value?.selectedCount)
-        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checked.orDefault())
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
         Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
         Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.data?.checked.orDefault())
 
@@ -171,7 +174,7 @@ class OfflineContentViewModelTest {
         }
 
         Assert.assertEquals(0, viewModel.data.value?.selectedCount)
-        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checked.orDefault())
+        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.data?.checked.orDefault())
     }
@@ -193,7 +196,7 @@ class OfflineContentViewModelTest {
         }
 
         Assert.assertEquals(1, viewModel.data.value?.selectedCount)
-        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checked.orDefault())
+        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.data?.checked.orDefault())
     }
 
@@ -214,8 +217,62 @@ class OfflineContentViewModelTest {
         }
 
         Assert.assertEquals(2, viewModel.data.value?.selectedCount)
-        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checked.orDefault())
+        Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
+    }
+
+    @Test
+    fun `Selecting not all files sets file checkbox to indeterminate`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.first()
+            ?.apply {
+                onCheckedChanged.invoke(true, this)
+            }
+
+        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+    }
+
+    @Test
+    fun `Selecting file writes to db`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        val fileItem =
+            viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.first()
+
+        fileItem?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        coVerify(exactly = 1) {
+            offlineContentRepository.saveFileSettings(FileSyncSettingsEntity(1, 1, null))
+        }
+    }
+
+    @Test
+    fun `Deselecting file deletes from db`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.first()
+            ?.apply {
+                onCheckedChanged.invoke(true, this)
+            }
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.first()
+            ?.apply {
+                onCheckedChanged.invoke(false, this)
+            }
+
+        coVerify(exactly = 1) {
+            offlineContentRepository.deleteFileSettings(1)
+        }
     }
 
     @Test
@@ -233,8 +290,38 @@ class OfflineContentViewModelTest {
         Assert.assertEquals(1, viewModel.data.value?.courseItems?.size)
     }
 
+    @Test
+    fun `Move back on sync click`() {
+        createViewModel()
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.onSyncClicked()
+
+        assert(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Back)
+    }
+
+    @Test
+    fun `Start sync`() {
+        createViewModel()
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.onSyncClicked()
+
+        coVerify {
+            offlineSyncHelper.syncCourses(any())
+        }
+    }
+
     private fun createViewModel() {
-        viewModel = OfflineContentViewModel(savedStateHandle, context, offlineContentRepository, storageUtils, offlineSyncHelper)
+        viewModel = OfflineContentViewModel(
+            savedStateHandle,
+            context,
+            offlineContentRepository,
+            storageUtils,
+            offlineSyncHelper
+        )
         viewModel.data.observe(lifecycleOwner) {}
     }
 

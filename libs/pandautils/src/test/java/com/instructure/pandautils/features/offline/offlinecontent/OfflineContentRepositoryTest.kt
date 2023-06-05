@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.offline;
+package com.instructure.pandautils.features.offline.offlinecontent
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -26,11 +26,16 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 import org.junit.function.ThrowingRunnable
@@ -42,11 +47,13 @@ class OfflineContentRepositoryTest {
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
+    private val fileSyncSettingsDao: FileSyncSettingsDao = mockk(relaxed = true)
 
-    private val repository = OfflineContentRepository(coursesApi, fileFolderApi, courseSyncSettingsDao)
+    private val repository =
+        OfflineContentRepository(coursesApi, fileFolderApi, courseSyncSettingsDao, fileSyncSettingsDao)
 
     @Test
-    fun `Returns course`() = runBlockingTest {
+    fun `Returns course`() = runTest {
         val course = Course(id = 1L, name = "Course")
 
         coEvery { coursesApi.getCourse(any(), any()) } returns DataResult.Success(course)
@@ -57,7 +64,7 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Throws exception when course requests fails`() = runBlockingTest {
+    fun `Throws exception when course requests fails`() = runTest {
         coEvery { coursesApi.getCourse(any(), any()) } returns DataResult.Fail()
 
         Assert.assertThrows(IllegalStateException::class.java, ThrowingRunnable {
@@ -66,10 +73,18 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Returns courses`() = runBlockingTest {
+    fun `Returns courses`() = runTest {
         val courses = listOf(
-            Course(id = 1L, name = "Course 1", enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
-            Course(id = 2L, name = "Course 2", enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE)))
+            Course(
+                id = 1L,
+                name = "Course 1",
+                enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))
+            ),
+            Course(
+                id = 2L,
+                name = "Course 2",
+                enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))
+            )
         )
 
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
@@ -80,9 +95,13 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Returns courses only with active enrollment and valid term`() = runBlockingTest {
+    fun `Returns courses only with active enrollment and valid term`() = runTest {
         val courses = listOf(
-            Course(id = 1L, name = "Course 1", enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
+            Course(
+                id = 1L,
+                name = "Course 1",
+                enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))
+            ),
             Course(
                 id = 2L,
                 name = "Course 2",
@@ -100,7 +119,7 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Throws exception when courses requests fails`() = runBlockingTest {
+    fun `Throws exception when courses requests fails`() = runTest {
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Fail()
 
         Assert.assertThrows(IllegalStateException::class.java, ThrowingRunnable {
@@ -109,7 +128,7 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Returns course files`() = runBlockingTest {
+    fun `Returns course files`() = runTest {
         val root = FileFolder(id = 1)
         val files = listOf(FileFolder(id = 2), FileFolder(id = 3))
         val folders = listOf(FileFolder(id = 4), FileFolder(id = 5))
@@ -129,7 +148,52 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Hidden and locked files and folders are filtered`() = runBlockingTest {
+    fun `Create default course settings`() = runTest {
+        val expected = CourseSyncSettingsEntity(1L, false, false, false, false, false)
+
+        coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns null
+
+        val syncSettings = repository.findCourseSyncSettings(1L)
+
+        coVerify(exactly = 1) { courseSyncSettingsDao.insert(expected) }
+
+        assertEquals(expected, syncSettings.courseSyncSettings)
+    }
+
+    @Test
+    fun `Add file calls dao`() = runTest {
+        val fileSettings = FileSyncSettingsEntity(1L, 1L, null)
+
+        repository.saveFileSettings(fileSettings)
+
+        coVerify(exactly = 1) { fileSyncSettingsDao.insert(fileSettings) }
+    }
+
+    @Test
+    fun `Delete file calls dao`() = runTest {
+        repository.deleteFileSettings(1L)
+
+        coVerify(exactly = 1) { fileSyncSettingsDao.deleteById(1L) }
+    }
+
+    @Test
+    fun `Delete files calls dao`() = runTest {
+        repository.deleteFileSettings(listOf(1L, 2L))
+
+        coVerify(exactly = 1) { fileSyncSettingsDao.deleteByIds(listOf(1L, 2L)) }
+    }
+
+    @Test
+    fun `Course settings update updates db`() = runTest {
+        val courseSyncSettings = CourseSyncSettingsEntity(1L, true, false, false, false, false)
+
+        repository.updateCourseSyncSettings(courseSyncSettings)
+
+        coVerify(exactly = 1) { courseSyncSettingsDao.update(courseSyncSettings) }
+    }
+
+    @Test
+    fun `Hidden and locked files and folders are filtered`() = runTest {
         val root = FileFolder(id = 1)
         val files = listOf(
             FileFolder(id = 2),
@@ -159,7 +223,7 @@ class OfflineContentRepositoryTest {
     }
 
     @Test
-    fun `Returns empty list when files request fails`() = runBlockingTest {
+    fun `Returns empty list when files request fails`() = runTest {
         coEvery { fileFolderApi.getRootFolderForContext(any(), any(), any()) } returns DataResult.Fail()
 
         val result = repository.getCourseFiles(1)

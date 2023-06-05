@@ -15,12 +15,12 @@
  *
  */
 
-package com.instructure.pandautils.features.offline.itemviewmodels
+package com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels
 
 import android.widget.CompoundButton
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.offline.FileViewData
-import com.instructure.pandautils.features.offline.OfflineItemViewModelType
+import com.instructure.pandautils.features.offline.offlinecontent.FileViewData
+import com.instructure.pandautils.features.offline.offlinecontent.OfflineItemViewModelType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class FileViewModel(
