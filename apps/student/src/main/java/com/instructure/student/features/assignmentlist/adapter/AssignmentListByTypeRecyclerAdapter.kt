@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.adapter.assignment
+package com.instructure.student.features.assignmentlist.adapter
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Assignment
@@ -23,16 +23,18 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
+import com.instructure.student.features.assignmentlist.AssignmentListRepository
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import java.util.*
 
 class AssignmentListByTypeRecyclerAdapter(
-        context: Context,
-        canvasContext: CanvasContext,
-        adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-        isTesting: Boolean = false,
-        filter: AssignmentListFilter = AssignmentListFilter.ALL
-) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting, filter) {
+    context: Context,
+    canvasContext: CanvasContext,
+    adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
+    isTesting: Boolean = false,
+    filter: AssignmentListFilter = AssignmentListFilter.ALL,
+    repository: AssignmentListRepository
+) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting, filter, repository) {
 
     override fun populateData() {
         assignmentGroups

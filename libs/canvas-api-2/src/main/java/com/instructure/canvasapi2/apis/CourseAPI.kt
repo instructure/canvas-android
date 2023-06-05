@@ -103,6 +103,9 @@ object CourseAPI {
         @GET("courses/{courseId}/grading_periods?per_page=100")
         fun getGradingPeriodsForCourse(@Path("courseId") courseId: Long): Call<GradingPeriodResponse>
 
+        @GET("courses/{courseId}/grading_periods?per_page=100")
+        suspend fun getGradingPeriodsForCourse(@Path("courseId") courseId: Long, @Tag params: RestParams): DataResult<GradingPeriodResponse>
+
         @GET("courses/{courseId}/users/{studentId}?include[]=avatar_url&include[]=enrollments&include[]=inactive_enrollments&include[]=current_grading_period_scores&include[]=email")
         fun getCourseStudent(@Path("courseId") courseId: Long, @Path("studentId") studentId: Long): Call<User>
 

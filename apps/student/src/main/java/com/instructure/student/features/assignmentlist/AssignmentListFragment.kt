@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.assignmentlist
 
 import android.content.DialogInterface
 import android.content.res.Configuration
@@ -47,22 +47,29 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
-import com.instructure.student.adapter.assignment.AssignmentListByDateRecyclerAdapter
-import com.instructure.student.adapter.assignment.AssignmentListByTypeRecyclerAdapter
-import com.instructure.student.adapter.assignment.AssignmentListFilter
-import com.instructure.student.adapter.assignment.AssignmentListRecyclerAdapter
 import com.instructure.student.databinding.AssignmentListLayoutBinding
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignmentlist.adapter.AssignmentListByDateRecyclerAdapter
+import com.instructure.student.features.assignmentlist.adapter.AssignmentListByTypeRecyclerAdapter
+import com.instructure.student.features.assignmentlist.adapter.AssignmentListFilter
+import com.instructure.student.features.assignmentlist.adapter.AssignmentListRecyclerAdapter
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @com.google.android.material.badge.ExperimentalBadgeUtils
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "{canvasContext}/assignments")
+@AndroidEntryPoint
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var repository: AssignmentListRepository
 
     private val binding by viewBinding(AssignmentListLayoutBinding::bind)
 
@@ -168,9 +175,21 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private fun createRecyclerAdapter(): AssignmentListRecyclerAdapter {
         return if (sortOrder == AssignmentsSortOrder.SORT_BY_TIME) {
-            AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback, filter = filter)
+            AssignmentListByDateRecyclerAdapter(
+                requireContext(),
+                canvasContext,
+                adapterToAssignmentsCallback,
+                filter = filter,
+                repository = repository
+            )
         } else {
-            AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback, filter = filter)
+            AssignmentListByTypeRecyclerAdapter(
+                requireContext(),
+                canvasContext,
+                adapterToAssignmentsCallback,
+                filter = filter,
+                repository = repository
+            )
         }
     }
 
