@@ -35,6 +35,7 @@ import com.instructure.pandautils.room.offline.entities.*
         CourseEntity::class,
         CourseFilesEntity::class,
         CourseGradingPeriodEntity::class,
+        CourseSettingsEntity::class,
         CourseSyncSettingsEntity::class,
         DashboardCardEntity::class,
         DiscussionEntryAttachmentEntity::class,
@@ -58,6 +59,8 @@ import com.instructure.pandautils.room.offline.entities.*
         RubricCriterionEntity::class,
         RubricCriterionRatingEntity::class,
         RubricSettingsEntity::class,
+        ScheduleItemAssignmentOverrideEntity::class,
+        ScheduleItemEntity::class,
         SectionEntity::class,
         SubmissionDiscussionEntryEntity::class,
         SubmissionEntity::class,
@@ -133,4 +136,12 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun moduleCompletionRequirementDao(): ModuleCompletionRequirementDao
 
     abstract fun dashboardCardDao(): DashboardCardDao
+
+    abstract fun courseSettingsDao(): CourseSettingsDao
+
+    abstract fun scheduleItemDao(): ScheduleItemDao
+
+    abstract fun scheduleItemAssignmentOverrideDao(): ScheduleItemAssignmentOverrideDao
+
+    abstract fun assignmentOverrideDao(): AssignmentOverrideDao
 }

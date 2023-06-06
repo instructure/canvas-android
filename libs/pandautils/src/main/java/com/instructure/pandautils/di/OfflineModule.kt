@@ -194,6 +194,26 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideCourseSettingsDao(offlineDatabase: OfflineDatabase): CourseSettingsDao {
+        return offlineDatabase.courseSettingsDao()
+    }
+
+    @Provides
+    fun provideScheduleItemDao(offlineDatabase: OfflineDatabase): ScheduleItemDao {
+        return offlineDatabase.scheduleItemDao()
+    }
+
+    @Provides
+    fun provideScheduleItemAssignmentOverrideDao(offlineDatabase: OfflineDatabase): ScheduleItemAssignmentOverrideDao {
+        return offlineDatabase.scheduleItemAssignmentOverrideDao()
+    }
+
+    @Provides
+    fun provideAssignmentOverrideDao(offlineDatabase: OfflineDatabase): AssignmentOverrideDao {
+        return offlineDatabase.assignmentOverrideDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
@@ -286,5 +306,15 @@ class OfflineModule {
         completionRequirementDao: ModuleCompletionRequirementDao
     ): LockInfoFacade {
         return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao)
+    }
+
+    @Provides
+    fun provideScheduleItemFacade(
+        scheduleItemDao: ScheduleItemDao,
+        assignmentFacade: AssignmentFacade,
+        assignmentOverrideDao: AssignmentOverrideDao,
+        scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao
+    ): ScheduleItemFacade {
+        return ScheduleItemFacade(scheduleItemDao, assignmentFacade, assignmentOverrideDao, scheduleItemAssignmentOverrideDao)
     }
 }

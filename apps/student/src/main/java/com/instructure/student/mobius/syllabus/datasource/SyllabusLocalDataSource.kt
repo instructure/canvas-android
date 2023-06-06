@@ -5,15 +5,24 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 
-class SyllabusLocalDataSource : SyllabusDataSource {
+class SyllabusLocalDataSource(
+    private val courseSettingsDao: CourseSettingsDao,
+    private val courseFacade: CourseFacade,
+    private val scheduleItemFacade: ScheduleItemFacade
+) : SyllabusDataSource {
 
-    override suspend fun getCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings {
-        TODO("Not yet implemented")
+    override suspend fun getCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return courseSettingsDao.findByCourseId(courseId)?.toApiModel()
     }
 
     override suspend fun getCourseWithSyllabus(courseId: Long, forceNetwork: Boolean): DataResult<Course> {
-        TODO("Not yet implemented")
+        return courseFacade.getCourseById(courseId)?.let {
+            DataResult.Success(it)
+        } ?: DataResult.Fail()
     }
 
     override suspend fun getCalendarEvents(
@@ -24,6 +33,12 @@ class SyllabusLocalDataSource : SyllabusDataSource {
         canvasContexts: List<String>,
         forceNetwork: Boolean
     ): DataResult<List<ScheduleItem>> {
-        TODO("Not yet implemented")
+        try {
+            return DataResult.Success(scheduleItemFacade.findByItemType(canvasContexts, type.apiName))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return DataResult.Fail()
+        }
+
     }
 }

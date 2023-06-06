@@ -39,7 +39,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID)
+private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID, Tab.SYLLABUS_ID)
 
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
@@ -242,6 +242,7 @@ class OfflineContentViewModel @Inject constructor(
             Tab.GRADES_ID -> courseSyncSettings?.copy(grades = checked)
             Tab.PAGES_ID -> courseSyncSettings?.copy(pages = checked)
             Tab.ASSIGNMENTS_ID -> courseSyncSettings?.copy(assignments = checked)
+            Tab.SYLLABUS_ID -> courseSyncSettings?.copy(syllabus = checked)
             else -> courseSyncSettings
         }
 

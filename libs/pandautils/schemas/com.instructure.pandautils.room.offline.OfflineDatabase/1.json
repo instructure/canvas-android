@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1b1eafa96cb51159cad1da7539fdfe5b",
+    "identityHash": "a2b39c2cb03c07c00831dc1b9bf3daa0",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -74,7 +74,7 @@
       },
       {
         "tableName": "AssignmentEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `description` TEXT, `submissionTypesRaw` TEXT NOT NULL, `dueAt` TEXT, `pointsPossible` REAL NOT NULL, `courseId` INTEGER NOT NULL, `isGradeGroupsIndividually` INTEGER NOT NULL, `gradingType` TEXT, `needsGradingCount` INTEGER NOT NULL, `htmlUrl` TEXT, `url` TEXT, `quizId` INTEGER NOT NULL, `isUseRubricForGrading` INTEGER NOT NULL, `rubricSettingsId` INTEGER, `allowedExtensions` TEXT NOT NULL, `submissionId` INTEGER, `assignmentGroupId` INTEGER NOT NULL, `position` INTEGER NOT NULL, `isPeerReviews` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockAt` TEXT, `unlockAt` TEXT, `lockExplanation` TEXT, `discussionTopicHeaderId` INTEGER, `freeFormCriterionComments` INTEGER NOT NULL, `published` INTEGER NOT NULL, `groupCategoryId` INTEGER NOT NULL, `userSubmitted` INTEGER NOT NULL, `unpublishable` INTEGER NOT NULL, `onlyVisibleToOverrides` INTEGER NOT NULL, `anonymousPeerReviews` INTEGER NOT NULL, `moderatedGrading` INTEGER NOT NULL, `anonymousGrading` INTEGER NOT NULL, `allowedAttempts` INTEGER NOT NULL, `plannerOverrideId` INTEGER, `isStudioEnabled` INTEGER NOT NULL, `inClosedGradingPeriod` INTEGER NOT NULL, `annotatableAttachmentId` INTEGER NOT NULL, `anonymousSubmissions` INTEGER NOT NULL, `omitFromFinalGrade` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assignmentGroupId`) REFERENCES `AssignmentGroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `description` TEXT, `submissionTypesRaw` TEXT NOT NULL, `dueAt` TEXT, `pointsPossible` REAL NOT NULL, `courseId` INTEGER NOT NULL, `isGradeGroupsIndividually` INTEGER NOT NULL, `gradingType` TEXT, `needsGradingCount` INTEGER NOT NULL, `htmlUrl` TEXT, `url` TEXT, `quizId` INTEGER NOT NULL, `isUseRubricForGrading` INTEGER NOT NULL, `rubricSettingsId` INTEGER, `allowedExtensions` TEXT NOT NULL, `submissionId` INTEGER, `assignmentGroupId` INTEGER NOT NULL, `position` INTEGER NOT NULL, `isPeerReviews` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockAt` TEXT, `unlockAt` TEXT, `lockExplanation` TEXT, `discussionTopicHeaderId` INTEGER, `freeFormCriterionComments` INTEGER NOT NULL, `published` INTEGER NOT NULL, `groupCategoryId` INTEGER NOT NULL, `userSubmitted` INTEGER NOT NULL, `unpublishable` INTEGER NOT NULL, `onlyVisibleToOverrides` INTEGER NOT NULL, `anonymousPeerReviews` INTEGER NOT NULL, `moderatedGrading` INTEGER NOT NULL, `anonymousGrading` INTEGER NOT NULL, `allowedAttempts` INTEGER NOT NULL, `plannerOverrideId` INTEGER, `isStudioEnabled` INTEGER NOT NULL, `inClosedGradingPeriod` INTEGER NOT NULL, `annotatableAttachmentId` INTEGER NOT NULL, `anonymousSubmissions` INTEGER NOT NULL, `omitFromFinalGrade` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -337,17 +337,6 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "courseId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "AssignmentGroupEntity",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "assignmentGroupId"
             ],
             "referencedColumns": [
               "id"
@@ -869,8 +858,46 @@
         ]
       },
       {
+        "tableName": "CourseSettingsEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `courseSummary` INTEGER, PRIMARY KEY(`courseId`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseSummary",
+            "columnName": "courseSummary",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "courseId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "CourseEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "CourseSyncSettingsEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, `syllabus` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
@@ -899,6 +926,12 @@
           {
             "fieldPath": "grades",
             "columnName": "grades",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syllabus",
+            "columnName": "syllabus",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -2600,6 +2633,172 @@
         "foreignKeys": []
       },
       {
+        "tableName": "ScheduleItemAssignmentOverrideEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assignmentOverrideId` INTEGER NOT NULL, `scheduleItemId` INTEGER NOT NULL, PRIMARY KEY(`assignmentOverrideId`, `scheduleItemId`), FOREIGN KEY(`assignmentOverrideId`) REFERENCES `AssignmentOverrideEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`scheduleItemId`) REFERENCES `ScheduleItemEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "assignmentOverrideId",
+            "columnName": "assignmentOverrideId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scheduleItemId",
+            "columnName": "scheduleItemId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "assignmentOverrideId",
+            "scheduleItemId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "AssignmentOverrideEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assignmentOverrideId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ScheduleItemEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "scheduleItemId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "ScheduleItemEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `description` TEXT, `startAt` TEXT, `endAt` TEXT, `isAllDay` INTEGER NOT NULL, `allDayAt` TEXT, `locationAddress` TEXT, `locationName` TEXT, `htmlUrl` TEXT, `contextCode` TEXT, `effectiveContextCode` TEXT, `isHidden` INTEGER NOT NULL, `importantDates` INTEGER NOT NULL, `assignmentId` INTEGER, `type` TEXT NOT NULL, `itemType` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startAt",
+            "columnName": "startAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endAt",
+            "columnName": "endAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isAllDay",
+            "columnName": "isAllDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "allDayAt",
+            "columnName": "allDayAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "locationAddress",
+            "columnName": "locationAddress",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "locationName",
+            "columnName": "locationName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "htmlUrl",
+            "columnName": "htmlUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contextCode",
+            "columnName": "contextCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "effectiveContextCode",
+            "columnName": "effectiveContextCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isHidden",
+            "columnName": "isHidden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "importantDates",
+            "columnName": "importantDates",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "assignmentId",
+            "columnName": "assignmentId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemType",
+            "columnName": "itemType",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "SectionEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `courseId` INTEGER, `startAt` TEXT, `endAt` TEXT, `totalStudents` INTEGER NOT NULL, `restrictEnrollmentsToSectionDates` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
@@ -3621,7 +3820,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b1eafa96cb51159cad1da7539fdfe5b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a2b39c2cb03c07c00831dc1b9bf3daa0')"
     ]
   }
 }
