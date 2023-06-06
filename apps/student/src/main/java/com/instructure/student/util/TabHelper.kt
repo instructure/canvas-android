@@ -29,8 +29,8 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
-import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
-import java.util.Locale
+import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
+import java.util.*
 
 object TabHelper {
 
@@ -92,7 +92,7 @@ object TabHelper {
             Tab.DISCUSSIONS_ID -> DiscussionListFragment.makeRoute(canvasContext)
             Tab.PEOPLE_ID -> PeopleListFragment.makeRoute(canvasContext)
             Tab.FILES_ID -> FileListFragment.makeRoute(canvasContext)
-            Tab.SYLLABUS_ID -> SyllabusFragment.makeRoute(canvasContext as Course)
+            Tab.SYLLABUS_ID -> SyllabusRepositoryFragment.makeRoute(canvasContext as Course)
             Tab.QUIZZES_ID -> QuizListFragment.makeRoute(canvasContext)
             Tab.OUTCOMES_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
             Tab.CONFERENCES_ID -> ConferenceListFragment.makeRoute(canvasContext)

@@ -16,16 +16,10 @@
  */
 package com.instructure.student.ui.renderTests
 
-import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.settings.pairobserver.PairObserverModel
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
-import com.instructure.student.mobius.syllabus.SyllabusModel
-import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
