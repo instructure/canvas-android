@@ -123,7 +123,7 @@ class InboxPage: BasePage() {
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
-        onView(matcher).scrollTo().assertDisplayed()
+        waitForView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertConversationNotDisplayed(subject: String) {
