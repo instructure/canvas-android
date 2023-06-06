@@ -69,7 +69,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertDisplaysCourse(courseName: String) {
         val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
-        scrollAndAssertDisplayed(matcher)
+        waitForView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: Course) {
@@ -103,9 +103,9 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().assertDisplayed()
+        waitForView(groupNameMatcher).scrollTo().assertDisplayed()
         val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView), hasSibling(groupNameMatcher))
-        onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
+        waitForView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
