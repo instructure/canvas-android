@@ -18,13 +18,13 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
-import android.net.ConnectivityManager
 
 class NetworkStateProvider(private val context: Context) {
 
     fun isOnline(): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        /*val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo?.isConnected == true
+        return networkInfo?.isConnected == true*/
+        return true
     }
 }
