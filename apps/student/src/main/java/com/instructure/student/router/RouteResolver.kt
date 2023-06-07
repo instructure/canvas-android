@@ -17,6 +17,7 @@ import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragm
 import com.instructure.student.features.assignmentlist.AssignmentListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
+import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
