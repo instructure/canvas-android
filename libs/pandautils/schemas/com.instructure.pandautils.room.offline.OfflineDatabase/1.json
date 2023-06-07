@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a2b39c2cb03c07c00831dc1b9bf3daa0",
+    "identityHash": "dca652d9f5467a9b73d07ed083b34bc2",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -74,7 +74,7 @@
       },
       {
         "tableName": "AssignmentEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `description` TEXT, `submissionTypesRaw` TEXT NOT NULL, `dueAt` TEXT, `pointsPossible` REAL NOT NULL, `courseId` INTEGER NOT NULL, `isGradeGroupsIndividually` INTEGER NOT NULL, `gradingType` TEXT, `needsGradingCount` INTEGER NOT NULL, `htmlUrl` TEXT, `url` TEXT, `quizId` INTEGER NOT NULL, `isUseRubricForGrading` INTEGER NOT NULL, `rubricSettingsId` INTEGER, `allowedExtensions` TEXT NOT NULL, `submissionId` INTEGER, `assignmentGroupId` INTEGER NOT NULL, `position` INTEGER NOT NULL, `isPeerReviews` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockAt` TEXT, `unlockAt` TEXT, `lockExplanation` TEXT, `discussionTopicHeaderId` INTEGER, `freeFormCriterionComments` INTEGER NOT NULL, `published` INTEGER NOT NULL, `groupCategoryId` INTEGER NOT NULL, `userSubmitted` INTEGER NOT NULL, `unpublishable` INTEGER NOT NULL, `onlyVisibleToOverrides` INTEGER NOT NULL, `anonymousPeerReviews` INTEGER NOT NULL, `moderatedGrading` INTEGER NOT NULL, `anonymousGrading` INTEGER NOT NULL, `allowedAttempts` INTEGER NOT NULL, `plannerOverrideId` INTEGER, `isStudioEnabled` INTEGER NOT NULL, `inClosedGradingPeriod` INTEGER NOT NULL, `annotatableAttachmentId` INTEGER NOT NULL, `anonymousSubmissions` INTEGER NOT NULL, `omitFromFinalGrade` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `description` TEXT, `submissionTypesRaw` TEXT NOT NULL, `dueAt` TEXT, `pointsPossible` REAL NOT NULL, `courseId` INTEGER NOT NULL, `isGradeGroupsIndividually` INTEGER NOT NULL, `gradingType` TEXT, `needsGradingCount` INTEGER NOT NULL, `htmlUrl` TEXT, `url` TEXT, `quizId` INTEGER NOT NULL, `isUseRubricForGrading` INTEGER NOT NULL, `rubricSettingsId` INTEGER, `allowedExtensions` TEXT NOT NULL, `submissionId` INTEGER, `assignmentGroupId` INTEGER NOT NULL, `position` INTEGER NOT NULL, `isPeerReviews` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockAt` TEXT, `unlockAt` TEXT, `lockExplanation` TEXT, `discussionTopicHeaderId` INTEGER, `freeFormCriterionComments` INTEGER NOT NULL, `published` INTEGER NOT NULL, `groupCategoryId` INTEGER NOT NULL, `userSubmitted` INTEGER NOT NULL, `unpublishable` INTEGER NOT NULL, `onlyVisibleToOverrides` INTEGER NOT NULL, `anonymousPeerReviews` INTEGER NOT NULL, `moderatedGrading` INTEGER NOT NULL, `anonymousGrading` INTEGER NOT NULL, `allowedAttempts` INTEGER NOT NULL, `plannerOverrideId` INTEGER, `isStudioEnabled` INTEGER NOT NULL, `inClosedGradingPeriod` INTEGER NOT NULL, `annotatableAttachmentId` INTEGER NOT NULL, `anonymousSubmissions` INTEGER NOT NULL, `omitFromFinalGrade` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assignmentGroupId`) REFERENCES `AssignmentGroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -337,6 +337,17 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "courseId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "AssignmentGroupEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assignmentGroupId"
             ],
             "referencedColumns": [
               "id"
@@ -3820,7 +3831,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a2b39c2cb03c07c00831dc1b9bf3daa0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dca652d9f5467a9b73d07ed083b34bc2')"
     ]
   }
 }
