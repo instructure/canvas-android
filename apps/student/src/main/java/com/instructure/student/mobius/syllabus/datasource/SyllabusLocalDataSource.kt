@@ -33,11 +33,11 @@ class SyllabusLocalDataSource(
         canvasContexts: List<String>,
         forceNetwork: Boolean
     ): DataResult<List<ScheduleItem>> {
-        try {
-            return DataResult.Success(scheduleItemFacade.findByItemType(canvasContexts, type.apiName))
+        return try {
+            DataResult.Success(scheduleItemFacade.findByItemType(canvasContexts, type.apiName))
         } catch (e: Exception) {
             e.printStackTrace()
-            return DataResult.Fail()
+            DataResult.Fail()
         }
 
     }

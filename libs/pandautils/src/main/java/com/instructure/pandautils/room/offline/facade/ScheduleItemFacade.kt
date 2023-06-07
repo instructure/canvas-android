@@ -1,6 +1,7 @@
 package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.room.offline.daos.AssignmentDao
 import com.instructure.pandautils.room.offline.daos.AssignmentOverrideDao
 import com.instructure.pandautils.room.offline.daos.ScheduleItemAssignmentOverrideDao
 import com.instructure.pandautils.room.offline.daos.ScheduleItemDao
@@ -10,9 +11,9 @@ import com.instructure.pandautils.room.offline.entities.ScheduleItemEntity
 
 class ScheduleItemFacade(
     private val scheduleItemDao: ScheduleItemDao,
-    private val assignmentFacade: AssignmentFacade,
     private val assignmentOverrideDao: AssignmentOverrideDao,
-    private val scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao
+    private val scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao,
+    private val assignmentDao: AssignmentDao
 ) {
 
     suspend fun insertScheduleItems(scheduleItems: List<ScheduleItem>) {
@@ -39,7 +40,7 @@ class ScheduleItemFacade(
         val entities = scheduleItemDao.findByItemType(contextCodes, itemType)
         return entities.map {
             val assignment = it.assignmentId?.let { assignmentId ->
-                assignmentFacade.getAssignmentById(assignmentId)
+                assignmentDao.findById(assignmentId)?.toApiModel()
             }
             val assignmentOverrideIds = scheduleItemAssignmentOverrideDao.findByScheduleItemId(it.id).map { it.assignmentOverrideId }
             val assignmentOverrides = assignmentOverrideDao.findByIds(assignmentOverrideIds).map { it.toApiModel() }
