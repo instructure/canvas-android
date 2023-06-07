@@ -178,7 +178,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().click()
+        waitForView(groupNameMatcher).scrollTo().click()
     }
 
     fun selectCourse(course: CourseApiModel) {
