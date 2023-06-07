@@ -32,7 +32,7 @@ class AssignmentListRepositoryTest {
 
         val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
 
-        coVerify { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) }
+        coVerify { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true) }
         assertEquals(expected, result)
     }
 
@@ -45,7 +45,7 @@ class AssignmentListRepositoryTest {
 
         val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
 
-        coVerify { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) }
+        coVerify { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true) }
         assertEquals(expected, result)
     }
 
@@ -58,7 +58,7 @@ class AssignmentListRepositoryTest {
 
         val result = repository.getAssignmentGroupsWithAssignments(1, true)
 
-        coVerify { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) }
+        coVerify { networkDataSource.getAssignmentGroupsWithAssignments(1, true) }
         assertEquals(expected, result)
     }
 
@@ -71,7 +71,7 @@ class AssignmentListRepositoryTest {
 
         val result = repository.getAssignmentGroupsWithAssignments(1, true)
 
-        coVerify { localDataSource.getAssignmentGroupsWithAssignments(any(), any()) }
+        coVerify { localDataSource.getAssignmentGroupsWithAssignments(1, true) }
         assertEquals(expected, result)
     }
 
@@ -84,7 +84,7 @@ class AssignmentListRepositoryTest {
 
         val result = repository.getGradingPeriodsForCourse(1, true)
 
-        coVerify { networkDataSource.getGradingPeriodsForCourse(any(), any()) }
+        coVerify { networkDataSource.getGradingPeriodsForCourse(1, true) }
         assertEquals(expected, result)
     }
 
@@ -97,7 +97,7 @@ class AssignmentListRepositoryTest {
 
         val result = repository.getGradingPeriodsForCourse(1, true)
 
-        coVerify { localDataSource.getGradingPeriodsForCourse(any(), any()) }
+        coVerify { localDataSource.getGradingPeriodsForCourse(1, true) }
         assertEquals(expected, result)
     }
 }
