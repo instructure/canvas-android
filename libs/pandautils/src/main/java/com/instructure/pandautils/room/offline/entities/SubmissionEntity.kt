@@ -67,7 +67,8 @@ data class SubmissionEntity(
     val pointsDeducted: Double?,
     val enteredScore: Double,
     val enteredGrade: String?,
-    val postedAt: Date?
+    val postedAt: Date?,
+    val gradingPeriodId: Long?
 ) {
     constructor(submission: Submission, groupId: Long?, mediaCommentId: String?) : this(
         id = submission.id,
@@ -96,7 +97,8 @@ data class SubmissionEntity(
         pointsDeducted = submission.pointsDeducted,
         enteredScore = submission.enteredScore,
         enteredGrade = submission.enteredGrade,
-        postedAt = submission.postedAt
+        postedAt = submission.postedAt,
+        gradingPeriodId = submission.gradingPeriodId
     )
 
     fun toApiModel(
@@ -143,6 +145,7 @@ data class SubmissionEntity(
         pointsDeducted = pointsDeducted,
         enteredScore = enteredScore,
         enteredGrade = enteredGrade,
-        postedAt = postedAt
+        postedAt = postedAt,
+        gradingPeriodId = gradingPeriodId
     )
 }

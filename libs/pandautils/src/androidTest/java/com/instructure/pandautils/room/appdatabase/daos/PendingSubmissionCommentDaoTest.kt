@@ -49,7 +49,7 @@ class PendingSubmissionCommentDaoTest {
     }
 
     @After
-    fun tearDoown() {
+    fun tearDown() {
         db.close()
     }
 

@@ -143,4 +143,21 @@ class CourseFacadeTest {
         Assert.assertEquals(gradingPeriod, result.first().gradingPeriods?.first())
         Assert.assertEquals(tab, result.first().tabs?.first())
     }
+
+    @Test
+    fun `Calling getGradingPeriodsByCourseId should return the grading periods by specified CourseID`() = runTest {
+        val gradingPeriods = listOf(GradingPeriod(id = 1L, title = "Grading period 1"), GradingPeriod(id = 2L, title = "Grading period 2"))
+        val gradingPeriodEntities = gradingPeriods.map { GradingPeriodEntity(it) }
+        val courseGradingPeriodEntities = gradingPeriods.map { CourseGradingPeriodEntity(1L, it.id) }
+
+        coEvery { courseGradingPeriodDao.findByCourseId(1L) } returns courseGradingPeriodEntities
+        gradingPeriodEntities.forEach {
+            coEvery { gradingPeriodDao.findById(it.id) } returns it
+        }
+
+        val result = facade.getGradingPeriodsByCourseId(1L)
+
+        Assert.assertEquals(gradingPeriods.size, result.size)
+        Assert.assertEquals(gradingPeriods, result)
+    }
 }

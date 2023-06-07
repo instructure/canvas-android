@@ -1,16 +1,12 @@
 package com.instructure.pandautils.room.common.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.common.entities.MediaCommentEntity
 
 @Dao
 interface MediaCommentDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(mediaComment: MediaCommentEntity)
 
     @Delete
