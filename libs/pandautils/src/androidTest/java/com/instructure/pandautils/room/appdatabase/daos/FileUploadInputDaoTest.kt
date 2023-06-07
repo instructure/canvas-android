@@ -45,7 +45,7 @@ class FileUploadInputDaoTest {
     }
 
     @After
-    fun tearDoown() {
+    fun tearDown() {
         db.close()
     }
 

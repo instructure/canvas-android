@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradingRule
 
@@ -31,11 +32,20 @@ data class AssignmentGroupEntity(
     val groupWeight: Double,
     val rules: GradingRule?
 ) {
-    constructor(assignmentGroup: AssignmentGroup): this(
+    constructor(assignmentGroup: AssignmentGroup) : this(
         assignmentGroup.id,
         assignmentGroup.name,
         assignmentGroup.position,
         assignmentGroup.groupWeight,
         assignmentGroup.rules
+    )
+
+    fun toApiModel(assignments: List<Assignment> = emptyList()) = AssignmentGroup(
+        id = id,
+        name = name,
+        position = position,
+        groupWeight = groupWeight,
+        assignments = assignments,
+        rules = rules
     )
 }
