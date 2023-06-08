@@ -54,7 +54,6 @@ class SyllabusLocalDataSource(
         return try {
             DataResult.Success(scheduleItemFacade.findByItemType(canvasContexts, type.apiName))
         } catch (e: Exception) {
-            e.printStackTrace()
             DataResult.Fail()
         }
 
