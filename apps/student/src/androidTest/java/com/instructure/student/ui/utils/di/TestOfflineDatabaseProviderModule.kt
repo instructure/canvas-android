@@ -47,10 +47,18 @@ class TestOfflineDatabaseProviderModule {
 
 class FakeOfflineDatabaseProvider(private val context: Context) : DatabaseProvider {
 
+    private val dbMap = mutableMapOf<Long, OfflineDatabase>()
+
     override fun getDatabase(userId: Long?): OfflineDatabase {
-        return Room.databaseBuilder(context, OfflineDatabase::class.java, "test-offline-db")
+        if (userId == null) return Room.databaseBuilder(context, OfflineDatabase::class.java, "test-offline-db")
             .addMigrations(*offlineDatabaseMigrations)
             .build()
+
+        return dbMap.getOrPut(userId) {
+            Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-$userId")
+                .addMigrations(*offlineDatabaseMigrations)
+                .build()
+        }
     }
 
 }
