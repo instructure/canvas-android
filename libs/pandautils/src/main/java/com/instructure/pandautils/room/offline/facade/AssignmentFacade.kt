@@ -109,4 +109,20 @@ class AssignmentFacade(
             this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this)
         }
     }
+
+    suspend fun getAssignmentGroupsWithAssignments(
+        courseId: Long
+    ): List<AssignmentGroup> {
+        val assignments = assignmentDao.findByCourseId(courseId).mapNotNull { getAssignmentById(it.id) }
+        return assignments.groupBy { it.assignmentGroupId }.map { assignmentGroupDao.findById(it.key).toApiModel(it.value) }
+    }
+
+    suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
+        courseId: Long,
+        gradingPeriodId: Long
+    ): List<AssignmentGroup> {
+        return getAssignmentGroupsWithAssignments(courseId).map { group ->
+            group.copy(assignments = group.assignments.filter { it.submission?.gradingPeriodId == gradingPeriodId })
+        }
+    }
 }

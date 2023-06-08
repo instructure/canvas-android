@@ -14,20 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.adapter.assignment
+package com.instructure.student.features.assignmentlist.adapter
 
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
@@ -35,29 +30,31 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
+import com.instructure.student.features.assignmentlist.AssignmentListRepository
 import com.instructure.student.holders.AssignmentViewHolder
 import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.interfaces.GradingPeriodsCallback
-import retrofit2.Call
-import retrofit2.Response
 
-abstract class AssignmentListRecyclerAdapter (
-        context: Context,
-        private val canvasContext: CanvasContext,
-        private val adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-        isTesting: Boolean = false,
-        filter: AssignmentListFilter = AssignmentListFilter.ALL
+abstract class AssignmentListRecyclerAdapter(
+    context: Context,
+    private val canvasContext: CanvasContext,
+    private val adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
+    isTesting: Boolean = false,
+    filter: AssignmentListFilter = AssignmentListFilter.ALL,
+    private val repository: AssignmentListRepository
 ) : ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder>(
-        context,
-        AssignmentGroup::class.java,
-        Assignment::class.java
+    context,
+    AssignmentGroup::class.java,
+    Assignment::class.java
 ), GradingPeriodsCallback {
 
-    private var assignmentGroupCallback: StatusCallback<List<AssignmentGroup>>? = null
     override var currentGradingPeriod: GradingPeriod? = null
-    private var apiJob: WeaveJob? = null
+
+    private var assignmentGroupsJob: WeaveJob? = null
+    private var gradingPeriodJob: WeaveJob? = null
+
     protected var assignmentGroups: List<AssignmentGroup> = emptyList()
 
     var filter: AssignmentListFilter = AssignmentListFilter.ALL
@@ -85,28 +82,6 @@ abstract class AssignmentListRecyclerAdapter (
         isDisplayEmptyCell = true
         this.filter = filter
         if (!isTesting) loadData()
-    }
-
-    override fun setupCallbacks() {
-        assignmentGroupCallback = object : StatusCallback<List<AssignmentGroup>>() {
-
-            override fun onResponse(response: Response<List<AssignmentGroup>>, linkHeaders: LinkHeaders, type: ApiType) {
-                assignmentGroups = response.body()!!
-                populateData()
-                adapterToAssignmentsCallback.onRefreshFinished()
-                adapterToAssignmentsCallback.assignmentLoadingFinished()
-            }
-
-            override fun onFail(call: Call<List<AssignmentGroup>>?, error: Throwable, response: Response<*>?) {
-                adapterToAssignmentsCallback.assignmentLoadingFinished()
-            }
-
-            override fun onFinished(type: ApiType) {
-                this@AssignmentListRecyclerAdapter.onCallbackFinished(type)
-            }
-        }
-
-
     }
 
     override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
@@ -164,10 +139,9 @@ abstract class AssignmentListRecyclerAdapter (
     }
 
     private fun fetchGradingPeriods(courseId: Long) {
-        apiJob = tryWeave {
-            val periods = awaitApi<GradingPeriodResponse> {
-                CourseManager.getGradingPeriodsForCourse(it, courseId, isRefresh)
-            }.gradingPeriodList
+        gradingPeriodJob?.cancel()
+        gradingPeriodJob = tryWeave {
+            val periods = repository.getGradingPeriodsForCourse(courseId, isRefresh)
             adapterToAssignmentsCallback.gradingPeriodsFetched(periods)
         } catch {
             adapterToAssignmentsCallback.gradingPeriodsFetched(emptyList())
@@ -206,24 +180,46 @@ abstract class AssignmentListRecyclerAdapter (
         )
     }
 
-    override fun loadAssignmentsForGradingPeriod(gradingPeriodID: Long, refreshFirst: Boolean) {
+    override fun loadAssignmentsForGradingPeriod(gradingPeriodId: Long, refreshFirst: Boolean) {
         /*Logic regarding MGP is similar here as it is in both assignment recycler adapters,
             if changes are made here, check if they are needed in the other recycler adapters.*/
         if (refreshFirst) resetData()
 
         // Scope assignments if its for a student
         val scopeToStudent = (canvasContext as Course).isStudent
-        AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(
+
+        assignmentGroupsJob?.cancel()
+        assignmentGroupsJob = tryWeave {
+            val groups = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(
                 canvasContext.id,
-                gradingPeriodID,
+                gradingPeriodId,
                 scopeToStudent,
-                isRefresh,
-                assignmentGroupCallback!!
-        )
+                isRefresh
+            )
+            onAssignmentGroupsFetched(groups)
+        } catch {
+            adapterToAssignmentsCallback.assignmentLoadingFinished()
+            onCallbackFinished(null)
+        }
     }
 
     override fun loadAssignment() {
-        AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext.id, isRefresh, assignmentGroupCallback!!)
+        assignmentGroupsJob?.cancel()
+        assignmentGroupsJob = tryWeave {
+            val groups = repository.getAssignmentGroupsWithAssignments(canvasContext.id, isRefresh)
+            onAssignmentGroupsFetched(groups)
+        } catch {
+            adapterToAssignmentsCallback.assignmentLoadingFinished()
+            onCallbackFinished(null)
+        }
+    }
+
+    private fun onAssignmentGroupsFetched(groups: List<AssignmentGroup>) {
+        assignmentGroups = groups
+        populateData()
+        adapterToAssignmentsCallback.onRefreshFinished()
+        adapterToAssignmentsCallback.assignmentLoadingFinished()
+        onCallbackFinished(null)
     }
 
     protected abstract fun populateData()
@@ -242,7 +238,8 @@ abstract class AssignmentListRecyclerAdapter (
 
     override fun cancel() {
         super.cancel()
-        apiJob?.cancel()
+        assignmentGroupsJob?.cancel()
+        gradingPeriodJob?.cancel()
     }
 }
 

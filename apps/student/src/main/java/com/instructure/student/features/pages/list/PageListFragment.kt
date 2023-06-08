@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.pages.list
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -35,18 +35,25 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.PageListRecyclerAdapter
 import com.instructure.student.databinding.FragmentCoursePagesBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.PageUpdatedEvent
+import com.instructure.student.fragment.PageDetailsFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PAGE_LIST)
 @PageView(url = "{canvasContext}/pages")
+@AndroidEntryPoint
 class PageListFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var repository: PageListRepository
 
     private val binding by viewBinding(FragmentCoursePagesBinding::bind)
     private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
@@ -97,9 +104,14 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
-        recyclerAdapter = PageListRecyclerAdapter(requireContext(), canvasContext, object : AdapterToFragmentCallback<Page> {
+        recyclerAdapter = PageListRecyclerAdapter(requireContext(), repository, canvasContext, object : AdapterToFragmentCallback<Page> {
             override fun onRowClicked(page: Page, position: Int, isOpenDetail: Boolean) {
-                RouteMatcher.route(requireContext(), PageDetailsFragment.makeRoute(canvasContext, page))
+                RouteMatcher.route(requireContext(),
+                    PageDetailsFragment.makeRoute(
+                        canvasContext,
+                        page
+                    )
+                )
             }
 
             override fun onRefreshFinished() {
@@ -115,7 +127,10 @@ class PageListFragment : ParentFragment(), Bookmarkable {
         super.onActivityCreated(savedInstanceState)
 
         if (isShowFrontPage) {
-            val route = PageDetailsFragment.makeRoute(canvasContext, Page.FRONT_PAGE_NAME).apply { ignoreDebounce = true}
+            val route = PageDetailsFragment.makeRoute(
+                canvasContext,
+                Page.FRONT_PAGE_NAME
+            ).apply { ignoreDebounce = true}
             RouteMatcher.route(requireContext(), route)
         }
     }
@@ -176,7 +191,10 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     companion object {
         const val SHOW_FRONT_PAGE = "isShowFrontPage"
 
-        fun newInstance(route: Route) = if (validRoute(route)) {
+        fun newInstance(route: Route) = if (validRoute(
+                route
+            )
+        ) {
             PageListFragment().apply {
                 arguments = route.arguments
 

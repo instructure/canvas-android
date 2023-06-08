@@ -114,7 +114,7 @@ class AssignmentFacadeTest {
     }
 
     @Test
-    fun `Calling getCourseById should return the course with the specified ID`() = runTest {
+    fun `Calling getAssignmentById should return the assignment with the specified ID`() = runTest {
         val assignmentId = 1L
         val rubricSettings = RubricSettings(id = 1L, title = "RubricSettings")
         val submission = Submission(id = 1L, grade = "Grade")
@@ -165,5 +165,150 @@ class AssignmentFacadeTest {
         Assert.assertEquals(lockInfo, result.lockInfo)
         Assert.assertEquals(assignmentId, result.submission?.assignment?.id)
         Assert.assertEquals(assignmentId, result.discussionTopicHeader?.assignment?.id)
+    }
+
+    @Test
+    fun `Calling getAssignmentGroupsWithAssignments should return assignment groups with assignments by the specifies CourseID`() = runTest {
+        val submissions = listOf(
+            Submission(id = 1L, gradingPeriodId = 1L), Submission(id = 2L)
+        )
+
+        val assignments = listOf(
+            Assignment(
+                id = 1L,
+                courseId = 1L,
+                assignmentGroupId = 1L,
+                submission = submissions[0]
+            ), Assignment(
+                id = 2L,
+                courseId = 1L,
+                assignmentGroupId = 1L,
+                submission = submissions[1]
+            )
+        )
+
+        val assignmentEntities = assignments.map {
+            AssignmentEntity(
+                assignment = it,
+                rubricSettingsId = null,
+                submissionId = it.submission?.id,
+                discussionTopicHeaderId = null,
+                plannerOverrideId = null
+            )
+        }
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1L,
+                name = "Group 1",
+                position = 0,
+                groupWeight = 0.0,
+                assignments = assignments,
+            ), AssignmentGroup(
+                id = 2L,
+                name = "Group 2"
+            )
+        )
+
+        val assignmentGroupEntities = assignmentGroups.map {
+            AssignmentGroupEntity(it)
+        }
+
+        assignmentEntities.forEach {
+            coEvery { assignmentDao.findById(it.id) } returns it
+        }
+
+        coEvery { assignmentDao.findByCourseId(1L) } returns assignmentEntities
+
+        submissions.forEach {
+            coEvery { submissionFacade.getSubmissionById(it.id) } returns it
+        }
+
+        assignmentGroupEntities.forEach {
+            coEvery { assignmentGroupDao.findById(it.id) } returns it
+        }
+
+        val result = facade.getAssignmentGroupsWithAssignments(1L)
+
+        val expected = assignmentGroups.filter { it.assignments.isNotEmpty() }
+
+        Assert.assertEquals(expected.size, result.size)
+        Assert.assertEquals(expected.first().id, result.first().id)
+        Assert.assertEquals(expected.first().assignments.size, result.first().assignments.size)
+        Assert.assertEquals(expected.first().assignments.first().id, result.first().assignments.first().id)
+    }
+
+    @Test
+    fun `Calling getAssignmentGroupsWithAssignmentsForGradingPeriod should return assignment groups with assignments by the specifies CourseID and GradingPeriodId`() = runTest {
+        val submissions = listOf(
+            Submission(id = 1L, gradingPeriodId = 1L), Submission(id = 2L)
+        )
+
+        val assignments = listOf(
+            Assignment(
+                id = 1L,
+                courseId = 1L,
+                assignmentGroupId = 1L,
+                submission = submissions[0]
+            ), Assignment(
+                id = 2L,
+                courseId = 1L,
+                assignmentGroupId = 1L,
+                submission = submissions[1]
+            )
+        )
+
+        val assignmentEntities = assignments.map {
+            AssignmentEntity(
+                assignment = it,
+                rubricSettingsId = null,
+                submissionId = it.submission?.id,
+                discussionTopicHeaderId = null,
+                plannerOverrideId = null
+            )
+        }
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1L,
+                name = "Group 1",
+                position = 0,
+                groupWeight = 0.0,
+                assignments = assignments,
+            ), AssignmentGroup(
+                id = 2L,
+                name = "Group 2"
+            )
+        )
+
+        val assignmentGroupEntities = assignmentGroups.map {
+            AssignmentGroupEntity(it)
+        }
+
+        assignmentEntities.forEach {
+            coEvery { assignmentDao.findById(it.id) } returns it
+        }
+
+        coEvery { assignmentDao.findByCourseId(1L) } returns assignmentEntities
+
+        submissions.forEach {
+            coEvery { submissionFacade.getSubmissionById(it.id) } returns it
+        }
+
+        assignmentGroupEntities.forEach {
+            coEvery { assignmentGroupDao.findById(it.id) } returns it
+        }
+
+        val result = facade.getAssignmentGroupsWithAssignmentsForGradingPeriod(1L, 1L)
+
+        val expected = assignmentGroups.filter { it.assignments.isNotEmpty() }.map { group ->
+            val filteredAssignments = group.assignments.filter { it.submission?.gradingPeriodId == 1L }
+            group.copy(assignments = filteredAssignments)
+        }
+
+        Assert.assertEquals(expected.size, result.size)
+        Assert.assertEquals(expected.first().id, result.first().id)
+        Assert.assertEquals(expected.first().assignments.size, result.first().assignments.size)
+        Assert.assertEquals(expected.first().assignments.first().id, result.first().assignments.first().id)
     }
 }

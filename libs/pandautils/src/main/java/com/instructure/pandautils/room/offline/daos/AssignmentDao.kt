@@ -34,4 +34,7 @@ interface AssignmentDao {
 
     @Query("SELECT * FROM AssignmentEntity WHERE id = :id")
     suspend fun findById(id: Long): AssignmentEntity?
+
+    @Query("SELECT * FROM AssignmentEntity WHERE courseId = :courseId")
+    suspend fun findByCourseId(courseId: Long): List<AssignmentEntity>
 }
