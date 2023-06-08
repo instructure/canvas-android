@@ -40,5 +40,5 @@ import androidx.room.ForeignKey
 )
 data class ScheduleItemAssignmentOverrideEntity(
     val assignmentOverrideId: Long,
-    val scheduleItemId: Long
+    val scheduleItemId: String
 )

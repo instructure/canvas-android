@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dca652d9f5467a9b73d07ed083b34bc2",
+    "identityHash": "55cb54f9f08a80b59dbf2f0f2f34d957",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -2645,7 +2645,7 @@
       },
       {
         "tableName": "ScheduleItemAssignmentOverrideEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assignmentOverrideId` INTEGER NOT NULL, `scheduleItemId` INTEGER NOT NULL, PRIMARY KEY(`assignmentOverrideId`, `scheduleItemId`), FOREIGN KEY(`assignmentOverrideId`) REFERENCES `AssignmentOverrideEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`scheduleItemId`) REFERENCES `ScheduleItemEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assignmentOverrideId` INTEGER NOT NULL, `scheduleItemId` TEXT NOT NULL, PRIMARY KEY(`assignmentOverrideId`, `scheduleItemId`), FOREIGN KEY(`assignmentOverrideId`) REFERENCES `AssignmentOverrideEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`scheduleItemId`) REFERENCES `ScheduleItemEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "assignmentOverrideId",
@@ -2656,7 +2656,7 @@
           {
             "fieldPath": "scheduleItemId",
             "columnName": "scheduleItemId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -3831,7 +3831,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dca652d9f5467a9b73d07ed083b34bc2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '55cb54f9f08a80b59dbf2f0f2f34d957')"
     ]
   }
 }

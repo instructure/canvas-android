@@ -44,7 +44,7 @@ class ScheduleItemFacade(
                         scheduleItemAssignmentOverrideDao.insert(
                             ScheduleItemAssignmentOverrideEntity(
                                 it.id,
-                                scheduleItem.id
+                                scheduleItem.itemId
                             )
                         )
                     }
