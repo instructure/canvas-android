@@ -48,7 +48,10 @@ import java.net.URLDecoder
 @PageView
 class LtiLaunchFragment : ParentFragment() {
 
-    var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
+    var canvasContext: CanvasContext by ParcelableArg(
+        default = CanvasContext.emptyUserContext(),
+        key = Const.CANVAS_CONTEXT
+    )
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
     private var ltiUrl: String by StringArg(key = LTI_URL)
     private var ltiTab: Tab? by NullableParcelableArg(key = Const.TAB)
@@ -68,9 +71,14 @@ class LtiLaunchFragment : ParentFragment() {
     private fun makePageViewUrl() =
         ltiTab?.externalUrl ?: ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools"
 
-    override fun title(): String = title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull() ?: ""
+    override fun title(): String =
+        title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull() ?: ""
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_lti_launch, container, false)
     }
 
@@ -121,10 +129,58 @@ class LtiLaunchFragment : ParentFragment() {
 
     private fun loadSessionlessLtiUrl(ltiUrl: String) {
         ltiUrlLaunchJob = weave {
-            val tool = getLtiTool(ltiUrl)
+            val decodedUrl = decodeAndReplaceUrlParameters(ltiUrl)
+            val tool = getLtiTool(decodedUrl)
             tool?.url?.let { launchCustomTab(it) } ?: displayError()
         }
     }
+
+    /**
+     * This is temporary fix.
+     *
+     * When launching an url, the url param inside the actual is encoded.
+     * This method decodes the url and replaces the url parameter with the decoded url.
+     *
+     * Url that caused issue is
+     * "https://canvas-test.emeritus.org/courses/118/external_tools/retrieve?display=borderless&session_token=eyJjcmVhdGVkX2F0IjoxNjg2MTYxODk3LCJwc2V1ZG9ueW1faWQiOjEwMDAwMDAwMDAxMTk4LCJjdXJyZW50X3VzZXJfaWQiOm51bGwsInVzZWRfcmVtZW1iZXJfbWVfdG9rZW4iOnRydWUsInNpZ25hdHVyZSI6eyJfYmluYXJ5IjoiTWpVeE5EVXlOVFZqWVRnd09EWmxZMlU0TnpRNE5tSTVPVGN3TldKa1pqWTBNR1poTm1NNVpRPT1cbiJ9fQ&url=https%3A%2F%2Fcanvas-test.emeritus.org%2Fcourses%2F118%2Fexternal_tools%2Fretrieve%3Fdisplay%3Dborderless"
+     */
+    private fun decodeAndReplaceUrlParameters(url: String): String {
+        val firstParamStartIndex = url.indexOf("url=")
+        if (firstParamStartIndex == -1) {
+            // "url=" parameter not found, return the original URL
+            return url
+        }
+
+        val firstParamEndIndex = url.indexOf("&", startIndex = firstParamStartIndex)
+        val firstParam = url.substring(firstParamStartIndex + 4, firstParamEndIndex)
+        val decodedFirstParam = try {
+            URLDecoder.decode(firstParam, "UTF-8")
+        } catch (e: IllegalArgumentException) {
+            // Invalid URL encoding, return the original URL
+            return url
+        }
+
+        val modifiedUrl = url.replace(firstParam, decodedFirstParam)
+
+        val secondParamStartIndex = url.lastIndexOf("url=")
+        if (secondParamStartIndex == -1 || secondParamStartIndex == firstParamStartIndex) {
+            // Second "url=" parameter not found or same as first, return the modified URL
+            return modifiedUrl
+        }
+
+        val secondParamEndIndex = url.length
+        val secondParam = url.substring(secondParamStartIndex + 4, secondParamEndIndex)
+        val decodedSecondParam = try {
+            URLDecoder.decode(secondParam, "UTF-8")
+        } catch (e: IllegalArgumentException) {
+            // Invalid URL encoding, return the modified URL
+            return modifiedUrl
+        }
+
+        val finalUrl = modifiedUrl.replace(secondParam, decodedSecondParam)
+        return finalUrl.replace("&amp;", "&")
+    }
+
 
     private fun launchCustomTab(url: String) {
         val uri = Uri.parse(url)
@@ -162,7 +218,8 @@ class LtiLaunchFragment : ParentFragment() {
 
     private suspend fun getLtiTool(url: String): LTITool? {
         return ltiTool?.let {
-            AssignmentManager.getExternalToolLaunchUrlAsync(it.courseId, it.id, it.assignmentId).await().dataOrNull
+            AssignmentManager.getExternalToolLaunchUrlAsync(it.courseId, it.id, it.assignmentId)
+                .await().dataOrNull
         } ?: SubmissionManager.getLtiFromAuthenticationUrlAsync(url, true).await().dataOrNull
     }
 
@@ -203,7 +260,10 @@ class LtiLaunchFragment : ParentFragment() {
                 putString(LTI_URL, url)
                 putBoolean(Const.SESSIONLESS_LAUNCH, sessionLessLaunch)
                 putBoolean(Const.ASSIGNMENT_LTI, isAssignmentLTI)
-                putString(Const.ACTION_BAR_TITLE, title) // For 'title' property in InternalWebViewFragment
+                putString(
+                    Const.ACTION_BAR_TITLE,
+                    title
+                ) // For 'title' property in InternalWebViewFragment
                 putParcelable(Const.LTI_TOOL, ltiTool)
             }
             return Route(LtiLaunchFragment::class.java, canvasContext, bundle)
@@ -222,7 +282,11 @@ class LtiLaunchFragment : ParentFragment() {
         }
 
         fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
-            val args = makeLTIBundle(URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
+            val args = makeLTIBundle(
+                URLDecoder.decode(url, "utf-8"),
+                context.getString(R.string.utils_externalToolTitle),
+                true
+            )
             RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
         }
     }
