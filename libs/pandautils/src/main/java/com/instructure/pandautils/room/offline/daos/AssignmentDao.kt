@@ -26,9 +26,6 @@ interface AssignmentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: AssignmentEntity)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertIgnore(entity: AssignmentEntity)
-
     @Delete
     suspend fun delete(entity: AssignmentEntity)
 
