@@ -18,7 +18,6 @@
 
 package com.instructure.student.test.syllabus
 
-import com.instructure.canvasapi2.CommentLibraryQuery.Data
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
