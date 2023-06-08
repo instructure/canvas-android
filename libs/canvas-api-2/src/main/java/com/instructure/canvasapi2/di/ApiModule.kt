@@ -197,4 +197,9 @@ class ApiModule {
     fun provideSubmissionApi(): SubmissionAPI.SubmissionInterface {
         return RestBuilder().build(SubmissionAPI.SubmissionInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideEnrollmentApi(): EnrollmentAPI.EnrollmentInterface {
+        return RestBuilder().build(EnrollmentAPI.EnrollmentInterface::class.java, RestParams())
+    }
 }

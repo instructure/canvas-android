@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.grades
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -26,7 +26,6 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.AppBarLayout
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -41,20 +40,25 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.GradesListRecyclerAdapter
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.databinding.FragmentCourseGradesBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import retrofit2.Response
+import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal
 import java.math.RoundingMode
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_GRADES_LIST)
 @PageView(url = "{canvasContext}/grades")
+@AndroidEntryPoint
 class GradesListFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var repository: GradesListRepository
 
     private val binding by viewBinding(FragmentCourseGradesBinding::bind)
 
@@ -86,26 +90,34 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_course_grades, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerAdapter = GradesListRecyclerAdapter(requireContext(), course, adapterToFragmentCallback, adapterToGradesCallback, gradingPeriodsCallback, object : WhatIfDialogStyled.WhatIfDialogCallback {
-            override fun onClick(assignment: Assignment, position: Int) {
-                WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.textAndIconColor) { whatIf, _ ->
-                    //Create dummy submission for what if grade
-                    //check to see if grade is empty for reset
-                    if (whatIf == null) {
-                        assignment.submission = null
-                        recyclerAdapter.assignmentsHash[assignment.id]?.submission = null
-                    } else {
-                        recyclerAdapter.assignmentsHash[assignment.id]?.submission = Submission(
+        recyclerAdapter = GradesListRecyclerAdapter(
+            requireContext(),
+            course,
+            adapterToFragmentCallback,
+            repository,
+            ::onGradingPeriodResponse,
+            adapterToGradesCallback,
+            object : WhatIfDialogStyled.WhatIfDialogCallback {
+                override fun onClick(assignment: Assignment, position: Int) {
+                    WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.textAndIconColor) { whatIf, _ ->
+                        //Create dummy submission for what if grade
+                        //check to see if grade is empty for reset
+                        if (whatIf == null) {
+                            assignment.submission = null
+                            recyclerAdapter.assignmentsHash[assignment.id]?.submission = null
+                        } else {
+                            recyclerAdapter.assignmentsHash[assignment.id]?.submission = Submission(
                                 score = whatIf,
                                 grade = whatIf.toString()
-                        )
-                    }
+                            )
+                        }
 
-                    //Compute new overall grade
-                    computeGrades(binding.showTotalCheckBox.isChecked, position)
+                        //Compute new overall grade
+                        computeGrades(binding.showTotalCheckBox.isChecked, position)
+                    }
                 }
             }
-        })
+        )
         view.let {
             configureViews(it)
             configureRecyclerView(it, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.gradesEmptyView, R.id.listView)
@@ -234,63 +246,56 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    /*
-    * This code is similar to code in the AssignmentListFragment.
-    * If you make changes here, make sure to check the same callback in the AssignmentListFrag.
-    */
-    private val gradingPeriodsCallback = object : StatusCallback<GradingPeriodResponse>() {
-
-        override fun onResponse(response: Response<GradingPeriodResponse>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (view == null) return
-            with(binding) {
-                gradingPeriodsList = ArrayList()
-                gradingPeriodsList.addAll(response.body()!!.gradingPeriodList)
-                // Add "select all" option
-                gradingPeriodsList.add(allTermsGradingPeriod)
-                termAdapter = TermSpinnerAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
-                    gradingPeriodsList
-                )
-                termSpinner.adapter = termAdapter
-                termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        // The current item must always be set first
-                        recyclerAdapter.currentGradingPeriod = termAdapter?.getItem(position)
-                        if (termAdapter?.getItem(position)?.title == getString(R.string.allGradingPeriods)) {
-                            recyclerAdapter.loadData()
-                        } else {
-                            if (termAdapter?.isEmpty == false) {
-                                recyclerAdapter.loadAssignmentsForGradingPeriod(
-                                    termAdapter?.getItem(position)?.id ?: 0,
-                                    true,
-                                    true
-                                )
-                                termSpinner.isEnabled = false
-                                termAdapter?.isLoading = true
-                                termAdapter?.notifyDataSetChanged()
-                            }
-                        }
-                        showTotalCheckBox.isChecked = true
-                    }
-                }
-
-                // If we have a "current" grading period select it
-                if (recyclerAdapter.currentGradingPeriod != null) {
-                    val position = termAdapter?.getPositionForId(recyclerAdapter.currentGradingPeriod?.id ?: -1) ?: -1
-                    if (position != -1) {
-                        termSpinner.setSelection(position)
+    private fun onGradingPeriodResponse(response: GradingPeriodResponse) {
+        if (view == null) return
+        with(binding) {
+            gradingPeriodsList = ArrayList()
+            gradingPeriodsList.addAll(response.gradingPeriodList)
+            // Add "select all" option
+            gradingPeriodsList.add(allTermsGradingPeriod)
+            termAdapter = TermSpinnerAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                gradingPeriodsList
+            )
+            termSpinner.adapter = termAdapter
+            termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    // The current item must always be set first
+                    recyclerAdapter.currentGradingPeriod = termAdapter?.getItem(position)
+                    if (termAdapter?.getItem(position)?.title == getString(R.string.allGradingPeriods)) {
+                        recyclerAdapter.loadData()
                     } else {
-                        Toast.makeText(
-                            requireActivity(),
-                            com.instructure.loginapi.login.R.string.errorOccurred,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (termAdapter?.isEmpty == false) {
+                            recyclerAdapter.loadAssignmentsForGradingPeriod(
+                                gradingPeriodID = termAdapter?.getItem(position)?.id.orDefault(),
+                                refreshFirst = true,
+                                forceNetwork = true
+                            )
+                            termSpinner.isEnabled = false
+                            termAdapter?.isLoading = true
+                            termAdapter?.notifyDataSetChanged()
+                        }
                     }
+                    showTotalCheckBox.isChecked = true
                 }
-                termSpinner.setVisible()
             }
+
+            // If we have a "current" grading period select it
+            if (recyclerAdapter.currentGradingPeriod != null) {
+                val position = termAdapter?.getPositionForId(recyclerAdapter.currentGradingPeriod?.id ?: -1) ?: -1
+                if (position != -1) {
+                    termSpinner.setSelection(position)
+                } else {
+                    Toast.makeText(
+                        requireActivity(),
+                        com.instructure.loginapi.login.R.string.errorOccurred,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            termSpinner.setVisible()
         }
     }
 

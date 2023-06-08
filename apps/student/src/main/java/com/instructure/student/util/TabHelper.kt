@@ -28,6 +28,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.assignmentlist.AssignmentListFragment
+import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
