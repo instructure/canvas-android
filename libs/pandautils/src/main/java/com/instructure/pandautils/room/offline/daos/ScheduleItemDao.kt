@@ -33,6 +33,9 @@ interface ScheduleItemDao {
     @Update
     suspend fun update(entity: ScheduleItemEntity)
 
+    @Query("SELECT * FROM ScheduleItemEntity WHERE id=:id")
+    suspend fun findById(id: String): ScheduleItemEntity?
+
     @Query("SELECT * FROM ScheduleItemEntity WHERE contextCode IN (:contextCodes) AND type=:type")
     suspend fun findByItemType(contextCodes: List<String>, type: String): List<ScheduleItemEntity>
 
