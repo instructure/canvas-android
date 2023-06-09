@@ -120,10 +120,10 @@ class OfflineSyncWorker @AssistedInject constructor(
     private suspend fun fetchQuizzes(assignmentGroups: List<AssignmentGroup>) {
         val params = RestParams(isForceReadFromNetwork = true)
         assignmentGroups.forEach { group ->
-            group.assignments.forEach {
-                if (it.quizId != 0L) {
-                    val quiz = quizApi.getQuiz(it.courseId, it.quizId, params).dataOrThrow
-                    quizDao.insert(QuizEntity(quiz))
+            group.assignments.forEach { assignment ->
+                if (assignment.quizId != 0L) {
+                    val quiz = quizApi.getQuiz(assignment.courseId, assignment.quizId, params).dataOrNull
+                    quiz?.let { quizDao.insert(QuizEntity(it)) }
                 }
             }
         }

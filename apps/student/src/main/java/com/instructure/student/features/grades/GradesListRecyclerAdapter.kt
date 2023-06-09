@@ -42,7 +42,7 @@ open class GradesListRecyclerAdapter(
     var canvasContext: CanvasContext? = null,
     val adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>? = null,
     private val repository: GradesListRepository,
-    private val onGradingPeriodResponse: (GradingPeriodResponse) -> Unit,
+    private val onGradingPeriodResponse: (List<GradingPeriod>) -> Unit,
     private val adapterToGradesCallback: AdapterToGradesCallback? = null,
     private val whatIfDialogCallback: WhatIfDialogStyled.WhatIfDialogCallback? = null
 ) : ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder>(context, AssignmentGroup::class.java, Assignment::class.java) {

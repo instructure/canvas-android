@@ -23,6 +23,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.student.features.grades.GradesListRecyclerAdapter
+import com.instructure.student.features.grades.GradesListRepository
+import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Assert
 import org.junit.Before
@@ -33,14 +35,23 @@ import org.junit.runner.RunWith
 class GradesListRecyclerAdapterTest : TestCase() {
     private var mAdapter: GradesListRecyclerAdapter? = null
 
+    private val repository: GradesListRepository = mockk(relaxed = true)
+
     /**
      * Make it so the protected constructor can be called
      */
-    class GradesListRecyclerAdapterWrapper(context: Context) : GradesListRecyclerAdapter(context)
+    class GradesListRecyclerAdapterWrapper(
+        context: Context,
+        repository: GradesListRepository
+    ) : GradesListRecyclerAdapter(
+        context,
+        onGradingPeriodResponse = {},
+        repository = repository
+    )
 
     @Before
     fun setup() {
-        mAdapter = GradesListRecyclerAdapterWrapper(ApplicationProvider.getApplicationContext())
+        mAdapter = GradesListRecyclerAdapterWrapper(ApplicationProvider.getApplicationContext(), repository)
     }
 
     @Test

@@ -41,7 +41,7 @@ interface GradesListDataSource {
 
     suspend fun getCoursesWithSyllabus(forceNetwork: Boolean): List<Course>
 
-    suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): GradingPeriodResponse
+    suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod>
 
     suspend fun getUserEnrollmentsForGradingPeriod(
         courseId: Long,

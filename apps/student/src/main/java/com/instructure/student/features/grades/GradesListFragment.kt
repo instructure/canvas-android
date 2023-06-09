@@ -246,11 +246,11 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun onGradingPeriodResponse(response: GradingPeriodResponse) {
+    private fun onGradingPeriodResponse(gradingPeriodList: List<GradingPeriod>) {
         if (view == null) return
         with(binding) {
             gradingPeriodsList = ArrayList()
-            gradingPeriodsList.addAll(response.gradingPeriodList)
+            gradingPeriodsList.addAll(gradingPeriodList)
             // Add "select all" option
             gradingPeriodsList.add(allTermsGradingPeriod)
             termAdapter = TermSpinnerAdapter(

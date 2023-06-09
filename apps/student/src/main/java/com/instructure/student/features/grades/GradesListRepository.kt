@@ -60,7 +60,7 @@ class GradesListRepository(
         return dataSource.getCoursesWithSyllabus(forceNetwork)
     }
 
-    suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): GradingPeriodResponse {
+    suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
         return dataSource.getGradingPeriodsForCourse(courseId, forceNetwork)
     }
 

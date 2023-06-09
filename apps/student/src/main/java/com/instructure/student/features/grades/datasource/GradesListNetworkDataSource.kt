@@ -87,10 +87,10 @@ class GradesListNetworkDataSource(
         }.dataOrThrow
     }
 
-    override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): GradingPeriodResponse {
+    override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
-        return courseApi.getGradingPeriodsForCourse(courseId, params).dataOrThrow
+        return courseApi.getGradingPeriodsForCourse(courseId, params).dataOrThrow.gradingPeriodList
     }
 
     override suspend fun getUserEnrollmentsForGradingPeriod(

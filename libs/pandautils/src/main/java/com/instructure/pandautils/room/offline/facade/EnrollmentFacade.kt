@@ -72,4 +72,34 @@ class EnrollmentFacade(
             )
         }
     }
+
+    suspend fun getAllEnrollments(): List<Enrollment> {
+        val enrollmentEntities = enrollmentDao.findAll()
+        return enrollmentEntities.map { enrollmentEntity ->
+            val gradesEntity = gradesDao.findByEnrollmentId(enrollmentEntity.id)
+            val observedUserEntity = enrollmentEntity.observedUserId?.let { userDao.findById(it) }
+            val userEntity = userDao.findById(enrollmentEntity.userId)
+
+            enrollmentEntity.toApiModel(
+                grades = gradesEntity?.toApiModel(),
+                observedUser = observedUserEntity?.toApiModel(),
+                user = userEntity?.toApiModel()
+            )
+        }
+    }
+
+    suspend fun getEnrollmentsByGradingPeriodId(gradingPeriodId: Long): List<Enrollment> {
+        val enrollmentEntities = enrollmentDao.findByGradingPeriodId(gradingPeriodId)
+        return enrollmentEntities.map { enrollmentEntity ->
+            val gradesEntity = gradesDao.findByEnrollmentId(enrollmentEntity.id)
+            val observedUserEntity = enrollmentEntity.observedUserId?.let { userDao.findById(it) }
+            val userEntity = userDao.findById(enrollmentEntity.userId)
+
+            enrollmentEntity.toApiModel(
+                grades = gradesEntity?.toApiModel(),
+                observedUser = observedUserEntity?.toApiModel(),
+                user = userEntity?.toApiModel()
+            )
+        }
+    }
 }

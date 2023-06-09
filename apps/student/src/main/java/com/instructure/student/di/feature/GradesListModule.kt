@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
+import com.instructure.pandautils.room.offline.facade.SubmissionFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.grades.GradesListRepository
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
@@ -38,10 +40,12 @@ class GradesListModule {
 
     @Provides
     fun provideAssignmentListLocalDataSource(
+        courseFacade: CourseFacade,
+        enrollmentFacade: EnrollmentFacade,
         assignmentFacade: AssignmentFacade,
-        courseFacade: CourseFacade
+        submissionFacade: SubmissionFacade
     ): GradesListLocalDataSource {
-        return GradesListLocalDataSource(assignmentFacade, courseFacade)
+        return GradesListLocalDataSource(courseFacade, enrollmentFacade, assignmentFacade, submissionFacade)
     }
 
     @Provides
