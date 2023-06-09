@@ -23,7 +23,7 @@ import com.instructure.pandautils.room.offline.entities.GradingPeriodEntity
 @Dao
 interface GradingPeriodDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(entity: GradingPeriodEntity)
 
     @Delete

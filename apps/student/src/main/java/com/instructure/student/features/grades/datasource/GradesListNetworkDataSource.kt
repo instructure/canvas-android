@@ -73,7 +73,7 @@ class GradesListNetworkDataSource(
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         return submissionApi.getSubmissionsForMultipleAssignments(
-            studentId, courseId, assignmentIds, params
+            courseId, studentId, assignmentIds, params
         ).depaginate {
             submissionApi.getNextPageSubmissions(it, params)
         }.dataOrThrow

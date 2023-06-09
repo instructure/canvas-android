@@ -57,7 +57,7 @@ class GradesListLocalDataSource(
     }
 
     override suspend fun getCoursesWithSyllabus(forceNetwork: Boolean): List<Course> {
-        return emptyList()
+        return courseFacade.getAllCourses()
     }
 
     override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {

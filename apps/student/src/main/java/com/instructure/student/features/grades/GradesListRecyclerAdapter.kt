@@ -205,12 +205,10 @@ open class GradesListRecyclerAdapter(
 
             // Request the grading period objects and make the assignment calls
             val result = repository.getGradingPeriodsForCourse(course.id, forceNetwork)
-            onGradingPeriodResponse(result)
-            return
+            if (result.isNotEmpty()) onGradingPeriodResponse(result)
         } else {
             // Otherwise we load the info from the current grading period
             loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true, forceNetwork)
-            return
         }
     }
 
@@ -295,7 +293,7 @@ open class GradesListRecyclerAdapter(
             for (assignment in gradedAssignments) {
                 assignmentsHash[assignment.id] = assignment
             }
-            if (!assignmentGroups.contains(group)) {
+            if (assignmentGroups.none { it.id == group.id }) {
                 assignmentGroups.add(group)
             }
         }
