@@ -180,8 +180,8 @@ class OfflineSyncWorker @AssistedInject constructor(
         assignmentGroups.forEach { group ->
             group.assignments.forEach {
                 if (it.quizId != 0L) {
-                    val quiz = quizApi.getQuiz(it.courseId, it.quizId, params).dataOrThrow
-                    quizDao.insert(QuizEntity(quiz))
+                    val quiz = quizApi.getQuiz(it.courseId, it.quizId, params).dataOrNull
+                    quiz?.let { quizDao.insert(QuizEntity(it)) }
                 }
             }
         }
