@@ -48,7 +48,9 @@ import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 import com.instructure.student.activity.*
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignmentlist.AssignmentListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
+import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment

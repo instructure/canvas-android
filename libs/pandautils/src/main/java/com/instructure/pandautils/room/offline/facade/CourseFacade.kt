@@ -18,6 +18,7 @@
 package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 
@@ -84,5 +85,13 @@ class CourseFacade(
             gradingPeriods = gradingPeriods,
             tabs = tabEntities.map { it.toApiModel() }
         )
+    }
+
+    suspend fun getGradingPeriodsByCourseId(id: Long): List<GradingPeriod> {
+        val gradingPeriodEntities = courseGradingPeriodDao.findByCourseId(id).map {
+            gradingPeriodDao.findById(it.gradingPeriodId)
+        }
+
+        return gradingPeriodEntities.map { it.toApiModel() }
     }
 }

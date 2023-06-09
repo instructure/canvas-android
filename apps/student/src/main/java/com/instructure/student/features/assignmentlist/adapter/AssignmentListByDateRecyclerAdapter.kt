@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.adapter.assignment
+package com.instructure.student.features.assignmentlist.adapter
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Assignment
@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.student.R
+import com.instructure.student.features.assignmentlist.AssignmentListRepository
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import java.util.*
 
@@ -35,12 +36,13 @@ private const val HEADER_POSITION_UNDATED = 2
 private const val HEADER_POSITION_PAST = 3
 
 class AssignmentListByDateRecyclerAdapter(
-        context: Context,
-        canvasContext: CanvasContext,
-        adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-        isTesting: Boolean = false,
-        filter: AssignmentListFilter = AssignmentListFilter.ALL
-) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting, filter) {
+    context: Context,
+    canvasContext: CanvasContext,
+    adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
+    isTesting: Boolean = false,
+    filter: AssignmentListFilter = AssignmentListFilter.ALL,
+    repository: AssignmentListRepository
+) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting, filter, repository) {
 
     private val overdue = AssignmentGroup(name = context.getString(R.string.overdueAssignments), position = HEADER_POSITION_OVERDUE)
     private val upcoming = AssignmentGroup(name = context.getString(R.string.upcomingAssignments), position = HEADER_POSITION_UPCOMING)

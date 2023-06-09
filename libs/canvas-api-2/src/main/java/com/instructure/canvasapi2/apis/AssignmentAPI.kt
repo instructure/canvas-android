@@ -85,8 +85,23 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("grading_period_id") gradingPeriodId: Long, @Query("scope_assignments_to_student") scopeToStudent: Boolean, @Query("order") order: String = "id"): Call<List<AssignmentGroup>>
 
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
+        suspend fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
+            @Path("courseId") courseId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long,
+            @Query("scope_assignments_to_student") scopeToStudent: Boolean,
+            @Query("order") order: String = "id",
+            @Tag restParams: RestParams
+        ): DataResult<List<AssignmentGroup>>
+
         @GET
         fun getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(@Url nextUrl: String): Call<List<AssignmentGroup>>
+
+        @GET
+        suspend fun getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(
+            @Url nextUrl: String,
+            @Tag restParams: RestParams
+        ): DataResult<List<AssignmentGroup>>
 
         @GET
         fun getNextPage(@Url nextUrl: String): Call<List<AssignmentGroup>>

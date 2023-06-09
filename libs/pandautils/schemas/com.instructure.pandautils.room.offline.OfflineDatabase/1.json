@@ -2714,7 +2714,7 @@
       },
       {
         "tableName": "SubmissionEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `grade` TEXT, `score` REAL NOT NULL, `attempt` INTEGER NOT NULL, `submittedAt` INTEGER, `commentCreated` INTEGER, `mediaContentType` TEXT, `mediaCommentUrl` TEXT, `mediaCommentDisplay` TEXT, `body` TEXT, `isGradeMatchesCurrentSubmission` INTEGER NOT NULL, `workflowState` TEXT, `submissionType` TEXT, `previewUrl` TEXT, `url` TEXT, `late` INTEGER NOT NULL, `excused` INTEGER NOT NULL, `missing` INTEGER NOT NULL, `mediaCommentId` TEXT, `assignmentId` INTEGER NOT NULL, `userId` INTEGER, `graderId` INTEGER, `groupId` INTEGER, `pointsDeducted` REAL, `enteredScore` REAL NOT NULL, `enteredGrade` TEXT, `postedAt` INTEGER, PRIMARY KEY(`id`, `attempt`), FOREIGN KEY(`groupId`) REFERENCES `GroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `grade` TEXT, `score` REAL NOT NULL, `attempt` INTEGER NOT NULL, `submittedAt` INTEGER, `commentCreated` INTEGER, `mediaContentType` TEXT, `mediaCommentUrl` TEXT, `mediaCommentDisplay` TEXT, `body` TEXT, `isGradeMatchesCurrentSubmission` INTEGER NOT NULL, `workflowState` TEXT, `submissionType` TEXT, `previewUrl` TEXT, `url` TEXT, `late` INTEGER NOT NULL, `excused` INTEGER NOT NULL, `missing` INTEGER NOT NULL, `mediaCommentId` TEXT, `assignmentId` INTEGER NOT NULL, `userId` INTEGER, `graderId` INTEGER, `groupId` INTEGER, `pointsDeducted` REAL, `enteredScore` REAL NOT NULL, `enteredGrade` TEXT, `postedAt` INTEGER, `gradingPeriodId` INTEGER, PRIMARY KEY(`id`, `attempt`), FOREIGN KEY(`groupId`) REFERENCES `GroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -2875,6 +2875,12 @@
           {
             "fieldPath": "postedAt",
             "columnName": "postedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gradingPeriodId",
+            "columnName": "gradingPeriodId",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -3671,7 +3677,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '31d71a6ad609c5446da63315ad1126ac')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b1eafa96cb51159cad1da7539fdfe5b')"
     ]
   }
 }

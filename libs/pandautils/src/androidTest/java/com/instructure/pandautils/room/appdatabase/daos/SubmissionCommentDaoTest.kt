@@ -60,7 +60,7 @@ class SubmissionCommentDaoTest {
     }
 
     @After
-    fun tearDoown() {
+    fun tearDown() {
         db.close()
     }
 
