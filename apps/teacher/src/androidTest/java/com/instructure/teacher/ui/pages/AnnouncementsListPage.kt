@@ -22,8 +22,24 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithContentDescription
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.replaceText
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
@@ -106,5 +122,24 @@ class AnnouncementsListPage : BasePage() {
 
     fun acceptExitWithoutSaveDialog() {
         onViewWithText(R.string.exitUnsaved).click()
+    }
+
+    fun clickSearchButton() {
+        onView(withId(R.id.search)).click()
+    }
+
+    fun typeSearchInput(searchText: String) {
+        onView(withId(R.id.search_src_text)).replaceText(searchText.dropLast(1))
+    }
+
+    fun clickResetSearchText() {
+        waitForView(withId(R.id.search_close_btn)).click()
+    }
+
+    fun assertSearchResultCount(expectedCount: Int) {
+        Thread.sleep(2000)
+        onView(withId(R.id.discussionRecyclerView) + withAncestor(R.id.swipeRefreshLayout)).check(
+            ViewAssertions.matches(ViewMatchers.hasChildCount(expectedCount + 1)) //because of the FrameLayout, it does not actually a discussion
+        )
     }
 }

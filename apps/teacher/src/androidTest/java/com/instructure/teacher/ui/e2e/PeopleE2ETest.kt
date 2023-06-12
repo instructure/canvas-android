@@ -32,6 +32,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
@@ -91,18 +92,21 @@ class PeopleE2ETest: TeacherTest() {
         courseBrowserPage.openPeopleTab()
 
         Log.d(STEP_TAG,"Click on '${teacher.name}', the teacher person and assert the that the teacher course info and the corresponding section name is displayed on Context Page.")
+        peopleListPage.assertPersonRole(teacher.name, PeopleListPage.UserRole.TEACHER)
         peopleListPage.clickPerson(teacher)
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
 
         Log.d(STEP_TAG,"Navigate back and click on '${parent.name}', the parent (observer) person and assert the that the observer course info and the corresponding section name are displayed on Context Page.")
         Espresso.pressBack()
+        peopleListPage.assertPersonRole(parent.name, PeopleListPage.UserRole.OBSERVER)
         peopleListPage.clickPerson(parent)
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.OBSERVER)
 
         Log.d(STEP_TAG,"Navigate back and click on ${notGradedStudent.name} student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
         Espresso.pressBack()
+        peopleListPage.assertPersonRole(notGradedStudent.name, PeopleListPage.UserRole.STUDENT)
         peopleListPage.clickPerson(notGradedStudent)
         studentContextPage.assertDisplaysStudentInfo(notGradedStudent)
         studentContextPage.assertSectionNameView(PersonContextPage.UserRole.STUDENT)
@@ -114,6 +118,7 @@ class PeopleE2ETest: TeacherTest() {
                 "Assert that '${gradedStudent.name}' graded student's info," +
                 "and the '${course.name}' course's info are displayed properly on the Context Page.")
         Espresso.pressBack()
+        peopleListPage.assertPersonRole(gradedStudent.name, PeopleListPage.UserRole.STUDENT)
         peopleListPage.clickPerson(gradedStudent)
         studentContextPage.assertDisplaysStudentInfo(gradedStudent)
         studentContextPage.assertDisplaysCourseInfo(course)

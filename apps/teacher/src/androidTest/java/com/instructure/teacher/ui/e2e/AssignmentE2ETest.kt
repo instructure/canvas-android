@@ -86,7 +86,8 @@ class AssignmentE2ETest : TeacherTest() {
                 pointsPossible = 15.0
         )
 
-        Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed.")
+        Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed." +
+                "Assert that the needs grading count under the corresponding assignment is 1.")
         assignmentListPage.refresh()
         assignmentListPage.assertHasAssignment(assignment[0])
 
@@ -139,6 +140,12 @@ class AssignmentE2ETest : TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that because of the other submission there will be 2 'Needs Grading' and only 1 remains as 'Not Submitted'.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.waitForRender()
+        assignmentDetailsPage.assertNotSubmitted(1,3)
+        assignmentDetailsPage.assertNeedsGrading(2,3)
+
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
         gradeSubmission(teacher, course, assignment, gradedStudent)
 
@@ -148,6 +155,11 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentDetailsPage.assertNotSubmitted(1,3)
         assignmentDetailsPage.assertNeedsGrading(1,3)
         assignmentDetailsPage.assertHasGraded(1,3)
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page. Assert that the '${assignment[0].name}' assignment has 1 'Needs Grading' submission.")
+        Espresso.pressBack()
+        assignmentListPage.assertHasAssignment(assignment[0])
+        assignmentListPage.assertNeedsGradingCountOfAssignment(assignment[0].name, 1)
 
         val newAssignmentName = "New Assignment Name"
         Log.d(STEP_TAG,"Edit ${assignment[0].name} assignment's name  to: $newAssignmentName.")
