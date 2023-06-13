@@ -44,6 +44,9 @@ data class CourseSyncSettingsEntity(
         return fullContentSync || isSelected
     }
 
+    val allTabsEnabled: Boolean
+        get() = assignments && pages && grades && fullFileSync
+
     val anySyncEnabled: Boolean
         get() = fullContentSync || assignments || pages || grades
 }
