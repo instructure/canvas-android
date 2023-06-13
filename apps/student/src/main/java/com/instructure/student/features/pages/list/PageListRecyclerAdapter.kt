@@ -15,29 +15,29 @@
  *
  */
 
-package com.instructure.student.adapter
+package com.instructure.student.features.pages.list
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import com.instructure.student.R
-import com.instructure.student.holders.FrontPageViewHolder
-import com.instructure.student.holders.PageViewHolder
-import com.instructure.student.interfaces.AdapterToFragmentCallback
-import com.instructure.canvasapi2.managers.PageManager
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitPaginated
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.pandautils.utils.toast
+import com.instructure.student.R
+import com.instructure.student.adapter.BaseListRecyclerAdapter
+import com.instructure.student.holders.FrontPageViewHolder
+import com.instructure.student.holders.PageViewHolder
+import com.instructure.student.interfaces.AdapterToFragmentCallback
 
 open class PageListRecyclerAdapter(
     context: Context,
+    private val repository: PageListRepository,
     private val canvasContext: CanvasContext,
     private val adapterToFragmentCallback: AdapterToFragmentCallback<Page>,
     private var selectedPageTitle: String = FRONT_PAGE_DETERMINER // Page urls only specify the title, not the pageId
@@ -61,7 +61,7 @@ open class PageListRecyclerAdapter(
     }
 
     init {
-        itemCallback = object : BaseListRecyclerAdapter.ItemComparableCallback<Page>() {
+        itemCallback = object : ItemComparableCallback<Page>() {
             override fun compare(page1: Page, page2: Page) = page1.compareTo(page2)
             override fun areContentsTheSame(item1: Page, item2: Page) = item1.title == item2.title
             override fun getUniqueItemId(page: Page) = page.id
@@ -102,15 +102,7 @@ open class PageListRecyclerAdapter(
 
     override fun loadFirstPage() {
         apiCall = tryWeave {
-            val refreshing = isRefresh
-            val newPages = mutableListOf<Page>()
-            awaitPaginated<List<Page>> {
-                exhaustive = true
-                onRequestFirst { PageManager.getFirstPagePages(canvasContext, it, refreshing) }
-                onRequestNext { url, callback -> PageManager.getNextPagePages(url, callback, refreshing) }
-                onResponse { newPages.addAll(it) }
-            }
-            pages = newPages
+            pages = repository.loadPages(canvasContext, isRefresh)
             populateData()
             isAllPagesLoaded = true
             adapterToFragmentCallback.onRefreshFinished()
