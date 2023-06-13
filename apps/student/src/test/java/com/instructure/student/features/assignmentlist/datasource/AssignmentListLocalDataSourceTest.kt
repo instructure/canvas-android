@@ -42,9 +42,9 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any()) } returns expected
 
-        val course = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
+        val result = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
 
-        assertEquals(expected, course)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -53,9 +53,9 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignments(any()) } returns expected
 
-        val course = dataSource.getAssignmentGroupsWithAssignments(1, true)
+        val result = dataSource.getAssignmentGroupsWithAssignments(1, true)
 
-        assertEquals(expected, course)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -64,8 +64,8 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { courseFacade.getGradingPeriodsByCourseId(any()) } returns expected
 
-        val course = dataSource.getGradingPeriodsForCourse(1, true)
+        val result = dataSource.getGradingPeriodsForCourse(1, true)
 
-        assertEquals(expected, course)
+        assertEquals(expected, result)
     }
 }
