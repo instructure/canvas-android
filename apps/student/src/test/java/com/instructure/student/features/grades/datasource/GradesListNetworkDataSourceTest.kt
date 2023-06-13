@@ -148,9 +148,9 @@ class GradesListNetworkDataSourceTest {
 
     @Test
     fun `Get grading period for course successfully returns data`() = runTest {
-        val expected = GradingPeriodResponse(listOf(GradingPeriod(1)))
+        val expected = listOf(GradingPeriod(1))
 
-        coEvery { courseApi.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(expected)
+        coEvery { courseApi.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(GradingPeriodResponse(expected))
 
         val result = dataSource.getGradingPeriodsForCourse(1, true)
 
