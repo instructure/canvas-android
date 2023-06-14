@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ef27ce4ab5b878a5dba74326f446ade2",
+    "identityHash": "31a8042dc789dc691642dab6a5b0f4fd",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -958,7 +958,7 @@
       },
       {
         "tableName": "DashboardCardEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isK5Subject` INTEGER NOT NULL, `shortName` TEXT, `originalName` TEXT, `courseCode` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isK5Subject` INTEGER NOT NULL, `shortName` TEXT, `originalName` TEXT, `courseCode` TEXT, `position` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -989,6 +989,12 @@
             "columnName": "courseCode",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -3837,7 +3843,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ef27ce4ab5b878a5dba74326f446ade2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '31a8042dc789dc691642dab6a5b0f4fd')"
     ]
   }
 }

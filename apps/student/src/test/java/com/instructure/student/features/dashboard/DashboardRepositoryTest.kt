@@ -140,6 +140,30 @@ class DashboardRepositoryTest {
     }
 
     @Test
+    fun `Sort dashboard cards by position`() = runTest {
+        val dashboardCards = listOf(
+            DashboardCard(id = 1, position = 1),
+            DashboardCard(id = 2, position = 0),
+            DashboardCard(id = 3),
+            DashboardCard(id = 4, position = 2)
+        )
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getDashboardCards(any()) } returns dashboardCards
+
+        val result = repository.getDashboardCourses(true)
+
+        val expectedResult = listOf(
+            DashboardCard(id = 2, position = 0),
+            DashboardCard(id = 1, position = 1),
+            DashboardCard(id = 4, position = 2),
+            DashboardCard(id = 3)
+        )
+
+        Assert.assertEquals(expectedResult, result)
+    }
+
+    @Test
     fun `Correctly filtered course ids are returned from getSyncedCourseIds`() = runTest {
         val entities = listOf(
             CourseSyncSettingsEntity(1, true, false, false, false, false),
