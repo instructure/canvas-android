@@ -45,5 +45,5 @@ data class CourseSyncSettingsEntity(
     }
 
     val anySyncEnabled: Boolean
-        get() = fullContentSync || assignments || pages || grades
+        get() = fullContentSync || assignments || pages || grades || syllabus
 }
