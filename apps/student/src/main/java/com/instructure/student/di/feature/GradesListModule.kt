@@ -39,7 +39,7 @@ import dagger.hilt.android.components.FragmentComponent
 class GradesListModule {
 
     @Provides
-    fun provideAssignmentListLocalDataSource(
+    fun provideGradesListLocalDataSource(
         courseFacade: CourseFacade,
         enrollmentFacade: EnrollmentFacade,
         assignmentFacade: AssignmentFacade,
@@ -49,7 +49,7 @@ class GradesListModule {
     }
 
     @Provides
-    fun provideAssignmentListNetworkDataSource(
+    fun provideGradesListNetworkDataSource(
         courseApi: CourseAPI.CoursesInterface,
         enrollmentApi: EnrollmentAPI.EnrollmentInterface,
         assignmentApi: AssignmentAPI.AssignmentInterface,
@@ -59,7 +59,7 @@ class GradesListModule {
     }
 
     @Provides
-    fun provideAssignmentListRepository(
+    fun provideGradesListRepository(
         localDataSource: GradesListLocalDataSource,
         networkDataSource: GradesListNetworkDataSource,
         networkStateProvider: NetworkStateProvider
