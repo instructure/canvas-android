@@ -4,26 +4,38 @@ import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 
 @Dao
-interface FileSyncSettingsDao {
+abstract class FileSyncSettingsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: FileSyncSettingsEntity)
+    abstract suspend fun insert(entity: FileSyncSettingsEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertAll(entities: List<FileSyncSettingsEntity>)
 
     @Delete
-    suspend fun delete(entity: FileSyncSettingsEntity)
+    abstract suspend fun delete(entity: FileSyncSettingsEntity)
 
     @Update
-    suspend fun update(entity: FileSyncSettingsEntity)
+    abstract suspend fun update(entity: FileSyncSettingsEntity)
 
     @Query("SELECT * FROM FileSyncSettingsEntity")
-    suspend fun findAll(): List<FileSyncSettingsEntity>
+    abstract suspend fun findAll(): List<FileSyncSettingsEntity>
 
     @Query("SELECT * FROM FileSyncSettingsEntity WHERE id=:id")
-    suspend fun findById(id: Long): FileSyncSettingsEntity?
+    abstract suspend fun findById(id: Long): FileSyncSettingsEntity?
 
     @Query("DELETE FROM FileSyncSettingsEntity WHERE id=:fileId")
-    suspend fun deleteById(fileId: Long)
+    abstract suspend fun deleteById(fileId: Long)
 
     @Query("DELETE FROM FileSyncSettingsEntity WHERE id IN (:ids)")
-    suspend fun deleteByIds(ids: List<Long>)
+    abstract suspend fun deleteByIds(ids: List<Long>)
+
+    @Query("DELETE FROM FileSyncSettingsEntity WHERE courseId=:courseId")
+    abstract suspend fun deleteByCourseId(courseId: Long)
+
+    @Transaction
+    open suspend fun updateCourseFiles(courseId: Long, fileSyncSettings: List<FileSyncSettingsEntity>) {
+        deleteByCourseId(courseId)
+        insertAll(fileSyncSettings)
+    }
 }

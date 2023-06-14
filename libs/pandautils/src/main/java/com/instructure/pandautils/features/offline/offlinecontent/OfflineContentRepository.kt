@@ -122,8 +122,13 @@ class OfflineContentRepository(
         return courseSettingsWithFiles
     }
 
-    suspend fun updateCourseSyncSettings(courseSyncSettingsEntity: CourseSyncSettingsEntity) {
-        courseSyncSettingsDao.update(courseSyncSettingsEntity)
+    suspend fun updateCourseSyncSettings(
+        courseId: Long,
+        courseSyncSettings: CourseSyncSettingsEntity,
+        fileSyncSettings: List<FileSyncSettingsEntity>
+    ) {
+        courseSyncSettingsDao.update(courseSyncSettings)
+        fileSyncSettingsDao.updateCourseFiles(courseId, fileSyncSettings)
     }
 
     suspend fun saveFileSettings(fileSyncSettingsEntity: FileSyncSettingsEntity) {

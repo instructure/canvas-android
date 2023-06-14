@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
@@ -357,8 +358,21 @@ class OfflineContentViewModel @Inject constructor(
 
     fun onSyncClicked() {
         viewModelScope.launch {
+            saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
             _events.postValue(Event(OfflineContentAction.Back))
+        }
+    }
+
+    private suspend fun saveSettings() {
+        syncSettingsMap.forEach { courseSettingsEntry ->
+            val courseId = courseSettingsEntry.key
+            val fileSettings = courseSelectedFilesMap[courseId].orEmpty().mapNotNull { fileId ->
+                courseFilesMap[courseId]?.get(fileId)?.let {
+                    FileSyncSettingsEntity(it.id, courseId, it.url)
+                }
+            }
+            offlineContentRepository.updateCourseSyncSettings(courseSettingsEntry.key, courseSettingsEntry.value.courseSyncSettings, fileSettings)
         }
     }
 

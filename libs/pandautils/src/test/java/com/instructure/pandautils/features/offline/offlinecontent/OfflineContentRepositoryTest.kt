@@ -29,6 +29,7 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -187,7 +188,7 @@ class OfflineContentRepositoryTest {
     fun `Course settings update updates db`() = runTest {
         val courseSyncSettings = CourseSyncSettingsEntity(1L, true, false, false, false, false)
 
-        repository.updateCourseSyncSettings(courseSyncSettings)
+        repository.updateCourseSyncSettings(1L, CourseSyncSettingsWithFiles(courseSyncSettings, emptyList()))
 
         coVerify(exactly = 1) { courseSyncSettingsDao.update(courseSyncSettings) }
     }
