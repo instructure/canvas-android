@@ -137,7 +137,7 @@ class AnnouncementsListPage : BasePage() {
     }
 
     fun assertSearchResultCount(expectedCount: Int) {
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         onView(withId(R.id.discussionRecyclerView) + withAncestor(R.id.swipeRefreshLayout)).check(
             ViewAssertions.matches(ViewMatchers.hasChildCount(expectedCount + 1)) //because of the FrameLayout, it does not actually a discussion
         )
