@@ -71,18 +71,20 @@ class OfflineSyncWorker @AssistedInject constructor(
             } ?: courseSyncSettingsDao.findAll()
 
             val syllabusCourseIds = mutableListOf<Long>()
-            courses.forEach { courseSettings ->
-                fetchCourseDetails(courseSettings.courseId)
-                if (courseSettings.pages) {
-                    fetchPages(courseSettings.courseId)
+            courses
+                .filter { it.anySyncEnabled }
+                .forEach { courseSettings ->
+                    fetchCourseDetails(courseSettings.courseId)
+                    if (courseSettings.pages) {
+                        fetchPages(courseSettings.courseId)
+                    }
+                    if (courseSettings.assignments || courseSettings.grades || courseSettings.syllabus) {
+                        fetchAssignments(courseSettings.courseId)
+                    }
+                    if (courseSettings.syllabus) {
+                        syllabusCourseIds.add(courseSettings.courseId)
+                    }
                 }
-                if (courseSettings.assignments || courseSettings.grades || courseSettings.syllabus) {
-                    fetchAssignments(courseSettings.courseId)
-                }
-                if (courseSettings.syllabus) {
-                    syllabusCourseIds.add(courseSettings.courseId)
-                }
-            }
             fetchSyllabus(syllabusCourseIds)
 
             return Result.success()
