@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0327ac4aaf82136ae51e9f3fcd172b54",
+    "identityHash": "175994435c600fdf50476ed99629a53a",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -1530,7 +1530,7 @@
       },
       {
         "tableName": "EnrollmentEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `role` TEXT NOT NULL, `type` TEXT NOT NULL, `courseId` INTEGER, `courseSectionId` INTEGER, `enrollmentState` TEXT, `userId` INTEGER NOT NULL, `computedCurrentScore` REAL, `computedFinalScore` REAL, `computedCurrentGrade` TEXT, `computedFinalGrade` TEXT, `multipleGradingPeriodsEnabled` INTEGER NOT NULL, `totalsForAllGradingPeriodsOption` INTEGER NOT NULL, `currentPeriodComputedCurrentScore` REAL, `currentPeriodComputedFinalScore` REAL, `currentPeriodComputedCurrentGrade` TEXT, `currentPeriodComputedFinalGrade` TEXT, `currentGradingPeriodId` INTEGER NOT NULL, `currentGradingPeriodTitle` TEXT, `associatedUserId` INTEGER NOT NULL, `lastActivityAt` INTEGER, `limitPrivilegesToCourseSection` INTEGER NOT NULL, `observedUserId` INTEGER, FOREIGN KEY(`observedUserId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`courseSectionId`) REFERENCES `SectionEntity`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `role` TEXT NOT NULL, `type` TEXT NOT NULL, `courseId` INTEGER, `courseSectionId` INTEGER, `enrollmentState` TEXT, `userId` INTEGER NOT NULL, `computedCurrentScore` REAL, `computedFinalScore` REAL, `computedCurrentGrade` TEXT, `computedFinalGrade` TEXT, `multipleGradingPeriodsEnabled` INTEGER NOT NULL, `totalsForAllGradingPeriodsOption` INTEGER NOT NULL, `currentPeriodComputedCurrentScore` REAL, `currentPeriodComputedFinalScore` REAL, `currentPeriodComputedCurrentGrade` TEXT, `currentPeriodComputedFinalGrade` TEXT, `currentGradingPeriodId` INTEGER NOT NULL, `currentGradingPeriodTitle` TEXT, `associatedUserId` INTEGER NOT NULL, `lastActivityAt` INTEGER, `limitPrivilegesToCourseSection` INTEGER NOT NULL, `observedUserId` INTEGER, FOREIGN KEY(`observedUserId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`courseSectionId`) REFERENCES `SectionEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1681,7 +1681,7 @@
         "foreignKeys": [
           {
             "table": "UserEntity",
-            "onDelete": "NO ACTION",
+            "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
               "observedUserId"
@@ -1692,7 +1692,7 @@
           },
           {
             "table": "UserEntity",
-            "onDelete": "NO ACTION",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "userId"
@@ -1703,7 +1703,7 @@
           },
           {
             "table": "SectionEntity",
-            "onDelete": "NO ACTION",
+            "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
               "courseSectionId"
@@ -3627,7 +3627,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0327ac4aaf82136ae51e9f3fcd172b54')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '175994435c600fdf50476ed99629a53a')"
     ]
   }
 }

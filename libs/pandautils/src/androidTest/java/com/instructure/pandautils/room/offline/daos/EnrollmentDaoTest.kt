@@ -17,6 +17,7 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -109,5 +110,87 @@ class EnrollmentDaoTest {
 
         Assert.assertEquals(1, result.size)
         Assert.assertEquals(entities.first(), result.first())
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testObservedUserForeignKey() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 2)
+
+        enrollmentDao.insert(enrollmentEntity)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testUserForeignKey() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 2), 1, 1, 1)
+
+        enrollmentDao.insert(enrollmentEntity)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testSectionForeignKey() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 2, 1)
+
+        enrollmentDao.insert(enrollmentEntity)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testCourseForeignKey() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 3, 1, 1)
+
+        enrollmentDao.insert(enrollmentEntity)
+    }
+
+    @Test
+    fun testObservedUserSetNullOnDelete() = runTest {
+        userDao.insert(UserEntity(User(id = 2)))
+
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 2)
+
+        enrollmentDao.insert(enrollmentEntity)
+
+        userDao.delete(UserEntity(User(id = 2)))
+
+        val result = enrollmentDao.findAll()
+
+        Assert.assertEquals(listOf(enrollmentEntity.copy(observedUserId = null)), result)
+    }
+
+    @Test
+    fun testUserCascade() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 1)
+
+        enrollmentDao.insert(enrollmentEntity)
+
+        userDao.delete(UserEntity(User(id = 1)))
+
+        val result = enrollmentDao.findAll()
+
+        assert(result.isEmpty())
+    }
+
+    @Test
+    fun testSectionSetNullOnDelete() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 1)
+
+        enrollmentDao.insert(enrollmentEntity)
+
+        sectionDao.delete(SectionEntity(Section(1)))
+
+        val result = enrollmentDao.findAll()
+
+        Assert.assertEquals(listOf(enrollmentEntity.copy(courseSectionId = null)), result)
+    }
+
+    @Test
+    fun testCourseCascade() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 1)
+
+        enrollmentDao.insert(enrollmentEntity)
+
+        courseDao.delete(CourseEntity(Course(1)))
+
+        val result = enrollmentDao.findAll()
+
+        assert(result.isEmpty())
     }
 }

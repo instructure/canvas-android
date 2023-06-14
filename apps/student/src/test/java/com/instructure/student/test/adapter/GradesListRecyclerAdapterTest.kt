@@ -33,7 +33,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class GradesListRecyclerAdapterTest : TestCase() {
-    private var mAdapter: GradesListRecyclerAdapter? = null
+    private var adapter: GradesListRecyclerAdapter? = null
 
     private val repository: GradesListRepository = mockk(relaxed = true)
 
@@ -51,13 +51,13 @@ class GradesListRecyclerAdapterTest : TestCase() {
 
     @Before
     fun setup() {
-        mAdapter = GradesListRecyclerAdapterWrapper(ApplicationProvider.getApplicationContext(), repository)
+        adapter = GradesListRecyclerAdapterWrapper(ApplicationProvider.getApplicationContext(), repository)
     }
 
     @Test
     fun testAreContentsTheSame_SameNameAndPoints() {
         val assignment = Assignment(name = "assignment", pointsPossible = 0.0)
-        Assert.assertTrue(mAdapter!!.createItemCallback().areContentsTheSame(assignment, assignment))
+        Assert.assertTrue(adapter!!.createItemCallback().areContentsTheSame(assignment, assignment))
     }
 
     @Test
@@ -65,7 +65,7 @@ class GradesListRecyclerAdapterTest : TestCase() {
         val assignment1 = Assignment(name = "assignment1", pointsPossible = 0.0)
         val assignment2 = Assignment(name = "assignment2", pointsPossible = 0.0)
 
-        Assert.assertFalse(mAdapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
+        Assert.assertFalse(adapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
     }
 
     @Test
@@ -73,7 +73,7 @@ class GradesListRecyclerAdapterTest : TestCase() {
         val assignment1 = Assignment(name = "assignment1", pointsPossible = 0.0)
         val assignment2 = Assignment(name = "assignment1", pointsPossible = 1.0)
 
-        Assert.assertFalse(mAdapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
+        Assert.assertFalse(adapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
     }
 
     @Test
@@ -81,7 +81,7 @@ class GradesListRecyclerAdapterTest : TestCase() {
         val submission = Submission(grade = "A")
         val assignment = Assignment(name = "assignment", pointsPossible = 0.0, submission = submission)
 
-        Assert.assertTrue(mAdapter!!.createItemCallback().areContentsTheSame(assignment, assignment))
+        Assert.assertTrue(adapter!!.createItemCallback().areContentsTheSame(assignment, assignment))
     }
 
     @Test
@@ -90,7 +90,7 @@ class GradesListRecyclerAdapterTest : TestCase() {
         val assignment1 = Assignment(name = "assignment", pointsPossible = 0.0, submission = submission1)
         val assignment2 = Assignment(name = "assignment1", pointsPossible = 0.0, submission = null)
 
-        Assert.assertFalse(mAdapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
+        Assert.assertFalse(adapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
     }
 
     @Test
@@ -101,6 +101,6 @@ class GradesListRecyclerAdapterTest : TestCase() {
         val submission2 = Submission(grade = null)
         val assignment2 = Assignment(name = "assignment1", pointsPossible = 0.0, submission = submission2)
 
-        Assert.assertFalse(mAdapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
+        Assert.assertFalse(adapter!!.createItemCallback().areContentsTheSame(assignment1, assignment2))
     }
 }

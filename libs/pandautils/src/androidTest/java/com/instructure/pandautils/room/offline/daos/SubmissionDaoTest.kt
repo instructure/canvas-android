@@ -17,6 +17,7 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -38,12 +39,16 @@ class SubmissionDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var submissionDao: SubmissionDao
+    private lateinit var userDao: UserDao
+    private lateinit var groupDao: GroupDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         submissionDao = db.submissionDao()
+        userDao = db.userDao()
+        groupDao = db.groupDao()
     }
 
     @After
@@ -91,5 +96,49 @@ class SubmissionDaoTest {
         )
 
         Assert.assertEquals(expected, result)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testGroupForeignKey() = runTest {
+        val submissionEntity = SubmissionEntity(Submission(id = 1, body = "Body 1", assignmentId = 1), 1, null)
+
+        submissionDao.insert(submissionEntity)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testUserForeignKey() = runTest {
+        val submissionEntity = SubmissionEntity(Submission(id = 1, body = "Body 1", assignmentId = 1, userId = 1), null, null)
+
+        submissionDao.insert(submissionEntity)
+    }
+
+    @Test
+    fun testGroupSetNullOnDelete() = runTest {
+        groupDao.insert(GroupEntity(Group(id = 1)))
+
+        val submissionEntity = SubmissionEntity(Submission(id = 1, body = "Body 1", assignmentId = 1), 1, null)
+
+        submissionDao.insert(submissionEntity)
+
+        groupDao.delete(GroupEntity(Group(id = 1)))
+
+        val result = submissionDao.findById(1)
+
+        Assert.assertEquals(listOf(submissionEntity.copy(groupId = null)), result)
+    }
+
+    @Test
+    fun testUserSetNullOnDelete() = runTest {
+        userDao.insert(UserEntity(User(id = 1)))
+
+        val submissionEntity = SubmissionEntity(Submission(id = 1, body = "Body 1", assignmentId = 1, userId = 1), null, null)
+
+        submissionDao.insert(submissionEntity)
+
+        userDao.delete(UserEntity(User(id = 1)))
+
+        val result = submissionDao.findById(1)
+
+        Assert.assertEquals(listOf(submissionEntity.copy(userId = null)), result)
     }
 }

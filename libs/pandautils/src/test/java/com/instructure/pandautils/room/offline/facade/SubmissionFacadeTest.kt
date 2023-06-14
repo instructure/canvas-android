@@ -117,11 +117,17 @@ class SubmissionFacadeTest {
         )
         val submissionHistory = listOf(Submission(id = submissionId, attempt = 1), Submission(id = submissionId, attempt = 2), submission)
 
-        coEvery { groupDao.findById(any()) } returns GroupEntity(group)
-        coEvery { mediaCommentDao.findById(any()) } returns MediaCommentEntity(mediaComment)
-        coEvery { userDao.findById(any()) } returns UserEntity(user)
-        coEvery { submissionDao.findByAssignmentIds(any()) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
-        coEvery { submissionDao.findById(any()) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
+        coEvery { groupDao.findById(group.id) } returns GroupEntity(group)
+        coEvery { mediaCommentDao.findById(mediaComment.mediaId) } returns MediaCommentEntity(mediaComment)
+        coEvery { userDao.findById(user.id) } returns UserEntity(user)
+        coEvery { submissionDao.findByAssignmentIds(listOf(assignmentId)) } returns submissionHistory.map {
+            SubmissionEntity(
+                it,
+                group.id,
+                mediaComment.mediaId
+            )
+        }
+        coEvery { submissionDao.findById(submissionId) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
 
         val result = facade.findByAssignmentIds(listOf(assignmentId))
 
