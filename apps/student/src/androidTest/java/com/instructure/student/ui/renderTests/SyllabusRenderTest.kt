@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.syllabus.SyllabusModel
-import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
+import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -135,8 +135,8 @@ class SyllabusRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val route = SyllabusFragment.makeRoute(model.course?.dataOrNull ?: Course(id = model.courseId))
-        val fragment = SyllabusFragment.newInstance(route)!!.apply {
+        val route = SyllabusRepositoryFragment.makeRoute(model.course?.dataOrNull ?: Course(id = model.courseId))
+        val fragment = SyllabusRepositoryFragment.newInstance(route)!!.apply {
             overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }

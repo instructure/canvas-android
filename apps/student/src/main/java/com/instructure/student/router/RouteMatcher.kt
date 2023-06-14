@@ -55,7 +55,7 @@ import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
-import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
+import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.util.FileUtils
 import retrofit2.Call
 import retrofit2.Response
@@ -169,7 +169,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/calendar_events/:${RouterParams.EVENT_ID}"), CalendarFragment::class.java))
 
         // Syllabus
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusRepositoryFragment::class.java))
 
         // Assignments
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments"), AssignmentListFragment::class.java))

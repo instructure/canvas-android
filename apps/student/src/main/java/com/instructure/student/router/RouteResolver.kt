@@ -30,7 +30,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
-import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
+import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 
 object RouteResolver {
 
@@ -88,7 +88,7 @@ object RouteResolver {
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
             cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
             cls.isA<CreateAnnouncementFragment>() -> CreateAnnouncementFragment.newInstance(route)
-            cls.isA<SyllabusFragment>() -> SyllabusFragment.newInstance(route)
+            cls.isA<SyllabusRepositoryFragment>() -> SyllabusRepositoryFragment.newInstance(route)
             cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
