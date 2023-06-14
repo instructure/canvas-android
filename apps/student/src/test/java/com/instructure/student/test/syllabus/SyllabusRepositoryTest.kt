@@ -44,7 +44,7 @@ class SyllabusRepositoryTest {
     private val syllabusNetworkDataSource: SyllabusNetworkDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
 
-    lateinit var repository: SyllabusRepository
+    private lateinit var repository: SyllabusRepository
 
     @Before
     fun setUp() {
