@@ -13,24 +13,12 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
 
 package com.instructure.pandautils.room.offline
 
-import android.content.Context
-import androidx.room.Room
+interface DatabaseProvider {
 
-class OfflineDatabaseProvider(private val context: Context): DatabaseProvider {
-
-    private val dbMap = mutableMapOf<Long, OfflineDatabase>()
-
-    override fun getDatabase(userId: Long?): OfflineDatabase {
-        if (userId == null) throw IllegalStateException("You can't access the database while logged out")
-
-        return dbMap.getOrPut(userId) {
-            Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-$userId")
-                .addMigrations(*offlineDatabaseMigrations)
-                .build()
-        }
-    }
+    abstract fun getDatabase(userId: Long?): OfflineDatabase
 }

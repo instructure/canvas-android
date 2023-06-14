@@ -72,11 +72,17 @@ object CourseAPI {
         @GET("courses/{courseId}/settings")
         fun getCourseSettings(@Path("courseId") courseId: Long): Call<CourseSettings>
 
+        @GET("courses/{courseId}/settings")
+        suspend fun getCourseSettings(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<CourseSettings>
+
         @PUT("courses/{course_id}/settings")
         fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>
 
         @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
         fun getCourseWithSyllabus(@Path("courseId") courseId: Long): Call<Course>
+
+        @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
+        suspend fun getCourseWithSyllabus(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<Course>
 
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image")
         fun getCourseWithGrade(@Path("courseId") courseId: Long): Call<Course>

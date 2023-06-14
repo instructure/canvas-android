@@ -1,22 +1,25 @@
 /*
  * Copyright (C) 2023 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
  *
  */
+
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -27,15 +30,14 @@ import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.AssignmentEntity
 import com.instructure.pandautils.room.offline.entities.AssignmentGroupEntity
 import com.instructure.pandautils.room.offline.entities.CourseEntity
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -43,22 +45,16 @@ class AssignmentDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var assignmentDao: AssignmentDao
-    private lateinit var courseDao: CourseDao
     private lateinit var assignmentGroupDao: AssignmentGroupDao
+    private lateinit var courseDao: CourseDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         assignmentDao = db.assignmentDao()
-        courseDao = db.courseDao()
         assignmentGroupDao = db.assignmentGroupDao()
-
-        runBlocking {
-            courseDao.insert(CourseEntity(Course(id = 1L)))
-            courseDao.insert(CourseEntity(Course(id = 2L)))
-            assignmentGroupDao.insert(AssignmentGroupEntity(AssignmentGroup(id = 1L)))
-        }
+        courseDao = db.courseDao()
     }
 
     @After
@@ -67,115 +63,102 @@ class AssignmentDaoTest {
     }
 
     @Test
-    fun testFindById() = runTest {
-        val assignmentEntity = AssignmentEntity(
-            Assignment(
-                id = 1L,
-                name = "Assignment 1",
-                courseId = 1L,
-                assignmentGroupId = 1L
-            ),
-            null,
-            null,
-            null,
-            null
-        )
+    fun testInsertReplace() = runTest {
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
+        assignmentGroupDao.insert(assignmentGroupEntity)
 
-        val assignmentEntity2 = assignmentEntity.copy(id = 2L, name = "Name 2")
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
+
+        val assignmentEntity =
+            AssignmentEntity(Assignment(id = 1L, name = "assignmentEntity", assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
+        val updated = assignmentEntity.copy(name = "updated")
 
         assignmentDao.insert(assignmentEntity)
-        assignmentDao.insert(assignmentEntity2)
+        assignmentDao.insert(updated)
 
-        val result = assignmentDao.findById(1L)!!
+        val result = assignmentDao.findById(1L)
 
-        Assert.assertEquals(assignmentEntity.id, result.id)
-        Assert.assertEquals(assignmentEntity.name, result.name)
-        Assert.assertEquals(assignmentEntity.courseId, result.courseId)
-        Assert.assertEquals(assignmentEntity.assignmentGroupId, result.assignmentGroupId)
+        assertEquals(updated.name, result?.name)
     }
 
     @Test
-    fun testFindByIdReturnsNullIfNotFound() = runTest {
-        val assignmentEntity = AssignmentEntity(
-            Assignment(
-                id = 1L,
-                name = "Assignment 1",
-                courseId = 1L,
-                assignmentGroupId = 1L
-            ),
-            null,
-            null,
-            null,
-            null
-        )
+    fun testFindById() = runTest {
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
+        assignmentGroupDao.insert(assignmentGroupEntity)
 
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
+
+        val assignmentEntity =
+            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
+        val assignmentEntity2 =
+            AssignmentEntity(Assignment(id = 2L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
         assignmentDao.insert(assignmentEntity)
+        assignmentDao.insert(assignmentEntity2)
 
         val result = assignmentDao.findById(2L)
 
-        Assert.assertNull(result)
+        assertEquals(assignmentEntity2.id, result?.id)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testCourseForeignKey() = runTest {
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
+        assignmentGroupDao.insert(assignmentGroupEntity)
+
+        val assignmentEntity =
+            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
+        assignmentDao.insert(assignmentEntity)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testAssignmentGroupForeignKey() = runTest {
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
+
+        val assignmentEntity =
+            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
+        assignmentDao.insert(assignmentEntity)
     }
 
     @Test
-    fun testInsertReplace() = runTest {
-        val assignmentEntity = AssignmentEntity(
-            Assignment(
-                id = 1L,
-                name = "Assignment 1",
-                courseId = 1L,
-                assignmentGroupId = 1L
-            ),
-            null,
-            null,
-            null,
-            null
-        )
+    fun testCourseCascade() = runTest {
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
+        assignmentGroupDao.insert(assignmentGroupEntity)
 
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
+
+        val assignmentEntity =
+            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
         assignmentDao.insert(assignmentEntity)
 
-        val updated = assignmentEntity.copy(name = "Assignment updated name")
-        assignmentDao.insert(updated)
+        courseDao.delete(courseEntity)
 
-        val result = assignmentDao.findById(1L)!!
+        val result = assignmentDao.findById(1L)
 
-        Assert.assertEquals(updated.id, result.id)
-        Assert.assertEquals(updated.name, result.name)
-        Assert.assertEquals(updated.courseId, result.courseId)
-        Assert.assertEquals(updated.assignmentGroupId, result.assignmentGroupId)
+        assertNull(result)
     }
 
     @Test
-    fun testFindByCourseId() = runTest {
-        val assignmentEntity = AssignmentEntity(Assignment(id = 1L, name = "Assignment 1", courseId = 1L, assignmentGroupId = 1L), 1L, 1L, 1L, 1L)
+    fun testAssignmentGroupCascade() = runTest {
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
+        assignmentGroupDao.insert(assignmentGroupEntity)
 
-        val assignmentEntity2 = assignmentEntity.copy(id = 2L, name = "Name 2", courseId = 2L)
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
 
-        val assignmentEntity3 = assignmentEntity.copy(id = 3L, name = "Name 3")
-
+        val assignmentEntity =
+            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
         assignmentDao.insert(assignmentEntity)
-        assignmentDao.insert(assignmentEntity2)
-        assignmentDao.insert(assignmentEntity3)
 
-        val result = assignmentDao.findByCourseId(1L)
+        assignmentGroupDao.delete(assignmentGroupEntity)
 
-        Assert.assertEquals(2, result.size)
-        Assert.assertEquals(assignmentEntity.id, result.first().id)
-        Assert.assertEquals(assignmentEntity.name, result.first().name)
-        Assert.assertEquals(assignmentEntity.courseId, result.first().courseId)
-        Assert.assertEquals(assignmentEntity.assignmentGroupId, result.first().assignmentGroupId)
+        val result = assignmentDao.findById(1L)
+
+        assertNull(result)
     }
 
-    @Test
-    fun testFindByCourseIdReturensEmptyListIfNotFound() = runTest {
-        val assignmentEntity = AssignmentEntity(Assignment(id = 1L, name = "Assignment 1", courseId = 1L, assignmentGroupId = 1L), 1L, 1L, 1L, 1L)
 
-        val assignmentEntity2 = assignmentEntity.copy(id = 2L, name = "Name 2")
-
-        assignmentDao.insert(assignmentEntity)
-        assignmentDao.insert(assignmentEntity2)
-
-        val result = assignmentDao.findByCourseId(2L)
-
-        Assert.assertTrue(result.isEmpty())
-    }
 }

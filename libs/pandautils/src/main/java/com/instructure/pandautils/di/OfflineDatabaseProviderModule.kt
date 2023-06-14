@@ -13,24 +13,28 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
 
-package com.instructure.pandautils.room.offline
+package com.instructure.pandautils.di
 
 import android.content.Context
-import androidx.room.Room
+import com.instructure.pandautils.room.offline.DatabaseProvider
+import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-class OfflineDatabaseProvider(private val context: Context): DatabaseProvider {
+@Module
+@InstallIn(SingletonComponent::class)
+class OfflineDatabaseProviderModule {
 
-    private val dbMap = mutableMapOf<Long, OfflineDatabase>()
-
-    override fun getDatabase(userId: Long?): OfflineDatabase {
-        if (userId == null) throw IllegalStateException("You can't access the database while logged out")
-
-        return dbMap.getOrPut(userId) {
-            Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-$userId")
-                .addMigrations(*offlineDatabaseMigrations)
-                .build()
-        }
+    @Provides
+    @Singleton
+    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context): DatabaseProvider {
+        return OfflineDatabaseProvider(context)
     }
 }

@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.AssignmentOverride
 import java.util.*
 
 @Entity(
@@ -44,4 +45,30 @@ data class AssignmentOverrideEntity(
     val lockAt: Date?,
     val courseSectionId: Long,
     val groupId: Long
-)
+) {
+
+    constructor(assignmentOverride: AssignmentOverride) : this(
+        assignmentOverride.id,
+        assignmentOverride.assignmentId,
+        assignmentOverride.title,
+        assignmentOverride.dueAt,
+        assignmentOverride.isAllDay,
+        assignmentOverride.allDayDate,
+        assignmentOverride.unlockAt,
+        assignmentOverride.lockAt,
+        assignmentOverride.courseSectionId,
+        assignmentOverride.groupId
+    )
+
+    fun toApiModel() = AssignmentOverride(
+        id,
+        assignmentId,
+        title,
+        dueAt,
+        isAllDay,
+        allDayDate,
+        unlockAt,
+        lockAt,
+        courseSectionId
+    )
+}
