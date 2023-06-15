@@ -156,19 +156,6 @@ class EnrollmentDaoTest {
     }
 
     @Test
-    fun testUserCascade() = runTest {
-        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 1)
-
-        enrollmentDao.insert(enrollmentEntity)
-
-        userDao.delete(UserEntity(User(id = 1)))
-
-        val result = enrollmentDao.findAll()
-
-        assert(result.isEmpty())
-    }
-
-    @Test
     fun testSectionSetNullOnDelete() = runTest {
         val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 1)
 
