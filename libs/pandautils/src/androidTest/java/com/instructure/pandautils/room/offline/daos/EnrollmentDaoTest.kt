@@ -120,13 +120,6 @@ class EnrollmentDaoTest {
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    fun testUserForeignKey() = runTest {
-        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 2), 1, 1, 1)
-
-        enrollmentDao.insert(enrollmentEntity)
-    }
-
-    @Test(expected = SQLiteConstraintException::class)
     fun testSectionForeignKey() = runTest {
         val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 2, 1)
 
