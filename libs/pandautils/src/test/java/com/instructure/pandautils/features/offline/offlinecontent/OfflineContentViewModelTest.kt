@@ -81,6 +81,7 @@ class OfflineContentViewModelTest {
                     assignments = false,
                     pages = false,
                     grades = false,
+                    syllabus = false,
                     fullFileSync = false
                 ),
                 emptyList()
@@ -299,7 +300,7 @@ class OfflineContentViewModelTest {
 
         createViewModel()
 
-        val expected = CourseSyncSettingsEntity(1L, true, true, true, true, true)
+        val expected = CourseSyncSettingsEntity(1L, true, true, true, true, true, true)
         val expectedFiles = listOf(FileSyncSettingsEntity(1L, 1L, null), FileSyncSettingsEntity(2L, 1L, null))
 
         viewModel.data.value?.courseItems?.first()?.apply {

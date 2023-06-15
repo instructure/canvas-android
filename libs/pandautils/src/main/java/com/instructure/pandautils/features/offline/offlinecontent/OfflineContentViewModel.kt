@@ -336,6 +336,7 @@ class OfflineContentViewModel @Inject constructor(
             assignments = shouldCheck,
             pages = shouldCheck,
             grades = shouldCheck,
+            syllabus = shouldCheck,
             fullFileSync = shouldCheck
         )
 

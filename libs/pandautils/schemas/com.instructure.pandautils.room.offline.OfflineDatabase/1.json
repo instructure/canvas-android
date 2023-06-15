@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "31d71a6ad609c5446da63315ad1126ac",
+    "identityHash": "7ad6fb09b23b9967775a2c0d8283d58e",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -908,7 +908,7 @@
       },
       {
         "tableName": "CourseSyncSettingsEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, `syllabus` INTEGER NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
@@ -937,6 +937,18 @@
           {
             "fieldPath": "grades",
             "columnName": "grades",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syllabus",
+            "columnName": "syllabus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullFileSync",
+            "columnName": "fullFileSync",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -3881,7 +3893,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0327ac4aaf82136ae51e9f3fcd172b54')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ad6fb09b23b9967775a2c0d8283d58e')"
     ]
   }
 }
