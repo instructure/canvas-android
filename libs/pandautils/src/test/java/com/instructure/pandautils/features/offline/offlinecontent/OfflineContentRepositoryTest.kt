@@ -188,7 +188,7 @@ class OfflineContentRepositoryTest {
     fun `Course settings update updates db`() = runTest {
         val courseSyncSettings = CourseSyncSettingsEntity(1L, true, false, false, false, false)
 
-        repository.updateCourseSyncSettings(1L, CourseSyncSettingsWithFiles(courseSyncSettings, emptyList()))
+        repository.updateCourseSyncSettings(1L, courseSyncSettings, emptyList())
 
         coVerify(exactly = 1) { courseSyncSettingsDao.update(courseSyncSettings) }
     }

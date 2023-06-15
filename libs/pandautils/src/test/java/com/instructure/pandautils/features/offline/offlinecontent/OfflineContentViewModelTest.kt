@@ -31,7 +31,9 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
@@ -69,6 +71,22 @@ class OfflineContentViewModelTest {
         mockkStatic(Formatter::class)
         every { Formatter.formatShortFileSize(context, any()) } returns ""
         every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns null
+
+        coEvery { offlineContentRepository.findCourseSyncSettings(any()) } answers {
+            val courseId = arg<Long>(0)
+            CourseSyncSettingsWithFiles(
+                CourseSyncSettingsEntity(
+                    courseId = courseId,
+                    fullContentSync = false,
+                    assignments = false,
+                    pages = false,
+                    grades = false,
+                    fullFileSync = false
+                ),
+                emptyList()
+            )
+
+        }
     }
 
     @After
@@ -237,45 +255,6 @@ class OfflineContentViewModelTest {
     }
 
     @Test
-    fun `Selecting file writes to db`() {
-        mockkCourseViewModels()
-
-        createViewModel()
-
-        val fileItem =
-            viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.first()
-
-        fileItem?.apply {
-            onCheckedChanged.invoke(true, this)
-        }
-
-        coVerify(exactly = 1) {
-            offlineContentRepository.saveFileSettings(FileSyncSettingsEntity(1, 1, null))
-        }
-    }
-
-    @Test
-    fun `Deselecting file deletes from db`() {
-        mockkCourseViewModels()
-
-        createViewModel()
-
-        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.first()
-            ?.apply {
-                onCheckedChanged.invoke(true, this)
-            }
-
-        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.files?.first()
-            ?.apply {
-                onCheckedChanged.invoke(false, this)
-            }
-
-        coVerify(exactly = 1) {
-            offlineContentRepository.deleteFileSettings(1)
-        }
-    }
-
-    @Test
     fun `Refresh updates list`() {
         coEvery { offlineContentRepository.getCourses() } returns emptyList()
 
@@ -312,6 +291,24 @@ class OfflineContentViewModelTest {
         coVerify {
             offlineSyncHelper.syncCourses(any())
         }
+    }
+
+    @Test
+    fun `Save state on sync`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        val expected = CourseSyncSettingsEntity(1L, true, true, true, true, true)
+        val expectedFiles = listOf(FileSyncSettingsEntity(1L, 1L, null), FileSyncSettingsEntity(2L, 1L, null))
+
+        viewModel.data.value?.courseItems?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        viewModel.onSyncClicked()
+
+        coVerify(exactly = 1) { offlineContentRepository.updateCourseSyncSettings(1L, expected, expectedFiles) }
     }
 
     private fun createViewModel() {
