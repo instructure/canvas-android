@@ -28,11 +28,11 @@ import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.features.assignmentlist.AssignmentListFragment
-import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
-import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.router.RouteMatcher
 import junit.framework.TestCase
@@ -455,13 +455,13 @@ class RouterUtilsTest : TestCase() {
         var route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/")
         val expectedParams = hashMapOf(RouterParams.COURSE_ID to courseId)
         assertNotNull(route)
-        assertEquals(ConferenceListFragment::class.java, route!!.primaryClass)
+        assertEquals(ConferenceListRepositoryFragment::class.java, route!!.primaryClass)
         assertEquals(expectedParams, route.paramsHash)
 
         // There is currently no API endpoint for specific conferences, so we must route to the conference list
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/234") // not an actual url
         assertNotNull(route)
-        assertEquals(ConferenceListFragment::class.java, route!!.primaryClass)
+        assertEquals(ConferenceListRepositoryFragment::class.java, route!!.primaryClass)
         assertEquals(expectedParams, route.paramsHash)
     }
 

@@ -18,7 +18,6 @@
 package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
-import android.content.LocusId
 import android.text.format.Formatter
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.models.Course
@@ -41,7 +40,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID, Tab.SYLLABUS_ID, Tab.GRADES_ID)
+private val ALLOWED_TAB_IDS = listOf(
+    Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID,
+    Tab.SYLLABUS_ID, Tab.GRADES_ID, Tab.CONFERENCES_ID
+)
 
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
@@ -271,6 +273,7 @@ class OfflineContentViewModel @Inject constructor(
             Tab.PAGES_ID -> courseSyncSettings.copy(pages = checked)
             Tab.ASSIGNMENTS_ID -> courseSyncSettings.copy(assignments = checked)
             Tab.SYLLABUS_ID -> courseSyncSettings.copy(syllabus = checked)
+            Tab.CONFERENCES_ID -> courseSyncSettings.copy(conferences = checked)
             Tab.FILES_ID -> {
                 toggleAllFiles(courseId, checked)
                 courseSyncSettings.copy(fullFileSync = checked)
@@ -339,6 +342,7 @@ class OfflineContentViewModel @Inject constructor(
             pages = shouldCheck,
             grades = shouldCheck,
             syllabus = shouldCheck,
+            conferences = shouldCheck,
             fullFileSync = shouldCheck
         )
 

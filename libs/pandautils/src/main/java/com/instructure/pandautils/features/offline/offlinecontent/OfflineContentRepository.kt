@@ -105,12 +105,13 @@ class OfflineContentRepository(
         if (courseSettingsWithFiles == null) {
             val default = CourseSyncSettingsEntity(
                 courseId,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false
+                fullContentSync = false,
+                assignments = false,
+                pages = false,
+                grades = false,
+                syllabus = false,
+                conferences = false,
+                fullFileSync = false
             )
             courseSyncSettingsDao.insert(default)
 

@@ -18,12 +18,13 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
+import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.offline.sync.ConferenceSyncHelper
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.facade.*
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -32,7 +33,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -316,5 +316,31 @@ class OfflineModule {
         scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao
     ): ScheduleItemFacade {
         return ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentDao)
+    }
+
+    @Provides
+    fun provideConferenceDao(appDatabase: OfflineDatabase): ConferenceDao {
+        return appDatabase.conferenceDao()
+    }
+
+    @Provides
+    fun provideConferenceRecodingDao(appDatabase: OfflineDatabase): ConferenceRecodingDao {
+        return appDatabase.conferenceRecordingDao()
+    }
+
+    @Provides
+    fun provideConferenceFacade(
+        conferenceDao: ConferenceDao,
+        conferenceRecodingDao: ConferenceRecodingDao
+    ): ConferenceFacade {
+        return ConferenceFacade(conferenceDao, conferenceRecodingDao)
+    }
+
+    @Provides
+    fun provideConferenceSyncHelper(
+        conferencesApi: ConferencesApi.ConferencesInterface,
+        conferenceFacade: ConferenceFacade
+    ): ConferenceSyncHelper {
+        return ConferenceSyncHelper(conferencesApi, conferenceFacade)
     }
 }

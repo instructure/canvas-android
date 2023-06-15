@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7ad6fb09b23b9967775a2c0d8283d58e",
+    "identityHash": "5824ec0652c1517e48a3ba8f9acca2f9",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -908,7 +908,7 @@
       },
       {
         "tableName": "CourseSyncSettingsEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, `syllabus` INTEGER NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, `syllabus` INTEGER NOT NULL, `conferences` INTEGER NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
@@ -943,6 +943,12 @@
           {
             "fieldPath": "syllabus",
             "columnName": "syllabus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conferences",
+            "columnName": "conferences",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -3877,12 +3883,178 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "ConferenceEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `conferenceKey` TEXT, `conferenceType` TEXT, `description` TEXT, `duration` INTEGER NOT NULL, `endedAt` INTEGER, `hasAdvancedSettings` INTEGER NOT NULL, `joinUrl` TEXT, `longRunning` INTEGER NOT NULL, `startedAt` INTEGER, `title` TEXT, `url` TEXT, `contextType` TEXT NOT NULL, `contextId` INTEGER NOT NULL, `record` INTEGER, `users` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conferenceKey",
+            "columnName": "conferenceKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conferenceType",
+            "columnName": "conferenceType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endedAt",
+            "columnName": "endedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hasAdvancedSettings",
+            "columnName": "hasAdvancedSettings",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "joinUrl",
+            "columnName": "joinUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "longRunning",
+            "columnName": "longRunning",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAt",
+            "columnName": "startedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contextType",
+            "columnName": "contextType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contextId",
+            "columnName": "contextId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "record",
+            "columnName": "record",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "users",
+            "columnName": "users",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ConferenceRecordingEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordingId` TEXT NOT NULL, `conferenceId` INTEGER NOT NULL, `createdAtMillis` INTEGER NOT NULL, `durationMinutes` INTEGER NOT NULL, `playbackUrl` TEXT, `title` TEXT NOT NULL, PRIMARY KEY(`recordingId`))",
+        "fields": [
+          {
+            "fieldPath": "recordingId",
+            "columnName": "recordingId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conferenceId",
+            "columnName": "conferenceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtMillis",
+            "columnName": "createdAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durationMinutes",
+            "columnName": "durationMinutes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "playbackUrl",
+            "columnName": "playbackUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "recordingId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ad6fb09b23b9967775a2c0d8283d58e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5824ec0652c1517e48a3ba8f9acca2f9')"
     ]
   }
 }

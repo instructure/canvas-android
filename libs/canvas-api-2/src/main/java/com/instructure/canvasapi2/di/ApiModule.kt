@@ -207,4 +207,14 @@ class ApiModule {
     fun provideEnrollmentApi(): EnrollmentAPI.EnrollmentInterface {
         return RestBuilder().build(EnrollmentAPI.EnrollmentInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun providesConferencesApi(): ConferencesApi.ConferencesInterface {
+        return RestBuilder().build(ConferencesApi.ConferencesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun providesOAuthApi(): OAuthAPI.OAuthInterface {
+        return RestBuilder().build(OAuthAPI.OAuthInterface::class.java, RestParams())
+    }
 }

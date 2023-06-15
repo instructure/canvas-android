@@ -56,7 +56,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val quizApi: QuizAPI.QuizInterface,
     private val dashboardCardDao: DashboardCardDao,
     private val courseSettingsDao: CourseSettingsDao,
-    private val scheduleItemFacade: ScheduleItemFacade
+    private val scheduleItemFacade: ScheduleItemFacade,
+    private val conferenceSyncHelper: ConferenceSyncHelper
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -83,6 +84,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.syllabus) {
                         syllabusCourseIds.add(courseSettings.courseId)
+                    }
+                    if (courseSettings.conferences) {
+                        conferenceSyncHelper.fetchConferences(courseSettings.courseId)
                     }
                 }
             fetchSyllabus(syllabusCourseIds)
