@@ -14,11 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.adapter
+package com.instructure.student.features.discussion.list.adapter
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.DiscussionManager
@@ -32,23 +32,24 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
-import com.instructure.student.holders.DiscussionExpandableViewHolder
-import com.instructure.student.holders.DiscussionListHolder
+import com.instructure.student.adapter.ExpandableRecyclerAdapter
+import com.instructure.student.features.discussion.list.DiscussionListRepository
 import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.NoViewholder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.coroutines.Job
 import retrofit2.Response
-import java.util.*
+import java.util.Date
 
 open class DiscussionListRecyclerAdapter(
     context: Context,
     private val canvasContext: CanvasContext,
     private val isDiscussions: Boolean,
+    private val repository: DiscussionListRepository,
     private val callback: AdapterToDiscussionsCallback,
     private val isTesting: Boolean = false
 ) : ExpandableRecyclerAdapter<String, DiscussionTopicHeader, RecyclerView.ViewHolder>(
@@ -69,7 +70,6 @@ open class DiscussionListRecyclerAdapter(
         }
 
     interface AdapterToDiscussionsCallback : AdapterToFragmentCallback<DiscussionTopicHeader>{
-        fun discussionOverflow(group: String?, discussionTopicHeader: DiscussionTopicHeader)
         fun askToDeleteDiscussion(discussionTopicHeader: DiscussionTopicHeader)
         fun onRefreshStarted()
     }
@@ -155,59 +155,6 @@ open class DiscussionListRecyclerAdapter(
         const val UNPINNED = "2_UNPINNED"
         const val CLOSED_FOR_COMMENTS = "3_CLOSED_FOR_COMMENTS"
         const val ANNOUNCEMENTS = "ANNOUNCEMENTS"
-        const val DELETE = "delete"
-    }
-
-    private val mDiscussionTopicHeaderPinnedCallback = object : StatusCallback<DiscussionTopicHeader>() {
-        override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-            response.body()?.let { addOrUpdateItem(PINNED, it) }
-        }
-    }
-
-    private val mDiscussionTopicHeaderUnpinnedCallback = object : StatusCallback<DiscussionTopicHeader>() {
-        override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-            response.body()?.let { addOrUpdateItem(UNPINNED, it) }
-        }
-    }
-
-    private val mDiscussionTopicHeaderClosedForCommentsCallback = object : StatusCallback<DiscussionTopicHeader>() {
-        override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-            response.body()?.let { addOrUpdateItem(CLOSED_FOR_COMMENTS, it) }
-        }
-    }
-
-    private val mDiscussionTopicHeaderOpenedForCommentsCallback = object : StatusCallback<DiscussionTopicHeader>() {
-        override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-            response.body()?.let { addOrUpdateItem(if(it.pinned) PINNED else UNPINNED, it) }
-        }
-    }
-
-    fun requestMoveDiscussionTopicToGroup(groupTo: String, groupFrom: String, discussionTopicHeader: DiscussionTopicHeader) {
-        // Move from this group into another
-        when(groupFrom) {
-            PINNED -> {
-                when(groupTo) {
-                    UNPINNED -> DiscussionManager.unpinDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderUnpinnedCallback)
-                    CLOSED_FOR_COMMENTS -> DiscussionManager.lockDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
-                    DELETE -> { callback.askToDeleteDiscussion(discussionTopicHeader) }
-                }
-            }
-            UNPINNED -> {
-                when(groupTo) {
-                    PINNED -> DiscussionManager.pinDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderPinnedCallback)
-                    CLOSED_FOR_COMMENTS -> DiscussionManager.lockDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
-                    DELETE -> { callback.askToDeleteDiscussion(discussionTopicHeader) }
-                }
-            }
-            CLOSED_FOR_COMMENTS -> {
-                when(groupTo) {
-                    PINNED -> DiscussionManager.pinDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderPinnedCallback)
-                    CLOSED_FOR_COMMENTS -> DiscussionManager.unlockDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderOpenedForCommentsCallback)
-                    DELETE -> { callback.askToDeleteDiscussion(discussionTopicHeader) }
-                }
-            }
-            DELETE -> { callback.askToDeleteDiscussion(discussionTopicHeader) }
-        }
     }
 
     fun deleteDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader) {

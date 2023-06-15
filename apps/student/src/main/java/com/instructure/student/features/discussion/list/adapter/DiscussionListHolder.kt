@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.holders
+package com.instructure.student.features.discussion.list.adapter
 
 import android.content.Context
 import android.view.View
@@ -28,9 +28,8 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.student.adapter.DiscussionListRecyclerAdapter
 import com.instructure.student.databinding.ViewholderDiscussionBinding
-import java.util.*
+import java.util.Date
 
 class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
 

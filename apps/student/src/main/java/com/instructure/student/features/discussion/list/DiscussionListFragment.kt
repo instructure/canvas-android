@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.discussion.list
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -47,12 +47,15 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.DiscussionListRecyclerAdapter
 import com.instructure.student.databinding.CourseDiscussionTopicBinding
 import com.instructure.student.events.DiscussionCreatedEvent
 import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
+import com.instructure.student.features.discussion.list.adapter.DiscussionListRecyclerAdapter
+import com.instructure.student.fragment.CreateAnnouncementFragment
+import com.instructure.student.fragment.CreateDiscussionFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -70,6 +73,9 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
+
+    @Inject
+    lateinit var repository: DiscussionListRepository
 
     protected var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -103,6 +109,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 requireContext(),
                 canvasContext,
                 !isAnnouncement,
+                repository,
                 object : DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback {
                     override fun onRowClicked(model: DiscussionTopicHeader, position: Int, isOpenDetail: Boolean) {
                         RouteMatcher.route(
@@ -140,15 +147,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                         setRefreshing(true)
                         // Hide the FAB.
                         if (canPost) binding.createNewDiscussion.hide()
-                    }
-
-                    override fun discussionOverflow(group: String?, discussionTopicHeader: DiscussionTopicHeader) {
-                        if (group != null) {
-                            // TODO - Blocked by COMMS-868
-//                    DiscussionsMoveToDialog.show(requireFragmentManager(), group, discussionTopicHeader, { newGroup ->
-//                        recyclerAdapter.requestMoveDiscussionTopicToGroup(newGroup, group, discussionTopicHeader)
-//                    })
-                        }
                     }
 
                     override fun askToDeleteDiscussion(discussionTopicHeader: DiscussionTopicHeader) {
