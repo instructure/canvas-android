@@ -270,6 +270,7 @@ class OfflineContentViewModel @Inject constructor(
             Tab.GRADES_ID -> courseSyncSettings.copy(grades = checked)
             Tab.PAGES_ID -> courseSyncSettings.copy(pages = checked)
             Tab.ASSIGNMENTS_ID -> courseSyncSettings.copy(assignments = checked)
+            Tab.SYLLABUS_ID -> courseSyncSettings.copy(syllabus = checked)
             Tab.FILES_ID -> {
                 toggleAllFiles(courseId, checked)
                 courseSyncSettings.copy(fullFileSync = checked)
