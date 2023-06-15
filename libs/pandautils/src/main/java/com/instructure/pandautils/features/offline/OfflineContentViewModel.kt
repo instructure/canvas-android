@@ -39,7 +39,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID, Tab.SYLLABUS_ID)
+private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID, Tab.SYLLABUS_ID, Tab.GRADES_ID)
 
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
