@@ -32,19 +32,13 @@ import java.util.*
             entity = UserEntity::class,
             parentColumns = ["id"],
             childColumns = ["observedUserId"],
-            onDelete = ForeignKey.NO_ACTION
-        ),
-        ForeignKey(
-            entity = UserEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["userId"],
-            onDelete = ForeignKey.NO_ACTION
+            onDelete = ForeignKey.SET_NULL
         ),
         ForeignKey(
             entity = SectionEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseSectionId"],
-            onDelete = ForeignKey.NO_ACTION
+            onDelete = ForeignKey.SET_NULL
         ),
         ForeignKey(
             entity = CourseEntity::class,

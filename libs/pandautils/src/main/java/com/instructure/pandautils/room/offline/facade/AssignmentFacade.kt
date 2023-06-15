@@ -87,33 +87,13 @@ class AssignmentFacade(
     }
 
     suspend fun getAssignmentById(id: Long): Assignment? {
-        val assignmentEntity = assignmentDao.findById(id)
-        val rubricCriterionEntities = rubricCriterionDao.findByAssignmentId(id)
-        val rubricSettingEntity = assignmentEntity?.rubricSettingsId?.let { rubricSettingsDao.findById(it) }
-        val submission = assignmentEntity?.submissionId?.let { submissionFacade.getSubmissionById(it) }
-        val discussionTopicHeader = assignmentEntity?.discussionTopicHeaderId?.let { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(it) }
-        val lockInfo = lockInfoFacade.getLockInfoByAssignmentId(id)
-        val scoreStatisticsEntity = assignmentScoreStatisticsDao.findByAssignmentId(id)
-        val plannerOverrideEntity = assignmentEntity?.plannerOverrideId?.let { plannerOverrideDao.findById(it) }
-
-        return assignmentEntity?.toApiModel(
-            rubric = rubricCriterionEntities.map { it.toApiModel() },
-            rubricSettings = rubricSettingEntity?.toApiModel(),
-            submission = submission,
-            lockInfo = lockInfo,
-            discussionTopicHeader = discussionTopicHeader,
-            scoreStatistics = scoreStatisticsEntity?.toApiModel(),
-            plannerOverride = plannerOverrideEntity?.toApiModel()
-        )?.apply {
-            this.submission = submission?.copy(assignment = this)
-            this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this)
-        }
+        return assignmentDao.findById(id)?.let { createFullApiModelFromEntity(it) }
     }
 
     suspend fun getAssignmentGroupsWithAssignments(
         courseId: Long
     ): List<AssignmentGroup> {
-        val assignments = assignmentDao.findByCourseId(courseId).mapNotNull { getAssignmentById(it.id) }
+        val assignments = assignmentDao.findByCourseId(courseId).map { createFullApiModelFromEntity(it) }
         return assignments.groupBy { it.assignmentGroupId }.map { assignmentGroupDao.findById(it.key).toApiModel(it.value) }
     }
 
@@ -123,6 +103,29 @@ class AssignmentFacade(
     ): List<AssignmentGroup> {
         return getAssignmentGroupsWithAssignments(courseId).map { group ->
             group.copy(assignments = group.assignments.filter { it.submission?.gradingPeriodId == gradingPeriodId })
+        }
+    }
+
+    private suspend fun createFullApiModelFromEntity(assignmentEntity: AssignmentEntity): Assignment {
+        val rubricCriterionEntities = rubricCriterionDao.findByAssignmentId(assignmentEntity.id)
+        val rubricSettingEntity = assignmentEntity.rubricSettingsId?.let { rubricSettingsDao.findById(it) }
+        val submission = assignmentEntity.submissionId?.let { submissionFacade.getSubmissionById(it) }
+        val discussionTopicHeader = assignmentEntity.discussionTopicHeaderId?.let { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(it) }
+        val lockInfo = lockInfoFacade.getLockInfoByAssignmentId(assignmentEntity.id)
+        val scoreStatisticsEntity = assignmentScoreStatisticsDao.findByAssignmentId(assignmentEntity.id)
+        val plannerOverrideEntity = assignmentEntity.plannerOverrideId?.let { plannerOverrideDao.findById(it) }
+
+        return assignmentEntity.toApiModel(
+            rubric = rubricCriterionEntities.map { it.toApiModel() },
+            rubricSettings = rubricSettingEntity?.toApiModel(),
+            submission = submission,
+            lockInfo = lockInfo,
+            discussionTopicHeader = discussionTopicHeader,
+            scoreStatistics = scoreStatisticsEntity?.toApiModel(),
+            plannerOverride = plannerOverrideEntity?.toApiModel()
+        ).apply {
+            this.submission = submission?.copy(assignment = this)
+            this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this)
         }
     }
 }

@@ -97,4 +97,9 @@ class SubmissionFacade(
             group = groupEntity?.toApiModel()
         )
     }
+
+    suspend fun findByAssignmentIds(assignmentIds: List<Long>): List<Submission> {
+        val submissionsByAssignmentIds = submissionDao.findByAssignmentIds(assignmentIds)
+        return submissionsByAssignmentIds.mapNotNull { getSubmissionById(it.id) }
+    }
 }
