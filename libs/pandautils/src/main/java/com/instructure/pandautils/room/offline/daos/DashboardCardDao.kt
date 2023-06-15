@@ -29,22 +29,22 @@ import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 abstract class DashboardCardDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend abstract fun insertAll(entities: List<DashboardCardEntity>)
+    abstract suspend fun insertAll(entities: List<DashboardCardEntity>)
 
     @Delete
-    suspend abstract fun delete(entity: DashboardCardEntity)
+    abstract suspend fun delete(entity: DashboardCardEntity)
 
     @Update
-    suspend abstract fun update(entity: DashboardCardEntity)
+    abstract suspend fun update(entity: DashboardCardEntity)
 
     @Query("DELETE FROM DashboardCardEntity")
-    suspend abstract fun dropAll()
+    abstract suspend fun dropAll()
 
     @Query("SELECT * FROM DashboardCardEntity")
-    suspend abstract fun findAll(): List<DashboardCardEntity>
+    abstract suspend fun findAll(): List<DashboardCardEntity>
 
     @Transaction
-    suspend open fun updateEntities(entities: List<DashboardCardEntity>) {
+    open suspend fun updateEntities(entities: List<DashboardCardEntity>) {
         dropAll()
         insertAll(entities)
     }
