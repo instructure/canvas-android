@@ -20,6 +20,7 @@ import androidx.test.espresso.Espresso
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
@@ -28,7 +29,7 @@ import com.instructure.teacher.R
 class EditAnnouncementPage : BasePage() {
 
     fun openEdit() {
-        onView(withId(R.id.menu_edit)).click()
+        waitForView(withId(R.id.menu_edit)).click()
     }
 
     fun editAnnouncementName(newName: String) {
