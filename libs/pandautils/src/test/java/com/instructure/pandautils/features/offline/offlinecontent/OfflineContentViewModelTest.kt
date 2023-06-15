@@ -151,7 +151,7 @@ class OfflineContentViewModelTest {
         Assert.assertEquals(2, viewModel.data.value?.courseItems?.size)
         Assert.assertEquals(arrayListOf(1L, 2L), viewModel.data.value?.courseItems?.map { it.courseId })
         val firstCourseTabs = viewModel.data.value?.courseItems?.first()?.data?.tabs
-        Assert.assertEquals(arrayListOf("Pages", "Files"), firstCourseTabs?.map { it.data.title })
+        Assert.assertEquals(arrayListOf("Pages", "Syllabus", "Assignments", "Grades", "Files"), firstCourseTabs?.map { it.data.title })
         Assert.assertTrue(firstCourseTabs?.first()?.data?.files.isNullOrEmpty())
         Assert.assertEquals(
             arrayListOf("File 1", "File 2"),
@@ -168,7 +168,7 @@ class OfflineContentViewModelTest {
 
         viewModel.toggleSelection()
 
-        Assert.assertEquals(6, viewModel.data.value?.selectedCount)
+        Assert.assertEquals(12, viewModel.data.value?.selectedCount)
     }
 
     @Test
@@ -183,7 +183,7 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        Assert.assertEquals(3, viewModel.data.value?.selectedCount)
+        Assert.assertEquals(6, viewModel.data.value?.selectedCount)
         Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
         Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
         Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.data?.checked.orDefault())
@@ -214,7 +214,7 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(false, this)
         }
 
-        Assert.assertEquals(1, viewModel.data.value?.selectedCount)
+        Assert.assertEquals(4, viewModel.data.value?.selectedCount)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.data?.checked.orDefault())
     }
@@ -235,7 +235,7 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(false, this)
         }
 
-        Assert.assertEquals(2, viewModel.data.value?.selectedCount)
+        Assert.assertEquals(5, viewModel.data.value?.selectedCount)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
         Assert.assertFalse(viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.synced.orDefault())
     }
@@ -312,6 +312,62 @@ class OfflineContentViewModelTest {
         coVerify(exactly = 1) { offlineContentRepository.updateCourseSyncSettings(1L, expected, expectedFiles) }
     }
 
+    @Test
+    fun `Syllabus check changed`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.SYLLABUS_ID }?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.SYLLABUS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+    }
+
+    @Test
+    fun `Pages check changed`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.PAGES_ID }?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.PAGES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+    }
+
+    @Test
+    fun `Assignments check changed`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+    }
+
+    @Test
+    fun `Grades check changed`() {
+        mockkCourseViewModels()
+
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.GRADES_ID }?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.GRADES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+    }
+
     private fun createViewModel() {
         viewModel = OfflineContentViewModel(
             savedStateHandle,
@@ -324,7 +380,13 @@ class OfflineContentViewModelTest {
     }
 
     private fun mockkCourseViewModels() {
-        val tabs = listOf(Tab(tabId = "pages", label = "Pages"), Tab(tabId = "files", label = "Files"))
+        val tabs = listOf(
+            Tab(tabId = "pages", label = "Pages"),
+            Tab(tabId = "syllabus", label = "Syllabus"),
+            Tab(tabId = "assignments", label = "Assignments"),
+            Tab(tabId = "grades", label = "Grades"),
+            Tab(tabId = "files", label = "Files"),
+        )
         val courses = listOf(Course(id = 1, tabs = tabs), Course(id = 2, tabs = tabs))
         val files = listOf(FileFolder(id = 1, displayName = "File 1"), FileFolder(id = 2, displayName = "File 2"))
 

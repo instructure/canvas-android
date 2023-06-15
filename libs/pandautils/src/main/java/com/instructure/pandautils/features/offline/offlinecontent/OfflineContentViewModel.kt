@@ -313,6 +313,7 @@ class OfflineContentViewModel @Inject constructor(
 
         syncSettingsMap[courseId] = syncSettings.copy(courseSyncSettings = updated)
     }
+
     private fun getSelectedItemCount(courses: List<CourseItemViewModel>): Int {
         val selectedTabs = courses.flatMap { it.data.tabs }.count { it.data.synced && it.tabId != Tab.FILES_ID }
         val selectedFiles = courses.flatMap { it.data.tabs }.flatMap { it.data.files }.count { it.data.checked }
