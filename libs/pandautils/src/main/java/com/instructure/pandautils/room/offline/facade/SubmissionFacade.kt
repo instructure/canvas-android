@@ -38,7 +38,7 @@ class SubmissionFacade(
     private val userApi: UserAPI.UsersInterface,
 ) {
 
-    private val fetchedUsers = mutableMapOf<Long, User>()
+    private val fetchedUsers = mutableMapOf<Long, User?>()
 
     suspend fun insertSubmission(submission: Submission): Long {
         val groupId = submission.group?.let { group -> groupDao.insert(GroupEntity(group)) }
@@ -57,8 +57,8 @@ class SubmissionFacade(
                     RestParams(isForceReadFromNetwork = true)
                 ).dataOrNull
 
+            fetchedUsers[submission.userId] = user
             if (user != null) {
-                fetchedUsers[user.id] = user
                 userDao.insert(UserEntity(user))
             }
         }

@@ -27,7 +27,8 @@ data class DashboardCardEntity(
     val isK5Subject: Boolean,
     val shortName: String?,
     val originalName: String?,
-    val courseCode: String?
+    val courseCode: String?,
+    val position: Int
 ) {
     constructor(dashboardCard: DashboardCard) : this(
         dashboardCard.id,
@@ -35,6 +36,7 @@ data class DashboardCardEntity(
         dashboardCard.shortName,
         dashboardCard.originalName,
         dashboardCard.courseCode,
+        dashboardCard.position
     )
 
     fun toApiModel(): DashboardCard {
@@ -43,7 +45,8 @@ data class DashboardCardEntity(
             isK5Subject,
             shortName,
             originalName,
-            courseCode
+            courseCode,
+            position
         )
     }
 }

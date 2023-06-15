@@ -21,6 +21,7 @@ import android.content.Context
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
 import com.instructure.pandautils.room.offline.daos.*
@@ -38,13 +39,7 @@ import javax.inject.Singleton
 class OfflineModule {
 
     @Provides
-    @Singleton
-    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context): OfflineDatabaseProvider {
-        return OfflineDatabaseProvider(context)
-    }
-
-    @Provides
-    fun provideOfflineDatabase(offlineDatabaseProvider: OfflineDatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
+    fun provideOfflineDatabase(offlineDatabaseProvider: DatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
         return offlineDatabaseProvider.getDatabase(apiPrefs.user?.id)
     }
 
@@ -194,6 +189,26 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideCourseSettingsDao(offlineDatabase: OfflineDatabase): CourseSettingsDao {
+        return offlineDatabase.courseSettingsDao()
+    }
+
+    @Provides
+    fun provideScheduleItemDao(offlineDatabase: OfflineDatabase): ScheduleItemDao {
+        return offlineDatabase.scheduleItemDao()
+    }
+
+    @Provides
+    fun provideScheduleItemAssignmentOverrideDao(offlineDatabase: OfflineDatabase): ScheduleItemAssignmentOverrideDao {
+        return offlineDatabase.scheduleItemAssignmentOverrideDao()
+    }
+
+    @Provides
+    fun provideAssignmentOverrideDao(offlineDatabase: OfflineDatabase): AssignmentOverrideDao {
+        return offlineDatabase.assignmentOverrideDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
@@ -291,5 +306,15 @@ class OfflineModule {
     @Provides
     fun provideFileSyncSettingsDao(appDatabase: OfflineDatabase): FileSyncSettingsDao {
         return appDatabase.fileSyncSettingsDao()
+    }
+
+    @Provides
+    fun provideScheduleItemFacade(
+        scheduleItemDao: ScheduleItemDao,
+        assignmentDao: AssignmentDao,
+        assignmentOverrideDao: AssignmentOverrideDao,
+        scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao
+    ): ScheduleItemFacade {
+        return ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentDao)
     }
 }

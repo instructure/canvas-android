@@ -197,4 +197,9 @@ class ApiModule {
     fun provideSubmissionApi(): SubmissionAPI.SubmissionInterface {
         return RestBuilder().build(SubmissionAPI.SubmissionInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideCalendarEventApi(): CalendarEventAPI.CalendarEventInterface {
+        return RestBuilder().build(CalendarEventAPI.CalendarEventInterface::class.java, RestParams())
+    }
 }

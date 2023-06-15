@@ -13,24 +13,26 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
 
-package com.instructure.pandautils.room.offline
+package com.instructure.pandautils.room.offline.daos
 
-import android.content.Context
-import androidx.room.Room
+import androidx.room.*
+import com.instructure.pandautils.room.offline.entities.AssignmentOverrideEntity
 
-class OfflineDatabaseProvider(private val context: Context): DatabaseProvider {
+@Dao
+interface AssignmentOverrideDao {
 
-    private val dbMap = mutableMapOf<Long, OfflineDatabase>()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entity: AssignmentOverrideEntity)
 
-    override fun getDatabase(userId: Long?): OfflineDatabase {
-        if (userId == null) throw IllegalStateException("You can't access the database while logged out")
+    @Delete
+    suspend fun delete(entity: AssignmentOverrideEntity)
 
-        return dbMap.getOrPut(userId) {
-            Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-$userId")
-                .addMigrations(*offlineDatabaseMigrations)
-                .build()
-        }
-    }
+    @Update
+    suspend fun update(entity: AssignmentOverrideEntity)
+
+    @Query("SELECT * FROM AssignmentOverrideEntity WHERE id IN (:assignmentOverrideIds)")
+    suspend fun findByIds(assignmentOverrideIds: List<Long>): List<AssignmentOverrideEntity>
 }
