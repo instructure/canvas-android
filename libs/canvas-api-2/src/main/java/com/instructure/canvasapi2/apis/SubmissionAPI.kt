@@ -47,8 +47,19 @@ object SubmissionAPI {
                 @Query("student_ids[]") studentId: Long,
                 @Query("assignment_ids[]") assignmentIds: List<Long>): Call<List<Submission>>
 
+        @GET("courses/{courseId}/students/submissions?include[]=assignment&include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        suspend fun getSubmissionsForMultipleAssignments(
+            @Path("courseId") courseId: Long,
+            @Query("student_ids[]") studentId: Long,
+            @Query("assignment_ids[]") assignmentIds: List<Long>,
+            @Tag restParams: RestParams
+        ): DataResult<List<Submission>>
+
         @GET
         fun getNextPageSubmissions(@Url nextUrl: String): Call<List<Submission>>
+
+        @GET
+        suspend fun getNextPageSubmissions(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Submission>>
 
         @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionRubricAssessmentMap(

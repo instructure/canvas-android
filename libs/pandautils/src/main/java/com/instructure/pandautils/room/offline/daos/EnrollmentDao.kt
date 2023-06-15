@@ -34,4 +34,10 @@ interface EnrollmentDao {
 
     @Query("SELECT * FROM EnrollmentEntity WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): List<EnrollmentEntity>
+
+    @Query("SELECT * FROM EnrollmentEntity")
+    suspend fun findAll(): List<EnrollmentEntity>
+
+    @Query("SELECT * FROM EnrollmentEntity WHERE currentGradingPeriodId = :gradingPeriodId")
+    suspend fun findByGradingPeriodId(gradingPeriodId: Long): List<EnrollmentEntity>
 }

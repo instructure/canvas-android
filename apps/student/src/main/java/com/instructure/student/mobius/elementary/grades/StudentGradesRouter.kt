@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.features.elementary.grades.GradesRouter
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
-import com.instructure.student.fragment.GradesListFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentGradesRouter(private val activity: FragmentActivity) : GradesRouter {

@@ -202,4 +202,9 @@ class ApiModule {
     fun provideCalendarEventApi(): CalendarEventAPI.CalendarEventInterface {
         return RestBuilder().build(CalendarEventAPI.CalendarEventInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideEnrollmentApi(): EnrollmentAPI.EnrollmentInterface {
+        return RestBuilder().build(EnrollmentAPI.EnrollmentInterface::class.java, RestParams())
+    }
 }
