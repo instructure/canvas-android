@@ -21,6 +21,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.dismissExisting
@@ -53,6 +55,11 @@ class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
             EventBus.getDefault().post(DiscussionOverflowMenuClickedEvent(DiscussionBottomSheetChoice.DELETE, entryId))
             this.dismiss()
         }
+
+        (dialog as? BottomSheetDialog)?.behavior?.let {
+            it.state = BottomSheetBehavior.STATE_EXPANDED
+            it.skipCollapsed = true
+        }
     }
 
     companion object {
@@ -64,6 +71,7 @@ class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
             entryId = id
             manager.dismissExisting<DiscussionBottomSheetMenuFragment>()
             val dialog = newInstance()
+
             dialog.show(manager, DiscussionBottomSheetMenuFragment::class.java.simpleName)
         }
     }

@@ -658,7 +658,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun showOverflowMenu(id: Long) {
-        fragmentManager?.let {
+        parentFragmentManager.let {
             DiscussionBottomSheetMenuFragment.show(it, id)
         }
     }

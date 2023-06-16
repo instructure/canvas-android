@@ -140,7 +140,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             { group, discussionTopicHeaderOverflow ->
                 if (group != null) {
                     DiscussionsMoveToDialog.show(
-                        requireFragmentManager(),
+                        parentFragmentManager,
                         group,
                         discussionTopicHeaderOverflow
                     ) { newGroup ->
