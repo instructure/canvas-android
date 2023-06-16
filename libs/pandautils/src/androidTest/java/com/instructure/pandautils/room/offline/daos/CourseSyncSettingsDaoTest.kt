@@ -64,6 +64,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
@@ -73,6 +74,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
@@ -92,6 +94,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
 
@@ -114,6 +117,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
@@ -123,6 +127,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
@@ -142,6 +147,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
@@ -151,6 +157,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
 
@@ -161,6 +168,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
@@ -181,6 +189,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
@@ -190,6 +199,7 @@ class CourseSyncSettingsSD {
             pages = false,
             grades = false,
             syllabus = false,
+            conferences = false,
             fullFileSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffect
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffectHandler
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListView
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -38,8 +39,10 @@ import org.junit.Test
 class ConferenceListEffectHandlerTest : Assert() {
     private val testDispatcher = TestCoroutineDispatcher()
     private val view: ConferenceListView = mockk(relaxed = true)
-    private val effectHandler =
-        ConferenceListEffectHandler().apply { view = this@ConferenceListEffectHandlerTest.view }
+    private val repository: ConferenceListRepository = mockk(relaxed = true)
+    private val effectHandler = ConferenceListEffectHandler(repository).apply {
+        view = this@ConferenceListEffectHandlerTest.view
+    }
     private val eventConsumer: Consumer<ConferenceListEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 

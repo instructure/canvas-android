@@ -166,16 +166,81 @@ class DashboardRepositoryTest {
     @Test
     fun `Correctly filtered course ids are returned from getSyncedCourseIds`() = runTest {
         val entities = listOf(
-            CourseSyncSettingsEntity(1, true, false, false, false, false, false),
-            CourseSyncSettingsEntity(2, false, true, false, false, false, false),
-            CourseSyncSettingsEntity(3, false, false, true, false, false, false),
-            CourseSyncSettingsEntity(4, false, false, false, true, false, false),
-            CourseSyncSettingsEntity(5, false, false, false, false, false, false),
+            CourseSyncSettingsEntity(
+                courseId = 1,
+                fullContentSync = true,
+                assignments = false,
+                pages = false,
+                grades = false,
+                syllabus = false,
+                conferences = false,
+                fullFileSync = false
+            ),
+            CourseSyncSettingsEntity(
+                courseId = 2,
+                fullContentSync = false,
+                assignments = true,
+                pages = false,
+                grades = false,
+                syllabus = false,
+                conferences = false,
+                fullFileSync = false
+            ),
+            CourseSyncSettingsEntity(
+                courseId = 3,
+                fullContentSync = false,
+                assignments = false,
+                pages = true,
+                grades = false,
+                syllabus = false,
+                conferences = false,
+                fullFileSync = false
+            ),
+            CourseSyncSettingsEntity(
+                courseId = 4,
+                fullContentSync = false,
+                assignments = false,
+                pages = false,
+                grades = true,
+                syllabus = false,
+                conferences = false,
+                fullFileSync = false
+            ),
+            CourseSyncSettingsEntity(
+                courseId = 5,
+                fullContentSync = false,
+                assignments = false,
+                pages = false,
+                grades = false,
+                syllabus = true,
+                conferences = false,
+                fullFileSync = false
+            ),
+            CourseSyncSettingsEntity(
+                courseId = 6,
+                fullContentSync = false,
+                assignments = false,
+                pages = false,
+                grades = false,
+                syllabus = false,
+                conferences = true,
+                fullFileSync = false
+            ),
+            CourseSyncSettingsEntity(
+                courseId = 78,
+                fullContentSync = false,
+                assignments = false,
+                pages = false,
+                grades = false,
+                syllabus = false,
+                conferences = false,
+                fullFileSync = false
+            ),
         )
         coEvery { courseSyncSettingsDao.findAll() } returns entities
 
         val result = repository.getSyncedCourseIds()
-        val expectedIds = setOf(1L, 2L, 3L, 4L)
+        val expectedIds = setOf(1L, 2L, 3L, 4L, 5L, 6L)
 
         Assert.assertEquals(expectedIds, result)
     }

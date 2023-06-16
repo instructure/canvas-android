@@ -31,10 +31,8 @@ class ConferenceSyncHelper(
 ) {
 
     suspend fun fetchConferences(courseId: Long) {
-        CanvasContext.fromContextCode("${CanvasContext.Type.COURSE.name.lowercase()}_$courseId")?.let { context ->
-            val conferences = getConferencesForContext(context, true).dataOrNull
-            conferences?.let { conferenceFacade.insertConferences(it, courseId) }
-        }
+        val conferences = getConferencesForContext(CanvasContext.emptyCourseContext(courseId), true).dataOrNull
+        conferences?.let { conferenceFacade.insertConferences(it, courseId) }
     }
 
     suspend fun getConferencesForContext(

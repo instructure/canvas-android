@@ -28,7 +28,7 @@ class ConferenceListLocalDataSource(
 ) : ConferenceListDataSource {
 
     override suspend fun getConferencesForContext(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<Conference>> {
-        return DataResult.Success(conferenceFacade.getConferences(canvasContext.id))
+        return DataResult.Success(conferenceFacade.getConferencesByCourseId(canvasContext.id))
     }
 
     override suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession {

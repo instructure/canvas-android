@@ -37,7 +37,7 @@ class ConferenceFacade(
         }
     }
 
-    suspend fun getConferences(courseId: Long): List<Conference> {
+    suspend fun getConferencesByCourseId(courseId: Long): List<Conference> {
         return conferenceDao.findByCourseId(courseId).map { conferenceEntity ->
             val recordings = conferenceRecodingDao.findByConferenceId(conferenceEntity.id).map { it.toApiModel() }
             conferenceEntity.toApiModel(recordings)

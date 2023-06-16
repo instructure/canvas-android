@@ -34,7 +34,4 @@ interface ConferenceRecodingDao {
 
     @Query("SELECT * FROM ConferenceRecordingEntity WHERE conferenceId = :conferenceId")
     suspend fun findByConferenceId(conferenceId: Long): List<ConferenceRecordingEntity>
-
-    @Query("SELECT * FROM ConferenceRecordingEntity")
-    suspend fun findAll(): List<ConferenceRecordingEntity>
 }
