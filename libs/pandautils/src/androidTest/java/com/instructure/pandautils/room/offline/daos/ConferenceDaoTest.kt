@@ -21,9 +21,12 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.ConferenceEntity
+import com.instructure.pandautils.room.offline.entities.CourseEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -37,12 +40,19 @@ class ConferenceDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var conferenceDao: ConferenceDao
+    private lateinit var courseDao: CourseDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         conferenceDao = db.conferenceDao()
+        courseDao = db.courseDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1)))
+            courseDao.insert(CourseEntity(Course(2)))
+        }
     }
 
     @After
@@ -61,5 +71,18 @@ class ConferenceDaoTest {
         val result = conferenceDao.findByCourseId(1)
 
         Assert.assertEquals(conferenceEntities.filter { it.courseId == 1L }, result)
+    }
+
+    @Test
+    fun testCourseCascade() = runTest {
+        val conferenceEntity = ConferenceEntity(Conference(1), 1)
+
+        conferenceDao.insert(conferenceEntity)
+
+        courseDao.delete(CourseEntity(Course(1)))
+
+        val result = conferenceDao.findByCourseId(1)
+
+        assert(result.isEmpty())
     }
 }

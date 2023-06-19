@@ -20,10 +20,15 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.ConferenceRecording
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.entities.ConferenceEntity
 import com.instructure.pandautils.room.offline.entities.ConferenceRecordingEntity
+import com.instructure.pandautils.room.offline.entities.CourseEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -37,12 +42,26 @@ class ConferenceRecordingDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var conferenceRecodingDao: ConferenceRecodingDao
+    private lateinit var conferenceDao: ConferenceDao
+    private lateinit var courseDao: CourseDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         conferenceRecodingDao = db.conferenceRecordingDao()
+        conferenceDao = db.conferenceDao()
+        courseDao = db.courseDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1)))
+            conferenceDao.insertAll(
+                listOf(
+                    ConferenceEntity(Conference(1), 1),
+                    ConferenceEntity(Conference(2), 1)
+                )
+            )
+        }
     }
 
     @After
@@ -60,5 +79,18 @@ class ConferenceRecordingDaoTest {
         val result = conferenceRecodingDao.findByConferenceId(1)
 
         Assert.assertEquals(listOf(conferenceRecordingEntity), result)
+    }
+
+    @Test
+    fun testConferenceCascade() = runTest {
+        val conferenceRecordingEntity = ConferenceRecordingEntity(ConferenceRecording(recordingId = "recording1"), 1)
+
+        conferenceRecodingDao.insert(conferenceRecordingEntity)
+
+        conferenceDao.delete(ConferenceEntity(Conference(1), 1))
+
+        val result = conferenceRecodingDao.findByConferenceId(1)
+
+        assert(result.isEmpty())
     }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5824ec0652c1517e48a3ba8f9acca2f9",
+    "identityHash": "9b56a7960a1d8054f14c90856f145049",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -3886,7 +3886,7 @@
       },
       {
         "tableName": "ConferenceEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `conferenceKey` TEXT, `conferenceType` TEXT, `description` TEXT, `duration` INTEGER NOT NULL, `endedAt` INTEGER, `hasAdvancedSettings` INTEGER NOT NULL, `joinUrl` TEXT, `longRunning` INTEGER NOT NULL, `startedAt` INTEGER, `title` TEXT, `url` TEXT, `contextType` TEXT NOT NULL, `contextId` INTEGER NOT NULL, `record` INTEGER, `users` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `conferenceKey` TEXT, `conferenceType` TEXT, `description` TEXT, `duration` INTEGER NOT NULL, `endedAt` INTEGER, `hasAdvancedSettings` INTEGER NOT NULL, `joinUrl` TEXT, `longRunning` INTEGER NOT NULL, `startedAt` INTEGER, `title` TEXT, `url` TEXT, `contextType` TEXT NOT NULL, `contextId` INTEGER NOT NULL, `record` INTEGER, `users` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -3998,11 +3998,23 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "CourseEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "ConferenceRecordingEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordingId` TEXT NOT NULL, `conferenceId` INTEGER NOT NULL, `createdAtMillis` INTEGER NOT NULL, `durationMinutes` INTEGER NOT NULL, `playbackUrl` TEXT, `title` TEXT NOT NULL, PRIMARY KEY(`recordingId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordingId` TEXT NOT NULL, `conferenceId` INTEGER NOT NULL, `createdAtMillis` INTEGER NOT NULL, `durationMinutes` INTEGER NOT NULL, `playbackUrl` TEXT, `title` TEXT NOT NULL, PRIMARY KEY(`recordingId`), FOREIGN KEY(`conferenceId`) REFERENCES `ConferenceEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "recordingId",
@@ -4048,13 +4060,25 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "ConferenceEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "conferenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5824ec0652c1517e48a3ba8f9acca2f9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9b56a7960a1d8054f14c90856f145049')"
     ]
   }
 }

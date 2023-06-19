@@ -18,10 +18,20 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.ConferenceRecording
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = ConferenceEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["conferenceId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class ConferenceRecordingEntity(
     @PrimaryKey
     val recordingId: String,
