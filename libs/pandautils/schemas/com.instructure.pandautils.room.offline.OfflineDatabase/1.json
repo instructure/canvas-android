@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "31a8042dc789dc691642dab6a5b0f4fd",
+    "identityHash": "7ad6fb09b23b9967775a2c0d8283d58e",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -908,7 +908,7 @@
       },
       {
         "tableName": "CourseSyncSettingsEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, `syllabus` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, `syllabus` INTEGER NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
@@ -943,6 +943,12 @@
           {
             "fieldPath": "syllabus",
             "columnName": "syllabus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullFileSync",
+            "columnName": "fullFileSync",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1580,7 +1586,7 @@
       },
       {
         "tableName": "EnrollmentEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `role` TEXT NOT NULL, `type` TEXT NOT NULL, `courseId` INTEGER, `courseSectionId` INTEGER, `enrollmentState` TEXT, `userId` INTEGER NOT NULL, `computedCurrentScore` REAL, `computedFinalScore` REAL, `computedCurrentGrade` TEXT, `computedFinalGrade` TEXT, `multipleGradingPeriodsEnabled` INTEGER NOT NULL, `totalsForAllGradingPeriodsOption` INTEGER NOT NULL, `currentPeriodComputedCurrentScore` REAL, `currentPeriodComputedFinalScore` REAL, `currentPeriodComputedCurrentGrade` TEXT, `currentPeriodComputedFinalGrade` TEXT, `currentGradingPeriodId` INTEGER NOT NULL, `currentGradingPeriodTitle` TEXT, `associatedUserId` INTEGER NOT NULL, `lastActivityAt` INTEGER, `limitPrivilegesToCourseSection` INTEGER NOT NULL, `observedUserId` INTEGER, FOREIGN KEY(`observedUserId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`courseSectionId`) REFERENCES `SectionEntity`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `role` TEXT NOT NULL, `type` TEXT NOT NULL, `courseId` INTEGER, `courseSectionId` INTEGER, `enrollmentState` TEXT, `userId` INTEGER NOT NULL, `computedCurrentScore` REAL, `computedFinalScore` REAL, `computedCurrentGrade` TEXT, `computedFinalGrade` TEXT, `multipleGradingPeriodsEnabled` INTEGER NOT NULL, `totalsForAllGradingPeriodsOption` INTEGER NOT NULL, `currentPeriodComputedCurrentScore` REAL, `currentPeriodComputedFinalScore` REAL, `currentPeriodComputedCurrentGrade` TEXT, `currentPeriodComputedFinalGrade` TEXT, `currentGradingPeriodId` INTEGER NOT NULL, `currentGradingPeriodTitle` TEXT, `associatedUserId` INTEGER NOT NULL, `lastActivityAt` INTEGER, `limitPrivilegesToCourseSection` INTEGER NOT NULL, `observedUserId` INTEGER, FOREIGN KEY(`observedUserId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseSectionId`) REFERENCES `SectionEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1731,7 +1737,7 @@
         "foreignKeys": [
           {
             "table": "UserEntity",
-            "onDelete": "NO ACTION",
+            "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
               "observedUserId"
@@ -1741,19 +1747,8 @@
             ]
           },
           {
-            "table": "UserEntity",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "userId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
             "table": "SectionEntity",
-            "onDelete": "NO ACTION",
+            "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
               "courseSectionId"
@@ -3838,12 +3833,56 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "FileSyncSettingsEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `url` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncSettingsEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "CourseSyncSettingsEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
+            ],
+            "referencedColumns": [
+              "courseId"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '31a8042dc789dc691642dab6a5b0f4fd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ad6fb09b23b9967775a2c0d8283d58e')"
     ]
   }
 }

@@ -15,36 +15,39 @@
  *
  */
 
-package com.instructure.pandautils.features.offline.itemviewmodels
+package com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels
 
-import android.widget.CompoundButton.OnCheckedChangeListener
-import androidx.databinding.Bindable
+import android.widget.CompoundButton
 import com.instructure.pandautils.R
-import com.instructure.pandautils.binding.GroupItemViewModel
-import com.instructure.pandautils.features.offline.CourseItemViewData
-import com.instructure.pandautils.features.offline.OfflineItemViewModelType
+import com.instructure.pandautils.features.offline.offlinecontent.FileViewData
+import com.instructure.pandautils.features.offline.offlinecontent.OfflineItemViewModelType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class CourseItemViewModel(
-    val data: CourseItemViewData,
+data class FileViewModel(
+    val data: FileViewData,
     val courseId: Long,
-    @get:Bindable override var collapsed: Boolean,
-    val onCheckedChanged: (Boolean, CourseItemViewModel) -> Unit
-) : GroupItemViewModel(collapsable = true, items = data.tabs) {
-    override val layoutId = R.layout.item_offline_course
-    override val viewType = OfflineItemViewModelType.COURSE.viewType
+    val fileId: Long,
+    val fileUrl: String?,
+    val tabId: String,
+    val onCheckedChanged: (Boolean, FileViewModel) -> Unit
+) : ItemViewModel {
+    override val layoutId = R.layout.item_offline_file
+    override val viewType = OfflineItemViewModelType.FILE.viewType
 
-    val onCheckChanged = OnCheckedChangeListener { cb, checked ->
+    val onCheckChanged = CompoundButton.OnCheckedChangeListener { cb, checked ->
         if (cb.isPressed) onCheckedChanged(checked, this)
     }
 
     override fun areContentsTheSame(other: ItemViewModel): Boolean {
-        return other is CourseItemViewModel
+        return other is FileViewModel
                 && other.courseId == this.courseId
+                && other.tabId == this.tabId
                 && other.data == this.data
     }
 
     override fun areItemsTheSame(other: ItemViewModel): Boolean {
-        return other is CourseItemViewModel && other.courseId == this.courseId
+        return other is FileViewModel
+                && other.courseId == this.courseId
+                && other.tabId == this.tabId
     }
 }

@@ -9,7 +9,7 @@ import com.instructure.pandautils.features.discussion.router.DiscussionRouterFra
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
-import com.instructure.pandautils.features.offline.OfflineContentFragment
+import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -19,6 +19,7 @@ import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.features.pages.list.PageListFragment
+import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment

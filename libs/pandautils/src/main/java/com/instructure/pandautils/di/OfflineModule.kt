@@ -304,6 +304,11 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideFileSyncSettingsDao(appDatabase: OfflineDatabase): FileSyncSettingsDao {
+        return appDatabase.fileSyncSettingsDao()
+    }
+
+    @Provides
     fun provideScheduleItemFacade(
         scheduleItemDao: ScheduleItemDao,
         assignmentDao: AssignmentDao,

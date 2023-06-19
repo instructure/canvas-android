@@ -11,7 +11,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.offline.itemviewmodels.FileViewModel" />
+            type="com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.FileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -85,4 +85,57 @@ class EnrollmentFacadeTest {
         Assert.assertEquals(user, result.first().user)
         Assert.assertEquals(enrollment, result.first())
     }
+
+    @Test
+    fun `Calling getAllEnrollments should return all enrollments`() = runTest {
+        val courseId = 1L
+        val grades = Grades(htmlUrl = "htmlUrl")
+        val user = User(id = 1L, name = "User")
+        val enrollment = Enrollment(id = 1L, courseId = courseId, observedUser = user, user = user, grades = grades, courseSectionId = 1L)
+
+        coEvery { enrollmentDao.findAll() } returns listOf(enrollment).map {
+            EnrollmentEntity(it, courseId, null, observedUserId = user.id)
+        }
+        coEvery { gradesDao.findByEnrollmentId(enrollment.id) } returns GradesEntity(grades, enrollment.id)
+        coEvery { userDao.findById(any()) } returns UserEntity(user)
+
+        val result = facade.getAllEnrollments()
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals(grades, result.first().grades)
+        Assert.assertEquals(user, result.first().observedUser)
+        Assert.assertEquals(user, result.first().user)
+        Assert.assertEquals(enrollment, result.first())
+    }
+
+    @Test
+    fun `Calling getEnrollmentsByGradingPeriodId should return enrollments by grading period id`() = runTest {
+        val gradingPeriodId = 1L
+        val courseId = 1L
+        val grades = Grades(htmlUrl = "htmlUrl")
+        val user = User(id = 1L, name = "User")
+        val enrollment = Enrollment(
+            id = 1L,
+            courseId = courseId,
+            observedUser = user,
+            user = user,
+            grades = grades,
+            courseSectionId = 1L,
+            currentGradingPeriodId = gradingPeriodId
+        )
+
+        coEvery { enrollmentDao.findByGradingPeriodId(any()) } returns listOf(enrollment).map {
+            EnrollmentEntity(it, courseId, null, observedUserId = user.id)
+        }
+        coEvery { gradesDao.findByEnrollmentId(enrollment.id) } returns GradesEntity(grades, enrollment.id)
+        coEvery { userDao.findById(any()) } returns UserEntity(user)
+
+        val result = facade.getEnrollmentsByGradingPeriodId(gradingPeriodId)
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals(grades, result.first().grades)
+        Assert.assertEquals(user, result.first().observedUser)
+        Assert.assertEquals(user, result.first().user)
+        Assert.assertEquals(enrollment, result.first())
+    }
 }

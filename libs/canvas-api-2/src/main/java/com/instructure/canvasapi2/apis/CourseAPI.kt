@@ -57,6 +57,9 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users")
         val firstPageCoursesWithSyllabus: Call<List<Course>>
 
+        @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users")
+        suspend fun firstPageCoursesWithSyllabus(@Tag params: RestParams): DataResult<List<Course>>
+
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=license&include[]=is_public&include[]=permissions&enrollment_state=active")
         val firstPageCoursesWithSyllabusWithActiveEnrollment: Call<List<Course>>
 
@@ -138,6 +141,14 @@ object CourseAPI {
 
         @GET("courses/{courseId}/enrollments?state[]=current_and_concluded")
         fun getUserEnrollmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("user_id") userId: Long, @Query("grading_period_id") gradingPeriodId: Long): Call<List<Enrollment>>
+
+        @GET("courses/{courseId}/enrollments?state[]=current_and_concluded")
+        suspend fun getUserEnrollmentsForGradingPeriod(
+            @Path("courseId") courseId: Long,
+            @Query("user_id") userId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long,
+            @Tag params: RestParams
+        ): DataResult<List<Enrollment>>
 
         @GET("courses/{courseId}/rubrics/{rubricId}")
         fun getRubricSettings(@Path("courseId") courseId: Long, @Path("rubricId") rubricId: Long): Call<RubricSettings>

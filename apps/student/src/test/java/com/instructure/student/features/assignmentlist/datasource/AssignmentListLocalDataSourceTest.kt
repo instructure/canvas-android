@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2023 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.instructure.student.features.assignmentlist.datasource
 
 import com.instructure.canvasapi2.models.AssignmentGroup
@@ -25,9 +42,9 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any()) } returns expected
 
-        val course = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
+        val result = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
 
-        assertEquals(expected, course)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -36,9 +53,9 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignments(any()) } returns expected
 
-        val course = dataSource.getAssignmentGroupsWithAssignments(1, true)
+        val result = dataSource.getAssignmentGroupsWithAssignments(1, true)
 
-        assertEquals(expected, course)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -47,8 +64,8 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { courseFacade.getGradingPeriodsByCourseId(any()) } returns expected
 
-        val course = dataSource.getGradingPeriodsForCourse(1, true)
+        val result = dataSource.getGradingPeriodsForCourse(1, true)
 
-        assertEquals(expected, course)
+        assertEquals(expected, result)
     }
 }

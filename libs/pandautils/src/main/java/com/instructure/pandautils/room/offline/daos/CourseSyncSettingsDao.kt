@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 
 @Dao
 interface CourseSyncSettingsDao {
@@ -40,4 +41,7 @@ interface CourseSyncSettingsDao {
 
     @Query("SELECT * FROM CourseSyncSettingsEntity WHERE courseId IN (:courseIds)")
     suspend fun findByIds(courseIds: List<Long>): List<CourseSyncSettingsEntity>
+
+    @Query("SELECT * FROM CourseSyncSettingsEntity WHERE courseId=:courseId")
+    suspend fun findWithFilesById(courseId: Long): CourseSyncSettingsWithFiles?
 }

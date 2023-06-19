@@ -71,18 +71,20 @@ class OfflineSyncWorker @AssistedInject constructor(
             } ?: courseSyncSettingsDao.findAll()
 
             val syllabusCourseIds = mutableListOf<Long>()
-            courses.forEach { courseSettings ->
-                fetchCourseDetails(courseSettings.courseId)
-                if (courseSettings.pages) {
-                    fetchPages(courseSettings.courseId)
+            courses
+                .filter { it.anySyncEnabled }
+                .forEach { courseSettings ->
+                    fetchCourseDetails(courseSettings.courseId)
+                    if (courseSettings.pages) {
+                        fetchPages(courseSettings.courseId)
+                    }
+                    if (courseSettings.assignments || courseSettings.grades || courseSettings.syllabus) {
+                        fetchAssignments(courseSettings.courseId)
+                    }
+                    if (courseSettings.syllabus) {
+                        syllabusCourseIds.add(courseSettings.courseId)
+                    }
                 }
-                if (courseSettings.assignments || courseSettings.grades || courseSettings.syllabus) {
-                    fetchAssignments(courseSettings.courseId)
-                }
-                if (courseSettings.syllabus) {
-                    syllabusCourseIds.add(courseSettings.courseId)
-                }
-            }
             fetchSyllabus(syllabusCourseIds)
 
             return Result.success()
@@ -178,9 +180,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     private suspend fun fetchQuizzes(assignmentGroups: List<AssignmentGroup>) {
         val params = RestParams(isForceReadFromNetwork = true)
         assignmentGroups.forEach { group ->
-            group.assignments.forEach {
-                if (it.quizId != 0L) {
-                    val quiz = quizApi.getQuiz(it.courseId, it.quizId, params).dataOrNull
+            group.assignments.forEach { assignment ->
+                if (assignment.quizId != 0L) {
+                    val quiz = quizApi.getQuiz(assignment.courseId, assignment.quizId, params).dataOrNull
                     quiz?.let { quizDao.insert(QuizEntity(it)) }
                 }
             }

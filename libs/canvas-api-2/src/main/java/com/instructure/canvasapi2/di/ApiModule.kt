@@ -204,6 +204,11 @@ class ApiModule {
     }
 
     @Provides
+    fun provideEnrollmentApi(): EnrollmentAPI.EnrollmentInterface {
+        return RestBuilder().build(EnrollmentAPI.EnrollmentInterface::class.java, RestParams())
+    }
+
+    @Provides
     fun provideDiscussionApi(): DiscussionAPI.DiscussionInterface {
         return RestBuilder().build(DiscussionAPI.DiscussionInterface::class.java, RestParams())
     }
