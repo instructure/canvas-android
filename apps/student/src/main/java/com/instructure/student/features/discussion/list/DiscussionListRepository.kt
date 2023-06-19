@@ -16,8 +16,13 @@
  */
 package com.instructure.student.features.discussion.list
 
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.isCourse
 import com.instructure.student.features.discussion.list.datasource.DiscussionListDataSource
 import com.instructure.student.features.discussion.list.datasource.DiscussionListLocalDataSource
 import com.instructure.student.features.discussion.list.datasource.DiscussionListNetworkDataSource
@@ -27,5 +32,25 @@ class DiscussionListRepository(localDataSource: DiscussionListLocalDataSource,
                                networkStateProvider: NetworkStateProvider
 ) : Repository<DiscussionListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
+    suspend fun getCreationPermission(canvasContext: CanvasContext, isAnnouncements: Boolean): Boolean {
+        val permissions = if (canvasContext.isCourse) {
+            dataSource.getPermissionsForCourse(canvasContext as Course)
+        } else {
+            dataSource.getPermissionsForGroup(canvasContext as Group)
+        }
 
+        return if (isAnnouncements) {
+            permissions?.canCreateAnnouncement ?: false
+        } else {
+            permissions?.canCreateDiscussionTopic ?: false
+        }
+    }
+
+    suspend fun getDiscussionTopicHeaders(canvasContext: CanvasContext, isAnnouncements: Boolean, forceNetwork: Boolean): List<DiscussionTopicHeader> {
+        return if (isAnnouncements) {
+            dataSource.getAnnouncements(canvasContext, forceNetwork)
+        } else {
+            dataSource.getDiscussions(canvasContext, forceNetwork)
+        }
+    }
 }

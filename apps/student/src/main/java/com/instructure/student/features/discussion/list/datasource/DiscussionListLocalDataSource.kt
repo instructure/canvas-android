@@ -16,5 +16,27 @@
  */
 package com.instructure.student.features.discussion.list.datasource
 
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
+
 class DiscussionListLocalDataSource : DiscussionListDataSource {
+
+    override suspend fun getPermissionsForCourse(course: Course): CanvasContextPermission? {
+        return null // Don't need to cache these because we can't create discussions/announcements offline.
+    }
+
+    override suspend fun getPermissionsForGroup(group: Group): CanvasContextPermission? {
+        return null // Don't need to cache these because we can't create discussions/announcements offline.
+    }
+
+    override suspend fun getDiscussions(canvasContext: CanvasContext, forceNetwork: Boolean): List<DiscussionTopicHeader> {
+        return emptyList() // TODO
+    }
+
+    override suspend fun getAnnouncements(canvasContext: CanvasContext, forceNetwork: Boolean): List<DiscussionTopicHeader> {
+        return emptyList() // TODO
+    }
 }

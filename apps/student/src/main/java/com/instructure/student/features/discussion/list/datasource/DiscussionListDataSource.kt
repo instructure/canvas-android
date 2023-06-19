@@ -16,5 +16,19 @@
  */
 package com.instructure.student.features.discussion.list.datasource
 
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
+
 interface DiscussionListDataSource {
+
+    suspend fun getPermissionsForCourse(course: Course): CanvasContextPermission?
+
+    suspend fun getPermissionsForGroup(group: Group): CanvasContextPermission?
+
+    suspend fun getDiscussions(canvasContext: CanvasContext, forceNetwork: Boolean): List<DiscussionTopicHeader>
+
+    suspend fun getAnnouncements(canvasContext: CanvasContext, forceNetwork: Boolean): List<DiscussionTopicHeader>
 }

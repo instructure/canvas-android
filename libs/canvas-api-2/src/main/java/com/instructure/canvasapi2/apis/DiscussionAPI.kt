@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionEntryPostBody
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -38,7 +39,7 @@ import java.io.File
 
 object DiscussionAPI {
 
-    internal interface DiscussionInterface {
+    interface DiscussionInterface {
 
         @Multipart
         @POST("{contextType}/{contextId}/discussion_topics")
@@ -77,6 +78,9 @@ object DiscussionAPI {
 
         @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=sections")
         fun getFirstPageDiscussionTopicHeaders(@Path("contextType") contextType: String, @Path("contextId") contextId: Long): Call<List<DiscussionTopicHeader>>
+
+        @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=sections")
+        suspend fun getFirstPageDiscussionTopicHeaders(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
 
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}?include[]=sections")
         fun getDetailedDiscussion(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
@@ -129,6 +133,9 @@ object DiscussionAPI {
 
         @GET
         fun getNextPage(@Url nextUrl: String): Call<List<DiscussionTopicHeader>>
+
+        @GET
+        suspend fun getNextPage(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
 
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}")
         fun updateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Body entry: DiscussionEntryPostBody): Call<DiscussionEntry>

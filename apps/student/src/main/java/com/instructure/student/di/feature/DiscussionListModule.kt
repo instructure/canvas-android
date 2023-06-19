@@ -16,6 +16,10 @@
  */
 package com.instructure.student.di.feature
 
+import com.instructure.canvasapi2.apis.AnnouncementAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.discussion.list.DiscussionListRepository
 import com.instructure.student.features.discussion.list.datasource.DiscussionListLocalDataSource
@@ -35,8 +39,13 @@ class DiscussionListModule {
     }
 
     @Provides
-    fun provideDiscussionListNetworkDataSource(): DiscussionListNetworkDataSource {
-        return DiscussionListNetworkDataSource()
+    fun provideDiscussionListNetworkDataSource(
+        courseApi: CourseAPI.CoursesInterface,
+        groupApi: GroupAPI.GroupInterface,
+        discussionApi: DiscussionAPI.DiscussionInterface,
+        announcementApi: AnnouncementAPI.AnnouncementInterface
+    ): DiscussionListNetworkDataSource {
+        return DiscussionListNetworkDataSource(courseApi, groupApi, discussionApi, announcementApi)
     }
 
     @Provides

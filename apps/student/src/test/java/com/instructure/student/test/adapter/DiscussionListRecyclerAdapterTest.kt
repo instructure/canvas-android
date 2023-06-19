@@ -38,9 +38,8 @@ class DiscussionListRecyclerAdapterTest : TestCase() {
     private lateinit var topicHeader: DiscussionTopicHeader
     private lateinit var topicHeader2: DiscussionTopicHeader
 
-    class DiscussionListRecyclerAdapterWrapper(context: Context) : DiscussionListRecyclerAdapter(context, CanvasContext.emptyCourseContext(), true, mockk(relaxed = true),
+    class DiscussionListRecyclerAdapterWrapper(context: Context) : DiscussionListRecyclerAdapter(context, CanvasContext.emptyCourseContext(), true, mockk(relaxed = true), mockk(relaxed = true),
         object : DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback {
-        override fun askToDeleteDiscussion(discussionTopicHeader: DiscussionTopicHeader) {}
         override fun onRefreshStarted() {}
         override fun onRowClicked(discussionTopicHeader: DiscussionTopicHeader, position: Int, isOpenDetail: Boolean) {}
         override fun onRefreshFinished() {}

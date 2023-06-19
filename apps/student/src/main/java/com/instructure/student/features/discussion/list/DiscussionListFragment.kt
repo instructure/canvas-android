@@ -22,21 +22,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -58,7 +51,7 @@ import com.instructure.student.fragment.CreateDiscussionFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -83,7 +76,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var discussionRecyclerView: RecyclerView
-    private var permissionJob: Job? = null
     private var canPost: Boolean = false
     private var groupsJob: WeaveJob? = null
     private var featureFlagsJob: WeaveJob? = null
@@ -110,6 +102,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 canvasContext,
                 !isAnnouncement,
                 repository,
+                lifecycleScope,
                 object : DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback {
                     override fun onRowClicked(model: DiscussionTopicHeader, position: Int, isOpenDetail: Boolean) {
                         RouteMatcher.route(
@@ -147,17 +140,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                         setRefreshing(true)
                         // Hide the FAB.
                         if (canPost) binding.createNewDiscussion.hide()
-                    }
-
-                    override fun askToDeleteDiscussion(discussionTopicHeader: DiscussionTopicHeader) {
-                        AlertDialog.Builder(requireContext())
-                            .setTitle(R.string.utils_discussionsDeleteTitle)
-                            .setMessage(R.string.utils_discussionsDeleteMessage)
-                            .setPositiveButton(R.string.delete) { _, _ ->
-                                recyclerAdapter.deleteDiscussionTopicHeader(discussionTopicHeader)
-                            }
-                            .setNegativeButton(R.string.cancel, null)
-                            .showThemed()
                     }
                 })
 
@@ -234,7 +216,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        permissionJob?.cancel()
         featureFlagsJob?.cancel()
         groupsJob?.cancel()
         recyclerAdapter.cancel()
@@ -274,37 +255,16 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     private fun checkForPermission() {
-        permissionJob = tryWeave {
-            val permission = if (canvasContext.isCourse) {
-                awaitApi<Course> {
-                    CourseManager.getCourse(
-                        canvasContext.id,
-                        it,
-                        true
-                    )
-                }.permissions
-            } else {
-                awaitApi<Group> {
-                    GroupManager.getDetailedGroup(
-                        canvasContext.id,
-                        it,
-                        true
-                    )
-                }.permissions
+        lifecycleScope.launch {
+            try {
+                canPost = repository.getCreationPermission(canvasContext, isAnnouncement)
+                if (canPost) {
+                    binding.createNewDiscussion.show()
+                }
+            } catch (e: Exception) {
+                Logger.e("Error getting permissions for discussion permissions. " + e.message)
+                binding.createNewDiscussion.hide()
             }
-
-            this@DiscussionListFragment.canvasContext.permissions = permission
-            canPost = if (isAnnouncement) {
-                permission?.canCreateAnnouncement ?: false
-            } else {
-                permission?.canCreateDiscussionTopic ?: false
-            }
-            if (canPost) {
-                binding.createNewDiscussion.show()
-            }
-        } catch {
-            Logger.e("Error getting permissions for discussion permissions. " + it.message)
-            binding.createNewDiscussion.hide()
         }
     }
 
