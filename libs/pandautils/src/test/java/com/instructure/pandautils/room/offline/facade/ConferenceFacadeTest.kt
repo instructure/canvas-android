@@ -30,9 +30,7 @@ class ConferenceFacadeTest {
 
         facade.insertConferences(conferences, 1)
 
-        conferences.forEach {
-            coVerify { conferenceDao.insert(ConferenceEntity(it, 1)) }
-        }
+        coVerify { conferenceDao.insertAll(conferences.map { ConferenceEntity(it, 1) }) }
         recordings.forEach {
             coVerify { conferenceRecordingDao.insert(ConferenceRecordingEntity(it, 1)) }
         }
