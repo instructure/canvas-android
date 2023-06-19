@@ -31,7 +31,7 @@ import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.conferences.conference_list.*
 
-@PageView(url = "courses/{canvasContext}/conferences")
+@PageView(url = "{canvasContext}/conferences")
 @ScreenView(SCREEN_VIEW_CONFERENCE_LIST)
 class ConferenceListFragment :
     MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect, ConferenceListView, ConferenceListViewState, FragmentConferenceListBinding>() {
