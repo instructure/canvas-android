@@ -18,10 +18,8 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
-import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.offline.sync.ConferenceSyncHelper
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
@@ -334,13 +332,5 @@ class OfflineModule {
         conferenceRecodingDao: ConferenceRecodingDao
     ): ConferenceFacade {
         return ConferenceFacade(conferenceDao, conferenceRecodingDao)
-    }
-
-    @Provides
-    fun provideConferenceSyncHelper(
-        conferencesApi: ConferencesApi.ConferencesInterface,
-        conferenceFacade: ConferenceFacade
-    ): ConferenceSyncHelper {
-        return ConferenceSyncHelper(conferencesApi, conferenceFacade)
     }
 }

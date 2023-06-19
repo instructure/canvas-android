@@ -17,8 +17,8 @@
 
 package com.instructure.student.di
 
+import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.pandautils.features.offline.sync.ConferenceSyncHelper
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
@@ -42,10 +42,10 @@ class ConferenceListModule {
 
     @Provides
     fun provideLocalDataSource(
-        conferenceSyncHelper: ConferenceSyncHelper,
+        conferencesApi: ConferencesApi.ConferencesInterface,
         oAuthApi: OAuthAPI.OAuthInterface
     ): ConferenceListNetworkDataSource {
-        return ConferenceListNetworkDataSource(conferenceSyncHelper, oAuthApi)
+        return ConferenceListNetworkDataSource(conferencesApi, oAuthApi)
     }
 
     @Provides

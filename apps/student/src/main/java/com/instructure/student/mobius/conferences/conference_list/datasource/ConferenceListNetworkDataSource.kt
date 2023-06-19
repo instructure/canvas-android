@@ -17,23 +17,30 @@
 
 package com.instructure.student.mobius.conferences.conference_list.datasource
 
+import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.features.offline.sync.ConferenceSyncHelper
+import com.instructure.canvasapi2.utils.depaginate
 
 class ConferenceListNetworkDataSource(
-    private val conferenceSyncHelper: ConferenceSyncHelper,
+    private val conferencesApi: ConferencesApi.ConferencesInterface,
     private val oAuthApi: OAuthAPI.OAuthInterface
 ) : ConferenceListDataSource {
 
     override suspend fun getConferencesForContext(
         canvasContext: CanvasContext, forceNetwork: Boolean
     ): DataResult<List<Conference>> {
-        return conferenceSyncHelper.getConferencesForContext(canvasContext, forceNetwork)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        return conferencesApi.getConferencesForContext(canvasContext.toAPIString().drop(1), params).map {
+            it.conferences
+        }.depaginate { url ->
+            conferencesApi.getNextPage(url, params).map { it.conferences }
+        }
     }
 
     suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession {
