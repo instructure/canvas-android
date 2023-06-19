@@ -155,7 +155,7 @@ class FileListFragment : BaseSyncFragment<
         }
 
         return url
-    }teacher
+    }
 
     override fun layoutResId() = R.layout.fragment_file_list
     override fun onCreateView(view: View) = Unit
