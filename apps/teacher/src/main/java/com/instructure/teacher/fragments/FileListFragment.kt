@@ -142,9 +142,20 @@ class FileListFragment : BaseSyncFragment<
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() =
-        if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"
+    private fun makePageViewUrl(): String {
+        var url = if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"
         else "${ApiPrefs.fullDomain}/${canvasContext.contextId.replace("_", "s/")}/files"
+
+        if (!currentFolder.isRoot) {
+            url += "/folder/"
+            if (canvasContext.type == CanvasContext.Type.USER) {
+                url += "users_${canvasContext.id}/"
+            }
+            url += currentFolder.fullName?.split(" ", limit = 2)?.get(1)?.replaceFirst("files/", "") ?: ""
+        }
+
+        return url
+    }teacher
 
     override fun layoutResId() = R.layout.fragment_file_list
     override fun onCreateView(view: View) = Unit
