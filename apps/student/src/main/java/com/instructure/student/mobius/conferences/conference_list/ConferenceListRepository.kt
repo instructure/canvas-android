@@ -29,7 +29,7 @@ import com.instructure.student.mobius.conferences.conference_list.datasource.Con
 
 class ConferenceListRepository(
     localDataSource: ConferenceListLocalDataSource,
-    networkDataSource: ConferenceListNetworkDataSource,
+    private val networkDataSource: ConferenceListNetworkDataSource,
     networkStateProvider: NetworkStateProvider
 ) : Repository<ConferenceListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
@@ -40,6 +40,6 @@ class ConferenceListRepository(
     }
 
     suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession {
-        return dataSource.getAuthenticatedSession(targetUrl)
+        return networkDataSource.getAuthenticatedSession(targetUrl)
     }
 }

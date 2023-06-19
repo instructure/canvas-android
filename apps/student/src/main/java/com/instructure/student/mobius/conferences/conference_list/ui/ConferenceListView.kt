@@ -21,15 +21,13 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentConferenceListBinding
@@ -60,12 +58,8 @@ class ConferenceListView(
             setIcon(R.drawable.ic_open_in_browser)
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener {
-                if (APIHelper.hasNetworkConnection()) {
+                (context as? FragmentActivity)?.withRequireNetwork {
                     consumer?.accept(ConferenceListEvent.LaunchInBrowser)
-                } else {
-                    (context as? AppCompatActivity)?.let {
-                        NoInternetConnectionDialog.show(it.supportFragmentManager)
-                    }
                 }
                 true
             }

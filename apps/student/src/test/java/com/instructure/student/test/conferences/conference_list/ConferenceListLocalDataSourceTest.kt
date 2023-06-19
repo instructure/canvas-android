@@ -56,9 +56,4 @@ class ConferenceListLocalDataSourceTest {
             conferenceFacade.getConferencesByCourseId(1)
         }
     }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Throws exception getting authenticated session`() = runTest {
-        localDataSource.getAuthenticatedSession("targetUrl")
-    }
 }

@@ -17,7 +17,6 @@
 
 package com.instructure.student.mobius.conferences.conference_list.datasource
 
-import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.DataResult
@@ -25,6 +24,4 @@ import com.instructure.canvasapi2.utils.DataResult
 interface ConferenceListDataSource {
 
     suspend fun getConferencesForContext(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<Conference>>
-
-    suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession
 }

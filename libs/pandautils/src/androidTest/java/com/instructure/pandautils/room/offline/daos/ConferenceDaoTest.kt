@@ -52,13 +52,14 @@ class ConferenceDaoTest {
 
     @Test
     fun testFindEntityByCourseId() = runTest {
-        val conferenceEntity = ConferenceEntity(Conference(1), 1)
-        val conferenceEntity2 = ConferenceEntity(Conference(2), 2)
-        conferenceDao.insert(conferenceEntity)
-        conferenceDao.insert(conferenceEntity2)
+        val conferenceEntities = listOf(
+            ConferenceEntity(Conference(1), 1),
+            ConferenceEntity(Conference(2), 2)
+        )
+        conferenceDao.insertAll(conferenceEntities)
 
         val result = conferenceDao.findByCourseId(1)
 
-        Assert.assertEquals(listOf(conferenceEntity), result)
+        Assert.assertEquals(conferenceEntities.filter { it.courseId == 1L }, result)
     }
 }

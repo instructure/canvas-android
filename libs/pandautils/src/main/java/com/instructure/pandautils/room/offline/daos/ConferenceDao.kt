@@ -26,6 +26,9 @@ interface ConferenceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: ConferenceEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<ConferenceEntity>)
+
     @Delete
     suspend fun delete(entity: ConferenceEntity)
 

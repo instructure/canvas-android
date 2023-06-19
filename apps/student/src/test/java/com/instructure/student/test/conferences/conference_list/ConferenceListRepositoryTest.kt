@@ -102,15 +102,5 @@ class ConferenceListRepositoryTest {
 
         TestCase.assertEquals(expected, result)
         coVerify(exactly = 1) { networkDataSource.getAuthenticatedSession("targetUrl") }
-        coVerify(exactly = 0) { localDataSource.getAuthenticatedSession(any()) }
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Throws exception calling authenticated session if offline`() = runTest {
-        every { networkStateProvider.isOnline() } returns false
-
-        coEvery { localDataSource.getAuthenticatedSession(any()) } throws IllegalStateException()
-
-        repository.getAuthenticatedSession("targetUrl")
     }
 }

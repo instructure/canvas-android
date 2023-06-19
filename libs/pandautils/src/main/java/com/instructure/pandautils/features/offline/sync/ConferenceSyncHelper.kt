@@ -46,24 +46,24 @@ class ConferenceSyncHelper(
             it.conferences
         }
     }
+}
 
-    private suspend fun DataResult<ConferenceList>.depaginate(
-        nextPageCall: suspend (nextUrl: String) -> DataResult<ConferenceList>
-    ): DataResult<ConferenceList> {
-        if (this !is DataResult.Success) return this
+suspend fun DataResult<ConferenceList>.depaginate(
+    nextPageCall: suspend (nextUrl: String) -> DataResult<ConferenceList>
+): DataResult<ConferenceList> {
+    if (this !is DataResult.Success) return this
 
-        val depaginatedList = data.conferences.toMutableList()
-        var nextUrl = linkHeaders.nextUrl
-        while (nextUrl != null) {
-            val newItemsResult = nextPageCall(nextUrl)
-            nextUrl = if (newItemsResult is DataResult.Success) {
-                depaginatedList.addAll(newItemsResult.data.conferences)
-                newItemsResult.linkHeaders.nextUrl
-            } else {
-                null
-            }
+    val depaginatedList = data.conferences.toMutableList()
+    var nextUrl = linkHeaders.nextUrl
+    while (nextUrl != null) {
+        val newItemsResult = nextPageCall(nextUrl)
+        nextUrl = if (newItemsResult is DataResult.Success) {
+            depaginatedList.addAll(newItemsResult.data.conferences)
+            newItemsResult.linkHeaders.nextUrl
+        } else {
+            null
         }
-
-        return DataResult.Success(ConferenceList(depaginatedList))
     }
+
+    return DataResult.Success(ConferenceList(depaginatedList))
 }

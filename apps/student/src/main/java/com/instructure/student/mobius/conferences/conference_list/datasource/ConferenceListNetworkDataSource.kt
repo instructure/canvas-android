@@ -36,7 +36,7 @@ class ConferenceListNetworkDataSource(
         return conferenceSyncHelper.getConferencesForContext(canvasContext, forceNetwork)
     }
 
-    override suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession {
+    suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession {
         val params = RestParams(isForceReadFromNetwork = true)
 
         return oAuthApi.getAuthenticatedSession(targetUrl, params).dataOrThrow

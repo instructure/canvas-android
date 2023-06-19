@@ -29,8 +29,8 @@ class ConferenceFacade(
 ) {
 
     suspend fun insertConferences(conferences: List<Conference>, courseId: Long) {
+        conferenceDao.insertAll(conferences.map { ConferenceEntity(it, courseId) })
         conferences.forEach { conference ->
-            conferenceDao.insert(ConferenceEntity(conference, courseId))
             conference.recordings.forEach { recording ->
                 conferenceRecodingDao.insert(ConferenceRecordingEntity(recording, conference.id))
             }

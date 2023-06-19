@@ -17,7 +17,6 @@
 
 package com.instructure.student.mobius.conferences.conference_list.datasource
 
-import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.DataResult
@@ -29,9 +28,5 @@ class ConferenceListLocalDataSource(
 
     override suspend fun getConferencesForContext(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<Conference>> {
         return DataResult.Success(conferenceFacade.getConferencesByCourseId(canvasContext.id))
-    }
-
-    override suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession {
-        throw IllegalStateException("This should never be called")
     }
 }
