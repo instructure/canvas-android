@@ -17,6 +17,7 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -92,5 +93,12 @@ class ConferenceRecordingDaoTest {
         val result = conferenceRecodingDao.findByConferenceId(1)
 
         assert(result.isEmpty())
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testConferenceForeignKey() = runTest {
+        val conferenceRecordingEntity = ConferenceRecordingEntity(ConferenceRecording(recordingId = "recording1"), 3)
+
+        conferenceRecodingDao.insert(conferenceRecordingEntity)
     }
 }
