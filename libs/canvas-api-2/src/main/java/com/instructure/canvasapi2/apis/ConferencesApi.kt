@@ -20,22 +20,33 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ConferenceList
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Tag
 import retrofit2.http.Url
 
 object ConferencesApi {
 
-    internal interface ConferencesInterface {
+    interface ConferencesInterface {
         @GET("{canvasContext}/conferences")
         fun getConferencesForContext(@Path("canvasContext", encoded = true) canvasContext: String): Call<ConferenceList>
+
+        @GET("{canvasContext}/conferences")
+        suspend fun getConferencesForContext(
+            @Path("canvasContext", encoded = true) canvasContext: String,
+            @Tag params: RestParams
+        ): DataResult<ConferenceList>
 
         @GET("conferences?state=live")
         fun getLiveConferences(): Call<ConferenceList>
 
         @GET
         fun getNextPage(@Url nextUrl: String): Call<ConferenceList>
+
+        @GET
+        suspend fun getNextPage(@Url nextUrl: String, @Tag params: RestParams): DataResult<ConferenceList>
     }
 
     fun getConferencesForContext(

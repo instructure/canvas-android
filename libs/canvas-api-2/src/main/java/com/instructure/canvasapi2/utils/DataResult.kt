@@ -55,9 +55,7 @@ sealed class DataResult<out A> {
 
     fun <B> map(block: (A) -> B): DataResult<B> {
         return when (this) {
-            is Success -> Success(
-                block(data)
-            )
+            is Success -> Success(block(data), linkHeaders, apiType)
             is Fail -> this
         }
     }

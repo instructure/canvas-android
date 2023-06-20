@@ -56,6 +56,7 @@ class FileSyncSettingsDaoTest {
                 pages = false,
                 grades = false,
                 syllabus = false,
+                conferences = false,
                 fullFileSync = false
             )
         )
