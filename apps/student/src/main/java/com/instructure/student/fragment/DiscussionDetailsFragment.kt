@@ -560,6 +560,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 if (discussionTopicHeader.id == 0L) {
                     discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, it, true) }
                 }
+
+                // If we had an offline discussion on the list it might need some additional fields so we need to fetch the whole discussion.
+                // We might not need this if we implement offline mode on the discussion details screen.
+                if (discussionTopicHeader.offline) {
+                    discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeader.id, it, true) }
+                }
             }
 
             // Check if we were routed with a course context, instead of a group context.

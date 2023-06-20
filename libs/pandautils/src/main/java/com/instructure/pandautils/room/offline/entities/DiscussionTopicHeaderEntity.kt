@@ -159,6 +159,7 @@ data class DiscussionTopicHeaderEntity(
         specificSections = specificSections,
         //TODO
         sections = null,
-        anonymousState = anonymousState
+        anonymousState = anonymousState,
+        offline = true
     )
 }
