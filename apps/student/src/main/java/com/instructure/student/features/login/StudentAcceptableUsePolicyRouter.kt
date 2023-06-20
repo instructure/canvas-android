@@ -22,13 +22,17 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.tasks.StudentLogoutTask
 
-class StudentAcceptableUsePolicyRouter(private val activity: FragmentActivity) : AcceptableUsePolicyRouter {
+class StudentAcceptableUsePolicyRouter(
+    private val activity: FragmentActivity,
+    private val databaseProvider: DatabaseProvider
+) : AcceptableUsePolicyRouter {
 
     override fun openPolicy(content: String) {
         val intent = InternalWebViewActivity.createIntent(activity, "http://www.canvaslms.com/policies/terms-of-use", content, activity.getString(R.string.acceptableUsePolicyTitle), false)
@@ -50,6 +54,6 @@ class StudentAcceptableUsePolicyRouter(private val activity: FragmentActivity) :
     }
 
     override fun logout() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
     }
 }
