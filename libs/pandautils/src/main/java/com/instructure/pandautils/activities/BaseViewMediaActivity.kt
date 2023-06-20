@@ -35,6 +35,8 @@ import androidx.databinding.ViewDataBinding
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
 import com.google.android.exoplayer2.upstream.HttpDataSource
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.viewBinding
@@ -52,6 +54,8 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
     abstract fun allowCopyingUrl() :Boolean
 
     private val binding by viewBinding(ActivityViewMediaBinding::inflate)
+
+    val url: String by lazy { intent?.extras?.getString(URL).orEmpty() }
 
     private val mUri: Uri by lazy { intent?.extras?.getParcelable(URI) ?: Uri.EMPTY }
     private val mContentType: String by lazy { intent?.extras?.getString(CONTENT_TYPE).orEmpty() }
@@ -234,6 +238,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
         private const val DISPLAY_NAME = "display_name"
         private const val DESTROY_ON_EXIT = "destroy_on_eit"
         private const val EDITABLE_FILE = "editable_file"
+        private const val URL = "url"
 
         @JvmOverloads
         fun makeBundle(
@@ -245,6 +250,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
                 editableFile: EditableFile? = null
         ) = Bundle().apply {
             putParcelable(URI, Uri.parse(url))
+            putString(URL, url)
             putString(THUMB_URL, thumbnailUrl)
             putString(CONTENT_TYPE, contentType)
             putString(DISPLAY_NAME, displayName)

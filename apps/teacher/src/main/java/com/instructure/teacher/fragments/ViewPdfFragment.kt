@@ -21,6 +21,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_PDF
 import com.instructure.pandautils.analytics.ScreenView
@@ -42,6 +44,7 @@ import instructure.androidblueprint.PresenterFragment
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_PDF)
+@PageView
 class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragmentView>(), ViewPdfFragmentView {
 
     private val binding by viewBinding(FragmentViewPdfBinding::bind)
@@ -79,6 +82,11 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
             }
             binding.toolbar.title = editableFile.file.displayName
         }
+    }
+
+    @PageViewUrl
+    private fun makePageViewUrl(): String {
+        return mUrl
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
