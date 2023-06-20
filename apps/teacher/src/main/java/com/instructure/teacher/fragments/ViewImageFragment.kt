@@ -29,8 +29,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_IMAGE
 import com.instructure.pandautils.analytics.ScreenView
@@ -47,7 +45,6 @@ import com.instructure.teacher.utils.setupMenu
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_IMAGE)
-@PageView
 class ViewImageFragment : Fragment(), ShareableFile {
 
     private val binding by viewBinding(FragmentViewImageBinding::bind)
@@ -152,9 +149,6 @@ class ViewImageFragment : Fragment(), ShareableFile {
             }
         }
     }
-
-    @PageViewUrl
-    fun makePageViewUrl() = mUri.toString()
 
     companion object {
         @JvmOverloads

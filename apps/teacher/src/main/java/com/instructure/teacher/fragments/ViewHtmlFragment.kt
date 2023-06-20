@@ -23,8 +23,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
-import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
@@ -40,7 +38,6 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 @ScreenView(SCREEN_VIEW_VIEW_HTML)
-@PageView
 class ViewHtmlFragment : InternalWebViewFragment() {
 
     private val downloadUrl by NullableStringArg(key = DOWNLOAD_URL)
@@ -110,16 +107,12 @@ class ViewHtmlFragment : InternalWebViewFragment() {
         }
     }
 
-    @PageViewUrl
-    fun makePageViewUrl() = url
-
     override fun onDestroy() {
         super.onDestroy()
         job?.cancel()
     }
 
     companion object {
-        private const val URL = "url"
         private const val DOWNLOAD_URL = "downloadUrl"
         private const val TOOLBAR_COLOR = "toolbarColor"
         private const val EDITABLE_FILE = "editableFile"

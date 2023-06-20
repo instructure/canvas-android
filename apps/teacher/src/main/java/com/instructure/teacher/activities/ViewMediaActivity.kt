@@ -18,8 +18,6 @@ package com.instructure.teacher.activities
 
 import android.content.Context
 import android.content.Intent
-import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_MEDIA
@@ -29,7 +27,6 @@ import com.instructure.teacher.fragments.EditFileFolderFragment
 import com.instructure.teacher.router.RouteMatcher
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
-@PageView
 class ViewMediaActivity : BaseViewMediaActivity() {
 
     override fun allowEditing() = true
@@ -38,9 +35,6 @@ class ViewMediaActivity : BaseViewMediaActivity() {
         val args = EditFileFolderFragment.makeBundle(editableFile.file, editableFile.usageRights, editableFile.licenses, editableFile.canvasContext!!.id)
         RouteMatcher.route(this, Route(EditFileFolderFragment::class.java, editableFile.canvasContext, args))
     }
-
-    @PageViewUrl
-    private fun makePageViewUrl() = url
 
     companion object {
         fun createIntent(context: Context, route: Route): Intent {
