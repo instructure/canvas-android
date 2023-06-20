@@ -19,8 +19,11 @@ package com.instructure.canvasapi2.utils.weave
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * Holds the data necessary for [tryWeave] to work correctly
@@ -45,4 +48,16 @@ infix fun TryWeave.catch(onException: (e: Throwable) -> Unit): WeaveCoroutine {
     val coroutine = WeaveCoroutine(context + exceptionHandler)
     coroutine.start(CoroutineStart.DEFAULT, coroutine, block)
     return coroutine
+}
+
+class TryLaunch(val coroutineScope: CoroutineScope, val block: suspend CoroutineScope.() -> Unit)
+
+fun CoroutineScope.tryLaunch(block: suspend CoroutineScope.() -> Unit) = TryLaunch(this, block)
+
+infix fun TryLaunch.catch(onException: (e: Throwable) -> Unit): Job {
+    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        if (throwable !is CancellationException) onException(throwable)
+    }
+
+    return coroutineScope.launch(context = exceptionHandler, block = block)
 }

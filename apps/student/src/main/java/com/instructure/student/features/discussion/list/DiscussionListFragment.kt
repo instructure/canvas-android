@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -255,16 +257,14 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     private fun checkForPermission() {
-        lifecycleScope.launch {
-            try {
-                canPost = repository.getCreationPermission(canvasContext, isAnnouncement)
-                if (canPost) {
-                    binding.createNewDiscussion.show()
-                }
-            } catch (e: Exception) {
-                Logger.e("Error getting permissions for discussion permissions. " + e.message)
-                binding.createNewDiscussion.hide()
+        lifecycleScope.tryLaunch {
+            canPost = repository.getCreationPermission(canvasContext, isAnnouncement)
+            if (canPost) {
+                binding.createNewDiscussion.show()
             }
+        } catch {
+            Logger.e("Error getting permissions for discussion permissions. " + it.message)
+            binding.createNewDiscussion.hide()
         }
     }
 
