@@ -41,7 +41,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID, Tab.SYLLABUS_ID, Tab.GRADES_ID)
+private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID, Tab.SYLLABUS_ID, Tab.GRADES_ID, Tab.ANNOUNCEMENTS_ID, Tab.DISCUSSIONS_ID)
 
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
@@ -275,6 +275,8 @@ class OfflineContentViewModel @Inject constructor(
                 toggleAllFiles(courseId, checked)
                 courseSyncSettings.copy(fullFileSync = checked)
             }
+            Tab.ANNOUNCEMENTS_ID -> courseSyncSettings.copy(announcements = checked)
+            Tab.DISCUSSIONS_ID -> courseSyncSettings.copy(discussions = checked)
             else -> courseSyncSettings
         }
         updated = updated.copy(fullContentSync = updated.allTabsEnabled)

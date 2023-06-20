@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.discussion.list.DiscussionListRepository
 import com.instructure.student.features.discussion.list.datasource.DiscussionListLocalDataSource
@@ -34,8 +35,8 @@ import dagger.hilt.android.components.FragmentComponent
 class DiscussionListModule {
 
     @Provides
-    fun provideDiscussionListLocalDataSource(): DiscussionListLocalDataSource {
-        return DiscussionListLocalDataSource()
+    fun provideDiscussionListLocalDataSource(discussionTopicHeaderFacade: DiscussionTopicHeaderFacade): DiscussionListLocalDataSource {
+        return DiscussionListLocalDataSource(discussionTopicHeaderFacade)
     }
 
     @Provides

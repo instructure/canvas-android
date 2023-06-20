@@ -110,6 +110,8 @@ class OfflineContentRepository(
                 false,
                 false,
                 false,
+                false,
+                false,
                 false
             )
             courseSyncSettingsDao.insert(default)

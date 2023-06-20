@@ -30,6 +30,8 @@ data class CourseSyncSettingsEntity(
     val pages: Boolean,
     val grades: Boolean,
     val syllabus: Boolean,
+    val announcements: Boolean,
+    val discussions: Boolean,
     val fullFileSync: Boolean
 ) {
 
@@ -40,6 +42,8 @@ data class CourseSyncSettingsEntity(
             Tab.GRADES_ID -> grades
             Tab.SYLLABUS_ID -> syllabus
             Tab.FILES_ID -> fullFileSync
+            Tab.ANNOUNCEMENTS_ID -> announcements
+            Tab.DISCUSSIONS_ID -> discussions
             else -> false
         }
 
@@ -47,8 +51,8 @@ data class CourseSyncSettingsEntity(
     }
 
     val allTabsEnabled: Boolean
-        get() = assignments && pages && grades && syllabus && fullFileSync
+        get() = assignments && pages && grades && syllabus && fullFileSync && announcements && discussions
 
     val anySyncEnabled: Boolean
-        get() = fullContentSync || assignments || pages || grades || syllabus
+        get() = fullContentSync || assignments || pages || grades || syllabus || announcements || discussions
 }

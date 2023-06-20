@@ -28,9 +28,38 @@ class DiscussionTopicHeaderFacade(
     private val discussionParticipantDao: DiscussionParticipantDao
 ) {
 
-    suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader): Long {
+    suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader, courseId: Long): Long {
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
-        return discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader))
+        return discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId))
+    }
+
+    suspend fun insertDiscussions(discussionTopicHeaders: List<DiscussionTopicHeader>, courseId: Long) {
+        val authors = discussionTopicHeaders
+            .map { it.author }
+            .filterNotNull()
+            .map { DiscussionParticipantEntity(it) }
+        discussionParticipantDao.insertAll(authors)
+
+        val discussionEntities = discussionTopicHeaders.map { DiscussionTopicHeaderEntity(it, courseId) }
+        discussionTopicHeaderDao.insertAll(discussionEntities)
+    }
+
+    suspend fun getDiscussionsForCourse(courseId: Long): List<DiscussionTopicHeader> {
+        return discussionTopicHeaderDao.findAllDiscussionsForCourse(courseId)
+            .map { discussionTopic ->
+                val authorEntity =
+                    discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
+                discussionTopic.toApiModel(authorEntity?.toApiModel())
+            }
+    }
+
+    suspend fun getAnnouncementsForCourse(courseId: Long): List<DiscussionTopicHeader> {
+        return discussionTopicHeaderDao.findAllAnnouncementsForCourse(courseId)
+            .map { discussionTopic ->
+                val authorEntity =
+                    discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
+                discussionTopic.toApiModel(authorEntity?.toApiModel())
+            }
     }
 
     suspend fun getDiscussionTopicHeaderById(id: Long): DiscussionTopicHeader? {

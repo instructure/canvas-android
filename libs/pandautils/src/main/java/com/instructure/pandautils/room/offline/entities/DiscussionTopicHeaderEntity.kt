@@ -33,12 +33,19 @@ import java.util.*
             parentColumns = ["id"],
             childColumns = ["authorId"],
             onDelete = ForeignKey.SET_NULL
+        ),
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class DiscussionTopicHeaderEntity(
     @PrimaryKey
     val id: Long,
+    val courseId: Long,
     var discussionType: String?,
     var title: String?,
     var message: String?,
@@ -72,8 +79,9 @@ data class DiscussionTopicHeaderEntity(
     var specificSections: String?,
     var anonymousState: String?
 ) {
-    constructor(discussionTopicHeader: DiscussionTopicHeader) : this(
+    constructor(discussionTopicHeader: DiscussionTopicHeader, courseId: Long) : this(
         discussionTopicHeader.id,
+        courseId,
         discussionTopicHeader.discussionType,
         discussionTopicHeader.title,
         discussionTopicHeader.message,

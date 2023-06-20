@@ -34,6 +34,7 @@ import com.instructure.pandautils.room.offline.entities.PageEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -56,7 +57,10 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val quizApi: QuizAPI.QuizInterface,
     private val dashboardCardDao: DashboardCardDao,
     private val courseSettingsDao: CourseSettingsDao,
-    private val scheduleItemFacade: ScheduleItemFacade
+    private val scheduleItemFacade: ScheduleItemFacade,
+    private val discussionApi: DiscussionAPI.DiscussionInterface,
+    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+    private val announcementApi: AnnouncementAPI.AnnouncementInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -83,6 +87,12 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.syllabus) {
                         syllabusCourseIds.add(courseSettings.courseId)
+                    }
+                    if (courseSettings.discussions) {
+                        fetchDiscussions(courseSettings.courseId)
+                    }
+                    if (courseSettings.announcements) {
+                        fetchAnnouncements(courseSettings.courseId)
                     }
                 }
             fetchSyllabus(syllabusCourseIds)
@@ -144,7 +154,7 @@ class OfflineSyncWorker @AssistedInject constructor(
         val pages =
             pageApi.getFirstPagePages(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
                 pageApi.getNextPagePagesList(nextUrl, params)
-            }.dataOrThrow
+            }.dataOrNull ?: emptyList()
 
         val entities = pages.map {
             PageEntity(it, courseId)
@@ -158,7 +168,7 @@ class OfflineSyncWorker @AssistedInject constructor(
         val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
             .depaginate { nextUrl ->
                 assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
-            }.dataOrThrow
+            }.dataOrNull ?: emptyList()
 
         fetchQuizzes(assignmentGroups)
 
@@ -187,5 +197,23 @@ class OfflineSyncWorker @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun fetchDiscussions(courseId: Long) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val discussions =  discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params).depaginate { nextPage ->
+            discussionApi.getNextPage(nextPage, params)
+        }.dataOrNull ?: emptyList()
+
+        discussionTopicHeaderFacade.insertDiscussions(discussions, courseId)
+    }
+
+    private suspend fun fetchAnnouncements(courseId: Long) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val announcements =  announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params).depaginate { nextPage ->
+            announcementApi.getNextPageAnnouncementsList(nextPage, params)
+        }.dataOrNull ?: emptyList()
+
+        discussionTopicHeaderFacade.insertDiscussions(announcements, courseId)
     }
 }

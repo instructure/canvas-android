@@ -21,8 +21,11 @@ import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 
-class DiscussionListLocalDataSource : DiscussionListDataSource {
+class DiscussionListLocalDataSource(
+    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+) : DiscussionListDataSource {
 
     override suspend fun getPermissionsForCourse(course: Course): CanvasContextPermission? {
         return null // Don't need to cache these because we can't create discussions/announcements offline.
@@ -33,10 +36,10 @@ class DiscussionListLocalDataSource : DiscussionListDataSource {
     }
 
     override suspend fun getDiscussions(canvasContext: CanvasContext, forceNetwork: Boolean): List<DiscussionTopicHeader> {
-        return emptyList() // TODO
+        return discussionTopicHeaderFacade.getDiscussionsForCourse(canvasContext.id)
     }
 
     override suspend fun getAnnouncements(canvasContext: CanvasContext, forceNetwork: Boolean): List<DiscussionTopicHeader> {
-        return emptyList() // TODO
+        return discussionTopicHeaderFacade.getAnnouncementsForCourse(canvasContext.id)
     }
 }
