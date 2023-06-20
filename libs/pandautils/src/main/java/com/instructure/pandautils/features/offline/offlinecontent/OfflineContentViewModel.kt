@@ -341,7 +341,9 @@ class OfflineContentViewModel @Inject constructor(
             pages = shouldCheck,
             grades = shouldCheck,
             syllabus = shouldCheck,
-            fullFileSync = shouldCheck
+            fullFileSync = shouldCheck,
+            announcements = shouldCheck,
+            discussions = shouldCheck
         )
 
         val updatedSyncSettings = syncSettingsWithFiles.copy(
