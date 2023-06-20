@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
+import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -203,6 +204,7 @@ class FileListFragment : BaseSyncFragment<
             if (it.displayName.isValid()) {
                 // This is a file
                 val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.backgroundColor, presenter.mCanvasContext, R.drawable.ic_document)
+                recordFilePreviewEvent(it)
                 if (it.isHtmlFile) {
                     /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
                     accessed as an authenticated preview to work correctly */
@@ -217,6 +219,10 @@ class FileListFragment : BaseSyncFragment<
                 RouteMatcher.route(requireContext(), Route(FileListFragment::class.java, presenter.mCanvasContext, args))
             }
         }
+    }
+
+    private fun recordFilePreviewEvent(file: FileFolder) {
+        PageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
     }
 
     override fun onRefreshStarted() = with(binding) {
