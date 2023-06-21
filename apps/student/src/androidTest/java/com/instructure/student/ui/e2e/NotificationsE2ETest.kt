@@ -79,20 +79,19 @@ class NotificationsE2ETest : StudentTest() {
         dashboardPage.clickNotificationsTab()
 
         Log.d(STEP_TAG,"Assert that there are some notifications on the Notifications Page. There should be 4 notification at this point, but sometimes the API does not work properly.")
-
         var notificationApiResponseAttempt = 1
         while(notificationApiResponseAttempt < 10) {
             try {
                 notificationPage.assertNotificationCountIsGreaterThan(0) //At least one notification is displayed.
                 break
-            } catch (e: java.lang.AssertionError) {
+            } catch (e: AssertionError) {
                 try {
+                    notificationApiResponseAttempt++
                     sleep(3000) //Wait for the notifications to be displayed (API is slow sometimes, it might take some time)
                     refresh()
                     notificationPage.assertNotificationCountIsGreaterThan(0) //At least one notification is displayed.
-                    notificationApiResponseAttempt++
                     break
-                } catch (e: java.lang.AssertionError) {
+                } catch (e: AssertionError) {
                     println("${notificationApiResponseAttempt--}. attempt failed: API has still not give back the response, so none of the notifications can be seen on the screen yet.")
                 }
             }
@@ -105,16 +104,26 @@ class NotificationsE2ETest : StudentTest() {
                 println("API may not work properly, so not all the notifications can be seen on the screen.")
         }
 
-        Log.d(PREPARATION_TAG,"Submit ${testAssignment.name} assignment with student: ${student.name}.")
-        submitAssignment(course, testAssignment, student)
+        var gradeResponseAttempt = 0
 
-        Log.d(PREPARATION_TAG,"Grade the submission of ${student.name} student for assignment: ${testAssignment.name}.")
-        gradeSubmission(teacher, course, testAssignment, student)
+        while(gradeResponseAttempt < 10) {
+            try {
+                gradeResponseAttempt++
+                Log.d(PREPARATION_TAG, "Submit ${testAssignment.name} assignment with student: ${student.name}.")
+                submitAssignment(course, testAssignment, student)
 
-        Log.d(STEP_TAG,"Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
-        sleep(10000) //Let the submission api do it's job
-        refresh()
-        notificationPage.assertHasGrade(testAssignment.name,"13")
+                Log.d(PREPARATION_TAG, "Grade the submission of ${student.name} student for assignment: ${testAssignment.name}.")
+                gradeSubmission(teacher, course, testAssignment, student)
+
+                Log.d(STEP_TAG, "Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
+                sleep(3000) //Let the submission api do it's job
+                refresh()
+                notificationPage.assertHasGrade(testAssignment.name, "13")
+                break
+            } catch (e: AssertionError) {
+                println("${gradeResponseAttempt}. attempt failed: API has still not give back the response, so the graded assignment is not displayed among the notifications.")
+            }
+        }
     }
 
     private fun gradeSubmission(

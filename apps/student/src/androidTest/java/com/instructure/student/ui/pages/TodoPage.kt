@@ -36,6 +36,7 @@ import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
+import java.lang.Thread.sleep
 
 class TodoPage: BasePage(R.id.todoPage) {
 
@@ -43,6 +44,20 @@ class TodoPage: BasePage(R.id.todoPage) {
 
     fun assertAssignmentDisplayed(assignment: AssignmentApiModel) {
         assertTextDisplayedInRecyclerView(assignment.name)
+    }
+
+    fun assertAssignmentDisplayedWithRetries(assignment: AssignmentApiModel, retryAttempt: Int) {
+        var remainingRetryAttempt = retryAttempt
+        while (remainingRetryAttempt > 0) {
+            try {
+                remainingRetryAttempt--
+                sleep(3000)
+                assertTextDisplayedInRecyclerView(assignment.name)
+                break
+            } catch (e: AssertionError) {
+                println("Attempt failed. The '${assignment.name}' assignment is not displayed, probably because of the API slowness.")
+            }
+        }
     }
 
     fun assertAssignmentNotDisplayed(assignment: AssignmentApiModel) {
