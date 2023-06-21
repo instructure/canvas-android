@@ -38,7 +38,6 @@ data class ConferenceRecordingEntity(
     val conferenceId: Long,
     val createdAtMillis: Long,
     val durationMinutes: Long,
-    //TODO val playbackFormats: List<PlaybackFormat>,
     val playbackUrl: String?,
     val title: String
 ) {

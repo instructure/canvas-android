@@ -14,34 +14,40 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.conferences.conference_list.ui
+package com.instructure.student.mobius.conferences.conference_details.ui
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conference
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
-import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ConferenceListRepositoryFragment : ConferenceListFragment() {
+class ConferenceDetailsRepositoryFragment : ConferenceDetailsFragment() {
 
     @Inject
-    lateinit var conferenceListRepository: ConferenceListRepository
+    lateinit var conferenceDetailsRepository: ConferenceDetailsRepository
 
-    override fun getRepository() = conferenceListRepository
+    override fun getRepository() = conferenceDetailsRepository
 
     companion object {
-        fun makeRoute(canvasContext: CanvasContext): Route {
-            return Route(null, ConferenceListRepositoryFragment::class.java, canvasContext, canvasContext.makeBundle())
+        fun makeRoute(canvasContext: CanvasContext, conference: Conference): Route {
+            val bundle = canvasContext.makeBundle {
+                putParcelable(Const.CONFERENCE, conference)
+            }
+            return Route(null, ConferenceDetailsRepositoryFragment::class.java, canvasContext, bundle)
         }
 
-        private fun validRoute(route: Route) = route.canvasContext != null
+        private fun validRoute(route: Route) =
+            route.canvasContext != null && route.arguments.containsKey(Const.CONFERENCE)
 
-        fun newInstance(route: Route): ConferenceListRepositoryFragment? {
+        fun newInstance(route: Route): ConferenceDetailsRepositoryFragment? {
             if (!validRoute(route)) return null
-            return ConferenceListRepositoryFragment().withArgs(route.arguments)
+            return ConferenceDetailsRepositoryFragment().withArgs(route.arguments)
         }
     }
 }

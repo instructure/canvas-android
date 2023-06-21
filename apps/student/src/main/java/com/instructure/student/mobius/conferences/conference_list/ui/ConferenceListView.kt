@@ -32,7 +32,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusView
-import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
+import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
@@ -100,7 +100,7 @@ class ConferenceListView(
     }
 
     fun showConferenceDetails(conference: Conference) {
-        RouteMatcher.route(context, ConferenceDetailsFragment.makeRoute(canvasContext, conference))
+        RouteMatcher.route(context, ConferenceDetailsRepositoryFragment.makeRoute(canvasContext, conference))
     }
 
     fun launchUrl(url: String) {
