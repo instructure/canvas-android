@@ -103,7 +103,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
 
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(conversation1.subject!!)
         inboxPage.assertConversationDisplayed(conversation2.subject!!)
     }
@@ -151,7 +151,7 @@ class InboxPageTest: TeacherTest() {
         data.conversations[conversation2.id] = conversation2.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.filterInbox("Starred")
+        inboxPage.filterMessageScope("Starred")
         inboxPage.selectConversations(listOf(conversation1.subject!!, conversation2.subject!!))
         inboxPage.clickUnstar()
         inboxPage.assertConversationNotDisplayed(conversation1.subject!!)
@@ -302,14 +302,14 @@ class InboxPageTest: TeacherTest() {
         data.conversations[unreadConversation.id] = unreadConversation
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.filterInbox("Unread")
+        inboxPage.filterMessageScope("Unread")
         inboxPage.swipeConversationRight(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
         inboxPage.swipeConversationLeft(unreadConversation)
         inboxPage.assertConversationNotDisplayed(unreadConversation.subject!!)
 
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(unreadConversation.subject!!)
     }
 
@@ -326,14 +326,14 @@ class InboxPageTest: TeacherTest() {
         data.conversations[sentConversation2.id] = sentConversation2
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.filterInbox("Sent")
+        inboxPage.filterMessageScope("Sent")
         inboxPage.swipeConversationRight(sentConversation)
         inboxPage.assertUnreadMarkerVisibility(sentConversation.subject!!, ViewMatchers.Visibility.GONE)
 
         inboxPage.swipeConversationRight(sentConversation)
         inboxPage.assertUnreadMarkerVisibility(sentConversation.subject!!, ViewMatchers.Visibility.VISIBLE)
 
-        inboxPage.filterInbox("Unread")
+        inboxPage.filterMessageScope("Unread")
         inboxPage.assertConversationDisplayed(sentConversation.subject!!)
     }
 
@@ -352,7 +352,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.swipeConversationLeft(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
 
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -371,7 +371,7 @@ class InboxPageTest: TeacherTest() {
         navigateToInbox(data, data.teachers.first())
         inboxPage.swipeConversationLeft(conversation)
 
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
         inboxPage.swipeConversationRight(conversation)
         inboxPage.assertConversationNotDisplayed(conversation.subject!!) //Because an Unread conversation cannot be Archived.
@@ -379,7 +379,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.swipeConversationLeft(archivedConversation)
         inboxPage.assertConversationNotDisplayed(archivedConversation.subject!!)
 
-        inboxPage.filterInbox("Inbox")
+        inboxPage.filterMessageScope("Inbox")
         inboxPage.assertConversationDisplayed(conversation.subject!!)
         inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.VISIBLE)
         inboxPage.assertConversationDisplayed(archivedConversation.subject!!)
@@ -398,7 +398,7 @@ class InboxPageTest: TeacherTest() {
         data.conversations[conversation.id] = conversation.copy(isStarred = true)
 
         navigateToInbox(data, data.teachers.first())
-        inboxPage.filterInbox("Starred")
+        inboxPage.filterMessageScope("Starred")
 
         inboxPage.assertUnreadMarkerVisibility(conversation.subject!!, ViewMatchers.Visibility.VISIBLE)
         inboxPage.swipeConversationRight(conversation)

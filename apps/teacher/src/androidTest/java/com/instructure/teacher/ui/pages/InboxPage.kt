@@ -13,6 +13,7 @@ import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
@@ -60,6 +61,10 @@ class InboxPage: BasePage() {
         inboxRecyclerView.check(RecyclerViewItemCountGreaterThanAssertion(count))
     }
 
+    fun assertConversationCount(count: Int) {
+        inboxRecyclerView.check(RecyclerViewItemCountAssertion(count))
+    }
+
     fun clickConversation(conversation: ConversationApiModel) {
         clickConversation(conversation.subject)
     }
@@ -85,10 +90,20 @@ class InboxPage: BasePage() {
             .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(50)))
     }
 
-    fun filterInbox(filterFor: String) {
+    fun filterMessageScope(filterFor: String) {
         waitForView(withId(R.id.scopeFilterText))
         onView(withId(R.id.scopeFilter)).click()
         waitForViewWithText(filterFor).click()
+    }
+
+    fun filterCourseScope(courseName: String) {
+        waitForView(withId(R.id.courseFilter)).click()
+        waitForViewWithText(courseName).click()
+    }
+
+    fun clearCourseFilter() {
+        waitForView(withId(R.id.courseFilter)).click()
+        onView(withId(R.id.clear) + withText(R.string.inboxClearFilter)).click()
     }
 
     fun assertThereIsAnUnreadMessage(unread: Boolean) {
