@@ -20,5 +20,7 @@ package com.instructure.pandautils.room.offline
 
 interface DatabaseProvider {
 
-    abstract fun getDatabase(userId: Long?): OfflineDatabase
+    fun getDatabase(userId: Long?): OfflineDatabase
+
+    fun clearDatabase(userId: Long)
 }
