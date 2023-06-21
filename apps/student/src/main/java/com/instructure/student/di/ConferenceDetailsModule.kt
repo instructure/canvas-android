@@ -35,17 +35,17 @@ class ConferenceDetailsModule {
 
     @Provides
     fun provideNetworkDataSource(
-        conferenceFacade: ConferenceFacade
-    ): ConferenceDetailsLocalDataSource {
-        return ConferenceDetailsLocalDataSource(conferenceFacade)
-    }
-
-    @Provides
-    fun provideLocalDataSource(
         conferencesApi: ConferencesApi.ConferencesInterface,
         oAuthApi: OAuthAPI.OAuthInterface
     ): ConferenceDetailsNetworkDataSource {
         return ConferenceDetailsNetworkDataSource(conferencesApi, oAuthApi)
+    }
+
+    @Provides
+    fun provideLocalDataSource(
+        conferenceFacade: ConferenceFacade
+    ): ConferenceDetailsLocalDataSource {
+        return ConferenceDetailsLocalDataSource(conferenceFacade)
     }
 
     @Provides
