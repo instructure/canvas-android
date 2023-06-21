@@ -78,7 +78,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         var url = if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"
         else "${ApiPrefs.fullDomain}/${canvasContext.contextId.replace("_", "s/")}/files"
 
-        if (folder != null) {
+        if (folder != null && folder?.isRoot == false) {
             url += "/folder/"
             if (canvasContext.type == CanvasContext.Type.USER) {
                 url += "users_${canvasContext.id}/"
