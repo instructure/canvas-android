@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6723c49561b0878ba665b3bd62bdf864",
+    "identityHash": "e7b612b9a2c66f2545c117cf7e3e8a1d",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -908,7 +908,7 @@
       },
       {
         "tableName": "CourseSyncSettingsEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `assignments` INTEGER NOT NULL, `pages` INTEGER NOT NULL, `grades` INTEGER NOT NULL, `syllabus` INTEGER NOT NULL, `announcements` INTEGER NOT NULL, `discussions` INTEGER NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `tabs` TEXT NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
@@ -923,39 +923,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "assignments",
-            "columnName": "assignments",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "pages",
-            "columnName": "pages",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "grades",
-            "columnName": "grades",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "syllabus",
-            "columnName": "syllabus",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "announcements",
-            "columnName": "announcements",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "discussions",
-            "columnName": "discussions",
-            "affinity": "INTEGER",
+            "fieldPath": "tabs",
+            "columnName": "tabs",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -3911,7 +3881,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6723c49561b0878ba665b3bd62bdf864')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e7b612b9a2c66f2545c117cf7e3e8a1d')"
     ]
   }
 }

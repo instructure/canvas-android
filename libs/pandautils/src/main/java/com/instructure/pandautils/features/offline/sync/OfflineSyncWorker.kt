@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
@@ -79,19 +80,19 @@ class OfflineSyncWorker @AssistedInject constructor(
                 .filter { it.anySyncEnabled }
                 .forEach { courseSettings ->
                     fetchCourseDetails(courseSettings.courseId)
-                    if (courseSettings.pages) {
+                    if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
                         fetchPages(courseSettings.courseId)
                     }
-                    if (courseSettings.assignments || courseSettings.grades || courseSettings.syllabus) {
+                    if (courseSettings.isTabSelected(Tab.ASSIGNMENTS_ID) || courseSettings.isTabSelected(Tab.GRADES_ID) || courseSettings.isTabSelected(Tab.SYLLABUS_ID)) {
                         fetchAssignments(courseSettings.courseId)
                     }
-                    if (courseSettings.syllabus) {
+                    if (courseSettings.isTabSelected(Tab.SYLLABUS_ID)) {
                         syllabusCourseIds.add(courseSettings.courseId)
                     }
-                    if (courseSettings.discussions) {
+                    if (courseSettings.isTabSelected(Tab.DISCUSSIONS_ID)) {
                         fetchDiscussions(courseSettings.courseId)
                     }
-                    if (courseSettings.announcements) {
+                    if (courseSettings.isTabSelected(Tab.ANNOUNCEMENTS_ID)) {
                         fetchAnnouncements(courseSettings.courseId)
                     }
                 }

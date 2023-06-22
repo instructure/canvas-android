@@ -26,33 +26,26 @@ data class CourseSyncSettingsEntity(
     @PrimaryKey
     val courseId: Long,
     val fullContentSync: Boolean,
-    val assignments: Boolean,
-    val pages: Boolean,
-    val grades: Boolean,
-    val syllabus: Boolean,
-    val announcements: Boolean,
-    val discussions: Boolean,
-    val fullFileSync: Boolean
+    val tabs: Map<String, Boolean> = TABS.associateWith { false },
+    val fullFileSync: Boolean = false
 ) {
 
     fun isTabSelected(tabId: String): Boolean {
-        val isSelected =  when (tabId) {
-            Tab.ASSIGNMENTS_ID -> assignments
-            Tab.PAGES_ID -> pages
-            Tab.GRADES_ID -> grades
-            Tab.SYLLABUS_ID -> syllabus
-            Tab.FILES_ID -> fullFileSync
-            Tab.ANNOUNCEMENTS_ID -> announcements
-            Tab.DISCUSSIONS_ID -> discussions
-            else -> false
+        val isSelected = if (tabId == Tab.FILES_ID) {
+            fullFileSync
+        } else {
+            tabs[tabId] ?: false
         }
-
         return fullContentSync || isSelected
     }
 
     val allTabsEnabled: Boolean
-        get() = assignments && pages && grades && syllabus && fullFileSync && announcements && discussions
+        get() = tabs.values.all { it == true } && fullFileSync
 
     val anySyncEnabled: Boolean
-        get() = fullContentSync || assignments || pages || grades || syllabus || announcements || discussions
+        get() = fullContentSync || tabs.values.any() { it == true }
+
+    companion object {
+        val TABS = setOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID, Tab.ANNOUNCEMENTS_ID, Tab.DISCUSSIONS_ID)
+    }
 }

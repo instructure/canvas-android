@@ -86,14 +86,7 @@ class OfflineContentViewModelTest {
             CourseSyncSettingsWithFiles(
                 CourseSyncSettingsEntity(
                     courseId = courseId,
-                    fullContentSync = false,
-                    assignments = false,
-                    pages = false,
-                    grades = false,
-                    syllabus = false,
-                    fullFileSync = false,
-                    announcements = false,
-                    discussions = false
+                    fullContentSync = false
                 ),
                 emptyList()
             )
@@ -311,7 +304,8 @@ class OfflineContentViewModelTest {
 
         createViewModel()
 
-        val expected = CourseSyncSettingsEntity(1L, true, true, true, true, true, true, true, true)
+        val tabs = CourseSyncSettingsEntity.TABS.associateWith { true }
+        val expected = CourseSyncSettingsEntity(1L, true, tabs, true)
         val expectedFiles = listOf(FileSyncSettingsEntity(1L, 1L, null), FileSyncSettingsEntity(2L, 1L, null))
 
         viewModel.data.value?.courseItems?.first()?.apply {

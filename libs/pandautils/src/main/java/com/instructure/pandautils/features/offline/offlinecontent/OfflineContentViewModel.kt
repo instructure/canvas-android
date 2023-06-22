@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
@@ -41,7 +42,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val ALLOWED_TAB_IDS = listOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.FILES_ID, Tab.SYLLABUS_ID, Tab.GRADES_ID, Tab.ANNOUNCEMENTS_ID, Tab.DISCUSSIONS_ID)
+private val ALLOWED_TAB_IDS = CourseSyncSettingsEntity.TABS.plus(Tab.FILES_ID)
 
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
@@ -266,18 +267,13 @@ class OfflineContentViewModel @Inject constructor(
     private fun updateTab(courseId: Long, tabId: String, checked: Boolean) {
         val courseSettingWithFiles = syncSettingsMap[courseId] ?: return
         val courseSyncSettings = courseSettingWithFiles.courseSyncSettings
-        var updated = when (tabId) {
-            Tab.GRADES_ID -> courseSyncSettings.copy(grades = checked)
-            Tab.PAGES_ID -> courseSyncSettings.copy(pages = checked)
-            Tab.ASSIGNMENTS_ID -> courseSyncSettings.copy(assignments = checked)
-            Tab.SYLLABUS_ID -> courseSyncSettings.copy(syllabus = checked)
-            Tab.FILES_ID -> {
-                toggleAllFiles(courseId, checked)
-                courseSyncSettings.copy(fullFileSync = checked)
-            }
-            Tab.ANNOUNCEMENTS_ID -> courseSyncSettings.copy(announcements = checked)
-            Tab.DISCUSSIONS_ID -> courseSyncSettings.copy(discussions = checked)
-            else -> courseSyncSettings
+
+        var updated = if (tabId == Tab.FILES_ID) {
+            toggleAllFiles(courseId, checked)
+            courseSyncSettings.copy(fullFileSync = checked)
+        } else {
+            val newTabs = courseSyncSettings.tabs.plus(Pair(tabId, checked))
+            courseSyncSettings.copy(tabs = newTabs)
         }
         updated = updated.copy(fullContentSync = updated.allTabsEnabled)
 
@@ -337,13 +333,8 @@ class OfflineContentViewModel @Inject constructor(
         val syncSettingsWithFiles = syncSettingsMap[courseId] ?: return
         val courseSyncSettings = syncSettingsWithFiles.courseSyncSettings.copy(
             fullContentSync = shouldCheck,
-            assignments = shouldCheck,
-            pages = shouldCheck,
-            grades = shouldCheck,
-            syllabus = shouldCheck,
-            fullFileSync = shouldCheck,
-            announcements = shouldCheck,
-            discussions = shouldCheck
+            tabs = CourseSyncSettingsEntity.TABS.associateWith { shouldCheck },
+            fullFileSync = shouldCheck
         )
 
         val updatedSyncSettings = syncSettingsWithFiles.copy(

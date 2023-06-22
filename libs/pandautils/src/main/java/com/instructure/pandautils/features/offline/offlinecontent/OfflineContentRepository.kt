@@ -103,17 +103,7 @@ class OfflineContentRepository(
     suspend fun findCourseSyncSettings(courseId: Long): CourseSyncSettingsWithFiles {
         var courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(courseId)
         if (courseSettingsWithFiles == null) {
-            val default = CourseSyncSettingsEntity(
-                courseId,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false
-            )
+            val default = CourseSyncSettingsEntity(courseId, false)
             courseSyncSettingsDao.insert(default)
 
             courseSettingsWithFiles = CourseSyncSettingsWithFiles(
