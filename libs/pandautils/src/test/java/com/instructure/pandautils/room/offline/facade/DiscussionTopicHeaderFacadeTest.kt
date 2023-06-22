@@ -78,7 +78,7 @@ class DiscussionTopicHeaderFacadeTest {
         val result = facade.getDiscussionTopicHeaderById(discussionTopicHeaderId)!!
 
         Assert.assertEquals(discussionParticipant, result.author)
-        Assert.assertEquals(discussionTopicHeader, result)
+        Assert.assertEquals(discussionTopicHeader.copy(offline = true), result)
     }
 
     @Test

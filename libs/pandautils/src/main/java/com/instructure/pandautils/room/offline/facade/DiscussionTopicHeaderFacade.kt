@@ -55,19 +55,16 @@ class DiscussionTopicHeaderFacade(
 
     suspend fun getAnnouncementsForCourse(courseId: Long): List<DiscussionTopicHeader> {
         return discussionTopicHeaderDao.findAllAnnouncementsForCourse(courseId)
-            .map { discussionTopic ->
-                val authorEntity =
-                    discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
-                discussionTopic.toApiModel(authorEntity?.toApiModel())
-            }
+            .map { discussionTopic -> createDiscussionApiModel(discussionTopic) }
     }
 
     suspend fun getDiscussionTopicHeaderById(id: Long): DiscussionTopicHeader? {
         val discussionTopicHeaderEntity = discussionTopicHeaderDao.findById(id)
-        val authorEntity = discussionTopicHeaderEntity?.authorId?.let { discussionParticipantDao.findById(it) }
+        return if (discussionTopicHeaderEntity != null) createDiscussionApiModel(discussionTopicHeaderEntity) else null
+    }
 
-        return discussionTopicHeaderEntity?.toApiModel(
-            author = authorEntity?.toApiModel()
-        )
+    private suspend fun createDiscussionApiModel(discussionTopicHeaderEntity: DiscussionTopicHeaderEntity): DiscussionTopicHeader {
+        val authorEntity = discussionTopicHeaderEntity.authorId?.let { discussionParticipantDao.findById(it) }
+        return discussionTopicHeaderEntity.toApiModel(authorEntity?.toApiModel())
     }
 }
