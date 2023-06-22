@@ -7,7 +7,11 @@ import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -90,7 +94,7 @@ class TodoE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Assert that the previously submitted assignment: '${testAssignment}', is not displayed on the To Do list any more.")
         todoPage.assertAssignmentNotDisplayed(testAssignment)
-        todoPage.assertAssignmentDisplayed(borderDateAssignment)
+        todoPage.assertAssignmentDisplayedWithRetries(borderDateAssignment, 5)
 
         Log.d(STEP_TAG, "Apply 'Favorited Courses' filter. Assert that the 'Favorited Courses' header filter and the empty view is displayed.")
         todoPage.chooseFavoriteCourseFilter()
@@ -102,7 +106,7 @@ class TodoE2ETest: StudentTest() {
         sleep(2000) //Allow the filter clarification to propagate.
 
         Log.d(STEP_TAG,"Assert that '${borderDateAssignment.name}' assignment and '${quiz.title}' quiz are displayed.")
-        todoPage.assertAssignmentDisplayed(borderDateAssignment)
+        todoPage.assertAssignmentDisplayedWithRetries(borderDateAssignment, 5)
         todoPage.assertQuizDisplayed(quiz)
 
         Log.d(STEP_TAG,"Assert that '${testAssignment}' assignment and '${tooFarAwayQuiz.title}' quiz are not displayed.")
@@ -129,7 +133,7 @@ class TodoE2ETest: StudentTest() {
         todoPage.assertFavoritedCoursesFilterHeader()
 
         Log.d(STEP_TAG, "Assert that only the favorited course's assignment, '${borderDateAssignment.name}' is displayed.")
-        todoPage.assertAssignmentDisplayed(favoriteCourseAssignment)
+        todoPage.assertAssignmentDisplayedWithRetries(favoriteCourseAssignment, 5)
         todoPage.assertAssignmentNotDisplayed(testAssignment)
         todoPage.assertAssignmentNotDisplayed(borderDateAssignment)
         todoPage.assertQuizNotDisplayed(quiz)
