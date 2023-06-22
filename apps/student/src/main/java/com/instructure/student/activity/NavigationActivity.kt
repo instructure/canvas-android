@@ -72,6 +72,7 @@ import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomShee
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
@@ -134,6 +135,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     @Inject
     lateinit var networkStateProvider: NetworkStateProvider
 
+    @Inject
+    lateinit var databaseProvider: DatabaseProvider
+
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
     private var drawerItemSelectedJob: Job? = null
@@ -180,13 +184,21 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }, route)
                 }
                 R.id.navigationDrawerItem_changeUser -> {
-                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS, typefaceBehavior = typefaceBehavior).execute()
+                    StudentLogoutTask(
+                        if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS,
+                        typefaceBehavior = typefaceBehavior,
+                        databaseProvider = databaseProvider
+                    ).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
                             .setPositiveButton(android.R.string.yes) { _, _ ->
-                                StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
+                                StudentLogoutTask(
+                                    LogoutTask.Type.LOGOUT,
+                                    typefaceBehavior = typefaceBehavior,
+                                    databaseProvider = databaseProvider
+                                ).execute()
                             }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
@@ -334,7 +346,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
-            StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
         }
 
         setupBottomNavigation()

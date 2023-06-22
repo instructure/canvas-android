@@ -16,38 +16,37 @@
  */
 package com.instructure.student.mobius.conferences.conference_list.ui
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFERENCE_LIST
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.student.databinding.FragmentConferenceListBinding
-import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.conferences.conference_list.*
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @PageView(url = "courses/{canvasContext}/conferences")
 @ScreenView(SCREEN_VIEW_CONFERENCE_LIST)
-abstract class ConferenceListFragment : MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect,
-        ConferenceListView, ConferenceListViewState, FragmentConferenceListBinding>() {
+@AndroidEntryPoint
+class ConferenceListRepositoryFragment : ConferenceListFragment() {
 
-    val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    @Inject
+    lateinit var conferenceListRepository: ConferenceListRepository
 
-    override fun makeUpdate() = ConferenceListUpdate()
+    override fun getRepository() = conferenceListRepository
 
-    override fun makePresenter() = ConferenceListPresenter
+    companion object {
+        fun makeRoute(canvasContext: CanvasContext): Route {
+            return Route(null, ConferenceListRepositoryFragment::class.java, canvasContext, canvasContext.makeBundle())
+        }
 
-    override fun makeEffectHandler() = ConferenceListEffectHandler(getRepository())
+        private fun validRoute(route: Route) = route.canvasContext != null
 
-    override fun makeInitModel() = ConferenceListModel(canvasContext)
-
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = ConferenceListView(
-        canvasContext,
-        inflater,
-        parent
-    )
-
-    abstract fun getRepository(): ConferenceListRepository
+        fun newInstance(route: Route): ConferenceListRepositoryFragment? {
+            if (!validRoute(route)) return null
+            return ConferenceListRepositoryFragment().withArgs(route.arguments)
+        }
+    }
 }

@@ -209,6 +209,16 @@ class ApiModule {
     }
 
     @Provides
+    fun providesConferencesApi(): ConferencesApi.ConferencesInterface {
+        return RestBuilder().build(ConferencesApi.ConferencesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun providesOAuthApi(): OAuthAPI.OAuthInterface {
+        return RestBuilder().build(OAuthAPI.OAuthInterface::class.java, RestParams())
+    }
+
+    @Provides
     fun provideDiscussionApi(): DiscussionAPI.DiscussionInterface {
         return RestBuilder().build(DiscussionAPI.DiscussionInterface::class.java, RestParams())
     }

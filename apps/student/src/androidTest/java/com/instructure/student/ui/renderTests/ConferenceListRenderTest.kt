@@ -16,14 +16,13 @@
 package com.instructure.student.ui.renderTests
 
 import android.graphics.Color
-import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListItemViewState
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListViewState
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -133,8 +132,8 @@ class ConferenceListRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val route = ConferenceListFragment.makeRoute(canvasContext)
-        val fragment = ConferenceListFragment.newInstance(route)!!.apply {
+        val route = ConferenceListRepositoryFragment.makeRoute(canvasContext)
+        val fragment = ConferenceListRepositoryFragment.newInstance(route)!!.apply {
             overrideInitViewState = state
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }

@@ -175,7 +175,7 @@ class DashboardRepositoryTest {
         coEvery { courseSyncSettingsDao.findAll() } returns entities
 
         val result = repository.getSyncedCourseIds()
-        val expectedIds = setOf(1L, 2L, 3L, 4L)
+        val expectedIds = setOf(1L, 2L, 3L, 4L, 5L, 6L)
 
         Assert.assertEquals(expectedIds, result)
     }

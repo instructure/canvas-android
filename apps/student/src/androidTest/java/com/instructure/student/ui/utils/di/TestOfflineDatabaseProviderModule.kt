@@ -61,4 +61,5 @@ class FakeOfflineDatabaseProvider(private val context: Context) : DatabaseProvid
         }
     }
 
+    override fun clearDatabase(userId: Long) {}
 }

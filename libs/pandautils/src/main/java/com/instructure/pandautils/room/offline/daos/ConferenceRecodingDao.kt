@@ -13,14 +13,25 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
- *
  */
 
-package com.instructure.pandautils.room.offline
+package com.instructure.pandautils.room.offline.daos
 
-interface DatabaseProvider {
+import androidx.room.*
+import com.instructure.pandautils.room.offline.entities.ConferenceRecordingEntity
 
-    fun getDatabase(userId: Long?): OfflineDatabase
+@Dao
+interface ConferenceRecodingDao {
 
-    fun clearDatabase(userId: Long)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entity: ConferenceRecordingEntity)
+
+    @Delete
+    suspend fun delete(entity: ConferenceRecordingEntity)
+
+    @Update
+    suspend fun update(entity: ConferenceRecordingEntity)
+
+    @Query("SELECT * FROM ConferenceRecordingEntity WHERE conferenceId = :conferenceId")
+    suspend fun findByConferenceId(conferenceId: Long): List<ConferenceRecordingEntity>
 }

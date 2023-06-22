@@ -25,8 +25,10 @@ import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
@@ -34,6 +36,7 @@ import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.PageEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
@@ -59,6 +62,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val dashboardCardDao: DashboardCardDao,
     private val courseSettingsDao: CourseSettingsDao,
     private val scheduleItemFacade: ScheduleItemFacade,
+    private val conferencesApi: ConferencesApi.ConferencesInterface,
+    private val conferenceFacade: ConferenceFacade,
     private val discussionApi: DiscussionAPI.DiscussionInterface,
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
     private val announcementApi: AnnouncementAPI.AnnouncementInterface
@@ -88,6 +93,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.isTabSelected(Tab.SYLLABUS_ID)) {
                         syllabusCourseIds.add(courseSettings.courseId)
+                    }
+                    if (courseSettings.conferences) {
+                        fetchConferences(courseSettings.courseId)
                     }
                     if (courseSettings.isTabSelected(Tab.DISCUSSIONS_ID)) {
                         fetchDiscussions(courseSettings.courseId)
@@ -197,6 +205,23 @@ class OfflineSyncWorker @AssistedInject constructor(
                     quiz?.let { quizDao.insert(QuizEntity(it)) }
                 }
             }
+        }
+    }
+
+    private suspend fun fetchConferences(courseId: Long) {
+        val conferences = getConferencesForContext(CanvasContext.emptyCourseContext(courseId), true).dataOrNull
+        conferences?.let { conferenceFacade.insertConferences(it, courseId) }
+    }
+
+    private suspend fun getConferencesForContext(
+        canvasContext: CanvasContext, forceNetwork: Boolean
+    ): DataResult<List<Conference>> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        return conferencesApi.getConferencesForContext(canvasContext.toAPIString().drop(1), params).map {
+            it.conferences
+        }.depaginate { url ->
+            conferencesApi.getNextPage(url, params).map { it.conferences }
         }
     }
 

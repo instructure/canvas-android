@@ -18,7 +18,6 @@
 package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
-import android.content.LocusId
 import android.text.format.Formatter
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.models.Course

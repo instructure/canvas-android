@@ -18,8 +18,8 @@ import com.instructure.student.features.assignmentlist.AssignmentListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
-import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
@@ -29,7 +29,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSub
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
-import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 
@@ -95,7 +95,7 @@ object RouteResolver {
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
             cls.isA<AnnouncementListFragment>() -> AnnouncementListFragment.newInstance(route)
             cls.isA<ConferenceDetailsFragment>() -> ConferenceDetailsFragment.newInstance(route)
-            cls.isA<ConferenceListFragment>() -> ConferenceListFragment.newInstance(route)
+            cls.isA<ConferenceListRepositoryFragment>() -> ConferenceListRepositoryFragment.newInstance(route)
             cls.isA<UnsupportedTabFragment>() -> UnsupportedTabFragment.newInstance(route)
             cls.isA<PageListFragment>() -> PageListFragment.newInstance(route)
             cls.isA<UnsupportedFeatureFragment>() -> UnsupportedFeatureFragment.newInstance(route)

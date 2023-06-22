@@ -74,7 +74,9 @@ import com.instructure.pandautils.room.offline.entities.*
         LockedModuleEntity::class,
         ModuleNameEntity::class,
         ModuleCompletionRequirementEntity::class,
-        FileSyncSettingsEntity::class
+        FileSyncSettingsEntity::class,
+        ConferenceEntity::class,
+        ConferenceRecordingEntity::class
     ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -147,4 +149,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun scheduleItemAssignmentOverrideDao(): ScheduleItemAssignmentOverrideDao
 
     abstract fun assignmentOverrideDao(): AssignmentOverrideDao
+
+    abstract fun conferenceDao(): ConferenceDao
+
+    abstract fun conferenceRecordingDao(): ConferenceRecodingDao
 }

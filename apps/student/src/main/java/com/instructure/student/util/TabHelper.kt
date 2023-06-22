@@ -27,12 +27,12 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.assignmentlist.AssignmentListFragment
 import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
+import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.fragment.*
-import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import java.util.*
 
@@ -99,7 +99,7 @@ object TabHelper {
             Tab.SYLLABUS_ID -> SyllabusRepositoryFragment.makeRoute(canvasContext as Course)
             Tab.QUIZZES_ID -> QuizListFragment.makeRoute(canvasContext)
             Tab.OUTCOMES_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
-            Tab.CONFERENCES_ID -> ConferenceListFragment.makeRoute(canvasContext)
+            Tab.CONFERENCES_ID -> ConferenceListRepositoryFragment.makeRoute(canvasContext)
             Tab.COLLABORATIONS_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
             Tab.ANNOUNCEMENTS_ID -> AnnouncementListFragment.makeRoute(canvasContext)
             Tab.GRADES_ID -> GradesListFragment.makeRoute(canvasContext)
