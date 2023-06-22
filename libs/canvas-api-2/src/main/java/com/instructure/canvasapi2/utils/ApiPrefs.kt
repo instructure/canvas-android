@@ -153,6 +153,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
         // Clear PageView session ID
         PageViewUtils.session.clear()
+        pandataInfo = null
 
         // Clear http cache
         RestBuilder.clearCacheDirectory()
