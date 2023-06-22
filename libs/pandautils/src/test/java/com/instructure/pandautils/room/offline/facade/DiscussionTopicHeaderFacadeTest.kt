@@ -47,10 +47,23 @@ class DiscussionTopicHeaderFacadeTest {
         coEvery { discussionParticipantDao.insert(any()) } returns 1L
         coEvery { discussionTopicHeaderDao.insert(any()) } returns 1L
 
-        facade.insertDiscussion(discussionTopicHeader)
+        facade.insertDiscussion(discussionTopicHeader, 1)
 
         coVerify { discussionParticipantDao.insert(DiscussionParticipantEntity(discussionParticipant)) }
-        coVerify { discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader)) }
+        coVerify { discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, 1)) }
+    }
+
+    @Test
+    fun `insertDiscussions should insert discussion topic headers and related entities`() = runTest {
+        val discussionParticipant = DiscussionParticipant(id = 1L)
+        val discussionParticipant2 = DiscussionParticipant(id = 2L)
+        val discussionTopicHeader = DiscussionTopicHeader(author = discussionParticipant)
+        val discussionTopicHeader2 = DiscussionTopicHeader(author = discussionParticipant2)
+
+        facade.insertDiscussions(listOf(discussionTopicHeader, discussionTopicHeader2), 1)
+
+        coVerify { discussionParticipantDao.insertAll(listOf(DiscussionParticipantEntity(discussionParticipant), DiscussionParticipantEntity(discussionParticipant2))) }
+        coVerify { discussionTopicHeaderDao.insertAll(listOf(DiscussionTopicHeaderEntity(discussionTopicHeader, 1), DiscussionTopicHeaderEntity(discussionTopicHeader2, 1))) }
     }
 
     @Test
@@ -60,11 +73,30 @@ class DiscussionTopicHeaderFacadeTest {
         val discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicHeaderId, author = discussionParticipant, title = "Title")
 
         coEvery { discussionParticipantDao.findById(any()) } returns DiscussionParticipantEntity(discussionParticipant)
-        coEvery { discussionTopicHeaderDao.findById(any()) } returns DiscussionTopicHeaderEntity(discussionTopicHeader)
+        coEvery { discussionTopicHeaderDao.findById(any()) } returns DiscussionTopicHeaderEntity(discussionTopicHeader, 1)
 
         val result = facade.getDiscussionTopicHeaderById(discussionTopicHeaderId)!!
 
         Assert.assertEquals(discussionParticipant, result.author)
         Assert.assertEquals(discussionTopicHeader, result)
+    }
+
+    @Test
+    fun `getDiscussionsForCourse should return the discussion topic headers for that course`() = runTest {
+        val discussionParticipant = DiscussionParticipant(id = 1L, displayName = "displayName")
+        val discussionTopicHeader = DiscussionTopicHeader(id = 1, author = discussionParticipant, title = "Title")
+        val discussionTopicHeader2 = DiscussionTopicHeader(id = 2, author = discussionParticipant, title = "Title")
+
+        coEvery { discussionParticipantDao.findById(any()) } returns DiscussionParticipantEntity(discussionParticipant)
+        coEvery { discussionTopicHeaderDao.findAllDiscussionsForCourse(any()) } returns listOf(
+            DiscussionTopicHeaderEntity(discussionTopicHeader, 1), DiscussionTopicHeaderEntity(discussionTopicHeader2, 1))
+
+        val result = facade.getDiscussionsForCourse(1)
+
+        Assert.assertEquals(2, result.size)
+        Assert.assertEquals(discussionParticipant, result[0].author)
+        Assert.assertEquals(discussionParticipant, result[1].author)
+        Assert.assertEquals(discussionTopicHeader.copy(offline = true), result[0])
+        Assert.assertEquals(discussionTopicHeader2.copy(offline = true), result[1])
     }
 }

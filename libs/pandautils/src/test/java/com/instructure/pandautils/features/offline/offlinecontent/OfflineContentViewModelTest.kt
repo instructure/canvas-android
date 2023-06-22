@@ -37,13 +37,22 @@ import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.junit.*
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class OfflineContentViewModelTest {
@@ -82,7 +91,9 @@ class OfflineContentViewModelTest {
                     pages = false,
                     grades = false,
                     syllabus = false,
-                    fullFileSync = false
+                    fullFileSync = false,
+                    announcements = false,
+                    discussions = false
                 ),
                 emptyList()
             )
@@ -300,7 +311,7 @@ class OfflineContentViewModelTest {
 
         createViewModel()
 
-        val expected = CourseSyncSettingsEntity(1L, true, true, true, true, true, true)
+        val expected = CourseSyncSettingsEntity(1L, true, true, true, true, true, true, true, true)
         val expectedFiles = listOf(FileSyncSettingsEntity(1L, 1L, null), FileSyncSettingsEntity(2L, 1L, null))
 
         viewModel.data.value?.courseItems?.first()?.apply {
