@@ -79,20 +79,18 @@ class NotificationsE2ETest : StudentTest() {
         dashboardPage.clickNotificationsTab()
 
         Log.d(STEP_TAG,"Assert that there are some notifications on the Notifications Page. There should be 4 notification at this point, but sometimes the API does not work properly.")
-        var notificationApiResponseAttempt = 1
-        while(notificationApiResponseAttempt < 10) {
+        repeat(10) {
             try {
                 notificationPage.assertNotificationCountIsGreaterThan(0) //At least one notification is displayed.
-                break
+                return@repeat
             } catch (e: AssertionError) {
                 try {
-                    notificationApiResponseAttempt++
                     sleep(3000) //Wait for the notifications to be displayed (API is slow sometimes, it might take some time)
                     refresh()
                     notificationPage.assertNotificationCountIsGreaterThan(0) //At least one notification is displayed.
-                    break
+                    return@repeat
                 } catch (e: AssertionError) {
-                    println("${notificationApiResponseAttempt--}. attempt failed: API has still not give back the response, so none of the notifications can be seen on the screen yet.")
+                    println("Attempt failed: API has still not give back the response, so none of the notifications can be seen on the screen yet.")
                 }
             }
         }
@@ -104,11 +102,8 @@ class NotificationsE2ETest : StudentTest() {
                 println("API may not work properly, so not all the notifications can be seen on the screen.")
         }
 
-        var gradeResponseAttempt = 0
-
-        while(gradeResponseAttempt < 10) {
+        repeat(10) {
             try {
-                gradeResponseAttempt++
                 Log.d(PREPARATION_TAG, "Submit ${testAssignment.name} assignment with student: ${student.name}.")
                 submitAssignment(course, testAssignment, student)
 
@@ -119,9 +114,9 @@ class NotificationsE2ETest : StudentTest() {
                 sleep(3000) //Let the submission api do it's job
                 refresh()
                 notificationPage.assertHasGrade(testAssignment.name, "13")
-                break
+                return@repeat
             } catch (e: AssertionError) {
-                println("${gradeResponseAttempt}. attempt failed: API has still not give back the response, so the graded assignment is not displayed among the notifications.")
+                println("Attempt failed: API has still not give back the response, so the graded assignment is not displayed among the notifications.")
             }
         }
     }
