@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -166,16 +167,17 @@ class DashboardRepositoryTest {
     @Test
     fun `Correctly filtered course ids are returned from getSyncedCourseIds`() = runTest {
         val entities = listOf(
-            CourseSyncSettingsEntity(1, true, false, false, false, false, false, false, false),
-            CourseSyncSettingsEntity(2, false, true, false, false, false, false, false, false),
-            CourseSyncSettingsEntity(3, false, false, true, false, false, false, false, false),
-            CourseSyncSettingsEntity(4, false, false, false, true, false, false, false, false),
-            CourseSyncSettingsEntity(5, false, false, false, false, false, false, false, false),
+            CourseSyncSettingsEntity(1, true),
+            CourseSyncSettingsEntity(2, false),
+            CourseSyncSettingsEntity(3, false, fullFileSync = true),
+            CourseSyncSettingsEntity(4, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.ANNOUNCEMENTS_ID }),
+            CourseSyncSettingsEntity(5, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.DISCUSSIONS_ID }),
+            CourseSyncSettingsEntity(6, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.PAGES_ID }),
         )
         coEvery { courseSyncSettingsDao.findAll() } returns entities
 
         val result = repository.getSyncedCourseIds()
-        val expectedIds = setOf(1L, 2L, 3L, 4L, 5L, 6L)
+        val expectedIds = setOf(1L, 3L, 4L, 5L, 6L)
 
         Assert.assertEquals(expectedIds, result)
     }
