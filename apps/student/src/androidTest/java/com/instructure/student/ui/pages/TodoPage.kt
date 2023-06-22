@@ -48,13 +48,15 @@ class TodoPage: BasePage(R.id.todoPage) {
 
     fun assertAssignmentDisplayedWithRetries(assignment: AssignmentApiModel, retryAttempt: Int) {
 
-        repeat(retryAttempt) {
-            try {
-                sleep(3000)
-                assertTextDisplayedInRecyclerView(assignment.name)
-                return@repeat
-            } catch (e: AssertionError) {
-                println("Attempt failed. The '${assignment.name}' assignment is not displayed, probably because of the API slowness.")
+        run assignmentDisplayedRepeat@{
+            repeat(retryAttempt) {
+                try {
+                    sleep(3000)
+                    assertTextDisplayedInRecyclerView(assignment.name)
+                    return@assignmentDisplayedRepeat
+                } catch (e: AssertionError) {
+                    println("Attempt failed. The '${assignment.name}' assignment is not displayed, probably because of the API slowness.")
+                }
             }
         }
     }
