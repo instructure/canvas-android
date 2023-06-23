@@ -21,9 +21,9 @@ import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
-import com.instructure.student.mobius.conferences.conference_list.datasource.ConferenceListLocalDataSource
-import com.instructure.student.mobius.conferences.conference_list.datasource.ConferenceListNetworkDataSource
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsRepository
+import com.instructure.student.mobius.conferences.conference_details.datasource.ConferenceDetailsLocalDataSource
+import com.instructure.student.mobius.conferences.conference_details.datasource.ConferenceDetailsNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,29 +31,29 @@ import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class ConferenceListModule {
+class ConferenceDetailsModule {
 
     @Provides
     fun provideNetworkDataSource(
         conferencesApi: ConferencesApi.ConferencesInterface,
         oAuthApi: OAuthAPI.OAuthInterface
-    ): ConferenceListNetworkDataSource {
-        return ConferenceListNetworkDataSource(conferencesApi, oAuthApi)
+    ): ConferenceDetailsNetworkDataSource {
+        return ConferenceDetailsNetworkDataSource(conferencesApi, oAuthApi)
     }
 
     @Provides
     fun provideLocalDataSource(
         conferenceFacade: ConferenceFacade
-    ): ConferenceListLocalDataSource {
-        return ConferenceListLocalDataSource(conferenceFacade)
+    ): ConferenceDetailsLocalDataSource {
+        return ConferenceDetailsLocalDataSource(conferenceFacade)
     }
 
     @Provides
     fun provideRepository(
-        localDataSource: ConferenceListLocalDataSource,
-        networkDataSource: ConferenceListNetworkDataSource,
+        localDataSource: ConferenceDetailsLocalDataSource,
+        networkDataSource: ConferenceDetailsNetworkDataSource,
         networkStateProvider: NetworkStateProvider
-    ): ConferenceListRepository {
-        return ConferenceListRepository(localDataSource, networkDataSource, networkStateProvider)
+    ): ConferenceDetailsRepository {
+        return ConferenceDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
     }
 }

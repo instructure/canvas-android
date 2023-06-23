@@ -27,7 +27,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextS
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
-import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
+import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
@@ -93,7 +93,7 @@ object RouteResolver {
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
             cls.isA<AnnouncementListFragment>() -> AnnouncementListFragment.newInstance(route)
-            cls.isA<ConferenceDetailsFragment>() -> ConferenceDetailsFragment.newInstance(route)
+            cls.isA<ConferenceDetailsRepositoryFragment>() -> ConferenceDetailsRepositoryFragment.newInstance(route)
             cls.isA<ConferenceListRepositoryFragment>() -> ConferenceListRepositoryFragment.newInstance(route)
             cls.isA<UnsupportedTabFragment>() -> UnsupportedTabFragment.newInstance(route)
             cls.isA<PageListFragment>() -> PageListFragment.newInstance(route)
