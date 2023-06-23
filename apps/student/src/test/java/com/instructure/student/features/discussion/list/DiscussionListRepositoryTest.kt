@@ -53,7 +53,7 @@ class DiscussionListRepositoryTest {
     }
 
     @Test
-    fun `Get announcement creation permission from local data source for course when device is online`() = runTest {
+    fun `Get announcement creation permission from local data source for course when device is offline`() = runTest {
         val course = Course(1)
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getPermissionsForCourse(course) } returns CanvasContextPermission(canCreateAnnouncement = true)
@@ -89,7 +89,7 @@ class DiscussionListRepositoryTest {
     }
 
     @Test
-    fun `Get discussion creation permission from local data source for course when device is online`() = runTest {
+    fun `Get discussion creation permission from local data source for course when device is offline`() = runTest {
         val course = Course(1)
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getPermissionsForCourse(course) } returns CanvasContextPermission(canCreateDiscussionTopic = true)

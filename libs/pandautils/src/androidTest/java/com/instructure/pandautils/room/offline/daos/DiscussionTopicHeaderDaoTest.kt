@@ -17,13 +17,16 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.CourseEntity
+import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicHeaderEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -43,6 +46,7 @@ class DiscussionTopicHeaderDaoTest {
 
     private lateinit var discussionTopicHeaderDao: DiscussionTopicHeaderDao
     private lateinit var courseDao: CourseDao
+    private lateinit var discussionParticipantDao: DiscussionParticipantDao
 
     @Before
     fun setUp() {
@@ -50,6 +54,7 @@ class DiscussionTopicHeaderDaoTest {
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         discussionTopicHeaderDao = db.discussionTopicHeaderDao()
         courseDao = db.courseDao()
+        discussionParticipantDao = db.discussionParticipantDao()
     }
 
     @After
@@ -121,5 +126,43 @@ class DiscussionTopicHeaderDaoTest {
         Assert.assertEquals(2, result.size)
         Assert.assertEquals(announcement3.title, result[0].title)
         Assert.assertEquals(announcement2.title, result[1].title)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testCourseForeignKeyIsMandatory() = runTest {
+        val discussion = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 1L, title = "Discussion"), 1)
+
+        discussionTopicHeaderDao.insert(discussion)
+    }
+
+    @Test
+    fun testDeletingTheAssociatedCourseDeletesTheDiscussion() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        val discussion = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 1L, title = "Discussion"), 1)
+        discussionTopicHeaderDao.insert(discussion)
+
+        courseDao.delete(CourseEntity(Course(id = 1)))
+
+        val result = discussionTopicHeaderDao.findAllDiscussionsForCourse(1)
+
+        Assert.assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun testDeletingTheAssociatedParticipantSetsItToNull() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        val discussion = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 1L, title = "Discussion", author = DiscussionParticipant(id = 1)), 1)
+        val participant = DiscussionParticipantEntity(DiscussionParticipant(id = 1, displayName = "Participant"))
+
+        discussionParticipantDao.insert(participant)
+        discussionTopicHeaderDao.insert(discussion)
+
+        val resultBeforeDelete = discussionTopicHeaderDao.findById(1)
+        Assert.assertEquals(1L, resultBeforeDelete?.authorId)
+
+        discussionParticipantDao.delete(participant)
+
+        val result = discussionTopicHeaderDao.findById(1)
+        Assert.assertNull(result?.authorId)
     }
 }
