@@ -87,9 +87,9 @@ dependencies {
     //
     // https://maven.google.com/com/android/support/test/espresso/espresso-core/3.0.0/espresso-core-3.0.0.pom
 
-    def runnerVersion = "1.4.0"
-    def rulesVersion = "1.4.0"
-    def espressoVersion = "3.4.0"
+    def runnerVersion = "1.5.2"
+    def rulesVersion = "1.5.0"
+    def espressoVersion = "3.5.1"
     def junitVersion = "4.13.2"
 
     // Update exclusions based on ./gradlew :app:androidDependencies
