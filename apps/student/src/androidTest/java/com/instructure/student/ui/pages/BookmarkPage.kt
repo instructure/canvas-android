@@ -18,11 +18,7 @@ package com.instructure.student.ui.pages
 
 import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
@@ -30,6 +26,7 @@ import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.typeText
 import com.instructure.student.R
@@ -80,6 +77,6 @@ class BookmarkPage : BasePage() {
     fun deleteBookmark(bookmarkName: String) {
         clickOnMoreMenu(bookmarkName)
         onView(allOf(withId(R.id.title), withText("Delete"), isDisplayed())).click()
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        waitForView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 }
