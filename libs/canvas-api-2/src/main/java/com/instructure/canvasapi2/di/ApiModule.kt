@@ -217,4 +217,14 @@ class ApiModule {
     fun providesOAuthApi(): OAuthAPI.OAuthInterface {
         return RestBuilder().build(OAuthAPI.OAuthInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideDiscussionApi(): DiscussionAPI.DiscussionInterface {
+        return RestBuilder().build(DiscussionAPI.DiscussionInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideAnnouncementApi(): AnnouncementAPI.AnnouncementInterface {
+        return RestBuilder().build(AnnouncementAPI.AnnouncementInterface::class.java, RestParams())
+    }
 }

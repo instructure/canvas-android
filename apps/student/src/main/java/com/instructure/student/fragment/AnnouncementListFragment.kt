@@ -24,6 +24,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOUNCEMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.student.features.discussion.list.DiscussionListFragment
 
 @ScreenView(SCREEN_VIEW_ANNOUNCEMENT_LIST)
 @PageView(url = "{canvasContext}/announcements")

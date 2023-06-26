@@ -59,23 +59,11 @@ class CourseSyncSettingsSD {
     fun testFindAllEntities() = runTest {
         val courseSyncSettingsEntity = CourseSyncSettingsEntity(
             courseId = 1L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
             courseId = 2L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
         courseSyncSettingsDao.insert(courseSyncSettingsEntity2)
@@ -89,13 +77,7 @@ class CourseSyncSettingsSD {
     fun testInsertReplace() = runTest {
         val courseSyncSettingsEntity = CourseSyncSettingsEntity(
             courseId = 1L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
 
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
@@ -112,23 +94,11 @@ class CourseSyncSettingsSD {
     fun testFindById() = runTest {
         val courseSyncSettingsEntity = CourseSyncSettingsEntity(
             courseId = 1L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
             courseId = 2L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
         courseSyncSettingsDao.insert(courseSyncSettingsEntity2)
@@ -142,34 +112,16 @@ class CourseSyncSettingsSD {
     fun testFindByIdList() = runTest {
         val courseSyncSettingsEntity = CourseSyncSettingsEntity(
             courseId = 1L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
             courseId = 2L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
 
         val courseSyncSettingsEntity3 = CourseSyncSettingsEntity(
             courseId = 3L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
         courseSyncSettingsDao.insert(courseSyncSettingsEntity2)
@@ -184,23 +136,11 @@ class CourseSyncSettingsSD {
     fun findWithFiles() = runTest {
         val courseSyncSettingsEntity = CourseSyncSettingsEntity(
             courseId = 1L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         val courseSyncSettingsEntity2 = CourseSyncSettingsEntity(
             courseId = 2L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
+            fullContentSync = false
         )
         courseSyncSettingsDao.insert(courseSyncSettingsEntity)
         courseSyncSettingsDao.insert(courseSyncSettingsEntity2)

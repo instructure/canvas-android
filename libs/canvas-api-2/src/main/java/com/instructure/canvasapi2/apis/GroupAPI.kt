@@ -58,6 +58,9 @@ object GroupAPI {
         @GET("groups/{groupId}?include[]=permissions&include[]=favorites")
         fun getDetailedGroup(@Path("groupId") groupId: Long): Call<Group>
 
+        @GET("groups/{groupId}?include[]=permissions&include[]=favorites")
+        suspend fun getDetailedGroup(@Path("groupId") groupId: Long, @Tag params: RestParams): DataResult<Group>
+
         @POST("users/self/favorites/groups/{groupId}")
         fun addGroupToFavorites(@Path("groupId") groupId: Long): Call<Favorite>
 

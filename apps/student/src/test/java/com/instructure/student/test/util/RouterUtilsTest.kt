@@ -28,8 +28,9 @@ import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.features.assignmentlist.AssignmentListFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.pages.list.PageListFragment
+import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment

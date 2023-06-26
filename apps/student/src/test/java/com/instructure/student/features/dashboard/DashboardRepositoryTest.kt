@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -166,81 +167,17 @@ class DashboardRepositoryTest {
     @Test
     fun `Correctly filtered course ids are returned from getSyncedCourseIds`() = runTest {
         val entities = listOf(
-            CourseSyncSettingsEntity(
-                courseId = 1,
-                fullContentSync = true,
-                assignments = false,
-                pages = false,
-                grades = false,
-                syllabus = false,
-                conferences = false,
-                fullFileSync = false
-            ),
-            CourseSyncSettingsEntity(
-                courseId = 2,
-                fullContentSync = false,
-                assignments = true,
-                pages = false,
-                grades = false,
-                syllabus = false,
-                conferences = false,
-                fullFileSync = false
-            ),
-            CourseSyncSettingsEntity(
-                courseId = 3,
-                fullContentSync = false,
-                assignments = false,
-                pages = true,
-                grades = false,
-                syllabus = false,
-                conferences = false,
-                fullFileSync = false
-            ),
-            CourseSyncSettingsEntity(
-                courseId = 4,
-                fullContentSync = false,
-                assignments = false,
-                pages = false,
-                grades = true,
-                syllabus = false,
-                conferences = false,
-                fullFileSync = false
-            ),
-            CourseSyncSettingsEntity(
-                courseId = 5,
-                fullContentSync = false,
-                assignments = false,
-                pages = false,
-                grades = false,
-                syllabus = true,
-                conferences = false,
-                fullFileSync = false
-            ),
-            CourseSyncSettingsEntity(
-                courseId = 6,
-                fullContentSync = false,
-                assignments = false,
-                pages = false,
-                grades = false,
-                syllabus = false,
-                conferences = true,
-                fullFileSync = false
-            ),
-            CourseSyncSettingsEntity(
-                courseId = 78,
-                fullContentSync = false,
-                assignments = false,
-                pages = false,
-                grades = false,
-                syllabus = false,
-                conferences = false,
-                fullFileSync = false
-            ),
+            CourseSyncSettingsEntity(1, true),
+            CourseSyncSettingsEntity(2, false),
+            CourseSyncSettingsEntity(3, false, fullFileSync = true),
+            CourseSyncSettingsEntity(4, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.ANNOUNCEMENTS_ID }),
+            CourseSyncSettingsEntity(5, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.DISCUSSIONS_ID }),
+            CourseSyncSettingsEntity(6, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.PAGES_ID }),
         )
         coEvery { courseSyncSettingsDao.findAll() } returns entities
 
         val result = repository.getSyncedCourseIds()
-        val expectedIds = setOf(1L, 2L, 3L, 4L, 5L, 6L)
+        val expectedIds = setOf(1L, 3L, 4L, 5L, 6L)
 
         Assert.assertEquals(expectedIds, result)
     }

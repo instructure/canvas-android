@@ -52,7 +52,7 @@ class AssignmentFacade(
                 val plannerOverrideId = insertPlannerOverride(assignment.plannerOverride)
 
                 val discussionTopicHeaderId = assignment.discussionTopicHeader?.let {
-                    discussionTopicHeaderFacade.insertDiscussion(it)
+                    discussionTopicHeaderFacade.insertDiscussion(it, assignment.courseId)
                 }
 
                 assignment.scoreStatistics?.let {

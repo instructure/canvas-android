@@ -183,8 +183,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/storageInfoContainer"
-                    app:recyclerViewItemViewModels="@{viewModel.data.courseItems}"
-                    app:useDiffUtil="@{true}" />
+                    app:recyclerViewItemViewModels="@{viewModel.data.courseItems}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

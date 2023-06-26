@@ -26,6 +26,9 @@ interface DiscussionParticipantDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: DiscussionParticipantEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<DiscussionParticipantEntity>): List<Long>
+
     @Delete
     suspend fun delete(entity: DiscussionParticipantEntity)
 

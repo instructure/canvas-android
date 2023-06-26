@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.holders
+package com.instructure.student.features.discussion.list.adapter
 
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
@@ -22,7 +22,6 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.student.adapter.DiscussionListRecyclerAdapter
 import com.instructure.student.databinding.ViewholderDiscussionGroupHeaderBinding
 
 class DiscussionExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

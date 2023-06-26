@@ -149,16 +149,7 @@ class OfflineContentRepositoryTest {
 
     @Test
     fun `Create default course settings`() = runTest {
-        val expected = CourseSyncSettingsEntity(
-            courseId = 1L,
-            fullContentSync = false,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
-        )
+        val expected = CourseSyncSettingsEntity(1L, false)
 
         coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns null
 
@@ -194,16 +185,7 @@ class OfflineContentRepositoryTest {
 
     @Test
     fun `Course settings update updates db`() = runTest {
-        val courseSyncSettings = CourseSyncSettingsEntity(
-            courseId = 1L,
-            fullContentSync = true,
-            assignments = false,
-            pages = false,
-            grades = false,
-            syllabus = false,
-            conferences = false,
-            fullFileSync = false
-        )
+        val courseSyncSettings = CourseSyncSettingsEntity(1L, true)
 
         repository.updateCourseSyncSettings(1L, courseSyncSettings, emptyList())
 
