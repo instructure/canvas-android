@@ -18,6 +18,8 @@ package com.instructure.student.mobius.conferences.conference_details.ui
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.makeBundle
@@ -27,12 +29,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@PageView(url = "{canvasContext}/conferences/{conferenceId}")
 class ConferenceDetailsRepositoryFragment : ConferenceDetailsFragment() {
 
     @Inject
     lateinit var conferenceDetailsRepository: ConferenceDetailsRepository
 
     override fun getRepository() = conferenceDetailsRepository
+
+    @PageViewUrlParam("conferenceId")
+    fun getConferenceId() = conference.id
 
     companion object {
         fun makeRoute(canvasContext: CanvasContext, conference: Conference): Route {

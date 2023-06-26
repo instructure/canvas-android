@@ -28,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
@@ -58,9 +59,11 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
 
+@PageView(url = "conversations/compose")
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 @AndroidEntryPoint
-class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView, FileUploadDialogParent {
+class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView,
+    FileUploadDialogParent {
 
     private val binding by viewBinding(FragmentAddMessageBinding::bind)
 
@@ -137,12 +140,14 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
                 override fun onGlobalLayout() {
                     if (presenter.isReply) {
-                        if(currentMessage == null && presenter.conversation?.participants != null && presenter.conversation!!.participants.size == 1) {
+                        if (currentMessage == null && presenter.conversation?.participants != null && presenter.conversation!!.participants.size == 1) {
                             // This is the result of replyAll to a monologue
                             addInitialRecipients(listOf(presenter.conversation!!.participants.first().id))
                         } else {
-                            addInitialRecipients(currentMessage?.participatingUserIds
-                                    ?: presenter.conversation?.audience ?: emptyList())
+                            addInitialRecipients(
+                                currentMessage?.participatingUserIds
+                                    ?: presenter.conversation?.audience ?: emptyList()
+                            )
                         }
                     } else if (isMessageStudentsWho) {
                         addRecipients(participants)
@@ -231,14 +236,21 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
         contactsImageButton.setOnClickListener {
             val canvasContext: CanvasContext? =
-                    if (presenter.course != null && presenter.course!!.id == 0L) {
-                        // Presenter doesn't know what the course is, use the selectedCourse instead
-                        selectedCourse
-                    } else {
-                        presenter.course
-                    }
+                if (presenter.course != null && presenter.course!!.id == 0L) {
+                    // Presenter doesn't know what the course is, use the selectedCourse instead
+                    selectedCourse
+                } else {
+                    presenter.course
+                }
 
-            RouteMatcher.route(requireContext(), Route(ChooseRecipientsFragment::class.java, canvasContext, ChooseRecipientsFragment.createBundle(canvasContext!!, recipientsFromRecipientEntries)))
+            RouteMatcher.route(
+                requireContext(),
+                Route(
+                    ChooseRecipientsFragment::class.java,
+                    canvasContext,
+                    ChooseRecipientsFragment.createBundle(canvasContext!!, recipientsFromRecipientEntries)
+                )
+            )
         }
 
         // Ensure attachments are up to date
@@ -259,7 +271,10 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         )
         if (selectedCourse != null) {
             courseSpinner.onItemSelectedListener = null // Prevent listener from firing when the selection is placed
-            courseSpinner.setSelection(adapter.getPosition(selectedCourse) + 1, false) //  + 1 is for the nothingSelected position
+            courseSpinner.setSelection(
+                adapter.getPosition(selectedCourse) + 1,
+                false
+            ) //  + 1 is for the nothingSelected position
             courseWasSelected()
         }
 
@@ -271,7 +286,8 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                         chips.clearRecipients()
                         selectedCourse = canvasContext
                         courseWasSelected()
-                        courseSpinner.contentDescription = getString(R.string.a11y_content_description_inbox_course_spinner, selectedCourse?.name)
+                        courseSpinner.contentDescription =
+                            getString(R.string.a11y_content_description_inbox_course_spinner, selectedCourse?.name)
                     }
                 }
             }
@@ -310,7 +326,8 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
                 R.id.menu_attachment -> {
                     val bundle = FileUploadDialogFragment.createAttachmentsBundle(ArrayList())
-                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle)
+                        .show(childFragmentManager, FileUploadDialogFragment.TAG)
                     true
                 }
 
@@ -497,28 +514,34 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         private const val MESSAGE_STUDENTS_WHO_CONTEXT_ID = "message_students_context_id"
         private const val MESSAGE_STUDENTS_WHO_CONTEXT_IS_PERSONAL = "message_students_is_personal"
 
-        fun createBundle(isReply: Boolean, conversation: Conversation, participants: List<Recipient>, messages: List<Message>, currentMessage: Message?): Bundle =
-                Bundle().apply {
-                    putBoolean(KEY_IS_REPLY, isReply)
-                    putParcelable(Const.CONVERSATION, conversation)
-                    putParcelableArrayList(KEY_PARTICIPANTS, ArrayList(participants))
-                    putParcelableArrayList(Const.MESSAGE, ArrayList(messages))
-                    putParcelable(Const.MESSAGE_TO_USER, currentMessage)
-                }
+        fun createBundle(
+            isReply: Boolean,
+            conversation: Conversation,
+            participants: List<Recipient>,
+            messages: List<Message>,
+            currentMessage: Message?
+        ): Bundle =
+            Bundle().apply {
+                putBoolean(KEY_IS_REPLY, isReply)
+                putParcelable(Const.CONVERSATION, conversation)
+                putParcelableArrayList(KEY_PARTICIPANTS, ArrayList(participants))
+                putParcelableArrayList(Const.MESSAGE, ArrayList(messages))
+                putParcelable(Const.MESSAGE_TO_USER, currentMessage)
+            }
 
         fun createBundle(): Bundle =
-                Bundle().apply {
-                    putBoolean(Const.COMPOSE_FRAGMENT, true)
-                }
+            Bundle().apply {
+                putBoolean(Const.COMPOSE_FRAGMENT, true)
+            }
 
         fun createBundle(users: List<Recipient>, subject: String, contextId: String, isPersonal: Boolean): Bundle =
-                Bundle().apply {
-                    putBoolean(MESSAGE_STUDENTS_WHO_CONTEXT_IS_PERSONAL, isPersonal)
-                    putBoolean(MESSAGE_STUDENTS_WHO, true)
-                    putParcelableArrayList(KEY_PARTICIPANTS, ArrayList(users))
-                    putString(MESSAGE_STUDENTS_WHO_SUBJECT, subject)
-                    putString(MESSAGE_STUDENTS_WHO_CONTEXT_ID, contextId)
-                }
+            Bundle().apply {
+                putBoolean(MESSAGE_STUDENTS_WHO_CONTEXT_IS_PERSONAL, isPersonal)
+                putBoolean(MESSAGE_STUDENTS_WHO, true)
+                putParcelableArrayList(KEY_PARTICIPANTS, ArrayList(users))
+                putString(MESSAGE_STUDENTS_WHO_SUBJECT, subject)
+                putString(MESSAGE_STUDENTS_WHO_CONTEXT_ID, contextId)
+            }
 
         fun newInstance(bundle: Bundle) = AddMessageFragment().withArgs(bundle)
     }
