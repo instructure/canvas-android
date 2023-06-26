@@ -26,7 +26,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_RESOURCES
@@ -42,7 +44,7 @@ import com.instructure.pandautils.views.CanvasWebViewWrapper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@PageView("#resources")
+@PageView
 @ScreenView(SCREEN_VIEW_K5_RESOURCES)
 @AndroidEntryPoint
 class ResourcesFragment : Fragment() {
@@ -130,6 +132,9 @@ class ResourcesFragment : Fragment() {
 
         webView.addVideoClient(requireActivity())
     }
+
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#resources"
 
     companion object {
         fun newInstance(): ResourcesFragment {

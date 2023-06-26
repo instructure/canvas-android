@@ -30,6 +30,7 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
@@ -45,9 +46,8 @@ class NotificationPage : BasePage() {
     }
 
     fun assertHasGrade(title: String, grade: String) {
-        val matcher = allOf(withText(title) + hasSibling(withId(R.id.description) + withText("Grade: $grade")))
-        scrollRecyclerView(R.id.listView, matcher)
-        onView(matcher).assertDisplayed()
+        val matcher = allOf(withText(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade: $grade")))
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun clickNotification(title: String) {

@@ -19,10 +19,7 @@ package com.instructure.student.ui.pages
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.getText
-import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
-import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
+import androidx.test.espresso.web.webdriver.DriverAtoms.*
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
@@ -89,10 +86,12 @@ class LoginSignInPage: BasePage() {
     //region UI Action Helpers
 
     private fun enterEmail(email: String) {
+        emailField().perform(clearElement())
         emailField().perform(webKeys(email))
     }
 
     private fun enterPassword(password: String) {
+        passwordField().perform(clearElement())
         passwordField().perform(webKeys(password))
     }
 

@@ -17,15 +17,12 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.appcompat.widget.AppCompatButton
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -35,6 +32,13 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.replaceText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
 import org.hamcrest.Matchers.allOf
@@ -47,8 +51,12 @@ class FileListPage : BasePage(R.id.fileListPage) {
 
     fun assertItemDisplayed(itemName: String) {
         val matcher = allOf(withId(R.id.fileName), withText(itemName))
-        scrollRecyclerView(R.id.fileListRecyclerView, matcher)
-        onView(matcher).assertDisplayed()
+        waitForView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertItemNotDisplayed(itemName: String) {
+        val matcher = allOf(withId(R.id.fileName), withText(itemName))
+        onView(matcher).check(doesNotExist())
     }
 
     fun selectItem(itemName: String) {
@@ -84,7 +92,55 @@ class FileListPage : BasePage(R.id.fileListPage) {
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE"), isDisplayed())).click()
     }
 
+
     fun assertViewEmpty() {
-        onView(allOf(withId(R.id.emptyPandaView), isDisplayed())).assertDisplayed()
+        waitForView(allOf(withId(R.id.emptyPandaView), isDisplayed())).assertDisplayed()
+    }
+
+    fun createFolder(folderName: String) {
+        onView(withId(R.id.addFab)).click()
+        waitForView(withId(R.id.addFolderFab)).click()
+        waitForView(withId(R.id.alertTitle)).assertDisplayed()
+        onView(withId(R.id.newFolderName)).typeText(folderName)
+        onView(withText(R.string.ok)).click()
+    }
+
+    fun deleteFolder(folderName: String) {
+        selectItem(folderName)
+        onView(withId(R.id.edit)).click()
+        onView(withId(R.id.deleteText)).click()
+        Thread.sleep(3000) //Wait for the Delete pop-up window to be displayed. (We need this because sometimes on Bitrise it's a bit slow)
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE"), isDisplayed())).click()
+    }
+
+    fun clickSearchButton() {
+        onView(withId(R.id.search)).click()
+    }
+
+    fun typeSearchInput(searchText: String) {
+        onView(withId(R.id.queryInput)).replaceText(searchText)
+    }
+
+    fun clickResetSearchText() {
+        waitForView(withId(R.id.clearButton)).click()
+        onView(withId(R.id.backButton)).click()
+    }
+
+    fun assertSearchResultCount(expectedCount: Int) {
+        Thread.sleep(2000)
+        onView(withId(R.id.fileSearchRecyclerView) + withAncestor(R.id.container)).check(
+            ViewAssertions.matches(hasChildCount(expectedCount))
+        )
+    }
+
+    fun assertFileListCount(expectedCount: Int) {
+        Thread.sleep(2000)
+        onView(withId(R.id.fileListRecyclerView) + withAncestor(R.id.container)).check(
+            ViewAssertions.matches(hasChildCount(expectedCount))
+        )
+    }
+
+    fun pressSearchBackButton() {
+        onView(withId(R.id.backButton)).click()
     }
 }

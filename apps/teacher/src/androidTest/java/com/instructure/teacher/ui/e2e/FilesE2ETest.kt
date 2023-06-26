@@ -165,6 +165,19 @@ class FilesE2ETest: TeacherTest() {
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled")
 
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${discussionAttachmentFile.name}', the file's name to the search input field.")
+        fileListPage.clickSearchButton()
+        fileListPage.typeSearchInput(discussionAttachmentFile.name)
+
+        Log.d(STEP_TAG, "Assert that only 1 file matches for the search text, and it is '${discussionAttachmentFile.name}', and no directories has been shown in the result.")
+        fileListPage.assertSearchResultCount(1)
+        fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
+        fileListPage.assertItemNotDisplayed("unfiled")
+
+        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that all the root level directories and files are displayed (1).")
+        fileListPage.clickResetSearchText()
+        fileListPage.assertFileListCount(1)
+
         Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
@@ -189,6 +202,24 @@ class FilesE2ETest: TeacherTest() {
 
         Log.d(STEP_TAG,"Assert that empty view is displayed after deletion, because no file left to display.")
         fileListPage.assertViewEmpty()
+
+        val newFolderName = "testfolder"
+        Log.d(STEP_TAG, "Navigate back to File List Page and assert that '$newFolderName' (recently created) folder is displayed.")
+        Espresso.pressBack()
+        fileListPage.createFolder(newFolderName)
+        fileListPage.assertItemDisplayed(newFolderName)
+
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${newFolderName}', the file's name to the search input field.")
+        fileListPage.clickSearchButton()
+        fileListPage.typeSearchInput(newFolderName)
+
+        Log.d(STEP_TAG,"Assert that empty view is displayed after deletion, because no folders will not be displayed in search result. Press back button (top one) to escape from Search 'view'.")
+        fileListPage.assertViewEmpty()
+        fileListPage.pressSearchBackButton()
+
+        Log.d(STEP_TAG, "Select '$newFolderName' folder and delete it. Assert that it has been disappeared from the File List Page.")
+        fileListPage.deleteFolder(newFolderName)
+        fileListPage.assertItemNotDisplayed(newFolderName)
     }
 
     private fun createDiscussion(

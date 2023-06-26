@@ -41,10 +41,11 @@ class DiscussionsE2ETest : TeacherTest() {
     fun testDiscussionE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, discussions = 1)
+        val data = seedData(students = 1, teachers = 1, courses = 1, discussions = 2)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val discussion = data.discussionsList[0]
+        val discussion2 = data.discussionsList[1]
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -54,9 +55,10 @@ class DiscussionsE2ETest : TeacherTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open Discussions Page and assert has discussion: ${discussion.title}.")
+        Log.d(STEP_TAG,"Open Discussions Page and assert has discussions: '${discussion.title}' and '${discussion2.title}'.")
         courseBrowserPage.openDiscussionsTab()
         discussionsListPage.assertHasDiscussion(discussion)
+        discussionsListPage.assertHasDiscussion(discussion2)
 
         Log.d(STEP_TAG,"Click on '${discussion.title}' discussion and navigate to Discussions Details Page by clicking on 'Edit'.")
         discussionsListPage.clickDiscussion(discussion)
@@ -81,9 +83,20 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsDetailsPage.refresh()
         discussionsDetailsPage.assertDiscussionUnpublished()
 
+        Log.d(STEP_TAG, "Navigate back to Discussion List Page. Select 'Pin' overflow menu of '${discussion2.title}' discussion and assert that it has became Pinned.")
+        Espresso.pressBack()
+        discussionsListPage.clickDiscussionOverFlowMenu(discussion2.title)
+        discussionsListPage.selectOverFlowMenu("Pin")
+        discussionsListPage.assertGroupDisplayed("Pinned")
+        discussionsListPage.assertDiscussionInGroup("Pinned", discussion2.title)
+
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '$newTitle' discussion.")
+        discussionsListPage.clickDiscussion(newTitle)
         discussionsDetailsPage.openEdit()
         editDiscussionsDetailsPage.deleteDiscussion()
+
+        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '${discussion2.title}' discussion via the overflow menu.")
+        discussionsListPage.deleteDiscussionFromOverflowMenu(discussion2.title)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that there is no discussion, so the '$newTitle' discussion has been deleted successfully.")
         discussionsListPage.refresh()

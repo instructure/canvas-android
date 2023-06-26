@@ -296,6 +296,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
         onView(matcher).check(matches(Matchers.not(isDisplayed())))
     }
+
+    fun assertDashboardNotificationDisplayed(title: String, subTitle: String) {
+        onView(withId(R.id.uploadTitle) + withText(title)).assertDisplayed()
+        onView(withId(R.id.uploadSubtitle) + withText(subTitle)).assertDisplayed()
+    }
+
+    fun clickOnDashboardNotification(subTitle: String) {
+        onView(withId(R.id.uploadSubtitle) + withText(subTitle)).click()
+    }
 }
 
 /**
