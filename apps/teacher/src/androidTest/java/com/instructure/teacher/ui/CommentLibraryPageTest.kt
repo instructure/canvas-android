@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvasapi2.di.GraphQlApiModule
@@ -64,6 +65,7 @@ class CommentLibraryPageTest : TeacherTest() {
         goToSpeedGraderCommentsPage()
 
         speedGraderCommentsPage.typeComment("great work")
+        Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
@@ -107,6 +109,7 @@ class CommentLibraryPageTest : TeacherTest() {
         val comment = "Great work"
 
         speedGraderCommentsPage.typeComment(comment)
+        Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
@@ -157,6 +160,7 @@ class CommentLibraryPageTest : TeacherTest() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
         speedGraderCommentsPage.typeComment("great")
+        Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCountGreaterThan(1) //Make sure that we have more than 1 filter result
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
@@ -179,6 +183,7 @@ class CommentLibraryPageTest : TeacherTest() {
         goToSpeedGraderCommentsPage()
 
         speedGraderCommentsPage.typeComment("Great work!")
+        Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
