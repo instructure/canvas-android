@@ -27,6 +27,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
@@ -431,12 +432,6 @@ abstract class CanvasTest : InstructureTestingContract {
         return resourceName
     }
 
-    // Allow tests to know whether they are in landscape mode
-    fun inLandscape() : Boolean {
-        var activity = activityRule.activity
-        return activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    }
-
     // Copy an asset file to the external cache, typically for use in uploading the asset
     // file via mocked intents.
     fun copyAssetFileToExternalCache(context: Context, fileName: String) {
@@ -473,6 +468,20 @@ abstract class CanvasTest : InstructureTestingContract {
         )
 
         private var configChecked = false
+
+        @JvmStatic
+        fun getDeviceOrientation(context: Context): Int {
+            val configuration = context.resources.configuration
+            return configuration.orientation
+        }
+
+        fun isLandscapeDevice(): Boolean {
+            return getDeviceOrientation(ApplicationProvider.getApplicationContext()) == Configuration.ORIENTATION_LANDSCAPE
+        }
+
+        fun isPortraitDevice(): Boolean {
+            return getDeviceOrientation(ApplicationProvider.getApplicationContext()) == Configuration.ORIENTATION_PORTRAIT
+        }
 
     }
 

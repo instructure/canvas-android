@@ -61,11 +61,14 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAndSelectFilteredCommentCloseCommentLibrary() {
+        val isTablet = isTablet()
+        val isLandScape = isLandscapeDevice()
+
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
 
         speedGraderCommentsPage.typeComment("great work")
-        Espresso.pressBack()
+        if(isTablet || isLandScape) Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
@@ -106,17 +109,18 @@ class CommentLibraryPageTest : TeacherTest() {
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
         createCommentLibraryMockData()
         val isTablet = isTablet()
+        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
         val comment = "Great work"
 
         speedGraderCommentsPage.typeComment(comment)
-        Espresso.pressBack()
+        if(isTablet || isLandScape) Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
         commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
-        if(isTablet) Espresso.pressBack()
+        if(isTablet || isLandScape) Espresso.pressBack()
         speedGraderCommentsPage.sendComment()
 
         speedGraderCommentsPage.assertDisplaysCommentText(comment)
@@ -159,9 +163,11 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
         createCommentLibraryMockData()
+        val isTablet = isTablet()
+        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
         speedGraderCommentsPage.typeComment("great")
-        Espresso.pressBack()
+        if(isTablet || isLandScape) Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCountGreaterThan(1) //Make sure that we have more than 1 filter result
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
@@ -181,10 +187,13 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
         val commentLibraryItems = createCommentLibraryMockData()
+        val isTablet = isTablet()
+        val isLandScape = isLandscapeDevice()
+
         goToSpeedGraderCommentsPage()
 
         speedGraderCommentsPage.typeComment("Great work!")
-        Espresso.pressBack()
+        if(isTablet || isLandScape) Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
