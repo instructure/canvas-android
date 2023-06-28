@@ -11,7 +11,7 @@ gcloud:
   test-targets:
   - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub,  com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
-  - model: Pixel2
+  - model: Pixel2.arm
     version: 29
     locale: en_US
     orientation: portrait
