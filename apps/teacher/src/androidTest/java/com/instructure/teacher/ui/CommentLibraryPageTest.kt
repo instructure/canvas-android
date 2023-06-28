@@ -105,6 +105,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
         createCommentLibraryMockData()
+        val isTablet = isTablet()
         goToSpeedGraderCommentsPage()
         val comment = "Great work"
 
@@ -115,7 +116,7 @@ class CommentLibraryPageTest : TeacherTest() {
 
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
         commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
-
+        if(isTablet) Espresso.pressBack()
         speedGraderCommentsPage.sendComment()
 
         speedGraderCommentsPage.assertDisplaysCommentText(comment)

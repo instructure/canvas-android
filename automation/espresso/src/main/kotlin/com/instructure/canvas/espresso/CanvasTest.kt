@@ -300,6 +300,16 @@ abstract class CanvasTest : InstructureTestingContract {
         return activityRule.activity.resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
     }
 
+    fun isTablet(): Boolean {
+
+        val metrics = activityRule.activity.resources.displayMetrics
+        val screenWidth = metrics.widthPixels / metrics.density
+        val screenHeight = metrics.heightPixels / metrics.density
+
+        // Assuming a tablet has a minimum width of 720dp and height of 720dp
+        return screenWidth >= 720 && screenHeight >= 720
+    }
+
     // Copying this matcher from the shared espresso lib to here.  In the espresso lib, we had
     // to rely on ActivityHelper.currentActivity() to get an activity, and that
     // was occasionally buggy due to small windows where there might be no resumed
@@ -349,7 +359,8 @@ abstract class CanvasTest : InstructureTestingContract {
             override fun matches(item: Any?): Boolean {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        var result = item.view?.contentDescription?.contains("Overflow", ignoreCase = true) ?: false
+                        val contentDescription = item.view?.contentDescription
+                        var result = (contentDescription?.contains("Overflow", ignoreCase = true) ?: false) || (contentDescription?.contains("More options", ignoreCase = true) ?: false)
                         //Log.v("overflowWidth", "isOverflowMenu: contentDescription=${item.view?.contentDescription ?: "unknown"}, result=$result ")
                         return result
                     }
