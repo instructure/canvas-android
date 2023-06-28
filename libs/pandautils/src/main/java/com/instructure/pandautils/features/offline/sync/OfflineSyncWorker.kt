@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -50,6 +51,7 @@ import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -77,7 +79,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val conferenceFacade: ConferenceFacade,
     private val discussionApi: DiscussionAPI.DiscussionInterface,
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface
+    private val announcementApi: AnnouncementAPI.AnnouncementInterface,
+    private val moduleApi: ModuleAPI.ModuleInterface,
+    private val moduleFacade: ModuleFacade
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -99,7 +103,7 @@ class OfflineSyncWorker @AssistedInject constructor(
                     if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
                         fetchPages(courseSettings.courseId)
                     }
-                    if (courseSettings.isTabSelected(Tab.ASSIGNMENTS_ID) || courseSettings.isTabSelected(Tab.GRADES_ID) || courseSettings.isTabSelected(Tab.SYLLABUS_ID)) {
+                    if (courseSettings.areAnyTabsSelected(setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID))) {
                         fetchAssignments(courseSettings.courseId)
                     }
                     if (courseSettings.isTabSelected(Tab.SYLLABUS_ID)) {
@@ -113,6 +117,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.isTabSelected(Tab.ANNOUNCEMENTS_ID)) {
                         fetchAnnouncements(courseSettings.courseId)
+                    }
+                    if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
+                        fetchModules(courseSettings.courseId)
                     }
                 }
             fetchSyllabus(syllabusCourseIds)
@@ -252,5 +259,22 @@ class OfflineSyncWorker @AssistedInject constructor(
         }.dataOrNull ?: emptyList()
 
         discussionTopicHeaderFacade.insertDiscussions(announcements, courseId)
+    }
+
+    private suspend fun fetchModules(courseId: Long) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val moduleObjects = moduleApi.getFirstPageModuleObjects(CanvasContext.Type.COURSE.apiString, courseId, params
+        ).depaginate { nextPage ->
+            moduleApi.getNextPageModuleObjectList(nextPage, params)
+        }
+            .dataOrNull
+            ?.map { moduleObject ->
+                val moduleItems = moduleApi.getFirstPageModuleItems(CanvasContext.Type.COURSE.apiString, courseId, moduleObject.id, params).depaginate { nextPage ->
+                    moduleApi.getNextPageModuleItemList(nextPage, params)
+                }.dataOrNull ?: moduleObject.items
+                moduleObject.copy(items = moduleItems)
+            }.orEmpty()
+
+        moduleFacade.insertModules(moduleObjects, courseId)
     }
 }

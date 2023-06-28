@@ -51,6 +51,8 @@ import com.instructure.pandautils.room.offline.entities.*
         GradingPeriodEntity::class,
         GroupEntity::class,
         GroupUserEntity::class,
+        ModuleObjectEntity::class,
+        ModuleItemEntity::class,
         NeedsGradingCountEntity::class,
         PageEntity::class,
         PlannerOverrideEntity::class,
@@ -153,4 +155,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun conferenceDao(): ConferenceDao
 
     abstract fun conferenceRecordingDao(): ConferenceRecodingDao
+
+    abstract fun moduleObjectDao(): ModuleObjectDao
+
+    abstract fun moduleItemDao(): ModuleItemDao
 }

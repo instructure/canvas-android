@@ -207,6 +207,16 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideModuleObjectDao(offlineDatabase: OfflineDatabase): ModuleObjectDao {
+        return offlineDatabase.moduleObjectDao()
+    }
+
+    @Provides
+    fun provideModuleItemDao(offlineDatabase: OfflineDatabase): ModuleItemDao {
+        return offlineDatabase.moduleItemDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
@@ -332,5 +342,13 @@ class OfflineModule {
         conferenceRecodingDao: ConferenceRecodingDao
     ): ConferenceFacade {
         return ConferenceFacade(conferenceDao, conferenceRecodingDao)
+    }
+
+    @Provides
+    fun provideModuleFacade(
+        moduleObjectDao: ModuleObjectDao,
+        moduleItemDao: ModuleItemDao
+    ): ModuleFacade {
+        return ModuleFacade(moduleObjectDao, moduleItemDao)
     }
 }
