@@ -15,7 +15,7 @@ gcloud:
   - annotation com.instructure.canvas.espresso.E2E
   - notAnnotation com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
-  - model: Pixel2.arm
+  - model: Pixel2
     version: 29
     locale: en_US
     orientation: portrait
