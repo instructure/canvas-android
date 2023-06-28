@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2016 - present Instructure, Inc.
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-package com.instructure.student.holders
+package com.instructure.student.features.modules.list.adapter
 
 import android.content.Context
 import android.graphics.Typeface
@@ -26,12 +10,16 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderModuleBinding
-import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
+import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.util.BinderUtils
-import com.instructure.student.util.ModuleUtility
 
 private const val MODULE_INDENT_IN_DP = 10
 
@@ -77,16 +65,24 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 when (ModuleObject.State.values().firstOrNull { it.apiString == requirement.type }) {
                     ModuleObject.State.MustSubmit -> {
                         if (complete) description.setTextColor(courseColor)
-                        if (complete) context.getString(R.string.moduleItemSubmitted) else context.getString(R.string.moduleItemSubmit)
+                        if (complete) context.getString(R.string.moduleItemSubmitted) else context.getString(
+                            R.string.moduleItemSubmit
+                        )
                     }
                     ModuleObject.State.MustView -> {
-                        if (complete) context.getString(R.string.moduleItemViewed) else context.getString(R.string.moduleItemMustView)
+                        if (complete) context.getString(R.string.moduleItemViewed) else context.getString(
+                            R.string.moduleItemMustView
+                        )
                     }
                     ModuleObject.State.MustContribute -> {
-                        if (complete) context.getString(R.string.moduleItemContributed) else context.getString(R.string.moduleItemContribute)
+                        if (complete) context.getString(R.string.moduleItemContributed) else context.getString(
+                            R.string.moduleItemContribute
+                        )
                     }
                     ModuleObject.State.MinScore -> {
-                        if (complete) context.getString(R.string.moduleItemMinScoreMet) else context.getString(R.string.moduleItemMinScore) + " " + requirement.minScore
+                        if (complete) context.getString(R.string.moduleItemMinScoreMet) else context.getString(
+                            R.string.moduleItemMinScore
+                        ) + " " + requirement.minScore
                     }
                     else -> null
                 }
@@ -99,7 +95,8 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Indicator
         indicator.setGone()
         if (moduleItem.completionRequirement?.completed == true) {
-            val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.ic_check_white_24dp, courseColor)
+            val drawable =
+                ColorKeeper.getColoredDrawable(context, R.drawable.ic_check_white_24dp, courseColor)
             indicator.setImageDrawable(drawable)
             indicator.setVisible()
         }
@@ -139,7 +136,11 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val hasDate: Boolean
             val hasPoints: Boolean
             if (details.dueDate != null) {
-                date.text = DateHelper.createPrefixedDateTimeString(context, R.string.toDoDue, details.dueDate)
+                date.text = DateHelper.createPrefixedDateTimeString(
+                    context,
+                    R.string.toDoDue,
+                    details.dueDate
+                )
                 hasDate = true
             } else {
                 date.text = ""

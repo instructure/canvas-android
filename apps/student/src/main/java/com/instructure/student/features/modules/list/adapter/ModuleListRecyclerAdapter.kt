@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.adapter
+package com.instructure.student.features.modules.list.adapter
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -30,7 +30,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.managers.TabManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
@@ -41,21 +45,17 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
-import com.instructure.student.holders.ModuleEmptyViewHolder
-import com.instructure.student.holders.ModuleHeaderViewHolder
-import com.instructure.student.holders.ModuleSubHeaderViewHolder
-import com.instructure.student.holders.ModuleViewHolder
-import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
-import com.instructure.student.util.CollapsedModulesStore
-import com.instructure.student.util.ModuleUtility
+import com.instructure.student.adapter.ExpandableRecyclerAdapter
+import com.instructure.student.features.modules.list.CollapsedModulesStore
+import com.instructure.student.features.modules.util.ModuleUtility
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 open class ModuleListRecyclerAdapter(
         private val courseContext: CanvasContext,

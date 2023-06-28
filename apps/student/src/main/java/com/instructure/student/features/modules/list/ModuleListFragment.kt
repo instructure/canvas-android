@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.modules.list
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -37,15 +37,17 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.ModuleListRecyclerAdapter
 import com.instructure.student.databinding.FragmentModuleListBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.ModuleUpdatedEvent
-import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
+import com.instructure.student.features.modules.list.adapter.ModuleAdapterToFragmentCallback
+import com.instructure.student.features.modules.list.adapter.ModuleListRecyclerAdapter
+import com.instructure.student.features.modules.util.ModuleProgressionUtility
+import com.instructure.student.features.modules.util.ModuleUtility
+import com.instructure.student.fragment.CourseModuleProgressionFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.CourseModulesStore
-import com.instructure.student.util.ModuleProgressionUtility
-import com.instructure.student.util.ModuleUtility
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -144,7 +146,8 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     fun setupViews() {
         val navigatingToSpecificModule = !arguments?.getString(MODULE_ID).isNullOrEmpty()
 
-        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, requireContext(), navigatingToSpecificModule, object : ModuleAdapterToFragmentCallback {
+        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, requireContext(), navigatingToSpecificModule, object :
+            ModuleAdapterToFragmentCallback {
             override fun onRowClicked(moduleObject: ModuleObject, moduleItem: ModuleItem, position: Int, isOpenDetail: Boolean) {
                 if (moduleItem.type != null && moduleItem.type == ModuleObject.State.UnlockRequirements.apiString) return
 
@@ -163,9 +166,11 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 CourseModulesStore.moduleListItems = moduleHelper.strippedModuleItems
                 CourseModulesStore.moduleObjects = groups
                 RouteMatcher.route(requireContext(), CourseModuleProgressionFragment.makeRoute(
-                        canvasContext,
-                        moduleHelper.newGroupPosition,
-                        moduleHelper.newChildPosition))
+                    canvasContext,
+                    moduleHelper.newGroupPosition,
+                    moduleHelper.newChildPosition
+                )
+                )
             }
 
             override fun onRefreshFinished(isError: Boolean) {
@@ -181,7 +186,9 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                     // that appear near the end of the list will not have the extra 'expanded' space needed
                     // to scroll as far as possible toward the top
                     recyclerBinding.listView.postDelayed({
-                        val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())
+                        val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(
+                            MODULE_ID
+                        )!!.toLong())
                         if (groupPosition >= 0) {
                             val lm = recyclerBinding.listView.layoutManager as? LinearLayoutManager
                             lm?.scrollToPositionWithOffset(groupPosition, 0)

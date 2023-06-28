@@ -53,11 +53,12 @@ import com.instructure.student.databinding.CourseModuleProgressionBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore
-import com.instructure.student.util.ModuleProgressionUtility
-import com.instructure.student.util.ModuleUtility
+import com.instructure.student.features.modules.util.ModuleProgressionUtility
+import com.instructure.student.features.modules.util.ModuleUtility
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
