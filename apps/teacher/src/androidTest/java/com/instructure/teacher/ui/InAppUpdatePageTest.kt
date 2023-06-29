@@ -238,6 +238,7 @@ class InAppUpdatePageTest : TeacherTest() {
     }
 
     @Test
+    @Stub
     fun showNotificationOnFlexibleDownloadFinish() {
         updatePrefs.clearPrefs()
         val expectedTitle = context.getString(R.string.appUpdateReadyTitle)
