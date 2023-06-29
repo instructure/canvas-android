@@ -61,10 +61,9 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAndSelectFilteredCommentCloseCommentLibrary() {
+        createCommentLibraryMockData()
         val isTablet = isTablet()
         val isLandScape = isLandscapeDevice()
-
-        createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
 
         speedGraderCommentsPage.typeComment("great work")
@@ -84,9 +83,12 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionAndSendComment() {
         createCommentLibraryMockData()
+        val isTablet = isTablet()
+        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
         speedGraderCommentsPage.typeComment("great work")
+        if(isTablet || isLandScape) Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
@@ -131,9 +133,12 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun reopenCommentLibraryWhenTextIsModified() {
         createCommentLibraryMockData()
+        val isTablet = isTablet()
+        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
         speedGraderCommentsPage.typeComment("great ")
+        if(isTablet || isLandScape) Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(3)
 
@@ -141,6 +146,7 @@ class CommentLibraryPageTest : TeacherTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
 
         speedGraderCommentsPage.typeComment("start")
+        if(isTablet || isLandScape) Espresso.pressBack()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
