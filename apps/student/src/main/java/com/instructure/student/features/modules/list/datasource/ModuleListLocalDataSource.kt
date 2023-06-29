@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
@@ -27,26 +28,21 @@ import com.instructure.pandautils.room.offline.facade.ModuleFacade
 class ModuleListLocalDataSource(private val tabDao: TabDao, private val moduleFacade: ModuleFacade) : ModuleListDataSource {
 
     override suspend fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        TODO("Not yet implemented")
+        val moduleObjects = moduleFacade.getModuleObjects(canvasContext.id)
+        return DataResult.Success(moduleObjects, apiType = ApiType.DB)
     }
 
     override suspend fun getFirstPageModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        TODO("Not yet implemented")
+        val moduleObjects = moduleFacade.getModuleObjects(canvasContext.id)
+        return DataResult.Success(moduleObjects, apiType = ApiType.DB)
     }
 
     override suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<Tab>> {
-        TODO("Not yet implemented")
+        return DataResult.Success(tabDao.findByCourseId(canvasContext.id).map { it.toApiModel() }, apiType = ApiType.DB)
     }
 
     override suspend fun getFirstPageModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
-        TODO("Not yet implemented")
+        val moduleItems = moduleFacade.getModuleItems(moduleId)
+        return DataResult.Success(moduleItems, apiType = ApiType.DB)
     }
 }

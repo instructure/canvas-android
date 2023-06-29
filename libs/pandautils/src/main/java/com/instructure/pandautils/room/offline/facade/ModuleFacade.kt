@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.room.offline.facade
 
+import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.pandautils.room.offline.daos.ModuleItemDao
 import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
@@ -33,8 +34,18 @@ class ModuleFacade(private val moduleObjectDao: ModuleObjectDao, private val mod
         }
     }
 
+    suspend fun getModuleObjects(courseId: Long): List<ModuleObject> {
+        val moduleObjects = moduleObjectDao.findByCourseId(courseId)
+        return moduleObjects.map { moduleObjectEntity -> createModuleObjectApiModel(moduleObjectEntity) }
+    }
+
     private suspend fun createModuleObjectApiModel(moduleObjectEntity: ModuleObjectEntity): ModuleObject {
         val moduleItems = moduleItemDao.findByModuleId(moduleObjectEntity.id).map { it.toApiModel() }
         return moduleObjectEntity.toApiModel(moduleItems)
+    }
+
+    suspend fun getModuleItems(moduleId: Long): List<ModuleItem> {
+        val moduleItemEntities = moduleItemDao.findByModuleId(moduleId)
+        return moduleItemEntities.map { moduleItemEntity -> moduleItemEntity.toApiModel() }
     }
 }

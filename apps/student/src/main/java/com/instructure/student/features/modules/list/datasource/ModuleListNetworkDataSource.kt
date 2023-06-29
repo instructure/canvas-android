@@ -40,7 +40,7 @@ class ModuleListNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterfa
         return moduleApi.getFirstPageModuleObjects(canvasContext.apiContext(), canvasContext.id, params)
     }
 
-    override suspend fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
+    suspend fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         return moduleApi.getNextPageModuleObjectList(nextUrl, params)
     }
@@ -55,7 +55,7 @@ class ModuleListNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterfa
         return moduleApi.getFirstPageModuleItems(canvasContext.apiContext(), canvasContext.id, moduleId, params)
     }
 
-    override suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
+    suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         return moduleApi.getNextPageModuleItemList(nextUrl, params)
     }

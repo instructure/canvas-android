@@ -36,7 +36,7 @@ import retrofit2.Response
 class ModuleListRepository(
     private val lifecycleScope: CoroutineScope,
     localDataSource: ModuleListLocalDataSource,
-    networkDataSource: ModuleListNetworkDataSource,
+    private val networkDataSource: ModuleListNetworkDataSource,
     networkStateProvider: NetworkStateProvider) : Repository<ModuleListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
     fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean, callback: StatusCallback<List<ModuleObject>>) {
@@ -53,7 +53,7 @@ class ModuleListRepository(
 
     fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean, callback: StatusCallback<List<ModuleObject>>) {
         convertDataResultCallToStatusCallback(callback) {
-            dataSource.getNextPageModuleObjects(nextUrl, forceNetwork)
+            networkDataSource.getNextPageModuleObjects(nextUrl, forceNetwork)
         }
     }
 
@@ -70,7 +70,7 @@ class ModuleListRepository(
 
     fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean, callback: StatusCallback<List<ModuleItem>>) {
         convertDataResultCallToStatusCallback(callback) {
-            dataSource.getNextPageModuleItems(nextUrl, forceNetwork)
+            networkDataSource.getNextPageModuleItems(nextUrl, forceNetwork)
         }
     }
 

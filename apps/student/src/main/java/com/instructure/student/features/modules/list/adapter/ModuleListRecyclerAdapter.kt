@@ -75,7 +75,7 @@ open class ModuleListRecyclerAdapter(
         viewHolderHeaderClicked = object : ViewHolderHeaderClicked<ModuleObject> {
             override fun viewClicked(view: View?, moduleObject: ModuleObject) {
                 val moduleItemsCallback = getModuleItemsCallback(moduleObject, false)
-                if (!moduleItemsCallback.isFromNetwork && !isGroupExpanded(moduleObject)) {
+                if (!moduleItemsCallback.isFromNetworkOrDb && !isGroupExpanded(moduleObject)) {
                     repository.getFirstPageModuleItems(courseContext, moduleObject.id, true, moduleItemsCallback)
                 } else {
                     CollapsedModulesStore.markModuleCollapsed(courseContext, moduleObject.id, true)
@@ -121,7 +121,7 @@ open class ModuleListRecyclerAdapter(
         val moduleEmptyViewHolder = holder as ModuleEmptyViewHolder
         // Keep displaying No connection as long as the result is not from network
         // Doing so will cause the user to toggle the expand to refresh the list, if they had expanded a module while offline
-        if (mModuleItemCallbacks.containsKey(moduleObject.id) && mModuleItemCallbacks[moduleObject.id]!!.isFromNetwork) {
+        if (mModuleItemCallbacks.containsKey(moduleObject.id) && mModuleItemCallbacks[moduleObject.id]!!.isFromNetworkOrDb) {
             moduleEmptyViewHolder.bind(getPrerequisiteString(moduleObject))
         } else {
             moduleEmptyViewHolder.bind(context.getString(R.string.noConnection))
@@ -273,7 +273,7 @@ open class ModuleListRecyclerAdapter(
 
                 override fun onResponse(response: Response<List<ModuleItem>>, linkHeaders: LinkHeaders, type: ApiType) {
                     val moduleItems = response.body()
-                    if (type === ApiType.API) {
+                    if (type === ApiType.API || type == ApiType.DB) {
                         var position = if (moduleItems!!.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
                         for (item in moduleItems) {
                             item.position = position++
@@ -286,7 +286,7 @@ open class ModuleListRecyclerAdapter(
                             repository.getNextPageModuleItems(nextItemsURL, true, this)
                         }
 
-                        this.isFromNetwork = true
+                        this.isFromNetworkOrDb = true
                         expandGroup(this.moduleObject, isNotifyGroupChange)
                     } else if (type === ApiType.CACHE) {
                         var position = if (moduleItems!!.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
@@ -455,6 +455,6 @@ open class ModuleListRecyclerAdapter(
     // endregion
 
     private abstract class ModuleItemCallback internal constructor(internal val moduleObject: ModuleObject) : StatusCallback<List<ModuleItem>>() {
-        internal var isFromNetwork = false // When true, there is no need to fetch objects from the network again.
+        internal var isFromNetworkOrDb = false // When true, there is no need to fetch objects from the network again.
     }
 }
