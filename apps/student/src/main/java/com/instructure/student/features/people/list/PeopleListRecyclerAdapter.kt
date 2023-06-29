@@ -14,13 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.adapter
+package com.instructure.student.features.people.list
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.canvasapi2.managers.UserManager
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Enrollment.EnrollmentType
@@ -28,27 +26,28 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitPaginated
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.backgroundColor
-import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
+import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.holders.PeopleHeaderViewHolder
 import com.instructure.student.holders.PeopleViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class PeopleListRecyclerAdapter(
         context: Context,
-        private val mCanvasContext: CanvasContext,
-        private val mAdapterToFragmentCallback: AdapterToFragmentCallback<User>
+        private val repository: PeopleListRepository,
+        private val canvasContext: CanvasContext,
+        private val adapterToFragmentCallback: AdapterToFragmentCallback<User>
 ) : ExpandableRecyclerAdapter<EnrollmentType, User, RecyclerView.ViewHolder>(context, EnrollmentType::class.java, User::class.java) {
 
-    private val mCourseColor = mCanvasContext.backgroundColor
+    private val mCourseColor = canvasContext.backgroundColor
     private val mEnrollmentPriority = mapOf( EnrollmentType.Teacher to 4, EnrollmentType.Ta to 3, EnrollmentType.Student to 2, EnrollmentType.Observer to 1)
     private var mApiCalls: WeaveJob? = null
 
@@ -57,41 +56,21 @@ class PeopleListRecyclerAdapter(
         loadData()
     }
 
-    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     override fun loadFirstPage() {
-        mApiCalls = tryWeave {
-            var canvasContext = mCanvasContext
+        CoroutineScope(Dispatchers.IO).launch {
+            var canvasContext = canvasContext
 
             // If the canvasContext is a group, and has a course we want to add the Teachers and TAs from that course to the peoples list
-            if (CanvasContext.Type.isGroup(mCanvasContext) && (mCanvasContext as Group).courseId > 0) {
+            if (CanvasContext.Type.isGroup(this@PeopleListRecyclerAdapter.canvasContext) && (this@PeopleListRecyclerAdapter.canvasContext as Group).courseId > 0) {
                 // We build a generic CanvasContext with type set to COURSE and give it the CourseId from the group, so that it wil use the course API not the group API
-                canvasContext = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, mCanvasContext.courseId, "")
+                canvasContext = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this@PeopleListRecyclerAdapter.canvasContext.courseId, "")
             }
 
-            // Get Teachers
-            awaitPaginated<List<User>> {
-                onRequestFirst { UserManager.getFirstPagePeopleList(canvasContext, UserAPI.EnrollmentType.TEACHER, isRefresh, it) }
-                onRequestNext { nextUrl, callback -> UserManager.getNextPagePeopleList(isRefresh, nextUrl, callback) }
-                onResponse { setNextUrl(""); populateAdapter(it) }
+            val peopleList = repository.loadPeople(canvasContext, isRefresh)
+            withContext(Dispatchers.Main) {
+                populateAdapter(peopleList)
+                setNextUrl(null)
             }
-
-            // Get TAs
-            awaitPaginated<List<User>> {
-                onRequestFirst { UserManager.getFirstPagePeopleList(canvasContext, UserAPI.EnrollmentType.TA, isRefresh, it) }
-                onRequestNext { nextUrl, callback -> UserManager.getNextPagePeopleList(isRefresh, nextUrl, callback) }
-                onResponse { setNextUrl(""); populateAdapter(it) }
-            }
-
-            // Get others
-            awaitPaginated<List<User>> {
-                onRequestFirst { UserManager.getFirstPagePeopleList(mCanvasContext, isRefresh, it) }
-                onRequestNext { nextUrl, callback -> UserManager.getNextPagePeopleList(isRefresh, nextUrl, callback) }
-                onResponse { setNextUrl(""); populateAdapter(it) }
-            }
-
-            setNextUrl(null)
-        } catch {
-            context.toast(R.string.errorOccurred)
         }
     }
 
@@ -115,9 +94,9 @@ class PeopleListRecyclerAdapter(
         enrolled.asSequence().onEach { it.enrollments.sortedByDescending { enrollment-> mEnrollmentPriority[enrollment.type] } }
                 .groupBy { it.enrollments[0].type }
                 .forEach { (type, users) -> addOrUpdateAllItems(type!!, users) }
-        if (CanvasContext.Type.isGroup(mCanvasContext)) addOrUpdateAllItems(EnrollmentType.NoEnrollment, unEnrolled)
+        if (CanvasContext.Type.isGroup(canvasContext)) addOrUpdateAllItems(EnrollmentType.NoEnrollment, unEnrolled)
         notifyDataSetChanged()
-        mAdapterToFragmentCallback.onRefreshFinished()
+        adapterToFragmentCallback.onRefreshFinished()
     }
 
     override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder =
@@ -131,7 +110,7 @@ class PeopleListRecyclerAdapter(
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, peopleGroupType: EnrollmentType, user: User) {
         val groupItemCount = getGroupItemCount(peopleGroupType)
         val itemPosition = storedIndexOfItem(peopleGroupType, user)
-        (holder as PeopleViewHolder).bind(user, mAdapterToFragmentCallback, mCourseColor, itemPosition == 0, itemPosition == groupItemCount - 1)
+        (holder as PeopleViewHolder).bind(user, adapterToFragmentCallback, mCourseColor, itemPosition == 0, itemPosition == groupItemCount - 1)
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, enrollmentType: EnrollmentType, isExpanded: Boolean) {

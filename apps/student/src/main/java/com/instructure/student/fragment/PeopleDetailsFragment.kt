@@ -48,6 +48,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.databinding.FragmentPeopleDetailsBinding
+import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.router.RouteMatcher
 
 @ScreenView(SCREEN_VIEW_PEOPLE_DETAILS)

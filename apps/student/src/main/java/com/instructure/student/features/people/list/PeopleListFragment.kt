@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.people.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -32,14 +32,21 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.PeopleListRecyclerAdapter
 import com.instructure.student.databinding.FragmentPeopleListBinding
+import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.fragment.PeopleDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PEOPLE_LIST)
 @PageView(url = "{canvasContext}/users")
+@AndroidEntryPoint
 class PeopleListFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var repository: PeopleListRepository
 
     private val binding by viewBinding(FragmentPeopleListBinding::bind)
 
@@ -68,7 +75,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerAdapter = PeopleListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
+        recyclerAdapter = PeopleListRecyclerAdapter(requireContext(), repository, canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
             requireContext(),
