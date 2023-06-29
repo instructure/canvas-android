@@ -62,7 +62,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAndSelectFilteredCommentCloseCommentLibrary() {
         createCommentLibraryMockData()
-        val isTablet = isTablet()
+        val isTablet = isTabletDevice()
         val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
@@ -83,7 +83,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionAndSendComment() {
         createCommentLibraryMockData()
-        val isTablet = isTablet()
+        val isTablet = isTabletDevice()
         val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
@@ -110,7 +110,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
         createCommentLibraryMockData()
-        val isTablet = isTablet()
+        val isTablet = isTabletDevice()
         val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
         val comment = "Great work"
@@ -133,7 +133,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun reopenCommentLibraryWhenTextIsModified() {
         createCommentLibraryMockData()
-        val isTablet = isTablet()
+        val isTablet = isTabletDevice()
         val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
@@ -169,7 +169,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
         createCommentLibraryMockData()
-        val isTablet = isTablet()
+        val isTablet = isTabletDevice()
         val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
         speedGraderCommentsPage.typeComment("great")
@@ -193,7 +193,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
         val commentLibraryItems = createCommentLibraryMockData()
-        val isTablet = isTablet()
+        val isTablet = isTabletDevice()
         val isLandScape = isLandscapeDevice()
 
         goToSpeedGraderCommentsPage()

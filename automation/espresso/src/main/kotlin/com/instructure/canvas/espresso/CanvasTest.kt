@@ -301,7 +301,7 @@ abstract class CanvasTest : InstructureTestingContract {
         return activityRule.activity.resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
     }
 
-    fun isTablet(): Boolean {
+    fun isTabletDevice(): Boolean {
 
         val metrics = activityRule.activity.resources.displayMetrics
         val screenWidth = metrics.widthPixels / metrics.density
@@ -469,8 +469,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
         private var configChecked = false
 
-        @JvmStatic
-        fun getDeviceOrientation(context: Context): Int {
+        private fun getDeviceOrientation(context: Context): Int {
             val configuration = context.resources.configuration
             return configuration.orientation
         }
