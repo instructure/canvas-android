@@ -23,6 +23,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.student.features.modules.list.adapter.ModuleListRecyclerAdapter
+import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
@@ -37,7 +38,7 @@ class ModuleListRecyclerAdapterTest : TestCase() {
     /**
      * Make it so the protected constructor can be called
      */
-    class ModuleListRecyclerAdapterWrapper(context: Context) : ModuleListRecyclerAdapter(context)
+    class ModuleListRecyclerAdapterWrapper(context: Context) : ModuleListRecyclerAdapter(context, mockk(), mockk())
 
     @Before
     fun setup() {

@@ -28,20 +28,16 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
@@ -50,7 +46,9 @@ import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.features.modules.list.CollapsedModulesStore
+import com.instructure.student.features.modules.list.ModuleListRepository
 import com.instructure.student.features.modules.util.ModuleUtility
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
@@ -58,10 +56,12 @@ import java.util.Locale
 import java.util.UUID
 
 open class ModuleListRecyclerAdapter(
-        private val courseContext: CanvasContext,
-        context: Context,
-        private var shouldExhaustPagination: Boolean,
-        private val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
+    private val courseContext: CanvasContext,
+    context: Context,
+    private var shouldExhaustPagination: Boolean,
+    private val repository: ModuleListRepository,
+    private val lifecycleScope: CoroutineScope,
+    private val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
 ) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
 
     private val mModuleItemCallbacks = HashMap<Long, ModuleItemCallback>()
@@ -69,14 +69,14 @@ open class ModuleListRecyclerAdapter(
     private var checkCourseTabsJob: Job? = null
 
     /* For testing purposes only */
-    protected constructor(context: Context) : this(CanvasContext.defaultCanvasContext(), context, false,null) // Callback not needed for testing, cast to null
+    protected constructor(context: Context, repository: ModuleListRepository, lifecycleScope: CoroutineScope) : this(CanvasContext.defaultCanvasContext(), context, false, repository, lifecycleScope, null) // Callback not needed for testing, cast to null
 
     init {
         viewHolderHeaderClicked = object : ViewHolderHeaderClicked<ModuleObject> {
             override fun viewClicked(view: View?, moduleObject: ModuleObject) {
                 val moduleItemsCallback = getModuleItemsCallback(moduleObject, false)
                 if (!moduleItemsCallback.isFromNetwork && !isGroupExpanded(moduleObject)) {
-                    ModuleManager.getFirstPageModuleItems(courseContext, moduleObject.id, moduleItemsCallback, true)
+                    repository.getFirstPageModuleItems(courseContext, moduleObject.id, true, moduleItemsCallback)
                 } else {
                     CollapsedModulesStore.markModuleCollapsed(courseContext, moduleObject.id, true)
                     expandCollapseGroup(moduleObject)
@@ -210,7 +210,7 @@ open class ModuleListRecyclerAdapter(
         mModuleItemCallbacks.clear()
         mModuleObjectCallback!!.cancel()
 
-        ModuleManager.getFirstPageModuleItems(courseContext, moduleObject.id, getModuleItemsCallback(moduleObject, false), true)
+        repository.getFirstPageModuleItems(courseContext, moduleObject.id, true, getModuleItemsCallback(moduleObject, false))
     }
 
     fun updateMasteryPathItems() {
@@ -283,7 +283,7 @@ open class ModuleListRecyclerAdapter(
 
                         val nextItemsURL = linkHeaders.nextUrl
                         if (nextItemsURL != null) {
-                            ModuleManager.getNextPageModuleItems(nextItemsURL, this, true)
+                            repository.getNextPageModuleItems(nextItemsURL, true, this)
                         }
 
                         this.isFromNetwork = true
@@ -297,7 +297,7 @@ open class ModuleListRecyclerAdapter(
 
                         val nextItemsURL = linkHeaders.nextUrl
                         if (nextItemsURL != null) {
-                            ModuleManager.getNextPageModuleItems(nextItemsURL, this, true)
+                            repository.getNextPageModuleItems(nextItemsURL, true, this)
                         }
 
                         // Wait for the network to expand when there are no items
@@ -339,7 +339,7 @@ open class ModuleListRecyclerAdapter(
                 moduleObjects?.toTypedArray()?.forEach {
                     addOrUpdateGroup(it)
                     if (!collapsedItems.contains(it.id)) {
-                        ModuleManager.getFirstPageModuleItems(courseContext, it.id, getModuleItemsCallback(it, true), true)
+                        repository.getFirstPageModuleItems(courseContext, it.id, true, getModuleItemsCallback(it, true))
                     }
                 }
                 if(!shouldExhaustPagination || !this.moreCallsExist()) {
@@ -355,16 +355,15 @@ open class ModuleListRecyclerAdapter(
     }
 
     override fun loadFirstPage() {
-        checkCourseTabsJob = tryWeave {
-            val tabs = awaitApi<List<Tab>> { TabManager.getTabs(courseContext, it, isRefresh) }
-                    .filter { !(it.isExternal && it.isHidden) }
+        checkCourseTabsJob = lifecycleScope.tryLaunch {
+            val tabs = repository.getTabs(courseContext, isRefresh)
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
                 if (shouldExhaustPagination) {
-                    ModuleManager.getAllModuleObjets(courseContext, mModuleObjectCallback!!, true)
+                    repository.getAllModuleObjects(courseContext, true, mModuleObjectCallback!!)
                 } else {
-                    ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
+                    repository.getFirstPageModuleObjects(courseContext, true, mModuleObjectCallback!!)
                 }
             } else {
                 adapterToFragmentCallback?.onRefreshFinished(true)
@@ -375,7 +374,7 @@ open class ModuleListRecyclerAdapter(
     }
 
     override fun loadNextPage(nextURL: String) {
-        ModuleManager.getNextPageModuleObjects(nextURL, mModuleObjectCallback!!, true)
+        repository.getNextPageModuleObjects(nextURL, true, mModuleObjectCallback!!)
     }
 
     // endregion
