@@ -24,7 +24,6 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.StubLandscape
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.utils.toApiString
@@ -239,7 +238,7 @@ class InAppUpdatePageTest : TeacherTest() {
     }
 
     @Test
-    @StubLandscape("Stubbed in Landscape because on API lvl 29 device the notification will remain opened even though we push the back button at the end. Should be investigated and make some workaround once.")
+    @Stub("Stubbed because on API lvl 29 device the notification will remain opened even though we push the back button at the end. Should be investigated and make some workaround once.")
     fun showNotificationOnFlexibleDownloadFinish() {
         updatePrefs.clearPrefs()
         val expectedTitle = context.getString(R.string.appUpdateReadyTitle)
