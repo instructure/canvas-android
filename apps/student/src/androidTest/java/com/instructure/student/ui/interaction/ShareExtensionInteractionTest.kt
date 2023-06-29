@@ -70,6 +70,8 @@ class ShareExtensionInteractionTest : StudentTest() {
     fun fileUploadDialogShowsCorrectlyForMyFilesUpload() {
         val data = createMockData()
         val student = data.students[0]
+
+        File(getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
         val uri = setupFileOnDevice("sample.jpg")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
