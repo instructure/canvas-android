@@ -28,7 +28,7 @@ import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsModel
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -271,8 +271,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val route = SubmissionDetailsFragment.makeRoute(model.canvasContext, model.assignmentId)
-        val fragment = SubmissionDetailsFragment.newInstance(route)!!.apply {
+        val route = SubmissionDetailsRepositoryFragment.makeRoute(model.canvasContext, model.assignmentId)
+        val fragment = SubmissionDetailsRepositoryFragment.newInstance(route)!!.apply {
             overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }

@@ -333,4 +333,9 @@ class OfflineModule {
     ): ConferenceFacade {
         return ConferenceFacade(conferenceDao, conferenceRecodingDao)
     }
+
+    @Provides
+    fun provideCourseFeaturesDao(appDatabase: OfflineDatabase): CourseFeaturesDao {
+        return appDatabase.courseFeaturesDao()
+    }
 }

@@ -21,36 +21,14 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.apis.AssignmentAPI
-import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.apis.ConferencesApi
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.DiscussionAPI
-import com.instructure.canvasapi2.apis.PageAPI
-import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
-import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.DashboardCardDao
-import com.instructure.pandautils.room.offline.daos.PageDao
-import com.instructure.pandautils.room.offline.daos.QuizDao
-import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
-import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
-import com.instructure.pandautils.room.offline.entities.PageEntity
-import com.instructure.pandautils.room.offline.entities.QuizEntity
-import com.instructure.pandautils.room.offline.facade.AssignmentFacade
-import com.instructure.pandautils.room.offline.facade.ConferenceFacade
-import com.instructure.pandautils.room.offline.facade.CourseFacade
-import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
-import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
+import com.instructure.pandautils.room.offline.facade.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -77,7 +55,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val conferenceFacade: ConferenceFacade,
     private val discussionApi: DiscussionAPI.DiscussionInterface,
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface
+    private val announcementApi: AnnouncementAPI.AnnouncementInterface,
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
+    private val courseFeaturesDao: CourseFeaturesDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -204,6 +184,11 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseSettings = courseApi.getCourseSettings(courseId, params).dataOrNull
         courseSettings?.let {
             courseSettingsDao.insert(CourseSettingsEntity(it, courseId))
+        }
+
+        val courseFeatures = featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull
+        courseFeatures?.let {
+            courseFeaturesDao.insert(CourseFeaturesEntity(courseId, it))
         }
     }
 

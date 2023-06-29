@@ -76,7 +76,8 @@ import com.instructure.pandautils.room.offline.entities.*
         ModuleCompletionRequirementEntity::class,
         FileSyncSettingsEntity::class,
         ConferenceEntity::class,
-        ConferenceRecordingEntity::class
+        ConferenceRecordingEntity::class,
+        CourseFeaturesEntity::class,
     ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -153,4 +154,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun conferenceDao(): ConferenceDao
 
     abstract fun conferenceRecordingDao(): ConferenceRecodingDao
+
+    abstract fun courseFeaturesDao(): CourseFeaturesDao
 }
