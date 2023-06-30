@@ -18,19 +18,29 @@ package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
 import com.instructure.pandautils.room.offline.daos.ModuleItemDao
 import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
+import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirementEntity
 import com.instructure.pandautils.room.offline.entities.ModuleItemEntity
 import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
 
-class ModuleFacade(private val moduleObjectDao: ModuleObjectDao, private val moduleItemDao: ModuleItemDao) {
+class ModuleFacade(
+    private val moduleObjectDao: ModuleObjectDao,
+    private val moduleItemDao: ModuleItemDao,
+    private val completionRequirementDao: ModuleCompletionRequirementDao) {
 
     suspend fun insertModules(moduleObjects: List<ModuleObject>, courseId: Long) {
         moduleObjects.forEach { moduleObject ->
             moduleObjectDao.insert(ModuleObjectEntity(moduleObject, courseId))
             moduleObject.items
-                .map { moduleItem -> ModuleItemEntity(moduleItem, moduleObject.id) }
-                .let { entities -> moduleItemDao.insertAll(entities) }
+                .forEach { moduleItem ->
+                    val modultItemEntity = ModuleItemEntity(moduleItem, moduleObject.id)
+                    moduleItemDao.insert(modultItemEntity)
+                    moduleItem.completionRequirement?.let {
+                        completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, modultItemEntity.id))
+                    }
+                }
         }
     }
 
@@ -40,12 +50,17 @@ class ModuleFacade(private val moduleObjectDao: ModuleObjectDao, private val mod
     }
 
     private suspend fun createModuleObjectApiModel(moduleObjectEntity: ModuleObjectEntity): ModuleObject {
-        val moduleItems = moduleItemDao.findByModuleId(moduleObjectEntity.id).map { it.toApiModel() }
+        val moduleItems = moduleItemDao.findByModuleId(moduleObjectEntity.id).map { createModuleItemApiModel(it) }
         return moduleObjectEntity.toApiModel(moduleItems)
     }
 
     suspend fun getModuleItems(moduleId: Long): List<ModuleItem> {
         val moduleItemEntities = moduleItemDao.findByModuleId(moduleId)
-        return moduleItemEntities.map { moduleItemEntity -> moduleItemEntity.toApiModel() }
+        return moduleItemEntities.map { moduleItemEntity -> createModuleItemApiModel(moduleItemEntity) }
+    }
+
+    private suspend fun createModuleItemApiModel(moduleItemEntity: ModuleItemEntity): ModuleItem {
+        val completionRequirement = completionRequirementDao.findByModuleId(moduleItemEntity.id).firstOrNull()?.toApiModel()
+        return moduleItemEntity.toApiModel(completionRequirement)
     }
 }

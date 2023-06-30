@@ -79,7 +79,7 @@ class LockInfoFacadeTest {
         coEvery { lockInfoDao.findByAssignmentId(assignmentId) } returns LockInfoEntity(lockInfo, assignmentId)
         coEvery { lockedModuleDao.findByLockInfoId(any()) } returns LockedModuleEntity(lockedModule, 1L)
         coEvery { moduleNameDao.findByLockModuleId(any()) } returns prerequisites.map { ModuleNameEntity(it, 1L) }
-        coEvery { completionRequirementDao.findByLockModuleId(any()) } returns completionRequirements.map {
+        coEvery { completionRequirementDao.findByModuleId(any()) } returns completionRequirements.map {
             ModuleCompletionRequirementEntity(it, 1L)
         }
 

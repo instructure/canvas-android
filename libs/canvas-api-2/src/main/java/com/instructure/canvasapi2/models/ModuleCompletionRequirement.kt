@@ -27,5 +27,6 @@ data class ModuleCompletionRequirement(
         @SerializedName("min_score")
         val minScore: Double = 0.0,
         @SerializedName("max_score")
-        val maxScore: Double = 0.0
+        val maxScore: Double = 0.0,
+        var completed: Boolean = false
 ) : CanvasModel<ModuleCompletionRequirement>()

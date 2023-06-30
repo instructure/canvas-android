@@ -49,7 +49,7 @@ class LockInfoFacade(
         val lockInfoEntity = lockInfoDao.findByAssignmentId(assignmentId)
         val lockedModuleEntity = lockInfoEntity?.id?.let { lockedModuleDao.findByLockInfoId(it) }
         val moduleNameEntities = lockedModuleEntity?.id?.let { moduleNameDao.findByLockModuleId(it) }
-        val completionRequirementEntities = lockedModuleEntity?.id?.let { completionRequirementDao.findByLockModuleId(it) }
+        val completionRequirementEntities = lockedModuleEntity?.id?.let { completionRequirementDao.findByModuleId(it) }
 
         return lockInfoEntity?.toApiModel(
             lockedModule = lockedModuleEntity?.toApiModel(

@@ -35,6 +35,6 @@ interface ModuleCompletionRequirementDao {
     @Update
     suspend fun update(entity: ModuleCompletionRequirementEntity)
 
-    @Query("SELECT * FROM ModuleCompletionRequirementEntity WHERE lockedModuleId = :lockModuleId")
-    suspend fun findByLockModuleId(lockModuleId: Long): List<ModuleCompletionRequirementEntity>
+    @Query("SELECT * FROM ModuleCompletionRequirementEntity WHERE moduleId = :moduleId")
+    suspend fun findByModuleId(moduleId: Long): List<ModuleCompletionRequirementEntity>
 }

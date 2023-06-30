@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "376985c8e44e885bedf7776ebc66d953",
+    "identityHash": "483cf04a166d8cd9d3eef21baa855d66",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -3987,7 +3987,7 @@
       },
       {
         "tableName": "ModuleCompletionRequirementEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `type` TEXT, `minScore` REAL NOT NULL, `maxScore` REAL NOT NULL, `lockedModuleId` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `minScore` REAL NOT NULL, `maxScore` REAL NOT NULL, `completed` INTEGER, `moduleId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -4014,14 +4014,20 @@
             "notNull": true
           },
           {
-            "fieldPath": "lockedModuleId",
-            "columnName": "lockedModuleId",
+            "fieldPath": "completed",
+            "columnName": "completed",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "moduleId",
+            "columnName": "moduleId",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -4267,7 +4273,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '376985c8e44e885bedf7776ebc66d953')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '483cf04a166d8cd9d3eef21baa855d66')"
     ]
   }
 }

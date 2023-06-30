@@ -347,8 +347,9 @@ class OfflineModule {
     @Provides
     fun provideModuleFacade(
         moduleObjectDao: ModuleObjectDao,
-        moduleItemDao: ModuleItemDao
+        moduleItemDao: ModuleItemDao,
+        completionRequirementDao: ModuleCompletionRequirementDao
     ): ModuleFacade {
-        return ModuleFacade(moduleObjectDao, moduleItemDao)
+        return ModuleFacade(moduleObjectDao, moduleItemDao, completionRequirementDao)
     }
 }
