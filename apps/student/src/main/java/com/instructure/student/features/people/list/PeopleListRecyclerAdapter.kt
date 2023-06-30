@@ -91,8 +91,10 @@ class PeopleListRecyclerAdapter(
 
     private fun populateAdapter(result: List<User>) {
         val (enrolled, unEnrolled) = result.partition { it.enrollments.isNotEmpty() }
-        enrolled.asSequence().onEach { it.enrollments.sortedByDescending { enrollment-> mEnrollmentPriority[enrollment.type] } }
-                .groupBy { it.enrollments[0].type }
+        enrolled
+                .groupBy {
+                    it.enrollments.sortedByDescending { enrollment -> mEnrollmentPriority[enrollment.type] }[0].type
+                }
                 .forEach { (type, users) -> addOrUpdateAllItems(type!!, users) }
         if (CanvasContext.Type.isGroup(canvasContext)) addOrUpdateAllItems(EnrollmentType.NoEnrollment, unEnrolled)
         notifyDataSetChanged()
