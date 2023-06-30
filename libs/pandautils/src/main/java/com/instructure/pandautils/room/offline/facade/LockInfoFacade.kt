@@ -34,8 +34,16 @@ class LockInfoFacade(
     private val completionRequirementDao: ModuleCompletionRequirementDao
 ) {
 
-    suspend fun insertLockInfo(lockInfo: LockInfo, assignmentId: Long) {
-        val lockInfoId = lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId))
+    suspend fun insertLockInfoForAssignment(lockInfo: LockInfo, assignmentId: Long) {
+        insertLockInfo(lockInfo, assignmentId = assignmentId)
+    }
+
+    suspend fun insertLockInfoForModule(lockInfo: LockInfo, moduleId: Long) {
+        insertLockInfo(lockInfo, moduleId = moduleId)
+    }
+
+    private suspend fun insertLockInfo(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null) {
+        val lockInfoId = lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId, moduleId))
         lockInfo.contextModule?.let { lockedModule ->
             lockedModuleDao.insert(LockedModuleEntity(lockedModule, lockInfoId))
             moduleNameDao.insertAll(lockedModule.prerequisites?.map { ModuleNameEntity(it, lockedModule.id) }.orEmpty())
@@ -47,6 +55,15 @@ class LockInfoFacade(
 
     suspend fun getLockInfoByAssignmentId(assignmentId: Long): LockInfo? {
         val lockInfoEntity = lockInfoDao.findByAssignmentId(assignmentId)
+        return createFullLockInfoApiModel(lockInfoEntity)
+    }
+
+    suspend fun getLockInfoByModuleId(moduleId: Long): LockInfo? {
+        val lockInfoEntity = lockInfoDao.findByModuleId(moduleId)
+        return createFullLockInfoApiModel(lockInfoEntity)
+    }
+
+    private suspend fun createFullLockInfoApiModel(lockInfoEntity: LockInfoEntity?): LockInfo? {
         val lockedModuleEntity = lockInfoEntity?.id?.let { lockedModuleDao.findByLockInfoId(it) }
         val moduleNameEntities = lockedModuleEntity?.id?.let { moduleNameDao.findByLockModuleId(it) }
         val completionRequirementEntities = lockedModuleEntity?.id?.let { completionRequirementDao.findByModuleId(it) }

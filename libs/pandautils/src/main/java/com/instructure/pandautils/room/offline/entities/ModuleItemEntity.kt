@@ -20,6 +20,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.ModuleCompletionRequirement
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 
 @Entity(
@@ -42,7 +43,6 @@ data class ModuleItemEntity(
     val type: String?,
     val htmlUrl: String?,
     val url: String?,
-//    val moduleDetails: ModuleContentDetails?,
     val published: Boolean?,
     val contentId: Long,
     val externalUrl: String?,
@@ -63,7 +63,7 @@ data class ModuleItemEntity(
         externalUrl = moduleItem.externalUrl,
         pageUrl = moduleItem.pageUrl)
 
-    fun toApiModel(completionRequirement: ModuleCompletionRequirement?): ModuleItem {
+    fun toApiModel(completionRequirement: ModuleCompletionRequirement?, moduleContentDetails: ModuleContentDetails?): ModuleItem {
         return ModuleItem(
             id = id,
             position = position,
@@ -73,6 +73,7 @@ data class ModuleItemEntity(
             htmlUrl = htmlUrl,
             url = url,
             completionRequirement = completionRequirement,
+            moduleDetails = moduleContentDetails,
             published = published,
             contentId = contentId,
             externalUrl = externalUrl,

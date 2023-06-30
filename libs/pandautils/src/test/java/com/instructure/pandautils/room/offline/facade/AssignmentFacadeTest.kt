@@ -106,7 +106,7 @@ class AssignmentFacadeTest {
         coEvery { discussionTopicHeaderFacade.insertDiscussion(any(), any()) } returns 1L
         coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
         coEvery { rubricCriterionDao.insert(any()) } just Runs
-        coEvery { lockInfoFacade.insertLockInfo(any(), any()) } just Runs
+        coEvery { lockInfoFacade.insertLockInfoForAssignment(any(), any()) } just Runs
 
         facade.insertAssignmentGroups(assignmentGroups)
 
@@ -121,7 +121,7 @@ class AssignmentFacadeTest {
                 rubricCriterions.forEach {
                     coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
                 }
-                coVerify { lockInfoFacade.insertLockInfo(lockInfo, assignment.id) }
+                coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
                 coVerify {
                     assignmentDao.insert(
                         AssignmentEntity(

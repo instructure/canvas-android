@@ -22,23 +22,20 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.instructure.pandautils.room.offline.entities.ModuleItemEntity
+import com.instructure.pandautils.room.offline.entities.ModuleContentDetailsEntity
 
 @Dao
-interface ModuleItemDao {
+interface ModuleContentDetailsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(moduleItem: ModuleItemEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(moduleItems: List<ModuleItemEntity>)
+    suspend fun insert(moduleContentDetails: ModuleContentDetailsEntity)
 
     @Delete
-    suspend fun delete(moduleItem: ModuleItemEntity)
+    suspend fun delete(moduleContentDetails: ModuleContentDetailsEntity)
 
     @Update
-    suspend fun update(moduleItem: ModuleItemEntity)
+    suspend fun update(moduleContentDetails: ModuleContentDetailsEntity)
 
-    @Query("SELECT * FROM ModuleItemEntity WHERE moduleId = :moduleId ORDER BY position")
-    suspend fun findByModuleId(moduleId: Long): List<ModuleItemEntity>
+    @Query("SELECT * FROM ModuleContentDetailsEntity WHERE moduleId = :moduleId")
+    suspend fun findByModuleId(moduleId: Long): ModuleContentDetailsEntity?
 }

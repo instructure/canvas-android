@@ -60,7 +60,7 @@ class LockInfoFacadeTest {
         coEvery { moduleNameDao.insertAll(any()) } just Runs
         coEvery { completionRequirementDao.insertAll(any()) } just Runs
 
-        facade.insertLockInfo(lockInfo, assignmentId)
+        facade.insertLockInfoForAssignment(lockInfo, assignmentId)
 
         coVerify { lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId)) }
         coVerify { lockedModuleDao.insert(LockedModuleEntity(lockedModule, 1L)) }

@@ -64,7 +64,7 @@ class AssignmentFacade(
                 }
 
                 assignment.lockInfo?.let {
-                    lockInfoFacade.insertLockInfo(it, assignment.id)
+                    lockInfoFacade.insertLockInfoForAssignment(it, assignment.id)
                 }
 
                 val assignmentEntity = AssignmentEntity(

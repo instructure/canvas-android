@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "483cf04a166d8cd9d3eef21baa855d66",
+    "identityHash": "96e89512f3155c0af1dd12b64253bf8d",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -2092,24 +2092,24 @@
         ]
       },
       {
-        "tableName": "ModuleObjectEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `position` INTEGER NOT NULL, `name` TEXT, `unlockAt` TEXT, `sequentialProgress` INTEGER NOT NULL, `prerequisiteIds` TEXT, `state` TEXT, `completedAt` TEXT, `published` INTEGER, `itemCount` INTEGER NOT NULL, `itemsUrl` TEXT NOT NULL, `courseId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "ModuleContentDetailsEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`moduleId` INTEGER NOT NULL, `pointsPossible` TEXT, `dueAt` TEXT, `unlockAt` TEXT, `lockAt` TEXT, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, PRIMARY KEY(`moduleId`), FOREIGN KEY(`moduleId`) REFERENCES `ModuleItemEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "moduleId",
+            "columnName": "moduleId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "position",
-            "columnName": "position",
-            "affinity": "INTEGER",
-            "notNull": true
+            "fieldPath": "pointsPossible",
+            "columnName": "pointsPossible",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
+            "fieldPath": "dueAt",
+            "columnName": "dueAt",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -2120,68 +2120,38 @@
             "notNull": false
           },
           {
-            "fieldPath": "sequentialProgress",
-            "columnName": "sequentialProgress",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "prerequisiteIds",
-            "columnName": "prerequisiteIds",
+            "fieldPath": "lockAt",
+            "columnName": "lockAt",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "state",
-            "columnName": "state",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "completedAt",
-            "columnName": "completedAt",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "published",
-            "columnName": "published",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "itemCount",
-            "columnName": "itemCount",
+            "fieldPath": "lockedForUser",
+            "columnName": "lockedForUser",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "itemsUrl",
-            "columnName": "itemsUrl",
+            "fieldPath": "lockExplanation",
+            "columnName": "lockExplanation",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "courseId",
-            "columnName": "courseId",
-            "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "moduleId"
           ]
         },
         "indices": [],
         "foreignKeys": [
           {
-            "table": "CourseEntity",
+            "table": "ModuleItemEntity",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "courseId"
+              "moduleId"
             ],
             "referencedColumns": [
               "id"
@@ -2280,6 +2250,104 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "moduleId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "ModuleObjectEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `position` INTEGER NOT NULL, `name` TEXT, `unlockAt` TEXT, `sequentialProgress` INTEGER NOT NULL, `prerequisiteIds` TEXT, `state` TEXT, `completedAt` TEXT, `published` INTEGER, `itemCount` INTEGER NOT NULL, `itemsUrl` TEXT NOT NULL, `courseId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unlockAt",
+            "columnName": "unlockAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sequentialProgress",
+            "columnName": "sequentialProgress",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "prerequisiteIds",
+            "columnName": "prerequisiteIds",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "published",
+            "columnName": "published",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemCount",
+            "columnName": "itemCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemsUrl",
+            "columnName": "itemsUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "CourseEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
             ],
             "referencedColumns": [
               "id"
@@ -3861,7 +3929,7 @@
       },
       {
         "tableName": "LockInfoEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `assignmentId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `assignmentId` INTEGER, `moduleId` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -3885,7 +3953,13 @@
             "fieldPath": "assignmentId",
             "columnName": "assignmentId",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
+          },
+          {
+            "fieldPath": "moduleId",
+            "columnName": "moduleId",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -4273,7 +4347,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '483cf04a166d8cd9d3eef21baa855d66')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '96e89512f3155c0af1dd12b64253bf8d')"
     ]
   }
 }

@@ -217,6 +217,11 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideModuleContentDetailsDao(offlineDatabase: OfflineDatabase): ModuleContentDetailsDao {
+        return offlineDatabase.moduleContentDetailsDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
@@ -348,8 +353,10 @@ class OfflineModule {
     fun provideModuleFacade(
         moduleObjectDao: ModuleObjectDao,
         moduleItemDao: ModuleItemDao,
-        completionRequirementDao: ModuleCompletionRequirementDao
+        completionRequirementDao: ModuleCompletionRequirementDao,
+        moduleContentDetailsDao: ModuleContentDetailsDao,
+        lockInfoFacade: LockInfoFacade
     ): ModuleFacade {
-        return ModuleFacade(moduleObjectDao, moduleItemDao, completionRequirementDao)
+        return ModuleFacade(moduleObjectDao, moduleItemDao, completionRequirementDao, moduleContentDetailsDao, lockInfoFacade)
     }
 }

@@ -19,16 +19,20 @@ package com.instructure.pandautils.room.offline.facade
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
+import com.instructure.pandautils.room.offline.daos.ModuleContentDetailsDao
 import com.instructure.pandautils.room.offline.daos.ModuleItemDao
 import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
 import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirementEntity
+import com.instructure.pandautils.room.offline.entities.ModuleContentDetailsEntity
 import com.instructure.pandautils.room.offline.entities.ModuleItemEntity
 import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
 
 class ModuleFacade(
     private val moduleObjectDao: ModuleObjectDao,
     private val moduleItemDao: ModuleItemDao,
-    private val completionRequirementDao: ModuleCompletionRequirementDao) {
+    private val completionRequirementDao: ModuleCompletionRequirementDao,
+    private val moduleContentDetailsDao: ModuleContentDetailsDao,
+    private val lockInfoFacade: LockInfoFacade) {
 
     suspend fun insertModules(moduleObjects: List<ModuleObject>, courseId: Long) {
         moduleObjects.forEach { moduleObject ->
@@ -39,6 +43,12 @@ class ModuleFacade(
                     moduleItemDao.insert(modultItemEntity)
                     moduleItem.completionRequirement?.let {
                         completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, modultItemEntity.id))
+                    }
+                    moduleItem.moduleDetails?.let { moduleDetails ->
+                        moduleContentDetailsDao.insert(ModuleContentDetailsEntity(moduleDetails, modultItemEntity.id))
+                        moduleDetails.lockInfo?.let { lockInfo ->
+                            lockInfoFacade.insertLockInfoForModule(lockInfo, modultItemEntity.id)
+                        }
                     }
                 }
         }
@@ -61,6 +71,8 @@ class ModuleFacade(
 
     private suspend fun createModuleItemApiModel(moduleItemEntity: ModuleItemEntity): ModuleItem {
         val completionRequirement = completionRequirementDao.findByModuleId(moduleItemEntity.id).firstOrNull()?.toApiModel()
-        return moduleItemEntity.toApiModel(completionRequirement)
+        val lockInfo = lockInfoFacade.getLockInfoByModuleId(moduleItemEntity.id)
+        val moduleContentDetails = moduleContentDetailsDao.findByModuleId(moduleItemEntity.id)?.toApiModel(lockInfo)
+        return moduleItemEntity.toApiModel(completionRequirement, moduleContentDetails)
     }
 }

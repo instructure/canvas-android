@@ -39,6 +39,6 @@ interface ModuleObjectDao {
     @Update
     suspend fun update(moduleObject: ModuleObjectEntity)
 
-    @Query("SELECT * FROM ModuleObjectEntity WHERE courseId = :courseId")
+    @Query("SELECT * FROM ModuleObjectEntity WHERE courseId = :courseId ORDER BY position")
     suspend fun findByCourseId(courseId: Long): List<ModuleObjectEntity>
 }
