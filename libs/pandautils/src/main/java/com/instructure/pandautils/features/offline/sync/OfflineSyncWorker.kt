@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
@@ -50,6 +51,7 @@ import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.PeopleFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -62,10 +64,12 @@ class OfflineSyncWorker @AssistedInject constructor(
     @Assisted workerParameters: WorkerParameters,
     private val courseApi: CourseAPI.CoursesInterface,
     private val pageApi: PageAPI.PagesInterface,
+    private val userApi: UserAPI.UsersInterface,
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val pageDao: PageDao,
+    private val peopleFacade: PeopleFacade,
     private val courseFacade: CourseFacade,
     private val assignmentFacade: AssignmentFacade,
     private val quizDao: QuizDao,
@@ -113,6 +117,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.isTabSelected(Tab.ANNOUNCEMENTS_ID)) {
                         fetchAnnouncements(courseSettings.courseId)
+                    }
+                    if (courseSettings.isTabSelected(Tab.PEOPLE_ID)) {
+                        fetchPeople(courseSettings.courseId)
                     }
                 }
             fetchSyllabus(syllabusCourseIds)
@@ -204,6 +211,16 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseSettings = courseApi.getCourseSettings(courseId, params).dataOrNull
         courseSettings?.let {
             courseSettingsDao.insert(CourseSettingsEntity(it, courseId))
+        }
+    }
+
+
+    private suspend fun fetchPeople(courseId: Long) {
+        val restParams = RestParams(isForceReadFromNetwork = true)
+        val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams).dataOrNull
+
+        users?.let {
+            peopleFacade.insertPeople(it)
         }
     }
 
