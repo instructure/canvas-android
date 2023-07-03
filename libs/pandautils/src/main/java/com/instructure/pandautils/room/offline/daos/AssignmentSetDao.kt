@@ -22,20 +22,20 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.instructure.pandautils.room.offline.entities.ModuleContentDetailsEntity
+import com.instructure.pandautils.room.offline.entities.AssignmentSetEntity
 
 @Dao
-interface ModuleContentDetailsDao {
+interface AssignmentSetDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(moduleContentDetails: ModuleContentDetailsEntity)
+    suspend fun insert(assignmentSetEntity: AssignmentSetEntity)
 
     @Delete
-    suspend fun delete(moduleContentDetails: ModuleContentDetailsEntity)
+    suspend fun delete(assignmentSetEntity: AssignmentSetEntity)
 
     @Update
-    suspend fun update(moduleContentDetails: ModuleContentDetailsEntity)
+    suspend fun update(assignmentSetEntity: AssignmentSetEntity)
 
-    @Query("SELECT * FROM ModuleContentDetailsEntity WHERE id = :id")
-    suspend fun findById(id: Long): ModuleContentDetailsEntity?
+    @Query("SELECT * FROM AssignmentSetEntity WHERE masteryPathId = :masteryPathId")
+    suspend fun findByMasteryPathId(masteryPathId: Long): List<AssignmentSetEntity>
 }

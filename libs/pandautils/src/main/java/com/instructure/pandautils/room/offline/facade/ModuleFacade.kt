@@ -32,7 +32,8 @@ class ModuleFacade(
     private val moduleItemDao: ModuleItemDao,
     private val completionRequirementDao: ModuleCompletionRequirementDao,
     private val moduleContentDetailsDao: ModuleContentDetailsDao,
-    private val lockInfoFacade: LockInfoFacade) {
+    private val lockInfoFacade: LockInfoFacade,
+    private val masteryPathFacade: MasteryPathFacade) {
 
     suspend fun insertModules(moduleObjects: List<ModuleObject>, courseId: Long) {
         moduleObjects.forEach { moduleObject ->
@@ -49,6 +50,9 @@ class ModuleFacade(
                         moduleDetails.lockInfo?.let { lockInfo ->
                             lockInfoFacade.insertLockInfoForModule(lockInfo, modultItemEntity.id)
                         }
+                    }
+                    moduleItem.masteryPaths?.let { masteryPaths ->
+                        masteryPathFacade.insertMasteryPath(masteryPaths, modultItemEntity.id)
                     }
                 }
         }
@@ -72,7 +76,8 @@ class ModuleFacade(
     private suspend fun createModuleItemApiModel(moduleItemEntity: ModuleItemEntity): ModuleItem {
         val completionRequirement = completionRequirementDao.findByModuleId(moduleItemEntity.id).firstOrNull()?.toApiModel()
         val lockInfo = lockInfoFacade.getLockInfoByModuleId(moduleItemEntity.id)
-        val moduleContentDetails = moduleContentDetailsDao.findByModuleId(moduleItemEntity.id)?.toApiModel(lockInfo)
-        return moduleItemEntity.toApiModel(completionRequirement, moduleContentDetails)
+        val moduleContentDetails = moduleContentDetailsDao.findById(moduleItemEntity.id)?.toApiModel(lockInfo)
+        val masteryPath = masteryPathFacade.getMasteryPath(moduleItemEntity.id)
+        return moduleItemEntity.toApiModel(completionRequirement, moduleContentDetails, masteryPath)
     }
 }

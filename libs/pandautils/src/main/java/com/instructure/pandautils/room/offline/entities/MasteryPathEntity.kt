@@ -19,8 +19,9 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.models.AssignmentSet
+import com.instructure.canvasapi2.models.MasteryPath
 
 @Entity(
     foreignKeys = [(
@@ -32,33 +33,22 @@ import com.instructure.canvasapi2.models.ModuleContentDetails
         )
         )]
 )
-data class ModuleContentDetailsEntity(
+data class MasteryPathEntity(
     @PrimaryKey
     val id: Long,
-    val pointsPossible: String?,
-    val dueAt: String?,
-    val unlockAt: String?,
-    val lockAt: String?,
-    val lockedForUser: Boolean,
-    val lockExplanation: String?
+    val isLocked: Boolean,
+    val selectedSetId: Long
 ) {
-    constructor(moduleContentDetails: ModuleContentDetails, moduleItemId: Long) : this(
+
+    constructor(masteryPath: MasteryPath, moduleItemId: Long) : this(
         id = moduleItemId, // This will always be a 1on1 relationship with the moduleItem so we use the same id
-        pointsPossible = moduleContentDetails.pointsPossible,
-        dueAt = moduleContentDetails.dueAt,
-        unlockAt = moduleContentDetails.unlockAt,
-        lockAt = moduleContentDetails.lockAt,
-        lockedForUser = moduleContentDetails.lockedForUser,
-        lockExplanation = moduleContentDetails.lockExplanation,
+        isLocked = masteryPath.isLocked,
+        selectedSetId = masteryPath.selectedSetId
     )
 
-    fun toApiModel(lockInfo: LockInfo?) = ModuleContentDetails(
-        pointsPossible = pointsPossible,
-        dueAt = dueAt,
-        unlockAt = unlockAt,
-        lockAt = lockAt,
-        lockedForUser = lockedForUser,
-        lockExplanation = lockExplanation,
-        lockInfo = lockInfo
+    fun toApiModel(assignmentSets: List<AssignmentSet?>) = MasteryPath(
+        isLocked = isLocked,
+        assignmentSets = assignmentSets.toTypedArray(),
+        selectedSetId = selectedSetId
     )
 }

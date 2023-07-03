@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.MasteryPath
 import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
@@ -35,7 +36,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 )
 data class ModuleItemEntity(
     @PrimaryKey
-    val id: Long = 0,
+    val id: Long,
     val moduleId: Long,
     var position: Int,
     val title: String?,
@@ -46,8 +47,7 @@ data class ModuleItemEntity(
     val published: Boolean?,
     val contentId: Long,
     val externalUrl: String?,
-    val pageUrl: String?,
-//    var masteryPaths: MasteryPath?,
+    val pageUrl: String?
 ) {
     constructor(moduleItem: ModuleItem, moduleId: Long) : this(
         id = moduleItem.id,
@@ -63,7 +63,7 @@ data class ModuleItemEntity(
         externalUrl = moduleItem.externalUrl,
         pageUrl = moduleItem.pageUrl)
 
-    fun toApiModel(completionRequirement: ModuleCompletionRequirement?, moduleContentDetails: ModuleContentDetails?): ModuleItem {
+    fun toApiModel(completionRequirement: ModuleCompletionRequirement?, moduleContentDetails: ModuleContentDetails?, masteryPath: MasteryPath?): ModuleItem {
         return ModuleItem(
             id = id,
             position = position,
@@ -77,7 +77,8 @@ data class ModuleItemEntity(
             published = published,
             contentId = contentId,
             externalUrl = externalUrl,
-            pageUrl = pageUrl
+            pageUrl = pageUrl,
+            masteryPaths = masteryPath
         )
     }
 }

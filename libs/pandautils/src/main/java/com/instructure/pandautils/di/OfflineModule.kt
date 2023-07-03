@@ -222,6 +222,21 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideMasteryPathDao(offlineDatabase: OfflineDatabase): MasteryPathDao {
+        return offlineDatabase.masteryPathDao()
+    }
+
+    @Provides
+    fun provideAssignmentSetDao(offlineDatabase: OfflineDatabase): AssignmentSetDao {
+        return offlineDatabase.assignmentSetDao()
+    }
+
+    @Provides
+    fun provideMasteryPathAssignmentDao(offlineDatabase: OfflineDatabase): MasteryPathAssignmentDao {
+        return offlineDatabase.masteryPathAssignmentDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
@@ -355,8 +370,19 @@ class OfflineModule {
         moduleItemDao: ModuleItemDao,
         completionRequirementDao: ModuleCompletionRequirementDao,
         moduleContentDetailsDao: ModuleContentDetailsDao,
-        lockInfoFacade: LockInfoFacade
+        lockInfoFacade: LockInfoFacade,
+        masteryPathFacade: MasteryPathFacade
     ): ModuleFacade {
-        return ModuleFacade(moduleObjectDao, moduleItemDao, completionRequirementDao, moduleContentDetailsDao, lockInfoFacade)
+        return ModuleFacade(moduleObjectDao, moduleItemDao, completionRequirementDao, moduleContentDetailsDao, lockInfoFacade, masteryPathFacade)
+    }
+
+    @Provides
+    fun provideMasteryPathFacade(
+        masteryPathDao: MasteryPathDao,
+        assignmentSetDao: AssignmentSetDao,
+        masteryPathAssignmentDao: MasteryPathAssignmentDao,
+        assignmentFacade: AssignmentFacade
+    ): MasteryPathFacade {
+        return MasteryPathFacade(masteryPathDao, masteryPathAssignmentDao, assignmentSetDao, assignmentFacade)
     }
 }
