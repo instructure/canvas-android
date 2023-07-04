@@ -22,7 +22,10 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.common.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
@@ -44,8 +47,14 @@ class SubmissionFacadeTest {
     private val mediaCommentDao: MediaCommentDao = mockk(relaxed = true)
     private val userDao: UserDao = mockk(relaxed = true)
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
+    private val submissionCommentDao: SubmissionCommentDao = mockk(relaxed = true)
+    private val attachmentDao: AttachmentDao = mockk(relaxed = true)
+    private val authorDao: AuthorDao = mockk(relaxed = true)
 
-    private val facade = SubmissionFacade(submissionDao, groupDao, mediaCommentDao, userDao, userApi)
+    private val facade = SubmissionFacade(
+        submissionDao, groupDao, mediaCommentDao, userDao,
+        userApi, submissionCommentDao, attachmentDao, authorDao
+    )
 
     @Test
     fun `Calling insertSubmission should insert submission and related entities`() = runTest {
