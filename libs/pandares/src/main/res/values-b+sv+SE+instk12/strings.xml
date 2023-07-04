@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">Inloggnings-ID</string>
     <string name="aboutEmailTitle">E-post</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Det uppstod ett problem när den här uppgiften skulle laddas om. Kontrollera din anslutning och försök igen.</string>
 </resources>
