@@ -1424,4 +1424,5 @@
     <string name="aboutLoginTitle">Nazwa użytkownika</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Wersja</string>
+    <string name="assignmentRefreshError">Wystąpił problem z wczytaniem tego zadania. Sprawdź połączenie i spróbuj ponownie.</string>
 </resources>

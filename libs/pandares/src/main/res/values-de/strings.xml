@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">Anmelde-ID</string>
     <string name="aboutEmailTitle">E-Mail</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Beim erneuten Laden der Aufgabe ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.</string>
 </resources>
