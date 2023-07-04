@@ -17,14 +17,15 @@ data class SubmissionCommentEntity(
     val attemptId: Long? = null,
     val submissionId: Long? = null
 ) {
-    constructor(submissionComment: SubmissionComment): this(
-        submissionComment.id,
-        submissionComment.authorId,
-        submissionComment.authorName,
-        submissionComment.authorPronouns,
-        submissionComment.comment,
-        submissionComment.createdAt,
-        submissionComment.mediaComment?.mediaId,
-        submissionComment.attempt
+    constructor(submissionComment: SubmissionComment, submissionId: Long? = null) : this(
+        id = submissionComment.id,
+        authorId = submissionComment.authorId,
+        authorName = submissionComment.authorName,
+        authorPronouns = submissionComment.authorPronouns,
+        comment = submissionComment.comment,
+        createdAt = submissionComment.createdAt,
+        mediaCommentId = submissionComment.mediaComment?.mediaId,
+        attemptId = submissionComment.attempt,
+        submissionId = submissionId
     )
 }

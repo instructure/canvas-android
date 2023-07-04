@@ -21,8 +21,14 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.common.entities.AttachmentEntity
+import com.instructure.pandautils.room.common.entities.AuthorEntity
 import com.instructure.pandautils.room.common.entities.MediaCommentEntity
+import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
@@ -36,6 +42,9 @@ class SubmissionFacade(
     private val mediaCommentDao: MediaCommentDao,
     private val userDao: UserDao,
     private val userApi: UserAPI.UsersInterface,
+    private val submissionCommentDao: SubmissionCommentDao,
+    private val attachmentDao: AttachmentDao,
+    private val authorDao: AuthorDao
 ) {
 
     private val fetchedUsers = mutableMapOf<Long, User?>()
@@ -76,6 +85,13 @@ class SubmissionFacade(
             }
         }
 
+        submissionCommentDao.insertAll(submission.submissionComments.map { submissionComment ->
+            submissionComment.author?.let { authorDao.insert(AuthorEntity(it)) }
+            SubmissionCommentEntity(submissionComment, submission.id)
+        })
+
+        attachmentDao.insertAll(submission.attachments.map { AttachmentEntity(it, submissionId = submission.id, attempt = submission.attempt) })
+
         submission.submissionHistory.forEach { submissionHistoryItem ->
             submissionHistoryItem?.let { insertSubmission(it) }
         }
@@ -85,21 +101,37 @@ class SubmissionFacade(
 
     suspend fun getSubmissionById(id: Long): Submission? {
         val submissionHistoryEntities = submissionDao.findById(id)
-        val submissionEntity = submissionHistoryEntities.lastOrNull()
-        val mediaCommentEntity = mediaCommentDao.findById(submissionEntity?.mediaCommentId)
-        val userEntity = submissionEntity?.userId?.let { userDao.findById(it) }
-        val groupEntity = submissionEntity?.groupId?.let { groupDao.findById(it) }
+        return submissionHistoryEntities.lastOrNull()?.let { submissionEntity ->
+            createApiModelFromEntity(submissionEntity).copy(submissionHistory = submissionHistoryEntities.map {
+                createApiModelFromEntity(it)
+            })
+        }
+    }
 
-        return submissionEntity?.toApiModel(
-            submissionHistory = submissionHistoryEntities.map { it.toApiModel() },
+    private suspend fun createApiModelFromEntity(submissionEntity: SubmissionEntity): Submission {
+        val mediaCommentEntity = mediaCommentDao.findById(submissionEntity.mediaCommentId)
+        val userEntity = submissionEntity.userId?.let { userDao.findById(it) }
+        val groupEntity = submissionEntity.groupId?.let { groupDao.findById(it) }
+        val submissionCommentEntities = submissionCommentDao.findBySubmissionId(submissionEntity.id)
+        val attachmentEntities = attachmentDao.findBySubmissionId(submissionEntity.id)
+
+        return submissionEntity.toApiModel(
             mediaComment = mediaCommentEntity?.toApiModel(),
             user = userEntity?.toApiModel(),
-            group = groupEntity?.toApiModel()
+            group = groupEntity?.toApiModel(),
+            submissionComments = submissionCommentEntities.map { it.toApiModel() },
+            attachments = attachmentEntities.filter { it.attempt == submissionEntity.attempt }.map { it.toApiModel() }
         )
     }
 
     suspend fun findByAssignmentIds(assignmentIds: List<Long>): List<Submission> {
         val submissionsByAssignmentIds = submissionDao.findByAssignmentIds(assignmentIds)
         return submissionsByAssignmentIds.mapNotNull { getSubmissionById(it.id) }
+    }
+
+    suspend fun findByAssignmentId(assignmentId: Long): Submission? {
+        return submissionDao.findByAssignmentId(assignmentId)?.let {
+            getSubmissionById(it.id)
+        }
     }
 }

@@ -21,6 +21,14 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.instructure.pandautils.room.common.Converters
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.common.entities.AttachmentEntity
+import com.instructure.pandautils.room.common.entities.AuthorEntity
+import com.instructure.pandautils.room.common.entities.MediaCommentEntity
+import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 
@@ -78,6 +86,10 @@ import com.instructure.pandautils.room.offline.entities.*
         ConferenceEntity::class,
         ConferenceRecordingEntity::class,
         CourseFeaturesEntity::class,
+        AttachmentEntity::class,
+        MediaCommentEntity::class,
+        AuthorEntity::class,
+        SubmissionCommentEntity::class
     ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -156,4 +168,12 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun conferenceRecordingDao(): ConferenceRecodingDao
 
     abstract fun courseFeaturesDao(): CourseFeaturesDao
+
+    abstract fun attachmentDao(): AttachmentDao
+
+    abstract fun authorDao(): AuthorDao
+
+    abstract fun mediaCommentDao(): MediaCommentDao
+
+    abstract fun submissionCommentDao(): SubmissionCommentDao
 }

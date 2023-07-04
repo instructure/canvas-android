@@ -38,7 +38,7 @@ class SubmissionDetailsLocalDataSource(
     }
 
     override suspend fun getSingleSubmission(courseId: Long, assignmentId: Long, studentId: Long, forceNetwork: Boolean): DataResult<Submission> {
-        val submission = submissionFacade.findByAssignmentIds(listOf(assignmentId)).firstOrNull()
+        val submission = submissionFacade.findByAssignmentId(assignmentId)
         return submission?.let { DataResult.Success(it) } ?: DataResult.Fail()
     }
 

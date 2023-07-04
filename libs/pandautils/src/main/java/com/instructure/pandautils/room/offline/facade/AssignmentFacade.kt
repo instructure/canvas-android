@@ -55,6 +55,16 @@ class AssignmentFacade(
                     discussionTopicHeaderFacade.insertDiscussion(it, assignment.courseId)
                 }
 
+                val assignmentEntity = AssignmentEntity(
+                    assignment = assignment,
+                    rubricSettingsId = rubricSettingsId,
+                    submissionId = submissionId,
+                    discussionTopicHeaderId = discussionTopicHeaderId,
+                    plannerOverrideId = plannerOverrideId,
+                )
+
+                assignmentDao.insert(assignmentEntity)
+
                 assignment.scoreStatistics?.let {
                     assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
                 }
@@ -66,16 +76,6 @@ class AssignmentFacade(
                 assignment.lockInfo?.let {
                     lockInfoFacade.insertLockInfo(it, assignment.id)
                 }
-
-                val assignmentEntity = AssignmentEntity(
-                    assignment = assignment,
-                    rubricSettingsId = rubricSettingsId,
-                    submissionId = submissionId,
-                    discussionTopicHeaderId = discussionTopicHeaderId,
-                    plannerOverrideId = plannerOverrideId,
-                )
-
-                assignmentDao.insert(assignmentEntity)
             }
         }
     }
