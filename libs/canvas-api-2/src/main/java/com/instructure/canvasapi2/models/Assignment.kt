@@ -119,10 +119,6 @@ data class Assignment(
 
     val lastActualSubmission: Submission? get() = submission?.takeIf { it.workflowState == "submitted" }
 
-    override fun toString(): String {
-        return this.id.toString()
-    }
-
     /**
      * Whether or not the user has submitted this assignment. If the user has not submitted anything, Canvas generates
      * an empty submission with a null value for "submittedAt". For very old assignments, canvas might not

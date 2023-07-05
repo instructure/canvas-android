@@ -87,10 +87,6 @@ data class Submission(
     override val comparisonDate get() = submittedAt
     override val comparisonString get() = submissionType
 
-    override fun toString(): String {
-        return this.id.toString()
-    }
-
     val isWithoutGradedSubmission: Boolean get() = !isGraded && submissionType == null
     val isGraded: Boolean get() = grade != null
 

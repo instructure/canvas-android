@@ -146,4 +146,37 @@ class SubmissionFacadeTest {
         Assert.assertEquals(user, result.first().user)
         Assert.assertEquals(submissionHistory.size, result.first().submissionHistory.size)
     }
+
+    @Test
+    fun `Calling findByAssignmentId should return submission by the specified assignment ID`() = runTest {
+        val assignmentId = 1L
+        val submissionId = 1L
+        val group = Group(id = 1, name = "name")
+        val mediaComment = MediaComment(mediaId = "mediaId")
+        val user = User(id = 1L)
+        val submission = Submission(
+            id = submissionId,
+            attempt = 3,
+            group = group,
+            mediaComment = mediaComment,
+            userId = user.id,
+            user = user,
+            assignmentId = assignmentId
+        )
+        val submissionHistory = listOf(Submission(id = submissionId, attempt = 1), Submission(id = submissionId, attempt = 2), submission)
+
+        coEvery { groupDao.findById(group.id) } returns GroupEntity(group)
+        coEvery { mediaCommentDao.findById(mediaComment.mediaId) } returns MediaCommentEntity(mediaComment)
+        coEvery { userDao.findById(user.id) } returns UserEntity(user)
+        coEvery { submissionDao.findByAssignmentId(assignmentId) } returns SubmissionEntity(submission, group.id, mediaComment.mediaId)
+        coEvery { submissionDao.findById(submissionId) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
+
+        val result = facade.findByAssignmentId(assignmentId)!!
+
+        Assert.assertEquals(submissionId, result.id)
+        Assert.assertEquals(group, result.group)
+        Assert.assertEquals(mediaComment, result.mediaComment)
+        Assert.assertEquals(user, result.user)
+        Assert.assertEquals(submissionHistory.size, result.submissionHistory.size)
+    }
 }

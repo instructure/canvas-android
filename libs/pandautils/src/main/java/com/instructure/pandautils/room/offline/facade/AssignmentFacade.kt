@@ -124,8 +124,8 @@ class AssignmentFacade(
             scoreStatistics = scoreStatisticsEntity?.toApiModel(),
             plannerOverride = plannerOverrideEntity?.toApiModel()
         ).apply {
-            this.submission = submission?.copy(assignment = this)
-            this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this)
+            this.submission = submission?.copy(assignment = this.copy(submission = null))
+            this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this.copy(submission = null))
         }
     }
 }
