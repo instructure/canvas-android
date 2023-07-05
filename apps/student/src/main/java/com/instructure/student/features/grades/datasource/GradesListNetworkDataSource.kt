@@ -39,7 +39,7 @@ class GradesListNetworkDataSource(
     }
 
     override suspend fun getObserveeEnrollments(forceNetwork: Boolean): List<Enrollment> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return enrollmentApi.firstPageObserveeEnrollments(params).depaginate {
             enrollmentApi.getNextPage(it, params)
@@ -52,7 +52,7 @@ class GradesListNetworkDataSource(
         scopeToStudent: Boolean,
         forceNetwork: Boolean
     ): List<AssignmentGroup> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
             courseId = courseId,
@@ -70,7 +70,7 @@ class GradesListNetworkDataSource(
         assignmentIds: List<Long>,
         forceNetwork: Boolean
     ): List<Submission> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return submissionApi.getSubmissionsForMultipleAssignments(
             courseId, studentId, assignmentIds, params
@@ -80,7 +80,7 @@ class GradesListNetworkDataSource(
     }
 
     override suspend fun getCoursesWithSyllabus(forceNetwork: Boolean): List<Course> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return courseApi.firstPageCoursesWithSyllabus(params).depaginate {
             courseApi.next(it, params)
@@ -105,7 +105,7 @@ class GradesListNetworkDataSource(
     }
 
     override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, params).depaginate {
             assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, params)

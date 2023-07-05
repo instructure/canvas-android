@@ -32,7 +32,7 @@ class SubmissionDetailsNetworkDataSource(
 ) : SubmissionDetailsDataSource {
 
     override suspend fun getObserveeEnrollments(forceNetwork: Boolean): DataResult<List<Enrollment>> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return enrollmentApi.firstPageObserveeEnrollments(params).depaginate {
             enrollmentApi.getNextPage(it, params)
         }

@@ -35,7 +35,7 @@ class AssignmentListNetworkDataSource(
         scopeToStudent: Boolean,
         forceNetwork: Boolean
     ): List<AssignmentGroup> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
             courseId = courseId,
@@ -48,7 +48,7 @@ class AssignmentListNetworkDataSource(
     }
 
     override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, params).depaginate {
             assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, params)

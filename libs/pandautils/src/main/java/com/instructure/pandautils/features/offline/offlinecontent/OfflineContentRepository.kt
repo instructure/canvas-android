@@ -47,8 +47,7 @@ class OfflineContentRepository(
 
     suspend fun getCourses(): List<Course> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val coursesResult =
-            coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
+        val coursesResult = coursesApi.getFirstPageCourses(params).depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
         return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
     }
@@ -79,7 +78,7 @@ class OfflineContentRepository(
     }
 
     private suspend fun getFolders(folder: FileFolder): List<FileFolder> {
-        val params = RestParams(isForceReadFromNetwork = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         val foldersResult = fileFolderApi.getFirstPageFolders(folder.id, params).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
@@ -88,7 +87,7 @@ class OfflineContentRepository(
     }
 
     private suspend fun getFiles(folder: FileFolder): List<FileFolder> {
-        val params = RestParams(isForceReadFromNetwork = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         val filesResult = fileFolderApi.getFirstPageFiles(folder.id, params).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }

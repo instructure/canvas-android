@@ -123,7 +123,7 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     private suspend fun fetchCalendarEvents(courseIds: List<Long>): List<ScheduleItem>? {
         val contextCodes = courseIds.map { "course_$it" }
-        val restParams = RestParams(isForceReadFromNetwork = true)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         return calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.CALENDAR.apiName,
@@ -131,13 +131,12 @@ class OfflineSyncWorker @AssistedInject constructor(
             null,
             contextCodes,
             restParams
-        )
-            .depaginate { calendarEventApi.next(it, restParams) }.dataOrNull
+        ).depaginate { calendarEventApi.next(it, restParams) }.dataOrNull
     }
 
     private suspend fun fetchCalendarAssignments(courseIds: List<Long>): List<ScheduleItem>? {
         val contextCodes = courseIds.map { "course_$it" }
-        val restParams = RestParams(isForceReadFromNetwork = true)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         return calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
@@ -145,16 +144,14 @@ class OfflineSyncWorker @AssistedInject constructor(
             null,
             contextCodes,
             restParams
-        )
-            .depaginate { calendarEventApi.next(it, restParams) }.dataOrNull
+        ).depaginate { calendarEventApi.next(it, restParams) }.dataOrNull
     }
 
     private suspend fun fetchPages(courseId: Long) {
-        val params = RestParams(isForceReadFromNetwork = true)
-        val pages =
-            pageApi.getFirstPagePages(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
-                pageApi.getNextPagePagesList(nextUrl, params)
-            }.dataOrNull ?: emptyList()
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val pages = pageApi.getFirstPagePages(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
+            pageApi.getNextPagePagesList(nextUrl, params)
+        }.dataOrNull.orEmpty()
 
         val entities = pages.map {
             PageEntity(it, courseId)
@@ -164,11 +161,11 @@ class OfflineSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchAssignments(courseId: Long) {
-        val restParams = RestParams(isForceReadFromNetwork = true)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
             .depaginate { nextUrl ->
                 assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
-            }.dataOrNull ?: emptyList()
+            }.dataOrNull.orEmpty()
 
         fetchQuizzes(assignmentGroups)
 
@@ -212,7 +209,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private suspend fun getConferencesForContext(
         canvasContext: CanvasContext, forceNetwork: Boolean
     ): DataResult<List<Conference>> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return conferencesApi.getConferencesForContext(canvasContext.toAPIString().drop(1), params).map {
             it.conferences

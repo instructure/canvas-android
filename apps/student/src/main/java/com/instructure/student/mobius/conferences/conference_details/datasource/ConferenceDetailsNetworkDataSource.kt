@@ -34,7 +34,7 @@ class ConferenceDetailsNetworkDataSource(
     override suspend fun getConferencesForContext(
         canvasContext: CanvasContext, forceNetwork: Boolean
     ): DataResult<List<Conference>> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return conferencesApi.getConferencesForContext(canvasContext.toAPIString().drop(1), params).map {
             it.conferences
