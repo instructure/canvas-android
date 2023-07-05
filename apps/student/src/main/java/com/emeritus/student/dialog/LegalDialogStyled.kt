@@ -24,6 +24,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.instructure.canvasapi2.managers.UserManager
@@ -33,12 +34,9 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LEGAL
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.descendants
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setVisible
 import com.emeritus.student.R
 import com.emeritus.student.activity.InternalWebViewActivity
+import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.legal.view.*
 import kotlinx.coroutines.Job
 
@@ -63,15 +61,14 @@ class LegalDialogStyled : AppCompatDialogFragment() {
         // different institutions can have different terms of service, we need to get them from the api
         termsJob = tryWeave {
 
-            val terms = awaitApi<TermsOfService> { UserManager.getTermsOfService(it,true) }
-            terms.content?.let { html = it }
-
+//            val terms = awaitApi<TermsOfService> { UserManager.getTermsOfService(it,true) }
+//            terms.content?.let { html = it }
 
             // if the institution has set terms and conditions to be "no terms", just keep the item gone
-            view.termsOfUse.setVisible(html.isNotBlank())
+            view.termsOfUse.setVisible()
             // now set the rest of the items visible
             view.privacyPolicy.setVisible()
-            view.openSource.setVisible()
+            view.openSource.setGone()
         } catch {
             // something went wrong, make everything visible
             view.descendants.forEach { it.setVisible()}
@@ -79,21 +76,21 @@ class LegalDialogStyled : AppCompatDialogFragment() {
 
         view.termsOfUse.onClick {
 
-            val intent = InternalWebViewActivity.createIntent(activity, "http://www.canvaslms.com/policies/terms-of-use", html, getString(R.string.termsOfUse), false)
+            val intent = InternalWebViewActivity.createIntent(activity, "https://emeritus.org/terms-of-service", getString(R.string.termsOfUse), false)
             requireContext().startActivity(intent)
             dialog?.dismiss()
         }
 
         view.privacyPolicy.onClick {
-            val intent = InternalWebViewActivity.createIntent(activity, "https://www.instructure.com/canvas/privacy", getString(R.string.privacyPolicy), false)
+            val intent = InternalWebViewActivity.createIntent(activity, "https://emeritus.org/privacy-notice", getString(R.string.privacyPolicy), false)
             requireContext().startActivity(intent)
             dialog?.dismiss()
         }
 
         view.openSource.onClick {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
-            requireContext().startActivity(intent)
-            dialog?.dismiss()
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
+//            requireContext().startActivity(intent)
+//            dialog?.dismiss()
         }
 
         return AlertDialog.Builder(requireContext())
