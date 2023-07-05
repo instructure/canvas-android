@@ -101,7 +101,7 @@ object SubmissionsApi {
                         courseId: Long,
                         assignmentId: Long,
                         studentId: Long,
-                        postedGrade: String,
+                        postedGrade: String? = null,
                         excused: Boolean): SubmissionApiModel {
 
         return submissionsService(teacherToken)

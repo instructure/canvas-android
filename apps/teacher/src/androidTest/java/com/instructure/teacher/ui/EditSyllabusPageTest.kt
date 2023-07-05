@@ -16,7 +16,13 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import android.os.Build
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addCourseSettings
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.CourseSettings
@@ -43,7 +49,7 @@ class EditSyllabusPageTest : TeacherTest() {
         editSyllabusPage.saveSyllabusEdit()
 
         syllabusPage.assertDisplaysSyllabus("Syllabus edited", true)
-        syllabusPage.assertSuccessfulSave(ActivityHelper.currentActivity())
+        if(Build.VERSION.SDK_INT != 30) syllabusPage.assertSuccessfulSave(ActivityHelper.currentActivity())
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room.appdatabase.entities
+package com.instructure.pandautils.room.common.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,7 +14,8 @@ data class SubmissionCommentEntity(
     val comment: String? = null,
     val createdAt: Date? = null,
     val mediaCommentId: String? = null,
-    val attemptId: Long? = null
+    val attemptId: Long? = null,
+    val submissionId: Long? = null
 ) {
     constructor(submissionComment: SubmissionComment): this(
         submissionComment.id,

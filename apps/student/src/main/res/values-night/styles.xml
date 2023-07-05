@@ -19,6 +19,7 @@
     <style name="ContextualToolbarStyle">
         <item name="pspdf__backgroundColor">@color/backgroundLightestElevated</item>
         <item name="pspdf__submenuBackgroundColor">@color/backgroundLightestElevated</item>
+        <item name="pspdf__iconsColor">@color/white</item>
     </style>
 
     <style name="ModalDialogStyle">
@@ -36,6 +37,7 @@
         <item name="android:navigationBarColor">@color/backgroundLightest</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/PSPDFAnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__actionBarIconsStyle">@style/PSPDFKitActionBarIconsStyle</item>
+        <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
     </style>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room.appdatabase.entities
+package com.instructure.pandautils.room.common.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -19,7 +19,8 @@ data class AttachmentEntity(
     //Used for file upload result
     val workerId: String? = null,
     //Used for Submission comments
-    val submissionCommentId: Long? = null
+    val submissionCommentId: Long? = null,
+    val submissionId: Long? = null
 ) {
     constructor(attachment: Attachment, workerId: String? = null, submissionCommentId: Long? = null) : this(
         attachment.id,

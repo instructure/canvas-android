@@ -28,7 +28,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_HOMEROOM
@@ -45,7 +47,7 @@ import com.instructure.pandautils.views.SpacesItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@PageView("#homeroom")
+@PageView
 @ScreenView(SCREEN_VIEW_K5_HOMEROOM)
 @AndroidEntryPoint
 class HomeroomFragment : Fragment() {
@@ -171,6 +173,9 @@ class HomeroomFragment : Fragment() {
             updateAssignments = false
         }
     }
+
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#homeroom"
 
     companion object {
         fun newInstance(): HomeroomFragment {

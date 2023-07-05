@@ -80,7 +80,7 @@ class GradesInteractionTest : StudentTest() {
         val course = data.courses.values.first()
 
         gradesPage.clickGradeRow(course.name)
-        elementaryCoursePage.assertPageObjects()
+        courseGradesPage.assertPageObjects()
 
         Espresso.pressBack()
         gradesPage.assertPageObjects()

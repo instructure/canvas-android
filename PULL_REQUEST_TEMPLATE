@@ -19,8 +19,8 @@ release note:
 ## Checklist
 
 - [ ] Follow-up e2e test ticket created or not needed
-- [ ] Run E2E test suite or not needed
+- [ ] Run E2E test suite
 - [ ] Tested in dark mode
 - [ ] Tested in light mode
 - [ ] A11y checked
-- [ ] Approve from product or not needed
+- [ ] Approve from product

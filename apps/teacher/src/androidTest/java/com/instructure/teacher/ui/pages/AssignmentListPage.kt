@@ -17,13 +17,22 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 
 class AssignmentListPage : BasePage() {
@@ -84,5 +93,9 @@ class AssignmentListPage : BasePage() {
 
     private fun assertAssignmentName(assignmentName: String) {
         waitForViewWithText(assignmentName).assertDisplayed()
+    }
+
+    fun assertNeedsGradingCountOfAssignment(assignmentName: String, needsGradingCount: Int) {
+        onView(withId(R.id.ungradedCount) + withText("$needsGradingCount needs grading") + hasSibling(withId(R.id.assignmentTitle) + withText(assignmentName))).assertDisplayed()
     }
 }
