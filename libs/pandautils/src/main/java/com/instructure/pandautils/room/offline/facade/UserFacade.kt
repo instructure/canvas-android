@@ -23,7 +23,7 @@ import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
 
-class PeopleFacade(
+class UserFacade(
         private val userDao: UserDao,
         private val enrollmentDao: EnrollmentDao,
 ) {
@@ -44,9 +44,12 @@ class PeopleFacade(
 
     suspend fun getPeopleByCourseId(courseId: Long): List<User> {
         val enrollments = enrollmentDao.findByCourseId(courseId)
-        val users = enrollments.mapNotNull { enrollment ->
-            userDao.findById(enrollment.userId)?.toApiModel(enrollments.map { it.toApiModel() }.filter { it.userId == enrollment.userId })
+        val users = enrollments.groupBy { it.userId }.keys.mapNotNull { userId ->
+            userDao.findById(userId)?.toApiModel(enrollments.map { it.toApiModel() }.filter { it.userId == userId })
         }
+//        val users = enrollments.mapNotNull { enrollment ->
+//            userDao.findById(enrollment.userId)?.toApiModel(enrollments.map { it.toApiModel() }.filter { it.userId == enrollment.userId })
+//        }
         return users
     }
 }

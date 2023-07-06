@@ -28,8 +28,8 @@ class PeopleListNetworkDataSource(
 ) : PeopleListDataSource {
 
     override suspend fun loadPeople(canvasContext: CanvasContext, forceNetwork: Boolean): List<User> {
-        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return api.getFirstPagePeopleList(canvasContext.id, canvasContext.apiContext(), restParams)
-            .depaginate { api.getNextPeoplePagesList(it, restParams) }.dataOrThrow
+            .depaginate { api.getNextPagePeopleList(it, restParams) }.dataOrThrow
     }
 }

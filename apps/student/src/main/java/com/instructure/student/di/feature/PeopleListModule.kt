@@ -18,7 +18,7 @@
 package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.pandautils.room.offline.facade.PeopleFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.people.list.PeopleListLocalDataSource
 import com.instructure.student.features.people.list.PeopleListNetworkDataSource
@@ -32,8 +32,8 @@ import dagger.hilt.android.components.FragmentComponent
 @InstallIn(FragmentComponent::class)
 class PeopleListModule {
     @Provides
-    fun provideLocalDataSource(peopleFacade: PeopleFacade): PeopleListLocalDataSource {
-        return PeopleListLocalDataSource(peopleFacade)
+    fun provideLocalDataSource(userFacade: UserFacade): PeopleListLocalDataSource {
+        return PeopleListLocalDataSource(userFacade)
     }
 
     @Provides

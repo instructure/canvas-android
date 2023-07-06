@@ -51,8 +51,8 @@ import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
-import com.instructure.pandautils.room.offline.facade.PeopleFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -60,28 +60,28 @@ const val COURSE_IDS = "course-ids"
 
 @HiltWorker
 class OfflineSyncWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters,
-    private val courseApi: CourseAPI.CoursesInterface,
-    private val pageApi: PageAPI.PagesInterface,
-    private val userApi: UserAPI.UsersInterface,
-    private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
-    private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val pageDao: PageDao,
-    private val peopleFacade: PeopleFacade,
-    private val courseFacade: CourseFacade,
-    private val assignmentFacade: AssignmentFacade,
-    private val quizDao: QuizDao,
-    private val quizApi: QuizAPI.QuizInterface,
-    private val dashboardCardDao: DashboardCardDao,
-    private val courseSettingsDao: CourseSettingsDao,
-    private val scheduleItemFacade: ScheduleItemFacade,
-    private val conferencesApi: ConferencesApi.ConferencesInterface,
-    private val conferenceFacade: ConferenceFacade,
-    private val discussionApi: DiscussionAPI.DiscussionInterface,
-    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface
+        @Assisted private val context: Context,
+        @Assisted workerParameters: WorkerParameters,
+        private val courseApi: CourseAPI.CoursesInterface,
+        private val pageApi: PageAPI.PagesInterface,
+        private val userApi: UserAPI.UsersInterface,
+        private val assignmentApi: AssignmentAPI.AssignmentInterface,
+        private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+        private val courseSyncSettingsDao: CourseSyncSettingsDao,
+        private val pageDao: PageDao,
+        private val userFacade: UserFacade,
+        private val courseFacade: CourseFacade,
+        private val assignmentFacade: AssignmentFacade,
+        private val quizDao: QuizDao,
+        private val quizApi: QuizAPI.QuizInterface,
+        private val dashboardCardDao: DashboardCardDao,
+        private val courseSettingsDao: CourseSettingsDao,
+        private val scheduleItemFacade: ScheduleItemFacade,
+        private val conferencesApi: ConferencesApi.ConferencesInterface,
+        private val conferenceFacade: ConferenceFacade,
+        private val discussionApi: DiscussionAPI.DiscussionInterface,
+        private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+        private val announcementApi: AnnouncementAPI.AnnouncementInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -216,11 +216,12 @@ class OfflineSyncWorker @AssistedInject constructor(
 
 
     private suspend fun fetchPeople(courseId: Long) {
-        val restParams = RestParams(isForceReadFromNetwork = true)
-        val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams).dataOrNull
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)
+                .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
 
-        users?.let {
-            peopleFacade.insertPeople(it)
+        users.let {
+            userFacade.insertPeople(it)
         }
     }
 

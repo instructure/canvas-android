@@ -93,7 +93,7 @@ object UserAPI {
         fun next(@Url nextURL: String): Call<List<User>>
 
         @GET
-        suspend fun getNextPeoplePagesList(
+        suspend fun getNextPagePeopleList(
                 @Url nextURL: String, @Tag params: RestParams
         ): DataResult<List<User>>
 

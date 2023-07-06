@@ -42,6 +42,7 @@ import java.util.Locale
 
 class PeopleListRecyclerAdapter(
         context: Context,
+        private val lifecycleScope: CoroutineScope,
         private val repository: PeopleListRepository,
         private val canvasContext: CanvasContext,
         private val adapterToFragmentCallback: AdapterToFragmentCallback<User>
@@ -57,7 +58,7 @@ class PeopleListRecyclerAdapter(
     }
 
     override fun loadFirstPage() {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             var canvasContext = canvasContext
 
             // If the canvasContext is a group, and has a course we want to add the Teachers and TAs from that course to the peoples list

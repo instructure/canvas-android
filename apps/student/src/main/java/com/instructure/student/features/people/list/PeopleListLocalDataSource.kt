@@ -19,10 +19,10 @@ package com.instructure.student.features.people.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.room.offline.facade.PeopleFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
 
-class PeopleListLocalDataSource(private val peopleFacade: PeopleFacade): PeopleListDataSource {
+class PeopleListLocalDataSource(private val userFacade: UserFacade): PeopleListDataSource {
     override suspend fun loadPeople(canvasContext: CanvasContext, forceNetwork: Boolean): List<User> {
-        return peopleFacade.getPeopleByCourseId(canvasContext.id)
+        return userFacade.getPeopleByCourseId(canvasContext.id)
     }
 }
