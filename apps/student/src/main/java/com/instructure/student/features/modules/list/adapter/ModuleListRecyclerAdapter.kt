@@ -232,40 +232,28 @@ open class ModuleListRecyclerAdapter(
 
     private fun handleModuleItemResponse(result: DataResult<List<ModuleItem>>, moduleObject: ModuleObject, isNotifyGroupChange: Boolean) {
         if (result is DataResult.Success) {
+            val resultIsFromApiOrDb = result.apiType === ApiType.API || result.apiType == ApiType.DB
             val moduleItems = result.data
-            if (result.apiType === ApiType.API || result.apiType == ApiType.DB) {
-                var position = if (moduleItems.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
-                for (item in moduleItems) {
-                    item.position = position++
-                    addOrUpdateItem(moduleObject, item)
-                    position = checkMasteryPaths(position, item, moduleObject)
-                }
 
-                val nextItemsURL = result.linkHeaders.nextUrl
-                if (nextItemsURL != null) {
-                    lifecycleScope.launch {
-                        val nextPageResult = repository.getNextPageModuleItems(nextItemsURL, true)
-                        handleModuleItemResponse(nextPageResult, moduleObject, isNotifyGroupChange)
-                    }
-                }
+            var position = if (moduleItems.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
+            for (item in moduleItems) {
+                item.position = position++
+                addOrUpdateItem(moduleObject, item)
+                position = if (resultIsFromApiOrDb) checkMasteryPaths(position, item, moduleObject) else position
+            }
 
+            val nextItemsURL = result.linkHeaders.nextUrl
+            if (nextItemsURL != null) {
+                lifecycleScope.launch {
+                    val nextPageResult = repository.getNextPageModuleItems(nextItemsURL, true)
+                    handleModuleItemResponse(nextPageResult, moduleObject, isNotifyGroupChange)
+                }
+            }
+
+            if (resultIsFromApiOrDb) {
                 moduleFromNetworkOrDb.put(moduleObject.id, true)
                 expandGroup(moduleObject, isNotifyGroupChange)
             } else if (result.apiType === ApiType.CACHE) {
-                var position = if (moduleItems.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
-                for (item in moduleItems) {
-                    item.position = position++
-                    addOrUpdateItem(moduleObject, item)
-                }
-
-                val nextItemsURL = result.linkHeaders.nextUrl
-                if (nextItemsURL != null) {
-                    lifecycleScope.launch {
-                        val nextPageResult = repository.getNextPageModuleItems(nextItemsURL, true)
-                        handleModuleItemResponse(nextPageResult, moduleObject, isNotifyGroupChange)
-                    }
-                }
-
                 // Wait for the network to expand when there are no items
                 if (moduleItems.isNotEmpty()) {
                     expandGroup(moduleObject, isNotifyGroupChange)
