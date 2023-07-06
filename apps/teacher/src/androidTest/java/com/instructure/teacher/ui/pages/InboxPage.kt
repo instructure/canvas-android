@@ -95,6 +95,24 @@ class InboxPage: BasePage() {
     }
 
     /**
+     * Clicks on the conversation with the specified subject.
+     *
+     * @param conversation The subject of the conversation to click.
+     */
+    fun clickConversation(conversation: ConversationApiModel) {
+        clickConversation(conversation.subject)
+    }
+
+    /**
+     * Clicks on the conversation with the specified subject.
+     *
+     * @param conversation The subject of the conversation to click.
+     */
+    fun clickConversation(conversation: Conversation) {
+        clickConversation(conversation.subject!!)
+    }
+
+    /**
      * Clicks on the add message FAB.
      */
     fun clickAddMessageFAB() {
