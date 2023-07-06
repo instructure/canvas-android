@@ -18,11 +18,25 @@
 package com.instructure.student.features.people.list
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.facade.UserFacade
 
 class PeopleListLocalDataSource(private val userFacade: UserFacade): PeopleListDataSource {
-    override suspend fun loadPeople(canvasContext: CanvasContext, forceNetwork: Boolean): List<User> {
-        return userFacade.getPeopleByCourseId(canvasContext.id)
+    override suspend fun loadFirstPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        return DataResult.Success(userFacade.getPeopleByCourseId(canvasContext.id))
+    }
+
+    override suspend fun loadNextPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean, nextUrl: String): DataResult<List<User>> {
+        return DataResult.Success(emptyList())
+    }
+
+    override suspend fun loadTeachers(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        return DataResult.Success(userFacade.getPeopleByCourseIdAndRole(canvasContext.id, Enrollment.EnrollmentType.Teacher))
+    }
+
+    override suspend fun loadTAs(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        return DataResult.Success(userFacade.getPeopleByCourseIdAndRole(canvasContext.id, Enrollment.EnrollmentType.Ta))
     }
 }

@@ -19,6 +19,7 @@ package com.instructure.student.features.people.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
 
@@ -28,7 +29,19 @@ class PeopleListRepository(
         networkStateProvider: NetworkStateProvider,
 ) : Repository<PeopleListDataSource>(peopleListLocalDataSource, peopleListNetworkDataSource, networkStateProvider) {
 
-    suspend fun loadPeople(canvasContext: CanvasContext, forceNetwork: Boolean): List<User> {
-        return dataSource.loadPeople(canvasContext, forceNetwork)
+    suspend fun loadFirstPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        return dataSource.loadFirstPagePeople(canvasContext, forceNetwork)
+    }
+
+    suspend fun loadNextPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean, nextUrl: String = ""): DataResult<List<User>> {
+        return dataSource.loadNextPagePeople(canvasContext, forceNetwork, nextUrl)
+    }
+
+    suspend fun loadTeachers(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        return dataSource.loadTeachers(canvasContext, forceNetwork)
+    }
+
+    suspend fun loadTAs(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        return dataSource.loadTAs(canvasContext, forceNetwork)
     }
 }

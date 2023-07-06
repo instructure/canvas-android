@@ -24,11 +24,12 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Enrollment.EnrollmentType
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
-import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.holders.PeopleHeaderViewHolder
@@ -36,6 +37,7 @@ import com.instructure.student.holders.PeopleViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -50,7 +52,6 @@ class PeopleListRecyclerAdapter(
 
     private val mCourseColor = canvasContext.backgroundColor
     private val mEnrollmentPriority = mapOf( EnrollmentType.Teacher to 4, EnrollmentType.Ta to 3, EnrollmentType.Student to 2, EnrollmentType.Observer to 1)
-    private var mApiCalls: WeaveJob? = null
 
     init {
         isExpandedByDefault = true
@@ -67,27 +68,48 @@ class PeopleListRecyclerAdapter(
                 canvasContext = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this@PeopleListRecyclerAdapter.canvasContext.courseId, "")
             }
 
-            val peopleList = repository.loadPeople(canvasContext, isRefresh)
-            withContext(Dispatchers.Main) {
-                populateAdapter(peopleList)
-                setNextUrl(null)
+            try {
+                val teachers = repository.loadTeachers(canvasContext, isRefresh)
+                val tas = repository.loadTAs(canvasContext, isRefresh)
+                val peopleFirstPage = repository.loadFirstPagePeople(canvasContext, isRefresh)
+                val result = teachers.dataOrThrow + tas.dataOrThrow + peopleFirstPage.dataOrThrow
+
+                withContext(Dispatchers.Main) {
+                    populateAdapter(result)
+                }
+
+                if (peopleFirstPage is DataResult.Success<List<User>>) {
+                    setNextUrl(peopleFirstPage.linkHeaders.nextUrl)
+                }
+            } catch (e: IllegalStateException) {
+                context.toast(R.string.errorOccurred)
             }
         }
     }
 
     override fun loadNextPage(nextURL: String) {
-        mApiCalls?.next()
+        lifecycleScope.launch {
+            try {
+                val peopleNextPage = repository.loadNextPagePeople(canvasContext, isRefresh, nextURL)
+
+                withContext(Dispatchers.Main) {
+                    populateAdapter(peopleNextPage.dataOrThrow)
+                }
+
+                if (peopleNextPage is DataResult.Success<List<User>>) {
+                    setNextUrl(peopleNextPage.linkHeaders.nextUrl)
+                }
+            } catch (e: IllegalStateException) {
+                context.toast(R.string.errorOccurred)
+            }
+
+        }
     }
 
     override val isPaginated get() = true
 
-    override fun resetData() {
-        mApiCalls?.cancel()
-        super.resetData()
-    }
-
     override fun cancel() {
-        mApiCalls?.cancel()
+        lifecycleScope.cancel()
     }
 
     private fun populateAdapter(result: List<User>) {

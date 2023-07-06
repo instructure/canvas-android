@@ -21,15 +21,31 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 
 class PeopleListNetworkDataSource(
     private val api: UserAPI.UsersInterface
 ) : PeopleListDataSource {
-
-    override suspend fun loadPeople(canvasContext: CanvasContext, forceNetwork: Boolean): List<User> {
+    override suspend fun loadFirstPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return api.getFirstPagePeopleList(canvasContext.id, canvasContext.apiContext(), restParams)
-            .depaginate { api.getNextPagePeopleList(it, restParams) }.dataOrThrow
+    }
+
+    override suspend fun loadNextPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean, nextUrl: String): DataResult<List<User>> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        return api.getNextPagePeopleList(nextUrl, restParams)
+    }
+
+    override suspend fun loadTeachers(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        return api.getFirstPagePeopleList(canvasContext.id, canvasContext.apiContext(), restParams, UserAPI.EnrollmentType.TEACHER.name.lowercase())
+                .depaginate { api.getNextPagePeopleList(it, restParams) }
+    }
+
+    override suspend fun loadTAs(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        return api.getFirstPagePeopleList(canvasContext.id, canvasContext.apiContext(), restParams, UserAPI.EnrollmentType.TA.name.lowercase())
+                .depaginate { api.getNextPagePeopleList(it, restParams) }
     }
 }

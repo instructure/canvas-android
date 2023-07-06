@@ -84,7 +84,7 @@ object UserAPI {
         fun getFirstPagePeopleList(@Path("context_id") context_id: Long, @Query("enrollment_type") enrollmentType: String): Call<List<User>>
 
         @GET("{contextType}/{context_id}/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true")
-        suspend fun getFirstPagePeopleList(@Path("context_id") context_id: Long, @Path("contextType") contextType: String, @Tag params: RestParams): DataResult<List<User>>
+        suspend fun getFirstPagePeopleList(@Path("context_id") context_id: Long, @Path("contextType") contextType: String, @Tag params: RestParams, @Query("enrollment_type") enrollmentType: String? = null): DataResult<List<User>>
 
         @GET("{context_id}/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true")
         fun getFirstPageAllPeopleList(@Path("context_id") context_id: Long): Call<List<User>>

@@ -214,7 +214,6 @@ class OfflineSyncWorker @AssistedInject constructor(
         }
     }
 
-
     private suspend fun fetchPeople(courseId: Long) {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)

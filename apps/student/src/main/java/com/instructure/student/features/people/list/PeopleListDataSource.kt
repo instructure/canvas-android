@@ -19,7 +19,11 @@ package com.instructure.student.features.people.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 
 interface PeopleListDataSource {
-    suspend fun loadPeople(canvasContext: CanvasContext, forceNetwork: Boolean): List<User>
+    suspend fun loadFirstPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>>
+    suspend fun loadNextPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean, nextUrl: String): DataResult<List<User>>
+    suspend fun loadTeachers(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>>
+    suspend fun loadTAs(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>>
 }
