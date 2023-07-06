@@ -34,27 +34,20 @@ import kotlinx.coroutines.CoroutineScope
 import retrofit2.Response
 
 class ModuleListRepository(
-    private val lifecycleScope: CoroutineScope,
     localDataSource: ModuleListLocalDataSource,
     private val networkDataSource: ModuleListNetworkDataSource,
     networkStateProvider: NetworkStateProvider) : Repository<ModuleListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
-    fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean, callback: StatusCallback<List<ModuleObject>>) {
-        convertDataResultCallToStatusCallback(callback) {
-            dataSource.getAllModuleObjects(canvasContext, forceNetwork)
-        }
+    suspend fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
+        return dataSource.getAllModuleObjects(canvasContext, forceNetwork)
     }
 
-    fun getFirstPageModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean, callback: StatusCallback<List<ModuleObject>>) {
-        convertDataResultCallToStatusCallback(callback) {
-            dataSource.getFirstPageModuleObjects(canvasContext, forceNetwork)
-        }
+    suspend fun getFirstPageModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
+        return dataSource.getFirstPageModuleObjects(canvasContext, forceNetwork)
     }
 
-    fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean, callback: StatusCallback<List<ModuleObject>>) {
-        convertDataResultCallToStatusCallback(callback) {
-            networkDataSource.getNextPageModuleObjects(nextUrl, forceNetwork)
-        }
+    suspend fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
+        return networkDataSource.getNextPageModuleObjects(nextUrl, forceNetwork)
     }
 
     suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
@@ -62,28 +55,11 @@ class ModuleListRepository(
         return tabs.filter { !(it.isExternal && it.isHidden) }
     }
 
-    fun getFirstPageModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean, callback: StatusCallback<List<ModuleItem>>) {
-        convertDataResultCallToStatusCallback(callback) {
-            dataSource.getFirstPageModuleItems(canvasContext, moduleId, forceNetwork)
-        }
+    suspend fun getFirstPageModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
+        return dataSource.getFirstPageModuleItems(canvasContext, moduleId, forceNetwork)
     }
 
-    fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean, callback: StatusCallback<List<ModuleItem>>) {
-        convertDataResultCallToStatusCallback(callback) {
-            networkDataSource.getNextPageModuleItems(nextUrl, forceNetwork)
-        }
-    }
-
-    private fun <T> convertDataResultCallToStatusCallback(callback: StatusCallback<T>, call: suspend () -> DataResult<T>) {
-        lifecycleScope.tryLaunch {
-            val result = call.invoke()
-            if (result is DataResult.Success) {
-                callback.onResponse(Response.success(result.dataOrThrow), result.linkHeaders, result.apiType)
-                callback.onFinished(result.apiType)
-            }
-        } catch {
-            callback.onFail(null, it, null)
-            callback.onFinished(ApiType.API)
-        }
+    suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
+        return networkDataSource.getNextPageModuleItems(nextUrl, forceNetwork)
     }
 }

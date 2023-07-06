@@ -47,12 +47,11 @@ class ModuleListModule {
 
     @Provides
     fun provideModuleListRepository(
-        fragment: Fragment,
         moduleListLocalDataSource: ModuleListLocalDataSource,
         moduleListNetworkDataSource: ModuleListNetworkDataSource,
         networkStateProvider: NetworkStateProvider
     ): ModuleListRepository {
-        return ModuleListRepository(fragment.lifecycleScope, moduleListLocalDataSource, moduleListNetworkDataSource, networkStateProvider)
+        return ModuleListRepository(moduleListLocalDataSource, moduleListNetworkDataSource, networkStateProvider)
     }
 
 }

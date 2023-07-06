@@ -34,7 +34,9 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -50,6 +52,7 @@ import com.instructure.student.features.modules.list.ModuleListRepository
 import com.instructure.student.features.modules.util.ModuleUtility
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -64,9 +67,10 @@ open class ModuleListRecyclerAdapter(
     private val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
 ) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
 
-    private val mModuleItemCallbacks = HashMap<Long, ModuleItemCallback>()
-    private var mModuleObjectCallback: StatusCallback<List<ModuleObject>>? = null
     private var checkCourseTabsJob: Job? = null
+    private var moduleObjectJob: Job? = null
+
+    private val moduleFromNetworkOrDb = HashMap<Long, Boolean>()
 
     /* For testing purposes only */
     protected constructor(context: Context, repository: ModuleListRepository, lifecycleScope: CoroutineScope) : this(CanvasContext.defaultCanvasContext(), context, false, repository, lifecycleScope, null) // Callback not needed for testing, cast to null
@@ -74,9 +78,12 @@ open class ModuleListRecyclerAdapter(
     init {
         viewHolderHeaderClicked = object : ViewHolderHeaderClicked<ModuleObject> {
             override fun viewClicked(view: View?, moduleObject: ModuleObject) {
-                val moduleItemsCallback = getModuleItemsCallback(moduleObject, false)
-                if (!moduleItemsCallback.isFromNetworkOrDb && !isGroupExpanded(moduleObject)) {
-                    repository.getFirstPageModuleItems(courseContext, moduleObject.id, true, moduleItemsCallback)
+                val isFromNetworkOrDb = moduleFromNetworkOrDb[moduleObject.id] ?: false
+                if (!isFromNetworkOrDb && !isGroupExpanded(moduleObject)) {
+                    lifecycleScope.launch {
+                        val result = repository.getFirstPageModuleItems(courseContext, moduleObject.id, true)
+                        handleModuleItemResponse(result, moduleObject, false)
+                    }
                 } else {
                     CollapsedModulesStore.markModuleCollapsed(courseContext, moduleObject.id, true)
                     expandCollapseGroup(moduleObject)
@@ -121,7 +128,7 @@ open class ModuleListRecyclerAdapter(
         val moduleEmptyViewHolder = holder as ModuleEmptyViewHolder
         // Keep displaying No connection as long as the result is not from network
         // Doing so will cause the user to toggle the expand to refresh the list, if they had expanded a module while offline
-        if (mModuleItemCallbacks.containsKey(moduleObject.id) && mModuleItemCallbacks[moduleObject.id]!!.isFromNetworkOrDb) {
+        if (moduleFromNetworkOrDb.containsKey(moduleObject.id) && moduleFromNetworkOrDb[moduleObject.id] == true) {
             moduleEmptyViewHolder.bind(getPrerequisiteString(moduleObject))
         } else {
             moduleEmptyViewHolder.bind(context.getString(R.string.noConnection))
@@ -139,20 +146,10 @@ open class ModuleListRecyclerAdapter(
 
     override fun refresh() {
         shouldExhaustPagination = false
-        mModuleItemCallbacks.clear()
+        moduleFromNetworkOrDb.clear()
         checkCourseTabsJob?.cancel()
         collapseAll()
         super.refresh()
-    }
-
-    override fun cancel() {
-        mModuleItemCallbacks.values.forEach { it.cancel() }
-        mModuleObjectCallback?.cancel()
-        checkCourseTabsJob?.cancel()
-    }
-
-    override fun contextReady() {
-
     }
 
     // region Expandable Callbacks
@@ -198,7 +195,7 @@ open class ModuleListRecyclerAdapter(
 
         dialog.setCancelable(false)
 
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setContentView(R.layout.progress_dialog)
         val currentColor = courseContext.textAndIconColor
 
@@ -207,10 +204,13 @@ open class ModuleListRecyclerAdapter(
     }
 
     fun updateWithoutResettingViews(moduleObject: ModuleObject) {
-        mModuleItemCallbacks.clear()
-        mModuleObjectCallback!!.cancel()
+        moduleFromNetworkOrDb.clear()
+        moduleObjectJob?.cancel()
 
-        repository.getFirstPageModuleItems(courseContext, moduleObject.id, true, getModuleItemsCallback(moduleObject, false))
+        lifecycleScope.launch {
+            val result = repository.getFirstPageModuleItems(courseContext, moduleObject.id, true)
+            handleModuleItemResponse(result, moduleObject, false)
+        }
     }
 
     fun updateMasteryPathItems() {
@@ -230,127 +230,120 @@ open class ModuleListRecyclerAdapter(
         }.start()
     }
 
-    private fun getModuleItemsCallback(moduleObject: ModuleObject, isNotifyGroupChange: Boolean): ModuleItemCallback {
-        if (mModuleItemCallbacks.containsKey(moduleObject.id)) {
-            return mModuleItemCallbacks[moduleObject.id]!!
-        } else {
-            val moduleItemCallback = object : ModuleItemCallback(moduleObject) {
-
-                private fun checkMasteryPaths(position: Int, item: ModuleItem): Int {
-                    var position = position
-                    if (item.masteryPaths != null && item.masteryPaths!!.isLocked) {
-                        // Add another module item that says it's locked
-                        val masteryPathsLocked = ModuleItem(
-                                // Set an id so that if there is more than one path we'll display all of them. otherwise addOrUpdateItem will overwrite it
-                                id = UUID.randomUUID().leastSignificantBits,
-                                title = String.format(Locale.getDefault(), context.getString(R.string.locked_mastery_paths), item.title),
-                                type = ModuleItem.Type.Locked.toString(),
-                                completionRequirement = null,
-                                position = position++
-                        )
-                        addOrUpdateItem(this.moduleObject, masteryPathsLocked)
-                    } else if (item.masteryPaths != null && !item.masteryPaths!!.isLocked && item.masteryPaths!!.selectedSetId == 0L) {
-                        // Add another module item that says select to choose assignment group
-                        // We only want to do this when we have a mastery paths object, it's unlocked, and the user hasn't already selected a set
-                        val masteryPathsSelect = ModuleItem(
-                                // Set an id so that if there is more than one path we'll display all of them. otherwise addOrUpdateItem will overwrite it
-                                id = UUID.randomUUID().leastSignificantBits,
-                                title = context.getString(R.string.choose_assignment_group),
-                                type = ModuleItem.Type.ChooseAssignmentGroup.toString(),
-                                completionRequirement = null,
-                                position = position++
-                        )
-
-                        // Sort the mastery paths by position
-                        item.masteryPaths!!.assignmentSets!!.sortBy { it?.position }
-                        masteryPathsSelect.masteryPathsItemId = item.id
-                        masteryPathsSelect.masteryPaths = item.masteryPaths
-                        addOrUpdateItem(this.moduleObject, masteryPathsSelect)
-                        notifyDataSetChanged()
-                    }
-                    return position
+    private fun handleModuleItemResponse(result: DataResult<List<ModuleItem>>, moduleObject: ModuleObject, isNotifyGroupChange: Boolean) {
+        if (result is DataResult.Success) {
+            val moduleItems = result.data
+            if (result.apiType === ApiType.API || result.apiType == ApiType.DB) {
+                var position = if (moduleItems.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
+                for (item in moduleItems) {
+                    item.position = position++
+                    addOrUpdateItem(moduleObject, item)
+                    position = checkMasteryPaths(position, item, moduleObject)
                 }
 
-                override fun onResponse(response: Response<List<ModuleItem>>, linkHeaders: LinkHeaders, type: ApiType) {
-                    val moduleItems = response.body()
-                    if (type === ApiType.API || type == ApiType.DB) {
-                        var position = if (moduleItems!!.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
-                        for (item in moduleItems) {
-                            item.position = position++
-                            addOrUpdateItem(this.moduleObject, item)
-                            position = checkMasteryPaths(position, item)
-                        }
-
-                        val nextItemsURL = linkHeaders.nextUrl
-                        if (nextItemsURL != null) {
-                            repository.getNextPageModuleItems(nextItemsURL, true, this)
-                        }
-
-                        this.isFromNetworkOrDb = true
-                        expandGroup(this.moduleObject, isNotifyGroupChange)
-                    } else if (type === ApiType.CACHE) {
-                        var position = if (moduleItems!!.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
-                        for (item in moduleItems) {
-                            item.position = position++
-                            addOrUpdateItem(this.moduleObject, item)
-                        }
-
-                        val nextItemsURL = linkHeaders.nextUrl
-                        if (nextItemsURL != null) {
-                            repository.getNextPageModuleItems(nextItemsURL, true, this)
-                        }
-
-                        // Wait for the network to expand when there are no items
-                        if (moduleItems.isNotEmpty()) {
-                            expandGroup(this.moduleObject, isNotifyGroupChange)
-                        }
+                val nextItemsURL = result.linkHeaders.nextUrl
+                if (nextItemsURL != null) {
+                    lifecycleScope.launch {
+                        val nextPageResult = repository.getNextPageModuleItems(nextItemsURL, true)
+                        handleModuleItemResponse(nextPageResult, moduleObject, isNotifyGroupChange)
                     }
-                    CollapsedModulesStore.markModuleCollapsed(courseContext, moduleObject.id, false)
                 }
 
-                override fun onFail(call: Call<List<ModuleItem>>?, error: Throwable, response: Response<*>?) {
+                moduleFromNetworkOrDb.put(moduleObject.id, true)
+                expandGroup(moduleObject, isNotifyGroupChange)
+            } else if (result.apiType === ApiType.CACHE) {
+                var position = if (moduleItems.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
+                for (item in moduleItems) {
+                    item.position = position++
+                    addOrUpdateItem(moduleObject, item)
+                }
 
-                    // Only expand if there was no cache result and no network. No connection empty cell will be displayed
-                    if (response != null
-                            && response.code() == 504
-                            && APIHelper.isCachedResponse(response)
-                            && context != null
-                            && !Utils.isNetworkAvailable(context)) {
-                        expandGroup(this.moduleObject, isNotifyGroupChange)
+                val nextItemsURL = result.linkHeaders.nextUrl
+                if (nextItemsURL != null) {
+                    lifecycleScope.launch {
+                        val nextPageResult = repository.getNextPageModuleItems(nextItemsURL, true)
+                        handleModuleItemResponse(nextPageResult, moduleObject, isNotifyGroupChange)
                     }
+                }
+
+                // Wait for the network to expand when there are no items
+                if (moduleItems.isNotEmpty()) {
+                    expandGroup(moduleObject, isNotifyGroupChange)
                 }
             }
-
-            mModuleItemCallbacks[moduleObject.id] = moduleItemCallback
-            return moduleItemCallback
+            CollapsedModulesStore.markModuleCollapsed(courseContext, moduleObject.id, false)
+        } else {
+            // Only expand if there was no cache result and no network. No connection empty cell will be displayed
+            val failedResult = result as DataResult.Fail
+            val errorCode = (failedResult.failure as? Failure.Network)?.errorCode
+            if (failedResult.response != null
+                && errorCode == 504
+                && APIHelper.isCachedResponse(failedResult.response!!)
+                && !Utils.isNetworkAvailable(context)) {
+                expandGroup(moduleObject, isNotifyGroupChange)
+            }
         }
+    }
+
+    private fun checkMasteryPaths(initPosition: Int, item: ModuleItem, moduleObject: ModuleObject): Int {
+        var position = initPosition
+        if (item.masteryPaths != null && item.masteryPaths!!.isLocked) {
+            // Add another module item that says it's locked
+            val masteryPathsLocked = ModuleItem(
+                // Set an id so that if there is more than one path we'll display all of them. otherwise addOrUpdateItem will overwrite it
+                id = UUID.randomUUID().leastSignificantBits,
+                title = String.format(Locale.getDefault(), context.getString(R.string.locked_mastery_paths), item.title),
+                type = ModuleItem.Type.Locked.toString(),
+                completionRequirement = null,
+                position = position++
+            )
+            addOrUpdateItem(moduleObject, masteryPathsLocked)
+        } else if (item.masteryPaths != null && !item.masteryPaths!!.isLocked && item.masteryPaths!!.selectedSetId == 0L) {
+            // Add another module item that says select to choose assignment group
+            // We only want to do this when we have a mastery paths object, it's unlocked, and the user hasn't already selected a set
+            val masteryPathsSelect = ModuleItem(
+                // Set an id so that if there is more than one path we'll display all of them. otherwise addOrUpdateItem will overwrite it
+                id = UUID.randomUUID().leastSignificantBits,
+                title = context.getString(R.string.choose_assignment_group),
+                type = ModuleItem.Type.ChooseAssignmentGroup.toString(),
+                completionRequirement = null,
+                position = position++
+            )
+
+            // Sort the mastery paths by position
+            item.masteryPaths!!.assignmentSets!!.sortBy { it?.position }
+            masteryPathsSelect.masteryPathsItemId = item.id
+            masteryPathsSelect.masteryPaths = item.masteryPaths
+            addOrUpdateItem(moduleObject, masteryPathsSelect)
+            notifyDataSetChanged()
+        }
+        return position
     }
 
     // region Pagination
     override val isPaginated get() = true
 
-    override fun setupCallbacks() {
-        mModuleObjectCallback = object : StatusCallback<List<ModuleObject>>() {
-
-            override fun onResponse(response: Response<List<ModuleObject>>, linkHeaders: LinkHeaders, type: ApiType) {
-                val moduleObjects = response.body()
-                setNextUrl(linkHeaders.nextUrl)
-                val collapsedItems = CollapsedModulesStore.getCollapsedModuleIds(courseContext)
-                moduleObjects?.toTypedArray()?.forEach {
-                    addOrUpdateGroup(it)
-                    if (!collapsedItems.contains(it.id)) {
-                        repository.getFirstPageModuleItems(courseContext, it.id, true, getModuleItemsCallback(it, true))
+    private fun handleModuleObjectsResponse(result: DataResult<List<ModuleObject>>) {
+        if (result is DataResult.Success) {
+            val moduleObjects = result.data
+            setNextUrl(result.linkHeaders.nextUrl)
+            val collapsedItems = CollapsedModulesStore.getCollapsedModuleIds(courseContext)
+            moduleObjects.toTypedArray().forEach {
+                addOrUpdateGroup(it)
+                if (!collapsedItems.contains(it.id)) {
+                    lifecycleScope.launch {
+                        val itemsResult = repository.getFirstPageModuleItems(courseContext, it.id, true)
+                        handleModuleItemResponse(itemsResult, it, true)
                     }
                 }
-                if(!shouldExhaustPagination || !this.moreCallsExist()) {
-                    // If we should exhaust pagination wait until we are done exhausting pagination
-                    adapterToFragmentCallback?.onRefreshFinished()
-                }
             }
-
-            override fun onFinished(type: ApiType) {
-                this@ModuleListRecyclerAdapter.onCallbackFinished(type)
+            if(!shouldExhaustPagination || result.linkHeaders.nextUrl == null) {
+                // If we should exhaust pagination wait until we are done exhausting pagination
+                adapterToFragmentCallback?.onRefreshFinished()
             }
+            this@ModuleListRecyclerAdapter.onCallbackFinished(result.apiType)
+        } else {
+            this@ModuleListRecyclerAdapter.onCallbackFinished(ApiType.API) // We can only get failed data result when it comes from the API
         }
     }
 
@@ -360,10 +353,13 @@ open class ModuleListRecyclerAdapter(
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
-                if (shouldExhaustPagination) {
-                    repository.getAllModuleObjects(courseContext, true, mModuleObjectCallback!!)
-                } else {
-                    repository.getFirstPageModuleObjects(courseContext, true, mModuleObjectCallback!!)
+                moduleObjectJob = lifecycleScope.launch {
+                    val result = if (shouldExhaustPagination) {
+                        repository.getAllModuleObjects(courseContext, true)
+                    } else {
+                        repository.getFirstPageModuleObjects(courseContext, true)
+                    }
+                    handleModuleObjectsResponse(result)
                 }
             } else {
                 adapterToFragmentCallback?.onRefreshFinished(true)
@@ -374,43 +370,15 @@ open class ModuleListRecyclerAdapter(
     }
 
     override fun loadNextPage(nextURL: String) {
-        repository.getNextPageModuleObjects(nextURL, true, mModuleObjectCallback!!)
+        moduleObjectJob = lifecycleScope.launch {
+            val result = repository.getNextPageModuleObjects(nextURL, true)
+            handleModuleObjectsResponse(result)
+        }
     }
 
     // endregion
 
-    // region Module binder Helpers
-    private fun isSequentiallyEnabled(moduleObject: ModuleObject, moduleItem: ModuleItem): Boolean {
-        // If it's sequential progress and the group is unlocked, the first incomplete one can be viewed
-        // if this moduleItem is locked, it should be greyed out unless it is the first one (position == 1 -> it is 1 based, not
-        // 0 based) or the previous item is unlocked
-        if ((courseContext as Course).isTeacher || courseContext.isTA) {
-            return true
-        }
-
-        if (moduleObject.sequentialProgress && moduleObject.state != null && (moduleObject.state == ModuleObject.State.Unlocked.apiString || moduleObject.state == ModuleObject.State.Started.apiString)) {
-
-            //group is sequential, need to figure out which ones to grey out
-            val indexOfCurrentModuleItem = storedIndexOfItem(moduleObject, moduleItem)
-            if (indexOfCurrentModuleItem != -1) {
-                // getItem performs invalid index checks
-                val previousModuleItem = getItem(moduleObject, indexOfCurrentModuleItem - 1)
-
-                return when {
-                    isComplete(moduleItem) -> true
-                    previousModuleItem == null -> true // Its the first one in the sequence
-                    !isComplete(previousModuleItem) -> false // previous item is not complete
-                    else -> isComplete(previousModuleItem) && !isComplete(moduleItem) // Previous complete, so show current as next in sequence
-                }
-            }
-        }
-        return true
-    }
-
-    private fun isComplete(moduleItem: ModuleItem?): Boolean {
-        return moduleItem != null && moduleItem.completionRequirement != null && moduleItem.completionRequirement!!.completed
-    }
-
+    // region Module binder Helper
     // never actually shows prereqs because grayed out module items show instead.
     private fun getPrerequisiteString(moduleObject: ModuleObject): String {
         var prereqString = context.getString(R.string.noItemsToDisplayShort)
@@ -453,8 +421,4 @@ open class ModuleListRecyclerAdapter(
         return prereqString
     }
     // endregion
-
-    private abstract class ModuleItemCallback internal constructor(internal val moduleObject: ModuleObject) : StatusCallback<List<ModuleItem>>() {
-        internal var isFromNetworkOrDb = false // When true, there is no need to fetch objects from the network again.
-    }
 }
