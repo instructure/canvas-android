@@ -55,7 +55,7 @@ class SubmissionDetailsNetworkDataSourceTest {
 
         TestCase.assertEquals(expected, result)
         coVerify(exactly = 1) {
-            enrollmentApi.firstPageObserveeEnrollments(RestParams(isForceReadFromNetwork = true))
+            enrollmentApi.firstPageObserveeEnrollments(RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true))
         }
     }
 

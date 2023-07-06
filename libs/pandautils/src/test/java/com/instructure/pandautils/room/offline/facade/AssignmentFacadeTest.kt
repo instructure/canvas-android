@@ -17,34 +17,11 @@
 
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.AssignmentScoreStatistics
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.canvasapi2.models.PlannableType
-import com.instructure.canvasapi2.models.PlannerOverride
-import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricSettings
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.pandautils.room.offline.daos.AssignmentDao
-import com.instructure.pandautils.room.offline.daos.AssignmentGroupDao
-import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
-import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
-import com.instructure.pandautils.room.offline.daos.RubricCriterionDao
-import com.instructure.pandautils.room.offline.daos.RubricSettingsDao
-import com.instructure.pandautils.room.offline.entities.AssignmentEntity
-import com.instructure.pandautils.room.offline.entities.AssignmentGroupEntity
-import com.instructure.pandautils.room.offline.entities.AssignmentScoreStatisticsEntity
-import com.instructure.pandautils.room.offline.entities.PlannerOverrideEntity
-import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
-import com.instructure.pandautils.room.offline.entities.RubricSettingsEntity
+import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.utils.orDefault
-import io.mockk.Runs
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.just
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -62,6 +39,7 @@ class AssignmentFacadeTest {
     private val assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao = mockk(relaxed = true)
     private val rubricCriterionDao: RubricCriterionDao = mockk(relaxed = true)
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
+    private val rubricCriterionRatingDao: RubricCriterionRatingDao = mockk(relaxed = true)
 
     private val facade = AssignmentFacade(
         assignmentGroupDao,
@@ -72,7 +50,8 @@ class AssignmentFacadeTest {
         discussionTopicHeaderFacade,
         assignmentScoreStatisticsDao,
         rubricCriterionDao,
-        lockInfoFacade
+        lockInfoFacade,
+        rubricCriterionRatingDao
     )
 
     @Test

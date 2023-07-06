@@ -28,6 +28,7 @@ import com.instructure.pandautils.room.common.daos.MediaCommentDao
 import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.common.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
+import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.GroupEntity
@@ -50,10 +51,11 @@ class SubmissionFacadeTest {
     private val submissionCommentDao: SubmissionCommentDao = mockk(relaxed = true)
     private val attachmentDao: AttachmentDao = mockk(relaxed = true)
     private val authorDao: AuthorDao = mockk(relaxed = true)
+    private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao = mockk(relaxed = true)
 
     private val facade = SubmissionFacade(
-        submissionDao, groupDao, mediaCommentDao, userDao,
-        userApi, submissionCommentDao, attachmentDao, authorDao
+        submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+        submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
     )
 
     @Test
