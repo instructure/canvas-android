@@ -38,6 +38,7 @@ object Versions {
     const val OKHTTP = "4.10.0"
     const val HEAP = "1.10.5"
     const val ROOM = "2.5.0"
+    const val DOKKA = "1.8.20"
 }
 
 object Libs {

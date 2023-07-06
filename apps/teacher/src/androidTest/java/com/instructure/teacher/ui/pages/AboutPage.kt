@@ -26,25 +26,49 @@ import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
+/**
+ * About page
+ *
+ * @constructor Create empty About page
+ */
 class AboutPage : BasePage(R.id.aboutPage) {
 
     private val domainLabel by OnViewWithText(R.string.domain)
     private val loginIdLabel by OnViewWithText(R.string.loginId)
     private val emailLabel by OnViewWithText(R.string.email)
 
+    /**
+     * Checks whether the domains is displayed or not.
+     *
+     * @param domain string.
+     */
     fun domainIs(domain: String) {
         onView(withId(R.id.domain) + withText(domain)).assertDisplayed()
 
     }
 
+    /**
+     * Checks whether the login ID is displayed or not.
+     *
+     * @param loginId string of a user.
+     */
     fun loginIdIs(loginId: String) {
         onView(withId(R.id.loginId) + withText(loginId)).assertDisplayed()
     }
 
+    /**
+     * Checks whether the email is displayed or not.
+     *
+     * @param email string of a user.
+     */
     fun emailIs(email: String) {
         onView(withId(R.id.email) + withText(email)).assertDisplayed()
     }
 
+    /**
+     * Assert that the Instructure logo is displayed.
+     *
+     */
     fun assertInstructureLogoDisplayed() {
         onView(withId(R.id.instructureLogo)).scrollTo().assertDisplayed()
     }
