@@ -29,19 +29,19 @@ import com.instructure.canvasapi2.utils.depaginate
 class ModuleListNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterface, private val tabApi: TabAPI.TabsInterface) : ModuleListDataSource {
 
     override suspend fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return moduleApi.getFirstPageModuleObjects(canvasContext.apiContext(), canvasContext.id, params).depaginate {
             moduleApi.getNextPageModuleObjectList(it, params)
         }
     }
 
     override suspend fun getFirstPageModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return moduleApi.getFirstPageModuleObjects(canvasContext.apiContext(), canvasContext.id, params)
     }
 
     suspend fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return moduleApi.getNextPageModuleObjectList(nextUrl, params)
     }
 
@@ -51,12 +51,12 @@ class ModuleListNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterfa
     }
 
     override suspend fun getFirstPageModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return moduleApi.getFirstPageModuleItems(canvasContext.apiContext(), canvasContext.id, moduleId, params)
     }
 
     suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return moduleApi.getNextPageModuleItemList(nextUrl, params)
     }
 }
