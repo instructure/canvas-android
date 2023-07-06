@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID d’authentification</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Il y a eu un problème pour recharger ce travail. Veuillez vérifier votre connexion, puis réessayez.</string>
 </resources>

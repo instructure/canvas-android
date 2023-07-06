@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">Käyttäjätunnus</string>
     <string name="aboutEmailTitle">Sähköposti</string>
     <string name="aboutVersionTitle">Versio</string>
+    <string name="assignmentRefreshError">Tämän tehtävän uudelleenlataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
 </resources>

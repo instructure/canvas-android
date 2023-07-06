@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID di accesso</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Versione</string>
+    <string name="assignmentRefreshError">Si è verificato un problema durante la ricarica di questo compito. Verifica la connessione e riprova.</string>
 </resources>

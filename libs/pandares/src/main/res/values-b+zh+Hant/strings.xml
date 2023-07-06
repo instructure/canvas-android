@@ -1370,4 +1370,5 @@
     <string name="aboutLoginTitle">登入 ID</string>
     <string name="aboutEmailTitle">電郵</string>
     <string name="aboutVersionTitle">版本</string>
+    <string name="assignmentRefreshError">重新載入此作業時發生問題。請檢查您的連接然後重試。</string>
 </resources>
