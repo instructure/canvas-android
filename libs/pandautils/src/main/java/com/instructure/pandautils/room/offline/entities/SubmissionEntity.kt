@@ -105,6 +105,7 @@ data class SubmissionEntity(
         submissionHistory: List<Submission> = emptyList(),
         submissionComments: List<SubmissionComment> = emptyList(),
         attachments: List<Attachment> = emptyList(),
+        rubricAssessment: HashMap<String, RubricCriterionAssessment> = hashMapOf(),
         mediaComment: MediaComment? = null,
         assignment: Assignment? = null,
         user: User? = null,
@@ -123,8 +124,7 @@ data class SubmissionEntity(
         submissionHistory = submissionHistory,
         attachments = ArrayList(attachments),
         body = body,
-        //TODO
-        rubricAssessment = hashMapOf(),
+        rubricAssessment = rubricAssessment,
         isGradeMatchesCurrentSubmission = isGradeMatchesCurrentSubmission,
         workflowState = workflowState,
         submissionType = submissionType,

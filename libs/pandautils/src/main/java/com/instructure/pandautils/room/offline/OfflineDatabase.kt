@@ -176,4 +176,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun mediaCommentDao(): MediaCommentDao
 
     abstract fun submissionCommentDao(): SubmissionCommentDao
+
+    abstract fun rubricCriterionAssessmentDao(): RubricCriterionAssessmentDao
+
+    abstract fun rubricCriterionRatingDao(): RubricCriterionRatingDao
 }

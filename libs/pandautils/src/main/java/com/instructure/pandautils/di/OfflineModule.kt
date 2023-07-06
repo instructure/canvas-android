@@ -222,7 +222,8 @@ class OfflineModule {
         discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
         assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
         rubricCriterionDao: RubricCriterionDao,
-        lockInfoFacade: LockInfoFacade
+        lockInfoFacade: LockInfoFacade,
+        rubricCriterionRatingDao: RubricCriterionRatingDao
     ): AssignmentFacade {
         return AssignmentFacade(
             assignmentGroupDao,
@@ -233,7 +234,8 @@ class OfflineModule {
             discussionTopicHeaderFacade,
             assignmentScoreStatisticsDao,
             rubricCriterionDao,
-            lockInfoFacade
+            lockInfoFacade,
+            rubricCriterionRatingDao
         )
     }
 
@@ -246,9 +248,13 @@ class OfflineModule {
         userApi: UserAPI.UsersInterface,
         @Named(OFFLINE_DATABASE) submissionCommentDao: SubmissionCommentDao,
         @Named(OFFLINE_DATABASE) attachmentDao: AttachmentDao,
-        @Named(OFFLINE_DATABASE) authorDao: AuthorDao
+        @Named(OFFLINE_DATABASE) authorDao: AuthorDao,
+        rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
     ): SubmissionFacade {
-        return SubmissionFacade(submissionDao, groupDao, mediaCommentDao, userDao, userApi, submissionCommentDao, attachmentDao, authorDao)
+        return SubmissionFacade(
+            submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+            submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
+        )
     }
 
     @Provides
@@ -370,5 +376,15 @@ class OfflineModule {
     @Named(OFFLINE_DATABASE)
     fun provideSubmissionCommentDao(offlineDatabase: OfflineDatabase): SubmissionCommentDao {
         return offlineDatabase.submissionCommentDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionAssessmentDao(offlineDatabase: OfflineDatabase): RubricCriterionAssessmentDao {
+        return offlineDatabase.rubricCriterionAssessmentDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionRatingDao(offlineDatabase: OfflineDatabase): RubricCriterionRatingDao {
+        return offlineDatabase.rubricCriterionRatingDao()
     }
 }

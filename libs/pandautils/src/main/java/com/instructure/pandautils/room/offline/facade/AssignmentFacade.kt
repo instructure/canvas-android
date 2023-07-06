@@ -32,7 +32,8 @@ class AssignmentFacade(
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
     private val assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
     private val rubricCriterionDao: RubricCriterionDao,
-    private val lockInfoFacade: LockInfoFacade
+    private val lockInfoFacade: LockInfoFacade,
+    private val rubricCriterionRatingDao: RubricCriterionRatingDao
 ) {
 
     suspend fun insertAssignmentGroups(assignmentGroups: List<AssignmentGroup>) {
@@ -69,8 +70,11 @@ class AssignmentFacade(
                     assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
                 }
 
-                assignment.rubric?.forEach {
-                    rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id))
+                assignment.rubric?.forEach { rubricCriterion ->
+                    rubricCriterionDao.insert(RubricCriterionEntity(rubricCriterion, assignment.id))
+                    rubricCriterionRatingDao.insertAll(rubricCriterion.ratings.map {
+                        RubricCriterionRatingEntity(it, rubricCriterion.id.orEmpty())
+                    })
                 }
 
                 assignment.lockInfo?.let {
@@ -116,7 +120,10 @@ class AssignmentFacade(
         val plannerOverrideEntity = assignmentEntity.plannerOverrideId?.let { plannerOverrideDao.findById(it) }
 
         return assignmentEntity.toApiModel(
-            rubric = rubricCriterionEntities.map { it.toApiModel() },
+            rubric = rubricCriterionEntities.map { rubricCriterionEntity ->
+                val rubricCriterionRatings = rubricCriterionRatingDao.findByRubricCriterionId(rubricCriterionEntity.id).map { it.toApiModel() }
+                rubricCriterionEntity.toApiModel(rubricCriterionRatings)
+            },
             rubricSettings = rubricSettingEntity?.toApiModel(),
             submission = submission,
             lockInfo = lockInfo,

@@ -30,9 +30,11 @@ import com.instructure.pandautils.room.common.entities.AuthorEntity
 import com.instructure.pandautils.room.common.entities.MediaCommentEntity
 import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
+import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.GroupEntity
+import com.instructure.pandautils.room.offline.entities.RubricCriterionAssessmentEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
 
@@ -44,7 +46,8 @@ class SubmissionFacade(
     private val userApi: UserAPI.UsersInterface,
     private val submissionCommentDao: SubmissionCommentDao,
     private val attachmentDao: AttachmentDao,
-    private val authorDao: AuthorDao
+    private val authorDao: AuthorDao,
+    private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
 ) {
 
     private val fetchedUsers = mutableMapOf<Long, User?>()
@@ -92,6 +95,10 @@ class SubmissionFacade(
 
         attachmentDao.insertAll(submission.attachments.map { AttachmentEntity(it, submissionId = submission.id, attempt = submission.attempt) })
 
+        rubricCriterionAssessmentDao.insertAll(submission.rubricAssessment.map {
+            RubricCriterionAssessmentEntity(it.value, it.key, submission.id)
+        })
+
         submission.submissionHistory.forEach { submissionHistoryItem ->
             submissionHistoryItem?.let { insertSubmission(it) }
         }
@@ -114,13 +121,15 @@ class SubmissionFacade(
         val groupEntity = submissionEntity.groupId?.let { groupDao.findById(it) }
         val submissionCommentEntities = submissionCommentDao.findBySubmissionId(submissionEntity.id)
         val attachmentEntities = attachmentDao.findBySubmissionId(submissionEntity.id)
+        val rubricCriterionAssessmentEntities = rubricCriterionAssessmentDao.findBySubmissionId(submissionEntity.id)
 
         return submissionEntity.toApiModel(
             mediaComment = mediaCommentEntity?.toApiModel(),
             user = userEntity?.toApiModel(),
             group = groupEntity?.toApiModel(),
             submissionComments = submissionCommentEntities.map { it.toApiModel() },
-            attachments = attachmentEntities.filter { it.attempt == submissionEntity.attempt }.map { it.toApiModel() }
+            attachments = attachmentEntities.filter { it.attempt == submissionEntity.attempt }.map { it.toApiModel() },
+            rubricAssessment = HashMap(rubricCriterionAssessmentEntities.associateBy({ it.id }, { it.toApiModel() }))
         )
     }
 
