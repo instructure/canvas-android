@@ -35,6 +35,7 @@ import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.holders.PeopleHeaderViewHolder
 import com.instructure.student.holders.PeopleViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -81,7 +82,9 @@ class PeopleListRecyclerAdapter(
                 if (peopleFirstPage is DataResult.Success<List<User>>) {
                     setNextUrl(peopleFirstPage.linkHeaders.nextUrl)
                 }
-            } catch (e: IllegalStateException) {
+            } catch (e: CancellationException) {
+                // Do nothing
+            }catch (e: IllegalStateException) {
                 context.toast(R.string.errorOccurred)
             }
         }
@@ -99,6 +102,8 @@ class PeopleListRecyclerAdapter(
                 if (peopleNextPage is DataResult.Success<List<User>>) {
                     setNextUrl(peopleNextPage.linkHeaders.nextUrl)
                 }
+            } catch (e: CancellationException) {
+                // Do nothing
             } catch (e: IllegalStateException) {
                 context.toast(R.string.errorOccurred)
             }
