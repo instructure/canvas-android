@@ -45,17 +45,17 @@ class UserFacade(
 
     suspend fun getPeopleByCourseId(courseId: Long): List<User> {
         val enrollments = enrollmentDao.findByCourseId(courseId)
-        val users = enrollments.groupBy { it.userId }.keys.mapNotNull { userId ->
-            userDao.findById(userId)?.toApiModel(enrollments.map { it.toApiModel() }.filter { it.userId == userId })
-        }
-        return users
+        return getUsersFromEnrollment(enrollments)
     }
 
     suspend fun getPeopleByCourseIdAndRole(courseId: Long, role: Enrollment.EnrollmentType): List<User> {
         val enrollments = enrollmentDao.findByCourseIdAndRole(courseId, role.name)
-        val users = enrollments.groupBy { it.userId }.keys.mapNotNull { userId ->
+        return getUsersFromEnrollment(enrollments)
+    }
+
+    private suspend fun getUsersFromEnrollment(enrollments: List<EnrollmentEntity>): List<User> {
+        return enrollments.groupBy { it.userId }.keys.mapNotNull { userId ->
             userDao.findById(userId)?.toApiModel(enrollments.map { it.toApiModel() }.filter { it.userId == userId })
         }
-        return users
     }
 }
