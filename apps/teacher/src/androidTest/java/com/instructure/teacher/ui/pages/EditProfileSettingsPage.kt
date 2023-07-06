@@ -30,9 +30,8 @@ import com.instructure.teacher.R
  * It extends the `BasePage` class.
  *
  * @constructor Creates an instance of `EditProfileSettingsPage`.
- * @param layoutId The resource ID of the layout for the profile settings page.
  */
-class EditProfileSettingsPage(layoutId: Int) : BasePage(layoutId) {
+class EditProfileSettingsPage : BasePage(R.id.editProfileSettingsPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val profileBanner by OnViewWithId(R.id.profileBanner)

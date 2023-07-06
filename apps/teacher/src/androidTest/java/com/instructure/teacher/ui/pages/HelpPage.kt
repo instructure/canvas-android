@@ -39,9 +39,8 @@ import com.instructure.teacher.R
 /**
  * A page representing the Help menu in the application.
  *
- * @param pageResId The resource ID of the Help dialog.
  */
-class HelpPage(pageResId: Int) : BasePage(pageResId) {
+class HelpPage : BasePage(R.id.helpDialog) {
 
     /**
      * The label for asking an instructor.
