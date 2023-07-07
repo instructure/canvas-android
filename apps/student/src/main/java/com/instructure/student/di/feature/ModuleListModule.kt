@@ -16,8 +16,6 @@
  */
 package com.instructure.student.di.feature
 
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.pandautils.room.offline.daos.TabDao

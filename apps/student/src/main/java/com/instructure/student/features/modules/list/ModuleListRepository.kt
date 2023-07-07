@@ -16,22 +16,16 @@
  */
 package com.instructure.student.features.modules.list
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.list.datasource.ModuleListDataSource
 import com.instructure.student.features.modules.list.datasource.ModuleListLocalDataSource
 import com.instructure.student.features.modules.list.datasource.ModuleListNetworkDataSource
-import kotlinx.coroutines.CoroutineScope
-import retrofit2.Response
 
 class ModuleListRepository(
     localDataSource: ModuleListLocalDataSource,

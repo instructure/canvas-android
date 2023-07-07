@@ -27,7 +27,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
@@ -37,7 +36,6 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Failure
-import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
@@ -53,8 +51,6 @@ import com.instructure.student.features.modules.util.ModuleUtility
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Response
 import java.util.Locale
 import java.util.UUID
 
