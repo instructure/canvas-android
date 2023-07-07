@@ -1370,4 +1370,5 @@
     <string name="aboutLoginTitle">ログイン ID</string>
     <string name="aboutEmailTitle">E メール</string>
     <string name="aboutVersionTitle">バージョン</string>
+    <string name="assignmentRefreshError">この課題のリロード中、問題がありました。接続を確認して、もう一度お試しください。</string>
 </resources>

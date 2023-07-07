@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID Koneksyon</string>
     <string name="aboutEmailTitle">Imèl</string>
     <string name="aboutVersionTitle">Vèsyon</string>
+    <string name="assignmentRefreshError">Te gen yon pwoblèm pou rechaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
 </resources>

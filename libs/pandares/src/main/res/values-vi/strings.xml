@@ -1389,4 +1389,5 @@
     <string name="aboutLoginTitle">ID Đăng Nhập</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Phiên bản</string>
+    <string name="assignmentRefreshError">Đã xảy ra vấn đề khi tải lại bài tập này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
 </resources>

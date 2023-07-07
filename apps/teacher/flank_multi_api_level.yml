@@ -23,7 +23,7 @@ gcloud:
       locale: en_US
       orientation: portrait
     - model: NexusLowRes
-      version: 29
+      version: 30
       locale: en_US
       orientation: portrait
 

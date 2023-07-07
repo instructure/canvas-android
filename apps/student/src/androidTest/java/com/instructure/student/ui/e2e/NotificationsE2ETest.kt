@@ -17,6 +17,7 @@
 package com.instructure.student.ui.e2e
 
 import android.util.Log
+import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.ReleaseExclude
 import com.instructure.canvas.espresso.refresh
@@ -121,7 +122,7 @@ class NotificationsE2ETest : StudentTest() {
                     refresh()
                     notificationPage.assertHasGrade(testAssignment.name, "13")
                     return@submitAndGradeRepeat
-                } catch (e: AssertionError) {
+                } catch (e: NoMatchingViewException) {
                     println("Attempt failed: API has still not give back the response, so the graded assignment is not displayed among the notifications.")
                 }
             }

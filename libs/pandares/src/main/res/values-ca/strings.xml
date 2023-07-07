@@ -1389,4 +1389,5 @@
     <string name="aboutLoginTitle">ID d\'inici de sessió</string>
     <string name="aboutEmailTitle">Correu electrònic</string>
     <string name="aboutVersionTitle">Versió</string>
+    <string name="assignmentRefreshError">Hi ha hagut un problema en tornar a carregar aquesta activitat. Reviseu la connexió i torneu-ho a provar.</string>
 </resources>

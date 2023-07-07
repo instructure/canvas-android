@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID Mewngofnodi</string>
     <string name="aboutEmailTitle">E-bost</string>
     <string name="aboutVersionTitle">Fersiwn</string>
+    <string name="assignmentRefreshError">Problem wrth ail-lwytho’r aseiniad hwn. Gwiriwch eich cysylltiad a rhowch gynnig arall arni.</string>
 </resources>

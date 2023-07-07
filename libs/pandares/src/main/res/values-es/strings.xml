@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID de inicio de sesión</string>
     <string name="aboutEmailTitle">Correo electrónico</string>
     <string name="aboutVersionTitle">Versión</string>
+    <string name="assignmentRefreshError">Se produjo un problema al volver a cargar esta tarea. Compruebe su conexión y vuelva a intentarlo.</string>
 </resources>

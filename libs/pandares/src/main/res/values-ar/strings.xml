@@ -1459,4 +1459,5 @@
     <string name="aboutLoginTitle">معرف تسجيل الدخول</string>
     <string name="aboutEmailTitle">البريد الإلكتروني</string>
     <string name="aboutVersionTitle">الإصدار</string>
+    <string name="assignmentRefreshError">حدثت مشكلة أثناء إعادة تحميل هذه المهمة. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
 </resources>
