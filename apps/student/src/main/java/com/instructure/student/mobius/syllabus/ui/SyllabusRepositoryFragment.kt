@@ -18,6 +18,7 @@
 
 package com.instructure.student.mobius.syllabus.ui
 
+import android.os.Bundle
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.makeBundle
@@ -31,6 +32,11 @@ class SyllabusRepositoryFragment : SyllabusFragment() {
 
     @Inject
     lateinit var syllabusRepository: SyllabusRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
 
     companion object {
 

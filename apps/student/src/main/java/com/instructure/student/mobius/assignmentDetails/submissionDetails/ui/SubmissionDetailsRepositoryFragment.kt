@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
+import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
@@ -34,6 +35,11 @@ class SubmissionDetailsRepositoryFragment : SubmissionDetailsFragment() {
     lateinit var submissionDetailsRepository: SubmissionDetailsRepository
 
     override fun getRepository() = submissionDetailsRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
 
     companion object {
         fun makeRoute(
