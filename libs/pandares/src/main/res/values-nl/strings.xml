@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">Aanmeldings-ID</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Versie</string>
+    <string name="assignmentRefreshError">Er is een probleem met het opnieuw laden van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
 </resources>

@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID ล็อกอิน</string>
     <string name="aboutEmailTitle">อีเมล</string>
     <string name="aboutVersionTitle">เวอร์ชั่น</string>
+    <string name="assignmentRefreshError">มีปัญหาในการรีโหลดภารกิจนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
 </resources>
