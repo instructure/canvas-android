@@ -28,8 +28,8 @@ class UserFacade(
         private val userDao: UserDao,
         private val enrollmentDao: EnrollmentDao,
 ) {
-    suspend fun insertPeople(peopleList: List<User>) {
-        peopleList.forEach { user ->
+    suspend fun insertUsers(userList: List<User>) {
+        userList.forEach { user ->
             userDao.insert(UserEntity(user))
             user.enrollments.forEach { enrollment ->
                 enrollment.observedUser?.let { userDao.insert(UserEntity(it)) }
@@ -43,12 +43,12 @@ class UserFacade(
         }
     }
 
-    suspend fun getPeopleByCourseId(courseId: Long): List<User> {
+    suspend fun getUsersByCourseId(courseId: Long): List<User> {
         val enrollments = enrollmentDao.findByCourseId(courseId)
         return getUsersFromEnrollment(enrollments)
     }
 
-    suspend fun getPeopleByCourseIdAndRole(courseId: Long, role: Enrollment.EnrollmentType): List<User> {
+    suspend fun getUsersByCourseIdAndRole(courseId: Long, role: Enrollment.EnrollmentType): List<User> {
         val enrollments = enrollmentDao.findByCourseIdAndRole(courseId, role.name)
         return getUsersFromEnrollment(enrollments)
     }

@@ -28,7 +28,7 @@ class PeopleListNetworkDataSourceTest {
 
         coEvery { userAPI.getFirstPagePeopleList(any(), any(), any()) } returns DataResult.Success(expected)
 
-        val result = dataSource.loadPeople(CanvasContext.defaultCanvasContext(), false)
+        val result = dataSource.loadFirstPagePeople(CanvasContext.defaultCanvasContext(), false).dataOrNull
 
         TestCase.assertEquals(expected, result)
     }
@@ -37,6 +37,6 @@ class PeopleListNetworkDataSourceTest {
     fun `User Api error throws exception`() = runTest {
         coEvery { userAPI.getFirstPagePeopleList(any(), any(), any()) } returns DataResult.Fail()
 
-        dataSource.loadPeople(CanvasContext.defaultCanvasContext(), true)
+        dataSource.loadFirstPagePeople(CanvasContext.defaultCanvasContext(), true)
     }
 }

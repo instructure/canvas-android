@@ -220,7 +220,7 @@ class OfflineSyncWorker @AssistedInject constructor(
                 .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
 
         users.let {
-            userFacade.insertPeople(it)
+            userFacade.insertUsers(it)
         }
     }
 

@@ -24,9 +24,9 @@ class PeopleListLocalDataSourceTest {
             User(id = 2L, name = "User 2", enrollments = listOf(Enrollment(3L))),
             User(id = 3L, name = "User 3", enrollments = listOf())
         )
-        coEvery { userFacade.getPeopleByCourseId(any()) } returns expected
+        coEvery { userFacade.getUsersByCourseId(any()) } returns expected
 
-        val people = dataSource.loadPeople(CanvasContext.defaultCanvasContext(), false)
+        val people = dataSource.loadFirstPagePeople(CanvasContext.defaultCanvasContext(), false).dataOrNull
 
         assertEquals(expected, people)
     }

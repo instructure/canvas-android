@@ -25,7 +25,7 @@ import com.instructure.pandautils.room.offline.facade.UserFacade
 
 class PeopleListLocalDataSource(private val userFacade: UserFacade): PeopleListDataSource {
     override suspend fun loadFirstPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
-        return DataResult.Success(userFacade.getPeopleByCourseId(canvasContext.id))
+        return DataResult.Success(userFacade.getUsersByCourseId(canvasContext.id))
     }
 
     override suspend fun loadNextPagePeople(canvasContext: CanvasContext, forceNetwork: Boolean, nextUrl: String): DataResult<List<User>> {
@@ -33,10 +33,10 @@ class PeopleListLocalDataSource(private val userFacade: UserFacade): PeopleListD
     }
 
     override suspend fun loadTeachers(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
-        return DataResult.Success(userFacade.getPeopleByCourseIdAndRole(canvasContext.id, Enrollment.EnrollmentType.Teacher))
+        return DataResult.Success(userFacade.getUsersByCourseIdAndRole(canvasContext.id, Enrollment.EnrollmentType.Teacher))
     }
 
     override suspend fun loadTAs(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<User>> {
-        return DataResult.Success(userFacade.getPeopleByCourseIdAndRole(canvasContext.id, Enrollment.EnrollmentType.Ta))
+        return DataResult.Success(userFacade.getUsersByCourseIdAndRole(canvasContext.id, Enrollment.EnrollmentType.Ta))
     }
 }

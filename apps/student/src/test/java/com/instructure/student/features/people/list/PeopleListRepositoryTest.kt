@@ -2,6 +2,7 @@ package com.instructure.student.features.people.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.every
@@ -25,10 +26,10 @@ class PeopleListRepositoryTest {
         val onlineExpected = listOf(User(id = 2L, name = "Online"))
 
         every { networkStateProvider.isOnline() } returns true
-        coEvery { localDataSource.loadPeople(any(), any()) } returns offlineExpected
-        coEvery { networkDataSource.loadPeople(any(), any()) } returns onlineExpected
+        coEvery { localDataSource.loadFirstPagePeople(any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadFirstPagePeople(any(), any()) } returns DataResult.Success(onlineExpected)
 
-        val people = repository.loadPeople(CanvasContext.defaultCanvasContext(), false)
+        val people = repository.loadFirstPagePeople(CanvasContext.defaultCanvasContext(), false).dataOrNull
 
         assertEquals(onlineExpected, people)
     }
@@ -39,10 +40,10 @@ class PeopleListRepositoryTest {
         val onlineExpected = listOf(User(id = 2L, name = "Online"))
 
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.loadPeople(any(), any()) } returns offlineExpected
-        coEvery { networkDataSource.loadPeople(any(), any()) } returns onlineExpected
+        coEvery { localDataSource.loadFirstPagePeople(any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadFirstPagePeople(any(), any()) } returns DataResult.Success(onlineExpected)
 
-        val pages = repository.loadPeople(CanvasContext.defaultCanvasContext(), false)
+        val pages = repository.loadFirstPagePeople(CanvasContext.defaultCanvasContext(), false).dataOrNull
 
         assertEquals(offlineExpected, pages)
     }

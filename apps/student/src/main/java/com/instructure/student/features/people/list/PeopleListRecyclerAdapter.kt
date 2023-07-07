@@ -38,8 +38,6 @@ import com.instructure.student.holders.PeopleHeaderViewHolder
 import com.instructure.student.holders.PeopleViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class PeopleListRecyclerAdapter(
@@ -88,9 +86,7 @@ class PeopleListRecyclerAdapter(
         lifecycleScope.tryLaunch {
             val peopleNextPage = repository.loadNextPagePeople(canvasContext, isRefresh, nextURL)
 
-            withContext(Dispatchers.Main) {
-                populateAdapter(peopleNextPage.dataOrThrow)
-            }
+            populateAdapter(peopleNextPage.dataOrThrow)
 
             if (peopleNextPage is DataResult.Success<List<User>>) {
                 setNextUrl(peopleNextPage.linkHeaders.nextUrl)
