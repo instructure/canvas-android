@@ -21,7 +21,7 @@ class PeopleListRepositoryTest {
     private val repository = PeopleListRepository(localDataSource, networkDataSource, networkStateProvider)
 
     @Test
-    fun `Get course people if device is online`() = runTest {
+    fun `Get course people first page if device is online`() = runTest {
         val offlineExpected = listOf(User(id = 1L, name = "Offline"))
         val onlineExpected = listOf(User(id = 2L, name = "Online"))
 
@@ -35,7 +35,7 @@ class PeopleListRepositoryTest {
     }
 
     @Test
-    fun `Get course people if device is offline`() = runTest {
+    fun `Get course people first page if device is offline`() = runTest {
         val offlineExpected = listOf(User(id = 1L, name = "Offline"))
         val onlineExpected = listOf(User(id = 2L, name = "Online"))
 
@@ -44,6 +44,90 @@ class PeopleListRepositoryTest {
         coEvery { networkDataSource.loadFirstPagePeople(any(), any()) } returns DataResult.Success(onlineExpected)
 
         val pages = repository.loadFirstPagePeople(CanvasContext.defaultCanvasContext(), false).dataOrNull
+
+        assertEquals(offlineExpected, pages)
+    }
+
+    @Test
+    fun `Get course people next page if device is online`() = runTest {
+        val offlineExpected = listOf(User(id = 1L, name = "Offline"))
+        val onlineExpected = listOf(User(id = 2L, name = "Online"))
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { localDataSource.loadNextPagePeople(any(), any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadNextPagePeople(any(), any(), any()) } returns DataResult.Success(onlineExpected)
+
+        val pages = repository.loadNextPagePeople(CanvasContext.defaultCanvasContext(), false).dataOrNull
+
+        assertEquals(onlineExpected, pages)
+    }
+
+    @Test
+    fun `Get course people next page if device is offline`() = runTest {
+        val offlineExpected = listOf(User(id = 1L, name = "Offline"))
+        val onlineExpected = listOf(User(id = 2L, name = "Online"))
+
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.loadNextPagePeople(any(), any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadNextPagePeople(any(), any(), any()) } returns DataResult.Success(onlineExpected)
+
+        val pages = repository.loadNextPagePeople(CanvasContext.defaultCanvasContext(), false).dataOrNull
+
+        assertEquals(offlineExpected, pages)
+    }
+
+    @Test
+    fun `Get course teachers if device is online`() = runTest {
+        val offlineExpected = listOf(User(id = 1L, name = "Offline"))
+        val onlineExpected = listOf(User(id = 2L, name = "Online"))
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { localDataSource.loadTeachers(any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadTeachers(any(), any()) } returns DataResult.Success(onlineExpected)
+
+        val pages = repository.loadTeachers(CanvasContext.defaultCanvasContext(), false).dataOrNull
+
+        assertEquals(onlineExpected, pages)
+    }
+
+    @Test
+    fun `Get course teachers if device is offline`() = runTest {
+        val offlineExpected = listOf(User(id = 1L, name = "Offline"))
+        val onlineExpected = listOf(User(id = 2L, name = "Online"))
+
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.loadTeachers(any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadTeachers(any(), any()) } returns DataResult.Success(onlineExpected)
+
+        val pages = repository.loadTeachers(CanvasContext.defaultCanvasContext(), false).dataOrNull
+
+        assertEquals(offlineExpected, pages)
+    }
+
+    @Test
+    fun `Get course TAs if device is online`() = runTest {
+        val offlineExpected = listOf(User(id = 1L, name = "Offline"))
+        val onlineExpected = listOf(User(id = 2L, name = "Online"))
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { localDataSource.loadTAs(any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadTAs(any(), any()) } returns DataResult.Success(onlineExpected)
+
+        val pages = repository.loadTAs(CanvasContext.defaultCanvasContext(), false).dataOrNull
+
+        assertEquals(onlineExpected, pages)
+    }
+
+    @Test
+    fun `Get course TAs if device is offline`() = runTest {
+        val offlineExpected = listOf(User(id = 1L, name = "Offline"))
+        val onlineExpected = listOf(User(id = 2L, name = "Online"))
+
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.loadTAs(any(), any()) } returns DataResult.Success(offlineExpected)
+        coEvery { networkDataSource.loadTAs(any(), any()) } returns DataResult.Success(onlineExpected)
+
+        val pages = repository.loadTAs(CanvasContext.defaultCanvasContext(), false).dataOrNull
 
         assertEquals(offlineExpected, pages)
     }
