@@ -333,4 +333,12 @@ class OfflineModule {
     ): ConferenceFacade {
         return ConferenceFacade(conferenceDao, conferenceRecodingDao)
     }
+
+    @Provides
+    fun providePeopleFacade(
+        userDao: UserDao,
+        enrollmentDao: EnrollmentDao,
+    ): UserFacade {
+        return UserFacade(userDao, enrollmentDao)
+    }
 }
