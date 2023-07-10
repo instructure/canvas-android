@@ -262,6 +262,66 @@ class ElementaryCourseViewModelTest {
         assertEquals(expectedData, viewModel.data.value)
     }
 
+    @Test
+    fun `Hidden grades tab opens native view`() {
+        val tabs = listOf(
+            Tab(tabId = "home", label = "Home", htmlUrl = "/home", isHidden = false, position = 1),
+            Tab(tabId = "schedule", label = "Schedule", htmlUrl = "/schedule", isHidden = false, position = 2),
+            Tab(tabId = "modules", label = "Modules", htmlUrl = "/modules", isHidden = false, position = 3),
+            Tab(tabId = "grades", label = "Grades", htmlUrl = "/grades", isHidden = true, position = 4),
+            Tab(tabId = "external_tool_google_drive", label = "Google Drive", htmlUrl = "/google_drive", isHidden = false, position = 5, type = Tab.TYPE_EXTERNAL),
+            Tab(tabId = "external_tool_name_coach", label = "NameCoach", htmlUrl = "/name_coach", isHidden = false, position = 6, type = Tab.TYPE_EXTERNAL)
+        )
+
+        every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(tabs)
+        }
+
+        viewModel.getData(CanvasContext.emptyCourseContext(), "grades")
+
+        assertEquals(ElementaryCourseAction.RedirectToGrades, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Hidden modules tab opens native view`() {
+        val tabs = listOf(
+            Tab(tabId = "home", label = "Home", htmlUrl = "/home", isHidden = false, position = 1),
+            Tab(tabId = "schedule", label = "Schedule", htmlUrl = "/schedule", isHidden = false, position = 2),
+            Tab(tabId = "modules", label = "Modules", htmlUrl = "/modules", isHidden = true, position = 3),
+            Tab(tabId = "grades", label = "Grades", htmlUrl = "/grades", isHidden = false, position = 4),
+            Tab(tabId = "external_tool_google_drive", label = "Google Drive", htmlUrl = "/google_drive", isHidden = false, position = 5, type = Tab.TYPE_EXTERNAL),
+            Tab(tabId = "external_tool_name_coach", label = "NameCoach", htmlUrl = "/name_coach", isHidden = false, position = 6, type = Tab.TYPE_EXTERNAL)
+        )
+
+        every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(tabs)
+        }
+
+        viewModel.getData(CanvasContext.emptyCourseContext(), "modules")
+
+        assertEquals(ElementaryCourseAction.RedirectToModules, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `External tool opens course browser`() {
+        val tabs = listOf(
+            Tab(tabId = "home", label = "Home", htmlUrl = "/home", isHidden = false, position = 1),
+            Tab(tabId = "schedule", label = "Schedule", htmlUrl = "/schedule", isHidden = false, position = 2),
+            Tab(tabId = "modules", label = "Modules", htmlUrl = "/modules", isHidden = false, position = 3),
+            Tab(tabId = "grades", label = "Grades", htmlUrl = "/grades", isHidden = false, position = 4),
+            Tab(tabId = "external_tool_google_drive", label = "Google Drive", htmlUrl = "/google_drive", isHidden = true, position = 5, type = Tab.TYPE_EXTERNAL),
+            Tab(tabId = "external_tool_name_coach", label = "NameCoach", htmlUrl = "/name_coach", isHidden = false, position = 6, type = Tab.TYPE_EXTERNAL)
+        )
+
+        every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(tabs)
+        }
+
+        viewModel.getData(CanvasContext.emptyCourseContext(), "external_tool_google_drive")
+
+        assertEquals(ElementaryCourseAction.RedirectToCourseBrowserPage, viewModel.events.value?.peekContent())
+    }
+
     private fun setupStrings() {
         every { resources.getString(R.string.error_loading_course_details) } returns "Uh oh! An error occurred while loading the course details."
         every { resources.getString(R.string.dashboardTabResources) } returns "Resources"

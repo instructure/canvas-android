@@ -17,7 +17,7 @@
 
 package com.instructure.pandautils.room.appdatabase
 
-import com.instructure.pandautils.room.createMigration
+import com.instructure.pandautils.room.common.createMigration
 
 val appDatabaseMigrations = arrayOf(
 
@@ -40,5 +40,10 @@ val appDatabaseMigrations = arrayOf(
         database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN assignmentId INTEGER")
         database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN attemptId INTEGER")
         database.execSQL("ALTER TABLE DashboardFileUploadEntity ADD COLUMN folderId INTEGER")
+    },
+
+    createMigration(5, 6) { database ->
+        database.execSQL("ALTER TABLE AttachmentEntity ADD COLUMN submissionId INTEGER")
+        database.execSQL("ALTER TABLE SubmissionCommentEntity ADD COLUMN submissionId INTEGER")
     }
 )

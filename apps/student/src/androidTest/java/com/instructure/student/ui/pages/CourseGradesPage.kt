@@ -18,16 +18,16 @@ package com.instructure.student.ui.pages
 
 import android.os.SystemClock.sleep
 import android.view.View
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withChild
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -37,11 +37,17 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -58,9 +64,13 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         onView(itemMatcher).assertDisplayed()
     }
 
+    fun openAssignment(assignmentName: String) {
+        waitForView(withId(R.id.title) + withText(assignmentName)).scrollTo().click()
+    }
+
     fun selectItem(itemMatcher: Matcher<View>) {
         scrollToItem(itemMatcher)
-        onView(itemMatcher).click()
+        Espresso.onView(itemMatcher).click()
     }
 
     fun assertTotalGrade(matcher: Matcher<View>) {
@@ -136,6 +146,17 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
             }
         } while(System.currentTimeMillis() < endTime)
         gradeValue.check(matches(matcher))
+    }
+
+    fun clickOnExpandCollapseButton() {
+        onView(withId(R.id.expand_collapse) + hasSibling(withId(R.id.title) + withText(R.string.assignments))).click()
+    }
+
+    fun assertAssignmentCount(count: Int) {
+        onView(withId(R.id.listView) + withAncestor(R.id.courseGradesPage)).check(
+            ViewAssertions.matches(
+                ViewMatchers.hasChildCount(count + 1) //because of the expandable 'header' we have to increase by 1.
+            ))
     }
 
 }

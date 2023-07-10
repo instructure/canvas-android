@@ -18,10 +18,26 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 
 class DiscussionsListPage : BasePage() {
@@ -82,5 +98,35 @@ class DiscussionsListPage : BasePage() {
 
     fun toggleCollapseExpandIcon() {
         onView(withId(R.id.collapseIcon)).click()
+    }
+
+    fun clickDiscussionOverFlowMenu(discussionTitle: String) {
+        waitForView(withId(R.id.discussionOverflow) + ViewMatchers.hasSibling(
+            withId(R.id.discussionTitle) + withText(
+                discussionTitle
+            )
+        )
+        ).click()
+    }
+
+    fun selectOverFlowMenu(menuText: String) {
+        waitForView(withText(menuText) + withParent(R.id.coursePages)).click()
+        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+    }
+
+    fun deleteDiscussionFromOverflowMenu(discussionTitle: String) {
+        clickDiscussionOverFlowMenu(discussionTitle)
+        selectOverFlowMenu("Delete")
+        onView(withId(android.R.id.button1) + withText(R.string.delete)).click()
+    }
+
+    fun assertGroupDisplayed(groupName: String) {
+        waitForView(withId(R.id.groupName) + withText(groupName)).assertDisplayed()
+    }
+
+    fun assertDiscussionInGroup(groupName: String, discussionTitle: String) {
+        val groupChildMatcher = withId(R.id.groupName) + withText(groupName)
+        waitForView(withId(R.id.discussionTitle) + withText(discussionTitle) +
+                withAncestor(withId(R.id.discussionRecyclerView) + withDescendant(groupChildMatcher))).assertDisplayed()
     }
 }

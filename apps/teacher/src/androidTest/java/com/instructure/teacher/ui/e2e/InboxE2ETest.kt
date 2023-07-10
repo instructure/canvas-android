@@ -89,7 +89,7 @@ class InboxE2ETest : TeacherTest() {
         addMessagePage.clickSendButton()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
-        inboxPage.filterInbox("Sent")
+        inboxPage.filterMessageScope("Sent")
 
         Log.d(STEP_TAG,"Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()
@@ -110,7 +110,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertHasConversation()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Inbox' category from the spinner on Inbox Page.")
-        inboxPage.filterInbox("Inbox")
+        inboxPage.filterMessageScope("Inbox")
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the previously seeded Inbox conversation is displayed.")
         inboxPage.refresh()
@@ -137,12 +137,12 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Archived' category from the spinner on Inbox Page." +
                 "Assert that the previously archived conversation is displayed.")
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertHasConversation()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Starred' category from the spinner on Inbox Page." +
                 "Assert that the '${seedConversation[0]}' conversation is displayed because it's still starred.")
-        inboxPage.filterInbox("Starred")
+        inboxPage.filterMessageScope("Starred")
         inboxPage.assertHasConversation()
 
         Log.d(STEP_TAG,"Click on the conversation.")
@@ -173,7 +173,7 @@ class InboxE2ETest : TeacherTest() {
         )
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Inbox' category from the spinner on Inbox Page. Assert that the '${seedConversation[0]}' conversation is displayed.")
-        inboxPage.filterInbox("Inbox")
+        inboxPage.filterMessageScope("Inbox")
         inboxPage.assertHasConversation()
 
         Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation. Unarchive it, and assert that it is not displayed in the 'ARCHIVED' scope any more.")
@@ -182,7 +182,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Select 'ARCHIVED' scope and assert that '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation and unarchive it." +
@@ -193,7 +193,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that ${seedConversation2[0].subject} conversation is displayed.")
-        inboxPage.filterInbox("Inbox")
+        inboxPage.filterMessageScope("Inbox")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Select both of the conversations (${seedConversation[0].subject} and ${seedConversation2[0].subject} and star them." +
@@ -220,17 +220,17 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that both of the conversations are displayed there.")
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'UNREAD' scope and assert that none of the conversations are displayed there, because a conversation cannot be archived and unread at the same time.")
-        inboxPage.filterInbox("Unread")
+        inboxPage.filterMessageScope("Unread")
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope and assert that both of the conversations are displayed there.")
-        inboxPage.filterInbox("Starred")
+        inboxPage.filterMessageScope("Starred")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
 
@@ -241,7 +241,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that both of the conversations are displayed there.")
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
 
@@ -252,7 +252,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope and assert that both of the conversations are displayed there.")
-        inboxPage.filterInbox("Inbox")
+        inboxPage.filterMessageScope("Inbox")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
 
@@ -270,7 +270,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope. Assert that the '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Swipe '${seedConversation2[0].subject}' left and assert it is removed from the 'ARCHIVED' scope because it has became unarchived.")
@@ -278,7 +278,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope. Assert that the '${seedConversation2[0].subject}' conversation is displayed in the 'INBOX' scope.")
-        inboxPage.filterInbox("Inbox")
+        inboxPage.filterMessageScope("Inbox")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
@@ -287,7 +287,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.clickMarkAsUnread()
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that both of the conversation are displayed in the 'STARRED' scope.")
-        inboxPage.filterInbox("Starred")
+        inboxPage.filterMessageScope("Starred")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
 
@@ -303,7 +303,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertUnreadMarkerVisibility(seedConversation3[0].subject, ViewMatchers.Visibility.GONE)
 
         Log.d(STEP_TAG, "Navigate to 'UNREAD' scope. Assert that only the '${seedConversation2[0].subject}' conversation is displayed in the 'UNREAD' scope.")
-        inboxPage.filterInbox("Unread")
+        inboxPage.filterMessageScope("Unread")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
 
@@ -312,11 +312,11 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope. Assert that the '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope and select '${seedConversation3[0].subject}' conversation.")
-        inboxPage.filterInbox("Inbox")
+        inboxPage.filterMessageScope("Inbox")
         inboxPage.selectConversation(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Delete the '${seedConversation3[0].subject}' conversation and assert that it has been removed from the 'INBOX' scope.")
@@ -325,7 +325,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope. Assert that the '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
-        inboxPage.filterInbox("Archived")
+        inboxPage.filterMessageScope("Archived")
 
         Log.d(STEP_TAG,"Click on the '${seedConversation2[0].subject}' conversation.")
         inboxPage.clickConversation(seedConversation2[0])
@@ -335,7 +335,99 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Assert that the empty view is displayed.")
         inboxPage.assertInboxEmpty()
+    }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
+    fun testInboxFilterCoursesE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, teachers = 1, courses = 2)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val course2 = data.coursesList[1]
+        val student1 = data.studentsList[0]
+
+        val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
+        val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
+        Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} student to the group: ${group.name}.")
+        GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
+
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+        dashboardPage.assertDisplaysCourse(course)
+
+        Log.d(STEP_TAG,"Open Inbox. Assert that Inbox is empty.")
+        dashboardPage.openInbox()
+        inboxPage.assertInboxEmpty()
+
+        Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API from Teacher to Student for '${course.name}' course only.")
+        val seedConversation = ConversationsApi.createConversationForCourse(
+            token = teacher.token,
+            recipients = listOf(student1.id.toString(), teacher.id.toString()),
+            courseId = course.id
+        )
+
+        Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API from Student to Teacher for '${course.name}' course only.")
+        val seedConversation2 = ConversationsApi.createConversationForCourse(
+            token = student1.token,
+            recipients = listOf(student1.id.toString(), teacher.id.toString()),
+            courseId = course.id
+        )
+
+        Log.d(STEP_TAG,"Refresh the page. Assert that the previously seeded Inbox conversation is displayed. Assert that the message is unread yet.")
+        inboxPage.refresh()
+
+        Log.d(STEP_TAG, "Assert that the '${seedConversation2[0].subject}' conversation, which was sent by the Student to the Teacher is displayed in the 'Inbox' filter view," +
+                "and the '${seedConversation[0].subject}' conversation, which was sent by the Teacher to the Student is not displayed in the 'Inbox' filter view.")
+        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        inboxPage.assertConversationNotDisplayed(seedConversation[0].subject)
+
+        Log.d(STEP_TAG, "Filter to 'Sent' messages. Assert that the '${seedConversation[0].subject}' conversation, which was sent by the Teacher to the Student is displayed in the 'Inbox' filter view," +
+                "and the '${seedConversation2[0].subject}' conversation, which was sent by the Student to the Teacher is not displayed in the 'Inbox' filter view.")
+        inboxPage.filterMessageScope("Sent")
+        inboxPage.assertConversationDisplayed(seedConversation[0].subject)
+        inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+
+        Log.d(STEP_TAG, "Filter to '${course.name}' course messages and filter to 'Inbox' messages.")
+        inboxPage.filterCourseScope(course.name)
+        inboxPage.filterMessageScope("Inbox")
+
+        Log.d(STEP_TAG, "Assert that the '${seedConversation2[0].subject}' conversation, which was sent by the Student to the Teacher is displayed in the 'Inbox' filter view," +
+                "and the '${seedConversation[0].subject}' conversation, which was sent by the Teacher to the Student is not displayed in the 'Inbox' filter view.")
+        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        inboxPage.assertConversationNotDisplayed(seedConversation[0].subject)
+
+        Log.d(STEP_TAG, "Filter to 'Sent' messages. Assert that the '${seedConversation[0].subject}' conversation, which was sent by the Teacher to the Student is displayed in the 'Inbox' filter view," +
+                "and the '${seedConversation2[0].subject}' conversation, which was sent by the Student to the Teacher is not displayed in the 'Inbox' filter view.")
+        inboxPage.filterMessageScope("Sent")
+        inboxPage.assertConversationDisplayed(seedConversation[0].subject)
+        inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+
+        Log.d(STEP_TAG, "Filter to '${course.name}' course messages. Assert that there is no message in the '${course.name}' course's 'Inbox' filter view," +
+                "because the seeded conversations does not belong to this course.")
+        inboxPage.filterCourseScope(course2.name)
+        inboxPage.assertInboxEmpty()
+
+        Log.d(STEP_TAG, "Filter to 'Sent' messages among the '${course.name}' course's messages. Assert that there is no message in the '${course.name}' course's 'Sent' filter view," +
+                "because the seeded conversations does not belong to this course.")
+        inboxPage.filterMessageScope("Sent")
+        inboxPage.assertInboxEmpty()
+
+        Log.d(STEP_TAG, "Clear course filter (so get back to 'All Courses' view." +
+                "Assert that the '${seedConversation[0].subject}' conversation, which was sent by the Student to the Teacher is displayed in the 'Inbox' filter view, " +
+                "and the '${seedConversation2[0].subject}' conversation, which was sent by the Teacher to the Student is not displayed in the 'Inbox' filter view.")
+        inboxPage.clearCourseFilter()
+        inboxPage.assertConversationDisplayed(seedConversation[0].subject)
+        inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+
+        Log.d(STEP_TAG, "Filter to 'Inbox' messages. Assert that the '${seedConversation2[0].subject}' conversation, which was sent by the Teacher to the Student is displayed in the 'Inbox' filter view," +
+                "and the '${seedConversation[0].subject}' conversation, which was sent by the Student to the Teacher is not displayed in the 'Inbox' filter view.")
+        inboxPage.filterMessageScope("Inbox")
+        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        inboxPage.assertConversationNotDisplayed(seedConversation[0].subject)
     }
 
     private fun addNewMessage(course: CourseApiModel, userRecipientList: MutableList<CanvasUserApiModel>) {

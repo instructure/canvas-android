@@ -69,7 +69,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-@PageView(url = "{canvasContext}/discussion_topics/{topicId}")
+@PageView(url = "{canvasContext}/{type}/{topicId}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
@@ -658,7 +658,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun showOverflowMenu(id: Long) {
-        fragmentManager?.let {
+        parentFragmentManager.let {
             DiscussionBottomSheetMenuFragment.show(it, id)
         }
     }
@@ -784,6 +784,9 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             DiscussionBottomSheetChoice.DELETE -> deleteDiscussionEntry(id)
         }
     }
+
+    @PageViewUrlParam("type")
+    fun pageViewType(): String = if (isAnnouncements) "announcements" else "discussion_topics"
 
     companion object {
         const val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"

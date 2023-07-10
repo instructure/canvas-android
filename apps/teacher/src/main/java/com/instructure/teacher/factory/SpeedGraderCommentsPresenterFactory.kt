@@ -20,6 +20,10 @@ import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import instructure.androidblueprint.PresenterFactory

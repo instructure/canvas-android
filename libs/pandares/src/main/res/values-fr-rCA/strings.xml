@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">Identifiant de connexion</string>
     <string name="aboutEmailTitle">Adresse électronique</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Un problème est survenu lors du rechargement de cette tâche. Veuillez vérifier votre connexion et réessayer.</string>
 </resources>

@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -45,7 +46,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-@PageView(url = "{canvasContext}/discussion_topics")
+@PageView(url = "{canvasContext}/{type}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
 open class DiscussionsListFragment : BaseExpandableSyncFragment<
         String,
@@ -140,7 +141,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             { group, discussionTopicHeaderOverflow ->
                 if (group != null) {
                     DiscussionsMoveToDialog.show(
-                        requireFragmentManager(),
+                        parentFragmentManager,
                         group,
                         discussionTopicHeaderOverflow
                     ) { newGroup ->
@@ -237,7 +238,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun discussionDeletedSuccessfully(discussionTopicHeader: DiscussionTopicHeader) {
-        adapter.removeItem(discussionTopicHeader, false)
         DiscussionTopicHeaderDeletedEvent(discussionTopicHeader.id, (DiscussionsDetailsFragment::class.java.toString() + ".onPost()")).post()
     }
 
@@ -279,14 +279,20 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     fun onDiscussionTopicHeaderDeleted(event: DiscussionTopicHeaderDeletedEvent) {
         event.get {
             val discussionTopicHeader = adapter.getItem(it)
-            if(discussionTopicHeader != null) {
-                adapter.removeItem(discussionTopicHeader, false)
+            if (discussionTopicHeader != null) {
+                adapter.removeItem(discussionTopicHeader, true)
                 needToForceNetwork = true
+                if (adapter.itemCount == 0) {
+                    presenter.refresh(true)
+                }
             }
         }
     }
 
     override fun onHandleBackPressed() = binding.discussionListToolbar.closeSearch()
+
+    @PageViewUrlParam("type")
+    open fun makePageViewUrl(): String = "discussion_topics"
 
     companion object {
         fun newInstance(canvasContext: CanvasContext) = DiscussionsListFragment().apply {

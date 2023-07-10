@@ -42,6 +42,7 @@ import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.databinding.FragmentQuizDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentGradedEvent
+import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.QuizDetailsPresenterFactory
@@ -102,6 +103,8 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         setupToolbar()
+
+        binding.swipeRefreshLayout.isRefreshing = true
     }
 
     override fun onPresenterPrepared(presenter: QuizDetailsPresenter) = Unit
@@ -109,6 +112,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     override fun onRefreshFinished() = Unit
 
     override fun onRefreshStarted() {
+        binding.swipeRefreshLayout.isRefreshing = true
         binding.toolbar.menu.clear()
         clearListeners()
     }
@@ -459,7 +463,10 @@ class QuizDetailsFragment : BasePresenterFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizEdited(event: QuizUpdatedEvent) {
         event.once(javaClass.simpleName) {
-            if (it == presenter.mQuiz.id) needToForceNetwork = true
+            if (it == presenter.mQuiz.id) {
+                needToForceNetwork = true
+                AssignmentUpdatedEvent(presenter.mQuiz.assignmentId, javaClass.simpleName).post()
+            }
         }
     }
 

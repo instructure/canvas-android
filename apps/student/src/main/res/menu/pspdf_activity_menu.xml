@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -20,18 +19,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/mainMenu"
-        android:icon="@drawable/ic_overflow_white_18dp"
+        android:id="@+id/upload_item"
+        android:icon="@drawable/ic_canvas_logo_red"
         android:title="@string/uploadToCanvas"
-        app:iconTint="@color/white"
-        app:showAsAction="always">
-        <menu>
-
-            <item
-                android:id="@+id/upload_item"
-                android:icon="@drawable/ic_canvas_logo_red"
-                android:title="@string/uploadToCanvas"/>
-        </menu>
-    </item>
+        app:showAsAction="never"/>
 
 </menu>

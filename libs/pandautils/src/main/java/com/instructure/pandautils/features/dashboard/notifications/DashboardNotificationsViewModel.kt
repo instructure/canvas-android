@@ -92,7 +92,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private val fileUploads = dashboardFileUploadDao.getAll(apiPrefs.user?.id.orDefault())
+    private val fileUploads = dashboardFileUploadDao.getAllForUser(apiPrefs.user?.id.orDefault())
 
     init {
         fileUploads.observeForever(runningWorkersObserver)
