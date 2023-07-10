@@ -173,4 +173,52 @@ class EnrollmentDaoTest {
 
         assert(result.isEmpty())
     }
+
+    @Test
+    fun testFindByCourseIdAndRoleTeachers() = runTest {
+        val entities = listOf(
+                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+        )
+        entities.forEach {
+            enrollmentDao.insert(it)
+        }
+
+        val result = enrollmentDao.findByCourseIdAndRole(1, Enrollment.EnrollmentType.Teacher.name)
+
+        Assert.assertEquals(entities.filter { it.role == Enrollment.EnrollmentType.Teacher.name }, result)
+    }
+
+    @Test
+    fun testFindByCourseIdAndRoleStudents() = runTest {
+        val entities = listOf(
+                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+        )
+        entities.forEach {
+            enrollmentDao.insert(it)
+        }
+
+        val result = enrollmentDao.findByCourseIdAndRole(1, Enrollment.EnrollmentType.Student.name)
+
+        Assert.assertEquals(entities.filter { it.role == Enrollment.EnrollmentType.Student.name }, result)
+    }
+
+    @Test
+    fun testFindByCourseIdAndRoleCourses() = runTest {
+        val entities = listOf(
+                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
+        )
+        entities.forEach {
+            enrollmentDao.insert(it)
+        }
+
+        val result = enrollmentDao.findByCourseIdAndRole(1, Enrollment.EnrollmentType.Teacher.name)
+
+        Assert.assertEquals(entities.filter { it.role == Enrollment.EnrollmentType.Teacher.name && it.courseId == 1L }, result)
+    }
 }

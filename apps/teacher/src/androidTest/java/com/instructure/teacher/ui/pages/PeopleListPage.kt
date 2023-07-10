@@ -21,10 +21,18 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
 import org.hamcrest.Matcher
@@ -96,4 +104,13 @@ class PeopleListPage : BasePage(R.id.peopleListPage) {
         waitForView(withText(R.string.no_items_to_display_short) + withId(R.id.title) + withAncestor(withId(R.id.emptyPandaView))).assertDisplayed()
     }
 
+    fun assertPersonRole(personName: String, role: UserRole) {
+        onView(withId(R.id.userRole) + withText(role.roleName) + hasSibling(withId(R.id.userName) + withText(personName))).assertDisplayed()
+    }
+
+    enum class UserRole(val roleName: String) {
+        TEACHER("Teacher"),
+        STUDENT("Student"),
+        OBSERVER("Observer")
+    }
 }

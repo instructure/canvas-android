@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID prijave</string>
     <string name="aboutEmailTitle">E-pošta</string>
     <string name="aboutVersionTitle">Različica</string>
+    <string name="assignmentRefreshError">Prišlo je do težave z ponovnim nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
 </resources>

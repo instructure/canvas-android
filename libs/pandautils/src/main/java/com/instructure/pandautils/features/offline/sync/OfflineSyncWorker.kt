@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
@@ -53,6 +54,7 @@ import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -60,28 +62,30 @@ const val COURSE_IDS = "course-ids"
 
 @HiltWorker
 class OfflineSyncWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters,
-    private val courseApi: CourseAPI.CoursesInterface,
-    private val pageApi: PageAPI.PagesInterface,
-    private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
-    private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val pageDao: PageDao,
-    private val courseFacade: CourseFacade,
-    private val assignmentFacade: AssignmentFacade,
-    private val quizDao: QuizDao,
-    private val quizApi: QuizAPI.QuizInterface,
-    private val dashboardCardDao: DashboardCardDao,
-    private val courseSettingsDao: CourseSettingsDao,
-    private val scheduleItemFacade: ScheduleItemFacade,
-    private val conferencesApi: ConferencesApi.ConferencesInterface,
-    private val conferenceFacade: ConferenceFacade,
-    private val discussionApi: DiscussionAPI.DiscussionInterface,
-    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface,
-    private val moduleApi: ModuleAPI.ModuleInterface,
-    private val moduleFacade: ModuleFacade
+        @Assisted private val context: Context,
+        @Assisted workerParameters: WorkerParameters,
+        private val courseApi: CourseAPI.CoursesInterface,
+        private val pageApi: PageAPI.PagesInterface,
+        private val userApi: UserAPI.UsersInterface,
+        private val assignmentApi: AssignmentAPI.AssignmentInterface,
+        private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+        private val courseSyncSettingsDao: CourseSyncSettingsDao,
+        private val pageDao: PageDao,
+        private val userFacade: UserFacade,
+        private val courseFacade: CourseFacade,
+        private val assignmentFacade: AssignmentFacade,
+        private val quizDao: QuizDao,
+        private val quizApi: QuizAPI.QuizInterface,
+        private val dashboardCardDao: DashboardCardDao,
+        private val courseSettingsDao: CourseSettingsDao,
+        private val scheduleItemFacade: ScheduleItemFacade,
+        private val conferencesApi: ConferencesApi.ConferencesInterface,
+        private val conferenceFacade: ConferenceFacade,
+        private val discussionApi: DiscussionAPI.DiscussionInterface,
+        private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+        private val announcementApi: AnnouncementAPI.AnnouncementInterface,
+        private val moduleApi: ModuleAPI.ModuleInterface,
+        private val moduleFacade: ModuleFacade
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -117,6 +121,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.isTabSelected(Tab.ANNOUNCEMENTS_ID)) {
                         fetchAnnouncements(courseSettings.courseId)
+                    }
+                    if (courseSettings.isTabSelected(Tab.PEOPLE_ID)) {
+                        fetchPeople(courseSettings.courseId)
                     }
                     if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
                         fetchModules(courseSettings.courseId)
@@ -211,6 +218,16 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseSettings = courseApi.getCourseSettings(courseId, params).dataOrNull
         courseSettings?.let {
             courseSettingsDao.insert(CourseSettingsEntity(it, courseId))
+        }
+    }
+
+    private suspend fun fetchPeople(courseId: Long) {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)
+                .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
+
+        users.let {
+            userFacade.insertUsers(it)
         }
     }
 

@@ -24,7 +24,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_GRADES
 import com.instructure.pandautils.analytics.ScreenView
@@ -33,7 +35,7 @@ import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@PageView("#grades")
+@PageView
 @ScreenView(SCREEN_VIEW_K5_GRADES)
 @AndroidEntryPoint
 class GradesFragment : Fragment() {
@@ -83,6 +85,9 @@ class GradesFragment : Fragment() {
         val selectedGradingPeriod = gradingPeriods[index]
         viewModel.gradingPeriodSelected(selectedGradingPeriod)
     }
+
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#grades"
 
     companion object {
         fun newInstance(): GradesFragment {

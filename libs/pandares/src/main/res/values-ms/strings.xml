@@ -1394,4 +1394,5 @@
     <string name="aboutLoginTitle">ID Log Masuk</string>
     <string name="aboutEmailTitle">E-mel</string>
     <string name="aboutVersionTitle">Versi</string>
+    <string name="assignmentRefreshError">Terdapat sedikit masalah untuk memuat semula tugasan ini. Sila semak sambungan anda dan cuba semula.</string>
 </resources>

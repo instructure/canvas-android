@@ -21,6 +21,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.OnViewWithId
@@ -170,6 +171,14 @@ class DashboardPage : BasePage() {
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
         onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+    }
+
+    fun assertNotificationDisplayed(accountNotification: AccountNotification) {
+        onView(withId(R.id.announcementTitle) + withAncestor(R.id.announcementContainer) + withText(accountNotification.subject)).assertDisplayed()
+    }
+
+    fun clickOnNotification(accountNotification: AccountNotification) {
+        onView(withId(R.id.announcementTitle) + withAncestor(R.id.announcementContainer) + withText(accountNotification.subject)).click()
     }
 
 }
