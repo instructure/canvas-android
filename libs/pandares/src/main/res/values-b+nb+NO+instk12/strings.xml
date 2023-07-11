@@ -1389,4 +1389,5 @@
     <string name="aboutLoginTitle">Innloggings-ID</string>
     <string name="aboutEmailTitle">E-post</string>
     <string name="aboutVersionTitle">Versjon</string>
+    <string name="assignmentRefreshError">Det oppstod et problem med lasting av denne oppgaven. Kontroller tilkoblingen og prøv på nytt.</string>
 </resources>

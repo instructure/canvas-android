@@ -1370,4 +1370,5 @@
     <string name="aboutLoginTitle">登录 ID</string>
     <string name="aboutEmailTitle">电子邮件</string>
     <string name="aboutVersionTitle">版本</string>
+    <string name="assignmentRefreshError">重新加载此作业时出错。请检查连接，然后重试。</string>
 </resources>

@@ -350,6 +350,14 @@ class OfflineModule {
     }
 
     @Provides
+    fun providePeopleFacade(
+        userDao: UserDao,
+        enrollmentDao: EnrollmentDao,
+    ): UserFacade {
+        return UserFacade(userDao, enrollmentDao)
+    }
+
+    @Provides
     fun provideCourseFeaturesDao(appDatabase: OfflineDatabase): CourseFeaturesDao {
         return appDatabase.courseFeaturesDao()
     }

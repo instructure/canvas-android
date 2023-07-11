@@ -8,7 +8,6 @@ import android.view.accessibility.AccessibilityNodeInfo
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.runner.AndroidJUnitRunner
-import androidx.test.runner.MonitoringInstrumentation
 import com.instructure.canvas.espresso.mockCanvas.MockCanvasInterceptor
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.jakewharton.espresso.OkHttp3IdlingResource
@@ -54,10 +53,10 @@ open class CanvasRunner : AndroidJUnitRunner() {
      * [buttonSubString] can be any part of the text associated with the desired dialog dismissal
      *                   button to push, case-insensitive
      **/
-    protected fun dialogDismissalLogic(rootNode : AccessibilityNodeInfo, messageSubString: String, buttonSubString: String) {
-        val matchingTextList = rootNode.findAccessibilityNodeInfosByText(messageSubString)
+    protected fun dialogDismissalLogic(rootNode : AccessibilityNodeInfo?, messageSubString: String, buttonSubString: String) {
+        val matchingTextList = rootNode?.findAccessibilityNodeInfosByText(messageSubString)
         if (matchingTextList != null && matchingTextList.size > 0) {
-            val matchingButtonList = rootNode.findAccessibilityNodeInfosByText(buttonSubString)
+            val matchingButtonList = rootNode?.findAccessibilityNodeInfosByText(buttonSubString)
             if (matchingButtonList != null && matchingButtonList.size > 0) {
                 matchingButtonList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK)
                 Log.v("dialogs", "Dismissed " + matchingTextList[0].text)

@@ -21,11 +21,35 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.instructure.canvasapi2.apis.AnnouncementAPI
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.ConferencesApi
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
+import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.entities.PageEntity
+import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.ConferenceFacade
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.room.offline.facade.*
@@ -36,26 +60,28 @@ const val COURSE_IDS = "course-ids"
 
 @HiltWorker
 class OfflineSyncWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters,
-    private val courseApi: CourseAPI.CoursesInterface,
-    private val pageApi: PageAPI.PagesInterface,
-    private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
-    private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val pageDao: PageDao,
-    private val courseFacade: CourseFacade,
-    private val assignmentFacade: AssignmentFacade,
-    private val quizDao: QuizDao,
-    private val quizApi: QuizAPI.QuizInterface,
-    private val dashboardCardDao: DashboardCardDao,
-    private val courseSettingsDao: CourseSettingsDao,
-    private val scheduleItemFacade: ScheduleItemFacade,
-    private val conferencesApi: ConferencesApi.ConferencesInterface,
-    private val conferenceFacade: ConferenceFacade,
-    private val discussionApi: DiscussionAPI.DiscussionInterface,
-    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface,
+        @Assisted private val context: Context,
+        @Assisted workerParameters: WorkerParameters,
+        private val courseApi: CourseAPI.CoursesInterface,
+        private val pageApi: PageAPI.PagesInterface,
+        private val userApi: UserAPI.UsersInterface,
+        private val assignmentApi: AssignmentAPI.AssignmentInterface,
+        private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+        private val courseSyncSettingsDao: CourseSyncSettingsDao,
+        private val pageDao: PageDao,
+        private val userFacade: UserFacade,
+        private val courseFacade: CourseFacade,
+        private val assignmentFacade: AssignmentFacade,
+        private val quizDao: QuizDao,
+        private val quizApi: QuizAPI.QuizInterface,
+        private val dashboardCardDao: DashboardCardDao,
+        private val courseSettingsDao: CourseSettingsDao,
+        private val scheduleItemFacade: ScheduleItemFacade,
+        private val conferencesApi: ConferencesApi.ConferencesInterface,
+        private val conferenceFacade: ConferenceFacade,
+        private val discussionApi: DiscussionAPI.DiscussionInterface,
+        private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+        private val announcementApi: AnnouncementAPI.AnnouncementInterface,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val courseFeaturesDao: CourseFeaturesDao
 ) : CoroutineWorker(context, workerParameters) {
@@ -93,6 +119,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.isTabSelected(Tab.ANNOUNCEMENTS_ID)) {
                         fetchAnnouncements(courseSettings.courseId)
+                    }
+                    if (courseSettings.isTabSelected(Tab.PEOPLE_ID)) {
+                        fetchPeople(courseSettings.courseId)
                     }
                 }
             fetchSyllabus(syllabusCourseIds)
@@ -186,6 +215,16 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseFeatures = featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull
         courseFeatures?.let {
             courseFeaturesDao.insert(CourseFeaturesEntity(courseId, it))
+        }
+    }
+
+    private suspend fun fetchPeople(courseId: Long) {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)
+                .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
+
+        users.let {
+            userFacade.insertUsers(it)
         }
     }
 

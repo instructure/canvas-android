@@ -86,6 +86,10 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
                 viewModel.toggleSelection()
             }
         }
+
+        viewModel.data.value?.let { data ->
+            updateMenuText(data.selectedCount)
+        }
     }
 
     override fun getFragment(): Fragment = this

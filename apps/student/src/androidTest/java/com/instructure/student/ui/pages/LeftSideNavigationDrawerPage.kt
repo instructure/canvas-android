@@ -11,11 +11,16 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
@@ -39,7 +44,7 @@ class LeftSideNavigationDrawerPage: BasePage() {
 
     private fun clickMenu(menuId: Int) {
         onView(hamburgerButtonMatcher).click()
-        onViewWithId(menuId).scrollTo().click()
+        waitForViewWithId(menuId).scrollTo().click()
     }
 
     fun logout() {

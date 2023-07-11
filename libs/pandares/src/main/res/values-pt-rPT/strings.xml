@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">ID de login</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Versão</string>
+    <string name="assignmentRefreshError">Ocorreu um problema ao recarregar esta atribuição. É favor verificar sua conexão e tente novamente.</string>
 </resources>
