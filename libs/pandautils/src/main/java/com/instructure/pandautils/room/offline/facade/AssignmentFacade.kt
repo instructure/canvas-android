@@ -131,6 +131,10 @@ class AssignmentFacade(
             scoreStatistics = scoreStatisticsEntity?.toApiModel(),
             plannerOverride = plannerOverrideEntity?.toApiModel()
         ).apply {
+            /*
+             * the assignment model has a submission that contains the assignment, but the inner assignment model cannot
+             * contain the submission because it causes a circular reference and leads to a stackoverflow exception
+             */
             this.submission = submission?.copy(assignment = this.copy(submission = null))
             this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this.copy(submission = null))
         }

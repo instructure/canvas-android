@@ -9,13 +9,13 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = CourseEntity::class,
             parentColumns = ["id"],
-            childColumns = ["courseId"],
+            childColumns = ["id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class CourseFeaturesEntity(
     @PrimaryKey
-    val courseId: Long,
+    val id: Long,
     val features: List<String>
 )

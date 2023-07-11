@@ -32,6 +32,6 @@ interface CourseFeaturesDao {
     @Update
     suspend fun update(entity: CourseFeaturesEntity)
 
-    @Query("SELECT * FROM CourseFeaturesEntity WHERE courseId = :courseId")
+    @Query("SELECT * FROM CourseFeaturesEntity WHERE id = :courseId")
     suspend fun findByCourseId(courseId: Long): CourseFeaturesEntity?
 }

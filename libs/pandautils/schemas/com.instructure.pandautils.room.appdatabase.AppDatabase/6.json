@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "fb05592c38126b79cd49f3ffb5768382",
+    "identityHash": "c843a3949b0b11ce080d316a1f324e47",
     "entities": [
       {
         "tableName": "AttachmentEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contentType` TEXT, `filename` TEXT, `displayName` TEXT, `url` TEXT, `thumbnailUrl` TEXT, `previewUrl` TEXT, `createdAt` INTEGER, `size` INTEGER NOT NULL, `workerId` TEXT, `submissionCommentId` INTEGER, `submissionId` INTEGER, `attempt` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contentType` TEXT, `filename` TEXT, `displayName` TEXT, `url` TEXT, `thumbnailUrl` TEXT, `previewUrl` TEXT, `createdAt` INTEGER, `size` INTEGER NOT NULL, `workerId` TEXT, `submissionCommentId` INTEGER, `submissionId` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -77,12 +77,6 @@
           {
             "fieldPath": "submissionId",
             "columnName": "submissionId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "attempt",
-            "columnName": "attempt",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -478,7 +472,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fb05592c38126b79cd49f3ffb5768382')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c843a3949b0b11ce080d316a1f324e47')"
     ]
   }
 }
