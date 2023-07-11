@@ -180,4 +180,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun rubricCriterionAssessmentDao(): RubricCriterionAssessmentDao
 
     abstract fun rubricCriterionRatingDao(): RubricCriterionRatingDao
+
+    abstract fun assignmentRubricCriterionDao(): AssignmentRubricCriterionDao
 }

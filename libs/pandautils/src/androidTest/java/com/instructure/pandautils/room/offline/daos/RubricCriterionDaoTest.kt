@@ -17,17 +17,13 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
-import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
-import com.instructure.pandautils.room.offline.entities.RubricCriterionRatingEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -37,23 +33,16 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class RubricCriterionRatingDaoTest {
+class RubricCriterionDaoTest {
 
     private lateinit var db: OfflineDatabase
-    private lateinit var rubricCriterionRatingDao: RubricCriterionRatingDao
     private lateinit var rubricCriterionDao: RubricCriterionDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
-        rubricCriterionRatingDao = db.rubricCriterionRatingDao()
         rubricCriterionDao = db.rubricCriterionDao()
-
-        runBlocking {
-            rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("1")))
-            rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("2")))
-        }
     }
 
     @After
@@ -62,35 +51,14 @@ class RubricCriterionRatingDaoTest {
     }
 
     @Test
-    fun testFindEntityByCourseId() = runTest {
-        val entities = listOf(
-            RubricCriterionRatingEntity(RubricCriterionRating("1"), "1"),
-            RubricCriterionRatingEntity(RubricCriterionRating("2"), "2"),
-        )
-        rubricCriterionRatingDao.insertAll(entities)
+    fun testFindById() = runTest {
+        val rubricCriterionEntity = RubricCriterionEntity(RubricCriterion("1"))
+        val rubricCriterionEntity2 = RubricCriterionEntity(RubricCriterion("2"))
+        rubricCriterionDao.insert(rubricCriterionEntity)
+        rubricCriterionDao.insert(rubricCriterionEntity2)
 
-        val result = rubricCriterionRatingDao.findByRubricCriterionId("1")
+        val result = rubricCriterionDao.findById("1")
 
-        Assert.assertEquals(entities.filter { it.rubricCriterionId == "1" }, result)
-    }
-
-    @Test
-    fun testRubricCriterionCascade() = runTest {
-        val rubricCriterionRatingEntity = RubricCriterionRatingEntity(RubricCriterionRating("1"), "1")
-
-        rubricCriterionRatingDao.insert(rubricCriterionRatingEntity)
-
-        rubricCriterionDao.delete(RubricCriterionEntity(RubricCriterion("1")))
-
-        val result = rubricCriterionRatingDao.findByRubricCriterionId("1")
-
-        assert(result.isEmpty())
-    }
-
-    @Test(expected = SQLiteConstraintException::class)
-    fun testRubricCriterionForeignKey() = runTest {
-        val rubricCriterionRatingEntity = RubricCriterionRatingEntity(RubricCriterionRating("1"), "3")
-
-        rubricCriterionRatingDao.insert(rubricCriterionRatingEntity)
+        Assert.assertEquals(rubricCriterionEntity, result)
     }
 }

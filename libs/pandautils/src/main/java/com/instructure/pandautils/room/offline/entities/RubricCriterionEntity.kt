@@ -26,16 +26,14 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 data class RubricCriterionEntity(
     @PrimaryKey
     val id: String,
-    val assignmentId: Long,
     val description: String?,
     val longDescription: String?,
     val points: Double,
     val criterionUseRange: Boolean,
     val ignoreForScoring: Boolean,
 ) {
-    constructor(rubricCriterion: RubricCriterion, assignmentId: Long) : this(
+    constructor(rubricCriterion: RubricCriterion) : this(
         rubricCriterion.id.orEmpty(),
-        assignmentId,
         rubricCriterion.description,
         rubricCriterion.longDescription,
         rubricCriterion.points,

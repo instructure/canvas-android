@@ -40,6 +40,7 @@ class AssignmentFacadeTest {
     private val rubricCriterionDao: RubricCriterionDao = mockk(relaxed = true)
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
     private val rubricCriterionRatingDao: RubricCriterionRatingDao = mockk(relaxed = true)
+    private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao = mockk(relaxed = true)
 
     private val facade = AssignmentFacade(
         assignmentGroupDao,
@@ -51,7 +52,8 @@ class AssignmentFacadeTest {
         assignmentScoreStatisticsDao,
         rubricCriterionDao,
         lockInfoFacade,
-        rubricCriterionRatingDao
+        rubricCriterionRatingDao,
+        assignmentRubricCriterionDao
     )
 
     @Test
@@ -98,7 +100,8 @@ class AssignmentFacadeTest {
                 coVerify { discussionTopicHeaderFacade.insertDiscussion(discussionTopicHeader, 1) }
                 coVerify { assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(scoreStatistics, assignment.id)) }
                 rubricCriterions.forEach {
-                    coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
+                    coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it)) }
+                    coVerify { assignmentRubricCriterionDao.insert(AssignmentRubricCriterionEntity(assignment.id, it.id.orEmpty())) }
                 }
                 coVerify { lockInfoFacade.insertLockInfo(lockInfo, assignment.id) }
                 coVerify {
@@ -145,7 +148,10 @@ class AssignmentFacadeTest {
         )
 
         coEvery { assignmentDao.findById(assignmentId) } returns assignmentEntity
-        coEvery { rubricCriterionDao.findByAssignmentId(assignmentId) } returns rubricCriterions.map { RubricCriterionEntity(it, assignmentId) }
+        coEvery { assignmentRubricCriterionDao.findByAssignmentId(assignmentId) } returns listOf(
+            AssignmentRubricCriterionEntity(assignmentId, rubricCriterions[0].id!!)
+        )
+        coEvery { rubricCriterionDao.findById(rubricCriterions[0].id!!) } returns RubricCriterionEntity(rubricCriterions[0])
         coEvery { rubricSettingsDao.findById(rubricSettings.id.orDefault()) } returns RubricSettingsEntity(rubricSettings)
         coEvery { submissionFacade.getSubmissionById(submission.id) } returns submission
         coEvery { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(discussionTopicHeader.id) } returns discussionTopicHeader

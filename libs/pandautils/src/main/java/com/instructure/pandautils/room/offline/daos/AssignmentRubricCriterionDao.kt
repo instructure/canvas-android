@@ -18,20 +18,20 @@
 package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
+import com.instructure.pandautils.room.offline.entities.AssignmentRubricCriterionEntity
 
 @Dao
-interface RubricCriterionDao {
+interface AssignmentRubricCriterionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: RubricCriterionEntity)
+    suspend fun insert(entity: AssignmentRubricCriterionEntity)
 
     @Delete
-    suspend fun delete(entity: RubricCriterionEntity)
+    suspend fun delete(entity: AssignmentRubricCriterionEntity)
 
     @Update
-    suspend fun update(entity: RubricCriterionEntity)
+    suspend fun update(entity: AssignmentRubricCriterionEntity)
 
-    @Query("SELECT * FROM RubricCriterionEntity WHERE id = :id")
-    suspend fun findById(id: String): RubricCriterionEntity?
+    @Query("SELECT * FROM AssignmentRubricCriterionEntity WHERE assignmentId = :assignmentId")
+    suspend fun findByAssignmentId(assignmentId: Long): List<AssignmentRubricCriterionEntity>
 }

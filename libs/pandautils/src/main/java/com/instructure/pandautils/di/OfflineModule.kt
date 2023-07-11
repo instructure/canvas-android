@@ -223,7 +223,8 @@ class OfflineModule {
         assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
         rubricCriterionDao: RubricCriterionDao,
         lockInfoFacade: LockInfoFacade,
-        rubricCriterionRatingDao: RubricCriterionRatingDao
+        rubricCriterionRatingDao: RubricCriterionRatingDao,
+        assignmentRubricCriterionDao: AssignmentRubricCriterionDao
     ): AssignmentFacade {
         return AssignmentFacade(
             assignmentGroupDao,
@@ -235,7 +236,8 @@ class OfflineModule {
             assignmentScoreStatisticsDao,
             rubricCriterionDao,
             lockInfoFacade,
-            rubricCriterionRatingDao
+            rubricCriterionRatingDao,
+            assignmentRubricCriterionDao
         )
     }
 
@@ -394,5 +396,10 @@ class OfflineModule {
     @Provides
     fun provideRubricCriterionRatingDao(offlineDatabase: OfflineDatabase): RubricCriterionRatingDao {
         return offlineDatabase.rubricCriterionRatingDao()
+    }
+
+    @Provides
+    fun provideAssignmentRubricCriterionDao(offlineDatabase: OfflineDatabase): AssignmentRubricCriterionDao {
+        return offlineDatabase.assignmentRubricCriterionDao()
     }
 }
