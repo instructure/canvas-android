@@ -231,7 +231,7 @@ open class ModuleListRecyclerAdapter(
             val resultIsFromApiOrDb = result.apiType === ApiType.API || result.apiType == ApiType.DB
             val moduleItems = result.data
 
-            var position = if (moduleItems.isNotEmpty() && moduleItems[0] != null) moduleItems[0].position - 1 else 0
+            var position = if (moduleItems.isNotEmpty()) moduleItems[0].position - 1 else 0
             for (item in moduleItems) {
                 item.position = position++
                 addOrUpdateItem(moduleObject, item)

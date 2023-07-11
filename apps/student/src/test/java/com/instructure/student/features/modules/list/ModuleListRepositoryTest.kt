@@ -116,7 +116,7 @@ class ModuleListRepositoryTest {
     }
 
     @Test
-    fun `Get first page module items for module from local data source when device is online`() = runTest {
+    fun `Get first page module items for module from local data source when device is offline`() = runTest {
         val offlineItems = listOf(ModuleItem(id = 1, title = "Offline"), ModuleItem(id = 2, title = "Offline 2"))
         val onlineItems = listOf(ModuleItem(id = 3, title = "Online"), ModuleItem(id = 4, title = "Online 2"))
         coEvery { networkDataSource.getFirstPageModuleItems(any(), any(), any()) } returns DataResult.Success(onlineItems)
@@ -152,7 +152,7 @@ class ModuleListRepositoryTest {
     }
 
     @Test
-    fun `Get tabs from local data source when device is offlibe`() = runTest {
+    fun `Get tabs from local data source when device is offline`() = runTest {
         val offlineTabs = listOf(Tab(tabId = "grades"), Tab(tabId = "modules"))
         val onlineTabs = listOf(Tab(tabId = "grades online"), Tab(tabId = "modules online"))
         coEvery { networkDataSource.getTabs(any(), any()) } returns DataResult.Success(onlineTabs)
