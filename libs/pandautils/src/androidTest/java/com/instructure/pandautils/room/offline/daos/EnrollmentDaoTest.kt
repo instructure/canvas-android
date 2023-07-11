@@ -221,4 +221,40 @@ class EnrollmentDaoTest {
 
         Assert.assertEquals(entities.filter { it.role == Enrollment.EnrollmentType.Teacher.name && it.courseId == 1L }, result)
     }
+
+    @Test
+    fun testFindByUserId() = runTest {
+        val entities = listOf(
+                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
+        )
+        entities.forEach {
+            enrollmentDao.insert(it)
+        }
+
+        val expected = entities.first { it.userId == 1L }
+
+        val result = enrollmentDao.findByUserId(1L)
+
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun testFindUSerByNonExistingUserId() = runTest {
+        val entities = listOf(
+                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
+        )
+        entities.forEach {
+            enrollmentDao.insert(it)
+        }
+
+        val expected = null
+
+        val result = enrollmentDao.findByUserId(4L)
+
+        Assert.assertEquals(expected, result)
+    }
 }
