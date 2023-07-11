@@ -15,17 +15,17 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.people.details
 
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
@@ -49,8 +49,13 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.databinding.FragmentPeopleDetailsBinding
 import com.instructure.student.features.people.list.PeopleListFragment
+import com.instructure.student.fragment.InboxComposeMessageFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_PEOPLE_DETAILS)
 @PageView(url = "{canvasContext}/users/{userId}")
 class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
@@ -60,6 +65,9 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
     @Suppress("unused")
     @PageViewUrlParam(name = "userId")
     private fun getUserIdForPageView() = userId
+
+    @Inject
+    lateinit var repository: PeopleDetailsRepository
 
     //This is necessary because the groups API doesn't currently support retrieving a single user
     //from a group, so we have to pass the user in as an argument.
@@ -92,8 +100,10 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
         when {
             canvasContext.isCourse -> fetchUser()
             user == null -> {
+                Log.d("PeopleDetailsFragment", "UserId: $userId; CanvasContext: $canvasContext")
                 //They must have used a deep link, and there's no way to retrieve user data through a
                 //deep link until the groups API gets updated. This redirects the user to the people list.
+                fetchUser()
                 val route = PeopleListFragment.makeRoute(canvasContext)
                 RouteMatcher.route(requireContext(), route)
             }
@@ -109,7 +119,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun fetchUser() {
         userCall = tryWeave {
-            user = awaitApi<User> { UserManager.getUserForContextId(canvasContext, userId, it, true) }
+            user = repository.loadUser(canvasContext, userId, true).dataOrThrow
             setupUserViews()
         } catch {
             toast(R.string.errorOccurred)
