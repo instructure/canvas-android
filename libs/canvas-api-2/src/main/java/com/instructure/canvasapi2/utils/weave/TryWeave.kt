@@ -59,5 +59,5 @@ infix fun TryLaunch.catch(onException: (e: Throwable) -> Unit): Job {
         if (throwable !is CancellationException) onException(throwable)
     }
 
-    return coroutineScope.launch(context = exceptionHandler, block = block)
+    return coroutineScope.launch(context = coroutineScope.coroutineContext + exceptionHandler, block = block)
 }
