@@ -57,11 +57,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
 
     private var adapterToFragmentCallback = object : AdapterToFragmentCallback<User> {
         override fun onRowClicked(user: User, position: Int, isOpenDetail: Boolean) {
-            if (canvasContext.isCourse) {
-                RouteMatcher.route(requireContext(), PeopleDetailsFragment.makeRoute(user.id, canvasContext))
-            } else {
-                RouteMatcher.route(requireContext(), PeopleDetailsFragment.makeRoute(user, canvasContext))
-            }
+            RouteMatcher.route(requireContext(), PeopleDetailsFragment.makeRoute(user, canvasContext))
         }
 
         override fun onRefreshFinished() {

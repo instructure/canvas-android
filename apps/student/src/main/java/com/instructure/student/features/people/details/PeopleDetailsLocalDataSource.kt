@@ -20,14 +20,14 @@ package com.instructure.student.features.people.details
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.room.offline.daos.UserDao
+import com.instructure.pandautils.room.offline.facade.UserFacade
 
-class PeopleDetailsLocalDataSource(private val userDao: UserDao): PeopleDetailsDataSource {
+class PeopleDetailsLocalDataSource(private val userFacade: UserFacade): PeopleDetailsDataSource {
 
     override suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean): DataResult<User> {
-        val user = userDao.findById(userId)
+        val user = userFacade.getUserById(userId)
         if (user != null) {
-            return DataResult.Success(user.toApiModel())
+            return DataResult.Success(user)
         }
         return DataResult.Fail()
 

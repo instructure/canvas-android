@@ -20,7 +20,6 @@ package com.instructure.student.features.people.details
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -98,12 +97,10 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
             RouteMatcher.route(requireContext(), route)
         }
         when {
-            canvasContext.isCourse -> fetchUser()
+            canvasContext.isCourse && user == null -> fetchUser()
             user == null -> {
-                Log.d("PeopleDetailsFragment", "UserId: $userId; CanvasContext: $canvasContext")
                 //They must have used a deep link, and there's no way to retrieve user data through a
                 //deep link until the groups API gets updated. This redirects the user to the people list.
-                fetchUser()
                 val route = PeopleListFragment.makeRoute(canvasContext)
                 RouteMatcher.route(requireContext(), route)
             }

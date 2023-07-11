@@ -58,4 +58,11 @@ class UserFacade(
             userDao.findById(userId)?.toApiModel(enrollments.map { it.toApiModel() }.filter { it.userId == userId })
         }
     }
+
+    suspend fun getUserById(userId: Long): User? {
+        enrollmentDao.findByUserId(userId)?.let {
+            return getUsersFromEnrollment(listOf(it)).firstOrNull()
+        }
+        return null
+    }
 }

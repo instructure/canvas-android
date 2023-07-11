@@ -80,7 +80,7 @@ object UserAPI {
         @GET("{contextType}/{contextId}/users/{userId}?include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&include[]=enrollments")
         fun getUserForContextId(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("userId") userId: Long): Call<User>
 
-        @GET("{contextType}/{contextId}/users/{userId}")
+        @GET("{contextType}/{contextId}/users/{userId}?include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&include[]=enrollments")
         suspend fun getUserForContextId(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("userId") userId: Long, @Tag params: RestParams): DataResult<User>
 
         @GET("{context_id}/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true")

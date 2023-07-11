@@ -18,7 +18,7 @@
 package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.pandautils.room.offline.daos.UserDao
+import com.instructure.pandautils.room.offline.facade.UserFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.people.details.PeopleDetailsLocalDataSource
 import com.instructure.student.features.people.details.PeopleDetailsNetworkDataSource
@@ -32,8 +32,8 @@ import dagger.hilt.android.components.FragmentComponent
 @InstallIn(FragmentComponent::class)
 class PeopleDetailsModule {
     @Provides
-    fun provideLocalDataSource(userDao: UserDao): PeopleDetailsLocalDataSource {
-        return PeopleDetailsLocalDataSource(userDao)
+    fun provideLocalDataSource(userFacade: UserFacade): PeopleDetailsLocalDataSource {
+        return PeopleDetailsLocalDataSource(userFacade)
     }
 
     @Provides
