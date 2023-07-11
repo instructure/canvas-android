@@ -17,13 +17,7 @@
 
 package com.instructure.canvasapi2.utils.weave
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  * Holds the data necessary for [tryWeave] to work correctly
@@ -59,5 +53,5 @@ infix fun TryLaunch.catch(onException: (e: Throwable) -> Unit): Job {
         if (throwable !is CancellationException) onException(throwable)
     }
 
-    return coroutineScope.launch(context = exceptionHandler, block = block)
+    return coroutineScope.launch(context = coroutineScope.coroutineContext + exceptionHandler, block = block)
 }
