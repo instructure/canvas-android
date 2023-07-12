@@ -2,7 +2,6 @@ package com.instructure.student.features.people.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.every
@@ -26,10 +25,10 @@ class PeopleDetailsRepositoryTest {
         val onlineExpected = User(id = 1L, name = "Online")
 
         every { networkStateProvider.isOnline() } returns true
-        coEvery { localDataSource.loadUser(any(), any()) } returns DataResult.Success(offlineExpected)
-        coEvery { networkDataSource.loadUser(any(), any()) } returns DataResult.Success(onlineExpected)
+        coEvery { localDataSource.loadUser(any(), any(), any()) } returns offlineExpected
+        coEvery { networkDataSource.loadUser(any(), any(), any()) } returns onlineExpected
 
-        val result = repository.loadUser(CanvasContext.defaultCanvasContext(), 1L).dataOrNull
+        val result = repository.loadUser(CanvasContext.defaultCanvasContext(), 1L, true)
 
         TestCase.assertEquals(onlineExpected, result)
     }
@@ -40,10 +39,38 @@ class PeopleDetailsRepositoryTest {
         val onlineExpected = User(id = 1L, name = "Online")
 
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.loadUser(any(), any()) } returns DataResult.Success(offlineExpected)
-        coEvery { networkDataSource.loadUser(any(), any()) } returns DataResult.Success(onlineExpected)
+        coEvery { localDataSource.loadUser(any(), any(), any()) } returns offlineExpected
+        coEvery { networkDataSource.loadUser(any(), any(), any()) } returns onlineExpected
 
-        val result = repository.loadUser(CanvasContext.defaultCanvasContext(), 1L).dataOrNull
+        val result = repository.loadUser(CanvasContext.defaultCanvasContext(), 1L, false)
+
+        TestCase.assertEquals(offlineExpected, result)
+    }
+
+    @Test
+    fun `Get permission if device is online`() = runTest {
+        val offlineExpected = false
+        val onlineExpected = true
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { localDataSource.loadMessagePermission(any(), any(), any(), any()) } returns offlineExpected
+        coEvery { networkDataSource.loadMessagePermission(any(), any(), any(), any()) } returns onlineExpected
+
+        val result = repository.loadMessagePermission(CanvasContext.defaultCanvasContext(), User(1L), true)
+
+        TestCase.assertEquals(onlineExpected, result)
+    }
+
+    @Test
+    fun `Get permission if device is offline`() = runTest {
+        val offlineExpected = true
+        val onlineExpected = false
+
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.loadMessagePermission(any(), any(), any(), any()) } returns offlineExpected
+        coEvery { networkDataSource.loadMessagePermission(any(), any(), any(), any()) } returns onlineExpected
+
+        val result = repository.loadMessagePermission(CanvasContext.defaultCanvasContext(), User(1L), false)
 
         TestCase.assertEquals(offlineExpected, result)
     }
