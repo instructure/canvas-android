@@ -90,16 +90,7 @@ class SubmissionFacade(
 
         submissionCommentDao.insertAll(submission.submissionComments.map { submissionComment ->
             submissionComment.mediaComment?.let { mediaCommentDao.insert(MediaCommentEntity(it)) }
-            submissionComment.attachments.map {
-                attachmentDao.insert(
-                    AttachmentEntity(
-                        it,
-                        submissionCommentId = submissionComment.id,
-                        submissionId = submission.id,
-                        attempt = submission.attempt
-                    )
-                )
-            }
+            submissionComment.attachments.map { attachmentDao.insert(AttachmentEntity(it, submissionCommentId = submissionComment.id)) }
             submissionComment.author?.let { authorDao.insert(AuthorEntity(it)) }
             SubmissionCommentEntity(submissionComment, submission.id)
         })
