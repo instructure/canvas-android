@@ -23,8 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.GroupManager
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
@@ -76,10 +75,6 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
-    private var userCall: WeaveJob? = null
-
-    private var permissionCall: WeaveJob? = null
-
     override fun title(): String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.fragment_people_details, container, false)
@@ -97,7 +92,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
             RouteMatcher.route(requireContext(), route)
         }
         when {
-            canvasContext.isCourse && user == null -> fetchUser()
+            canvasContext.isCourse -> fetchUser()
             user == null -> {
                 //They must have used a deep link, and there's no way to retrieve user data through a
                 //deep link until the groups API gets updated. This redirects the user to the people list.
@@ -108,15 +103,9 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    override fun onDestroy() {
-        userCall?.cancel()
-        permissionCall?.cancel()
-        super.onDestroy()
-    }
-
     private fun fetchUser() {
-        userCall = tryWeave {
-            user = repository.loadUser(canvasContext, userId, true).dataOrThrow
+        lifecycleScope.tryLaunch {
+            user = repository.loadUser(canvasContext, userId, true)
             setupUserViews()
         } catch {
             toast(R.string.errorOccurred)
@@ -140,16 +129,8 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun checkMessagePermission() {
-        permissionCall = tryWeave {
-            val id = canvasContext.id
-            val canMessageUser = when {
-                canvasContext.isGroup -> GroupManager.getPermissionsAsync(id).awaitOrThrow().send_messages
-                canvasContext.isCourse -> {
-                    val isTeacher = user?.enrollments?.any { it.courseId == id && (it.isTA || it.isTeacher) } ?: false
-                    isTeacher || CourseManager.getPermissionsAsync(id).awaitOrThrow().send_messages
-                }
-                else -> false
-            }
+        lifecycleScope.tryLaunch {
+            val canMessageUser = repository.loadMessagePermission(canvasContext, user)
             binding.compose.setVisible(canMessageUser)
         } catch {
             binding.compose.setVisible(false)

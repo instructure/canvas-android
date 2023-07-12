@@ -19,7 +19,6 @@ package com.instructure.student.features.people.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
 
@@ -28,7 +27,11 @@ class PeopleDetailsRepository(
         peopleDetailsLocalDataSource: PeopleDetailsLocalDataSource,
         networkStateProvider: NetworkStateProvider,
 ) : Repository<PeopleDetailsDataSource>(peopleDetailsLocalDataSource, peopleDetailsNetworkDataSource, networkStateProvider) {
-    suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean = false): DataResult<User> {
+    suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean = false): User? {
         return dataSource.loadUser(canvasContext, userId, forceNetwork)
+    }
+
+    suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?): Boolean {
+        return dataSource.loadMessagePermission(canvasContext, user)
     }
 }

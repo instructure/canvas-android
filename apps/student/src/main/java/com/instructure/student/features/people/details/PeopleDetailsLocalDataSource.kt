@@ -19,17 +19,15 @@ package com.instructure.student.features.people.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.facade.UserFacade
 
 class PeopleDetailsLocalDataSource(private val userFacade: UserFacade): PeopleDetailsDataSource {
 
-    override suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean): DataResult<User> {
-        val user = userFacade.getUserById(userId)
-        if (user != null) {
-            return DataResult.Success(user)
-        }
-        return DataResult.Fail()
+    override suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean): User? {
+        return userFacade.getUserById(userId)
+    }
 
+    override suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?): Boolean {
+        return false
     }
 }

@@ -19,8 +19,9 @@ package com.instructure.student.features.people.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.DataResult
 
 interface PeopleDetailsDataSource {
-    suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean = false): DataResult<User>
+    suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean = false): User?
+
+    suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?): Boolean
 }
