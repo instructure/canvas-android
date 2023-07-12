@@ -163,7 +163,7 @@ class AssignmentFacadeTest {
             )
         }
         rubricCriterions.forEach {
-            coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
+            coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it)) }
         }
         coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
         coVerify {
