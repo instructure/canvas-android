@@ -42,49 +42,53 @@ class AssignmentFacade(
             assignmentGroupDao.insert(AssignmentGroupEntity(assignmentGroup))
 
             assignmentGroup.assignments.forEach { assignment ->
-                val rubricSettingsId = assignment.rubricSettings?.let {
-                    rubricSettingsDao.insert(RubricSettingsEntity(it))
-                }
-
-                val submissionId = assignment.submission?.let { submission ->
-                    submissionFacade.insertSubmission(submission)
-                    submission.id
-                }
-
-                val plannerOverrideId = insertPlannerOverride(assignment.plannerOverride)
-
-                val discussionTopicHeaderId = assignment.discussionTopicHeader?.let {
-                    discussionTopicHeaderFacade.insertDiscussion(it, assignment.courseId)
-                }
-
-                val assignmentEntity = AssignmentEntity(
-                    assignment = assignment,
-                    rubricSettingsId = rubricSettingsId,
-                    submissionId = submissionId,
-                    discussionTopicHeaderId = discussionTopicHeaderId,
-                    plannerOverrideId = plannerOverrideId,
-                )
-
-                assignmentDao.insert(assignmentEntity)
-
-                assignment.scoreStatistics?.let {
-                    assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
-                }
-
-                assignment.rubric?.forEach { rubricCriterion ->
-                    rubricCriterionDao.insert(RubricCriterionEntity(rubricCriterion))
-                    rubricCriterionRatingDao.insertAll(rubricCriterion.ratings.map {
-                        RubricCriterionRatingEntity(it, rubricCriterion.id.orEmpty())
-                    })
-                    assignmentRubricCriterionDao.insert(
-                        AssignmentRubricCriterionEntity(assignment.id, rubricCriterion.id.orEmpty())
-                    )
-                }
-
-                assignment.lockInfo?.let {
-                    lockInfoFacade.insertLockInfo(it, assignment.id)
-                }
+                insertAssignment(assignment)
             }
+        }
+    }
+
+    suspend fun insertAssignment(assignment: Assignment) {
+        val rubricSettingsId = assignment.rubricSettings?.let {
+            rubricSettingsDao.insert(RubricSettingsEntity(it))
+        }
+
+        val submissionId = assignment.submission?.let { submission ->
+            submissionFacade.insertSubmission(submission)
+            submission.id
+        }
+
+        val plannerOverrideId = insertPlannerOverride(assignment.plannerOverride)
+
+        val discussionTopicHeaderId = assignment.discussionTopicHeader?.let {
+            discussionTopicHeaderFacade.insertDiscussion(it, assignment.courseId)
+        }
+
+        val assignmentEntity = AssignmentEntity(
+            assignment = assignment,
+            rubricSettingsId = rubricSettingsId,
+            submissionId = submissionId,
+            discussionTopicHeaderId = discussionTopicHeaderId,
+            plannerOverrideId = plannerOverrideId,
+        )
+
+        assignmentDao.insert(assignmentEntity)
+
+        assignment.scoreStatistics?.let {
+            assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
+        }
+
+        assignment.rubric?.forEach { rubricCriterion ->
+            rubricCriterionDao.insert(RubricCriterionEntity(rubricCriterion))
+            rubricCriterionRatingDao.insertAll(rubricCriterion.ratings.map {
+                RubricCriterionRatingEntity(it, rubricCriterion.id.orEmpty())
+            })
+            assignmentRubricCriterionDao.insert(
+                AssignmentRubricCriterionEntity(assignment.id, rubricCriterion.id.orEmpty())
+            )
+        }
+
+        assignment.lockInfo?.let {
+            lockInfoFacade.insertLockInfoForAssignment(it, assignment.id)
         }
     }
 

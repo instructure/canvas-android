@@ -35,7 +35,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.fragment.CourseBrowserFragment
-import com.instructure.student.fragment.ModuleListFragment
+import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 

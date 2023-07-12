@@ -13,9 +13,10 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.util
+package com.instructure.student.features.modules.list
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.student.util.StudentPrefs
 
 object CollapsedModulesStore {
 

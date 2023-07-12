@@ -30,12 +30,16 @@ import com.instructure.pandautils.room.offline.entities.LockInfoEntity
 import com.instructure.pandautils.room.offline.entities.LockedModuleEntity
 import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirementEntity
 import com.instructure.pandautils.room.offline.entities.ModuleNameEntity
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 class LockInfoFacadeTest {
@@ -48,7 +52,7 @@ class LockInfoFacadeTest {
     private val facade = LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao)
 
     @Test
-    fun `Calling insertLockInfo should insert lock info and related entities`() = runTest {
+    fun `Calling insertLockInfoForAssignment should insert lock info and related entities`() = runTest {
         val assignmentId = 1L
         val prerequisites = listOf(ModuleName("Module name 1"))
         val completionRequirements = listOf(ModuleCompletionRequirement(id = 1L))
@@ -60,9 +64,30 @@ class LockInfoFacadeTest {
         coEvery { moduleNameDao.insertAll(any()) } just Runs
         coEvery { completionRequirementDao.insertAll(any()) } just Runs
 
-        facade.insertLockInfo(lockInfo, assignmentId)
+        facade.insertLockInfoForAssignment(lockInfo, assignmentId)
 
         coVerify { lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId)) }
+        coVerify { lockedModuleDao.insert(LockedModuleEntity(lockedModule, 1L)) }
+        coVerify { moduleNameDao.insertAll(prerequisites.map { ModuleNameEntity(it, 1L) }) }
+        coVerify { completionRequirementDao.insertAll(completionRequirements.map { ModuleCompletionRequirementEntity(it, 1L) }) }
+    }
+
+    @Test
+    fun `Calling insertLockInfoForModule should insert lock info and related entities`() = runTest {
+        val moduleId = 1L
+        val prerequisites = listOf(ModuleName("Module name 1"))
+        val completionRequirements = listOf(ModuleCompletionRequirement(id = 1L))
+        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
+        val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
+
+        coEvery { lockInfoDao.insert(any()) } returns 1L
+        coEvery { lockedModuleDao.insert(any()) } just Runs
+        coEvery { moduleNameDao.insertAll(any()) } just Runs
+        coEvery { completionRequirementDao.insertAll(any()) } just Runs
+
+        facade.insertLockInfoForModule(lockInfo, moduleId)
+
+        coVerify { lockInfoDao.insert(LockInfoEntity(lockInfo, moduleId = moduleId)) }
         coVerify { lockedModuleDao.insert(LockedModuleEntity(lockedModule, 1L)) }
         coVerify { moduleNameDao.insertAll(prerequisites.map { ModuleNameEntity(it, 1L) }) }
         coVerify { completionRequirementDao.insertAll(completionRequirements.map { ModuleCompletionRequirementEntity(it, 1L) }) }
@@ -79,11 +104,32 @@ class LockInfoFacadeTest {
         coEvery { lockInfoDao.findByAssignmentId(assignmentId) } returns LockInfoEntity(lockInfo, assignmentId)
         coEvery { lockedModuleDao.findByLockInfoId(any()) } returns LockedModuleEntity(lockedModule, 1L)
         coEvery { moduleNameDao.findByLockModuleId(any()) } returns prerequisites.map { ModuleNameEntity(it, 1L) }
-        coEvery { completionRequirementDao.findByLockModuleId(any()) } returns completionRequirements.map {
+        coEvery { completionRequirementDao.findByModuleId(any()) } returns completionRequirements.map {
             ModuleCompletionRequirementEntity(it, 1L)
         }
 
         val result = facade.getLockInfoByAssignmentId(assignmentId)
+
+        Assert.assertEquals(lockedModule, result?.contextModule)
+        Assert.assertEquals(lockInfo, result)
+    }
+
+    @Test
+    fun `Calling getLockInfoByModuleId should return the lock info with the specified module ID`() = runTest {
+        val moduleId = 1L
+        val prerequisites = listOf(ModuleName("Module name 1"))
+        val completionRequirements = listOf(ModuleCompletionRequirement(id = 1L))
+        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
+        val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
+
+        coEvery { lockInfoDao.findByModuleId(moduleId) } returns LockInfoEntity(lockInfo, moduleId = moduleId)
+        coEvery { lockedModuleDao.findByLockInfoId(any()) } returns LockedModuleEntity(lockedModule, 1L)
+        coEvery { moduleNameDao.findByLockModuleId(any()) } returns prerequisites.map { ModuleNameEntity(it, 1L) }
+        coEvery { completionRequirementDao.findByModuleId(any()) } returns completionRequirements.map {
+            ModuleCompletionRequirementEntity(it, 1L)
+        }
+
+        val result = facade.getLockInfoByModuleId(moduleId)
 
         Assert.assertEquals(lockedModule, result?.contextModule)
         Assert.assertEquals(lockInfo, result)

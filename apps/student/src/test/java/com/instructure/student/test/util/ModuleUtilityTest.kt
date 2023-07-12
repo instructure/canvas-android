@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.util.Const
-import com.instructure.student.util.ModuleUtility
+import com.instructure.student.features.modules.util.ModuleUtility
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -40,6 +40,7 @@ import com.instructure.pandautils.room.offline.entities.*
         AssignmentOverrideEntity::class,
         AssignmentRubricCriterionEntity::class,
         AssignmentScoreStatisticsEntity::class,
+        AssignmentSetEntity::class,
         CourseEntity::class,
         CourseFilesEntity::class,
         CourseGradingPeriodEntity::class,
@@ -59,6 +60,11 @@ import com.instructure.pandautils.room.offline.entities.*
         GradingPeriodEntity::class,
         GroupEntity::class,
         GroupUserEntity::class,
+        MasteryPathAssignmentEntity::class,
+        MasteryPathEntity::class,
+        ModuleContentDetailsEntity::class,
+        ModuleItemEntity::class,
+        ModuleObjectEntity::class,
         NeedsGradingCountEntity::class,
         PageEntity::class,
         PlannerOverrideEntity::class,
@@ -166,6 +172,18 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun conferenceDao(): ConferenceDao
 
     abstract fun conferenceRecordingDao(): ConferenceRecodingDao
+
+    abstract fun moduleObjectDao(): ModuleObjectDao
+
+    abstract fun moduleItemDao(): ModuleItemDao
+
+    abstract fun moduleContentDetailsDao(): ModuleContentDetailsDao
+
+    abstract fun masteryPathDao(): MasteryPathDao
+
+    abstract fun assignmentSetDao(): AssignmentSetDao
+
+    abstract fun masteryPathAssignmentDao(): MasteryPathAssignmentDao
 
     abstract fun courseFeaturesDao(): CourseFeaturesDao
 

@@ -229,6 +229,11 @@ class ApiModule {
     }
 
     @Provides
+    fun provideModuleApi(): ModuleAPI.ModuleInterface {
+        return RestBuilder().build(ModuleAPI.ModuleInterface::class.java, RestParams())
+    }
+
+    @Provides
     fun provideFeaturesApi(): FeaturesAPI.FeaturesInterface {
         return RestBuilder().build(FeaturesAPI.FeaturesInterface::class.java, RestParams())
     }

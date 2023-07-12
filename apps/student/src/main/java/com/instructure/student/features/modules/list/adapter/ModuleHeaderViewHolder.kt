@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2016 - present Instructure, Inc.
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-package com.instructure.student.holders
+package com.instructure.student.features.modules.list.adapter
 
 import android.animation.Animator
 import android.animation.AnimatorInflater
@@ -30,7 +14,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderHeaderModuleBinding
-import com.instructure.student.util.ModuleUtility
+import com.instructure.student.features.modules.util.ModuleUtility
 
 class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var isExpanded: Boolean = false
@@ -56,7 +40,10 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 divider.setGone()
             }
             isExpanded = !isExpanded
-            val flipAnimator = AnimatorInflater.loadAnimator(v.context, animationType) as ObjectAnimator
+            val flipAnimator = AnimatorInflater.loadAnimator(
+                v.context,
+                animationType
+            ) as ObjectAnimator
             flipAnimator.target = expandCollapse
             flipAnimator.duration = 200
             flipAnimator.start()
@@ -90,7 +77,12 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         } else {
             if (isLocked) R.drawable.ic_lock else R.drawable.ic_module_circle
         }
-        moduleStatus.setImageDrawable(ColorUtils.colorIt(color, ContextCompat.getDrawable(context, drawable)!!))
+        moduleStatus.setImageDrawable(
+            ColorUtils.colorIt(
+                color,
+                ContextCompat.getDrawable(context, drawable)!!
+            )
+        )
     }
 
     companion object {

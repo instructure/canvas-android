@@ -27,10 +27,43 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.entities.*
+import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
+import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.entities.PageEntity
+import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import com.instructure.canvasapi2.apis.AnnouncementAPI
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.ConferencesApi
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.apis.*
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
+import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.entities.PageEntity
+import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.ConferenceFacade
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.ModuleFacade
+import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
+import com.instructure.pandautils.room.offline.facade.*
 
 const val COURSE_IDS = "course-ids"
 
@@ -57,7 +90,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val conferenceFacade: ConferenceFacade,
     private val discussionApi: DiscussionAPI.DiscussionInterface,
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface,
+    private val announcementApi: AnnouncementAPI.AnnouncementInterface
+    private val moduleApi: ModuleAPI.ModuleInterface,
+    private val moduleFacade: ModuleFacade,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val courseFeaturesDao: CourseFeaturesDao
 ) : CoroutineWorker(context, workerParameters) {
@@ -81,9 +116,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
                         fetchPages(courseSettings.courseId)
                     }
-                    if (courseSettings.isTabSelected(Tab.ASSIGNMENTS_ID)
-                        || courseSettings.isTabSelected(Tab.GRADES_ID)
-                        || courseSettings.isTabSelected(Tab.SYLLABUS_ID)
+                    if (courseSettings.areAnyTabsSelected(
+                            setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID)
+                        )
                     ) {
                         fetchAssignments(courseSettings.courseId)
                     }
@@ -101,6 +136,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.isTabSelected(Tab.PEOPLE_ID)) {
                         fetchUsers(courseSettings.courseId)
+                    }
+                    if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
+                        fetchModules(courseSettings.courseId)
                     }
                 }
             fetchSyllabus(syllabusCourseIds)
@@ -250,5 +288,24 @@ class OfflineSyncWorker @AssistedInject constructor(
             .depaginate { nextPage -> announcementApi.getNextPageAnnouncementsList(nextPage, params) }.dataOrNull.orEmpty()
 
         discussionTopicHeaderFacade.insertDiscussions(announcements, courseId)
+    }
+
+    private suspend fun fetchModules(courseId: Long) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val moduleObjects = moduleApi.getFirstPageModuleObjects(
+            CanvasContext.Type.COURSE.apiString, courseId, params
+        ).depaginate { nextPage ->
+            moduleApi.getNextPageModuleObjectList(nextPage, params)
+        }
+            .dataOrNull
+            ?.map { moduleObject ->
+                val moduleItems =
+                    moduleApi.getFirstPageModuleItems(CanvasContext.Type.COURSE.apiString, courseId, moduleObject.id, params).depaginate { nextPage ->
+                        moduleApi.getNextPageModuleItemList(nextPage, params)
+                    }.dataOrNull ?: moduleObject.items
+                moduleObject.copy(items = moduleItems)
+            }.orEmpty()
+
+        moduleFacade.insertModules(moduleObjects, courseId)
     }
 }

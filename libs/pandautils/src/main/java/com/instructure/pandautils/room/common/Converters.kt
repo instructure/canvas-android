@@ -27,6 +27,16 @@ class Converters {
     }
 
     @TypeConverter
+    fun fromLongArray(array: LongArray?) : String? {
+        return array?.joinToString()
+    }
+
+    @TypeConverter
+    fun fromStringToLongArray(s: String?): LongArray? {
+        return s?.split(", ")?.mapNotNull { it.toLongOrNull() }?.toLongArray()
+    }
+
+    @TypeConverter
     fun dateToLong(date: Date?): Long? {
         return date?.time
     }
