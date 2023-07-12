@@ -17,7 +17,6 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
-import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -75,8 +74,8 @@ class SubmissionDetailsView(
         override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
         override fun onTabReselected(tab: TabLayout.Tab?) = onTabSelected(tab)
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            if (binding.slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                binding.slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
+            if (binding.slidingUpPanelLayout.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                binding.slidingUpPanelLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
             }
             binding.drawerViewPager.hideKeyboard()
             logTabSelected(tab?.position)
@@ -92,7 +91,7 @@ class SubmissionDetailsView(
     }
 
     init {
-        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.setupAsBackButton { activity.onBackPressed() }
         binding.retryButton.onClick { consumer?.accept(SubmissionDetailsEvent.RefreshRequested) }
         binding.drawerViewPager.offscreenPageLimit = 3
         binding.drawerViewPager.adapter = drawerPagerAdapter
@@ -168,7 +167,7 @@ class SubmissionDetailsView(
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(activity, binding.toolbar, canvasContext)
     }
 
     override fun onConnect(output: Consumer<SubmissionDetailsEvent>) {
