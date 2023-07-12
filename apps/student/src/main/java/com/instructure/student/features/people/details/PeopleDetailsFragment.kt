@@ -92,7 +92,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
             RouteMatcher.route(requireContext(), route)
         }
         when {
-            canvasContext.isCourse -> fetchUser()
+            canvasContext.isCourse && user == null -> fetchUser()
             user == null -> {
                 //They must have used a deep link, and there's no way to retrieve user data through a
                 //deep link until the groups API gets updated. This redirects the user to the people list.
