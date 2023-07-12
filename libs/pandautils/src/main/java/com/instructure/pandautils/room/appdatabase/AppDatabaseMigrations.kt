@@ -45,5 +45,9 @@ val appDatabaseMigrations = arrayOf(
     createMigration(5, 6) { database ->
         database.execSQL("ALTER TABLE AttachmentEntity ADD COLUMN submissionId INTEGER")
         database.execSQL("ALTER TABLE SubmissionCommentEntity ADD COLUMN submissionId INTEGER")
+    },
+
+    createMigration(6, 7) { database ->
+        database.execSQL("ALTER TABLE AttachmentEntity ADD COLUMN attempt INTEGER")
     }
 )

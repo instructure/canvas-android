@@ -95,4 +95,26 @@ class SubmissionCommentDaoTest {
         Assert.assertEquals("Obi-Wan", result.author!!.displayName)
         Assert.assertEquals("Order 66", result.mediaComment!!.displayName)
     }
+
+    @Test
+    fun testFindBySubmissionId() = runTest {
+        val submissionComment = SubmissionCommentEntity(
+            id = 1,
+            comment = "These are the droids you are looking for",
+            authorId = 1,
+            mediaCommentId = "66",
+            submissionId = 1
+        )
+        val submissionComment2 = SubmissionCommentEntity(
+            id = 2,
+            comment = "These are not the droids you are looking for",
+            submissionId = 2
+        )
+        submissionCommentDao.insertAll(listOf(submissionComment, submissionComment2))
+
+        val result = submissionCommentDao.findBySubmissionId(1)
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals(submissionComment, result.first().submissionComment)
+    }
 }
