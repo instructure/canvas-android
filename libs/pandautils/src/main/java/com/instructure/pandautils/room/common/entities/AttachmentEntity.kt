@@ -20,33 +20,40 @@ data class AttachmentEntity(
     val workerId: String? = null,
     //Used for Submission comments
     val submissionCommentId: Long? = null,
-    val submissionId: Long? = null
+    val submissionId: Long? = null,
+    val attempt: Long? = null
 ) {
-    constructor(attachment: Attachment, workerId: String? = null, submissionCommentId: Long? = null) : this(
-        attachment.id,
-        attachment.contentType,
-        attachment.filename,
-        attachment.displayName,
-        attachment.url,
-        attachment.thumbnailUrl,
-        attachment.previewUrl,
-        attachment.createdAt,
-        attachment.size,
-        workerId,
-        submissionCommentId
+    constructor(
+        attachment: Attachment,
+        workerId: String? = null,
+        submissionCommentId: Long? = null,
+        submissionId: Long? = null,
+        attempt: Long? = null
+    ) : this(
+        id = attachment.id,
+        contentType = attachment.contentType,
+        filename = attachment.filename,
+        displayName = attachment.displayName,
+        url = attachment.url,
+        thumbnailUrl = attachment.thumbnailUrl,
+        previewUrl = attachment.previewUrl,
+        createdAt = attachment.createdAt,
+        size = attachment.size,
+        workerId = workerId,
+        submissionCommentId = submissionCommentId,
+        submissionId = submissionId,
+        attempt = attempt
     )
 
-    fun toApiModel(): Attachment {
-        return Attachment(
-            id,
-            contentType,
-            filename,
-            displayName,
-            url,
-            thumbnailUrl,
-            previewUrl,
-            createdAt,
-            size
-        )
-    }
+    fun toApiModel() = Attachment(
+        id = id,
+        contentType = contentType,
+        filename = filename,
+        displayName = displayName,
+        url = url,
+        thumbnailUrl = thumbnailUrl,
+        previewUrl = previewUrl,
+        createdAt = createdAt,
+        size = size
+    )
 }

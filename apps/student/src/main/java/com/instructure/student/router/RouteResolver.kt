@@ -29,7 +29,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
@@ -116,7 +116,7 @@ object RouteResolver {
             cls.isA<AccountPreferencesFragment>() -> AccountPreferencesFragment.newInstance()
             cls.isA<CourseModuleProgressionFragment>() -> CourseModuleProgressionFragment.newInstance(route)
             cls.isA<AssignmentDetailsFragment>() -> AssignmentDetailsFragment.newInstance(route)
-            cls.isA<SubmissionDetailsFragment>() -> SubmissionDetailsFragment.newInstance(route)
+            cls.isA<SubmissionDetailsRepositoryFragment>() -> SubmissionDetailsRepositoryFragment.newInstance(route)
             cls.isA<SubmissionRubricDescriptionFragment>() -> SubmissionRubricDescriptionFragment.newInstance(route)
             cls.isA<DiscussionListFragment>() -> DiscussionListFragment.newInstance(route)
             cls.isA<DiscussionDetailsFragment>() -> DiscussionDetailsFragment.newInstance(route)

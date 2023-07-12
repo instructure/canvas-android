@@ -3,9 +3,9 @@ package com.instructure.pandautils.room.appdatabase
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.instructure.pandautils.room.common.Converters
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.appdatabase.entities.*
+import com.instructure.pandautils.room.common.Converters
 import com.instructure.pandautils.room.common.daos.AttachmentDao
 import com.instructure.pandautils.room.common.daos.AuthorDao
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
@@ -24,7 +24,7 @@ import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
         SubmissionCommentEntity::class,
         PendingSubmissionCommentEntity::class,
         DashboardFileUploadEntity::class
-    ], version = 6
+    ], version = 7
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

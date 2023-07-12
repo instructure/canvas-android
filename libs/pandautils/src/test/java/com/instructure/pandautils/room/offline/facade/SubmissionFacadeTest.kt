@@ -22,9 +22,13 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.common.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.daos.GroupDao
+import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.GroupEntity
@@ -44,8 +48,15 @@ class SubmissionFacadeTest {
     private val mediaCommentDao: MediaCommentDao = mockk(relaxed = true)
     private val userDao: UserDao = mockk(relaxed = true)
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
+    private val submissionCommentDao: SubmissionCommentDao = mockk(relaxed = true)
+    private val attachmentDao: AttachmentDao = mockk(relaxed = true)
+    private val authorDao: AuthorDao = mockk(relaxed = true)
+    private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao = mockk(relaxed = true)
 
-    private val facade = SubmissionFacade(submissionDao, groupDao, mediaCommentDao, userDao, userApi)
+    private val facade = SubmissionFacade(
+        submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+        submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
+    )
 
     @Test
     fun `Calling insertSubmission should insert submission and related entities`() = runTest {
@@ -136,5 +147,38 @@ class SubmissionFacadeTest {
         Assert.assertEquals(mediaComment, result.first().mediaComment)
         Assert.assertEquals(user, result.first().user)
         Assert.assertEquals(submissionHistory.size, result.first().submissionHistory.size)
+    }
+
+    @Test
+    fun `Calling findByAssignmentId should return submission by the specified assignment ID`() = runTest {
+        val assignmentId = 1L
+        val submissionId = 1L
+        val group = Group(id = 1, name = "name")
+        val mediaComment = MediaComment(mediaId = "mediaId")
+        val user = User(id = 1L)
+        val submission = Submission(
+            id = submissionId,
+            attempt = 3,
+            group = group,
+            mediaComment = mediaComment,
+            userId = user.id,
+            user = user,
+            assignmentId = assignmentId
+        )
+        val submissionHistory = listOf(Submission(id = submissionId, attempt = 1), Submission(id = submissionId, attempt = 2), submission)
+
+        coEvery { groupDao.findById(group.id) } returns GroupEntity(group)
+        coEvery { mediaCommentDao.findById(mediaComment.mediaId) } returns MediaCommentEntity(mediaComment)
+        coEvery { userDao.findById(user.id) } returns UserEntity(user)
+        coEvery { submissionDao.findByAssignmentId(assignmentId) } returns SubmissionEntity(submission, group.id, mediaComment.mediaId)
+        coEvery { submissionDao.findById(submissionId) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
+
+        val result = facade.findByAssignmentId(assignmentId)!!
+
+        Assert.assertEquals(submissionId, result.id)
+        Assert.assertEquals(group, result.group)
+        Assert.assertEquals(mediaComment, result.mediaComment)
+        Assert.assertEquals(user, result.user)
+        Assert.assertEquals(submissionHistory.size, result.submissionHistory.size)
     }
 }

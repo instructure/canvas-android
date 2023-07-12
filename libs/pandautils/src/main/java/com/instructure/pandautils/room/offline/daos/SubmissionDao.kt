@@ -37,4 +37,7 @@ interface SubmissionDao {
 
     @Query("SELECT * FROM SubmissionEntity WHERE assignmentId IN (:assignmentIds)")
     suspend fun findByAssignmentIds(assignmentIds: List<Long>): List<SubmissionEntity>
+
+    @Query("SELECT * FROM SubmissionEntity WHERE assignmentId = :assignmentId")
+    suspend fun findByAssignmentId(assignmentId: Long): SubmissionEntity?
 }

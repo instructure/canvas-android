@@ -122,7 +122,7 @@ class SyllabusNetworkDataSourceTest {
                 null,
                 null,
                 listOf("course_1"),
-                RestParams(isForceReadFromNetwork = false)
+                RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)
             )
         }
     }
@@ -162,9 +162,9 @@ class SyllabusNetworkDataSourceTest {
                 null,
                 null,
                 listOf("course_1"),
-                RestParams(isForceReadFromNetwork = false)
+                RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)
             )
-            calendarEventApi.next("next_url", RestParams(isForceReadFromNetwork = false))
+            calendarEventApi.next("next_url", RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false))
         }
     }
 

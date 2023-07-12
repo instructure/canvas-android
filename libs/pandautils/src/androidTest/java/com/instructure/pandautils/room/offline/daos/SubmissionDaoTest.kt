@@ -141,4 +141,19 @@ class SubmissionDaoTest {
 
         Assert.assertEquals(listOf(submissionEntity.copy(userId = null)), result)
     }
+
+    @Test
+    fun testFindByAssignmentId() = runTest {
+        val entities = listOf(
+            SubmissionEntity(Submission(id = 1, body = "Body 1", assignmentId = 1), null, null),
+            SubmissionEntity(Submission(id = 2, body = "Body 2", assignmentId = 2), null, null),
+        )
+        entities.forEach {
+            submissionDao.insert(it)
+        }
+
+        val result = submissionDao.findByAssignmentId(1)
+
+        Assert.assertEquals(entities.first(), result)
+    }
 }

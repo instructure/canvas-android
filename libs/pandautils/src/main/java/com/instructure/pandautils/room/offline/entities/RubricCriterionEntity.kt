@@ -20,21 +20,20 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionRating
 
 @Entity
 data class RubricCriterionEntity(
     @PrimaryKey
     val id: String,
-    val assignmentId: Long,
     val description: String?,
     val longDescription: String?,
     val points: Double,
     val criterionUseRange: Boolean,
     val ignoreForScoring: Boolean,
 ) {
-    constructor(rubricCriterion: RubricCriterion, assignmentId: Long) : this(
+    constructor(rubricCriterion: RubricCriterion) : this(
         rubricCriterion.id.orEmpty(),
-        assignmentId,
         rubricCriterion.description,
         rubricCriterion.longDescription,
         rubricCriterion.points,
@@ -42,12 +41,12 @@ data class RubricCriterionEntity(
         rubricCriterion.ignoreForScoring,
     )
 
-    fun toApiModel() = RubricCriterion(
+    fun toApiModel(ratings: List<RubricCriterionRating> = listOf()) = RubricCriterion(
         id = id,
         description = description,
         longDescription = longDescription,
         points = points,
-        ratings = arrayListOf(),
+        ratings = ratings.toMutableList(),
         criterionUseRange = criterionUseRange,
         ignoreForScoring = ignoreForScoring
     )

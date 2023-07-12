@@ -41,6 +41,14 @@ object SubmissionAPI {
                 @Path("assignmentId") assignmentId: Long,
                 @Path("studentId") studentId: Long): Call<Submission>
 
+        @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        suspend fun getSingleSubmission(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Path("studentId") studentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
+
         @GET("courses/{courseId}/students/submissions?include[]=assignment&include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getSubmissionsForMultipleAssignments(
                 @Path("courseId") courseId: Long,

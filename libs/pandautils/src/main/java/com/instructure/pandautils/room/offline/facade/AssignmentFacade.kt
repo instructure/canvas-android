@@ -32,7 +32,9 @@ class AssignmentFacade(
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
     private val assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
     private val rubricCriterionDao: RubricCriterionDao,
-    private val lockInfoFacade: LockInfoFacade
+    private val lockInfoFacade: LockInfoFacade,
+    private val rubricCriterionRatingDao: RubricCriterionRatingDao,
+    private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao
 ) {
 
     suspend fun insertAssignmentGroups(assignmentGroups: List<AssignmentGroup>) {
@@ -61,18 +63,6 @@ class AssignmentFacade(
             discussionTopicHeaderFacade.insertDiscussion(it, assignment.courseId)
         }
 
-        assignment.scoreStatistics?.let {
-            assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
-        }
-
-        assignment.rubric?.forEach {
-            rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id))
-        }
-
-        assignment.lockInfo?.let {
-            lockInfoFacade.insertLockInfoForAssignment(it, assignment.id)
-        }
-
         val assignmentEntity = AssignmentEntity(
             assignment = assignment,
             rubricSettingsId = rubricSettingsId,
@@ -82,6 +72,24 @@ class AssignmentFacade(
         )
 
         assignmentDao.insert(assignmentEntity)
+
+        assignment.scoreStatistics?.let {
+            assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
+        }
+
+        assignment.rubric?.forEach { rubricCriterion ->
+            rubricCriterionDao.insert(RubricCriterionEntity(rubricCriterion))
+            rubricCriterionRatingDao.insertAll(rubricCriterion.ratings.map {
+                RubricCriterionRatingEntity(it, rubricCriterion.id.orEmpty())
+            })
+            assignmentRubricCriterionDao.insert(
+                AssignmentRubricCriterionEntity(assignment.id, rubricCriterion.id.orEmpty())
+            )
+        }
+
+        assignment.lockInfo?.let {
+            lockInfoFacade.insertLockInfoForAssignment(it, assignment.id)
+        }
     }
 
     private suspend fun insertPlannerOverride(plannerOverride: PlannerOverride?): Long? {
@@ -111,16 +119,21 @@ class AssignmentFacade(
     }
 
     private suspend fun createFullApiModelFromEntity(assignmentEntity: AssignmentEntity): Assignment {
-        val rubricCriterionEntities = rubricCriterionDao.findByAssignmentId(assignmentEntity.id)
         val rubricSettingEntity = assignmentEntity.rubricSettingsId?.let { rubricSettingsDao.findById(it) }
         val submission = assignmentEntity.submissionId?.let { submissionFacade.getSubmissionById(it) }
         val discussionTopicHeader = assignmentEntity.discussionTopicHeaderId?.let { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(it) }
         val lockInfo = lockInfoFacade.getLockInfoByAssignmentId(assignmentEntity.id)
         val scoreStatisticsEntity = assignmentScoreStatisticsDao.findByAssignmentId(assignmentEntity.id)
         val plannerOverrideEntity = assignmentEntity.plannerOverrideId?.let { plannerOverrideDao.findById(it) }
+        val rubricCriterionEntities = assignmentRubricCriterionDao.findByAssignmentId(assignmentEntity.id).mapNotNull {
+            rubricCriterionDao.findById(it.rubricId)
+        }
 
         return assignmentEntity.toApiModel(
-            rubric = rubricCriterionEntities.map { it.toApiModel() },
+            rubric = rubricCriterionEntities.map { rubricCriterionEntity ->
+                val rubricCriterionRatings = rubricCriterionRatingDao.findByRubricCriterionId(rubricCriterionEntity.id).map { it.toApiModel() }
+                rubricCriterionEntity.toApiModel(rubricCriterionRatings)
+            },
             rubricSettings = rubricSettingEntity?.toApiModel(),
             submission = submission,
             lockInfo = lockInfo,
@@ -128,8 +141,12 @@ class AssignmentFacade(
             scoreStatistics = scoreStatisticsEntity?.toApiModel(),
             plannerOverride = plannerOverrideEntity?.toApiModel()
         ).apply {
-            this.submission = submission?.copy(assignment = this)
-            this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this)
+            /*
+             * the assignment model has a submission that contains the assignment, but the inner assignment model cannot
+             * contain the submission because it causes a circular reference and leads to a stackoverflow exception
+             */
+            this.submission = submission?.copy(assignment = this.copy(submission = null))
+            this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this.copy(submission = null))
         }
     }
 }

@@ -11,7 +11,7 @@ class PageListNetworkDataSource(
 ) : PageListDataSource {
 
     override suspend fun loadPages(canvasContext: CanvasContext, forceNetwork: Boolean): List<Page> {
-        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return api.getFirstPagePages(canvasContext.id, canvasContext.apiContext(), restParams)
             .depaginate { api.getNextPagePagesList(it, restParams) }.dataOrThrow
     }

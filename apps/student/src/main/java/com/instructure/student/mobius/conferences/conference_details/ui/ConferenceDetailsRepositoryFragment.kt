@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.conferences.conference_details.ui
 
+import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -39,6 +40,11 @@ class ConferenceDetailsRepositoryFragment : ConferenceDetailsFragment() {
 
     @PageViewUrlParam("conferenceId")
     fun getConferenceId() = conference.id
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
 
     companion object {
         fun makeRoute(canvasContext: CanvasContext, conference: Conference): Route {

@@ -17,34 +17,11 @@
 
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.AssignmentScoreStatistics
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.canvasapi2.models.PlannableType
-import com.instructure.canvasapi2.models.PlannerOverride
-import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricSettings
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.pandautils.room.offline.daos.AssignmentDao
-import com.instructure.pandautils.room.offline.daos.AssignmentGroupDao
-import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
-import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
-import com.instructure.pandautils.room.offline.daos.RubricCriterionDao
-import com.instructure.pandautils.room.offline.daos.RubricSettingsDao
-import com.instructure.pandautils.room.offline.entities.AssignmentEntity
-import com.instructure.pandautils.room.offline.entities.AssignmentGroupEntity
-import com.instructure.pandautils.room.offline.entities.AssignmentScoreStatisticsEntity
-import com.instructure.pandautils.room.offline.entities.PlannerOverrideEntity
-import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
-import com.instructure.pandautils.room.offline.entities.RubricSettingsEntity
+import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.utils.orDefault
-import io.mockk.Runs
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.just
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -62,6 +39,8 @@ class AssignmentFacadeTest {
     private val assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao = mockk(relaxed = true)
     private val rubricCriterionDao: RubricCriterionDao = mockk(relaxed = true)
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
+    private val rubricCriterionRatingDao: RubricCriterionRatingDao = mockk(relaxed = true)
+    private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao = mockk(relaxed = true)
 
     private val facade = AssignmentFacade(
         assignmentGroupDao,
@@ -72,7 +51,9 @@ class AssignmentFacadeTest {
         discussionTopicHeaderFacade,
         assignmentScoreStatisticsDao,
         rubricCriterionDao,
-        lockInfoFacade
+        lockInfoFacade,
+        rubricCriterionRatingDao,
+        assignmentRubricCriterionDao
     )
 
     @Test
@@ -119,7 +100,8 @@ class AssignmentFacadeTest {
                 coVerify { discussionTopicHeaderFacade.insertDiscussion(discussionTopicHeader, 1) }
                 coVerify { assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(scoreStatistics, assignment.id)) }
                 rubricCriterions.forEach {
-                    coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
+                    coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it)) }
+                    coVerify { assignmentRubricCriterionDao.insert(AssignmentRubricCriterionEntity(assignment.id, it.id.orEmpty())) }
                 }
                 coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
                 coVerify {
@@ -181,7 +163,7 @@ class AssignmentFacadeTest {
             )
         }
         rubricCriterions.forEach {
-            coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
+            coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it)) }
         }
         coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
         coVerify {
@@ -226,7 +208,10 @@ class AssignmentFacadeTest {
         )
 
         coEvery { assignmentDao.findById(assignmentId) } returns assignmentEntity
-        coEvery { rubricCriterionDao.findByAssignmentId(assignmentId) } returns rubricCriterions.map { RubricCriterionEntity(it, assignmentId) }
+        coEvery { assignmentRubricCriterionDao.findByAssignmentId(assignmentId) } returns listOf(
+            AssignmentRubricCriterionEntity(assignmentId, rubricCriterions[0].id!!)
+        )
+        coEvery { rubricCriterionDao.findById(rubricCriterions[0].id!!) } returns RubricCriterionEntity(rubricCriterions[0])
         coEvery { rubricSettingsDao.findById(rubricSettings.id.orDefault()) } returns RubricSettingsEntity(rubricSettings)
         coEvery { submissionFacade.getSubmissionById(submission.id) } returns submission
         coEvery { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(discussionTopicHeader.id) } returns discussionTopicHeader

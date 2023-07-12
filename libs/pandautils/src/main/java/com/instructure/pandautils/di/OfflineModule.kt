@@ -20,7 +20,10 @@ package com.instructure.pandautils.di
 import android.content.Context
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
 import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.*
@@ -31,6 +34,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
+
+const val OFFLINE_DATABASE = "offline_database"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -246,7 +252,9 @@ class OfflineModule {
         discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
         assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
         rubricCriterionDao: RubricCriterionDao,
-        lockInfoFacade: LockInfoFacade
+        lockInfoFacade: LockInfoFacade,
+        rubricCriterionRatingDao: RubricCriterionRatingDao,
+        assignmentRubricCriterionDao: AssignmentRubricCriterionDao
     ): AssignmentFacade {
         return AssignmentFacade(
             assignmentGroupDao,
@@ -257,7 +265,9 @@ class OfflineModule {
             discussionTopicHeaderFacade,
             assignmentScoreStatisticsDao,
             rubricCriterionDao,
-            lockInfoFacade
+            lockInfoFacade,
+            rubricCriterionRatingDao,
+            assignmentRubricCriterionDao
         )
     }
 
@@ -265,11 +275,18 @@ class OfflineModule {
     fun provideSubmissionFacade(
         submissionDao: SubmissionDao,
         groupDao: GroupDao,
-        mediaCommentDao: MediaCommentDao,
+        @Named(OFFLINE_DATABASE) mediaCommentDao: MediaCommentDao,
         userDao: UserDao,
-        userApi: UserAPI.UsersInterface
+        userApi: UserAPI.UsersInterface,
+        @Named(OFFLINE_DATABASE) submissionCommentDao: SubmissionCommentDao,
+        @Named(OFFLINE_DATABASE) attachmentDao: AttachmentDao,
+        @Named(OFFLINE_DATABASE) authorDao: AuthorDao,
+        rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
     ): SubmissionFacade {
-        return SubmissionFacade(submissionDao, groupDao, mediaCommentDao, userDao, userApi)
+        return SubmissionFacade(
+            submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+            submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
+        )
     }
 
     @Provides
@@ -392,5 +409,49 @@ class OfflineModule {
         assignmentFacade: AssignmentFacade
     ): MasteryPathFacade {
         return MasteryPathFacade(masteryPathDao, masteryPathAssignmentDao, assignmentSetDao, assignmentFacade)
+    }
+
+    @Provides
+    fun provideCourseFeaturesDao(appDatabase: OfflineDatabase): CourseFeaturesDao {
+        return appDatabase.courseFeaturesDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideAttachmentDao(offlineDatabase: OfflineDatabase): AttachmentDao {
+        return offlineDatabase.attachmentDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideAuthorDao(offlineDatabase: OfflineDatabase): AuthorDao {
+        return offlineDatabase.authorDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideMediaCommentDao(offlineDatabase: OfflineDatabase): MediaCommentDao {
+        return offlineDatabase.mediaCommentDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideSubmissionCommentDao(offlineDatabase: OfflineDatabase): SubmissionCommentDao {
+        return offlineDatabase.submissionCommentDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionAssessmentDao(offlineDatabase: OfflineDatabase): RubricCriterionAssessmentDao {
+        return offlineDatabase.rubricCriterionAssessmentDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionRatingDao(offlineDatabase: OfflineDatabase): RubricCriterionRatingDao {
+        return offlineDatabase.rubricCriterionRatingDao()
+    }
+
+    @Provides
+    fun provideAssignmentRubricCriterionDao(offlineDatabase: OfflineDatabase): AssignmentRubricCriterionDao {
+        return offlineDatabase.assignmentRubricCriterionDao()
     }
 }

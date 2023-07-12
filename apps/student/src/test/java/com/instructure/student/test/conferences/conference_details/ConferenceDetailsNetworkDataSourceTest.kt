@@ -59,7 +59,7 @@ class ConferenceDetailsNetworkDataSourceTest {
         coVerify(exactly = 1) {
             conferencesApi.getConferencesForContext(
                 CanvasContext.emptyCourseContext(1).toAPIString().drop(1),
-                RestParams(isForceReadFromNetwork = true)
+                RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             )
         }
     }
@@ -88,10 +88,10 @@ class ConferenceDetailsNetworkDataSourceTest {
         coVerify(exactly = 1) {
             conferencesApi.getConferencesForContext(
                 CanvasContext.emptyCourseContext(1).toAPIString().drop(1),
-                RestParams(isForceReadFromNetwork = true)
+                RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             )
-            conferencesApi.getNextPage("page_2_url", RestParams(isForceReadFromNetwork = true))
-            conferencesApi.getNextPage("page_3_url", RestParams(isForceReadFromNetwork = true))
+            conferencesApi.getNextPage("page_2_url", RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true))
+            conferencesApi.getNextPage("page_3_url", RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true))
         }
     }
 
@@ -106,7 +106,7 @@ class ConferenceDetailsNetworkDataSourceTest {
         coVerify(exactly = 1) {
             conferencesApi.getConferencesForContext(
                 CanvasContext.emptyCourseContext(1).toAPIString().drop(1),
-                RestParams(isForceReadFromNetwork = true)
+                RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             )
         }
     }

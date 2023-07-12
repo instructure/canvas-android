@@ -17,13 +17,7 @@
 
 package com.instructure.canvasapi2.utils.weave
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  * Holds the data necessary for [tryWeave] to work correctly

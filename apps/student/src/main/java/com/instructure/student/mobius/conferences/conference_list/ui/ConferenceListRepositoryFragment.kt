@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.conferences.conference_list.ui
 
+import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.makeBundle
@@ -31,6 +32,11 @@ class ConferenceListRepositoryFragment : ConferenceListFragment() {
     lateinit var conferenceListRepository: ConferenceListRepository
 
     override fun getRepository() = conferenceListRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
 
     companion object {
         fun makeRoute(canvasContext: CanvasContext): Route {

@@ -28,12 +28,6 @@ import androidx.room.ForeignKey
             parentColumns = ["id"],
             childColumns = ["assignmentId"],
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = RubricCriterionEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["rubricId"],
-            onDelete = ForeignKey.CASCADE
         )
     ]
 )

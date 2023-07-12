@@ -50,7 +50,7 @@ class SyllabusNetworkDataSource(
         canvasContexts: List<String>,
         forceNetwork: Boolean
     ): DataResult<List<ScheduleItem>> {
-        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return calendarEventApi.getCalendarEvents(
             allEvents,
             type.apiName,
@@ -58,7 +58,6 @@ class SyllabusNetworkDataSource(
             endDate,
             canvasContexts,
             restParams
-        )
-            .depaginate { calendarEventApi.next(it, restParams) }
+        ).depaginate { calendarEventApi.next(it, restParams) }
     }
 }

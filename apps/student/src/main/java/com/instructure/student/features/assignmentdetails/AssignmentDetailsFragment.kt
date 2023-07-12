@@ -60,7 +60,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.Picker
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
 import dagger.hilt.android.AndroidEntryPoint
@@ -156,7 +156,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             is AssignmentDetailAction.NavigateToSubmissionScreen -> {
                 RouteMatcher.route(
                     requireActivity(),
-                    SubmissionDetailsFragment.makeRoute(canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
+                    SubmissionDetailsRepositoryFragment.makeRoute(canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
                 )
             }
             is AssignmentDetailAction.NavigateToQuizScreen -> {
