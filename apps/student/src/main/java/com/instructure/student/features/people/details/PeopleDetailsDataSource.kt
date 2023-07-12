@@ -23,5 +23,5 @@ import com.instructure.canvasapi2.models.User
 interface PeopleDetailsDataSource {
     suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean = false): User?
 
-    suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?): Boolean
+    suspend fun loadMessagePermission(canvasContext: CanvasContext, requestedPermissions: List<String> = emptyList(), user: User?, forceNetwork: Boolean = false): Boolean
 }

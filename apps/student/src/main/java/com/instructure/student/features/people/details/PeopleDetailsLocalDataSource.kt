@@ -27,7 +27,7 @@ class PeopleDetailsLocalDataSource(private val userFacade: UserFacade): PeopleDe
         return userFacade.getUserById(userId)
     }
 
-    override suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?): Boolean {
+    override suspend fun loadMessagePermission(canvasContext: CanvasContext, requestedPermissions: List<String>, user: User?, forceNetwork: Boolean): Boolean {
         return false
     }
 }

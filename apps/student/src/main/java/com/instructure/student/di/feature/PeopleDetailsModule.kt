@@ -17,6 +17,8 @@
 
 package com.instructure.student.di.feature
 
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.room.offline.facade.UserFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -37,8 +39,8 @@ class PeopleDetailsModule {
     }
 
     @Provides
-    fun provideNetworkDataSource(userApi: UserAPI.UsersInterface): PeopleDetailsNetworkDataSource {
-        return PeopleDetailsNetworkDataSource(userApi)
+    fun provideNetworkDataSource(userApi: UserAPI.UsersInterface, courseApi: CourseAPI.CoursesInterface, groupApi: GroupAPI.GroupInterface): PeopleDetailsNetworkDataSource {
+        return PeopleDetailsNetworkDataSource(userApi, courseApi, groupApi)
     }
 
     @Provides

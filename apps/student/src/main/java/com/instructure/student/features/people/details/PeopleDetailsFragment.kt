@@ -130,7 +130,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun checkMessagePermission() {
         lifecycleScope.tryLaunch {
-            val canMessageUser = repository.loadMessagePermission(canvasContext, user)
+            val canMessageUser = repository.loadMessagePermission(canvasContext, user, true)
             binding.compose.setVisible(canMessageUser)
         } catch {
             binding.compose.setVisible(false)

@@ -27,11 +27,15 @@ class PeopleDetailsRepository(
         peopleDetailsLocalDataSource: PeopleDetailsLocalDataSource,
         networkStateProvider: NetworkStateProvider,
 ) : Repository<PeopleDetailsDataSource>(peopleDetailsLocalDataSource, peopleDetailsNetworkDataSource, networkStateProvider) {
-    suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean = false): User? {
+    suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean): User? {
         return dataSource.loadUser(canvasContext, userId, forceNetwork)
     }
 
-    suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?): Boolean {
-        return dataSource.loadMessagePermission(canvasContext, user)
+    suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?, forceNetwork: Boolean): Boolean {
+        return dataSource.loadMessagePermission(
+            canvasContext = canvasContext,
+            user = user,
+            forceNetwork = forceNetwork,
+        )
     }
 }
