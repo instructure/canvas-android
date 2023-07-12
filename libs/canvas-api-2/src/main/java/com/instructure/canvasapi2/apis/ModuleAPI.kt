@@ -20,18 +20,25 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
-internal object ModuleAPI {
+object ModuleAPI {
 
-    internal interface ModuleInterface {
+    interface ModuleInterface {
         @GET("{contextId}/modules")
         fun getFirstPageModuleObjects(@Path("contextId") contextId: Long) : Call<List<ModuleObject>>
 
+        @GET("{contextType}/{contextId}/modules")
+        suspend fun getFirstPageModuleObjects(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams) : DataResult<List<ModuleObject>>
+
         @GET
         fun getNextPageModuleObjectList(@Url nextURL: String) : Call<List<ModuleObject>>
+
+        @GET
+        suspend fun getNextPageModuleObjectList(@Url nextURL: String, @Tag params: RestParams) : DataResult<List<ModuleObject>>
 
         @GET("{contextId}/modules?include[]=items&include[]=content_details")
         fun getFirstPageModulesWithItems(@Path("contextId") contextId: Long) : Call<List<ModuleObject>>
@@ -39,8 +46,14 @@ internal object ModuleAPI {
         @GET("{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
         fun getFirstPageModuleItems(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long) : Call<List<ModuleItem>>
 
+        @GET("{contextType}/{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
+        suspend fun getFirstPageModuleItems(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Tag params: RestParams) : DataResult<List<ModuleItem>>
+
         @GET
         fun getNextPageModuleItemList(@Url nextURL: String) : Call<List<ModuleItem>>
+
+        @GET
+        suspend fun getNextPageModuleItemList(@Url nextURL: String, @Tag params: RestParams) : DataResult<List<ModuleItem>>
 
         @POST("{contextId}/modules/{moduleId}/items/{itemId}/mark_read")
         fun markModuleItemRead(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ResponseBody>

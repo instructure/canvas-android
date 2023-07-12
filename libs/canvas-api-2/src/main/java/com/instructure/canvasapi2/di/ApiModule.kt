@@ -227,4 +227,9 @@ class ApiModule {
     fun provideAnnouncementApi(): AnnouncementAPI.AnnouncementInterface {
         return RestBuilder().build(AnnouncementAPI.AnnouncementInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideModuleApi(): ModuleAPI.ModuleInterface {
+        return RestBuilder().build(ModuleAPI.ModuleInterface::class.java, RestParams())
+    }
 }

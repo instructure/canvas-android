@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.util
+package com.instructure.student.features.modules.util
 
 import android.content.Context
 import com.instructure.canvasapi2.models.ModuleItem

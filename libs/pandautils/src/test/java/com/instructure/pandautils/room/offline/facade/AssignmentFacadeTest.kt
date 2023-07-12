@@ -106,7 +106,7 @@ class AssignmentFacadeTest {
         coEvery { discussionTopicHeaderFacade.insertDiscussion(any(), any()) } returns 1L
         coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
         coEvery { rubricCriterionDao.insert(any()) } just Runs
-        coEvery { lockInfoFacade.insertLockInfo(any(), any()) } just Runs
+        coEvery { lockInfoFacade.insertLockInfoForAssignment(any(), any()) } just Runs
 
         facade.insertAssignmentGroups(assignmentGroups)
 
@@ -121,7 +121,7 @@ class AssignmentFacadeTest {
                 rubricCriterions.forEach {
                     coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
                 }
-                coVerify { lockInfoFacade.insertLockInfo(lockInfo, assignment.id) }
+                coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
                 coVerify {
                     assignmentDao.insert(
                         AssignmentEntity(
@@ -134,6 +134,66 @@ class AssignmentFacadeTest {
                     )
                 }
             }
+        }
+    }
+
+    @Test
+    fun `Calling insertAssignment should insert assignment with related entities`() = runTest {
+        val rubricSettings = RubricSettings(id = 1L)
+        val submission = Submission(id = 1L)
+        val plannedOverride = PlannerOverride(id = 1L, plannableType = PlannableType.ASSIGNMENT, plannableId = 1L)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 1L)
+        val scoreStatistics = AssignmentScoreStatistics(0.0, 0.0, 0.0)
+        val rubricCriterions = listOf(RubricCriterion())
+        val lockInfo = LockInfo()
+        val assignment = Assignment(
+                rubricSettings = rubricSettings,
+                submission = submission,
+                plannerOverride = plannedOverride,
+                discussionTopicHeader = discussionTopicHeader,
+                scoreStatistics = scoreStatistics,
+                rubric = rubricCriterions,
+                lockInfo = lockInfo,
+                courseId = 1,
+            )
+
+        coEvery { assignmentDao.insert(any()) } just Runs
+        coEvery { plannerOverrideDao.insert(any()) } returns 1L
+        coEvery { rubricSettingsDao.insert(any()) } returns 1L
+        coEvery { submissionFacade.insertSubmission(any()) } returns 1L
+        coEvery { discussionTopicHeaderFacade.insertDiscussion(any(), any()) } returns 1L
+        coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
+        coEvery { rubricCriterionDao.insert(any()) } just Runs
+        coEvery { lockInfoFacade.insertLockInfoForAssignment(any(), any()) } just Runs
+
+        facade.insertAssignment(assignment)
+
+        coVerify { rubricSettingsDao.insert(RubricSettingsEntity(rubricSettings)) }
+        coVerify { submissionFacade.insertSubmission(submission) }
+        coVerify { plannerOverrideDao.insert(PlannerOverrideEntity(plannedOverride)) }
+        coVerify { discussionTopicHeaderFacade.insertDiscussion(discussionTopicHeader, 1) }
+        coVerify {
+            assignmentScoreStatisticsDao.insert(
+                AssignmentScoreStatisticsEntity(
+                    scoreStatistics,
+                    assignment.id
+                )
+            )
+        }
+        rubricCriterions.forEach {
+            coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
+        }
+        coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
+        coVerify {
+            assignmentDao.insert(
+                AssignmentEntity(
+                    assignment = assignment,
+                    1L,
+                    1L,
+                    1L,
+                    1L
+                )
+            )
         }
     }
 

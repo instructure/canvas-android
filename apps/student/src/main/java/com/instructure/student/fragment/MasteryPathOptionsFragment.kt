@@ -34,6 +34,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.MasteryPathOptionsRecyclerAdapter
 import com.instructure.student.databinding.FragmentMasteryPathsOptionsBinding
+import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 

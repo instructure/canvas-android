@@ -23,25 +23,28 @@ import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 
 @Entity
 data class ModuleCompletionRequirementEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val type: String?,
     val minScore: Double,
     val maxScore: Double,
-    val lockedModuleId: Long
+    val completed: Boolean?,
+    val moduleId: Long
 ) {
-    constructor(moduleCompletionRequirement: ModuleCompletionRequirement, lockedModuleId: Long) : this(
+    constructor(moduleCompletionRequirement: ModuleCompletionRequirement, moduleId: Long) : this(
         id = moduleCompletionRequirement.id,
         type = moduleCompletionRequirement.type,
         minScore = moduleCompletionRequirement.minScore,
         maxScore = moduleCompletionRequirement.maxScore,
-        lockedModuleId = lockedModuleId
+        completed = moduleCompletionRequirement.completed,
+        moduleId = moduleId
     )
 
     fun toApiModel() = ModuleCompletionRequirement(
         id = id,
         type = type,
         minScore = minScore,
-        maxScore = maxScore
+        maxScore = maxScore,
+        completed = completed ?: false
     )
 }
