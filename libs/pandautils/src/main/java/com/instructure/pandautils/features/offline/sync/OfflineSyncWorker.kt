@@ -27,43 +27,10 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
-import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
-import com.instructure.pandautils.room.offline.entities.PageEntity
-import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.room.offline.facade.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.apis.AssignmentAPI
-import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.apis.ConferencesApi
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.DiscussionAPI
-import com.instructure.canvasapi2.apis.ModuleAPI
-import com.instructure.canvasapi2.apis.PageAPI
-import com.instructure.canvasapi2.apis.QuizAPI
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.canvasapi2.apis.*
-import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
-import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.DashboardCardDao
-import com.instructure.pandautils.room.offline.daos.PageDao
-import com.instructure.pandautils.room.offline.daos.QuizDao
-import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
-import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
-import com.instructure.pandautils.room.offline.entities.PageEntity
-import com.instructure.pandautils.room.offline.entities.QuizEntity
-import com.instructure.pandautils.room.offline.facade.AssignmentFacade
-import com.instructure.pandautils.room.offline.facade.ConferenceFacade
-import com.instructure.pandautils.room.offline.facade.CourseFacade
-import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
-import com.instructure.pandautils.room.offline.facade.ModuleFacade
-import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
-import com.instructure.pandautils.room.offline.facade.UserFacade
-import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.entities.*
-import com.instructure.pandautils.room.offline.facade.*
 
 const val COURSE_IDS = "course-ids"
 
@@ -90,7 +57,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val conferenceFacade: ConferenceFacade,
     private val discussionApi: DiscussionAPI.DiscussionInterface,
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface
+    private val announcementApi: AnnouncementAPI.AnnouncementInterface,
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val moduleFacade: ModuleFacade,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
