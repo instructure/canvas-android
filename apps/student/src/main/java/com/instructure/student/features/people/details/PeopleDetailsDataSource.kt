@@ -15,23 +15,13 @@
  *
  */
 
-package com.instructure.pandautils.room.offline.daos
+package com.instructure.student.features.people.details
 
-import androidx.room.*
-import com.instructure.pandautils.room.offline.entities.GradesEntity
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.User
 
-@Dao
-interface GradesDao {
+interface PeopleDetailsDataSource {
+    suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean = false): User?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: GradesEntity)
-
-    @Delete
-    suspend fun delete(entity: GradesEntity)
-
-    @Update
-    suspend fun update(entity: GradesEntity)
-
-    @Query("SELECT * FROM GradesEntity WHERE enrollmentId = :enrollmentId")
-    suspend fun findByEnrollmentId(enrollmentId: Long): GradesEntity?
+    suspend fun loadMessagePermission(canvasContext: CanvasContext, requestedPermissions: List<String> = emptyList(), user: User?, forceNetwork: Boolean = false): Boolean
 }

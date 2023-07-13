@@ -34,8 +34,8 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentPeopleListBinding
+import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.fragment.PeopleDetailsFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
