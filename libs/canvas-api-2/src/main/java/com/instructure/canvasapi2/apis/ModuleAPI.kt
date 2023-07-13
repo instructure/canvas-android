@@ -70,6 +70,9 @@ object ModuleAPI {
         @GET("{contextId}/module_item_sequence")
         fun getModuleItemSequence(@Path("contextId") contextId: Long, @Query("asset_type") assetType: String, @Query("asset_id") assetId: String) : Call<ModuleItemSequence>
 
+        @GET("{contextType}/{contextId}/module_item_sequence")
+        suspend fun getModuleItemSequence(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Query("asset_type") assetType: String, @Query("asset_id") assetId: String, @Tag params: RestParams) : DataResult<ModuleItemSequence>
+
         @GET("{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
         fun getModuleItem(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ModuleItem>
     }

@@ -62,6 +62,7 @@ import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import kotlinx.coroutines.Job

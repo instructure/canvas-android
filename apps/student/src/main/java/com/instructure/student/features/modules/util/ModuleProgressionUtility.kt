@@ -19,8 +19,7 @@ package com.instructure.student.features.modules.util
 import android.content.Context
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.student.fragment.CourseModuleProgressionFragment.Companion.shouldAddModuleItem
-import java.util.*
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment.Companion.shouldAddModuleItem
 
 object ModuleProgressionUtility {
     fun prepareModulesForCourseProgression(
