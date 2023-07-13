@@ -20,25 +20,44 @@ package com.instructure.pandautils.room.offline.facade
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
+import com.instructure.pandautils.room.offline.daos.GradesDao
+import com.instructure.pandautils.room.offline.daos.SectionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
+import com.instructure.pandautils.room.offline.entities.GradesEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
 
 class UserFacade(
-        private val userDao: UserDao,
-        private val enrollmentDao: EnrollmentDao,
+    private val userDao: UserDao,
+    private val enrollmentDao: EnrollmentDao,
+    private val gradesDao: GradesDao,
+    private val sectionDao: SectionDao,
 ) {
-    suspend fun insertUsers(userList: List<User>) {
+    suspend fun insertUsers(userList: List<User>, courseId: Long) {
         userList.forEach { user ->
             userDao.insert(UserEntity(user))
             user.enrollments.forEach { enrollment ->
                 enrollment.observedUser?.let { userDao.insert(UserEntity(it)) }
 
-                enrollmentDao.insert(EnrollmentEntity(
-                        enrollment,
-                        courseId = enrollment.courseId,
-                        observedUserId = enrollment.observedUser?.id,
-                ))
+                val courseSectionIds = sectionDao.findByCourseId(courseId).map { it.id }
+                val enrollmentId = if (courseSectionIds.contains(enrollment.courseSectionId)) {
+                    enrollmentDao.insert(EnrollmentEntity(
+                            enrollment,
+                            courseId = courseId,
+                            observedUserId = null
+                    ))
+                }
+                else {
+                    enrollmentDao.insert(EnrollmentEntity(
+                            enrollment.copy(courseSectionId = 0L),
+                            courseId = courseId,
+                            courseSectionId = null,
+                            observedUserId = null,
+                    ))
+                }
+
+
+                enrollment.grades?.let { grades -> gradesDao.insert(GradesEntity(grades, enrollmentId)) }
             }
         }
     }

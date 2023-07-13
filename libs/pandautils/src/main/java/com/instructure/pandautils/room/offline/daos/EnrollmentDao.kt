@@ -23,7 +23,7 @@ import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
 @Dao
 interface EnrollmentDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: EnrollmentEntity): Long
 
     @Delete

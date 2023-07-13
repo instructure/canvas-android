@@ -338,7 +338,9 @@ class OfflineModule {
     fun providePeopleFacade(
         userDao: UserDao,
         enrollmentDao: EnrollmentDao,
+        gradesDao: GradesDao,
+        sectionDao: SectionDao,
     ): UserFacade {
-        return UserFacade(userDao, enrollmentDao)
+        return UserFacade(userDao, enrollmentDao, gradesDao, sectionDao)
     }
 }
