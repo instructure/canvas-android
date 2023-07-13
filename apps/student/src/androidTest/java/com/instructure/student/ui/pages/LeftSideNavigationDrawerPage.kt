@@ -112,6 +112,14 @@ class LeftSideNavigationDrawerPage: BasePage() {
         Espresso.pressBack()
     }
 
+    fun openMenu() {
+        hamburgerButton.click()
+    }
+
+    fun assertDisplaysUserData() {
+        userName.assertDisplayed()
+    }
+
     /**
      * Custom ViewAction to set a SwitchCompat to the desired on/off position
      * [position]: true -> "on", false -> "off"
