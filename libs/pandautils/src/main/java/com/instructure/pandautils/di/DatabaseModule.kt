@@ -57,4 +57,10 @@ class DatabaseModule {
     fun provideDashboardFileUploadDao(appDatabase: AppDatabase): DashboardFileUploadDao {
         return appDatabase.dashboardFileUploadDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideEnvironmentFeatureFlagsDao(appDatabase: AppDatabase): EnvironmentFeatureFlagsDao {
+        return appDatabase.environmentFeatureFlagsDao()
+    }
 }

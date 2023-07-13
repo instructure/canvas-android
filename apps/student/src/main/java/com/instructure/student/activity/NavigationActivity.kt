@@ -45,6 +45,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -129,6 +130,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var updateManager: UpdateManager
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -266,6 +270,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupNavDrawerItems()
 
+        loadFeatureFlags()
+
         checkAppUpdates()
 
         val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
@@ -278,6 +284,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         requestNotificationsPermission()
+    }
+
+    private fun loadFeatureFlags() {
+        lifecycleScope.launch {
+            featureFlagProvider.loadEnvironmentFeatureFlags()
+        }
     }
 
     private fun requestNotificationsPermission() {
