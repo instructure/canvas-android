@@ -145,7 +145,7 @@ class FeatureFlagProviderTest {
         every { apiPrefs.user } returns User(id = 1L)
         coEvery { featuresApi.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(featureFlags)
 
-        featureFlagProvider.loadEnvironmentFeatureFlags()
+        featureFlagProvider.fetchEnvironmentFeatureFlags()
 
         coVerify(exactly = 1) { environmentFeatureFlags.insert(EnvironmentFeatureFlags(1L, featureFlags)) }
     }

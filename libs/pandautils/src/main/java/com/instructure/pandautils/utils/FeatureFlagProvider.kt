@@ -46,7 +46,7 @@ class FeatureFlagProvider(
         return BuildConfig.IS_DEBUG
     }
 
-    suspend fun loadEnvironmentFeatureFlags() {
+    suspend fun fetchEnvironmentFeatureFlags() {
         val restParams = RestParams(isForceReadFromNetwork = false)
         val featureFlags = featuresApi.getEnvironmentFeatureFlags(restParams).dataOrNull ?: return
         apiPrefs.user?.id?.let {

@@ -288,7 +288,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun loadFeatureFlags() {
         lifecycleScope.launch {
-            featureFlagProvider.loadEnvironmentFeatureFlags()
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
         }
     }
 
