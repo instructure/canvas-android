@@ -63,6 +63,11 @@ class ModuleFacade(
         return moduleObjects.map { moduleObjectEntity -> createModuleObjectApiModel(moduleObjectEntity) }
     }
 
+    suspend fun getModuleObjectById(moduleId: Long): ModuleObject? {
+        val moduleObjectEntity = moduleObjectDao.findById(moduleId)
+        return moduleObjectEntity?.let { createModuleObjectApiModel(it) }
+    }
+
     private suspend fun createModuleObjectApiModel(moduleObjectEntity: ModuleObjectEntity): ModuleObject {
         val moduleItems = moduleItemDao.findByModuleId(moduleObjectEntity.id).map { createModuleItemApiModel(it) }
         return moduleObjectEntity.toApiModel(moduleItems)
@@ -79,5 +84,20 @@ class ModuleFacade(
         val moduleContentDetails = moduleContentDetailsDao.findById(moduleItemEntity.id)?.toApiModel(lockInfo)
         val masteryPath = masteryPathFacade.getMasteryPath(moduleItemEntity.id)
         return moduleItemEntity.toApiModel(completionRequirement, moduleContentDetails, masteryPath)
+    }
+
+    suspend fun getModuleItemById(moduleItemId: Long): ModuleItem? {
+        val moduleItemEntity = moduleItemDao.findById(moduleItemId)
+        return moduleItemEntity?.let { createModuleItemApiModel(it) }
+    }
+
+    suspend fun getModuleItemByAssetIdAndType(assetType: String, assetId: Long): ModuleItem? {
+        val moduleItemEntity = moduleItemDao.findByTypeAndContentId(assetType, assetId)
+        return moduleItemEntity?.let { createModuleItemApiModel(it) }
+    }
+
+    suspend fun getModuleItemForPage(pageUrl: String): ModuleItem? {
+        val moduleItemEntity = moduleItemDao.findByPageUrl(pageUrl)
+        return moduleItemEntity?.let { createModuleItemApiModel(it) }
     }
 }

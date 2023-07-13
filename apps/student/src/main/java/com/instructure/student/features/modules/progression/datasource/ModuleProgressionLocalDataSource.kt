@@ -19,14 +19,33 @@ package com.instructure.student.features.modules.progression.datasource
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
+import com.instructure.student.features.modules.progression.ModuleItemAsset
 
 class ModuleProgressionLocalDataSource(private val moduleFacade: ModuleFacade) : ModuleProgressionDataSource {
     override suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
-        TODO("Not yet implemented")
+        return moduleFacade.getModuleItems(moduleId)
     }
 
     override suspend fun getModuleItemSequence(canvasContext: CanvasContext, assetType: String, assetId: String, forceNetwork: Boolean): ModuleItemSequence {
-        TODO("Not yet implemented")
+        val moduleItem = when (assetType) {
+            ModuleItemAsset.MODULE_ITEM.assetType -> {
+                moduleFacade.getModuleItemById(assetId.toLong())
+            }
+            ModuleItemAsset.PAGE.assetType -> {
+                moduleFacade.getModuleItemForPage(assetId)
+            }
+            else -> {
+                moduleFacade.getModuleItemByAssetIdAndType(assetType, assetId.toLong())
+            }
+        }
+
+        if (moduleItem == null) return ModuleItemSequence()
+
+        val moduleObject = moduleFacade.getModuleObjectById(moduleItem.moduleId)
+        val modules = if (moduleObject != null) arrayOf(moduleObject) else emptyArray()
+
+        return ModuleItemSequence(arrayOf(ModuleItemWrapper(current = moduleItem)), modules)
     }
 }
