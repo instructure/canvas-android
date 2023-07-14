@@ -14,6 +14,7 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -25,15 +26,40 @@ import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
+
 class LeftSideNavigationDrawerPage: BasePage() {
 
-    private val settings by OnViewWithId(R.id.navigationDrawerSettings)
+    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
+
+    // User data
+    private val profileImage by OnViewWithId(R.id.navigationDrawerProfileImage)
     private val userName by OnViewWithId(R.id.navigationDrawerUserName)
     private val userEmail by OnViewWithId(R.id.navigationDrawerUserEmail)
+
+    // Navigation items
+    private val files by OnViewWithId(R.id.navigationDrawerItem_files)
+    private val bookmarks by OnViewWithId(R.id.navigationDrawerItem_bookmarks)
+    private val studio by OnViewWithId(R.id.navigationDrawerItem_studio)
+    private val gauge by OnViewWithId(R.id.navigationDrawerItem_gauge)
+    private val settings by OnViewWithId(R.id.navigationDrawerSettings)
+
+    // Divider
+    private val optionsDivider by OnViewWithId(R.id.navigationMenuItemsDivider)
+    private val optionsDividerTitle by OnViewWithId(R.id.optionsMenuTitle)
+
+    //Option items
+    private val showGrades by OnViewWithId(R.id.navigationDrawerItem_showGrades)
+    private val colorOverlay by OnViewWithId(R.id.navigationDrawerItem_colorOverlay)
+
+    // Divider
+    private val accountDivider by OnViewWithId(R.id.optionsMenuItemsDivider)
+
+    // Account items
+    private val help by OnViewWithId(R.id.navigationDrawerItem_help)
     private val changeUser by OnViewWithId(R.id.navigationDrawerItem_changeUser)
+    private val actAsUser by OnViewWithId(R.id.navigationDrawerItem_startMasquerading)
     private val logoutButton by OnViewWithId(R.id.navigationDrawerItem_logout)
     private val version by OnViewWithId(R.id.navigationDrawerVersion)
-    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
     // in the UI stack.  We want to choose the one that is displayed.
@@ -116,8 +142,60 @@ class LeftSideNavigationDrawerPage: BasePage() {
         hamburgerButton.click()
     }
 
-    fun assertDisplaysUserData() {
+    fun assertUserDataDisplayed() {
+        profileImage.assertDisplayed()
         userName.assertDisplayed()
+        userEmail.assertDisplayed()
+    }
+
+    fun assertElementaryNavigationMenuItemsDisplayed() {
+        files.assertDisplayed()
+        settings.assertDisplayed()
+
+        bookmarks.assertNotDisplayed()
+        studio.assertNotDisplayed()
+        gauge.assertNotDisplayed()
+    }
+
+    fun assertDefaultNavigationMenuItemsDisplayed() {
+        files.assertDisplayed()
+        bookmarks.assertDisplayed()
+        settings.assertDisplayed()
+
+        studio.assertNotDisplayed()
+        gauge.assertNotDisplayed()
+    }
+
+    fun assertElementaryOptionsMenuItemsDisplayed() {
+        optionsDividerTitle.assertNotDisplayed()
+        showGrades.assertNotDisplayed()
+        colorOverlay.assertNotDisplayed()
+    }
+
+    fun assertDefaultOptionsMenuItemsDisplayed() {
+        optionsDivider.assertDisplayed()
+        optionsDividerTitle.assertDisplayed()
+        showGrades.assertDisplayed()
+        colorOverlay.assertDisplayed()
+    }
+
+    fun assertElementaryAccountMenuItemsDisplayed() {
+        help.assertDisplayed()
+        changeUser.assertDisplayed()
+        actAsUser.assertNotDisplayed()
+        logoutButton.assertDisplayed()
+    }
+
+    fun assertDefaultAccountMenuItemsDisplayed() {
+        accountDivider.assertDisplayed()
+        help.assertDisplayed()
+        changeUser.assertDisplayed()
+        actAsUser.assertNotDisplayed()
+        logoutButton.assertDisplayed()
+    }
+
+    fun assertVersionNumberDisplayed() {
+        version.assertDisplayed()
     }
 
     /**
