@@ -31,11 +31,30 @@ import org.hamcrest.Matcher
  */
 class LeftSideNavigationDrawerPage: BasePage() {
 
+    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
+
+    // User data
+    private val profileImage by OnViewWithId(R.id.navigationDrawerProfileImage)
     private val userName by OnViewWithId(R.id.navigationDrawerUserName)
     private val userEmail by OnViewWithId(R.id.navigationDrawerUserEmail)
+
+    // Navigation items
+    private val files by OnViewWithId(R.id.navigationDrawerItem_files)
+    private val studio by OnViewWithId(R.id.navigationDrawerItem_arc)
+    private val gauge by OnViewWithId(R.id.navigationDrawerItem_gauge)
+    private val settings by OnViewWithId(R.id.navigationDrawerSettings)
+
+    //Option items
+    private val colorOverlay by OnViewWithId(R.id.navigationDrawerItem_colorOverlay)
+
+    // Account items
+    private val help by OnViewWithId(R.id.navigationDrawerItem_help)
+    private val changeUser by OnViewWithId(R.id.navigationDrawerItem_changeUser)
     private val logoutButton by OnViewWithId(R.id.navigationDrawerItem_logout)
+    private val actAsUser by OnViewWithId(R.id.navigationDrawerItem_startMasquerading)
+    private val stopActAsUser by OnViewWithId(R.id.navigationDrawerItem_stopMasquerading)
     private val version by OnViewWithId(R.id.navigationDrawerVersion)
-    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
+
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
     // in the UI stack.  We want to choose the one that is displayed.
@@ -117,6 +136,35 @@ class LeftSideNavigationDrawerPage: BasePage() {
         onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()
         Espresso.pressBack()
+    }
+
+    fun openMenu() {
+        hamburgerButton.click()
+    }
+
+    fun assertUserDataDisplayed() {
+        profileImage.assertDisplayed()
+        userName.assertDisplayed()
+        userEmail.assertDisplayed()
+    }
+
+    fun assertNavigationItemsDisplayed() {
+        files.assertDisplayed()
+        settings.assertDisplayed()
+    }
+
+    fun assertOptionItemsDisplayed() {
+        colorOverlay.assertDisplayed()
+    }
+
+    fun assertAccountItemsDisplayed() {
+        help.assertDisplayed()
+        changeUser.assertDisplayed()
+        logoutButton.assertDisplayed()
+    }
+
+    fun assertVersionNumberDisplayed() {
+        version.assertDisplayed()
     }
 
     /**
