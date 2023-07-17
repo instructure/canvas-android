@@ -20,15 +20,17 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionDataSource
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionLocalDataSource
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionNetworkDataSource
+import okhttp3.ResponseBody
 
 class ModuleProgressionRepository(
     localDataSource: ModuleProgressionLocalDataSource,
-    networkDataSource: ModuleProgressionNetworkDataSource,
+    private val networkDataSource: ModuleProgressionNetworkDataSource,
     networkStateProvider: NetworkStateProvider
 ) : Repository<ModuleProgressionDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
@@ -42,6 +44,18 @@ class ModuleProgressionRepository(
 
     suspend fun getDetailedQuiz(url: String, quizId: Long, forceNetwork: Boolean): Quiz {
         return dataSource.getDetailedQuiz(url, quizId, forceNetwork)
+    }
+
+    suspend fun markAsNotDone(canvasContext: CanvasContext, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return networkDataSource.markAsNotDone(canvasContext, moduleItem)
+    }
+
+    suspend fun markAsDone(canvasContext: CanvasContext, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return networkDataSource.markAsDone(canvasContext, moduleItem)
+    }
+
+    suspend fun markAsRead(canvasContext: CanvasContext, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return networkDataSource.markAsRead(canvasContext, moduleItem)
     }
 
 }

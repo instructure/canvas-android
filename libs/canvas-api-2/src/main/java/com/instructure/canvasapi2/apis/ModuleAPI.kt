@@ -58,11 +58,14 @@ object ModuleAPI {
         @POST("{contextId}/modules/{moduleId}/items/{itemId}/mark_read")
         fun markModuleItemRead(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ResponseBody>
 
-        @PUT("{contextId}/modules/{moduleId}/items/{itemId}/done")
-        fun markModuleAsDone(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ResponseBody>
+        @POST("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}/mark_read")
+        suspend fun markModuleItemRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Tag params: RestParams) : DataResult<ResponseBody>
 
-        @DELETE("{contextId}/modules/{moduleId}/items/{itemId}/done")
-        fun markModuleAsNotDone(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long): Call<ResponseBody>
+        @PUT("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}/done")
+        suspend fun markModuleItemAsDone(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Tag params: RestParams) : DataResult<ResponseBody>
+
+        @DELETE("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}/done")
+        suspend fun markModuleItemAsNotDone(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Tag params: RestParams): DataResult<ResponseBody>
 
         @POST("{contextId}/modules/{moduleId}/items/{itemId}/select_mastery_path")
         fun selectMasteryPath(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Query("assignment_set_id") assignmentSetId: Long) : Call<MasteryPathSelectResponse>
@@ -123,14 +126,6 @@ object ModuleAPI {
 
     fun markModuleItemAsRead(adapter: RestBuilder, params: RestParams,canvasContext: CanvasContext, moduleId: Long, itemId: Long, callback: StatusCallback<ResponseBody>) {
         callback.addCall(adapter.build(ModuleInterface::class.java, params).markModuleItemRead(canvasContext.id, moduleId, itemId)).enqueue(callback)
-    }
-
-    fun markModuleAsDone(adapter: RestBuilder, params: RestParams,canvasContext: CanvasContext, moduleId: Long, itemId: Long, callback: StatusCallback<ResponseBody>) {
-        callback.addCall(adapter.build(ModuleInterface::class.java, params).markModuleAsDone(canvasContext.id, moduleId, itemId)).enqueue(callback)
-    }
-
-    fun markModuleAsNotDone(adapter: RestBuilder, params: RestParams,canvasContext: CanvasContext, moduleId: Long, itemId: Long, callback: StatusCallback<ResponseBody>) {
-        callback.addCall(adapter.build(ModuleInterface::class.java, params).markModuleAsNotDone(canvasContext.id, moduleId, itemId)).enqueue(callback)
     }
 
     fun selectMasteryPath(adapter: RestBuilder, params: RestParams,canvasContext: CanvasContext, moduleId: Long, itemId: Long, assignmentSetId: Long, callback: StatusCallback<MasteryPathSelectResponse>) {

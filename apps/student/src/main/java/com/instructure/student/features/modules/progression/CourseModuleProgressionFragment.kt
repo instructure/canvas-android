@@ -27,14 +27,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.ModuleObject.State
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -67,8 +64,6 @@ import com.instructure.student.util.CourseModulesStore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 @PageView(url = "courses/{canvasContext}/modules")
@@ -204,20 +199,14 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         binding.markDoneButton.setOnClickListener {
             val moduleItem = getModelObject()
             if (moduleItem?.completionRequirement != null) {
-                if (moduleItem.completionRequirement!!.completed) {
-                    ModuleManager.markAsNotDone(canvasContext, moduleItem.moduleId, moduleItem.id,
-                            object : StatusCallback<ResponseBody>() {
-                                override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {
-                                    setMarkDone(moduleItem, false)
-                                }
-                            })
-                } else {
-                    ModuleManager.markAsDone(canvasContext, moduleItem.moduleId, moduleItem.id,
-                            object : StatusCallback<ResponseBody>() {
-                                override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {
-                                    setMarkDone(moduleItem, true)
-                                }
-                            })
+                lifecycleScope.launch {
+                    if (moduleItem.completionRequirement!!.completed) {
+                        val result = repository.markAsNotDone(canvasContext, moduleItem)
+                        if (result.isSuccess) setMarkDone(moduleItem, false)
+                    } else {
+                        val result = repository.markAsDone(canvasContext, moduleItem)
+                        if (result.isSuccess) setMarkDone(moduleItem, true)
+                    }
                 }
             }
         }
@@ -313,18 +302,18 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             addLockedIconIfNeeded(modules, items, groupPos, childPos)
 
             // Mark the item as viewed
-            markAsRead(currentModuleItem.moduleId, currentModuleItem.id)
+            markAsRead(currentModuleItem)
         }
 
         updateModuleMarkDoneView(currentModuleItem)
     }
 
-    private fun markAsRead(moduleId: Long, moduleItemId: Long) {
+    private fun markAsRead(moduleItem: ModuleItem) {
         markAsReadJob = tryWeave {
             // mark the moduleItem as viewed if we have a valid module id and item id,
             // but not the files, because they need to open or download those to view them
-            if (moduleId != 0L && moduleItemId != 0L && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()) {
-                awaitApi { ModuleManager.markModuleItemAsRead(canvasContext, moduleId, moduleItemId, it) }
+            if (moduleItem.moduleId != 0L && moduleItem.id != 0L && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()) {
+                repository.markAsRead(canvasContext, moduleItem)
 
                 // Update the module item locally, needed to unlock modules as the user ViewPages through them
                 getCurrentModuleItem(currentPos)?.completionRequirement?.completed = true
@@ -332,8 +321,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 setupNextModule(getModuleItemGroup(currentPos))
 
                 // Update the module state to indicate in the list that the module is completed
-                val module = modules.find { it.id == moduleId } ?: return@tryWeave
-                val isModuleCompleted = items.flatten().filter { it.moduleId == moduleId }.all { it.completionRequirement?.completed.orDefault() }
+                val module = modules.find { it.id == moduleItem.moduleId } ?: return@tryWeave
+                val isModuleCompleted = items.flatten().filter { it.moduleId == moduleItem.moduleId }.all { it.completionRequirement?.completed.orDefault() }
                 val updatedState = if (isModuleCompleted) State.Completed.apiString else module.state
 
                 // Update the module list fragment to show that these requirements are done,

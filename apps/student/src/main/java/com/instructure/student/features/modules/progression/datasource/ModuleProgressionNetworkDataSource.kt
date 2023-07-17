@@ -23,7 +23,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import okhttp3.ResponseBody
 
 class ModuleProgressionNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterface, private val quizApi: QuizAPI.QuizInterface) : ModuleProgressionDataSource {
     override suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
@@ -41,5 +43,17 @@ class ModuleProgressionNetworkDataSource(private val moduleApi: ModuleAPI.Module
     override suspend fun getDetailedQuiz(url: String, quizId: Long, forceNetwork: Boolean): Quiz {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return quizApi.getDetailedQuizByUrl(url, params).dataOrThrow
+    }
+
+    suspend fun markAsNotDone(canvasContext: CanvasContext, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsNotDone(canvasContext.apiContext(), canvasContext.id, moduleItem.moduleId, moduleItem.id, RestParams())
+    }
+
+    suspend fun markAsDone(canvasContext: CanvasContext, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsDone(canvasContext.apiContext(), canvasContext.id, moduleItem.moduleId, moduleItem.id, RestParams())
+    }
+
+    suspend fun markAsRead(canvasContext: CanvasContext, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemRead(canvasContext.apiContext(), canvasContext.id, moduleItem.moduleId, moduleItem.id, RestParams())
     }
 }
