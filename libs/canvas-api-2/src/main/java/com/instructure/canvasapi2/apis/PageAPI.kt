@@ -41,6 +41,11 @@ object PageAPI {
             @Path("contextId") contextId: Long, @Path("contextType") contextType: String, @Tag params: RestParams
         ): DataResult<List<Page>>
 
+        @GET("{contextType}/{contextId}/pages?sort=title&order=asc&include[]=body")
+        suspend fun getFirstPagePagesWithBody(
+            @Path("contextId") contextId: Long, @Path("contextType") contextType: String, @Tag params: RestParams
+        ): DataResult<List<Page>>
+
         @GET
         fun getNextPagePagesList(
             @Url nextURL: String
