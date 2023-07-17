@@ -3,6 +3,8 @@ package com.instructure.student.features.people.list
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
+import com.instructure.pandautils.room.offline.daos.GradesDao
+import com.instructure.pandautils.room.offline.daos.SectionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
@@ -21,8 +23,10 @@ import org.junit.Test
 class UserFacadeTest {
     private val userDao: UserDao = mockk(relaxed = true)
     private val enrollmentDao: EnrollmentDao = mockk(relaxed = true)
+    private val gradesDao: GradesDao = mockk(relaxed = true)
+    private val sectionDao: SectionDao = mockk(relaxed = true)
 
-    private val userFacade = UserFacade(userDao, enrollmentDao)
+    private val userFacade = UserFacade(userDao, enrollmentDao, gradesDao, sectionDao)
 
     @Test
     fun `Get users as api model`() = runTest {
@@ -50,7 +54,7 @@ class UserFacadeTest {
         coEvery { userDao.insert(any()) } just Runs
         coEvery { enrollmentDao.insert(any()) } returns 1L
 
-        userFacade.insertUsers(users)
+        userFacade.insertUsers(users, 1L)
 
         coVerify(exactly = 2) { userDao.insert(any()) }
         coVerify(exactly = 3) { enrollmentDao.insert(any()) }

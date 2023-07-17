@@ -75,6 +75,9 @@ object GroupAPI {
 
         @GET("groups/{groupId}/permissions")
         fun getGroupPermissions(@Path("groupId") groupId: Long, @Query("permissions[]") requestedPermissions: List<String>): Call<CanvasContextPermission>
+
+        @GET("groups/{groupId}/permissions")
+        suspend fun getGroupPermissions(@Path("groupId") groupId: Long, @Query("permissions[]") requestedPermissions: List<String>, @Tag params: RestParams): DataResult<CanvasContextPermission>
     }
 
     fun getFirstPageGroups(adapter: RestBuilder, callback: StatusCallback<List<Group>>, params: RestParams) {

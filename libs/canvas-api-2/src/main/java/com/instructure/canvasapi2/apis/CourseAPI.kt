@@ -139,6 +139,9 @@ object CourseAPI {
         @GET("courses/{courseId}/permissions")
         fun getCoursePermissions(@Path("courseId") courseId: Long, @Query("permissions[]") requestedPermissions: List<String>): Call<CanvasContextPermission>
 
+        @GET("courses/{courseId}/permissions")
+        suspend fun getCoursePermissions(@Path("courseId") courseId: Long, @Query("permissions[]") requestedPermissions: List<String>, @Tag params: RestParams): DataResult<CanvasContextPermission>
+
         @GET("courses/{courseId}/enrollments?state[]=current_and_concluded")
         fun getUserEnrollmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("user_id") userId: Long, @Query("grading_period_id") gradingPeriodId: Long): Call<List<Enrollment>>
 

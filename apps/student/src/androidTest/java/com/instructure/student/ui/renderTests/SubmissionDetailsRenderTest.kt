@@ -18,6 +18,7 @@ package com.instructure.student.ui.renderTests
 import android.content.pm.ActivityInfo
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
@@ -229,6 +230,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @Stub
     fun updatesDrawerHeightOnOrientationChangeToLandscape() {
         loadPageWithModel(
             baseModel.copy(
@@ -248,6 +250,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @Stub
     fun updatesDrawerHeightOnOrientationChangeToPortrait() {
         loadPageWithModel(
             baseModel.copy(

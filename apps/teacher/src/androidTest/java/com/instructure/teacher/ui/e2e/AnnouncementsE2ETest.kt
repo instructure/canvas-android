@@ -29,6 +29,11 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+/**
+ * Announcements e2e test
+ *
+ * @constructor Create empty Announcements e2e test
+ */
 @HiltAndroidTest
 class AnnouncementsE2ETest : TeacherTest() {
 
@@ -36,6 +41,10 @@ class AnnouncementsE2ETest : TeacherTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    /**
+     * Test announcements e2e
+     *
+     */
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.E2E)

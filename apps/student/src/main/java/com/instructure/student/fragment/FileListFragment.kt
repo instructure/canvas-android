@@ -83,7 +83,10 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             if (canvasContext.type == CanvasContext.Type.USER) {
                 url += "users_${canvasContext.id}/"
             }
-            url += folder?.fullName?.split(" ", limit = 2)?.get(1)?.replaceFirst("files/", "") ?: ""
+            val fullNameParts = folder?.fullName?.split("/", limit = 2)
+            if ((fullNameParts?.size ?: 0) > 1) {
+                url += fullNameParts?.get(1) ?: ""
+            }
         }
 
         return url

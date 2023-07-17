@@ -78,12 +78,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(CourseModuleProgressionBinding::bind)
 
-    private val discussionRouteHelper = DiscussionRouteHelper(
-        FeaturesManager,
-        FeatureFlagProvider(UserManager, ApiPrefs),
-        DiscussionManager,
-        GroupManager
-    )
+    @Inject
+    lateinit var discussionRouteHelper: DiscussionRouteHelper
 
     @Inject
     lateinit var repository: ModuleProgressionRepository

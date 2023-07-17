@@ -25,6 +25,12 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
 
+/**
+ * The `EditProfileSettingsPage` class represents a page for editing profile settings.
+ * It extends the `BasePage` class.
+ *
+ * @constructor Creates an instance of `EditProfileSettingsPage`.
+ */
 class EditProfileSettingsPage : BasePage(R.id.editProfileSettingsPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
@@ -33,19 +39,28 @@ class EditProfileSettingsPage : BasePage(R.id.editProfileSettingsPage) {
     private val usersName by OnViewWithId(R.id.usersName)
     private val profileCameraIcon by OnViewWithId(R.id.profileCameraIcon)
 
+    /**
+     * Clicks on the save button to save the profile settings.
+     */
     fun clickOnSave() {
         onView(withId(R.id.menuSave)).click()
     }
 
+    /**
+     * Edits the user name with the specified new user name.
+     *
+     * @param newUserName The new user name to be set.
+     */
     fun editUserName(newUserName: String) {
         clearUserNameInputField()
         usersName.typeText(newUserName)
     }
 
-    fun clearUserNameInputField() {
+    /**
+     * Clears the user name input field.
+     */
+    private fun clearUserNameInputField() {
         usersName.clearText()
     }
-
-
-
 }
+

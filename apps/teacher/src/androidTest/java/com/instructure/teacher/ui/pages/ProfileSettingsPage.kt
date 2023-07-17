@@ -25,6 +25,15 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 
+/**
+ * Represents the Profile Settings Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the elements on the "Profile Settings" page.
+ * It contains properties for accessing various views on the page such as the toolbar, profile banner, user's avatar, user's name, user's email, and user's bio.
+ * Additionally, it provides methods for clicking on the edit pencil icon and asserting the user's name.
+ *
+ * @param pageId The ID of the profile settings page.
+ */
 open class ProfileSettingsPage : BasePage(R.id.profileSettingsPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
@@ -34,10 +43,18 @@ open class ProfileSettingsPage : BasePage(R.id.profileSettingsPage) {
     private val usersEmail by OnViewWithId(R.id.usersEmail)
     private val usersBio by OnViewWithId(R.id.usersBio)
 
+    /**
+     * Clicks on the edit pencil icon.
+     */
     fun clickEditPencilIcon() {
         onView(withId(R.id.menu_edit)).click()
     }
 
+    /**
+     * Asserts that the user's name is as expected.
+     *
+     * @param expectedName The expected name of the user.
+     */
     fun assertUserNameIs(expectedName: String) {
         usersName.check(matches(withText(expectedName)))
     }

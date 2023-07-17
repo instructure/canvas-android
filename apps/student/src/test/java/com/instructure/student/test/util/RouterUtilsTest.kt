@@ -30,6 +30,8 @@ import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragm
 import com.instructure.student.features.assignmentlist.AssignmentListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.people.details.PeopleDetailsFragment
+import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.pages.list.PageListFragment
