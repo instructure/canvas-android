@@ -149,7 +149,7 @@ class ModuleQuizDecider : ParentFragment() {
         binding.toolbar.title = quiz.title.validOrNull() ?: getString(R.string.quizzes)
 
         ViewStyler.themeButton(binding.goToQuiz)
-        binding.goToQuiz.onClick {
+        binding.goToQuiz.onClickWithRequireNetwork {
             val route = BasicQuizViewFragment.makeRoute(canvasContext, quiz, baseURL)
             route.ignoreDebounce = true
             RouteMatcher.route(requireActivity(), route)
