@@ -111,6 +111,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     @Inject
     lateinit var typefaceBehaviour: TypefaceBehavior
 
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
 
@@ -206,6 +209,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             }
         }
 
+        fetchFeatureFlags()
+
         requestNotificationsPermission()
     }
 
@@ -224,6 +229,12 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             } catch(e: IOException) {
                 LoggingUtility.log(e.stackTrace.toString(), Log.WARN)
             }
+        }
+    }
+
+    private fun fetchFeatureFlags() {
+        lifecycleScope.launch {
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
         }
     }
 

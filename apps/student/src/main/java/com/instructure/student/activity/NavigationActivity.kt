@@ -45,6 +45,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -137,6 +138,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var databaseProvider: DatabaseProvider
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -282,6 +286,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupNavDrawerItems()
 
+        loadFeatureFlags()
+
         checkAppUpdates()
 
         val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
@@ -297,6 +303,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         if (!networkStateProvider.isOnline()) {
             Snackbar.make(binding.fullScreenCoordinatorLayout, R.string.offlineModeSnackbar, Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private fun loadFeatureFlags() {
+        lifecycleScope.launch {
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
         }
     }
 

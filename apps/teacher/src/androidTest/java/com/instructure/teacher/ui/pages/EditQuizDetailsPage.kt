@@ -17,18 +17,38 @@
 package com.instructure.teacher.ui.pages
 
 
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.PickerActions
-import androidx.test.espresso.matcher.ViewMatchers.*
-import android.widget.DatePicker
-import android.widget.TimePicker
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.espresso.*
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.canvas.espresso.has
 import com.instructure.canvas.espresso.hasTextInputLayoutErrorText
 import com.instructure.canvas.espresso.withIndex
-import com.instructure.espresso.page.*
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.espresso.ClickUntilMethod
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithContentDescription
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithClassName
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.waitScrollClick
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.randomString
+import com.instructure.espresso.replaceText
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import com.instructure.teacher.view.AssignmentOverrideView
 import org.hamcrest.CoreMatchers.allOf
@@ -36,6 +56,10 @@ import org.hamcrest.Matchers
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * The `EditQuizDetailsPage` class represents a page for editing quiz details.
+ * It extends the `BasePage` class.
+ */
 class EditQuizDetailsPage : BasePage() {
 
     private val quizTitleEditText by OnViewWithId(R.id.editQuizTitle)
@@ -44,30 +68,49 @@ class EditQuizDetailsPage : BasePage() {
     private val accessCodeEditText by WaitForViewWithId(R.id.editAccessCode)
     private val saveButton by OnViewWithId(R.id.menuSave)
     private val descriptionWebView by OnViewWithId(R.id.descriptionWebView, autoAssert = false)
-    private val noDescriptionTextView by OnViewWithId(R.id.noDescriptionTextView, autoAssert = false)
+    private val noDescriptionTextView by OnViewWithId(
+        R.id.noDescriptionTextView,
+        autoAssert = false
+    )
 
+    /**
+     * Saves the quiz by clicking the save button.
+     */
     fun saveQuiz() {
         saveButton.click()
     }
 
+    /**
+     * Edits the quiz title with the specified new name.
+     *
+     * @param newName The new name to be set as the quiz title.
+     */
     fun editQuizTitle(newName: String) {
-        // Combination of scroll and click randomly selects the text sometimes.
-        // This opens a contextual menu and blocks the background view to receive focus and fails the test.
-        // That is why, `quizTitleEditText.scrollTo()` is not needed.
         quizTitleEditText.replaceText(newName)
         saveQuiz()
     }
 
+    /**
+     * Clicks on the access code switch to toggle its state.
+     */
     fun clickAccessCode() {
         accessCodeSwitch.scrollTo()
         accessCodeSwitch.click()
     }
 
+    /**
+     * Clicks on the access code edit text field.
+     */
     fun clickAccessCodeEditText() {
         accessCodeEditText.scrollTo()
         accessCodeEditText.click()
     }
 
+    /**
+     * Edits the access code for the quiz and saves it.
+     *
+     * @return The new access code.
+     */
     fun editAccessCode(): String {
         val code = randomString()
         accessCodeEditText.scrollTo()
@@ -76,70 +119,142 @@ class EditQuizDetailsPage : BasePage() {
         return code
     }
 
+    /**
+     * Edits the date of the quiz with the specified year, month, and day.
+     *
+     * @param year The year value.
+     * @param month The month value (0-11).
+     * @param dayOfMonth The day of the month value.
+     */
     fun editDate(year: Int, month: Int, dayOfMonth: Int) {
         waitForViewWithClassName(Matchers.equalTo<String>(DatePicker::class.java.name))
-                .perform(PickerActions.setDate(year, month, dayOfMonth))
+            .perform(PickerActions.setDate(year, month, dayOfMonth))
         onViewWithId(android.R.id.button1).click()
     }
 
+    /**
+     * Edits the time of the quiz with the specified hour and minute.
+     *
+     * @param hour The hour value.
+     * @param min The minute value.
+     */
     fun editTime(hour: Int, min: Int) {
         waitForViewWithClassName(Matchers.equalTo<String>(TimePicker::class.java.name))
-                .perform(PickerActions.setTime(hour, min))
+            .perform(PickerActions.setTime(hour, min))
         onViewWithId(android.R.id.button1).click()
     }
 
+    /**
+     * Removes the second override for the quiz.
+     */
     fun removeSecondOverride() {
-        // scroll to bottom to make the 2nd override button visible
         addOverrideButton().scrollTo()
-
         onViewWithContentDescription("remove_override_button_1").scrollTo()
         ClickUntilMethod.run(
-                onView(withContentDescription("remove_override_button_1")),
-                onView(withText("Remove Due Date"))
+            onView(withContentDescription("remove_override_button_1")),
+            onView(withText("Remove Due Date"))
         )
-
-        // Wait for alert dialog to display before clicking "Remove"
         waitForViewWithText(R.string.removeDueDate).assertVisible()
         waitForViewWithText(R.string.remove).click()
     }
 
+    /**
+     * Asserts that the date has changed to the specified year, month, and day.
+     *
+     * @param year The expected year value.
+     * @param month The expected month value (0-11).
+     * * @param dayOfMonth The expected day of the month value.
+     * @param id The resource ID of the view displaying the date.
+     */
     fun assertDateChanged(year: Int, month: Int, dayOfMonth: Int, id: Int) {
         val cal = Calendar.getInstance().apply { set(year, month, dayOfMonth) }
         waitForViewWithId(id).assertHasText(DateHelper.fullMonthNoLeadingZeroDateFormat.format(cal.time))
     }
 
+    /**
+     * Asserts that the time has changed to the specified hour and minute.
+     *
+     * @param hour The expected hour value.
+     * @param min The expected minute value.
+     * @param id The resource ID of the view displaying the time.
+     */
     fun assertTimeChanged(hour: Int, min: Int, id: Int) {
         val cal = Calendar.getInstance().apply { set(0, 0, 0, hour, min) }
         val sdh = SimpleDateFormat("H:mm a", Locale.US)
         waitForViewWithId(id).assertHasText(sdh.format(cal.time))
     }
 
+    /**
+     * Asserts that a new override has been created for the quiz.
+     */
     fun assertNewOverrideCreated() {
-        waitForViewWithId(R.id.overrideContainer).check(has(2, Matchers.instanceOf(AssignmentOverrideView::class.java)))
+        waitForViewWithId(R.id.overrideContainer).check(
+            has(
+                2,
+                Matchers.instanceOf(AssignmentOverrideView::class.java)
+            )
+        )
     }
 
+    /**
+     * Asserts that an override has been removed from the quiz.
+     */
     fun assertOverrideRemoved() {
-        waitForViewWithId(R.id.overrideContainer).check(has(1, Matchers.instanceOf(AssignmentOverrideView::class.java)))
+        waitForViewWithId(R.id.overrideContainer).check(
+            has(
+                1,
+                Matchers.instanceOf(AssignmentOverrideView::class.java)
+            )
+        )
     }
 
+    /**
+     * Asserts that the "Due Date Before Unlock Date" error message is shown.
+     */
     fun assertDueDateBeforeUnlockDateErrorShown() {
-        waitForViewWithId(R.id.fromDateTextInput).check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.unlock_after_due_date_error)))
+        waitForViewWithId(R.id.fromDateTextInput).check(
+            ViewAssertions.matches(
+                hasTextInputLayoutErrorText(R.string.unlock_after_due_date_error)
+            )
+        )
     }
 
+    /**
+     * Asserts that the "Due Date After Lock Date" error message is shown.
+     */
     fun assertDueDateAfterLockDateErrorShown() {
-        waitForViewWithId(R.id.toDateTextInput).check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.lock_before_due_date_error)))
+        waitForViewWithId(R.id.toDateTextInput).check(
+            ViewAssertions.matches(
+                hasTextInputLayoutErrorText(R.string.lock_before_due_date_error)
+            )
+        )
     }
 
+    /**
+     * Asserts that the "Lock Date After Unlock Date" error message is shown.
+     */
     fun assertLockDateAfterUnlockDateErrorShown() {
-        waitForViewWithId(R.id.toDateTextInput).check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.lock_after_unlock_error)))
+        waitForViewWithId(R.id.toDateTextInput).check(
+            ViewAssertions.matches(
+                hasTextInputLayoutErrorText(R.string.lock_after_unlock_error)
+            )
+        )
     }
 
+    /**
+     * Asserts that the "No Assignees" error message is shown.
+     */
     fun assertNoAssigneesErrorShown() {
-        Espresso.onView(withIndex(withId(R.id.assignToTextInput), 1)).check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.assignee_blank_error)))
+        Espresso.onView(withIndex(withId(R.id.assignToTextInput), 1))
+            .check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.assignee_blank_error)))
     }
 
-    private fun addOverrideButton() = waitForView(allOf(withId(R.id.addOverride),
-            withEffectiveVisibility(Visibility.VISIBLE)))
+    private fun addOverrideButton() = waitForView(
+        allOf(
+            withId(R.id.addOverride),
+            withEffectiveVisibility(Visibility.VISIBLE)
+        )
+    )
 
     fun editAssignees() = waitScrollClick(R.id.assignTo)
     fun clickEditDueDate() = waitScrollClick(R.id.dueDate)

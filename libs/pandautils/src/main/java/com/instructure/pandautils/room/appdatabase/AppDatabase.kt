@@ -19,12 +19,13 @@ import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
     entities = [
         AttachmentEntity::class,
         AuthorEntity::class,
+        EnvironmentFeatureFlags::class,
         FileUploadInputEntity::class,
         MediaCommentEntity::class,
         SubmissionCommentEntity::class,
         PendingSubmissionCommentEntity::class,
         DashboardFileUploadEntity::class
-    ], version = 7
+    ], version = 8
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -42,4 +43,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun pendingSubmissionCommentDao(): PendingSubmissionCommentDao
 
     abstract fun dashboardFileUploadDao(): DashboardFileUploadDao
+
+    abstract fun environmentFeatureFlagsDao(): EnvironmentFeatureFlagsDao
 }

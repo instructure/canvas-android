@@ -26,20 +26,37 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
+/**
+ * Represents the Edit Announcement page.
+ */
 class EditAnnouncementPage : BasePage() {
 
+    /**
+     * Opens the edit mode for the announcement.
+     */
     fun openEdit() {
         waitForView(withId(R.id.menu_edit)).click()
     }
 
+    /**
+     * Edits the name of the announcement with the specified [newName].
+     *
+     * @param newName The new name for the announcement.
+     */
     fun editAnnouncementName(newName: String) {
         onView(withId(R.id.announcementNameEditText)).replaceText(newName)
     }
 
+    /**
+     * Saves the edited announcement.
+     */
     fun saveEditAnnouncement() {
         onView(withId(R.id.menuSaveAnnouncement)).click()
     }
 
+    /**
+     * Deletes the announcement.
+     */
     fun deleteAnnouncement() {
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.deleteAnnouncementButton)).scrollTo()

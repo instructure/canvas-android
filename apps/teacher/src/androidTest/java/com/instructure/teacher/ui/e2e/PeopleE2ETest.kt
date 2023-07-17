@@ -131,11 +131,8 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.clickOnNewMessageButton()
 
         val subject = "Test Subject"
-        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject.")
-        addMessagePage.addSubject(subject)
-
-        Log.d(STEP_TAG,"Add some message text and click on 'Send' (aka. 'Arrow') button.")
-        addMessagePage.addMessage("This a test message from student context page.")
+        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject. Add some message text and click on 'Send' (aka. 'Arrow') button.")
+        addMessagePage.composeMessageWithSubject(subject, "This a test message from student context page.")
         addMessagePage.clickSendButton()
 
         Log.d(STEP_TAG, "Navigate back to People List Page.")

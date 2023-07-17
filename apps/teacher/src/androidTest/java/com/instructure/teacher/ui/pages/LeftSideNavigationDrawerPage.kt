@@ -22,6 +22,13 @@ import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
+/**
+ * Represents the Left Side Navigation Drawer Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the left side
+ * navigation drawer. It contains various view elements such as user name, user email, logout button,
+ * version, hamburger button, and hamburger button matcher.
+ */
 class LeftSideNavigationDrawerPage: BasePage() {
 
     private val userName by OnViewWithId(R.id.navigationDrawerUserName)
@@ -37,11 +44,20 @@ class LeftSideNavigationDrawerPage: BasePage() {
         ViewMatchers.isDisplayed()
     )
 
+    /**
+     * Clicks the menu item with the specified ID in the navigation drawer.
+     *
+     * @param menuId The ID of the menu item to click.
+     */
     private fun clickMenu(menuId: Int) {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(menuId).scrollTo().click()
     }
 
+    /**
+     * Performs the logout action from the navigation drawer.
+     * It waits for the sign-out to take effect before returning.
+     */
     fun logout() {
         onView(hamburgerButtonMatcher).click()
         logoutButton.scrollTo().click()
@@ -53,28 +69,50 @@ class LeftSideNavigationDrawerPage: BasePage() {
         ))
     }
 
+    /**
+     * Clicks the "Change User" menu item in the navigation drawer.
+     */
     fun clickChangeUserMenu() {
         clickMenu(R.id.navigationDrawerItem_changeUser)
     }
 
+    /**
+     * Clicks the "Help" menu item in the navigation drawer.
+     */
     fun clickHelpMenu() {
         clickMenu(R.id.navigationDrawerItem_help)
     }
 
+    /**
+     * Clicks the "Files" menu item in the navigation drawer.
+     */
     fun clickFilesMenu() {
         clickMenu(R.id.navigationDrawerItem_files)
     }
 
+    /**
+     * Clicks the "Settings" menu item in the navigation drawer.
+     */
     fun clickSettingsMenu() {
         clickMenu(R.id.navigationDrawerSettings)
     }
 
+    /**
+     * Sets the color overlay in the navigation drawer.
+     *
+     * @param colorOverlay Flag indicating whether to enable color overlay.
+     */
     fun setColorOverlay(colorOverlay: Boolean) {
         hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerColorOverlaySwitch).perform(SetSwitchCompat(colorOverlay))
         Espresso.pressBack()
     }
 
+    /**
+     * Asserts that the specified user is logged in.
+     *
+     * @param user The user to assert being logged in.
+     */
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
         onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()

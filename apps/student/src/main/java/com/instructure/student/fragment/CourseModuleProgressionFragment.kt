@@ -59,23 +59,22 @@ import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore
 import com.instructure.student.features.modules.util.ModuleProgressionUtility
 import com.instructure.student.features.modules.util.ModuleUtility
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
+import javax.inject.Inject
 
 @PageView(url = "courses/{canvasContext}/modules")
 @ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
+@AndroidEntryPoint
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(CourseModuleProgressionBinding::bind)
 
-    private val discussionRouteHelper = DiscussionRouteHelper(
-        FeaturesManager,
-        FeatureFlagProvider(UserManager, ApiPrefs),
-        DiscussionManager,
-        GroupManager
-    )
+    @Inject
+    lateinit var discussionRouteHelper: DiscussionRouteHelper
 
     private var routeModuleProgressionJob: Job? = null
     private var moduleItemsJob: Job? = null
