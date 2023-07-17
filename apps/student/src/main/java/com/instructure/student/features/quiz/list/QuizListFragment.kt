@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -78,7 +79,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
-        recyclerAdapter = QuizListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback, quizListRepository)
+        recyclerAdapter = QuizListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback, quizListRepository, lifecycleScope)
         configureRecyclerView(
             view,
             requireContext(),

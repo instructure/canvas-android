@@ -20,16 +20,14 @@ package com.instructure.student.features.quiz.list
 
 import android.content.Context
 import android.view.View
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.filterWithQuery
-import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitPaginated
 import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
@@ -42,15 +40,14 @@ import com.instructure.student.holders.QuizViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 
 class QuizListRecyclerAdapter(
-    context: Context,
-    private val canvasContext: CanvasContext,
-    private val adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?,
-    private val repository: QuizListRepository
+        context: Context,
+        private val canvasContext: CanvasContext,
+        private val adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?,
+        private val repository: QuizListRepository,
+        private val lifecycleScope: LifecycleCoroutineScope,
 ) : ExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder>(context, String::class.java, Quiz::class.java) {
 
     private var quizzes = emptyList<Quiz>()
-
-    private var apiCall: WeaveJob? = null
 
     var searchQuery = ""
         set(value) {
@@ -94,7 +91,7 @@ class QuizListRecyclerAdapter(
     }
 
     override fun loadFirstPage() {
-        apiCall = tryWeave {
+        lifecycleScope.tryLaunch {
             quizzes = repository.loadQuizzes(canvasContext.type.apiString, canvasContext.id, isRefresh)
             populateData()
             onCallbackFinished(ApiType.API)
@@ -142,10 +139,6 @@ class QuizListRecyclerAdapter(
             override fun getChildType(group: String, item: Quiz) = Types.TYPE_ITEM
             override fun areContentsTheSame(oldItem: Quiz, newItem: Quiz) = comparator.compare(oldItem, newItem) == 0
         }
-    }
-
-    override fun cancel() {
-        apiCall?.cancel()
     }
 
 }
