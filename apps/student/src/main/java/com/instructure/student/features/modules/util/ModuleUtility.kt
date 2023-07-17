@@ -28,6 +28,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment.Companion.makeRoute
+import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.fragment.DiscussionDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.FileDetailsFragment
@@ -37,7 +38,6 @@ import com.instructure.student.fragment.LockedModuleItemFragment
 import com.instructure.student.fragment.LockedModuleItemFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment
 import com.instructure.student.fragment.MasteryPathSelectionFragment.Companion.makeRoute
-import com.instructure.student.fragment.ModuleQuizDecider
 import com.instructure.student.fragment.PageDetailsFragment
 import com.instructure.student.fragment.PageDetailsFragment.Companion.makeRoute
 import java.util.Date
@@ -46,7 +46,7 @@ object ModuleUtility {
     fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?, isDiscussionRedesignEnabled: Boolean, navigatedFromModules: Boolean): Fragment? = when (item.type) {
         "Page" -> PageDetailsFragment.newInstance(makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
         "Assignment" -> AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
-        "Discussion" -> { // TODO Add not available offline fragment
+        "Discussion" -> {
             if (isDiscussionRedesignEnabled) {
                 DiscussionDetailsWebViewFragment.newInstance(getDiscussionRedesignRoute(item, course))
             } else {
@@ -57,9 +57,9 @@ object ModuleUtility {
         "SubHeader" -> null // Don't do anything with headers, they're just dividers so we don't show them here.
         "Quiz" -> {
             val apiURL = removeDomain(item.url)
-            ModuleQuizDecider.newInstance(ModuleQuizDecider.makeRoute(course, item.htmlUrl!!, apiURL!!))
+            ModuleQuizDecider.newInstance(ModuleQuizDecider.makeRoute(course, item.htmlUrl!!, apiURL!!, item.contentId))
         }
-        "ChooseAssignmentGroup" -> { // TODO Add not available offline fragment
+        "ChooseAssignmentGroup" -> {
             val route = makeRoute(course, item.masteryPaths!!, moduleObject!!.id, item.masteryPathsItemId)
             MasteryPathSelectionFragment.newInstance(route)
         }
@@ -67,7 +67,6 @@ object ModuleUtility {
             if (item.isLocked()) {
                 LockedModuleItemFragment.newInstance(makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
             } else {
-                // TODO Add not available offline fragment
                 val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
                 val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
                 InternalWebviewFragment.newInstance(route)

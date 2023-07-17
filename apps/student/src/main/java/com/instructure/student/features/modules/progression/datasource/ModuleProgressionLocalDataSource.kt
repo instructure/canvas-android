@@ -20,10 +20,12 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleItemWrapper
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.student.features.modules.progression.ModuleItemAsset
 
-class ModuleProgressionLocalDataSource(private val moduleFacade: ModuleFacade) : ModuleProgressionDataSource {
+class ModuleProgressionLocalDataSource(private val moduleFacade: ModuleFacade, private val quizDao: QuizDao) : ModuleProgressionDataSource {
     override suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
         return moduleFacade.getModuleItems(moduleId)
     }
@@ -47,5 +49,10 @@ class ModuleProgressionLocalDataSource(private val moduleFacade: ModuleFacade) :
         val modules = if (moduleObject != null) arrayOf(moduleObject) else emptyArray()
 
         return ModuleItemSequence(arrayOf(ModuleItemWrapper(current = moduleItem)), modules)
+    }
+
+    override suspend fun getDetailedQuiz(url: String, quizId: Long, forceNetwork: Boolean): Quiz {
+        val quiz = quizDao.findById(quizId)?.toApiModel()
+        return quiz ?: throw IllegalStateException("Quiz not found in database")
     }
 }

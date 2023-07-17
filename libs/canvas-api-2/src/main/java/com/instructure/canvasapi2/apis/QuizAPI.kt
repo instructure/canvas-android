@@ -42,6 +42,9 @@ object QuizAPI {
         @GET
         fun getDetailedQuizByUrl(@Url quizUrl: String): Call<Quiz>
 
+        @GET
+        suspend fun getDetailedQuizByUrl(@Url quizUrl: String, @Tag params: RestParams): DataResult<Quiz>
+
         @GET("courses/{courseId}/all_quizzes")
         fun getFirstPageQuizzes(@Path("courseId") contextId: Long): Call<List<Quiz>>
 

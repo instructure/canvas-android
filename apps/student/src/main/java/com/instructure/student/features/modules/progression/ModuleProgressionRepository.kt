@@ -19,6 +19,7 @@ package com.instructure.student.features.modules.progression
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionDataSource
@@ -37,6 +38,10 @@ class ModuleProgressionRepository(
 
     suspend fun getModuleItemSequence(canvasContext: CanvasContext, assetType: String, assetId: String, forceNetwork: Boolean): ModuleItemSequence {
         return dataSource.getModuleItemSequence(canvasContext, assetType, assetId, forceNetwork)
+    }
+
+    suspend fun getDetailedQuiz(url: String, quizId: Long, forceNetwork: Boolean): Quiz {
+        return dataSource.getDetailedQuiz(url, quizId, forceNetwork)
     }
 
 }

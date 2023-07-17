@@ -19,10 +19,13 @@ package com.instructure.student.features.modules.progression.datasource
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.Quiz
 
 interface ModuleProgressionDataSource {
 
     suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem>
 
     suspend fun getModuleItemSequence(canvasContext: CanvasContext, assetType: String, assetId: String, forceNetwork: Boolean): ModuleItemSequence
+
+    suspend fun getDetailedQuiz(url: String, quizId: Long, forceNetwork: Boolean): Quiz
 }

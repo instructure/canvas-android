@@ -17,22 +17,29 @@
 package com.instructure.student.features.modules.progression.datasource
 
 import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.depaginate
 
-class ModuleProgressionNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterface) : ModuleProgressionDataSource {
+class ModuleProgressionNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterface, private val quizApi: QuizAPI.QuizInterface) : ModuleProgressionDataSource {
     override suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return moduleApi.getFirstPageModuleItems(canvasContext.apiContext(), canvasContext.id, moduleId, params).depaginate {
             moduleApi.getNextPageModuleItemList(it, params)
-        }.dataOrThrow // TODO error handling
+        }.dataOrThrow
     }
 
     override suspend fun getModuleItemSequence(canvasContext: CanvasContext, assetType: String, assetId: String, forceNetwork: Boolean): ModuleItemSequence {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-        return moduleApi.getModuleItemSequence(canvasContext.apiContext(), canvasContext.id, assetType, assetId, params).dataOrThrow // TODO error handling
+        return moduleApi.getModuleItemSequence(canvasContext.apiContext(), canvasContext.id, assetType, assetId, params).dataOrThrow
+    }
+
+    override suspend fun getDetailedQuiz(url: String, quizId: Long, forceNetwork: Boolean): Quiz {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return quizApi.getDetailedQuizByUrl(url, params).dataOrThrow
     }
 }

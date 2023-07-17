@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.modules.progression
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,16 +23,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
-import com.instructure.canvasapi2.managers.QuizManager
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_QUIZ_DECIDER
 import com.instructure.pandautils.analytics.ScreenView
@@ -41,16 +40,26 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentModuleQuizDeciderBinding
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_MODULE_QUIZ_DECIDER)
+@AndroidEntryPoint
 class ModuleQuizDecider : ParentFragment() {
 
     private val binding by viewBinding(FragmentModuleQuizDeciderBinding::bind)
 
+    @Inject
+    lateinit var repository: ModuleProgressionRepository
+
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var baseURL by StringArg(key = Const.URL)
     private var apiURL by StringArg(key = Const.API_URL)
+    private var quizId by LongArg(key = Const.ID)
 
     private lateinit var quiz: Quiz
 
@@ -66,11 +75,11 @@ class ModuleQuizDecider : ParentFragment() {
         override fun onPageStartedCallback(webView: WebView, url: String) = Unit
 
         override fun canRouteInternallyDelegate(url: String): Boolean {
-            return RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+            return RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
         }
 
         override fun routeInternallyCallback(url: String) {
-            RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
+            RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
         }
     }
 
@@ -110,10 +119,10 @@ class ModuleQuizDecider : ParentFragment() {
     }
 
     private fun obtainQuiz() = with(binding) {
-        tryWeave {
+        lifecycleScope.tryLaunch {
             quizInfoContainer.setGone()
             progressBar.setVisible()
-            quiz = awaitApi { QuizManager.getDetailedQuizByUrl(apiURL, true, it) }
+            quiz = repository.getDetailedQuiz(apiURL, quizId, true)
             quizInfoContainer.setVisible()
             progressBar.setGone()
             quizTitle.text = quiz.title
@@ -133,7 +142,6 @@ class ModuleQuizDecider : ParentFragment() {
             setupViews()
         } catch {
             toast(R.string.errorOccurred)
-            activity?.finish()
         }
     }
 
@@ -144,16 +152,17 @@ class ModuleQuizDecider : ParentFragment() {
         binding.goToQuiz.onClick {
             val route = BasicQuizViewFragment.makeRoute(canvasContext, quiz, baseURL)
             route.ignoreDebounce = true
-            RouteMatcher.route(requireContext(), route)
+            RouteMatcher.route(requireActivity(), route)
         }
     }
 
     companion object {
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, apiURL: String): Route {
+        fun makeRoute(canvasContext: CanvasContext, url: String, apiURL: String, quizId: Long): Route {
             val bundle = Bundle().apply {
                 putString(Const.URL, url)
                 putString(Const.API_URL, apiURL)
+                putLong(Const.ID, quizId)
             }
             return Route(ModuleQuizDecider::class.java, canvasContext, bundle)
         }

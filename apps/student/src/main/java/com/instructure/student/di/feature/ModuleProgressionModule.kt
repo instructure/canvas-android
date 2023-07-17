@@ -17,6 +17,8 @@
 package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.progression.ModuleProgressionRepository
@@ -32,13 +34,13 @@ import dagger.hilt.android.components.FragmentComponent
 class ModuleProgressionModule {
 
     @Provides
-    fun provideModuleProgressionLocalDataSource(moduleFacade: ModuleFacade): ModuleProgressionLocalDataSource {
-        return ModuleProgressionLocalDataSource(moduleFacade)
+    fun provideModuleProgressionLocalDataSource(moduleFacade: ModuleFacade, quizDao: QuizDao): ModuleProgressionLocalDataSource {
+        return ModuleProgressionLocalDataSource(moduleFacade, quizDao)
     }
 
     @Provides
-    fun provideModuleProgressionNetworkDataSource(moduleApi: ModuleAPI.ModuleInterface): ModuleProgressionNetworkDataSource {
-        return ModuleProgressionNetworkDataSource(moduleApi)
+    fun provideModuleProgressionNetworkDataSource(moduleApi: ModuleAPI.ModuleInterface, quizApi: QuizAPI.QuizInterface): ModuleProgressionNetworkDataSource {
+        return ModuleProgressionNetworkDataSource(moduleApi, quizApi)
     }
 
     @Provides
