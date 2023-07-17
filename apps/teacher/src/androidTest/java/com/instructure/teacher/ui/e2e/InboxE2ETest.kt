@@ -81,11 +81,8 @@ class InboxE2ETest : TeacherTest() {
         addNewMessage(course,data.studentsList)
 
         val subject = "Hello there"
-        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject.")
-        addMessagePage.addSubject(subject)
-
-        Log.d(STEP_TAG,"Add some message text and click on 'Send' (aka. 'Arrow') button.")
-        addMessagePage.addMessage("General Kenobi")
+        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject. Add some message text and click on 'Send' (aka. 'Arrow') button.")
+        addMessagePage.composeMessageWithSubject(subject, "General Kenobi")
         addMessagePage.clickSendButton()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")

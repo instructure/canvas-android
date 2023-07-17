@@ -3,7 +3,7 @@ package com.instructure.pandautils.room.common.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Attachment
-import java.util.*
+import java.util.Date
 
 @Entity
 data class AttachmentEntity(

@@ -25,6 +25,14 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.page.BasePage
 
+/**
+ * Represents the WebView Login Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the elements on the WebView login page.
+ * It contains private constants for the CSS selectors of the email field, password field, and login button.
+ * Additionally, it provides methods for locating the email field, password field, and login button in the WebView, asserting the presence of these elements on the page,
+ * entering an email and password, clicking the login button, and logging in as a teacher.
+ */
 @Suppress("unused")
 class WebViewLoginPage : BasePage() {
 
@@ -32,51 +40,78 @@ class WebViewLoginPage : BasePage() {
     private val PASSWORD_FIELD_CSS = "input[name=\"pseudonym_session[password]\"]"
     private val LOGIN_BUTTON_CSS = "button[type=\"submit\"]"
 
-    //region UI Element Locator Methods
-
+    /**
+     * Locates the email field in the WebView.
+     *
+     * @return The WebInteraction object representing the email field.
+     */
     private fun emailField(): Web.WebInteraction<*> {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, EMAIL_FIELD_CSS))
     }
 
+    /**
+     * Locates the password field in the WebView.
+     *
+     * @return The WebInteraction object representing the password field.
+     */
     private fun passwordField(): Web.WebInteraction<*> {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, PASSWORD_FIELD_CSS))
     }
 
+    /**
+     * Locates the login button in the WebView.
+     *
+     * @return The WebInteraction object representing the login button.
+     */
     private fun loginButton(): Web.WebInteraction<*> {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, LOGIN_BUTTON_CSS))
     }
 
-    //endregion
-
-    //region Assertion Helpers
-
+    /**
+     * Asserts the presence of the email field, password field, and login button on the page.
+     *
+     * @param duration The duration to wait for the elements to be displayed.
+     */
     override fun assertPageObjects(duration: Long) {
         emailField()
         passwordField()
         loginButton()
     }
 
-    //endregion
-
-    //region UI Action Helpers
-
+    /**
+     * Enters an email into the email field in the WebView.
+     *
+     * @param email The email to be entered.
+     */
     fun enterEmail(email: String) {
         emailField().perform(webKeys(email))
     }
 
+    /**
+     * Enters a password into the password field in the WebView.
+     *
+     * @param password The password to be entered.
+     */
     fun enterPassword(password: String) {
         passwordField().perform(webKeys(password))
     }
 
+    /**
+     * Clicks the login button in the WebView.
+     */
     fun clickLoginButton() {
         loginButton().perform(webClick())
     }
 
+    /**
+     * Logs in as a teacher by entering the teacher's email and password, and clicking the login button.
+     *
+     * @param teacher The teacher object representing the teacher's login credentials.
+     */
     fun loginAs(teacher: CanvasUserApiModel) {
         enterEmail(teacher.loginId)
         enterPassword(teacher.password)
         clickLoginButton()
     }
-
-    //endregion
 }
+

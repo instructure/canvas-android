@@ -19,33 +19,61 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.dataseeding.model.AttachmentApiModel
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.matchers.RecyclerViewMatcher
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 
+/**
+ * Represents the SpeedGrader files page.
+ *
+ * This page provides functionality for interacting with the elements on the SpeedGrader files page. It contains methods
+ * for asserting the presence of an empty view, asserting the presence of files, asserting the selection of a file,
+ * and selecting a file. This page extends the BasePage class.
+ */
 class SpeedGraderFilesPage : BasePage() {
 
     private val speedGraderFileRecyclerView by OnViewWithId(R.id.speedGraderFilesRecyclerView)
 
     private val emptySpeedGraderFileView by WaitForViewWithId(R.id.speedGraderFilesEmptyView)
 
+    /**
+     * Asserts the presence of an empty view.
+     */
     fun assertDisplaysEmptyView() {
         emptySpeedGraderFileView.assertDisplayed()
     }
 
+    /**
+     * Asserts the presence of files with the given attachments.
+     *
+     * @param attachments The list of attachments representing the files.
+     */
     fun assertHasFiles(attachments: MutableList<Attachment>) {
         speedGraderFileRecyclerView.check(RecyclerViewItemCountAssertion(attachments.size))
         for (attachment in attachments) onView(withText(attachment.filename))
     }
 
+    /**
+     * Asserts the selection of a file at the specified position.
+     *
+     * @param position The position of the file in the list.
+     */
     fun assertFileSelected(position: Int) {
         onView(RecyclerViewMatcher(R.id.speedGraderFilesRecyclerView).atPosition(position))
-                .check(ViewAssertions.matches(hasDescendant(Matchers.allOf(withId(R.id.isSelectedIcon), withEffectiveVisibility(Visibility.VISIBLE)))))
+            .check(ViewAssertions.matches(hasDescendant(Matchers.allOf(withId(R.id.isSelectedIcon), withEffectiveVisibility(Visibility.VISIBLE)))))
     }
 
+    /**
+     * Selects a file at the specified position.
+     *
+     * @param position The position of the file in the list.
+     */
     fun selectFile(position: Int) {
         onView(RecyclerViewMatcher(R.id.speedGraderFilesRecyclerView).atPosition(position)).click()
     }

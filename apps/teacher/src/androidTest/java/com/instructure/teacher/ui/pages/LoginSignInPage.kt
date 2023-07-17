@@ -16,6 +16,13 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers
 
+/**
+ * Represents the Login Sign-In Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the login
+ * sign-in page. It contains various view elements and helper methods for locating and interacting
+ * with UI elements on the page.
+ */
 @Suppress("unused")
 class LoginSignInPage : BasePage() {
 
@@ -59,6 +66,11 @@ class LoginSignInPage : BasePage() {
 
     //region Assertion Helpers
 
+    /**
+     * Asserts the presence of page objects on the Sign-In page.
+     *
+     * @param duration The duration to wait for the assertion.
+     */
     override fun assertPageObjects(duration: Long) {
         signInRoot.assertDisplayed()
         toolbar.assertDisplayed()
@@ -73,24 +85,45 @@ class LoginSignInPage : BasePage() {
 
     //region UI Action Helpers
 
+    /**
+     * Enters the email into the email field.
+     *
+     * @param email The email to enter.
+     */
     fun enterEmail(email: String) {
         emailField().perform(clearElement())
         emailField().perform(webKeys(email))
     }
 
+    /**
+     * Enters the password into the password field.
+     *
+     * @param password The password to enter.
+     */
     fun enterPassword(password: String) {
         passwordField().perform(clearElement())
         passwordField().perform(webKeys(password))
     }
 
+    /**
+     * Clicks the login button.
+     */
     fun clickLoginButton() {
         loginButton().perform(webClick())
     }
 
+    /**
+     * Clicks the forgot password button.
+     */
     fun clickForgotPasswordButton() {
         forgotPasswordButton().perform(webClick())
     }
 
+    /**
+     * Asserts the login error message.
+     *
+     * @param errorMessage The expected error message.
+     */
     fun assertLoginErrorMessage(errorMessage: String) {
         loginErrorMessageHolder().check(
             WebViewAssertions.webMatches(
@@ -100,10 +133,21 @@ class LoginSignInPage : BasePage() {
         )
     }
 
+    /**
+     * Logs in as the specified teacher.
+     *
+     * @param teacher The teacher to log in as.
+     */
     fun loginAs(teacher: CanvasUserApiModel) {
         loginAs(teacher.loginId, teacher.password)
     }
 
+    /**
+     * Logs in with the specified login ID and password.
+     *
+     * @param loginId The login ID to enter.
+     * @param password The password to enter.
+     */
     fun loginAs(loginId: String, password: String) {
         enterEmail(loginId)
         enterPassword(password)
@@ -117,4 +161,5 @@ class LoginSignInPage : BasePage() {
 
     //endregion
 }
+
 
