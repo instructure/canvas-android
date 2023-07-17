@@ -19,13 +19,14 @@ package com.instructure.pandautils.room.offline.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.instructure.pandautils.room.offline.entities.QuizContextEntity
 
 @Dao
 interface QuizContextDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(quizContextEntity: QuizContextEntity)
 
     @Delete
