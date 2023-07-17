@@ -20,6 +20,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

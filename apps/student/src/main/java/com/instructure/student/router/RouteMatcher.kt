@@ -47,12 +47,14 @@ import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 import com.instructure.student.activity.*
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.features.assignmentlist.AssignmentListFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
+import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
+import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment

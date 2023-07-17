@@ -13,13 +13,15 @@ import com.instructure.pandautils.features.offline.offlinecontent.OfflineContent
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.features.assignmentlist.AssignmentListFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
+import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
+import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment

@@ -38,7 +38,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentCoursePagesBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.PageUpdatedEvent
-import com.instructure.student.fragment.PageDetailsFragment
+import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher

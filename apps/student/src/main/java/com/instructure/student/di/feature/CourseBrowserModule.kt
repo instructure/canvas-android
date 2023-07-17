@@ -21,9 +21,9 @@ import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.offline.coursebrowser.CourseBrowserLocalDataSource
-import com.instructure.student.features.offline.coursebrowser.CourseBrowserNetworkDataSource
-import com.instructure.student.features.offline.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

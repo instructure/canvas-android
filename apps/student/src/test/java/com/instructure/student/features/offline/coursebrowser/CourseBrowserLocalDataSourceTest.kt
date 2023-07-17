@@ -23,6 +23,7 @@ import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.entities.PageEntity
 import com.instructure.pandautils.room.offline.entities.TabEntity
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
