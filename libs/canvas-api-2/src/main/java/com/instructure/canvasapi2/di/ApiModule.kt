@@ -1,6 +1,7 @@
 package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.apis.InboxApi
@@ -167,5 +168,10 @@ class ApiModule {
     @Provides
     fun provideProgressApi(): ProgressAPI.ProgressInterface {
         return RestBuilder().build(ProgressAPI.ProgressInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideFeaturesApi(): FeaturesAPI.FeaturesInterface {
+        return RestBuilder().build(FeaturesAPI.FeaturesInterface::class.java, RestParams())
     }
 }
