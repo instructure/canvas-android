@@ -116,8 +116,12 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     override fun createAdapter(): QuizListAdapter {
         return QuizListAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { quiz ->
-            val args = QuizDetailsFragment.makeBundle(quiz)
-            RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
+            if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl, ApiPrefs.domain, false)) {
+                RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain)
+            } else {
+                val args = QuizDetailsFragment.makeBundle(quiz)
+                RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
+            }
         }
     }
 
