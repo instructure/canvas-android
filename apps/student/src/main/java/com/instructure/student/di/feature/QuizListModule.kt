@@ -18,6 +18,8 @@
 
 package com.instructure.student.di.feature
 
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.pandautils.room.offline.facade.QuizFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.quiz.list.QuizListLocalDataSource
 import com.instructure.student.features.quiz.list.QuizListNetworkDataSource
@@ -29,16 +31,16 @@ import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class QuizListModule {
+class QuizListModule() {
 
     @Provides
-    fun provideQuizListNetworkDataSource(): QuizListNetworkDataSource {
-        return QuizListNetworkDataSource()
+    fun provideQuizListNetworkDataSource(quizApi: QuizAPI.QuizInterface): QuizListNetworkDataSource {
+        return QuizListNetworkDataSource(quizApi)
     }
 
     @Provides
-    fun provideQuizListLocalDataSource(): QuizListLocalDataSource {
-        return QuizListLocalDataSource()
+    fun provideQuizListLocalDataSource(quizFacade: QuizFacade): QuizListLocalDataSource {
+        return QuizListLocalDataSource(quizFacade)
     }
 
     @Provides

@@ -456,4 +456,14 @@ class OfflineModule {
     fun provideAssignmentRubricCriterionDao(offlineDatabase: OfflineDatabase): AssignmentRubricCriterionDao {
         return offlineDatabase.assignmentRubricCriterionDao()
     }
+
+    @Provides
+    fun provideQuizContextDao(offlineDatabase: OfflineDatabase): QuizContextDao {
+        return offlineDatabase.quizContextDao()
+    }
+
+    @Provides
+    fun provideQuizFacade(quizDao: QuizDao, quizContextDao: QuizContextDao): QuizFacade {
+        return QuizFacade(quizDao, quizContextDao)
+    }
 }

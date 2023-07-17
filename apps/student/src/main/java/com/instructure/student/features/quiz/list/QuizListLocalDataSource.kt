@@ -19,9 +19,12 @@
 package com.instructure.student.features.quiz.list
 
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.facade.QuizFacade
 
-class QuizListLocalDataSource : QuizListDataSource {
-    override suspend fun loadQuizzes(): List<Quiz> {
-        TODO("Not yet implemented")
+class QuizListLocalDataSource(
+    private val quizFacade: QuizFacade,
+) : QuizListDataSource {
+    override suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
+        return quizFacade.getQuizzesByContext(contextType, contextId)
     }
 }

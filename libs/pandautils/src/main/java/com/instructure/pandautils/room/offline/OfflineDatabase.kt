@@ -84,6 +84,7 @@ import com.instructure.pandautils.room.offline.entities.*
         UserCalendarEntity::class,
         UserEntity::class,
         QuizEntity::class,
+        QuizContextEntity::class,
         LockInfoEntity::class,
         LockedModuleEntity::class,
         ModuleNameEntity::class,
@@ -148,6 +149,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun rubricCriterionDao(): RubricCriterionDao
 
     abstract fun quizDao(): QuizDao
+
+    abstract fun quizContextDao(): QuizContextDao
 
     abstract fun lockInfoDao(): LockInfoDao
 
