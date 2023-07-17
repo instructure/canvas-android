@@ -18,12 +18,34 @@ package com.instructure.student.ui.interaction
 import android.text.Html
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addItemToModule
+import com.instructure.canvas.espresso.mockCanvas.addLTITool
+import com.instructure.canvas.espresso.mockCanvas.addModuleToCourse
+import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
+import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.LockInfo
+import com.instructure.canvasapi2.models.LockedModule
+import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizAnswer
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.*
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.SecondaryFeatureCategory
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
@@ -272,6 +294,7 @@ class ModuleInteractionTest : StudentTest() {
     // Module can't be accessed unless all prerequisites have been fulfilled
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+
     fun testModules_moduleLockedWithUnfulfilledPrerequisite() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)

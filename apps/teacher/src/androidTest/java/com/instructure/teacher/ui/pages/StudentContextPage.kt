@@ -22,10 +22,23 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 
+/**
+ * Represents the Student Context Page.
+ *
+ * This page extends the PersonContextPage class and provides functionality for interacting with the elements on the
+ * Student Context page. It contains methods for asserting the display of student information, student grade, student
+ * submission, assignment listing, and assignment submission. It also provides a method for clicking on the new message
+ * button.
+ */
 class StudentContextPage : PersonContextPage() {
 
     private val messageButton by WaitForViewWithId(R.id.messageButton)
 
+    /**
+     * Asserts the display of student information on the Student Context page.
+     *
+     * @param student The student for which the information should be displayed.
+     */
     fun assertDisplaysStudentInfo(student: CanvasUserApiModel) {
         waitForView(withParent(R.id.toolbar) + withText(student.shortName)).assertDisplayed()
         studentName.assertHasText(student.shortName)
@@ -33,22 +46,43 @@ class StudentContextPage : PersonContextPage() {
         onView(withId(R.id.gradeItems)).scrollTo().assertDisplayed()
     }
 
+    /**
+     * Asserts the student's grade on the Student Context page.
+     *
+     * @param grade The expected grade of the student.
+     */
     fun assertStudentGrade(grade: String) {
         onView(withId(R.id.gradeBeforePosting)).assertHasText(grade)
     }
 
+    /**
+     * Asserts the student's submission count on the Student Context page.
+     *
+     * @param submittedCount The expected number of submitted items.
+     */
     fun assertStudentSubmission(submittedCount: String) {
         onView(withId(R.id.submittedCount)).assertHasText(submittedCount)
     }
 
+    /**
+     * Asserts the listing of an assignment on the Student Context page.
+     *
+     * @param assignmentTitle The title of the assignment to be listed.
+     */
     fun assertAssignmentListed(assignmentTitle: String) {
         onView(withId(R.id.assignmentTitle) + withText(assignmentTitle)).scrollTo().assertDisplayed()
     }
 
+    /**
+     * Asserts the submission status of an assignment on the Student Context page.
+     */
     fun assertAssignmentSubmitted() {
         onView(withId(R.id.submissionStatus) + withText(R.string.submitted)).assertDisplayed()
     }
 
+    /**
+     * Clicks on the new message button on the Student Context page.
+     */
     fun clickOnNewMessageButton() {
         messageButton.click()
     }

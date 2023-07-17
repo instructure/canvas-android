@@ -35,58 +35,99 @@ import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 
+/**
+ * AssignmentListPage represents a page that displays a list of assignments.
+ * It provides methods to interact with the assignment list, such as clicking on assignments, performing searches, and asserting the presence of assignments and grading periods.
+ *
+ * @constructor Creates an instance of the AssignmentListPage.
+ */
 class AssignmentListPage : BasePage() {
 
     private val assignmentListToolbar by OnViewWithId(R.id.assignmentListToolbar)
-
     private val assignmentRecyclerView by OnViewWithId(R.id.assignmentRecyclerView)
-
     private val searchButton by OnViewWithId(R.id.search)
-
     private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
-
-    //Only displayed when assignment list is empty
     private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
-
-    //Only displayed when there are grading periods
     private val gradingPeriodHeader by WaitForViewWithId(R.id.gradingPeriodContainer)
 
+    /**
+     * Clicks on the given assignment.
+     *
+     * @param assignment The assignment to click on.
+     */
     fun clickAssignment(assignment: AssignmentApiModel) {
         waitForViewWithText(assignment.name).click()
     }
 
+    /**
+     * Clicks on the given assignment.
+     *
+     * @param assignment The assignment to click on.
+     */
     fun clickAssignment(assignment: Assignment) {
         waitForViewWithText(assignment.name!!).click()
     }
 
+    /**
+     * Asserts that the "No Assignments" view is displayed.
+     */
     fun assertDisplaysNoAssignmentsView() {
         emptyPandaView.assertDisplayed()
     }
 
+    /**
+     * Asserts that the given assignment is present in the list.
+     *
+     * @param assignment The assignment to check.
+     */
     fun assertHasAssignment(assignment: Assignment) {
         assertAssignmentName(assignment.name!!)
     }
 
+    /**
+     * Asserts that the given assignment is present in the list.
+     *
+     * @param assignment The assignment to check.
+     */
     fun assertHasAssignment(assignment: AssignmentApiModel) {
         assertAssignmentName(assignment.name)
     }
 
+    /**
+     * Asserts that grading periods are present.
+     */
     fun assertHasGradingPeriods() {
         gradingPeriodHeader.assertDisplayed()
     }
 
+    /**
+     * Opens the search field.
+     */
     fun openSearch() {
         searchButton.click()
     }
 
+    /**
+     * Enters the given search query.
+     *
+     * @param query The search query to enter.
+     */
     fun enterSearchQuery(query: String) {
         searchInput.perform(ViewActions.replaceText(query))
     }
 
+    /**
+     * Asserts the number of assignments in the list.
+     *
+     * @param count The expected number of assignments.
+     */
     fun assertAssignmentCount(count: Int) {
         assignmentRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
     }
 
+    /**
+     * Refreshes the assignment list.
+     */
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout)).swipeDown()
     }
@@ -95,6 +136,12 @@ class AssignmentListPage : BasePage() {
         waitForViewWithText(assignmentName).assertDisplayed()
     }
 
+    /**
+     * Asserts the "needs grading" count of the given assignment.
+     *
+     * @param assignmentName The name of the assignment to check.
+     * @param needsGradingCount The expected "needs grading" count.
+     */
     fun assertNeedsGradingCountOfAssignment(assignmentName: String, needsGradingCount: Int) {
         onView(withId(R.id.ungradedCount) + withText("$needsGradingCount needs grading") + hasSibling(withId(R.id.assignmentTitle) + withText(assignmentName))).assertDisplayed()
     }

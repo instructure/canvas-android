@@ -22,7 +22,6 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnHolderItem
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToHolder
 import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -41,36 +40,81 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
+/**
+ * A page representing the Assignee List screen in the application.
+ */
 @Suppress("unused")
 class AssigneeListPage : BasePage(pageResId = R.id.assigneeListPage) {
 
+    /**
+     * The title text view of the Assignee List screen.
+     */
     private val titleTextView by OnViewWithText(R.string.page_title_add_assignees)
+
+    /**
+     * The close button of the Assignee List screen.
+     */
     private val closeButton by OnViewWithContentDescription(R.string.close)
+
+    /**
+     * The save button of the Assignee List screen.
+     */
     private val saveButton by OnViewWithId(R.id.menuSave)
+
+    /**
+     * The recycler view of the Assignee List screen.
+     */
     private val recyclerView by WaitForViewWithId(R.id.recyclerView)
 
+    /**
+     * Asserts that the Assignee List screen displays the assignee options.
+     *
+     * @param sectionNames The list of section names to verify.
+     * @param groupNames The list of group names to verify.
+     * @param studentNames The list of student names to verify.
+     */
     fun assertDisplaysAssigneeOptions(
-            sectionNames: List<String> = emptyList(),
-            groupNames: List<String> = emptyList(),
-            studentNames: List<String> = emptyList()) {
+        sectionNames: List<String> = emptyList(),
+        groupNames: List<String> = emptyList(),
+        studentNames: List<String> = emptyList()
+    ) {
         for (assigneeName in (sectionNames + groupNames + studentNames)) {
-            var targetView = allOf(withText(assigneeName), withId(R.id.assigneeTitleView))
+            val targetView = allOf(withText(assigneeName), withId(R.id.assigneeTitleView))
             scrollRecyclerView(R.id.recyclerView, targetView)
             onView(targetView).assertDisplayed()
         }
     }
 
+    /**
+     * Asserts that the specified assignees are selected.
+     *
+     * @param assigneeNames The list of assignee names to verify.
+     */
     fun assertAssigneesSelected(assigneeNames: List<String>) {
         val selectedTextView = onViewWithId(R.id.selectedAssigneesTextView)
-        for (name in assigneeNames) selectedTextView.assertContainsText(name)
+        for (name in assigneeNames) {
+            selectedTextView.assertContainsText(name)
+        }
     }
 
+    /**
+     * Toggles the selection of the specified assignees.
+     *
+     * @param assigneeNames The list of assignee names to toggle.
+     */
     fun toggleAssignees(assigneeNames: List<String>) {
-        assigneeNames
-                .map { withTitle(it) }
-                .forEach { onView((withId(R.id.recyclerView))).perform(scrollToHolder(it), actionOnHolderItem(it, click())) }
+        assigneeNames.map { withTitle(it) }
+            .forEach {
+                onView(withId(R.id.recyclerView)).perform(
+                    scrollToHolder(it),
+                    actionOnHolderItem(it, click())
+                )
+            }
     }
 
+    /**
+     * Saves the selection and closes the Assignee List screen.
+     */
     fun saveAndClose() {
         saveButton.click()
     }
