@@ -26,6 +26,11 @@ import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
+/**
+ * All courses list page
+ *
+ * @constructor Create empty All courses list page
+ */
 @Suppress("unused")
 class AllCoursesListPage : BasePage() {
 
@@ -39,15 +44,29 @@ class AllCoursesListPage : BasePage() {
 
     private val coursesRecyclerView by WaitForViewWithId(R.id.recyclerView)
 
+    /**
+     * Assert that all the courses given in the parameter list is displayed in the corresponding recycler view.
+     *
+     * @param mCourses: The Course object list parameter.
+     */
     fun assertHasCourses(mCourses: List<Course>) {
         coursesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
         for (course in mCourses) onView(withText(course.name)).assertDisplayed()
     }
 
+    /**
+     * Navigate back
+     *
+     */
     fun navigateBack() {
         backButton.click()
     }
 
+    /**
+     * Assert that the course given in the parameter is displayed.
+     *
+     * @param course: The CourseApiModel object parameter.
+     */
     fun assertDisplaysCourse(course: CourseApiModel) {
         val matcher = CoreMatchers.allOf(
             withText(course.name),
@@ -57,8 +76,13 @@ class AllCoursesListPage : BasePage() {
         scrollAndAssertDisplayed(matcher)
     }
 
+    /**
+     * Scroll to and assert that the View matcher given in the parameter is displayed.
+     *
+     * @param matcher: The View matcher parameter.
+     */
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
-        onView(matcher).assertDisplayed()
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
 }

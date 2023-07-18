@@ -162,7 +162,7 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     private suspend fun fetchPages(courseId: Long) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val pages = pageApi.getFirstPagePages(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
+        val pages = pageApi.getFirstPagePagesWithBody(courseId, CanvasContext.Type.COURSE.apiString, params).depaginate { nextUrl ->
             pageApi.getNextPagePagesList(nextUrl, params)
         }.dataOrNull.orEmpty()
 

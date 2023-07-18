@@ -16,8 +16,10 @@
  */
 package com.instructure.pandautils.di
 
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.Module
 import dagger.Provides
@@ -29,7 +31,7 @@ import dagger.hilt.components.SingletonComponent
 class FeatureFlagModule {
 
     @Provides
-    fun provideFeatureFlagProvider(userManager: UserManager, apiPrefs: ApiPrefs): FeatureFlagProvider {
-        return FeatureFlagProvider(userManager, apiPrefs)
+    fun provideFeatureFlagProvider(userManager: UserManager, apiPrefs: ApiPrefs, featuresApi: FeaturesAPI.FeaturesInterface, environmentFeatureFlagsDao: EnvironmentFeatureFlagsDao): FeatureFlagProvider {
+        return FeatureFlagProvider(userManager, apiPrefs, featuresApi, environmentFeatureFlagsDao)
     }
 }
