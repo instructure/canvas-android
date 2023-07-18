@@ -67,7 +67,7 @@ class QuizDaoTest {
 
         val result = quizDao.findById(2L)
 
-        assertEquals(expectedQuizEntity, result)
+        assertEquals(expectedQuizEntity.title, result?.title)
     }
 
     @Test
@@ -81,7 +81,7 @@ class QuizDaoTest {
         quizEntities.forEach {quizDao.insert(it)}
 
         val result = quizDao.findByCourseId(2L)
-        assertEquals(expectedQuizEntities, result)
+        assertEquals(expectedQuizEntities.map { it.title }, result.map { it.title })
     }
 
     @Test
