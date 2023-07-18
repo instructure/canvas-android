@@ -62,7 +62,6 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val moduleFacade: ModuleFacade,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val courseFeaturesDao: CourseFeaturesDao,
-    private val quizFacade: QuizFacade,
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -228,13 +227,13 @@ class OfflineSyncWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun fetchAllQuizzes(contextType: String, contextId: Long) {
+    private suspend fun fetchAllQuizzes(contextType: String, courseId: Long) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val quizzes = quizApi.getFirstPageQuizzesList(contextType, contextId, params).depaginate { nextUrl ->
+        val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
             quizApi.getNextPageQuizzesList(nextUrl, params)
         }.dataOrNull
         quizzes?.forEach { quiz ->
-            quizFacade.insertQuiz(contextType, contextId, quiz)
+            quizDao.insert(QuizEntity(quiz, courseId))
 
         }
     }

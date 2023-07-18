@@ -17,7 +17,6 @@
 package com.instructure.student.features.quiz.list.datasource
 
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.pandautils.room.offline.facade.QuizFacade
 import com.instructure.student.features.quiz.list.QuizListLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk

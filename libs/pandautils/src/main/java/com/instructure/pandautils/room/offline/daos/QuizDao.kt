@@ -34,4 +34,7 @@ interface QuizDao {
 
     @Query("SELECT * FROM QuizEntity WHERE id = :id")
     suspend fun findById(id: Long): QuizEntity?
+
+    @Query("SELECT * FROM QuizEntity WHERE courseId = :courseId")
+    suspend fun findByCourseId(courseId: Long): List<QuizEntity>
 }
