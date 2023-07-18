@@ -37,4 +37,7 @@ interface LockInfoDao {
 
     @Query("SELECT * FROM LockInfoEntity WHERE moduleId = :moduleId")
     suspend fun findByModuleId(moduleId: Long): LockInfoEntity?
+
+    @Query("SELECT * FROM LockInfoEntity WHERE pageId = :pageId")
+    suspend fun findByPageId(pageId: Long): LockInfoEntity?
 }

@@ -14,25 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.features.coursebrowser.datasource
+
+package com.instructure.student.features.pages.details.datasource
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.room.offline.daos.TabDao
-import com.instructure.pandautils.room.offline.facade.PageFacade
+import com.instructure.canvasapi2.utils.DataResult
 
-class CourseBrowserLocalDataSource(
-    private val tabDao: TabDao,
-    private val pageFacade: PageFacade
-) : CourseBrowserDataSource {
-    override suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
-        return tabDao.findByCourseId(canvasContext.id).map {
-            it.toApiModel()
-        }
-    }
+interface PageDetailsDataSource {
 
-    override suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): Page? {
-        return pageFacade.getFrontPage(canvasContext.id)
-    }
+    suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<Page>
+
+    suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceNetwork: Boolean): DataResult<Page>
 }

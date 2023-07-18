@@ -18,20 +18,15 @@
 package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.pandautils.room.offline.daos.LockInfoDao
-import com.instructure.pandautils.room.offline.daos.LockedModuleDao
-import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
-import com.instructure.pandautils.room.offline.daos.ModuleNameDao
-import com.instructure.pandautils.room.offline.entities.LockInfoEntity
-import com.instructure.pandautils.room.offline.entities.LockedModuleEntity
-import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirementEntity
-import com.instructure.pandautils.room.offline.entities.ModuleNameEntity
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
 
 class LockInfoFacade(
     private val lockInfoDao: LockInfoDao,
     private val lockedModuleDao: LockedModuleDao,
     private val moduleNameDao: ModuleNameDao,
-    private val completionRequirementDao: ModuleCompletionRequirementDao
+    private val completionRequirementDao: ModuleCompletionRequirementDao,
+    private val lockInfoLockedModuleDao: LockInfoLockedModuleDao
 ) {
 
     suspend fun insertLockInfoForAssignment(lockInfo: LockInfo, assignmentId: Long) {
@@ -42,10 +37,15 @@ class LockInfoFacade(
         insertLockInfo(lockInfo, moduleId = moduleId)
     }
 
-    private suspend fun insertLockInfo(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null) {
-        val lockInfoId = lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId, moduleId))
+    suspend fun insertLockInfoForPage(lockInfo: LockInfo, pageId: Long) {
+        insertLockInfo(lockInfo, pageId = pageId)
+    }
+
+    private suspend fun insertLockInfo(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null, pageId: Long? = null) {
+        val lockInfoId = lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId, moduleId, pageId))
         lockInfo.contextModule?.let { lockedModule ->
-            lockedModuleDao.insert(LockedModuleEntity(lockedModule, lockInfoId))
+            lockedModuleDao.insert(LockedModuleEntity(lockedModule))
+            lockInfoLockedModuleDao.insert(LockInfoLockedModuleEntity(lockInfoId, lockedModule.id))
             moduleNameDao.insertAll(lockedModule.prerequisites?.map { ModuleNameEntity(it, lockedModule.id) }.orEmpty())
             completionRequirementDao.insertAll(lockedModule.completionRequirements.map {
                 ModuleCompletionRequirementEntity(it, lockedModule.id)
@@ -63,8 +63,14 @@ class LockInfoFacade(
         return createFullLockInfoApiModel(lockInfoEntity)
     }
 
+    suspend fun getLockInfoByPageId(pageId: Long): LockInfo? {
+        val lockInfoEntity = lockInfoDao.findByPageId(pageId)
+        return createFullLockInfoApiModel(lockInfoEntity)
+    }
+
     private suspend fun createFullLockInfoApiModel(lockInfoEntity: LockInfoEntity?): LockInfo? {
-        val lockedModuleEntity = lockInfoEntity?.id?.let { lockedModuleDao.findByLockInfoId(it) }
+        val lockedInfoLockedModuleEntity = lockInfoEntity?.id?.let { lockInfoLockedModuleDao.findByLockInfoId(it) }
+        val lockedModuleEntity = lockedInfoLockedModuleEntity?.lockedModuleId?.let { lockedModuleDao.findById(it) }
         val moduleNameEntities = lockedModuleEntity?.id?.let { moduleNameDao.findByLockModuleId(it) }
         val completionRequirementEntities = lockedModuleEntity?.id?.let { completionRequirementDao.findByModuleId(it) }
 

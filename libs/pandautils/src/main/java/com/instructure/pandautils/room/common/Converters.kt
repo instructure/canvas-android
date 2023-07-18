@@ -3,7 +3,7 @@ package com.instructure.pandautils.room.common
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.Date
+import java.util.*
 
 class Converters {
     @TypeConverter
@@ -13,7 +13,7 @@ class Converters {
 
     @TypeConverter
     fun fromStringToListString(s: String): List<String> {
-        return s.split(", ")
+        return s.takeIf { it.isNotEmpty() }?.split(", ").orEmpty()
     }
 
     @TypeConverter

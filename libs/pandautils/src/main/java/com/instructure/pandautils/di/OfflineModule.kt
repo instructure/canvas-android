@@ -343,9 +343,10 @@ class OfflineModule {
         lockInfoDao: LockInfoDao,
         lockedModuleDao: LockedModuleDao,
         moduleNameDao: ModuleNameDao,
-        completionRequirementDao: ModuleCompletionRequirementDao
+        completionRequirementDao: ModuleCompletionRequirementDao,
+        lockInfoLockedModuleDao: LockInfoLockedModuleDao
     ): LockInfoFacade {
-        return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao)
+        return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao, lockInfoLockedModuleDao)
     }
 
     @Provides
@@ -455,5 +456,15 @@ class OfflineModule {
     @Provides
     fun provideAssignmentRubricCriterionDao(offlineDatabase: OfflineDatabase): AssignmentRubricCriterionDao {
         return offlineDatabase.assignmentRubricCriterionDao()
+    }
+
+    @Provides
+    fun providePageFacade(pageDao: PageDao, lockInfoFacade: LockInfoFacade): PageFacade {
+        return PageFacade(pageDao, lockInfoFacade)
+    }
+
+    @Provides
+    fun provideLockInfoLockedModuleDao(appDatabase: OfflineDatabase): LockInfoLockedModuleDao {
+        return appDatabase.lockInfoLockedModuleDao()
     }
 }

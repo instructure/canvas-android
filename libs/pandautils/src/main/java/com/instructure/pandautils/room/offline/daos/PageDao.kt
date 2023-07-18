@@ -43,4 +43,7 @@ interface PageDao {
 
     @Query("SELECT * FROM PageEntity WHERE courseId=:courseId")
     suspend fun findByCourseId(courseId: Long): List<PageEntity>
+
+    @Query("SELECT * FROM PageEntity WHERE courseId=:courseId AND (url=:pageId OR title=:pageId)")
+    suspend fun getPageDetails(courseId: Long, pageId: String): PageEntity?
 }

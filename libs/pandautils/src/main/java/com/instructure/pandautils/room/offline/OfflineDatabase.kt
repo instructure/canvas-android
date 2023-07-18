@@ -95,7 +95,8 @@ import com.instructure.pandautils.room.offline.entities.*
         AttachmentEntity::class,
         MediaCommentEntity::class,
         AuthorEntity::class,
-        SubmissionCommentEntity::class
+        SubmissionCommentEntity::class,
+        LockInfoLockedModuleEntity::class
     ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -200,4 +201,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun rubricCriterionRatingDao(): RubricCriterionRatingDao
 
     abstract fun assignmentRubricCriterionDao(): AssignmentRubricCriterionDao
+
+    abstract fun lockInfoLockedModuleDao(): LockInfoLockedModuleDao
 }

@@ -18,20 +18,20 @@
 package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.offline.entities.LockedModuleEntity
+import com.instructure.pandautils.room.offline.entities.LockInfoLockedModuleEntity
 
 @Dao
-interface LockedModuleDao {
+interface LockInfoLockedModuleDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: LockedModuleEntity)
+    suspend fun insert(entity: LockInfoLockedModuleEntity)
 
     @Delete
-    suspend fun delete(entity: LockedModuleEntity)
+    suspend fun delete(entity: LockInfoLockedModuleEntity)
 
     @Update
-    suspend fun update(entity: LockedModuleEntity)
+    suspend fun update(entity: LockInfoLockedModuleEntity)
 
-    @Query("SELECT * FROM LockedModuleEntity WHERE id = :id")
-    suspend fun findById(id: Long): LockedModuleEntity?
+    @Query("SELECT * FROM LockInfoLockedModuleEntity WHERE lockInfoId = :lockInfoId")
+    suspend fun findByLockInfoId(lockInfoId: Long): LockInfoLockedModuleEntity?
 }

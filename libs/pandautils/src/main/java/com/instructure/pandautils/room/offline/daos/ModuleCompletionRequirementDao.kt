@@ -26,7 +26,7 @@ interface ModuleCompletionRequirementDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: ModuleCompletionRequirementEntity)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(entities: List<ModuleCompletionRequirementEntity>)
 
     @Delete

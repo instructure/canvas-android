@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "15c09d53200b81cd30dc4c1a821769a9",
+    "identityHash": "05087080b5c8a0150f0dc477b3b5bf54",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -4086,7 +4086,7 @@
       },
       {
         "tableName": "LockInfoEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `assignmentId` INTEGER, `moduleId` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `assignmentId` INTEGER, `moduleId` INTEGER, `pageId` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -4117,6 +4117,12 @@
             "columnName": "moduleId",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "pageId",
+            "columnName": "pageId",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -4130,7 +4136,7 @@
       },
       {
         "tableName": "LockedModuleEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `contextType` TEXT, `name` TEXT, `unlockAt` TEXT, `isRequireSequentialProgress` INTEGER NOT NULL, `lockInfoId` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `contextType` TEXT, `name` TEXT, `unlockAt` TEXT, `isRequireSequentialProgress` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -4165,12 +4171,6 @@
           {
             "fieldPath": "isRequireSequentialProgress",
             "columnName": "isRequireSequentialProgress",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lockInfoId",
-            "columnName": "lockInfoId",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -4785,12 +4785,51 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "LockInfoLockedModuleEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`lockInfoId` INTEGER NOT NULL, `lockedModuleId` INTEGER NOT NULL, PRIMARY KEY(`lockInfoId`, `lockedModuleId`), FOREIGN KEY(`lockInfoId`) REFERENCES `LockInfoEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "lockInfoId",
+            "columnName": "lockInfoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lockedModuleId",
+            "columnName": "lockedModuleId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "lockInfoId",
+            "lockedModuleId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "LockInfoEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "lockInfoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '15c09d53200b81cd30dc4c1a821769a9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '05087080b5c8a0150f0dc477b3b5bf54')"
     ]
   }
 }

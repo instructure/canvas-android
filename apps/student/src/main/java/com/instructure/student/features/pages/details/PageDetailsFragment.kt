@@ -20,15 +20,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
@@ -49,17 +47,21 @@ import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.Subscribe
-import retrofit2.Response
 import java.util.*
 import java.util.regex.Pattern
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 @PageView
+@AndroidEntryPoint
 class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
-    private var fetchDataJob: WeaveJob? = null
+    @Inject
+    lateinit var repository: PageDetailsRepository
+
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
     private var page: Page by ParcelableArg(default = Page(), key = PAGE)
@@ -100,7 +102,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        fetchDataJob?.cancel()
         loadHtmlJob?.cancel()
     }
 
@@ -130,9 +131,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_edit -> {
-                openEditPage(page)
-            }
+            R.id.menu_edit -> activity?.withRequireNetwork { openEditPage(page) }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -157,13 +156,14 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     private fun fetchFontPage() {
-        fetchDataJob = tryWeave {
-            val response = awaitApiResponse<Page> { PageManager.getFrontPage(canvasContext, true, it) }
-            response.body()?.let {
+        lifecycleScope.tryLaunch {
+            val result = repository.getFrontPage(canvasContext, true)
+            result.onSuccess {
                 nonNullArgs.putParcelable(PAGE, it)
                 loadPage(it)
+            }.onFailure {
+                loadFailedPageInfo((it as? Failure.Network)?.errorCode)
             }
-            if (response.body() == null) loadFailedPageInfo(response)
         } catch {
             Logger.e("Page Fetch Error ${it.message}")
             loadFailedPageInfo()
@@ -171,14 +171,15 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     private fun fetchPageDetails() {
-        fetchDataJob = tryWeave {
+        lifecycleScope.tryLaunch {
             val pageUrl = pageUrl ?: page.url ?: pageName ?: throw Exception("Page url/name null!")
-            val response = awaitApiResponse<Page> { PageManager.getPageDetails(canvasContext, pageUrl, true, it) }
-            response.body()?.let {
+            val result = repository.getPageDetails(canvasContext, pageUrl, true)
+            result.onSuccess {
                 nonNullArgs.putParcelable(PAGE, it)
                 loadPage(it)
+            }.onFailure {
+                loadFailedPageInfo((it as? Failure.Network)?.errorCode)
             }
-            if (response.body() == null) loadFailedPageInfo(response)
         } catch {
             Logger.e("Page Fetch Error ${it.message}")
             loadFailedPageInfo()
@@ -188,8 +189,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     private fun loadPage(page: Page) = with(binding) {
         setPageObject(page)
 
-        if (page.lockInfo != null) {
-            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(page.lockInfo!!, requireContext(), R.string.lockedPageDesc, !navigatedFromModules)
+        page.lockInfo?.let {
+            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(it, requireContext(), R.string.lockedPageDesc, !navigatedFromModules)
             populateWebView(lockedMessage, getString(R.string.pages))
             return
         }
@@ -246,8 +247,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         return newHtml
     }
 
-    private fun loadFailedPageInfo(response: Response<Page>? = null) {
-        if (response != null && response.code() >= 400 && response.code() < 500 && pageName != null && pageName == Page.FRONT_PAGE_NAME) {
+    private fun loadFailedPageInfo(errorCode: Int? = null) {
+        if (errorCode != null && errorCode >= 400 && errorCode < 500 && pageName != null && pageName == Page.FRONT_PAGE_NAME) {
 
             var context: String = if (canvasContext.type == CanvasContext.Type.COURSE) {
                 getString(R.string.course)
@@ -281,7 +282,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     override val bookmark: Bookmarker
-        get() = Bookmarker(true, canvasContext).withParam(RouterParams.PAGE_ID, if (Page.FRONT_PAGE_NAME == pageName) Page.FRONT_PAGE_NAME else pageName!!)
+        get() = Bookmarker(true, canvasContext)
+            .withParam(RouterParams.PAGE_ID, if (Page.FRONT_PAGE_NAME == pageName) Page.FRONT_PAGE_NAME else pageName!!)
 
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
@@ -347,8 +349,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         }
 
         fun makeRoute(canvasContext: CanvasContext, pageName: String?): Route {
-            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { if (pageName != null) putString(
-                PAGE_NAME, pageName) }))
+            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
+                if (pageName != null) putString(PAGE_NAME, pageName)
+            }))
         }
 
         fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?, navigatedFromModules: Boolean): Route {
