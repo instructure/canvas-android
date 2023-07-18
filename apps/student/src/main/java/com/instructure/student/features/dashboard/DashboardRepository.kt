@@ -31,20 +31,19 @@ class DashboardRepository(
     networkDataSource: DashboardNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-    private val courseApi: CourseAPI.CoursesInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
 ) : Repository<DashboardDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getCourses(forceNetwork: Boolean): List<Course> {
-        return dataSource.getCourses(forceNetwork)
+        return dataSource().getCourses(forceNetwork)
     }
 
     suspend fun getGroups(forceNetwork: Boolean): List<Group> {
-        return dataSource.getGroups(forceNetwork)
+        return dataSource().getGroups(forceNetwork)
     }
 
     suspend fun getDashboardCourses(forceNetwork: Boolean): List<DashboardCard> {
-        val dashboardCards = dataSource.getDashboardCards(forceNetwork).sortedBy { it.position }
+        val dashboardCards = dataSource().getDashboardCards(forceNetwork).sortedBy { it.position }
         if (isOnline() && isOfflineEnabled()) {
             localDataSource.saveDashboardCards(dashboardCards)
         }
@@ -52,6 +51,8 @@ class DashboardRepository(
     }
 
     suspend fun getSyncedCourseIds(): Set<Long> {
+        if (!isOfflineEnabled()) return emptySet()
+
         val courseSyncSettings = courseSyncSettingsDao.findAll()
         return courseSyncSettings
             .filter { it.anySyncEnabled }
