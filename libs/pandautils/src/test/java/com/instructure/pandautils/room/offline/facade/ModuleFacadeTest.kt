@@ -63,7 +63,7 @@ class ModuleFacadeTest {
         val moduleObject = ModuleObject(id = 1, position = 1, name = "Module 1", items = listOf(
             ModuleItem(id = 2, position = 1, title = "Module 1 Item 1"),
             ModuleItem(id = 3, position = 2, title = "Module 1 Item 2",
-                completionRequirement = ModuleCompletionRequirement(id = 4, minScore = 10.0),
+                completionRequirement = ModuleCompletionRequirement(minScore = 10.0),
                 moduleDetails = ModuleContentDetails(lockAt = "2020-01-01T00:00:00Z", lockInfo = LockInfo(unlockAt = "2020-01-01T00:00:00Z")),
                 masteryPaths = MasteryPath(isLocked = true)
         )))
@@ -80,7 +80,7 @@ class ModuleFacadeTest {
 
         val completionRequirement = slot<ModuleCompletionRequirementEntity>()
         coVerify { completionRequirementDao.insert(capture(completionRequirement)) }
-        Assert.assertEquals(moduleObject.items[1].completionRequirement?.id, completionRequirement.captured.id)
+        Assert.assertEquals(moduleObject.items[1].completionRequirement?.minScore, completionRequirement.captured.minScore)
 
         val moduleContentDetails = slot<ModuleContentDetailsEntity>()
         coVerify { moduleContentDetailsDao.insert(capture(moduleContentDetails)) }
@@ -117,6 +117,28 @@ class ModuleFacadeTest {
     }
 
     @Test
+    fun `Build and return ModuleObject for id from related database entities`() = runTest {
+        coEvery { moduleObjectDao.findById(1) } returns ModuleObjectEntity(ModuleObject(id = 1, name = "Module"), 1)
+        coEvery { moduleItemDao.findByModuleId(1) } returns listOf(ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1))
+        coEvery { completionRequirementDao.findByModuleId(2) } returns listOf(ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1))
+        coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
+        coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
+            ModuleContentDetails(pointsPossible = "10"), 2
+        )
+        coEvery { masteryPathFacade.getMasteryPath(2) } returns MasteryPath(isLocked = true)
+
+        val result = moduleFacade.getModuleObjectById(1)
+
+        Assert.assertEquals(1, result!!.id)
+        Assert.assertEquals("Module", result.name)
+        Assert.assertEquals("Item", result.items.first().title)
+        Assert.assertEquals(10.0, result.items.first().completionRequirement?.minScore)
+        Assert.assertEquals("2020-01-01T00:00:00Z", result.items.first().moduleDetails?.lockInfo?.unlockAt)
+        Assert.assertEquals("10", result.items.first().moduleDetails?.pointsPossible)
+        Assert.assertEquals(true, result.items.first().masteryPaths?.isLocked)
+    }
+
+    @Test
     fun `Build and return ModuleItems for module from related database entities`() = runTest {
         coEvery { moduleItemDao.findByModuleId(1) } returns listOf(ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1))
         coEvery { completionRequirementDao.findByModuleId(2) } returns listOf(ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1))
@@ -135,5 +157,65 @@ class ModuleFacadeTest {
         Assert.assertEquals("2020-01-01T00:00:00Z", result.first().moduleDetails?.lockInfo?.unlockAt)
         Assert.assertEquals("10", result.first().moduleDetails?.pointsPossible)
         Assert.assertEquals(true, result.first().masteryPaths?.isLocked)
+    }
+
+    @Test
+    fun `Build and return ModuleItem for id from related database entities`() = runTest {
+        coEvery { moduleItemDao.findById(2) } returns ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1)
+        coEvery { completionRequirementDao.findByModuleId(2) } returns listOf(ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1))
+        coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
+        coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
+            ModuleContentDetails(pointsPossible = "10"), 2
+        )
+        coEvery { masteryPathFacade.getMasteryPath(2) } returns MasteryPath(isLocked = true)
+
+        val result = moduleFacade.getModuleItemById(2)
+
+        Assert.assertEquals(2, result!!.id)
+        Assert.assertEquals("Item", result.title)
+        Assert.assertEquals(10.0, result.completionRequirement?.minScore)
+        Assert.assertEquals("2020-01-01T00:00:00Z", result.moduleDetails?.lockInfo?.unlockAt)
+        Assert.assertEquals("10", result.moduleDetails?.pointsPossible)
+        Assert.assertEquals(true, result.masteryPaths?.isLocked)
+    }
+
+    @Test
+    fun `Build and return ModuleItem for asset id and type from related database entities`() = runTest {
+        coEvery { moduleItemDao.findByTypeAndContentId("Assignment", 1) } returns ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1)
+        coEvery { completionRequirementDao.findByModuleId(2) } returns listOf(ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1))
+        coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
+        coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
+            ModuleContentDetails(pointsPossible = "10"), 2
+        )
+        coEvery { masteryPathFacade.getMasteryPath(2) } returns MasteryPath(isLocked = true)
+
+        val result = moduleFacade.getModuleItemByAssetIdAndType("Assignment", 1)
+
+        Assert.assertEquals(2, result!!.id)
+        Assert.assertEquals("Item", result.title)
+        Assert.assertEquals(10.0, result.completionRequirement?.minScore)
+        Assert.assertEquals("2020-01-01T00:00:00Z", result.moduleDetails?.lockInfo?.unlockAt)
+        Assert.assertEquals("10", result.moduleDetails?.pointsPossible)
+        Assert.assertEquals(true, result.masteryPaths?.isLocked)
+    }
+
+    @Test
+    fun `Build and return ModuleItem for page from related database entities`() = runTest {
+        coEvery { moduleItemDao.findByPageUrl("instructure.com") } returns ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1)
+        coEvery { completionRequirementDao.findByModuleId(2) } returns listOf(ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1))
+        coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
+        coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
+            ModuleContentDetails(pointsPossible = "10"), 2
+        )
+        coEvery { masteryPathFacade.getMasteryPath(2) } returns MasteryPath(isLocked = true)
+
+        val result = moduleFacade.getModuleItemForPage("instructure.com")
+
+        Assert.assertEquals(2, result!!.id)
+        Assert.assertEquals("Item", result.title)
+        Assert.assertEquals(10.0, result.completionRequirement?.minScore)
+        Assert.assertEquals("2020-01-01T00:00:00Z", result.moduleDetails?.lockInfo?.unlockAt)
+        Assert.assertEquals("10", result.moduleDetails?.pointsPossible)
+        Assert.assertEquals(true, result.masteryPaths?.isLocked)
     }
 }
