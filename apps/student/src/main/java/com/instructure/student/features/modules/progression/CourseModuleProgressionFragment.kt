@@ -196,7 +196,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         binding.prevItem.setOnClickListener(prevItemClickCallback)
         binding.nextItem.setOnClickListener(nextItemClickCallback)
 
-        binding.markDoneButton.setOnClickListener {
+        binding.markDoneButton.onClickWithRequireNetwork {
             val moduleItem = getModelObject()
             if (moduleItem?.completionRequirement != null) {
                 lifecycleScope.launch {

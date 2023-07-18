@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 @Entity
 data class ModuleCompletionRequirementEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0,
     val type: String?,
     val minScore: Double,
     val maxScore: Double,
@@ -32,7 +32,6 @@ data class ModuleCompletionRequirementEntity(
     val moduleId: Long
 ) {
     constructor(moduleCompletionRequirement: ModuleCompletionRequirement, moduleId: Long) : this(
-        id = moduleCompletionRequirement.id,
         type = moduleCompletionRequirement.type,
         minScore = moduleCompletionRequirement.minScore,
         maxScore = moduleCompletionRequirement.maxScore,
