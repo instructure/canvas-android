@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.discussion.list.DiscussionListRepository
 import com.instructure.student.features.discussion.list.datasource.DiscussionListLocalDataSource
@@ -53,8 +54,9 @@ class DiscussionListModule {
     fun provideDiscussionListRepository(
         localDataSource: DiscussionListLocalDataSource,
         networkDataSource: DiscussionListNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): DiscussionListRepository {
-        return DiscussionListRepository(localDataSource, networkDataSource, networkStateProvider)
+        return DiscussionListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.list.ModuleListRepository
 import com.instructure.student.features.modules.list.datasource.ModuleListLocalDataSource
@@ -47,9 +48,10 @@ class ModuleListModule {
     fun provideModuleListRepository(
         moduleListLocalDataSource: ModuleListLocalDataSource,
         moduleListNetworkDataSource: ModuleListNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): ModuleListRepository {
-        return ModuleListRepository(moduleListLocalDataSource, moduleListNetworkDataSource, networkStateProvider)
+        return ModuleListRepository(moduleListLocalDataSource, moduleListNetworkDataSource, networkStateProvider, featureFlagProvider)
     }
 
 }

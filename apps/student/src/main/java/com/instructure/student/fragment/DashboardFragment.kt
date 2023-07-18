@@ -178,6 +178,7 @@ class DashboardFragment : ParentFragment() {
 
         configureRecyclerView()
         recyclerBinding.listView.isSelectionEnabled = false
+        initMenu()
     }
 
     override fun applyTheme() {
@@ -185,8 +186,6 @@ class DashboardFragment : ParentFragment() {
             toolbar.title = title()
             // Styling done in attachNavigationDrawer
             navigation?.attachNavigationDrawer(this@DashboardFragment, toolbar)
-
-            initMenu()
 
             recyclerAdapter?.notifyDataSetChanged()
         }

@@ -25,6 +25,7 @@ import com.instructure.pandautils.features.dashboard.notifications.DashboardRout
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.dashboard.DashboardLocalDataSource
 import com.instructure.student.features.dashboard.DashboardNetworkDataSource
@@ -69,9 +70,9 @@ class DashboardModule {
         networkDataSource: DashboardNetworkDataSource,
         localDataSource: DashboardLocalDataSource,
         networkStateProvider: NetworkStateProvider,
-        courseApi: CourseAPI.CoursesInterface,
+        featureFlagProvider: FeatureFlagProvider,
         courseSyncSettingsDao: CourseSyncSettingsDao
     ): DashboardRepository {
-        return DashboardRepository(localDataSource, networkDataSource, networkStateProvider, courseApi, courseSyncSettingsDao)
+        return DashboardRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao)
     }
 }

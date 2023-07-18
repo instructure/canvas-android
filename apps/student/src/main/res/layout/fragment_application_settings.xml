@@ -272,6 +272,7 @@
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/offlineContentDivider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

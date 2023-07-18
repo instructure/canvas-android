@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.offline.coursebrowser.CourseBrowserLocalDataSource
 import com.instructure.student.features.offline.coursebrowser.CourseBrowserNetworkDataSource
@@ -39,13 +40,21 @@ class CourseBrowserModule {
     }
 
     @Provides
-    fun provideCourseBrowserNetworkDataSource(tabApi: TabAPI.TabsInterface, pageApi: PageAPI.PagesInterface): CourseBrowserNetworkDataSource {
+    fun provideCourseBrowserNetworkDataSource(
+        tabApi: TabAPI.TabsInterface,
+        pageApi: PageAPI.PagesInterface
+    ): CourseBrowserNetworkDataSource {
         return CourseBrowserNetworkDataSource(tabApi, pageApi)
     }
 
     @Provides
-    fun provideCourseBrowserRepository(networkDataSource: CourseBrowserNetworkDataSource, localDataSource: CourseBrowserLocalDataSource, networkStateProvider: NetworkStateProvider): CourseBrowserRepository {
-        return CourseBrowserRepository(networkDataSource, localDataSource, networkStateProvider)
+    fun provideCourseBrowserRepository(
+        networkDataSource: CourseBrowserNetworkDataSource,
+        localDataSource: CourseBrowserLocalDataSource,
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
+    ): CourseBrowserRepository {
+        return CourseBrowserRepository(networkDataSource, localDataSource, networkStateProvider, featureFlagProvider)
     }
 
 

@@ -2,6 +2,7 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.pages.list.PageListLocalDataSource
 import com.instructure.student.features.pages.list.PageListNetworkDataSource
@@ -29,8 +30,9 @@ class PageListModule {
     fun providePageListRepository(
         localDataSource: PageListLocalDataSource,
         networkDataSource: PageListNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): PageListRepository {
-        return PageListRepository(localDataSource, networkDataSource, networkStateProvider)
+        return PageListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

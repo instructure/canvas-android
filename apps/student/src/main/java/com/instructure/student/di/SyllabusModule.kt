@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.syllabus.SyllabusRepository
 import com.instructure.student.mobius.syllabus.datasource.SyllabusLocalDataSource
@@ -39,8 +40,9 @@ class SyllabusModule {
     fun provideSyllabusRepository(
         localDataSource: SyllabusLocalDataSource,
         networkDataSource: SyllabusNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): SyllabusRepository {
-        return SyllabusRepository(localDataSource, networkDataSource, networkStateProvider)
+        return SyllabusRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

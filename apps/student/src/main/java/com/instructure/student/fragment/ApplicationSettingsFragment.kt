@@ -172,6 +172,7 @@ class ApplicationSettingsFragment : ParentFragment() {
     private fun setUpSyncSettings() {
         lifecycleScope.launch {
             if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
+                binding.offlineContentDivider.setGone()
                 binding.offlineContentTitle.setGone()
                 binding.offlineSyncSettingsContainer.setGone()
             } else {

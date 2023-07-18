@@ -23,6 +23,7 @@ import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
 import com.instructure.pandautils.room.offline.facade.SubmissionFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsRepository
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.datasource.SubmissionDetailsLocalDataSource
@@ -62,8 +63,9 @@ class SubmissionDetailsModule {
     fun provideRepository(
         localDataSource: SubmissionDetailsLocalDataSource,
         networkDataSource: SubmissionDetailsNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): SubmissionDetailsRepository {
-        return SubmissionDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
+        return SubmissionDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

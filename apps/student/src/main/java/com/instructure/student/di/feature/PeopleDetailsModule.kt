@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.room.offline.facade.UserFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.people.details.PeopleDetailsLocalDataSource
 import com.instructure.student.features.people.details.PeopleDetailsNetworkDataSource
@@ -47,8 +48,9 @@ class PeopleDetailsModule {
     fun providePeopleDetailsRepository(
         localDataSource: PeopleDetailsLocalDataSource,
         networkDataSource: PeopleDetailsNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): PeopleDetailsRepository {
-        return PeopleDetailsRepository(networkDataSource, localDataSource, networkStateProvider)
+        return PeopleDetailsRepository(networkDataSource, localDataSource, networkStateProvider, featureFlagProvider)
     }
 }
