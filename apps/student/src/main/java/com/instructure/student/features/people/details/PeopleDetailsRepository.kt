@@ -20,19 +20,26 @@ package com.instructure.student.features.people.details
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 
 class PeopleDetailsRepository(
-        peopleDetailsNetworkDataSource: PeopleDetailsNetworkDataSource,
-        peopleDetailsLocalDataSource: PeopleDetailsLocalDataSource,
-        networkStateProvider: NetworkStateProvider,
-) : Repository<PeopleDetailsDataSource>(peopleDetailsLocalDataSource, peopleDetailsNetworkDataSource, networkStateProvider) {
+    peopleDetailsNetworkDataSource: PeopleDetailsNetworkDataSource,
+    peopleDetailsLocalDataSource: PeopleDetailsLocalDataSource,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<PeopleDetailsDataSource>(
+    peopleDetailsLocalDataSource,
+    peopleDetailsNetworkDataSource,
+    networkStateProvider,
+    featureFlagProvider
+) {
     suspend fun loadUser(canvasContext: CanvasContext, userId: Long, forceNetwork: Boolean): User? {
-        return dataSource.loadUser(canvasContext, userId, forceNetwork)
+        return dataSource().loadUser(canvasContext, userId, forceNetwork)
     }
 
     suspend fun loadMessagePermission(canvasContext: CanvasContext, user: User?, forceNetwork: Boolean): Boolean {
-        return dataSource.loadMessagePermission(
+        return dataSource().loadMessagePermission(
             canvasContext = canvasContext,
             user = user,
             forceNetwork = forceNetwork,
