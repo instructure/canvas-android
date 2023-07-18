@@ -17,6 +17,8 @@
 package com.instructure.student.features.quiz.list.datasource
 
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.student.features.quiz.list.QuizListLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -27,15 +29,15 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class QuizListLocalDataSourceTest {
-    private val quizFacade: QuizFacade = mockk(relaxed = true)
+    private val quizDao: QuizDao = mockk(relaxed = true)
 
-    private val dataSource = QuizListLocalDataSource(quizFacade)
+    private val dataSource = QuizListLocalDataSource(quizDao)
 
     @Test
     fun `Quizzes returned`() = runTest {
         val expected = listOf(Quiz(1L), Quiz(2L))
 
-        coEvery { quizFacade.getQuizzesByContext(any(), any()) } returns expected
+        coEvery { quizDao.findByCourseId(any()) } returns expected.map { QuizEntity(it, 1L) }
 
         val result = dataSource.loadQuizzes("course", 1L, false)
         assertEquals(expected, result)
