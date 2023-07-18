@@ -20,6 +20,8 @@ import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.discussion.list.datasource.DiscussionListLocalDataSource
 import com.instructure.student.features.discussion.list.datasource.DiscussionListNetworkDataSource
@@ -29,6 +31,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -37,8 +40,14 @@ class DiscussionListRepositoryTest {
     private val networkDataSource: DiscussionListNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: DiscussionListLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val repository = DiscussionListRepository(localDataSource, networkDataSource, networkStateProvider)
+    private val repository = DiscussionListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+
+    @Before
+    fun setup() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+    }
 
     @Test
     fun `Get announcement creation permission from network data source for course when device is online`() = runTest {
