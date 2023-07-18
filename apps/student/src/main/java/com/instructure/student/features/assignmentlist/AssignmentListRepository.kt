@@ -20,6 +20,7 @@ package com.instructure.student.features.assignmentlist
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignmentlist.datasource.AssignmentListDataSource
 import com.instructure.student.features.assignmentlist.datasource.AssignmentListLocalDataSource
@@ -28,8 +29,9 @@ import com.instructure.student.features.assignmentlist.datasource.AssignmentList
 class AssignmentListRepository(
     localDataSource: AssignmentListLocalDataSource,
     networkDataSource: AssignmentListNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<AssignmentListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<AssignmentListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
@@ -37,7 +39,7 @@ class AssignmentListRepository(
         scopeToStudent: Boolean,
         forceNetwork: Boolean
     ): List<AssignmentGroup> {
-        return dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
+        return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(
             courseId,
             gradingPeriodId,
             scopeToStudent,
@@ -49,13 +51,13 @@ class AssignmentListRepository(
         courseId: Long,
         isRefresh: Boolean
     ): List<AssignmentGroup> {
-        return dataSource.getAssignmentGroupsWithAssignments(courseId, isRefresh)
+        return dataSource().getAssignmentGroupsWithAssignments(courseId, isRefresh)
     }
 
     suspend fun getGradingPeriodsForCourse(
         courseId: Long,
         isRefresh: Boolean
     ): List<GradingPeriod> {
-        return dataSource.getGradingPeriodsForCourse(courseId, isRefresh)
+        return dataSource().getGradingPeriodsForCourse(courseId, isRefresh)
     }
 }

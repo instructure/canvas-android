@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.list.datasource.ModuleListDataSource
 import com.instructure.student.features.modules.list.datasource.ModuleListLocalDataSource
@@ -30,14 +31,22 @@ import com.instructure.student.features.modules.list.datasource.ModuleListNetwor
 class ModuleListRepository(
     localDataSource: ModuleListLocalDataSource,
     private val networkDataSource: ModuleListNetworkDataSource,
-    networkStateProvider: NetworkStateProvider) : Repository<ModuleListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<ModuleListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
-    suspend fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        return dataSource.getAllModuleObjects(canvasContext, forceNetwork)
+    suspend fun getAllModuleObjects(
+        canvasContext: CanvasContext,
+        forceNetwork: Boolean
+    ): DataResult<List<ModuleObject>> {
+        return dataSource().getAllModuleObjects(canvasContext, forceNetwork)
     }
 
-    suspend fun getFirstPageModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        return dataSource.getFirstPageModuleObjects(canvasContext, forceNetwork)
+    suspend fun getFirstPageModuleObjects(
+        canvasContext: CanvasContext,
+        forceNetwork: Boolean
+    ): DataResult<List<ModuleObject>> {
+        return dataSource().getFirstPageModuleObjects(canvasContext, forceNetwork)
     }
 
     suspend fun getNextPageModuleObjects(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
@@ -45,12 +54,16 @@ class ModuleListRepository(
     }
 
     suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
-        val tabs = dataSource.getTabs(canvasContext, forceNetwork).dataOrNull ?: emptyList()
+        val tabs = dataSource().getTabs(canvasContext, forceNetwork).dataOrNull ?: emptyList()
         return tabs.filter { !(it.isExternal && it.isHidden) }
     }
 
-    suspend fun getFirstPageModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
-        return dataSource.getFirstPageModuleItems(canvasContext, moduleId, forceNetwork)
+    suspend fun getFirstPageModuleItems(
+        canvasContext: CanvasContext,
+        moduleId: Long,
+        forceNetwork: Boolean
+    ): DataResult<List<ModuleItem>> {
+        return dataSource().getFirstPageModuleItems(canvasContext, moduleId, forceNetwork)
     }
 
     suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {

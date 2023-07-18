@@ -23,15 +23,17 @@ import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 
 class DashboardRepository(
     private val localDataSource: DashboardLocalDataSource,
     networkDataSource: DashboardNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
     private val courseApi: CourseAPI.CoursesInterface,
-    private val courseSyncSettingsDao: CourseSyncSettingsDao
-) : Repository<DashboardDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+) : Repository<DashboardDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getCourses(forceNetwork: Boolean): List<Course> {
         return dataSource.getCourses(forceNetwork)
@@ -43,7 +45,7 @@ class DashboardRepository(
 
     suspend fun getDashboardCourses(forceNetwork: Boolean): List<DashboardCard> {
         val dashboardCards = dataSource.getDashboardCards(forceNetwork).sortedBy { it.position }
-        if (isOnline()) {
+        if (isOnline() && isOfflineEnabled()) {
             localDataSource.saveDashboardCards(dashboardCards)
         }
         return dashboardCards
