@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -38,6 +39,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
@@ -76,6 +78,9 @@ class DashboardFragment : ParentFragment() {
 
     @Inject
     lateinit var repository: DashboardRepository
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
@@ -180,6 +185,14 @@ class DashboardFragment : ParentFragment() {
             // Styling done in attachNavigationDrawer
             navigation?.attachNavigationDrawer(this@DashboardFragment, toolbar)
 
+            initMenu()
+
+            recyclerAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun initMenu() = with(binding) {
+        lifecycleScope.tryLaunch {
             toolbar.setMenu(R.menu.menu_dashboard) { item ->
                 when (item.itemId) {
                     R.id.menu_dashboard_cards -> changeDashboardLayout(item)
@@ -196,7 +209,10 @@ class DashboardFragment : ParentFragment() {
                 if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
             dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
-            recyclerAdapter?.notifyDataSetChanged()
+            if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
+                toolbar.menu.removeItem(R.id.menu_dashboard_offline)
+                toolbar.menu.findItem(R.id.menu_dashboard_cards).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            }
         }
     }
 
