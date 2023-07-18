@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.room.offline.facade.*
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -38,6 +40,7 @@ const val COURSE_IDS = "course-ids"
 class OfflineSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
+    private val featureFlagProvider: FeatureFlagProvider,
     private val courseApi: CourseAPI.CoursesInterface,
     private val pageApi: PageAPI.PagesInterface,
     private val userApi: UserAPI.UsersInterface,
@@ -65,6 +68,7 @@ class OfflineSyncWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
+        if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) return Result.success()
         try {
             val dashboardCards =
                 courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
