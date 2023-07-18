@@ -65,6 +65,7 @@ import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import javax.inject.Inject
@@ -192,7 +193,7 @@ class DashboardFragment : ParentFragment() {
     }
 
     private fun initMenu() = with(binding) {
-        lifecycleScope.tryLaunch {
+        lifecycleScope.launch {
             toolbar.setMenu(R.menu.menu_dashboard) { item ->
                 when (item.itemId) {
                     R.id.menu_dashboard_cards -> changeDashboardLayout(item)
