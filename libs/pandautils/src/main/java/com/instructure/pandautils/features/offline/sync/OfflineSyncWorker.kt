@@ -85,7 +85,7 @@ class OfflineSyncWorker @AssistedInject constructor(
                         fetchPages(courseSettings.courseId)
                     }
                     if (courseSettings.areAnyTabsSelected(
-                            setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID, Tab.QUIZZES_ID)
+                            setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID)
                         )
                     ) {
                         fetchAssignments(courseSettings.courseId)

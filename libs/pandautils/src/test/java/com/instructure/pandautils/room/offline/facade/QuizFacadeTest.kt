@@ -14,14 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.features.quiz.list
+package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.room.offline.daos.QuizContextDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.QuizContextEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
-import com.instructure.pandautils.room.offline.facade.QuizFacade
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

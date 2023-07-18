@@ -95,6 +95,7 @@ class QuizListRecyclerAdapter(
             quizzes = repository.loadQuizzes(canvasContext.type.apiString, canvasContext.id, isRefresh)
             populateData()
             onCallbackFinished(ApiType.API)
+            isAllPagesLoaded = true
         } catch {
             context.toast(R.string.errorOccurred)
         }

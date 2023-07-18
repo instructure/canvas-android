@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.depaginate
 class QuizListNetworkDataSource(private val quizApi: QuizAPI.QuizInterface) : QuizListDataSource {
 
     override suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
-        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return quizApi.getFirstPageQuizzesList(contextType, contextId, restParams).depaginate {
             quizApi.getNextPageQuizzesList(it, restParams)
         }.dataOrThrow
