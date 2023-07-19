@@ -177,11 +177,11 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
 
     final source = files(projects.jacocoReport.sourceDirectories)
 
-    additionalSourceDirs.setFrom source
-    sourceDirectories.setFrom source
+    additionalSourceDirs.setFrom(source)
+    sourceDirectories.setFrom (source)
 
-    classDirectories.setFrom files(projects.jacocoReport.classDirectories)
-    executionData.setFrom files(projects.jacocoReport.executionData)
+    classDirectories.setFrom(files(projects.jacocoReport.classDirectories))
+    executionData.setFrom(files(projects.jacocoReport.executionData))
 
     reports {
         html {
@@ -195,7 +195,8 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
     }
 
     doFirst {
-        executionData.setFrom files(executionData.findAll { it.exists() })
+        def existingFiles = files(executionData.findAll { it.exists() })
+        executionData.setFrom(existingFiles)
     }
 }
 
