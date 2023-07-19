@@ -26,17 +26,18 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.isVisible
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderQuizBinding
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.util.BinderUtils
-import java.util.*
+import java.util.Date
 
 class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: Quiz, adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?, context: Context, iconAndTextColor: Int) = with(ViewholderQuizBinding.bind(itemView)) {
-        root.setOnClickListener { adapterToFragmentCallback?.onRowClicked(item, adapterPosition, true) }
+        root.onClickWithRequireNetwork { adapterToFragmentCallback?.onRowClicked(item, adapterPosition, true) }
 
         // Title
         title.text = item.title

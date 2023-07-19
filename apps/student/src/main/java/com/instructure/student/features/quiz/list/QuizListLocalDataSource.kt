@@ -13,28 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
 
-package com.instructure.pandautils.room.offline.daos
+package com.instructure.student.features.quiz.list
 
-import androidx.room.*
-import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.QuizDao
 
-@Dao
-interface QuizDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: QuizEntity)
-
-    @Delete
-    suspend fun delete(entity: QuizEntity)
-
-    @Update
-    suspend fun update(entity: QuizEntity)
-
-    @Query("SELECT * FROM QuizEntity WHERE id = :id")
-    suspend fun findById(id: Long): QuizEntity?
-
-    @Query("SELECT * FROM QuizEntity WHERE courseId = :courseId")
-    suspend fun findByCourseId(courseId: Long): List<QuizEntity>
+class QuizListLocalDataSource(
+    private val quizDao: QuizDao,
+) : QuizListDataSource {
+    override suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
+        return quizDao.findByCourseId(contextId).map { it.toApiModel() }
+    }
 }

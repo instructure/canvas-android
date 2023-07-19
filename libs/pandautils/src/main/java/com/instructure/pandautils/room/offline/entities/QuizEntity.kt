@@ -18,10 +18,20 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Quiz
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+    ]
+)
 data class QuizEntity(
     @PrimaryKey
     val id: Long,
@@ -62,8 +72,9 @@ data class QuizEntity(
     val assignmentId: Long,
     val isOnlyVisibleToOverrides: Boolean,
     val unpublishable: Boolean,
+    val courseId: Long?,
 ) {
-    constructor(quiz: Quiz) : this(
+    constructor(quiz: Quiz, courseId: Long? = null) : this(
         id = quiz.id,
         title = quiz.title,
         mobileUrl = quiz.mobileUrl,
@@ -99,7 +110,8 @@ data class QuizEntity(
         published = quiz.published,
         assignmentId = quiz.assignmentId,
         isOnlyVisibleToOverrides = quiz.isOnlyVisibleToOverrides,
-        unpublishable = quiz.unpublishable
+        unpublishable = quiz.unpublishable,
+        courseId = courseId,
     )
 
     fun toApiModel() = Quiz(
