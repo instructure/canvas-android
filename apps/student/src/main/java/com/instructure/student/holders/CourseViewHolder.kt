@@ -59,7 +59,7 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
         courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
 
-        if (courseItem.available) {
+        if (courseItem.available || !isOfflineEnabled) {
             cardView.alpha = 1f
             cardView.isEnabled = true
             overflow.isEnabled = true
