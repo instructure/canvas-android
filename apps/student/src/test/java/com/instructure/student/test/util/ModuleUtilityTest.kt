@@ -211,7 +211,8 @@ class ModuleUtilityTest : TestCase() {
                 id = 4567,
                 type = "Quiz",
                 url = url,
-                htmlUrl = htmlUrl
+                htmlUrl = htmlUrl,
+                contentId = 55
         )
 
         val course = Course()
@@ -219,6 +220,7 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putString(Const.URL, htmlUrl)
         expectedBundle.putString(Const.API_URL, apiUrl)
+        expectedBundle.putLong(Const.ID, 55)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
         TestCase.assertNotNull(parentFragment)
