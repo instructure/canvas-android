@@ -39,7 +39,6 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
@@ -192,23 +191,24 @@ class DashboardFragment : ParentFragment() {
     }
 
     private fun initMenu() = with(binding) {
-        lifecycleScope.launch {
-            toolbar.setMenu(R.menu.menu_dashboard) { item ->
-                when (item.itemId) {
-                    R.id.menu_dashboard_cards -> changeDashboardLayout(item)
-                    R.id.menu_dashboard_offline -> RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute())
-                }
+
+        toolbar.setMenu(R.menu.menu_dashboard) { item ->
+            when (item.itemId) {
+                R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+                R.id.menu_dashboard_offline -> RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute())
             }
+        }
 
-            val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
-            val menuIconRes =
-                if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
-            dashboardLayoutMenuItem.setIcon(menuIconRes)
+        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+        val menuIconRes =
+            if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        dashboardLayoutMenuItem.setIcon(menuIconRes)
 
-            val menuTitleRes =
-                if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
-            dashboardLayoutMenuItem.setTitle(menuTitleRes)
+        val menuTitleRes =
+            if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
+        lifecycleScope.launch {
             if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
                 toolbar.menu.removeItem(R.id.menu_dashboard_offline)
                 toolbar.menu.findItem(R.id.menu_dashboard_cards).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)

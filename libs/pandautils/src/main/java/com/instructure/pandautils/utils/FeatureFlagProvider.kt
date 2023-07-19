@@ -20,7 +20,6 @@ import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
