@@ -343,10 +343,9 @@ class OfflineModule {
         lockInfoDao: LockInfoDao,
         lockedModuleDao: LockedModuleDao,
         moduleNameDao: ModuleNameDao,
-        completionRequirementDao: ModuleCompletionRequirementDao,
-        lockInfoLockedModuleDao: LockInfoLockedModuleDao
+        completionRequirementDao: ModuleCompletionRequirementDao
     ): LockInfoFacade {
-        return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao, lockInfoLockedModuleDao)
+        return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao)
     }
 
     @Provides
@@ -461,10 +460,5 @@ class OfflineModule {
     @Provides
     fun providePageFacade(pageDao: PageDao, lockInfoFacade: LockInfoFacade): PageFacade {
         return PageFacade(pageDao, lockInfoFacade)
-    }
-
-    @Provides
-    fun provideLockInfoLockedModuleDao(appDatabase: OfflineDatabase): LockInfoLockedModuleDao {
-        return appDatabase.lockInfoLockedModuleDao()
     }
 }

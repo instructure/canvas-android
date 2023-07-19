@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "05087080b5c8a0150f0dc477b3b5bf54",
+    "identityHash": "1a187ca4971c65fe9154b9d46efa32b0",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -4086,7 +4086,7 @@
       },
       {
         "tableName": "LockInfoEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `assignmentId` INTEGER, `moduleId` INTEGER, `pageId` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `lockedModuleId` INTEGER, `assignmentId` INTEGER, `moduleId` INTEGER, `pageId` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -4104,6 +4104,12 @@
             "fieldPath": "unlockAt",
             "columnName": "unlockAt",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lockedModuleId",
+            "columnName": "lockedModuleId",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -4785,51 +4791,12 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "LockInfoLockedModuleEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`lockInfoId` INTEGER NOT NULL, `lockedModuleId` INTEGER NOT NULL, PRIMARY KEY(`lockInfoId`, `lockedModuleId`), FOREIGN KEY(`lockInfoId`) REFERENCES `LockInfoEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "lockInfoId",
-            "columnName": "lockInfoId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lockedModuleId",
-            "columnName": "lockedModuleId",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "lockInfoId",
-            "lockedModuleId"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": [
-          {
-            "table": "LockInfoEntity",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "lockInfoId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '05087080b5c8a0150f0dc477b3b5bf54')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a187ca4971c65fe9154b9d46efa32b0')"
     ]
   }
 }

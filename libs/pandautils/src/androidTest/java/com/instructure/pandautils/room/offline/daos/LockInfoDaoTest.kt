@@ -72,4 +72,18 @@ class LockInfoDaoTest {
 
         Assert.assertEquals("4", result!!.unlockAt)
     }
+
+    @Test
+    fun testFindByPageId() = runTest {
+        lockInfoDao.insert(LockInfoEntity(LockInfo(unlockAt = "1"), moduleId = 1))
+        lockInfoDao.insert(LockInfoEntity(LockInfo(unlockAt = "2"), moduleId = 2))
+        lockInfoDao.insert(LockInfoEntity(LockInfo(unlockAt = "3"), assignmentId = 1))
+        lockInfoDao.insert(LockInfoEntity(LockInfo(unlockAt = "4"), assignmentId = 2))
+        lockInfoDao.insert(LockInfoEntity(LockInfo(unlockAt = "5"), pageId = 1))
+        lockInfoDao.insert(LockInfoEntity(LockInfo(unlockAt = "6"), pageId = 2))
+
+        val result = lockInfoDao.findByPageId(2)
+
+        Assert.assertEquals("6", result!!.unlockAt)
+    }
 }

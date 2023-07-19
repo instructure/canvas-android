@@ -1,4 +1,4 @@
-package com.instructure.student.features.people.list
+package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
@@ -8,12 +8,7 @@ import com.instructure.pandautils.room.offline.daos.SectionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
-import com.instructure.pandautils.room.offline.facade.UserFacade
-import io.mockk.Runs
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.just
-import io.mockk.mockk
+import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
