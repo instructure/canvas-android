@@ -19,6 +19,7 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.room.offline.facade.UserFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.people.list.PeopleListLocalDataSource
 import com.instructure.student.features.people.list.PeopleListNetworkDataSource
@@ -45,8 +46,9 @@ class PeopleListModule {
     fun providePeopleListRepository(
         localDataSource: PeopleListLocalDataSource,
         networkDataSource: PeopleListNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): PeopleListRepository {
-        return PeopleListRepository(localDataSource, networkDataSource, networkStateProvider)
+        return PeopleListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

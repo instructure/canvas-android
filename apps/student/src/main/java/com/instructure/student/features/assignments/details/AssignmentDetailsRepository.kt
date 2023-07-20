@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
@@ -30,26 +31,27 @@ import com.instructure.student.features.assignments.details.datasource.Assignmen
 class AssignmentDetailsRepository(
     localDataSource: AssignmentDetailsLocalDataSource,
     networkDataSource: AssignmentDetailsNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
-        return dataSource.getCourseWithGrade(courseId, forceNetwork)
+        return dataSource().getCourseWithGrade(courseId, forceNetwork)
     }
 
     suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
-        return dataSource.getAssignment(isObserver, assignmentId, courseId, forceNetwork)
+        return dataSource().getAssignment(isObserver, assignmentId, courseId, forceNetwork)
     }
 
     suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
-        return dataSource.getQuiz(courseId, quizId, forceNetwork)
+        return dataSource().getQuiz(courseId, quizId, forceNetwork)
     }
 
     suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
-        return dataSource.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork)
+        return dataSource().getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork)
     }
 
     suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
-        return dataSource.getLtiFromAuthenticationUrl(url, forceNetwork)
+        return dataSource().getLtiFromAuthenticationUrl(url, forceNetwork)
     }
 }

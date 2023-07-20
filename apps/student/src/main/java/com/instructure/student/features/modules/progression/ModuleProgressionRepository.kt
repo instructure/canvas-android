@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionDataSource
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionLocalDataSource
@@ -31,19 +32,20 @@ import okhttp3.ResponseBody
 class ModuleProgressionRepository(
     localDataSource: ModuleProgressionLocalDataSource,
     private val networkDataSource: ModuleProgressionNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<ModuleProgressionDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<ModuleProgressionDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
-        return dataSource.getAllModuleItems(canvasContext, moduleId, forceNetwork)
+        return dataSource().getAllModuleItems(canvasContext, moduleId, forceNetwork)
     }
 
     suspend fun getModuleItemSequence(canvasContext: CanvasContext, assetType: String, assetId: String, forceNetwork: Boolean): ModuleItemSequence {
-        return dataSource.getModuleItemSequence(canvasContext, assetType, assetId, forceNetwork)
+        return dataSource().getModuleItemSequence(canvasContext, assetType, assetId, forceNetwork)
     }
 
     suspend fun getDetailedQuiz(url: String, quizId: Long, forceNetwork: Boolean): Quiz {
-        return dataSource.getDetailedQuiz(url, quizId, forceNetwork)
+        return dataSource().getDetailedQuiz(url, quizId, forceNetwork)
     }
 
     suspend fun markAsNotDone(canvasContext: CanvasContext, moduleItem: ModuleItem): DataResult<ResponseBody> {

@@ -54,6 +54,8 @@ class DashboardRecyclerAdapter(
     private var mApiCalls: WeaveJob? = null
     private var mCourseMap = mapOf<Long, Course>()
 
+    private var isOfflineEnabled = false
+
     init {
         isExpandedByDefault = true
         loadData()
@@ -68,7 +70,7 @@ class DashboardRecyclerAdapter(
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, header: ItemType, item: Any) {
         when {
-            holder is CourseViewHolder && item is DashboardCourseItem -> holder.bind(item, mAdapterToFragmentCallback)
+            holder is CourseViewHolder && item is DashboardCourseItem -> holder.bind(item, isOfflineEnabled, mAdapterToFragmentCallback)
             holder is GroupViewHolder && item is Group -> holder.bind(item, mCourseMap, mAdapterToFragmentCallback)
         }
     }
@@ -125,6 +127,8 @@ class DashboardRecyclerAdapter(
                 ColorApiHelper.awaitSync()
                 FlutterComm.sendUpdatedTheme()
             }
+
+            isOfflineEnabled = repository.isOfflineEnabled()
 
             val courses = repository.getCourses(isRefresh)
             val groups = repository.getGroups(isRefresh)

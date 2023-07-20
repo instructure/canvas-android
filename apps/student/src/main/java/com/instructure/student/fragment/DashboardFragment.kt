@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -64,6 +65,7 @@ import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import javax.inject.Inject
@@ -77,6 +79,9 @@ class DashboardFragment : ParentFragment() {
 
     @Inject
     lateinit var repository: DashboardRepository
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
@@ -173,6 +178,7 @@ class DashboardFragment : ParentFragment() {
 
         configureRecyclerView()
         recyclerBinding.listView.isSelectionEnabled = false
+        initMenu()
     }
 
     override fun applyTheme() {
@@ -181,23 +187,33 @@ class DashboardFragment : ParentFragment() {
             // Styling done in attachNavigationDrawer
             navigation?.attachNavigationDrawer(this@DashboardFragment, toolbar)
 
-            toolbar.setMenu(R.menu.menu_dashboard) { item ->
-                when (item.itemId) {
-                    R.id.menu_dashboard_cards -> changeDashboardLayout(item)
-                    R.id.menu_dashboard_offline -> RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute())
-                }
-            }
-
-            val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
-            val menuIconRes =
-                if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
-            dashboardLayoutMenuItem.setIcon(menuIconRes)
-
-            val menuTitleRes =
-                if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
-            dashboardLayoutMenuItem.setTitle(menuTitleRes)
-
             recyclerAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun initMenu() = with(binding) {
+
+        toolbar.setMenu(R.menu.menu_dashboard) { item ->
+            when (item.itemId) {
+                R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+                R.id.menu_dashboard_offline -> RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute())
+            }
+        }
+
+        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+        val menuIconRes =
+            if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        dashboardLayoutMenuItem.setIcon(menuIconRes)
+
+        val menuTitleRes =
+            if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
+
+        lifecycleScope.launch {
+            if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
+                toolbar.menu.removeItem(R.id.menu_dashboard_offline)
+                toolbar.menu.findItem(R.id.menu_dashboard_cards).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            }
         }
     }
 

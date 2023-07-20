@@ -19,6 +19,7 @@ package com.instructure.student.features.grades
 
 import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.grades.datasource.GradesListDataSource
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
@@ -27,15 +28,16 @@ import com.instructure.student.features.grades.datasource.GradesListNetworkDataS
 class GradesListRepository(
     localDataSource: GradesListLocalDataSource,
     networkDataSource: GradesListNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<GradesListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<GradesListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
-        return dataSource.getCourseWithGrade(courseId, forceNetwork)
+        return dataSource().getCourseWithGrade(courseId, forceNetwork)
     }
 
     suspend fun getObserveeEnrollments(forceNetwork: Boolean): List<Enrollment> {
-        return dataSource.getObserveeEnrollments(forceNetwork)
+        return dataSource().getObserveeEnrollments(forceNetwork)
     }
 
     suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -44,7 +46,7 @@ class GradesListRepository(
         scopeToStudent: Boolean,
         forceNetwork: Boolean
     ): List<AssignmentGroup> {
-        return dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId, scopeToStudent, forceNetwork)
+        return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId, scopeToStudent, forceNetwork)
     }
 
     suspend fun getSubmissionsForMultipleAssignments(
@@ -53,15 +55,15 @@ class GradesListRepository(
         assignmentIds: List<Long>,
         forceNetwork: Boolean
     ): List<Submission> {
-        return dataSource.getSubmissionsForMultipleAssignments(studentId, courseId, assignmentIds, forceNetwork)
+        return dataSource().getSubmissionsForMultipleAssignments(studentId, courseId, assignmentIds, forceNetwork)
     }
 
     suspend fun getCoursesWithSyllabus(forceNetwork: Boolean): List<Course> {
-        return dataSource.getCoursesWithSyllabus(forceNetwork)
+        return dataSource().getCoursesWithSyllabus(forceNetwork)
     }
 
     suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
-        return dataSource.getGradingPeriodsForCourse(courseId, forceNetwork)
+        return dataSource().getGradingPeriodsForCourse(courseId, forceNetwork)
     }
 
     suspend fun getUserEnrollmentsForGradingPeriod(
@@ -70,13 +72,13 @@ class GradesListRepository(
         gradingPeriodId: Long,
         forceNetwork: Boolean
     ): List<Enrollment> {
-        return dataSource.getUserEnrollmentsForGradingPeriod(courseId, userId, gradingPeriodId, forceNetwork)
+        return dataSource().getUserEnrollmentsForGradingPeriod(courseId, userId, gradingPeriodId, forceNetwork)
     }
 
     suspend fun getAssignmentGroupsWithAssignments(
         courseId: Long,
         forceNetwork: Boolean,
     ): List<AssignmentGroup> {
-        return dataSource.getAssignmentGroupsWithAssignments(courseId, forceNetwork)
+        return dataSource().getAssignmentGroupsWithAssignments(courseId, forceNetwork)
     }
 }

@@ -18,6 +18,8 @@
 package com.instructure.student.features.grades
 
 import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
 import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
@@ -28,6 +30,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -36,8 +39,14 @@ class GradesListRepositoryTest {
     private val networkDataSource: GradesListNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: GradesListLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val repository = GradesListRepository(localDataSource, networkDataSource, networkStateProvider)
+    private val repository = GradesListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+
+    @Before
+    fun setup() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+    }
 
     @Test
     fun `Get course with grade if device is online`() = runTest {

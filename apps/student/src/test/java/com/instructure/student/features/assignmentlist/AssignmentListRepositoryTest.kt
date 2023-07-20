@@ -19,6 +19,8 @@ package com.instructure.student.features.assignmentlist
 
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.list.AssignmentListRepository
 import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
@@ -30,6 +32,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -38,8 +41,14 @@ class AssignmentListRepositoryTest {
     private val networkDataSource: AssignmentListNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: AssignmentListLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val repository = AssignmentListRepository(localDataSource, networkDataSource, networkStateProvider)
+    private val repository = AssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+
+    @Before
+    fun setup() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+    }
 
     @Test
     fun `Get assignment groups with assignments for grading period if device is online`() = runTest {

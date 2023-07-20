@@ -20,15 +20,17 @@ package com.instructure.student.features.quiz.list
 
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 
 class QuizListRepository(
     localDataSource: QuizListLocalDataSource,
     networkDataSource: QuizListNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<QuizListDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<QuizListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
-        return dataSource.loadQuizzes(contextType, contextId, forceNetwork)
+        return dataSource().loadQuizzes(contextType, contextId, forceNetwork)
     }
 }

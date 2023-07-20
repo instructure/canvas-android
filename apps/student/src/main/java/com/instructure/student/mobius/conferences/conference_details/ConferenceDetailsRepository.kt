@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.conferences.conference_details.datasource.ConferenceDetailsDataSource
 import com.instructure.student.mobius.conferences.conference_details.datasource.ConferenceDetailsLocalDataSource
@@ -30,13 +31,14 @@ import com.instructure.student.mobius.conferences.conference_details.datasource.
 class ConferenceDetailsRepository(
     localDataSource: ConferenceDetailsLocalDataSource,
     private val networkDataSource: ConferenceDetailsNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<ConferenceDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<ConferenceDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getConferencesForContext(
         canvasContext: CanvasContext, forceNetwork: Boolean
     ): DataResult<List<Conference>> {
-        return dataSource.getConferencesForContext(canvasContext, forceNetwork)
+        return dataSource().getConferencesForContext(canvasContext, forceNetwork)
     }
 
     suspend fun getAuthenticatedSession(targetUrl: String): AuthenticatedSession {

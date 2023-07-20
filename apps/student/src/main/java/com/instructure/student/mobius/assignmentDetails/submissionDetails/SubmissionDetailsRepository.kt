@@ -20,6 +20,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.datasource.SubmissionDetailsDataSource
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.datasource.SubmissionDetailsLocalDataSource
@@ -28,34 +29,35 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.dataso
 class SubmissionDetailsRepository(
     localDataSource: SubmissionDetailsLocalDataSource,
     networkDataSource: SubmissionDetailsNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<SubmissionDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<SubmissionDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getObserveeEnrollments(forceNetwork: Boolean): DataResult<List<Enrollment>> {
-        return dataSource.getObserveeEnrollments(forceNetwork)
+        return dataSource().getObserveeEnrollments(forceNetwork)
     }
 
     suspend fun getSingleSubmission(courseId: Long, assignmentId: Long, studentId: Long, forceNetwork: Boolean): DataResult<Submission> {
-        return dataSource.getSingleSubmission(courseId, assignmentId, studentId, forceNetwork)
+        return dataSource().getSingleSubmission(courseId, assignmentId, studentId, forceNetwork)
     }
 
     suspend fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment> {
-        return dataSource.getAssignment(assignmentId, courseId, forceNetwork)
+        return dataSource().getAssignment(assignmentId, courseId, forceNetwork)
     }
 
     suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): DataResult<LTITool> {
-        return dataSource.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork)
+        return dataSource().getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork)
     }
 
     suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): DataResult<LTITool> {
-        return dataSource.getLtiFromAuthenticationUrl(url, forceNetwork)
+        return dataSource().getLtiFromAuthenticationUrl(url, forceNetwork)
     }
 
     suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): DataResult<Quiz> {
-        return dataSource.getQuiz(courseId, quizId, forceNetwork)
+        return dataSource().getQuiz(courseId, quizId, forceNetwork)
     }
 
     suspend fun getCourseFeatures(courseId: Long, forceNetwork: Boolean): DataResult<List<String>> {
-        return dataSource.getCourseFeatures(courseId, forceNetwork)
+        return dataSource().getCourseFeatures(courseId, forceNetwork)
     }
 }

@@ -19,6 +19,8 @@ package com.instructure.student.features.offline.coursebrowser
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.coursebrowser.CourseBrowserRepository
 import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
@@ -39,8 +41,14 @@ class CourseBrowserRepositoryTest {
     private val networkDataSource: CourseBrowserNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: CourseBrowserLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val courseBrowserRepository = CourseBrowserRepository(networkDataSource, localDataSource, networkStateProvider)
+    private val courseBrowserRepository = CourseBrowserRepository(networkDataSource, localDataSource, networkStateProvider, featureFlagProvider)
+
+    @Before
+    fun setup() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+    }
 
     @Before
     fun setUp() {
