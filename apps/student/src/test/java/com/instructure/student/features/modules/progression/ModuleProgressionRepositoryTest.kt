@@ -22,6 +22,8 @@ import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionLocalDataSource
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionNetworkDataSource
@@ -31,6 +33,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -39,8 +42,14 @@ class ModuleProgressionRepositoryTest {
     private val localDataSource: ModuleProgressionLocalDataSource = mockk()
     private val networkDataSource: ModuleProgressionNetworkDataSource = mockk()
     private val networkStateProvider: NetworkStateProvider = mockk()
+    private val featureFlagProvider: FeatureFlagProvider = mockk()
 
-    private val repository = ModuleProgressionRepository(localDataSource, networkDataSource, networkStateProvider)
+    private val repository = ModuleProgressionRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+
+    @Before
+    fun setup() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+    }
 
     @Test
     fun `Get all module items from network when device is online`() = runTest {
