@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.student.features.assignmentlist.AssignmentListFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.AnnouncementListFragment

@@ -18,12 +18,12 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
-import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.offline.coursebrowser.CourseBrowserLocalDataSource
-import com.instructure.student.features.offline.coursebrowser.CourseBrowserNetworkDataSource
-import com.instructure.student.features.offline.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,8 +34,8 @@ import dagger.hilt.android.components.FragmentComponent
 class CourseBrowserModule {
 
     @Provides
-    fun provideCourseBrowserLocalDataSource(tabDao: TabDao, pageDao: PageDao): CourseBrowserLocalDataSource {
-        return CourseBrowserLocalDataSource(tabDao, pageDao)
+    fun provideCourseBrowserLocalDataSource(tabDao: TabDao, pageFacade: PageFacade): CourseBrowserLocalDataSource {
+        return CourseBrowserLocalDataSource(tabDao, pageFacade)
     }
 
     @Provides
@@ -44,9 +44,11 @@ class CourseBrowserModule {
     }
 
     @Provides
-    fun provideCourseBrowserRepository(networkDataSource: CourseBrowserNetworkDataSource, localDataSource: CourseBrowserLocalDataSource, networkStateProvider: NetworkStateProvider): CourseBrowserRepository {
+    fun provideCourseBrowserRepository(
+        networkDataSource: CourseBrowserNetworkDataSource,
+        localDataSource: CourseBrowserLocalDataSource,
+        networkStateProvider: NetworkStateProvider
+    ): CourseBrowserRepository {
         return CourseBrowserRepository(networkDataSource, localDataSource, networkStateProvider)
     }
-
-
 }

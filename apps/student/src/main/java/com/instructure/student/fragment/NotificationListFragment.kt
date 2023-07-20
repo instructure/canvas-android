@@ -43,7 +43,7 @@ import com.instructure.student.activity.ParentActivity
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListNotificationBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.router.RouteMatcher

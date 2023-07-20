@@ -3,6 +3,8 @@ package com.instructure.student.features.pages.list
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.pages.list.datasource.PageListLocalDataSource
+import com.instructure.student.features.pages.list.datasource.PageListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

@@ -4,6 +4,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.pages.list.datasource.PageListDataSource
+import com.instructure.student.features.pages.list.datasource.PageListLocalDataSource
+import com.instructure.student.features.pages.list.datasource.PageListNetworkDataSource
 
 class PageListRepository(
     pageListLocalDataSource: PageListLocalDataSource,

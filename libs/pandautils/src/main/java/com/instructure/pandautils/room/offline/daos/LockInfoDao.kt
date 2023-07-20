@@ -24,7 +24,7 @@ import com.instructure.pandautils.room.offline.entities.LockInfoEntity
 interface LockInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: LockInfoEntity): Long
+    suspend fun insert(entity: LockInfoEntity)
 
     @Delete
     suspend fun delete(entity: LockInfoEntity)
@@ -37,4 +37,7 @@ interface LockInfoDao {
 
     @Query("SELECT * FROM LockInfoEntity WHERE moduleId = :moduleId")
     suspend fun findByModuleId(moduleId: Long): LockInfoEntity?
+
+    @Query("SELECT * FROM LockInfoEntity WHERE pageId = :pageId")
+    suspend fun findByPageId(pageId: Long): LockInfoEntity?
 }

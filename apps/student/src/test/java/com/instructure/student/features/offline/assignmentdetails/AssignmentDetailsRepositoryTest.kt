@@ -22,6 +22,9 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
+import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

@@ -22,9 +22,9 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignmentlist.AssignmentListRepository
-import com.instructure.student.features.assignmentlist.datasource.AssignmentListLocalDataSource
-import com.instructure.student.features.assignmentlist.datasource.AssignmentListNetworkDataSource
+import com.instructure.student.features.assignments.list.AssignmentListRepository
+import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
+import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

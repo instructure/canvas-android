@@ -27,7 +27,10 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.entities.*
+import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
+import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
+import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -44,7 +47,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val pageDao: PageDao,
+    private val pageFacade: PageFacade,
     private val userFacade: UserFacade,
     private val courseFacade: CourseFacade,
     private val assignmentFacade: AssignmentFacade,
@@ -169,11 +172,7 @@ class OfflineSyncWorker @AssistedInject constructor(
             pageApi.getNextPagePagesList(nextUrl, params)
         }.dataOrNull.orEmpty()
 
-        val entities = pages.map {
-            PageEntity(it, courseId)
-        }
-
-        pageDao.insert(*entities.toTypedArray())
+        pageFacade.insertPages(pages, courseId)
     }
 
     private suspend fun fetchAssignments(courseId: Long) {

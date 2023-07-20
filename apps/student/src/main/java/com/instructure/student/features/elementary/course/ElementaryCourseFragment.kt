@@ -33,8 +33,8 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
+import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.grades.GradesListFragment
-import com.instructure.student.fragment.CourseBrowserFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
