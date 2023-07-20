@@ -28,14 +28,18 @@ data class LockInfoEntity(
     val id: Long = 0,
     val modulePrerequisiteNames: List<String>?,
     val unlockAt: String?,
+    val lockedModuleId: Long?,
     val assignmentId: Long?,
-    val moduleId: Long?
+    val moduleId: Long?,
+    val pageId: Long?
 ) {
-    constructor(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null) : this(
+    constructor(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null, pageId: Long? = null) : this(
         modulePrerequisiteNames = lockInfo.modulePrerequisiteNames,
         unlockAt = lockInfo.unlockAt,
+        lockedModuleId = lockInfo.contextModule?.id,
         assignmentId = assignmentId,
-        moduleId = moduleId
+        moduleId = moduleId,
+        pageId = pageId
     )
 
     fun toApiModel(

@@ -456,4 +456,9 @@ class OfflineModule {
     fun provideAssignmentRubricCriterionDao(offlineDatabase: OfflineDatabase): AssignmentRubricCriterionDao {
         return offlineDatabase.assignmentRubricCriterionDao()
     }
+
+    @Provides
+    fun providePageFacade(pageDao: PageDao, lockInfoFacade: LockInfoFacade): PageFacade {
+        return PageFacade(pageDao, lockInfoFacade)
+    }
 }

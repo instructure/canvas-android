@@ -19,10 +19,10 @@ package com.instructure.student.features.offline.coursebrowser
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.TabDao
-import com.instructure.pandautils.room.offline.entities.PageEntity
 import com.instructure.pandautils.room.offline.entities.TabEntity
+import com.instructure.pandautils.room.offline.facade.PageFacade
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,9 +34,9 @@ import org.junit.Test
 class CourseBrowserLocalDataSourceTest {
 
     private val tabDao: TabDao = mockk(relaxed = true)
-    private val pageDao: PageDao = mockk(relaxed = true)
+    private val pageFacade: PageFacade = mockk(relaxed = true)
 
-    private val dataSource = CourseBrowserLocalDataSource(tabDao, pageDao)
+    private val dataSource = CourseBrowserLocalDataSource(tabDao, pageFacade)
 
     @Test
     fun `Get tabs successfully returns api model`() = runTest {
@@ -49,7 +49,7 @@ class CourseBrowserLocalDataSourceTest {
 
     @Test
     fun `Get front page successfully returns api model`() = runTest {
-        coEvery { pageDao.getFrontPage(any()) } returns PageEntity(Page(id = 12, title = "Page title", frontPage = true), 1)
+        coEvery { pageFacade.getFrontPage(any()) } returns Page(id = 12, title = "Page title", frontPage = true)
 
         val frontPage = dataSource.getFrontPage(CanvasContext.emptyCourseContext(1), false)
 

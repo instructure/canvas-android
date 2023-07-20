@@ -24,6 +24,7 @@ import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
 
+const val FEATURE_FLAG_OFFLINE = "mobile_offline_mode"
 class FeatureFlagProvider(
     private val userManager: UserManager,
     private val apiPrefs: ApiPrefs,
@@ -47,7 +48,7 @@ class FeatureFlagProvider(
     }
 
     suspend fun fetchEnvironmentFeatureFlags() {
-        val restParams = RestParams(isForceReadFromNetwork = false)
+        val restParams = RestParams(isForceReadFromNetwork = true)
         val featureFlags = featuresApi.getEnvironmentFeatureFlags(restParams).dataOrNull ?: return
         apiPrefs.user?.id?.let {
             environmentFeatureFlags.insert(EnvironmentFeatureFlags(it, featureFlags))

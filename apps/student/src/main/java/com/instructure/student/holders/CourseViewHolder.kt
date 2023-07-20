@@ -42,7 +42,7 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(courseItem: DashboardCourseItem, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
+    fun bind(courseItem: DashboardCourseItem, isOfflineEnabled: Boolean, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
         val course = courseItem.course
 
         titleTextView.text = course.name
@@ -59,7 +59,7 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
         courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
 
-        if (courseItem.available) {
+        if (courseItem.available || !isOfflineEnabled) {
             cardView.alpha = 1f
             cardView.isEnabled = true
             overflow.isEnabled = true
@@ -80,7 +80,9 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             // Add things to the popup menu
             menu.add(0, 0, 0, R.string.editNickname)
             menu.add(0, 1, 1, R.string.editCourseColor)
-            menu.add(0, 2, 2, R.string.course_menu_manage_offline_content)
+            if (isOfflineEnabled) {
+                menu.add(0, 2, 2, R.string.course_menu_manage_offline_content)
+            }
 
             // Add click listener
             popup.setOnMenuItemClickListener { item ->

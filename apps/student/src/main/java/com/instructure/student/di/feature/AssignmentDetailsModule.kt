@@ -21,10 +21,11 @@ import com.instructure.canvasapi2.apis.*
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsLocalDataSource
-import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsNetworkDataSource
-import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
+import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,8 +58,9 @@ class AssignmentDetailsModule {
     fun provideCourseBrowserRepository(
         networkStateProvider: NetworkStateProvider,
         localDataSource: AssignmentDetailsLocalDataSource,
-        networkDataSource: AssignmentDetailsNetworkDataSource
+        networkDataSource: AssignmentDetailsNetworkDataSource,
+        featureFlagProvider: FeatureFlagProvider
     ): AssignmentDetailsRepository {
-        return AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
+        return AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

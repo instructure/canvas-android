@@ -25,6 +25,7 @@ import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
 import com.instructure.pandautils.room.offline.facade.SubmissionFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.grades.GradesListRepository
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
@@ -62,8 +63,9 @@ class GradesListModule {
     fun provideGradesListRepository(
         localDataSource: GradesListLocalDataSource,
         networkDataSource: GradesListNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): GradesListRepository {
-        return GradesListRepository(localDataSource, networkDataSource, networkStateProvider)
+        return GradesListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

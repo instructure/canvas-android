@@ -38,8 +38,8 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.databinding.QuizListLayoutBinding
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.features.assignmentlist.AssignmentListFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback

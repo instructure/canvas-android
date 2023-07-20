@@ -29,11 +29,12 @@ import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.R
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment.Companion.makeRoute
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment.Companion.makeRoute
 import com.instructure.student.features.modules.progression.LockedModuleItemFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
+import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.FileDetailsFragment
@@ -41,7 +42,6 @@ import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment
 import com.instructure.student.fragment.MasteryPathSelectionFragment.Companion.makeRoute
-import com.instructure.student.fragment.PageDetailsFragment
 import java.util.Date
 
 object ModuleUtility {

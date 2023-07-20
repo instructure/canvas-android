@@ -19,6 +19,8 @@ package com.instructure.student.test.assignment.details.submissionDetails
 
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsRepository
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.datasource.SubmissionDetailsLocalDataSource
@@ -39,12 +41,14 @@ class SubmissionDetailsRepositoryTest {
     private val localDataSource: SubmissionDetailsLocalDataSource = mockk(relaxed = true)
     private val networkDataSource: SubmissionDetailsNetworkDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var repository: SubmissionDetailsRepository
 
     @Before
     fun setUp() {
-        repository = SubmissionDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
+        repository = SubmissionDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
     }
 
     @Test

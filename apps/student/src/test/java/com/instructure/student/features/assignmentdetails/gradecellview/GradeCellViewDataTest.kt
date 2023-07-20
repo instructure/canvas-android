@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Test

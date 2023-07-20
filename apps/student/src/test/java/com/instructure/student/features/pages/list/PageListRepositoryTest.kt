@@ -2,13 +2,18 @@ package com.instructure.student.features.pages.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.pages.list.datasource.PageListLocalDataSource
+import com.instructure.student.features.pages.list.datasource.PageListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -17,8 +22,14 @@ class PageListRepositoryTest {
     private val networkDataSource: PageListNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: PageListLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val pageListRepository = PageListRepository(localDataSource, networkDataSource, networkStateProvider)
+    private val pageListRepository = PageListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+
+    @Before
+    fun setup() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+    }
 
     @Test
     fun `Get tabs from network if online`() = runTest {

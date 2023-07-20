@@ -42,15 +42,19 @@ class LockInfoFacade(
         insertLockInfo(lockInfo, moduleId = moduleId)
     }
 
-    private suspend fun insertLockInfo(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null) {
-        val lockInfoId = lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId, moduleId))
+    suspend fun insertLockInfoForPage(lockInfo: LockInfo, pageId: Long) {
+        insertLockInfo(lockInfo, pageId = pageId)
+    }
+
+    private suspend fun insertLockInfo(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null, pageId: Long? = null) {
+        lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId, moduleId, pageId))
         lockInfo.contextModule?.let { lockedModule ->
-            lockedModuleDao.insert(LockedModuleEntity(lockedModule, lockInfoId))
+            lockedModuleDao.insert(LockedModuleEntity(lockedModule))
             moduleNameDao.insertAll(lockedModule.prerequisites?.map { ModuleNameEntity(it, lockedModule.id) }.orEmpty())
             lockedModule.completionRequirements.forEach {
                 val oldEntity = completionRequirementDao.findById(it.id)
                 if (oldEntity != null) {
-                    var newEntity = oldEntity.copy(minScore = it.minScore, maxScore = it.maxScore, moduleId = lockedModule.id)
+                    val newEntity = oldEntity.copy(minScore = it.minScore, maxScore = it.maxScore, moduleId = lockedModule.id)
                     completionRequirementDao.insert(newEntity)
                 } else {
                     completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, lockedModule.id))
@@ -69,8 +73,13 @@ class LockInfoFacade(
         return createFullLockInfoApiModel(lockInfoEntity)
     }
 
+    suspend fun getLockInfoByPageId(pageId: Long): LockInfo? {
+        val lockInfoEntity = lockInfoDao.findByPageId(pageId)
+        return createFullLockInfoApiModel(lockInfoEntity)
+    }
+
     private suspend fun createFullLockInfoApiModel(lockInfoEntity: LockInfoEntity?): LockInfo? {
-        val lockedModuleEntity = lockInfoEntity?.id?.let { lockedModuleDao.findByLockInfoId(it) }
+        val lockedModuleEntity = lockInfoEntity?.lockedModuleId?.let { lockedModuleDao.findById(it) }
         val moduleNameEntities = lockedModuleEntity?.id?.let { moduleNameDao.findByLockModuleId(it) }
         val completionRequirementEntities = lockedModuleEntity?.id?.let { completionRequirementDao.findByModuleId(it) }
 

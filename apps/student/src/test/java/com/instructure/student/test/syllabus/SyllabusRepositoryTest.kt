@@ -23,7 +23,10 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
 import com.instructure.student.mobius.syllabus.SyllabusRepository
 import com.instructure.student.mobius.syllabus.datasource.SyllabusLocalDataSource
 import com.instructure.student.mobius.syllabus.datasource.SyllabusNetworkDataSource
@@ -43,12 +46,14 @@ class SyllabusRepositoryTest {
     private val syllabusLocalDataSource: SyllabusLocalDataSource = mockk(relaxed = true)
     private val syllabusNetworkDataSource: SyllabusNetworkDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var repository: SyllabusRepository
 
     @Before
     fun setUp() {
-        repository = SyllabusRepository(syllabusLocalDataSource, syllabusNetworkDataSource, networkStateProvider)
+        repository = SyllabusRepository(syllabusLocalDataSource, syllabusNetworkDataSource, networkStateProvider, featureFlagProvider)
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
     }
 
     @Test

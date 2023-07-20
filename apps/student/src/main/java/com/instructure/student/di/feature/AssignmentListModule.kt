@@ -21,10 +21,11 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignmentlist.AssignmentListRepository
-import com.instructure.student.features.assignmentlist.datasource.AssignmentListLocalDataSource
-import com.instructure.student.features.assignmentlist.datasource.AssignmentListNetworkDataSource
+import com.instructure.student.features.assignments.list.AssignmentListRepository
+import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
+import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,8 +55,9 @@ class AssignmentListModule {
     fun provideAssignmentListRepository(
         localDataSource: AssignmentListLocalDataSource,
         networkDataSource: AssignmentListNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): AssignmentListRepository {
-        return AssignmentListRepository(localDataSource, networkDataSource, networkStateProvider)
+        return AssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

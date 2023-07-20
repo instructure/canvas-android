@@ -35,11 +35,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.interactions.router.BaseRouteMatcher
-import com.instructure.interactions.router.Route
-import com.instructure.interactions.router.RouteContext
-import com.instructure.interactions.router.RouteType
-import com.instructure.interactions.router.RouterParams
+import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -50,18 +46,16 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
-import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.activity.InterwebsToApplication
-import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.activity.ViewMediaActivity
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.features.assignmentlist.AssignmentListFragment
+import com.instructure.student.activity.*
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
+import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
+import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
@@ -73,8 +67,7 @@ import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.util.FileUtils
 import retrofit2.Call
 import retrofit2.Response
-import java.util.Arrays
-import java.util.Locale
+import java.util.*
 import java.util.regex.Pattern
 
 object RouteMatcher : BaseRouteMatcher() {

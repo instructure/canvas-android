@@ -21,6 +21,8 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsRepository
 import com.instructure.student.mobius.conferences.conference_details.datasource.ConferenceDetailsLocalDataSource
@@ -41,12 +43,14 @@ class ConferenceDetailsRepositoryTest {
     private val localDataSource: ConferenceDetailsLocalDataSource = mockk(relaxed = true)
     private val networkDataSource: ConferenceDetailsNetworkDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var repository: ConferenceDetailsRepository
 
     @Before
     fun setUp() {
-        repository = ConferenceDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
+        repository = ConferenceDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
     }
 
     @Test

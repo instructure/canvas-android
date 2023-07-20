@@ -27,10 +27,11 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.assignmentlist.AssignmentListFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
+import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
+import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment

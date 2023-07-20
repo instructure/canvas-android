@@ -20,6 +20,7 @@ package com.instructure.student.di
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsRepository
 import com.instructure.student.mobius.conferences.conference_details.datasource.ConferenceDetailsLocalDataSource
@@ -52,8 +53,9 @@ class ConferenceDetailsModule {
     fun provideRepository(
         localDataSource: ConferenceDetailsLocalDataSource,
         networkDataSource: ConferenceDetailsNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): ConferenceDetailsRepository {
-        return ConferenceDetailsRepository(localDataSource, networkDataSource, networkStateProvider)
+        return ConferenceDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }

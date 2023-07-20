@@ -24,7 +24,10 @@ import com.instructure.pandautils.room.offline.entities.PageEntity
 interface PageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg entities: PageEntity)
+    suspend fun insert(entity: PageEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<PageEntity>)
 
     @Delete
     suspend fun delete(entity: PageEntity)
@@ -43,4 +46,7 @@ interface PageDao {
 
     @Query("SELECT * FROM PageEntity WHERE courseId=:courseId")
     suspend fun findByCourseId(courseId: Long): List<PageEntity>
+
+    @Query("SELECT * FROM PageEntity WHERE courseId=:courseId AND (url=:pageId OR title=:pageId)")
+    suspend fun getPageDetails(courseId: Long, pageId: String): PageEntity?
 }

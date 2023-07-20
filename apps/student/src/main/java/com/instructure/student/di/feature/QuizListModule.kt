@@ -20,6 +20,7 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.quiz.list.QuizListLocalDataSource
 import com.instructure.student.features.quiz.list.QuizListNetworkDataSource
@@ -47,8 +48,9 @@ class QuizListModule() {
     fun provideQuizListRepository(
         localDataSource: QuizListLocalDataSource,
         networkDataSource: QuizListNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): QuizListRepository {
-        return QuizListRepository(localDataSource, networkDataSource, networkStateProvider)
+        return QuizListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 }
