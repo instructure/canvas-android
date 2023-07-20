@@ -19,8 +19,16 @@ package com.instructure.student.ui.e2e
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.dataseeding.api.*
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.api.ModulesApi
+import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.ModuleApiModel
+import com.instructure.dataseeding.model.ModuleItemTypes
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -110,10 +118,10 @@ class ModulesE2ETest: StudentTest() {
         Espresso.pressBack()
 
         Log.d(PREPARATION_TAG,"Publish ${module1.name} module.")
-        updateModule(course, module1, teacher)
+        publishModule(course, module1, teacher)
 
         Log.d(PREPARATION_TAG,"Publish ${module2.name} module.")
-        updateModule(course, module2, teacher)
+        publishModule(course, module2, teacher)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the 'Modules' Tab is displayed.")
         courseBrowserPage.refresh()
@@ -133,9 +141,22 @@ class ModulesE2ETest: StudentTest() {
         modulesPage.assertModuleItemDisplayed(module2, assignment2.name)
         modulesPage.assertModuleItemDisplayed(module2, page1.title)
         modulesPage.assertModuleItemDisplayed(module2, discussionTopic1.title)
+
+        Log.d(STEP_TAG, "Collapse the '${module2.name}' module. Assert that there will be 4 countable items on the screen.")
+        modulesPage.clickOnModuleExpandCollapseIcon(module2.name)
+        modulesPage.assertModulesAndItemsCount(4) // 2 modules titles and 2 module item in first module
+
+        Log.d(STEP_TAG, "Expand the '${module2.name}' module. Assert that there will be 7 countable items on the screen.")
+        modulesPage.clickOnModuleExpandCollapseIcon(module2.name)
+        modulesPage.assertModulesAndItemsCount(7) // 2 modules titles, 2 module items in first module, 3 items in second module
+
+        Log.d(STEP_TAG, "Assert that ${assignment1.name} module item is displayed and open it. Assert that the Assignment Details page is displayed with the corresponding assignment title.")
+        modulesPage.assertAndClickModuleItem(module1.name, assignment1.name, true)
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertAssignmentTitle(assignment1.name)
     }
 
-    private fun updateModule(
+    private fun publishModule(
         course: CourseApiModel,
         module1: ModuleApiModel,
         teacher: CanvasUserApiModel

@@ -46,7 +46,7 @@ class NotificationPage : BasePage() {
     }
 
     fun assertHasGrade(title: String, grade: String) {
-        val matcher = allOf(withText(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade: $grade")))
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade: $grade")))
         onView(matcher).scrollTo().assertDisplayed()
     }
 
