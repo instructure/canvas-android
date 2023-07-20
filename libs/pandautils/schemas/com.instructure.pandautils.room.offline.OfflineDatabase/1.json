@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "15c09d53200b81cd30dc4c1a821769a9",
+    "identityHash": "d0cc5f1a7a06a2ada5ada0f47a910d74",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -3856,7 +3856,7 @@
       },
       {
         "tableName": "QuizEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `mobileUrl` TEXT, `htmlUrl` TEXT, `description` TEXT, `quizType` TEXT, `assignmentGroupId` INTEGER NOT NULL, `allowedAttempts` INTEGER NOT NULL, `questionCount` INTEGER NOT NULL, `pointsPossible` TEXT, `isLockQuestionsAfterAnswering` INTEGER NOT NULL, `dueAt` TEXT, `timeLimit` INTEGER NOT NULL, `shuffleAnswers` INTEGER NOT NULL, `showCorrectAnswers` INTEGER NOT NULL, `scoringPolicy` TEXT, `accessCode` TEXT, `ipFilter` TEXT, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `hideResults` TEXT, `showCorrectAnswersAt` TEXT, `hideCorrectAnswersAt` TEXT, `unlockAt` TEXT, `oneTimeResults` INTEGER NOT NULL, `lockAt` TEXT, `questionTypes` TEXT NOT NULL, `hasAccessCode` INTEGER NOT NULL, `oneQuestionAtATime` INTEGER NOT NULL, `requireLockdownBrowser` INTEGER NOT NULL, `requireLockdownBrowserForResults` INTEGER NOT NULL, `allowAnonymousSubmissions` INTEGER NOT NULL, `published` INTEGER NOT NULL, `assignmentId` INTEGER NOT NULL, `isOnlyVisibleToOverrides` INTEGER NOT NULL, `unpublishable` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `mobileUrl` TEXT, `htmlUrl` TEXT, `description` TEXT, `quizType` TEXT, `assignmentGroupId` INTEGER NOT NULL, `allowedAttempts` INTEGER NOT NULL, `questionCount` INTEGER NOT NULL, `pointsPossible` TEXT, `isLockQuestionsAfterAnswering` INTEGER NOT NULL, `dueAt` TEXT, `timeLimit` INTEGER NOT NULL, `shuffleAnswers` INTEGER NOT NULL, `showCorrectAnswers` INTEGER NOT NULL, `scoringPolicy` TEXT, `accessCode` TEXT, `ipFilter` TEXT, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `hideResults` TEXT, `showCorrectAnswersAt` TEXT, `hideCorrectAnswersAt` TEXT, `unlockAt` TEXT, `oneTimeResults` INTEGER NOT NULL, `lockAt` TEXT, `questionTypes` TEXT NOT NULL, `hasAccessCode` INTEGER NOT NULL, `oneQuestionAtATime` INTEGER NOT NULL, `requireLockdownBrowser` INTEGER NOT NULL, `requireLockdownBrowserForResults` INTEGER NOT NULL, `allowAnonymousSubmissions` INTEGER NOT NULL, `published` INTEGER NOT NULL, `assignmentId` INTEGER NOT NULL, `isOnlyVisibleToOverrides` INTEGER NOT NULL, `unpublishable` INTEGER NOT NULL, `courseId` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -4073,6 +4073,12 @@
             "columnName": "unpublishable",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -4082,7 +4088,19 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "CourseEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "LockInfoEntity",
@@ -4790,7 +4808,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '15c09d53200b81cd30dc4c1a821769a9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd0cc5f1a7a06a2ada5ada0f47a910d74')"
     ]
   }
 }

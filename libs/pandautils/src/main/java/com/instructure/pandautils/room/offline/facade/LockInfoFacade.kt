@@ -47,9 +47,15 @@ class LockInfoFacade(
         lockInfo.contextModule?.let { lockedModule ->
             lockedModuleDao.insert(LockedModuleEntity(lockedModule, lockInfoId))
             moduleNameDao.insertAll(lockedModule.prerequisites?.map { ModuleNameEntity(it, lockedModule.id) }.orEmpty())
-            completionRequirementDao.insertAll(lockedModule.completionRequirements.map {
-                ModuleCompletionRequirementEntity(it, lockedModule.id)
-            })
+            lockedModule.completionRequirements.forEach {
+                val oldEntity = completionRequirementDao.findById(it.id)
+                if (oldEntity != null) {
+                    var newEntity = oldEntity.copy(minScore = it.minScore, maxScore = it.maxScore, moduleId = lockedModule.id)
+                    completionRequirementDao.insert(newEntity)
+                } else {
+                    completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, lockedModule.id))
+                }
+            }
         }
     }
 
