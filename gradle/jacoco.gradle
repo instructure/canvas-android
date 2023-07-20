@@ -194,10 +194,9 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
         }
     }
 
-    doFirst {
-        def existingFiles = files(executionData.findAll { it.exists() })
-        executionData.setFrom(existingFiles)
-    }
+//    doFirst {
+//        executionData.setFrom(files(executionData.findAll { it.exists() }))
+//    }
 }
 
 task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
