@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.modules.progression
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentLockedModuleItemBinding
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 
 @ScreenView(SCREEN_VIEW_LOCKED_MODULE_ITEM)

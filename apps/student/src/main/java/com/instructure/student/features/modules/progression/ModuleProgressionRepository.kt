@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionDataSource
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionLocalDataSource
@@ -31,7 +32,8 @@ import okhttp3.ResponseBody
 class ModuleProgressionRepository(
     localDataSource: ModuleProgressionLocalDataSource,
     private val networkDataSource: ModuleProgressionNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
+    networkStateProvider: NetworkStateProvider,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao
 ) : Repository<ModuleProgressionDataSource>(localDataSource, networkDataSource, networkStateProvider) {
 
     suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
@@ -58,4 +60,8 @@ class ModuleProgressionRepository(
         return networkDataSource.markAsRead(canvasContext, moduleItem)
     }
 
+    suspend fun getSyncedTabs(courseId: Long): Set<String> {
+        val courseSyncSettings = courseSyncSettingsDao.findById(courseId)
+        return courseSyncSettings?.tabs?.filter { it.value }?.keys ?: emptySet()
+    }
 }

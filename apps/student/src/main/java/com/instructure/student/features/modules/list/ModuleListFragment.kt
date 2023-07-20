@@ -84,11 +84,6 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
-
     override fun onDestroy() {
         recyclerAdapter.cancel()
         super.onDestroy()

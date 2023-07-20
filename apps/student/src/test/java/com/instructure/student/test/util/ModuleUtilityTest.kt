@@ -17,6 +17,7 @@
 
 package com.instructure.student.test.util
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -28,12 +29,15 @@ import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.fragment.*
 import com.instructure.student.util.Const
+import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ModuleUtilityTest : TestCase() {
+
+    private val context = mockk<Context>(relaxed = true)
 
     @Test
     fun testGetFragment_file() {
@@ -250,6 +254,6 @@ class ModuleUtilityTest : TestCase() {
     }
 
     private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?): Fragment? {
-        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false)
+        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false, true, emptySet(), context)
     }
 }

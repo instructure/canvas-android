@@ -16,63 +16,90 @@
  */
 package com.instructure.student.features.modules.util
 
+import android.content.Context
 import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.APIHelper.expandTildeId
 import com.instructure.canvasapi2.utils.findWithPrevious
 import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.student.R
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment.Companion.makeRoute
+import com.instructure.student.features.modules.progression.LockedModuleItemFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
+import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.FileDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
-import com.instructure.student.fragment.LockedModuleItemFragment
-import com.instructure.student.fragment.LockedModuleItemFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment
 import com.instructure.student.fragment.MasteryPathSelectionFragment.Companion.makeRoute
 import com.instructure.student.fragment.PageDetailsFragment
-import com.instructure.student.fragment.PageDetailsFragment.Companion.makeRoute
 import java.util.Date
 
 object ModuleUtility {
-    fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?, isDiscussionRedesignEnabled: Boolean, navigatedFromModules: Boolean): Fragment? = when (item.type) {
-        "Page" -> PageDetailsFragment.newInstance(makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
-        "Assignment" -> AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
-        "Discussion" -> {
-            if (isDiscussionRedesignEnabled) {
-                DiscussionDetailsWebViewFragment.newInstance(getDiscussionRedesignRoute(item, course))
-            } else {
-                DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
+    fun getFragment(
+        item: ModuleItem,
+        course: Course,
+        moduleObject: ModuleObject?,
+        isDiscussionRedesignEnabled: Boolean,
+        navigatedFromModules: Boolean,
+        isOnline: Boolean,
+        syncedTabs: Set<String>,
+        context: Context
+    ): Fragment? = when (item.type) {
+        "Page" -> {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.PAGES_ID) {
+                PageDetailsFragment.newInstance(PageDetailsFragment.makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
             }
         }
-        "Locked" -> LockedModuleItemFragment.newInstance(makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
+        "Assignment" -> {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.ASSIGNMENTS_ID) {
+                AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
+            }
+        }
+        "Discussion" -> {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context) {
+                if (isDiscussionRedesignEnabled) {
+                    DiscussionDetailsWebViewFragment.newInstance(getDiscussionRedesignRoute(item, course))
+                } else {
+                    DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
+                }
+            }
+        }
+        "Locked" -> LockedModuleItemFragment.newInstance(LockedModuleItemFragment.makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
         "SubHeader" -> null // Don't do anything with headers, they're just dividers so we don't show them here.
         "Quiz" -> {
-            val apiURL = removeDomain(item.url)
-            ModuleQuizDecider.newInstance(ModuleQuizDecider.makeRoute(course, item.htmlUrl!!, apiURL!!, item.contentId))
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.QUIZZES_ID) {
+                val apiURL = removeDomain(item.url)
+                ModuleQuizDecider.newInstance(ModuleQuizDecider.makeRoute(course, item.htmlUrl!!, apiURL!!, item.contentId))
+            }
         }
         "ChooseAssignmentGroup" -> {
-            val route = makeRoute(course, item.masteryPaths!!, moduleObject!!.id, item.masteryPathsItemId)
-            MasteryPathSelectionFragment.newInstance(route)
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context) {
+                val route = makeRoute(course, item.masteryPaths!!, moduleObject!!.id, item.masteryPathsItemId)
+                MasteryPathSelectionFragment.newInstance(route)
+            }
         }
         "ExternalUrl", "ExternalTool" -> {
             if (item.isLocked()) {
-                LockedModuleItemFragment.newInstance(makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
+                LockedModuleItemFragment.newInstance(LockedModuleItemFragment.makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
             } else {
-                val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
-                val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
-                InternalWebviewFragment.newInstance(route)
+                createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context) {
+                    val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
+                    val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
+                    InternalWebviewFragment.newInstance(route)
+                }
             }
         }
-        "File" -> {
+        "File" -> { // TODO Handle offline availability after files sync
             val url = removeDomain(item.url)
             if (moduleObject == null) {
                 FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, url!!))
@@ -81,6 +108,23 @@ object ModuleUtility {
             }
         }
         else -> null
+    }
+
+    private fun createFragmentWithOfflineCheck(
+        isOnline: Boolean,
+        course: Course,
+        item: ModuleItem,
+        syncedTabs: Set<String>,
+        context: Context,
+        tab: String? = null,
+        creationBlock: () -> Fragment?
+    ): Fragment? {
+        return if (isOnline || syncedTabs.contains(tab)) {
+            creationBlock()
+        } else {
+            val descriptionResource = if (tab == null) R.string.notAvailableOfflineDescription else R.string.notAvailableOfflineDescriptionForTabs
+            NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(descriptionResource)))
+        }
     }
 
     fun isGroupLocked(module: ModuleObject?): Boolean {

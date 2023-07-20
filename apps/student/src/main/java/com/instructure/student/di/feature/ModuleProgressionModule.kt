@@ -18,6 +18,7 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -47,12 +48,14 @@ class ModuleProgressionModule {
     fun provideModuleProgressionRepository(
         moduleProgressionLocalDataSource: ModuleProgressionLocalDataSource,
         moduleProgressionNetworkDataSource: ModuleProgressionNetworkDataSource,
-        networkStateProvider: NetworkStateProvider
+        networkStateProvider: NetworkStateProvider,
+        courseSyncSettingsDao: CourseSyncSettingsDao
     ): ModuleProgressionRepository {
         return ModuleProgressionRepository(
             moduleProgressionLocalDataSource,
             moduleProgressionNetworkDataSource,
-            networkStateProvider
+            networkStateProvider,
+            courseSyncSettingsDao
         )
     }
 }

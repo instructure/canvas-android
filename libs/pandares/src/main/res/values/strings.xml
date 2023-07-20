@@ -1431,4 +1431,7 @@
     <string name="syncSettings_wifiConfirmationPositiveButton">Turn Off</string>
     <string name="syncSettings_manualDescription">Manual</string>
     <string name="offlineModeSnackbar">Offline Mode</string>
+    <string name="notAvailableOfflineScreenTitle">Not Available Offline</string>
+    <string name="notAvailableOfflineDescription">This content is not available in offline mode.</string>
+    <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
 </resources>
