@@ -23,8 +23,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.filterWithQuery
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.textAndIconColor
@@ -36,6 +34,7 @@ import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.NoViewholder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.Date
 
 open class DiscussionListRecyclerAdapter(
@@ -104,12 +103,14 @@ open class DiscussionListRecyclerAdapter(
 
     override fun loadData() {
         callback.onRefreshStarted()
-        lifecycleScope.tryLaunch {
-            discussions = repository.getDiscussionTopicHeaders(canvasContext, !isDiscussions, isRefresh)
-            populateData()
-        } catch {
-            callback.onRefreshFinished()
-            context.toast(R.string.errorOccurred)
+        lifecycleScope.launch {
+            try {
+                discussions = repository.getDiscussionTopicHeaders(canvasContext, !isDiscussions, isRefresh)
+                populateData()
+            } catch (e: Exception) {
+                callback.onRefreshFinished()
+                context.toast(R.string.errorOccurred)
+            }
         }
     }
 
