@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.pages.details.datasource.PageDetailsDataSource
 import com.instructure.student.features.pages.details.datasource.PageDetailsLocalDataSource
@@ -29,14 +30,15 @@ import com.instructure.student.features.pages.details.datasource.PageDetailsNetw
 class PageDetailsRepository(
     localDataSource: PageDetailsLocalDataSource,
     networkDataSource: PageDetailsNetworkDataSource,
-    networkStateProvider: NetworkStateProvider
-) : Repository<PageDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider
+) : Repository<PageDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<Page> {
-        return dataSource.getFrontPage(canvasContext, forceNetwork)
+        return dataSource().getFrontPage(canvasContext, forceNetwork)
     }
 
     suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceNetwork: Boolean): DataResult<Page> {
-        return dataSource.getPageDetails(canvasContext, pageId, forceNetwork)
+        return dataSource().getPageDetails(canvasContext, pageId, forceNetwork)
     }
 }

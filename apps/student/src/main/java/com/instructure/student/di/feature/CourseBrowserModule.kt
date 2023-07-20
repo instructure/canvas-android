@@ -19,6 +19,8 @@ package com.instructure.student.di.feature
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.facade.PageFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.coursebrowser.CourseBrowserRepository
 import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
