@@ -17,6 +17,7 @@
 package com.instructure.student.features.quiz.list
 
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.every
@@ -32,8 +33,9 @@ class QuizListRepositoryTest {
     private val networkDataSource: QuizListNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: QuizListLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val repository = QuizListRepository(localDataSource, networkDataSource, networkStateProvider)
+    private val repository = QuizListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
 
     @Test
     fun `Get course quizzes first page if device is online`() = runTest {
