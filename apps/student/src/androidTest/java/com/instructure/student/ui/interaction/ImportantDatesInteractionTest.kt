@@ -101,7 +101,7 @@ class ImportantDatesInteractionTest : StudentTest() {
         //Refresh the page and verify if the previously not displayed event will be displayed after the refresh.
         importantDatesPage.pullToRefresh()
         importantDatesPage.assertItemDisplayed(eventToCheck.title!!)
-        importantDatesPage.assertRecyclerViewItemCount(3) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(2)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(eventToCheck.startDate))
     }
 
