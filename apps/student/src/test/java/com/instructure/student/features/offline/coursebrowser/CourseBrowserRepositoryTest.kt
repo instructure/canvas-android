@@ -22,6 +22,9 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.coursebrowser.CourseBrowserRepository
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
+import com.instructure.student.features.coursebrowser.datasource.CourseBrowserNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

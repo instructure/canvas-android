@@ -21,7 +21,7 @@
 
         <variable
             name="viewData"
-            type="com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData" />
+            type="com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData" />
 
         <import type="android.view.View" />
 

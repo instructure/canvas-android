@@ -1,12 +1,12 @@
 package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.PageAPI
-import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.pages.list.PageListLocalDataSource
-import com.instructure.student.features.pages.list.PageListNetworkDataSource
 import com.instructure.student.features.pages.list.PageListRepository
+import com.instructure.student.features.pages.list.datasource.PageListLocalDataSource
+import com.instructure.student.features.pages.list.datasource.PageListNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,8 +17,8 @@ import dagger.hilt.android.components.FragmentComponent
 class PageListModule {
 
     @Provides
-    fun provideLocalDataSource(pageDao: PageDao): PageListLocalDataSource {
-        return PageListLocalDataSource(pageDao)
+    fun provideLocalDataSource(pageFacade: PageFacade): PageListLocalDataSource {
+        return PageListLocalDataSource(pageFacade)
     }
 
     @Provides

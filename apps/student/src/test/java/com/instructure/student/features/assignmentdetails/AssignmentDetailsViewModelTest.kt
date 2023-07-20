@@ -35,8 +35,10 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.student.db.StudentDb
-import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
-import com.instructure.student.features.offline.assignmentdetails.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.AssignmentDetailAction
+import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
+import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

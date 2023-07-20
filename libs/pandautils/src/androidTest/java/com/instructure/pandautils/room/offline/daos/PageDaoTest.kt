@@ -121,4 +121,23 @@ class PageDaoTest {
         val result2 = pageDao.findByCourseId(2L)
         assertEquals(listOf(pageEntity3, pageEntity4), result2)
     }
+
+    @Test
+    fun testFindPageDetails() = runTest {
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
+
+        val pageEntity = PageEntity(Page(id = 1, title = "Page1", url = "url"), courseId = 1L)
+        val pageEntity2 = PageEntity(Page(id = 2, title = "Page2"), courseId = 1L)
+        val pageEntity3 = PageEntity(Page(id = 3, title = "Page3"), courseId = 1L)
+        pageDao.insert(pageEntity)
+        pageDao.insert(pageEntity2)
+        pageDao.insert(pageEntity3)
+
+        val resultByUrl = pageDao.getPageDetails(1L, "url")
+        assertEquals(pageEntity, resultByUrl)
+
+        val resultByTitle = pageDao.getPageDetails(1L, "Page2")
+        assertEquals(pageEntity2, resultByTitle)
+    }
 }

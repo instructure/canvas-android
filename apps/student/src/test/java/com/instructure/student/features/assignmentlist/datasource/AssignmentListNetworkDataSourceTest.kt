@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriodResponse
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

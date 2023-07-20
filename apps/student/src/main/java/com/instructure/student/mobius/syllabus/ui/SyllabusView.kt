@@ -29,7 +29,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSyllabusBinding
 import com.instructure.student.databinding.FragmentSyllabusEventsBinding
 import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent

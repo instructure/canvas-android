@@ -31,17 +31,15 @@ data class LockedModuleEntity(
     val contextType: String?,
     val name: String?,
     val unlockAt: String?,
-    val isRequireSequentialProgress: Boolean,
-    val lockInfoId: Long
+    val isRequireSequentialProgress: Boolean
 ) {
-    constructor(lockedModule: LockedModule, lockInfoId: Long) : this(
+    constructor(lockedModule: LockedModule) : this(
         id = lockedModule.id,
         contextId = lockedModule.contextId,
         contextType = lockedModule.contextType,
         name = lockedModule.name,
         unlockAt = lockedModule.unlockAt,
-        isRequireSequentialProgress = lockedModule.isRequireSequentialProgress,
-        lockInfoId = lockInfoId
+        isRequireSequentialProgress = lockedModule.isRequireSequentialProgress
     )
 
     fun toApiModel(

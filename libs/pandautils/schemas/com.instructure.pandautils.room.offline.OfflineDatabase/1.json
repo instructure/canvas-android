@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d0cc5f1a7a06a2ada5ada0f47a910d74",
+    "identityHash": "1a187ca4971c65fe9154b9d46efa32b0",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -4104,7 +4104,7 @@
       },
       {
         "tableName": "LockInfoEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `assignmentId` INTEGER, `moduleId` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `modulePrerequisiteNames` TEXT, `unlockAt` TEXT, `lockedModuleId` INTEGER, `assignmentId` INTEGER, `moduleId` INTEGER, `pageId` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -4125,6 +4125,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "lockedModuleId",
+            "columnName": "lockedModuleId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "assignmentId",
             "columnName": "assignmentId",
             "affinity": "INTEGER",
@@ -4133,6 +4139,12 @@
           {
             "fieldPath": "moduleId",
             "columnName": "moduleId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pageId",
+            "columnName": "pageId",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -4148,7 +4160,7 @@
       },
       {
         "tableName": "LockedModuleEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `contextType` TEXT, `name` TEXT, `unlockAt` TEXT, `isRequireSequentialProgress` INTEGER NOT NULL, `lockInfoId` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `contextType` TEXT, `name` TEXT, `unlockAt` TEXT, `isRequireSequentialProgress` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -4183,12 +4195,6 @@
           {
             "fieldPath": "isRequireSequentialProgress",
             "columnName": "isRequireSequentialProgress",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lockInfoId",
-            "columnName": "lockInfoId",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -4808,7 +4814,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd0cc5f1a7a06a2ada5ada0f47a910d74')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a187ca4971c65fe9154b9d46efa32b0')"
     ]
   }
 }

@@ -22,8 +22,9 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignmentlist.datasource.AssignmentListLocalDataSource
-import com.instructure.student.features.assignmentlist.datasource.AssignmentListNetworkDataSource
+import com.instructure.student.features.assignments.list.AssignmentListRepository
+import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
+import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
