@@ -96,4 +96,124 @@ class ModuleItemDaoTest {
         val resultAfterDelete = moduleItemDao.findByModuleId(1)
         Assert.assertEquals(0, resultAfterDelete.size)
     }
+
+    @Test
+    fun testFindById() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        val entities = listOf(
+            ModuleItemEntity(ModuleItem(id = 1), 1),
+            ModuleItemEntity(ModuleItem(id = 2), 1),
+            ModuleItemEntity(ModuleItem(id = 3), 1),
+            ModuleItemEntity(ModuleItem(id = 55, title = "This is the way"), 1),
+        )
+
+        moduleItemDao.insertAll(entities)
+
+        val result = moduleItemDao.findById(55)
+
+        Assert.assertEquals(55, result!!.id)
+        Assert.assertEquals("This is the way", result.title)
+    }
+
+    @Test
+    fun testFindByIdReturnsNullWhenNotFound() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        val entities = listOf(
+            ModuleItemEntity(ModuleItem(id = 1), 1),
+            ModuleItemEntity(ModuleItem(id = 2), 1),
+            ModuleItemEntity(ModuleItem(id = 3), 1),
+            ModuleItemEntity(ModuleItem(id = 55, title = "This is the way"), 1),
+        )
+
+        moduleItemDao.insertAll(entities)
+
+        val result = moduleItemDao.findById(14)
+
+        Assert.assertNull(result)
+    }
+
+    @Test
+    fun testFindByTypeAndContentId() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        val entities = listOf(
+            ModuleItemEntity(ModuleItem(id = 1, type = "Quiz", contentId = 1), 1),
+            ModuleItemEntity(ModuleItem(id = 2, type = "Assignment", contentId = 1), 1),
+            ModuleItemEntity(ModuleItem(id = 3, type = "Quiz", contentId = 2), 1),
+            ModuleItemEntity(ModuleItem(id = 55, type = "Assignment", contentId = 2, title = "This is the way"), 1),
+        )
+
+        moduleItemDao.insertAll(entities)
+
+        val result = moduleItemDao.findByTypeAndContentId("Assignment", 2)
+
+        Assert.assertEquals(55, result!!.id)
+        Assert.assertEquals("This is the way", result.title)
+        Assert.assertEquals("Assignment", result.type)
+        Assert.assertEquals(2, result.contentId)
+    }
+
+    @Test
+    fun testFindByTypeAndContentIdReturnsNullWhenNotFound() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        val entities = listOf(
+            ModuleItemEntity(ModuleItem(id = 1, type = "Quiz", contentId = 1), 1),
+            ModuleItemEntity(ModuleItem(id = 2, type = "Assignment", contentId = 1), 1),
+            ModuleItemEntity(ModuleItem(id = 3, type = "Quiz", contentId = 2), 1),
+            ModuleItemEntity(ModuleItem(id = 55, type = "Assignment", contentId = 2, title = "This is the way"), 1),
+        )
+
+        moduleItemDao.insertAll(entities)
+
+        val result = moduleItemDao.findByTypeAndContentId("Assignment", 14)
+
+        Assert.assertNull(result)
+    }
+
+    @Test
+    fun testFindByPageUrl() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        val entities = listOf(
+            ModuleItemEntity(ModuleItem(id = 1, pageUrl = "github.com/hermannakos"), 1),
+            ModuleItemEntity(ModuleItem(id = 2, pageUrl = "github.com/kristofnemere"), 1),
+            ModuleItemEntity(ModuleItem(id = 3, pageUrl = "github.com/tamaskozmer"), 1),
+            ModuleItemEntity(ModuleItem(id = 55, pageUrl = "github.com/kozmi55", title = "This is the way"), 1),
+        )
+
+        moduleItemDao.insertAll(entities)
+
+        val result = moduleItemDao.findByPageUrl("github.com/kozmi55")
+
+        Assert.assertEquals(55, result!!.id)
+        Assert.assertEquals("This is the way", result.title)
+        Assert.assertEquals("github.com/kozmi55", result.pageUrl)
+    }
+
+    @Test
+    fun testFindByPageUrlReturnsNullWhenNotFound() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        val entities = listOf(
+            ModuleItemEntity(ModuleItem(id = 1, pageUrl = "github.com/hermannakos"), 1),
+            ModuleItemEntity(ModuleItem(id = 2, pageUrl = "github.com/kristofnemere"), 1),
+            ModuleItemEntity(ModuleItem(id = 3, pageUrl = "github.com/tamaskozmer"), 1),
+            ModuleItemEntity(ModuleItem(id = 55, pageUrl = "github.com/kozmi55", title = "This is the way"), 1),
+        )
+
+        moduleItemDao.insertAll(entities)
+
+        val result = moduleItemDao.findByPageUrl("github.com/thisisnotagithubuser")
+
+        Assert.assertNull(result)
+    }
 }

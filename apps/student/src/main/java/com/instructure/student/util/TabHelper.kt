@@ -34,6 +34,7 @@ import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.list.PeopleListFragment
+import com.instructure.student.features.quiz.list.QuizListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment

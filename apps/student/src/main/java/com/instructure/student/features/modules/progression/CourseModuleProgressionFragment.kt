@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.modules.progression
 
 import android.content.Context
 import android.net.Uri
@@ -27,15 +27,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.ModuleObject.State
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -56,6 +54,12 @@ import com.instructure.student.features.assignments.details.AssignmentDetailsFra
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.util.ModuleProgressionUtility
 import com.instructure.student.features.modules.util.ModuleUtility
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.FileDetailsFragment
+import com.instructure.student.fragment.PageDetailsFragment
+import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.features.modules.util.ModuleProgressionUtility
+import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
@@ -63,8 +67,6 @@ import com.instructure.student.util.CourseModulesStore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 @PageView(url = "courses/{canvasContext}/modules")
@@ -77,7 +79,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     @Inject
     lateinit var discussionRouteHelper: DiscussionRouteHelper
 
-    private var routeModuleProgressionJob: Job? = null
+    @Inject
+    lateinit var repository: ModuleProgressionRepository
+
     private var moduleItemsJob: Job? = null
     private var markAsReadJob: WeaveJob? = null
 
@@ -134,8 +138,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        routeModuleProgressionJob?.cancel()
-        moduleItemsJob?.cancel()
         markAsReadJob?.cancel()
     }
 
@@ -197,23 +199,17 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         binding.prevItem.setOnClickListener(prevItemClickCallback)
         binding.nextItem.setOnClickListener(nextItemClickCallback)
 
-        binding.markDoneButton.setOnClickListener {
+        binding.markDoneButton.onClickWithRequireNetwork {
             val moduleItem = getModelObject()
             if (moduleItem?.completionRequirement != null) {
-                if (moduleItem.completionRequirement!!.completed) {
-                    ModuleManager.markAsNotDone(canvasContext, moduleItem.moduleId, moduleItem.id,
-                            object : StatusCallback<ResponseBody>() {
-                                override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {
-                                    setMarkDone(moduleItem, false)
-                                }
-                            })
-                } else {
-                    ModuleManager.markAsDone(canvasContext, moduleItem.moduleId, moduleItem.id,
-                            object : StatusCallback<ResponseBody>() {
-                                override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {
-                                    setMarkDone(moduleItem, true)
-                                }
-                            })
+                lifecycleScope.launch {
+                    if (moduleItem.completionRequirement!!.completed) {
+                        val result = repository.markAsNotDone(canvasContext, moduleItem)
+                        if (result.isSuccess) setMarkDone(moduleItem, false)
+                    } else {
+                        val result = repository.markAsDone(canvasContext, moduleItem)
+                        if (result.isSuccess) setMarkDone(moduleItem, true)
+                    }
                 }
             }
         }
@@ -309,18 +305,18 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             addLockedIconIfNeeded(modules, items, groupPos, childPos)
 
             // Mark the item as viewed
-            markAsRead(currentModuleItem.moduleId, currentModuleItem.id)
+            markAsRead(currentModuleItem)
         }
 
         updateModuleMarkDoneView(currentModuleItem)
     }
 
-    private fun markAsRead(moduleId: Long, moduleItemId: Long) {
+    private fun markAsRead(moduleItem: ModuleItem) {
         markAsReadJob = tryWeave {
             // mark the moduleItem as viewed if we have a valid module id and item id,
             // but not the files, because they need to open or download those to view them
-            if (moduleId != 0L && moduleItemId != 0L && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()) {
-                awaitApi { ModuleManager.markModuleItemAsRead(canvasContext, moduleId, moduleItemId, it) }
+            if (moduleItem.moduleId != 0L && moduleItem.id != 0L && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()) {
+                repository.markAsRead(canvasContext, moduleItem)
 
                 // Update the module item locally, needed to unlock modules as the user ViewPages through them
                 getCurrentModuleItem(currentPos)?.completionRequirement?.completed = true
@@ -328,8 +324,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 setupNextModule(getModuleItemGroup(currentPos))
 
                 // Update the module state to indicate in the list that the module is completed
-                val module = modules.find { it.id == moduleId } ?: return@tryWeave
-                val isModuleCompleted = items.flatten().filter { it.moduleId == moduleId }.all { it.completionRequirement?.completed.orDefault() }
+                val module = modules.find { it.id == moduleItem.moduleId } ?: return@tryWeave
+                val isModuleCompleted = items.flatten().filter { it.moduleId == moduleItem.moduleId }.all { it.completionRequirement?.completed.orDefault() }
                 val updatedState = if (isModuleCompleted) State.Completed.apiString else module.state
 
                 // Update the module list fragment to show that these requirements are done,
@@ -384,8 +380,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun getModuleItemData(moduleId: Long) {
-        moduleItemsJob = tryWeave {
-            val moduleItems = awaitApi<List<ModuleItem>> { ModuleManager.getAllModuleItems(canvasContext, moduleId, it, true) }
+        moduleItemsJob = lifecycleScope.tryLaunch {
+            val moduleItems = repository.getAllModuleItems(canvasContext, moduleId, true)
             // Update ui here with results
             // Holds the position of the module the current module item belongs to
             var index = 0
@@ -693,18 +689,18 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
     //endregion
 
-    private fun loadModuleProgression(bundle: Bundle?) = with(binding) {
+    private fun loadModuleProgression(bundle: Bundle?) {
         if(assetId.isBlank()) {
-            bottomBarModule.setVisible()
+            binding.bottomBarModule.setVisible()
             setViewInfo(bundle)
             setButtonListeners()
             updateBottomNavBarButtons()
             return
         }
 
-        progressBar.setVisible()
-        routeModuleProgressionJob = tryWeave {
-            val moduleItemSequence = awaitApi<ModuleItemSequence> { ModuleManager.getModuleItemSequence(canvasContext, assetType, assetId, it, true) }
+        binding.progressBar.setVisible()
+        lifecycleScope.tryLaunch {
+            val moduleItemSequence = repository.getModuleItemSequence(canvasContext, assetType, assetId, true)
             // Make sure that there is a sequence
             val sequenceItems = moduleItemSequence.items ?: emptyArray()
             if (sequenceItems.isNotEmpty()) {
@@ -713,7 +709,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                    assetType == ModuleItemAsset.MODULE_ITEM.assetType -> sequenceItems.firstOrNull { it.current!!.id == assetId.toLong() }?.current ?: sequenceItems[0].current
                    else -> sequenceItems[0].current
                 }
-                val moduleItems = awaitApi<List<ModuleItem>> { ModuleManager.getAllModuleItems(canvasContext, current!!.moduleId, it, true) }
+                val moduleItems = repository.getAllModuleItems(canvasContext, current!!.moduleId, true)
                 val unfilteredItems = ArrayList<ArrayList<ModuleItem>>(1).apply { add(ArrayList(moduleItems)) }
                 modules = ArrayList<ModuleObject>(1).apply { moduleItemSequence.modules!!.firstOrNull { it.id == current?.moduleId }?.let { add(it) } }
                 val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(requireContext(), current!!.id, modules, unfilteredItems)
@@ -721,21 +717,21 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 childPos = moduleHelper.newChildPosition
                 items = moduleHelper.strippedModuleItems
             } else {
-                progressBar.setGone()
+                binding.progressBar.setGone()
                 val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType)
                 if (moduleItemAsset != ModuleItemAsset.MODULE_ITEM) {
                     val newRoute = route.copy(secondaryClass = moduleItemAsset.routeClass, removePreviousScreen = true)
                     RouteMatcher.route(requireContext(), newRoute)
-                    return@tryWeave
+                    return@tryLaunch
                 }
             }
 
-            progressBar.setGone()
-            bottomBarModule.setVisible()
+            binding.progressBar.setGone()
+            binding.bottomBarModule.setVisible()
             setViewInfo(bundle)
             setButtonListeners()
         } catch {
-            progressBar.setGone()
+            binding.progressBar.setGone()
             Logger.e("Error routing modules: " + it.message)
         }
     }

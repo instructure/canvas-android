@@ -58,14 +58,15 @@ class LockInfoFacadeTest {
         coEvery { lockInfoDao.insert(any()) } just Runs
         coEvery { lockedModuleDao.insert(any()) } just Runs
         coEvery { moduleNameDao.insertAll(any()) } just Runs
-        coEvery { completionRequirementDao.insertAll(any()) } just Runs
+        coEvery { completionRequirementDao.insert(any()) } just Runs
+        coEvery { completionRequirementDao.findById(any()) } returns null
 
         facade.insertLockInfoForAssignment(lockInfo, assignmentId)
 
         coVerify { lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId)) }
         coVerify { lockedModuleDao.insert(LockedModuleEntity(lockedModule)) }
         coVerify { moduleNameDao.insertAll(prerequisites.map { ModuleNameEntity(it, 1L) }) }
-        coVerify { completionRequirementDao.insertAll(completionRequirements.map { ModuleCompletionRequirementEntity(it, 1L) }) }
+        coVerify { completionRequirementDao.insert(ModuleCompletionRequirementEntity(completionRequirements.first(), 1L)) }
     }
 
     @Test
@@ -79,14 +80,15 @@ class LockInfoFacadeTest {
         coEvery { lockInfoDao.insert(any()) } just Runs
         coEvery { lockedModuleDao.insert(any()) } just Runs
         coEvery { moduleNameDao.insertAll(any()) } just Runs
-        coEvery { completionRequirementDao.insertAll(any()) } just Runs
+        coEvery { completionRequirementDao.insert(any()) } just Runs
+        coEvery { completionRequirementDao.findById(any()) } returns null
 
         facade.insertLockInfoForModule(lockInfo, moduleId)
 
         coVerify { lockInfoDao.insert(LockInfoEntity(lockInfo, moduleId = moduleId)) }
         coVerify { lockedModuleDao.insert(LockedModuleEntity(lockedModule)) }
         coVerify { moduleNameDao.insertAll(prerequisites.map { ModuleNameEntity(it, 1L) }) }
-        coVerify { completionRequirementDao.insertAll(completionRequirements.map { ModuleCompletionRequirementEntity(it, 1L) }) }
+        coVerify { completionRequirementDao.insert(ModuleCompletionRequirementEntity(completionRequirements.first(), 1L)) }
     }
 
     @Test

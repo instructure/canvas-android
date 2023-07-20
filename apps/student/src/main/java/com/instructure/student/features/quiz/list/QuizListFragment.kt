@@ -1,27 +1,29 @@
 /*
- * Copyright (C) 2016 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.quiz.list
 
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -34,17 +36,24 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.QuizListRecyclerAdapter
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.databinding.QuizListLayoutBinding
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_QUIZ_LIST)
 @PageView(url = "{canvasContext}/quizzes")
+@AndroidEntryPoint
 class QuizListFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var quizListRepository: QuizListRepository
 
     private val binding by viewBinding(QuizListLayoutBinding::bind)
     private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
@@ -70,7 +79,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
-        recyclerAdapter = QuizListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
+        recyclerAdapter = QuizListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback, quizListRepository, lifecycleScope)
         configureRecyclerView(
             view,
             requireContext(),

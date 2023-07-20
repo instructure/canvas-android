@@ -82,4 +82,24 @@ class ModuleCompletionRequirementDaoTest {
         Assert.assertEquals(1L, result[0].id)
         Assert.assertEquals(10.0, result[0].minScore, 0.0)
     }
+
+    @Test
+    fun testFindById() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        moduleItemDao.insert(ModuleItemEntity(ModuleItem(id = 1), 1 ))
+        moduleItemDao.insert(ModuleItemEntity(ModuleItem(id = 2), 1 ))
+
+        moduleCompletionRequirementDao.insert(ModuleCompletionRequirementEntity(
+            ModuleCompletionRequirement(id = 1, minScore = 10.0), 1))
+
+        moduleCompletionRequirementDao.insert(ModuleCompletionRequirementEntity(
+            ModuleCompletionRequirement(id = 2, minScore = 20.0), 2))
+
+        val result = moduleCompletionRequirementDao.findById(1)
+
+        Assert.assertEquals(1L, result!!.id)
+        Assert.assertEquals(10.0, result.minScore, 0.0)
+    }
 }

@@ -89,4 +89,42 @@ class ModuleObjectDaoTest {
         val resultAfterDelete = moduleObjectDao.findByCourseId(1)
         Assert.assertEquals(0, resultAfterDelete.size)
     }
+
+    @Test
+    fun testFindById() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+
+        val entities = listOf(
+            ModuleObjectEntity(ModuleObject(id = 1), 1),
+            ModuleObjectEntity(ModuleObject(id = 2, position = 1), 1),
+            ModuleObjectEntity(ModuleObject(id = 3, position = 3), 1),
+            ModuleObjectEntity(ModuleObject(id = 4, position = 2), 1)
+        )
+
+        moduleObjectDao.insertAll(entities)
+
+        val result = moduleObjectDao.findById(2)
+
+        Assert.assertEquals(2, result!!.id)
+        Assert.assertEquals(1, result.position)
+        Assert.assertEquals(1, result.courseId)
+    }
+
+    @Test
+    fun testFindByIdReturnsNullWhenNotFound() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+
+        val entities = listOf(
+            ModuleObjectEntity(ModuleObject(id = 1), 1),
+            ModuleObjectEntity(ModuleObject(id = 2, position = 1), 1),
+            ModuleObjectEntity(ModuleObject(id = 3, position = 3), 1),
+            ModuleObjectEntity(ModuleObject(id = 4, position = 2), 1)
+        )
+
+        moduleObjectDao.insertAll(entities)
+
+        val result = moduleObjectDao.findById(55)
+
+        Assert.assertNull(result)
+    }
 }

@@ -64,7 +64,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val moduleFacade: ModuleFacade,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
-    private val courseFeaturesDao: CourseFeaturesDao
+    private val courseFeaturesDao: CourseFeaturesDao,
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -109,6 +109,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     }
                     if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
                         fetchModules(courseSettings.courseId)
+                    }
+                    if (courseSettings.isTabSelected(Tab.QUIZZES_ID)) {
+                        fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseSettings.courseId)
                     }
                 }
             fetchSyllabus(syllabusCourseIds)
@@ -220,6 +223,17 @@ class OfflineSyncWorker @AssistedInject constructor(
                     quiz?.let { quizDao.insert(QuizEntity(it)) }
                 }
             }
+        }
+    }
+
+    private suspend fun fetchAllQuizzes(contextType: String, courseId: Long) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
+            quizApi.getNextPageQuizzesList(nextUrl, params)
+        }.dataOrNull
+        quizzes?.forEach { quiz ->
+            quizDao.insert(QuizEntity(quiz, courseId))
+
         }
     }
 

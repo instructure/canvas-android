@@ -41,4 +41,13 @@ interface ModuleItemDao {
 
     @Query("SELECT * FROM ModuleItemEntity WHERE moduleId = :moduleId ORDER BY position")
     suspend fun findByModuleId(moduleId: Long): List<ModuleItemEntity>
+
+    @Query("SELECT * FROM ModuleItemEntity WHERE id = :id")
+    suspend fun findById(id: Long): ModuleItemEntity?
+
+    @Query("SELECT * FROM ModuleItemEntity WHERE type = :type AND contentId = :contentId")
+    suspend fun findByTypeAndContentId(type: String, contentId: Long): ModuleItemEntity?
+
+    @Query("SELECT * FROM ModuleItemEntity WHERE pageUrl = :pageUrl")
+    suspend fun findByPageUrl(pageUrl: String): ModuleItemEntity?
 }
