@@ -1,53 +1,53 @@
 /*
- * Copyright (C) 2016 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
  *
  */
 
-package com.instructure.student.adapter
+package com.instructure.student.features.quiz.list
 
 import android.content.Context
 import android.view.View
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.filterWithQuery
-import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitPaginated
 import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
+import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.holders.QuizViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 
 class QuizListRecyclerAdapter(
-    context: Context,
-    private val canvasContext: CanvasContext,
-    private val adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?
+        context: Context,
+        private val canvasContext: CanvasContext,
+        private val adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?,
+        private val repository: QuizListRepository,
+        private val lifecycleScope: LifecycleCoroutineScope,
 ) : ExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder>(context, String::class.java, Quiz::class.java) {
 
     private var quizzes = emptyList<Quiz>()
-
-    private var apiCall: WeaveJob? = null
 
     var searchQuery = ""
         set(value) {
@@ -91,19 +91,11 @@ class QuizListRecyclerAdapter(
     }
 
     override fun loadFirstPage() {
-        apiCall = tryWeave {
-            val refreshing = isRefresh
-            val newQuizzes = mutableListOf<Quiz>()
-            awaitPaginated<List<Quiz>> {
-                exhaustive = true
-                onRequestFirst { QuizManager.getFirstPageQuizList(canvasContext, refreshing, it) }
-                onRequestNext { url, callback -> QuizManager.getNextPageQuizList(url, refreshing, callback) }
-                onResponse { newQuizzes.addAll(it) }
-            }
-            isAllPagesLoaded = true
-            quizzes = newQuizzes
+        lifecycleScope.tryLaunch {
+            quizzes = repository.loadQuizzes(canvasContext.type.apiString, canvasContext.id, isRefresh)
             populateData()
             onCallbackFinished(ApiType.API)
+            isAllPagesLoaded = true
         } catch {
             context.toast(R.string.errorOccurred)
         }
@@ -148,10 +140,6 @@ class QuizListRecyclerAdapter(
             override fun getChildType(group: String, item: Quiz) = Types.TYPE_ITEM
             override fun areContentsTheSame(oldItem: Quiz, newItem: Quiz) = comparator.compare(oldItem, newItem) == 0
         }
-    }
-
-    override fun cancel() {
-        apiCall?.cancel()
     }
 
 }

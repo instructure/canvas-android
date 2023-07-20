@@ -33,8 +33,14 @@ object QuizAPI {
         @GET("{contextType}/{contextId}/all_quizzes")
         fun getFirstPageQuizzesList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long): Call<List<Quiz>>
 
+        @GET("{contextType}/{contextId}/all_quizzes")
+        suspend fun getFirstPageQuizzesList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag restParams: RestParams): DataResult<List<Quiz>>
+
         @GET
         fun getNextPageQuizzesList(@Url nextURL: String): Call<List<Quiz>>
+
+        @GET
+        suspend fun getNextPageQuizzesList(@Url nextURL: String, @Tag restParams: RestParams): DataResult<List<Quiz>>
 
         @GET("{contextType}/{contextId}/quizzes/{quizId}")
         fun getDetailedQuiz(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("quizId") quizId: Long): Call<Quiz>
