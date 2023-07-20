@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.modules.progression
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,8 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentNotAvailableOfflineBinding
@@ -55,6 +58,7 @@ class NotAvailableOfflineFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.title = moduleItemName
         binding.description.text = description
+        setIconVisibility()
 
         binding.toolbar.setupAsBackButton(this)
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
@@ -83,5 +87,18 @@ class NotAvailableOfflineFragment : ParentFragment() {
         } else null
 
         private fun validRoute(route: Route) = route.arguments.containsKey(MODULE_ITEM_NAME)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setIconVisibility()
+    }
+
+    private fun setIconVisibility() {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            binding.notAvailableIcon.setVisible()
+        } else {
+            binding.notAvailableIcon.setGone()
+        }
     }
 }
