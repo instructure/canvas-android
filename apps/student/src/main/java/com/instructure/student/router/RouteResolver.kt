@@ -20,6 +20,8 @@ import com.instructure.student.features.elementary.course.ElementaryCourseFragme
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
+import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment

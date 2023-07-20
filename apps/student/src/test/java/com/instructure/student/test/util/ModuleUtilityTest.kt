@@ -24,9 +24,10 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.modules.progression.ModuleQuizDecider
+import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.fragment.*
 import com.instructure.student.util.Const
-import com.instructure.student.features.modules.util.ModuleUtility
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -210,7 +211,8 @@ class ModuleUtilityTest : TestCase() {
                 id = 4567,
                 type = "Quiz",
                 url = url,
-                htmlUrl = htmlUrl
+                htmlUrl = htmlUrl,
+                contentId = 55
         )
 
         val course = Course()
@@ -218,6 +220,7 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putString(Const.URL, htmlUrl)
         expectedBundle.putString(Const.API_URL, apiUrl)
+        expectedBundle.putLong(Const.ID, 55)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
         TestCase.assertNotNull(parentFragment)

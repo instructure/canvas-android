@@ -66,6 +66,7 @@ data class ModuleItemEntity(
     fun toApiModel(completionRequirement: ModuleCompletionRequirement?, moduleContentDetails: ModuleContentDetails?, masteryPath: MasteryPath?): ModuleItem {
         return ModuleItem(
             id = id,
+            moduleId = moduleId,
             position = position,
             title = title,
             indent = indent,

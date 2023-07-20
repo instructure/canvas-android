@@ -43,9 +43,9 @@ import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.features.modules.list.adapter.ModuleAdapterToFragmentCallback
 import com.instructure.student.features.modules.list.adapter.ModuleListRecyclerAdapter
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.modules.util.ModuleProgressionUtility
 import com.instructure.student.features.modules.util.ModuleUtility
-import com.instructure.student.fragment.CourseModuleProgressionFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.CourseModulesStore

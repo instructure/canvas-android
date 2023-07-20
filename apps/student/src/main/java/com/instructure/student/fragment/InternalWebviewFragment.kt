@@ -44,6 +44,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentWebviewBinding
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.FileDownloadJobIntentService
 import kotlinx.coroutines.Job

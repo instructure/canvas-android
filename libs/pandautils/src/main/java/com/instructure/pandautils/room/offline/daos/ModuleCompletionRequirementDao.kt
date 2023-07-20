@@ -26,9 +26,6 @@ interface ModuleCompletionRequirementDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: ModuleCompletionRequirementEntity)
 
-    @Insert
-    suspend fun insertAll(entities: List<ModuleCompletionRequirementEntity>)
-
     @Delete
     suspend fun delete(entity: ModuleCompletionRequirementEntity)
 
@@ -37,4 +34,7 @@ interface ModuleCompletionRequirementDao {
 
     @Query("SELECT * FROM ModuleCompletionRequirementEntity WHERE moduleId = :moduleId")
     suspend fun findByModuleId(moduleId: Long): List<ModuleCompletionRequirementEntity>
+
+    @Query("SELECT * FROM ModuleCompletionRequirementEntity WHERE id = :id")
+    suspend fun findById(id: Long): ModuleCompletionRequirementEntity?
 }

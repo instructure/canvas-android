@@ -31,8 +31,9 @@ data class ModuleCompletionRequirementEntity(
     val completed: Boolean?,
     val moduleId: Long
 ) {
-    constructor(moduleCompletionRequirement: ModuleCompletionRequirement, moduleId: Long) : this(
-        id = moduleCompletionRequirement.id,
+    constructor(moduleCompletionRequirement: ModuleCompletionRequirement, moduleId: Long, moduleItemId: Long? = null) : this(
+        // In some api calls we don't receive the id of this entity, but it corresponds to the id of the module item so in that case we can use that
+        id = if (moduleCompletionRequirement.id == 0L) moduleItemId ?: 0 else moduleCompletionRequirement.id,
         type = moduleCompletionRequirement.type,
         minScore = moduleCompletionRequirement.minScore,
         maxScore = moduleCompletionRequirement.maxScore,
