@@ -195,7 +195,7 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
     }
 
 //    doFirst {
-//        executionData.setFrom(files(executionData.findAll { it.exists() }))
+//        executionData.from = files(executionData.findAll { it.exists() })
 //    }
 }
 
@@ -230,7 +230,7 @@ task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
         }
     }
 
-    doFirst {
-        executionData.setFrom files(executionData.findAll { it.exists() })
-    }
+//    doFirst {
+//        executionData.setFrom files(executionData.findAll { it.exists() })
+//    }
 }
