@@ -23,10 +23,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
-import com.instructure.student.features.modules.progression.ModuleQuizDecider
-import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.*

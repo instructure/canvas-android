@@ -42,12 +42,12 @@ class PageFacadeTest {
         val lockInfo = LockInfo(unlockAt = Date().toApiString())
         val pages = listOf(Page(id = 1L, title = "Page 1", lockInfo = lockInfo), Page(id = 2L, title = "Page 2"))
 
-        coEvery { pageDao.insert(any()) } just Runs
+        coEvery { pageDao.insertAll(any()) } just Runs
         coEvery { lockInfoFacade.insertLockInfoForPage(any(), any()) } just Runs
 
         facade.insertPages(pages, 1L)
 
-        coVerify { pageDao.insert(*pages.map { PageEntity(it, 1L) }.toTypedArray()) }
+        coVerify { pageDao.insertAll(pages.map { PageEntity(it, 1L) }) }
         coVerify { lockInfoFacade.insertLockInfoForPage(lockInfo, 1L) }
     }
 

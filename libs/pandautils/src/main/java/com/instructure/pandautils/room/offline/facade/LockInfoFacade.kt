@@ -54,7 +54,7 @@ class LockInfoFacade(
             lockedModule.completionRequirements.forEach {
                 val oldEntity = completionRequirementDao.findById(it.id)
                 if (oldEntity != null) {
-                    var newEntity = oldEntity.copy(minScore = it.minScore, maxScore = it.maxScore, moduleId = lockedModule.id)
+                    val newEntity = oldEntity.copy(minScore = it.minScore, maxScore = it.maxScore, moduleId = lockedModule.id)
                     completionRequirementDao.insert(newEntity)
                 } else {
                     completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, lockedModule.id))

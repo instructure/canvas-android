@@ -27,7 +27,7 @@ class PageFacade(
 ) {
 
     suspend fun insertPages(pages: List<Page>, courseId: Long) {
-        pageDao.insert(*pages.map { PageEntity(it, courseId) }.toTypedArray())
+        pageDao.insertAll(pages.map { PageEntity(it, courseId) })
         pages.forEach { page -> page.lockInfo?.let { lockedInfoFacade.insertLockInfoForPage(it, page.id) } }
     }
 
