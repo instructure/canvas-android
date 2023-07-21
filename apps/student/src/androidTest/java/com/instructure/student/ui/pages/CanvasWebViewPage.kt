@@ -17,6 +17,8 @@
 package com.instructure.student.ui.pages
 
 import androidx.annotation.StringRes
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.model.Atoms.getCurrentUrl
@@ -28,8 +30,17 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.espresso.assertVisible
-import com.instructure.espresso.page.*
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
+import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 
@@ -93,6 +104,23 @@ open class CanvasWebViewPage : BasePage(R.id.contentWebView) {
     fun waitForWebView() {
         waitForView(allOf(withId(R.id.contentWebView), isDisplayed()))
     }
+
+    fun clickEditPencilIcon() {
+        onView(withId(R.id.menu_edit)).click()
+    }
+
+    fun assertDoesNotEditable() {
+        onView(withId(R.id.menu_edit)).check(doesNotExist())
+    }
+
+    fun typeInRCEEditor(textToType: String) {
+        waitForView(ViewMatchers.withId(R.id.rce_webView)).perform(TypeInRCETextEditor(textToType))
+    }
+
+    fun clickOnSave() {
+        onViewWithId(R.id.menuSavePage).click()
+    }
+
 }
 
 /** data class that encapsulates info for a webview text check */
