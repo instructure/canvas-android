@@ -17,24 +17,30 @@
 
 package com.instructure.student.test.util
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
+import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.util.Const
+import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ModuleUtilityTest : TestCase() {
+
+    private val context = mockk<Context>(relaxed = true)
 
     @Test
     fun testGetFragment_file() {
@@ -99,6 +105,45 @@ class ModuleUtilityTest : TestCase() {
     }
 
     @Test
+    fun testGetFragment_page_offlineSynced() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/pages/hello-world"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "Page",
+            url = url,
+            title = "hello-world"
+        )
+
+        val course = Course()
+        val expectedBundle = Bundle()
+        expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putString(PageDetailsFragment.PAGE_NAME, "hello-world")
+        expectedBundle.putBoolean(PageDetailsFragment.NAVIGATED_FROM_MODULES, false)
+
+        val parentFragment = callGetFragment(moduleItem, course, null, isOnline = false, tabs = setOf(Tab.PAGES_ID))
+        TestCase.assertNotNull(parentFragment)
+        TestCase.assertEquals(PageDetailsFragment::class.java, parentFragment!!.javaClass)
+        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+    }
+
+    @Test
+    fun testGetFragment_page_offlineNotSynced() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/pages/hello-world"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "Page",
+            url = url,
+            title = "hello-world"
+        )
+
+        val course = Course()
+
+        val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
+        TestCase.assertNotNull(fragment)
+        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
+    }
+
+    @Test
     fun testGetFragment_assignment() {
         val url = "https://mobile.canvas.net/api/v1/courses/222/assignments/123456789"
         val moduleItem = ModuleItem(
@@ -116,6 +161,42 @@ class ModuleUtilityTest : TestCase() {
         TestCase.assertNotNull(parentFragment)
         TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
         TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+    }
+
+    @Test
+    fun testGetFragment_assignment_offlineSynced() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/assignments/123456789"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "Assignment",
+            url = url
+        )
+
+        val course = Course()
+        val expectedBundle = Bundle()
+        expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putLong(Const.ASSIGNMENT_ID, 123456789)
+
+        val parentFragment = callGetFragment(moduleItem, course, null, isOnline = false, tabs = setOf(Tab.ASSIGNMENTS_ID))
+        TestCase.assertNotNull(parentFragment)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
+        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+    }
+
+    @Test
+    fun testGetFragment_assignment_offlineNotSynced() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/assignments/123456789"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "Assignment",
+            url = url
+        )
+
+        val course = Course()
+
+        val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
+        TestCase.assertNotNull(fragment)
+        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
     }
 
     @Test
@@ -192,6 +273,24 @@ class ModuleUtilityTest : TestCase() {
     }
 
     @Test
+    fun testGetFragment_externalTool_offline() {
+        val url = "https://instructure.com"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "ExternalUrl",
+            title = "Hello",
+            htmlUrl = url
+
+        )
+
+        val course = Course()
+
+        val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
+        TestCase.assertNotNull(fragment)
+        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
+    }
+
+    @Test
     fun testGetFragment_subheader() {
         val moduleItem = ModuleItem(
                 type = "SubHeader"
@@ -230,6 +329,53 @@ class ModuleUtilityTest : TestCase() {
     }
 
     @Test
+    fun testGetFragment_quiz_offlineSynced() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/quizzes/123456789"
+        val htmlUrl = "https://mobile.canvas.net/courses/222/quizzes/123456789"
+        val apiUrl = "courses/222/quizzes/123456789"
+
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "Quiz",
+            url = url,
+            htmlUrl = htmlUrl,
+            contentId = 55
+        )
+
+        val course = Course()
+        val expectedBundle = Bundle()
+        expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putString(Const.URL, htmlUrl)
+        expectedBundle.putString(Const.API_URL, apiUrl)
+        expectedBundle.putLong(Const.ID, 55)
+
+        val parentFragment = callGetFragment(moduleItem, course, null, isOnline = false, tabs = setOf(Tab.QUIZZES_ID))
+        TestCase.assertNotNull(parentFragment)
+        TestCase.assertEquals(ModuleQuizDecider::class.java, parentFragment!!.javaClass)
+        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+    }
+
+    @Test
+    fun testGetFragment_quiz_offlineNotSynced() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/quizzes/123456789"
+        val htmlUrl = "https://mobile.canvas.net/courses/222/quizzes/123456789"
+        val apiUrl = "courses/222/quizzes/123456789"
+
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "Quiz",
+            url = url,
+            htmlUrl = htmlUrl,
+            contentId = 55
+        )
+
+        val course = Course()
+        val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
+        TestCase.assertNotNull(fragment)
+        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
+    }
+
+    @Test
     fun testGetFragment_discussion() {
         val url = "https://mobile.canvas.net/api/v1/courses/222/discussion_topics/123456789"
         val moduleItem = ModuleItem(
@@ -250,7 +396,22 @@ class ModuleUtilityTest : TestCase() {
         TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
-    private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?): Fragment? {
-        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false)
+    @Test
+    fun testGetFragment_discussion_offline() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/discussion_topics/123456789"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "Discussion",
+            url = url
+        )
+
+        val course = Course()
+        val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
+        TestCase.assertNotNull(fragment)
+        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
+    }
+
+    private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?, isOnline: Boolean = true, tabs: Set<String> = emptySet()): Fragment? {
+        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false, isOnline, tabs, context)
     }
 }

@@ -22,6 +22,8 @@ import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -43,8 +45,9 @@ class ModuleProgressionRepositoryTest {
     private val networkDataSource: ModuleProgressionNetworkDataSource = mockk()
     private val networkStateProvider: NetworkStateProvider = mockk()
     private val featureFlagProvider: FeatureFlagProvider = mockk()
+    private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
 
-    private val repository = ModuleProgressionRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+    private val repository = ModuleProgressionRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao)
 
     @Before
     fun setup() = runTest {
@@ -187,5 +190,19 @@ class ModuleProgressionRepositoryTest {
 
         coVerify { networkDataSource.markAsRead(Course(1), ModuleItem(1)) }
         Assert.assertTrue(result.isFail)
+    }
+
+    @Test
+    fun `getSyncedTabs returns only the synced tabs from dao`() = runTest {
+        coEvery { courseSyncSettingsDao.findById(1) } returns CourseSyncSettingsEntity(1, false, mapOf(
+            "Page" to true,
+            "Quiz" to false,
+            "Assignment" to true,
+            "Files" to false
+        ))
+
+        val result = repository.getSyncedTabs(1)
+
+        Assert.assertEquals(setOf("Page", "Assignment"), result)
     }
 }
