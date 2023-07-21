@@ -106,6 +106,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var isDiscussionRedesignEnabled = false
 
     private var snycedTabs = emptySet<String>()
+    private var isOfflineEnabled = false
 
     val tabId: String
         get() = Tab.MODULES_ID
@@ -130,6 +131,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifecycleScope.launch {
+            isOfflineEnabled = repository.isOfflineEnabled()
             snycedTabs = repository.getSyncedTabs(canvasContext.id)
             isDiscussionRedesignEnabled = discussionRouteHelper.isDiscussionRedesignEnabled(canvasContext)
             loadModuleProgression(savedInstanceState)
@@ -639,7 +641,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             modules[groupPos],
             isDiscussionRedesignEnabled,
             navigatedFromModules,
-            repository.isOnline(),
+            repository.isOnline() || !isOfflineEnabled, // If the offline feature is disabled we always use the online behavior
             snycedTabs,
             requireContext()
         )
