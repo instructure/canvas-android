@@ -416,6 +416,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 setEmptyView(binding.emptyView, R.drawable.ic_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
             }
             StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+            updateFileList()
         } catch {
             toast(R.string.errorOccurred)
         }
@@ -440,12 +441,21 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
-                recyclerAdapter?.refresh()
-                folder?.let {
-                    StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + it.id
+                updateFileList(true)
+                folder?.let { fileFolder ->
+                    StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + fileFolder.id
                 }
             }
         }
+    }
+
+    private fun updateFileList(includeCurrentScreen: Boolean = false) {
+        parentFragmentManager.fragments
+            .filterIsInstance(FileListFragment::class.java)
+            .dropLast(if (includeCurrentScreen) 0 else 1)
+            .forEach { fragment ->
+                fragment.recyclerAdapter?.refresh()
+            }
     }
 
     private fun createFolder() {
@@ -456,6 +466,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 }
                 recyclerAdapter?.add(newFolder)
                 StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+                updateFileList()
             } catch {
                 toast(R.string.folderCreationError)
             }
