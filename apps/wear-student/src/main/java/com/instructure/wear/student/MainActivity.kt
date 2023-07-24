@@ -21,62 +21,72 @@ package com.instructure.wear.student
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                Text("Hello World!", modifier = Modifier.fillMaxSize())
-            }
+            WearApp()
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WearApp(greetingName: String) {
+fun WearApp() {
+
+    val pagerState = rememberPagerState()
+    val pageIndicatorState: PageIndicatorState = remember {
+        object : PageIndicatorState {
+            override val pageCount: Int
+                get() = 2
+            override val pageOffset: Float
+                get() = 0f
+            override val selectedPage: Int
+                get() = pagerState.currentPage
+
+        }
+    }
+
     MaterialTheme {
-        /* If you have enough items in your list, use [ScalingLazyColumn] which is an optimized
-         * version of LazyColumn for wear devices with some added features. For more information,
-         * see d.android.com/wear/compose.
-         */
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-                .selectableGroup(),
-            verticalArrangement = Arrangement.Center
+                .fillMaxSize(),
+            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         ) {
-            Greeting(greetingName = greetingName)
+            HorizontalPager(pageCount = 2, state = pagerState) {
+                Greeting(greetingName = "Test $it")
+            }
+            HorizontalPageIndicator(pageIndicatorState = pageIndicatorState)
         }
+
     }
 }
 
 @Composable
 fun Greeting(greetingName: String) {
     Text(
-        modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colors.primary,
-        text = stringResource(R.string.hello_world, greetingName)
+        text = greetingName
     )
 }
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    WearApp("Preview Android")
+    WearApp()
 }
