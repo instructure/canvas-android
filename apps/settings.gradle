@@ -41,3 +41,4 @@ project(':pandares').projectDir = new File(rootProject.projectDir, '/../libs/pan
 project(':panda_annotations').projectDir = new File(rootProject.projectDir, '/../libs/panda_annotations')
 project(':panda_processor').projectDir = new File(rootProject.projectDir, '/../libs/panda_processor')
 project(':DocumentScanner').projectDir = new File(rootProject.projectDir, '/../libs/DocumentScanner')
+include ':wear-student'
