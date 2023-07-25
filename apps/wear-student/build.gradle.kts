@@ -65,6 +65,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":canvas-api-2"))
 
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("com.google.android.gms:play-services-wearable:18.0.0")

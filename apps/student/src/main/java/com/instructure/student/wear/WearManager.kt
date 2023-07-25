@@ -23,22 +23,24 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
+import com.google.gson.Gson
 import com.instructure.canvasapi2.utils.ApiPrefs
 
 class WearManager(private val context: Context) {
 
     @SuppressLint("VisibleForTests")
     fun refreshToken() {
+        val domain = ApiPrefs.fullDomain
         val token = ApiPrefs.accessToken
+        val refreshToken = ApiPrefs.refreshToken
         val dataClient = Wearable.getDataClient(context)
 
         val putDataReq = PutDataMapRequest.create("/auth").apply {
-            dataMap.putString("token", token)
+            dataMap.putString("accessToken", token)
+            dataMap.putString("refreshToken", refreshToken)
+            dataMap.putString("domain", domain)
         }.asPutDataRequest()
             .setUrgent()
         val result = dataClient.putDataItem(putDataReq)
-        result.addOnSuccessListener {
-            Log.d("event sent", "refreshToken: $token")
-        }
     }
 }

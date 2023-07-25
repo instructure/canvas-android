@@ -19,9 +19,7 @@
 package com.instructure.student
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -36,11 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
@@ -49,12 +42,12 @@ import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.features.grades.GradesScreen
 import com.instructure.student.features.todo.TodoScreen
-import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity(), DataClient.OnDataChangedListener {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -83,13 +76,12 @@ class MainActivity : ComponentActivity(), DataClient.OnDataChangedListener {
             if (event.type == DataEvent.TYPE_CHANGED) {
                 val dataItemPath = event.dataItem.uri.path ?: ""
                 if (dataItemPath.startsWith("/auth")) {
-                    val token = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("token")
-                    lifecycleScope.launch {
-                        dataStore.edit {preferences ->
-                            preferences[TOKEN] = token ?: ""
-                        }
-                    }
-                    Log.d("event received", "onDataChanged: $token")
+                    val token = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("accessToken")
+                    val refreshToken = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("refreshToken")
+                    val domain = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("domain")
+                    ApiPrefs.accessToken = token ?: ""
+                    ApiPrefs.refreshToken = refreshToken ?: ""
+                    ApiPrefs.domain = domain ?: ""
                 }
             }
         }
@@ -118,7 +110,6 @@ fun WearApp() {
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-
             HorizontalPager(pageCount = 2, state = pagerState) {
                 when (it) {
                     0 -> GradesScreen()
