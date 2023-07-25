@@ -22,8 +22,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -31,16 +32,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
+import com.instructure.wear.student.features.grades.GradesScreen
+import com.instructure.wear.student.features.todo.TodoScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
-            WearApp()
+            Box(Modifier.safeDrawingPadding()) {
+                WearApp()
+            }
         }
     }
 }
@@ -63,26 +72,22 @@ fun WearApp() {
     }
 
     MaterialTheme {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize(),
-            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         ) {
+
             HorizontalPager(pageCount = 2, state = pagerState) {
-                Greeting(greetingName = "Test $it")
+                when (it) {
+                    0 -> GradesScreen()
+                    1 -> TodoScreen()
+                    else -> throw IllegalStateException("Unexpected page index $it")
+                }
             }
             HorizontalPageIndicator(pageIndicatorState = pageIndicatorState)
         }
 
     }
-}
-
-@Composable
-fun Greeting(greetingName: String) {
-    Text(
-        color = MaterialTheme.colors.primary,
-        text = greetingName
-    )
 }
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
