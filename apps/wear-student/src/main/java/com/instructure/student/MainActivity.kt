@@ -19,6 +19,7 @@
 package com.instructure.student
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -35,6 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
@@ -45,6 +51,8 @@ import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.instructure.student.features.grades.GradesScreen
 import com.instructure.student.features.todo.TodoScreen
+import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity(), DataClient.OnDataChangedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +84,11 @@ class MainActivity : ComponentActivity(), DataClient.OnDataChangedListener {
                 val dataItemPath = event.dataItem.uri.path ?: ""
                 if (dataItemPath.startsWith("/auth")) {
                     val token = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("token")
+                    lifecycleScope.launch {
+                        dataStore.edit {preferences ->
+                            preferences[TOKEN] = token ?: ""
+                        }
+                    }
                     Log.d("event received", "onDataChanged: $token")
                 }
             }
