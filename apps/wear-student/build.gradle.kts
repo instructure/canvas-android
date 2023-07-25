@@ -22,11 +22,11 @@ plugins {
 }
 
 android {
-    namespace = "com.instructure.wear.student"
+    namespace = "com.instructure.candroid"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.instructure.wear.student"
+        applicationId = "com.instructure.candroid"
         minSdk = 30
         targetSdk = 33
         versionCode = 1

@@ -16,9 +16,11 @@
  *
  */
 
-package com.instructure.wear.student
+package com.instructure.student
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -36,11 +38,15 @@ import androidx.core.view.WindowCompat
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
-import androidx.wear.compose.material.Text
-import com.instructure.wear.student.features.grades.GradesScreen
-import com.instructure.wear.student.features.todo.TodoScreen
+import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.DataEvent
+import com.google.android.gms.wearable.DataEventBuffer
+import com.google.android.gms.wearable.DataMapItem
+import com.google.android.gms.wearable.Wearable
+import com.instructure.student.features.grades.GradesScreen
+import com.instructure.student.features.todo.TodoScreen
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), DataClient.OnDataChangedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,6 +55,29 @@ class MainActivity : ComponentActivity() {
         setContent {
             Box(Modifier.safeDrawingPadding()) {
                 WearApp()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Wearable.getDataClient(this).addListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Wearable.getDataClient(this).removeListener(this)
+    }
+
+    @SuppressLint("VisibleForTests")
+    override fun onDataChanged(events: DataEventBuffer) {
+        events.forEach { event ->
+            if (event.type == DataEvent.TYPE_CHANGED) {
+                val dataItemPath = event.dataItem.uri.path ?: ""
+                if (dataItemPath.startsWith("/auth")) {
+                    val token = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("token")
+                    Log.d("event received", "onDataChanged: $token")
+                }
             }
         }
     }

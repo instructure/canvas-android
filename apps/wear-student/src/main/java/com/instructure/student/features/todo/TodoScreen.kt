@@ -16,7 +16,7 @@
  *
  */
 
-package com.instructure.wear.student.features.grades
+package com.instructure.student.features.todo
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,21 +31,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Text
 
-data class Grade(
-    val title: String
-)
-
 @Composable
-fun GradesScreen() {
+fun TodoScreen() {
     LazyColumn {
         items(10) { position ->
-            GradeItem(text = "Grade $position")
+            TodoItem(text = "ToDo $position")
         }
     }
 }
 
 @Composable
-fun GradeItem(text: String) {
+fun TodoItem(text: String) {
     Column {
         Card(modifier = Modifier.fillMaxWidth()) {
             Text(text = text, modifier = Modifier.fillMaxWidth())
@@ -59,5 +55,5 @@ fun GradeItem(text: String) {
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    GradesScreen()
+    TodoScreen()
 }

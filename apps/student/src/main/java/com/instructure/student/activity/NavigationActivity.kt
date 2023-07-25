@@ -98,6 +98,7 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
+import com.instructure.student.wear.WearManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -220,6 +221,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
+        WearManager(this).refreshToken()
     }
 
     private fun checkAppUpdates() {
