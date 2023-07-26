@@ -18,10 +18,10 @@
 
 package com.instructure.student
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +29,9 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,15 +39,13 @@ import androidx.core.view.WindowCompat
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
-import com.google.android.gms.wearable.DataClient
-import com.google.android.gms.wearable.DataEvent
-import com.google.android.gms.wearable.DataEventBuffer
-import com.google.android.gms.wearable.DataMapItem
-import com.google.android.gms.wearable.Wearable
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.features.grades.GradesScreen
 import com.instructure.student.features.todo.TodoScreen
+import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.wear.compose.material.Text
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +63,10 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WearApp() {
-
+fun WearApp(
+    authViewModel: AuthViewModel = viewModel()
+) {
+    val uiState = authViewModel.authState.collectAsState()
     val pagerState = rememberPagerState()
     val pageIndicatorState: PageIndicatorState = remember {
         object : PageIndicatorState {
@@ -79,19 +81,29 @@ fun WearApp() {
     }
 
     MaterialTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-        ) {
-            HorizontalPager(pageCount = 2, state = pagerState) {
-                when (it) {
-                    0 -> GradesScreen()
-                    1 -> TodoScreen()
-                    else -> throw IllegalStateException("Unexpected page index $it")
+        if (uiState.value) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+            ) {
+                HorizontalPager(pageCount = 2, state = pagerState) {
+                    when (it) {
+                        0 -> GradesScreen()
+                        1 -> TodoScreen()
+                        else -> throw IllegalStateException("Unexpected page index $it")
+                    }
                 }
+                HorizontalPageIndicator(pageIndicatorState = pageIndicatorState)
             }
-            HorizontalPageIndicator(pageIndicatorState = pageIndicatorState)
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+            ) {
+                Text(text = "Not Authenticated", modifier = Modifier.align(Alignment.Center))
+            }
         }
+
 
     }
 }

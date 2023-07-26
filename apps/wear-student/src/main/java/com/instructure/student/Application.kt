@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,23 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
-repositories {
-    google()
-    mavenCentral()
-}
 
-val agpVersion= "7.1.3"
+package com.instructure.student
 
-dependencies {
-    implementation("com.android.tools.build:gradle:$agpVersion")
-    implementation("com.android.tools.build:gradle-api:$agpVersion")
-    implementation("org.javassist:javassist:3.24.1-GA")
-    implementation("com.google.code.gson:gson:2.8.8")
-    implementation ("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10")
-    implementation("com.squareup:javapoet:1.13.0")
-}
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-plugins {
-    `kotlin-dsl`
+@HiltAndroidApp
+class Application : Application() {
 }
