@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.instructure.student">
 
     <uses-feature android:name="android.hardware.type.watch" />
@@ -32,6 +33,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".AuthListenerService" android:exported="true" tools:ignore="ExportedService" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:scheme="wear" android:host="*"
+                    android:path="/auth" />
+            </intent-filter>
+        </service>
 
     </application>
 

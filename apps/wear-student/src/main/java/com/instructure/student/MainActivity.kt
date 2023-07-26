@@ -46,7 +46,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.features.grades.GradesScreen
 import com.instructure.student.features.todo.TodoScreen
 
-class MainActivity : ComponentActivity(), DataClient.OnDataChangedListener {
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,33 +56,6 @@ class MainActivity : ComponentActivity(), DataClient.OnDataChangedListener {
         setContent {
             Box(Modifier.safeDrawingPadding()) {
                 WearApp()
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Wearable.getDataClient(this).addListener(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Wearable.getDataClient(this).removeListener(this)
-    }
-
-    @SuppressLint("VisibleForTests")
-    override fun onDataChanged(events: DataEventBuffer) {
-        events.forEach { event ->
-            if (event.type == DataEvent.TYPE_CHANGED) {
-                val dataItemPath = event.dataItem.uri.path ?: ""
-                if (dataItemPath.startsWith("/auth")) {
-                    val token = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("accessToken")
-                    val refreshToken = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("refreshToken")
-                    val domain = DataMapItem.fromDataItem(event.dataItem).dataMap.getString("domain")
-                    ApiPrefs.accessToken = token ?: ""
-                    ApiPrefs.refreshToken = refreshToken ?: ""
-                    ApiPrefs.domain = domain ?: ""
-                }
             }
         }
     }
