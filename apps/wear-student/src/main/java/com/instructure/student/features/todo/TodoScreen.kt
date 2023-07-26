@@ -18,6 +18,7 @@
 
 package com.instructure.student.features.todo
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Text
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TodoScreen() {
     LazyColumn {

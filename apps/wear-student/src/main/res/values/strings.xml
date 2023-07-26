@@ -20,4 +20,6 @@
     <string name="app_name">Canvas Student</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello World!</string>
+    <string name="loading">Loading...</string>
+    <string name="nothing_to_see_here">Nothing to see here</string>
 </resources>
