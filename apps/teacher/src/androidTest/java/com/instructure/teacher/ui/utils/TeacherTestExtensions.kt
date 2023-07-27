@@ -28,8 +28,29 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.api.*
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ConversationsApi
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.SeedApi
+import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.api.UserApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.ConversationListApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.EnrollmentTypes
+import com.instructure.dataseeding.model.FileType
+import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.PageApiModel
+import com.instructure.dataseeding.model.QuizListApiModel
+import com.instructure.dataseeding.model.QuizSubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.DataSeedingException
 import com.instructure.dataseeding.util.Randomizer
@@ -38,8 +59,12 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.router.RouteMatcher
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.Matchers.anyOf
-import java.io.*
+import org.hamcrest.CoreMatchers.anyOf
+import java.io.BufferedInputStream
+import java.io.DataInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileWriter
 
 
 fun TeacherTest.enterDomain(enrollmentType: String = EnrollmentTypes.TEACHER_ENROLLMENT): CanvasUserApiModel {

@@ -47,8 +47,8 @@ import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 import com.instructure.teacher.view.AssignmentOverrideView
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.Matchers
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -172,7 +172,7 @@ class EditAssignmentDetailsPage : BasePage() {
      * @param dayOfMonth The day of the month (1-31).
      */
     fun editDate(year: Int, month: Int, dayOfMonth: Int) {
-        waitForViewWithClassName(Matchers.equalTo<String>(DatePicker::class.java.name))
+        waitForViewWithClassName(CoreMatchers.equalTo<String>(DatePicker::class.java.name))
             .perform(PickerActions.setDate(year, month, dayOfMonth))
         onViewWithId(android.R.id.button1).click()
     }
@@ -184,7 +184,7 @@ class EditAssignmentDetailsPage : BasePage() {
      * @param min The minute (0-59).
      */
     fun editTime(hour: Int, min: Int) {
-        waitForViewWithClassName(Matchers.equalTo<String>(TimePicker::class.java.name))
+        waitForViewWithClassName(CoreMatchers.equalTo<String>(TimePicker::class.java.name))
             .perform(PickerActions.setTime(hour, min))
         onViewWithId(android.R.id.button1).click()
     }
@@ -219,14 +219,14 @@ class EditAssignmentDetailsPage : BasePage() {
      * Asserts that a new override has been created.
      */
     fun assertNewOverrideCreated() {
-        waitForViewWithId(R.id.overrideContainer).check(has(2, Matchers.instanceOf(AssignmentOverrideView::class.java)))
+        waitForViewWithId(R.id.overrideContainer).check(has(2, CoreMatchers.instanceOf(AssignmentOverrideView::class.java)))
     }
 
     /**
      * Asserts that an override has been removed.
      */
     fun assertOverrideRemoved() {
-        waitForViewWithId(R.id.overrideContainer).check(has(1, Matchers.instanceOf(AssignmentOverrideView::class.java)))
+        waitForViewWithId(R.id.overrideContainer).check(has(1, CoreMatchers.instanceOf(AssignmentOverrideView::class.java)))
     }
 
     /**

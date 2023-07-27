@@ -16,7 +16,7 @@ import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.CoreMatchers.allOf
 
 /**
  * Represents the Modules Page.

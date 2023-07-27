@@ -15,14 +15,15 @@
  */
 package com.instructure.teacher.ui.utils
 
+import android.view.View
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
-import android.view.View
 import com.instructure.espresso.ViewInteractionDelegate
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers
+
 
 /**
  *  The toolbar's title text view's resource id is the same as the course text view in course cards.
@@ -31,6 +32,6 @@ import org.hamcrest.Matchers
 class WaitForToolbarTitle(val text: Int, autoAssert: Boolean = true) : ViewInteractionDelegate(autoAssert) {
     override fun onProvide(matcher: Matcher<View>): ViewInteraction = Espresso.onView(matcher)
     override fun getMatcher(): Matcher<View> {
-        return Matchers.allOf(ViewMatchers.withText(text), ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar)))
+        return allOf(ViewMatchers.withText(text), ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar)))
     }
 }

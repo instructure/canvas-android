@@ -51,8 +51,8 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import com.instructure.teacher.view.AssignmentOverrideView
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.Matchers
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -127,7 +127,7 @@ class EditQuizDetailsPage : BasePage() {
      * @param dayOfMonth The day of the month value.
      */
     fun editDate(year: Int, month: Int, dayOfMonth: Int) {
-        waitForViewWithClassName(Matchers.equalTo<String>(DatePicker::class.java.name))
+        waitForViewWithClassName(CoreMatchers.equalTo<String>(DatePicker::class.java.name))
             .perform(PickerActions.setDate(year, month, dayOfMonth))
         onViewWithId(android.R.id.button1).click()
     }
@@ -139,7 +139,7 @@ class EditQuizDetailsPage : BasePage() {
      * @param min The minute value.
      */
     fun editTime(hour: Int, min: Int) {
-        waitForViewWithClassName(Matchers.equalTo<String>(TimePicker::class.java.name))
+        waitForViewWithClassName(CoreMatchers.equalTo<String>(TimePicker::class.java.name))
             .perform(PickerActions.setTime(hour, min))
         onViewWithId(android.R.id.button1).click()
     }
@@ -191,7 +191,7 @@ class EditQuizDetailsPage : BasePage() {
         waitForViewWithId(R.id.overrideContainer).check(
             has(
                 2,
-                Matchers.instanceOf(AssignmentOverrideView::class.java)
+                CoreMatchers.instanceOf(AssignmentOverrideView::class.java)
             )
         )
     }
@@ -203,7 +203,7 @@ class EditQuizDetailsPage : BasePage() {
         waitForViewWithId(R.id.overrideContainer).check(
             has(
                 1,
-                Matchers.instanceOf(AssignmentOverrideView::class.java)
+                CoreMatchers.instanceOf(AssignmentOverrideView::class.java)
             )
         )
     }

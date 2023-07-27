@@ -33,8 +33,8 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.Matchers
 
 /**
  * Represents the Inbox Message page.
@@ -104,7 +104,7 @@ class InboxMessagePage: BasePage() {
      */
     fun deleteConversation() {
         openOptionMenuFor("Delete")
-        Espresso.onView(Matchers.allOf(ViewMatchers.isAssignableFrom(AppCompatButton::class.java),
+        Espresso.onView(CoreMatchers.allOf(ViewMatchers.isAssignableFrom(AppCompatButton::class.java),
             containsTextCaseInsensitive("DELETE"))).click()
     }
 }

@@ -26,7 +26,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers
 
 /**
  * Represents a page displaying a calendar event.
@@ -46,7 +46,7 @@ class CalendarEventPage : BasePage(R.id.fragmentCalendarEvent) {
      * @throws AssertionError if the title does not match the expected title.
      */
     fun verifyTitle(title: String) {
-        Espresso.onView(Matchers.allOf(ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar)), containsTextCaseInsensitive(title))).assertDisplayed()
+        Espresso.onView(CoreMatchers.allOf(ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar)), containsTextCaseInsensitive(title))).assertDisplayed()
     }
 
     /**
@@ -58,6 +58,6 @@ class CalendarEventPage : BasePage(R.id.fragmentCalendarEvent) {
     fun verifyDescription(description: String) {
         Web.onWebView(ViewMatchers.withId(R.id.contentWebView))
             .withElement(DriverAtoms.findElement(Locator.ID, "content"))
-            .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(description)))
+            .check(WebViewAssertions.webMatches(DriverAtoms.getText(), CoreMatchers.equalTo(description)))
     }
 }

@@ -17,12 +17,21 @@
 package com.instructure.teacher.ui.renderTests.pages
 
 import androidx.test.espresso.action.ViewActions
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.pages.SyllabusPage
 import org.hamcrest.CoreMatchers
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers.allOf
+
 
 class SyllabusRenderPage : SyllabusPage() {
 
@@ -37,7 +46,7 @@ class SyllabusRenderPage : SyllabusPage() {
         findChildTextInToolbar(text).assertDisplayed()
     }
 
-    private fun findChildTextInToolbar(text: String) = onView(Matchers.allOf(withText(text), withParent(R.id.toolbar)))
+    private fun findChildTextInToolbar(text: String) = onView(allOf(withText(text), withParent(R.id.toolbar)))
 
     fun assertDoesNotDisplaySyllabus() {
         tabs.assertNotDisplayed()

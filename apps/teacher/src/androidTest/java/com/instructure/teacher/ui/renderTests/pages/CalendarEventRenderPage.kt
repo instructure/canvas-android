@@ -24,7 +24,7 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers.allOf
 
 class CalendarEventRenderPage : BasePage(R.id.fragmentCalendarEvent) {
 
@@ -40,5 +40,5 @@ class CalendarEventRenderPage : BasePage(R.id.fragmentCalendarEvent) {
         findChildTextInToolbar(text).assertDisplayed()
     }
 
-    private fun findChildTextInToolbar(text: String) = onView(Matchers.allOf(withText(text), withParent(R.id.toolbar)))
+    private fun findChildTextInToolbar(text: String) = onView(allOf(withText(text), withParent(R.id.toolbar)))
 }

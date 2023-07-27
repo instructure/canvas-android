@@ -18,8 +18,8 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
 
 /**
  * The `EditPageDetailsPage` class represents a page for editing page details.

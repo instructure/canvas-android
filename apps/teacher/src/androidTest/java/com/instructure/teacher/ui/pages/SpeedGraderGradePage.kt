@@ -37,8 +37,8 @@ import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
-import org.hamcrest.Matchers
-import org.hamcrest.Matchers.not
+import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.not
 import java.text.DecimalFormat
 import java.util.*
 
@@ -73,7 +73,7 @@ class SpeedGraderGradePage : BasePage() {
      * Opens the grade dialog.
      */
     fun openGradeDialog() {
-        onView(Matchers.allOf((withId(R.id.gradeTextContainer)), ViewMatchers.isDisplayed())).click()
+        onView(CoreMatchers.allOf((withId(R.id.gradeTextContainer)), ViewMatchers.isDisplayed())).click()
     }
 
     /**
@@ -99,7 +99,7 @@ class SpeedGraderGradePage : BasePage() {
      * @param grade The expected grade.
      */
     fun assertHasGrade(grade: String) {
-        onView(Matchers.allOf((withId(R.id.gradeValueText)), ViewMatchers.isDisplayed())).assertContainsText(grade)
+        onView(CoreMatchers.allOf((withId(R.id.gradeValueText)), ViewMatchers.isDisplayed())).assertContainsText(grade)
     }
 
     /**
@@ -150,7 +150,7 @@ class SpeedGraderGradePage : BasePage() {
      * @param value The expected max value.
      */
     fun assertSliderMaxValue(value: String) {
-        onView(Matchers.allOf((withId(R.id.maxGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
+        onView(CoreMatchers.allOf((withId(R.id.maxGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
     }
 
     /**
@@ -159,7 +159,7 @@ class SpeedGraderGradePage : BasePage() {
      * @param value The expected min value.
      */
     fun assertSliderMinValue(value: String) {
-        onView(Matchers.allOf((withId(R.id.minGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
+        onView(CoreMatchers.allOf((withId(R.id.minGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
     }
 
     /**
@@ -169,7 +169,7 @@ class SpeedGraderGradePage : BasePage() {
      */
     fun assertHasOvergradeWarning(overgradedBy: Double) {
         val numberFormatter = DecimalFormat("##.##")
-        onView(Matchers.allOf((withId(R.id.gradeText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.speed_grader_overgraded_by, numberFormatter.format(overgradedBy)))
+        onView(CoreMatchers.allOf((withId(R.id.gradeText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.speed_grader_overgraded_by, numberFormatter.format(overgradedBy)))
     }
 
     /**
@@ -183,7 +183,7 @@ class SpeedGraderGradePage : BasePage() {
      * Asserts that the student is excused.
      */
     fun assertStudentExcused() {
-        waitForView(Matchers.allOf((withId(R.id.gradeValueText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.excused))
+        waitForView(CoreMatchers.allOf((withId(R.id.gradeValueText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.excused))
     }
 
     /**

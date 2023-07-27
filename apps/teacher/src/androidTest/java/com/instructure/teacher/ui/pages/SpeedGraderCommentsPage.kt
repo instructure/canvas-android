@@ -43,7 +43,7 @@ import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.CoreMatchers.allOf
 
 /**
  * Represents the SpeedGrader comments page.

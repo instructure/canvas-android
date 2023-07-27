@@ -28,8 +28,8 @@ import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
-import org.hamcrest.Matchers
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
 import java.util.*
 
 /**
@@ -132,7 +132,7 @@ class SpeedGraderPage : BasePage() {
     fun clickBackButton() {
         try {
             Espresso.onView(
-                Matchers.allOf(
+                CoreMatchers.allOf(
                     ViewMatchers.withContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description),
                     ViewMatchers.isCompletelyDisplayed(),
                     ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.speedGraderToolbar))

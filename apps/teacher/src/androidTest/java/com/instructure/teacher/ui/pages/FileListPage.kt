@@ -41,7 +41,7 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.CoreMatchers.allOf
 
 /**
  * Represents the File List page.

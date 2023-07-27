@@ -46,8 +46,8 @@ import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.Matchers
 
 /**
  * Represents a page for managing assignment submissions.
@@ -299,7 +299,7 @@ class AssignmentSubmissionListPage : BasePage() {
      */
     fun assertFileDisplayed(fileName: String) {
         val matcher =
-            Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
+            CoreMatchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
         Espresso.onView(matcher).assertDisplayed()
     }
     /**
@@ -309,16 +309,16 @@ class AssignmentSubmissionListPage : BasePage() {
     @param displayName The display name of the attachment.
      */
     fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
-        val commentMatcher = Matchers.allOf(
+        val commentMatcher = CoreMatchers.allOf(
             ViewMatchers.withId(R.id.commentHolder),
             ViewMatchers.hasDescendant(
-                Matchers.allOf(
+                CoreMatchers.allOf(
                     ViewMatchers.withText(displayName),
                     ViewMatchers.withId(R.id.userNameTextView)
                 )
             ),
             ViewMatchers.hasDescendant(
-                Matchers.allOf(
+                CoreMatchers.allOf(
                     ViewMatchers.withText(fileName),
                     ViewMatchers.withId(R.id.attachmentNameTextView)
                 )

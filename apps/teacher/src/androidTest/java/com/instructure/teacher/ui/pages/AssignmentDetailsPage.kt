@@ -26,7 +26,7 @@ import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers
 
 /**
  * Assignment details page
@@ -248,7 +248,7 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
                 Locator.XPATH,
                 "//div[@id='content' and contains(text(),'$text')]"
             )
-        ).check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(text)))    }
+        ).check(WebViewAssertions.webMatches(DriverAtoms.getText(), CoreMatchers.equalTo(text)))    }
 
     /**
      * Assert needs grading

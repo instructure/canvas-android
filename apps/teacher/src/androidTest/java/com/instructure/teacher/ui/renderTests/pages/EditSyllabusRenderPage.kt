@@ -29,7 +29,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
-import org.hamcrest.Matchers.containsString
+import org.hamcrest.CoreMatchers.containsString
 
 class EditSyllabusRenderPage : BasePage(R.id.editSyllabusPage) {
 

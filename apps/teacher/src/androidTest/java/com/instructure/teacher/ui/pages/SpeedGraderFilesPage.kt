@@ -27,7 +27,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.matchers.RecyclerViewMatcher
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers
 
 /**
  * Represents the SpeedGrader files page.
@@ -66,7 +66,7 @@ class SpeedGraderFilesPage : BasePage() {
      */
     fun assertFileSelected(position: Int) {
         onView(RecyclerViewMatcher(R.id.speedGraderFilesRecyclerView).atPosition(position))
-            .check(ViewAssertions.matches(hasDescendant(Matchers.allOf(withId(R.id.isSelectedIcon), withEffectiveVisibility(Visibility.VISIBLE)))))
+            .check(ViewAssertions.matches(hasDescendant(CoreMatchers.allOf(withId(R.id.isSelectedIcon), withEffectiveVisibility(Visibility.VISIBLE)))))
     }
 
     /**

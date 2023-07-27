@@ -35,8 +35,8 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers
 
 /**
  * Represents the People List Page.
@@ -65,13 +65,13 @@ class PeopleListPage : BasePage(R.id.peopleListPage) {
     fun assertPersonListed(person: CanvasUserApiModel, role: String? = null) {
         var matcher: Matcher<View>? = null
         if (role == null) {
-            matcher = Matchers.allOf(ViewMatchers.withText(person.name), withId(R.id.userName))
+            matcher = CoreMatchers.allOf(ViewMatchers.withText(person.name), withId(R.id.userName))
         } else {
-            matcher = Matchers.allOf(
+            matcher = CoreMatchers.allOf(
                 ViewMatchers.withText(person.name),
                 withId(R.id.userName),
                 ViewMatchers.hasSibling(
-                    Matchers.allOf(
+                    CoreMatchers.allOf(
                         withId(R.id.userRole),
                         ViewMatchers.withText(role)
                     )
@@ -99,7 +99,7 @@ class PeopleListPage : BasePage(R.id.peopleListPage) {
      */
     private fun scrollToMatch(matcher: Matcher<View>) {
         Espresso.onView(
-            Matchers.allOf(
+            CoreMatchers.allOf(
                 withId(R.id.recyclerView),
                 ViewMatchers.isDisplayed(),
                 withAncestor(R.id.peopleListPage)

@@ -210,6 +210,13 @@ android {
     hilt {
         enableAggregatingTask = false
     }
+
+    configurations {
+        cucumberRuntime {
+            // Cucumber runtime configurations
+            extendsFrom testImplementation
+        }
+    }
 }
 
 dependencies {
@@ -235,6 +242,10 @@ dependencies {
     testImplementation Libs.MOCKK
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.THREETEN_BP
+    implementation 'io.cucumber:cucumber-java:6.10.4'
+    implementation 'io.cucumber:cucumber-android:4.10.0'
+    cucumberRuntime 'io.cucumber:cucumber-android:4.10.0'
+    testImplementation 'io.cucumber:cucumber-junit:6.10.4'
 
     /* AndroidTest Dependencies */
     androidTestImplementation project(':espresso')

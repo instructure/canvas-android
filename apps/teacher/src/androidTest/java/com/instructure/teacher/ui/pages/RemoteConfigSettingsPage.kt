@@ -28,8 +28,8 @@ import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.pandautils.R
+import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers
 
 /**
  * Represents the Remote Config Settings page.
@@ -85,7 +85,7 @@ class RemoteConfigSettingsPage : BasePage(R.id.remoteConfigSettingsFragment) {
      * @return The matcher for locating the remote config parameter value.
      */
     private fun getParamValueMatcher(param: RemoteConfigParam): Matcher<View> {
-        val matcher = Matchers.allOf(
+        val matcher = CoreMatchers.allOf(
             ViewMatchers.isAssignableFrom(EditText::class.java),
             ViewMatchers.hasSibling(containsTextCaseInsensitive("${param.rc_name}:"))
         )

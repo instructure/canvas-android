@@ -36,9 +36,9 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.teacher.R
 import com.instructure.teacher.holders.AssigneeItemViewHolder
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
 
 /**
  * A page representing the Assignee List screen in the application.

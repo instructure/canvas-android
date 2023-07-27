@@ -28,7 +28,7 @@ import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
-import org.hamcrest.Matchers.`is`
+import org.hamcrest.CoreMatchers.`is`
 
 /**
  * Represents a page for the course settings.

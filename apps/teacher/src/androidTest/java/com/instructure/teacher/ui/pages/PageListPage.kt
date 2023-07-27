@@ -34,9 +34,9 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
 
 /**
  * Represents the Page List Page.

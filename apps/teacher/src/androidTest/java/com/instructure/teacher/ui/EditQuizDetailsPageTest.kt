@@ -29,7 +29,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers
 import org.junit.Test
 
 @HiltAndroidTest
@@ -42,8 +42,8 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     override fun enableAndConfigureAccessibilityChecks() {
-        extraAccessibilitySupressions = Matchers.allOf(
-            AccessibilityCheckResultUtils.matchesCheckNames(Matchers.`is`("SpeakableTextPresentCheck")),
+        extraAccessibilitySupressions = CoreMatchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheckNames(CoreMatchers.`is`("SpeakableTextPresentCheck")),
             AccessibilityCheckResultUtils.matchesViews(ViewMatchers.withId(R.id.assignTo))
         )
 

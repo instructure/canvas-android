@@ -41,7 +41,7 @@ import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 import com.instructure.teacher.holders.CourseBrowserViewHolder
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.CoreMatchers.allOf
 
 /**
  * Represents the course browser page (aka. when you opens a course from the dashboard, you can see the Course Browser Page).

@@ -34,7 +34,7 @@ import com.instructure.espresso.swipeLeft
 import com.instructure.espresso.swipeRight
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers
 
 /**
  * Represents the Inbox Page.
@@ -179,12 +179,12 @@ class InboxPage: BasePage() {
      * @param subject The subject of the conversation.
      */
     fun assertConversationStarred(subject: String) {
-        val matcher = Matchers.allOf(
+        val matcher = CoreMatchers.allOf(
             withId(R.id.star),
             ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
             hasSibling(withId(R.id.userName)),
             hasSibling(withId(R.id.date)),
-            hasSibling(Matchers.allOf(withId(R.id.subjectView), withText(subject)))
+            hasSibling(CoreMatchers.allOf(withId(R.id.subjectView), withText(subject)))
         )
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
         onView(matcher).assertDisplayed()
@@ -196,12 +196,12 @@ class InboxPage: BasePage() {
      * @param subject The subject of the conversation.
      */
     fun assertConversationNotStarred(subject: String) {
-        val matcher = Matchers.allOf(
+        val matcher = CoreMatchers.allOf(
             withId(R.id.star),
             ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
             hasSibling(withId(R.id.userName)),
             hasSibling(withId(R.id.date)),
-            hasSibling(Matchers.allOf(withId(R.id.subjectView), withText(subject)))
+            hasSibling(CoreMatchers.allOf(withId(R.id.subjectView), withText(subject)))
         )
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
         onView(matcher).check(ViewAssertions.doesNotExist())
@@ -234,11 +234,11 @@ class InboxPage: BasePage() {
      * @param visibility The expected visibility of the unread marker.
      */
     fun assertUnreadMarkerVisibility(subject: String, visibility: ViewMatchers.Visibility) {
-        val matcher = Matchers.allOf(
+        val matcher = CoreMatchers.allOf(
             withId(R.id.unreadMark),
             ViewMatchers.withEffectiveVisibility(visibility),
-            hasSibling(Matchers.allOf(withId(R.id.avatar))),
-            hasSibling(Matchers.allOf(withId(R.id.subjectView), withText(subject)))
+            hasSibling(CoreMatchers.allOf(withId(R.id.avatar))),
+            hasSibling(CoreMatchers.allOf(withId(R.id.subjectView), withText(subject)))
         )
         if(visibility == ViewMatchers.Visibility.VISIBLE) {
             waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
@@ -246,7 +246,7 @@ class InboxPage: BasePage() {
             onView(matcher).assertDisplayed()
         }
         else if(visibility == ViewMatchers.Visibility.GONE) {
-            onView(matcher).check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
+            onView(matcher).check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
         }
     }
 
