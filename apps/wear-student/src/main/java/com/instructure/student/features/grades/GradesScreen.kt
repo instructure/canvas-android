@@ -18,6 +18,7 @@
 
 package com.instructure.student.features.grades
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,12 +28,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +50,7 @@ import androidx.wear.compose.material.AutoCenteringParams
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.rememberScalingLazyListState
+import com.instructure.candroid.R
 import com.instructure.student.Empty
 import com.instructure.student.Loading
 
@@ -69,7 +77,7 @@ fun GradeList(grades: List<GradeItem>) {
         state = listState
     ) {
         item {
-            Text(text = "Grades", modifier = Modifier.fillMaxWidth())
+            Text(text = "Grades", modifier = Modifier.fillMaxWidth(), color = colorResource(id = R.color.textLightest))
         }
         grades.forEach { grade ->
             item {
@@ -82,34 +90,41 @@ fun GradeList(grades: List<GradeItem>) {
 @Composable
 fun GradeItem(gradeItem: GradeItem) {
     Column {
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(4.dp),
+            border = BorderStroke(1.dp, Color(gradeItem.color)),
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.backgroundDark))
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(4.dp),
             ) {
                 Text(
                     text = gradeItem.name,
                     modifier = Modifier
-                        .padding(4.dp),
+                        .padding(start = 4.dp, end = 4.dp)
+                        .weight(2f),
                     fontSize = MaterialTheme.typography.caption2.fontSize,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    maxLines = 2,
+                    lineHeight = MaterialTheme.typography.caption2.fontSize * 1.1f,
+                    overflow = TextOverflow.Ellipsis,
+                    color = colorResource(id = R.color.textLightest),
                 )
-                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = gradeItem.grade.ifBlank { "N/A" },
                     modifier = Modifier
-                        .padding(4.dp),
+                        .padding(start = 4.dp, end = 4.dp)
+                        .weight(1f)
+                        .align(Alignment.CenterVertically),
+                    color = Color(gradeItem.color),
+                    textAlign = TextAlign.End,
                     maxLines = 1,
                     fontSize = MaterialTheme.typography.caption2.fontSize,
                 )
             }
         }
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-        )
     }
 }
 

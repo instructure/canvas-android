@@ -19,16 +19,24 @@
 package com.instructure.student.features.grades
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.depaginate
 
-class GradesNetworkDataSource(private val courseApi: CourseAPI.CoursesInterface) : GradesDataSource {
+class GradesNetworkDataSource(
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val userApi: UserAPI.UsersInterface
+) : GradesDataSource {
 
     override suspend fun loadCourses(): List<Course> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         return courseApi.getFirstPageCourses(restParams).depaginate {
             courseApi.next(it, restParams)
         }.dataOrThrow
+    }
+
+    override suspend fun loadColors(): Map<String, String> {
+        return userApi.getColors(RestParams(isForceReadFromNetwork = true)).dataOrNull?.colors.orEmpty()
     }
 }

@@ -26,5 +26,6 @@ sealed class GradesUiState {
 
 data class GradeItem(
     val name: String,
-    val grade: String
+    val grade: String,
+    val color: Int
 )

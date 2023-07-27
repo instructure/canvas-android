@@ -21,6 +21,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -64,10 +65,15 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    hilt {
+        enableTransformForLocalTests = true
+        enableAggregatingTask = false
+    }
 }
 
 dependencies {
     implementation(project(":canvas-api-2"))
+    implementation(project(":pandares"))
 
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
 

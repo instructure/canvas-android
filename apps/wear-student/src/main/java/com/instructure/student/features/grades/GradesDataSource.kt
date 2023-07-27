@@ -23,4 +23,6 @@ import com.instructure.canvasapi2.models.Course
 interface GradesDataSource {
 
     suspend fun loadCourses(): List<Course>
+
+    suspend fun loadColors(): Map<String, String>
 }

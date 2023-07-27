@@ -8,6 +8,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.*
@@ -173,5 +174,10 @@ class ApiModule {
     @Provides
     fun provideFeaturesApi(): FeaturesAPI.FeaturesInterface {
         return RestBuilder().build(FeaturesAPI.FeaturesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideUserApi(): UserAPI.UsersInterface {
+        return RestBuilder().build(UserAPI.UsersInterface::class.java, RestParams())
     }
 }

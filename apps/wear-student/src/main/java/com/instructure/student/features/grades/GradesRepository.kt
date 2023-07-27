@@ -28,4 +28,8 @@ class GradesRepository(private val gradesNetworkDataSource: GradesNetworkDataSou
         return courses
             .filter { it.isCurrentEnrolment() && !it.isInvited() }
     }
+
+    suspend fun loadColors(): Map<String, String> {
+        return gradesNetworkDataSource.loadColors()
+    }
 }

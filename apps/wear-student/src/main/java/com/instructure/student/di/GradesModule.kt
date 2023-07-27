@@ -19,6 +19,7 @@
 package com.instructure.student.di
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.student.features.grades.GradesNetworkDataSource
 import com.instructure.student.features.grades.GradesRepository
 import dagger.Module
@@ -31,8 +32,8 @@ import dagger.hilt.android.components.ViewModelComponent
 class GradesModule {
 
     @Provides
-    fun provideGradesNetworkDataSource(coursesApi: CourseAPI.CoursesInterface): GradesNetworkDataSource {
-        return GradesNetworkDataSource(coursesApi)
+    fun provideGradesNetworkDataSource(coursesApi: CourseAPI.CoursesInterface, userApi: UserAPI.UsersInterface): GradesNetworkDataSource {
+        return GradesNetworkDataSource(coursesApi, userApi)
     }
 
     @Provides
