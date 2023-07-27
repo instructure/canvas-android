@@ -16,11 +16,14 @@ import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/utils/alert_helper.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsInteractor {
   Future<AlertsList> getAlertsForStudent(String studentId, bool forceRefresh) async {
-    final alertsFuture = _alertsApi().getAlertsDepaginated(studentId, forceRefresh)?.then((list) => list
+    final alertsFuture = _alertsApi().getAlertsDepaginated(studentId, forceRefresh)?.then((List<Alert> list) async {
+      return AlertsHelper().filterAlerts(list, forceRefresh);
+    })?.then((list) => list
       ..sort((a, b) {
         if (a.actionDate == null && b.actionDate == null) return 0;
         if (a.actionDate == null && b.actionDate != null) return -1;

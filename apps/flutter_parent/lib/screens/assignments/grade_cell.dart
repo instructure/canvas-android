@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/grade_cell_data.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -27,10 +28,12 @@ class GradeCell extends StatelessWidget {
 
   GradeCell.forSubmission(
     BuildContext context,
+    Course course,
     Assignment assignment,
     Submission submission, {
     Key key,
   })  : data = GradeCellData.forSubmission(
+          course,
           assignment,
           submission,
           Theme.of(context),
@@ -75,7 +78,9 @@ class GradeCell extends StatelessWidget {
   }
 
   Widget _graded(BuildContext context, GradeCellData data) {
+    final bool _isGradedRestrictQuantitativeData = data.state == GradeCellState.gradedRestrictQuantitativeData;
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       key: Key('grade-cell-graded-container'),
       children: <Widget>[
         Stack(
@@ -129,8 +134,8 @@ class GradeCell extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(width: 16),
-        Expanded(
+        if (!_isGradedRestrictQuantitativeData) SizedBox(width: 16),
+        if (!_isGradedRestrictQuantitativeData) Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

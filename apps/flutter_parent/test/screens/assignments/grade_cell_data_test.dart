@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/grade_cell_data.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
@@ -23,6 +24,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
 void main() {
+  Course baseCourse;
   Assignment baseAssignment;
   Submission baseSubmission;
   GradeCellData baseGradedState;
@@ -33,6 +35,11 @@ void main() {
   AppLocalizations l10n = AppLocalizations();
 
   setUp(() {
+    baseCourse = Course((c) => c
+      ..id = '123'
+      ..name = 'Course'
+      ..courseCode = 'COURSECODE');
+
     baseAssignment = Assignment((a) => a
       ..id = '1'
       ..courseId = '123'
@@ -59,7 +66,7 @@ void main() {
 
   test('Returns empty for null submission', () {
     var expected = GradeCellData();
-    var actual = GradeCellData.forSubmission(baseAssignment, null, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, null, theme, l10n);
     expect(actual, expected);
   });
 
@@ -69,7 +76,7 @@ void main() {
       ..graphPercent = 0.85
       ..score = '85'
       ..showPointsLabel = true);
-    var actual = GradeCellData.forSubmission(baseAssignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -81,7 +88,7 @@ void main() {
       ..grade = null
       ..score = 0.0);
     var expected = GradeCellData();
-    var actual = GradeCellData.forSubmission(baseAssignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -97,14 +104,14 @@ void main() {
         l10n.submissionStatusSuccessSubtitle,
         dateFormat: DateFormat.MMMMd(),
       ));
-    var actual = GradeCellData.forSubmission(baseAssignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
   test('Returns Empty state when not submitted and ungraded', () {
     var submission = Submission((b) => b..assignmentId = '1');
     var expected = GradeCellData();
-    var actual = GradeCellData.forSubmission(baseAssignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -114,7 +121,7 @@ void main() {
       ..graphPercent = 1.0
       ..showCompleteIcon = true
       ..grade = 'Excused');
-    var actual = GradeCellData.forSubmission(baseAssignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -127,7 +134,7 @@ void main() {
       ..showPointsLabel = true
       ..grade = '85%'
       ..gradeContentDescription = '85%');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -138,7 +145,7 @@ void main() {
       ..graphPercent = 1.0
       ..showCompleteIcon = true
       ..grade = 'Complete');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -152,7 +159,7 @@ void main() {
       ..graphPercent = 1.0
       ..showIncompleteIcon = true
       ..grade = 'Incomplete');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -167,7 +174,7 @@ void main() {
         l10n.submissionStatusSuccessSubtitle,
         dateFormat: DateFormat.MMMMd(),
       ));
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -176,7 +183,7 @@ void main() {
       ..graphPercent = 0.85
       ..score = '85'
       ..showPointsLabel = true);
-    var actual = GradeCellData.forSubmission(baseAssignment, baseSubmission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, baseSubmission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -189,7 +196,7 @@ void main() {
       ..showPointsLabel = true
       ..grade = 'B+'
       ..gradeContentDescription = 'B+');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -206,7 +213,7 @@ void main() {
       ..showPointsLabel = true
       ..grade = 'A-'
       ..gradeContentDescription = 'A. minus');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -219,7 +226,7 @@ void main() {
       ..showPointsLabel = true
       ..grade = '3.8 GPA'
       ..gradeContentDescription = '3.8 GPA');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -227,7 +234,7 @@ void main() {
     var assignment = baseAssignment.rebuild((b) => b..gradingType = GradingType.notGraded);
     var submission = Submission((b) => b..assignmentId = '1');
     var expected = GradeCellData();
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -242,7 +249,7 @@ void main() {
       ..showPointsLabel = true
       ..latePenalty = 'Late penalty (-6)'
       ..finalGrade = 'Final Grade: 79');
-    var actual = GradeCellData.forSubmission(baseAssignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -255,7 +262,7 @@ void main() {
       ..showPointsLabel = true
       ..grade = 'B-'
       ..gradeContentDescription = 'B. minus');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 
@@ -272,7 +279,7 @@ void main() {
       ..showPointsLabel = true
       ..grade = 'B'
       ..gradeContentDescription = 'B');
-    var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
+    var actual = GradeCellData.forSubmission(baseCourse, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
 }

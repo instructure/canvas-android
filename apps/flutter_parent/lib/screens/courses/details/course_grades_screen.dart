@@ -36,6 +36,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CourseGradesScreen extends StatefulWidget {
+  final bool _restrictQuantitativeData;
+
+  CourseGradesScreen(this._restrictQuantitativeData);
+
   @override
   _CourseGradesScreenState createState() => _CourseGradesScreenState();
 }
@@ -149,7 +153,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
             ),
             children: <Widget>[
               ...(group.assignments.toList()..sort((a, b) => a.position.compareTo(b.position)))
-                  .map((assignment) => _AssignmentRow(assignment: assignment))
+                  .map((assignment) => _AssignmentRow(assignment: assignment, restrictQuantitativeData: widget._restrictQuantitativeData))
             ],
           ),
         ),
@@ -275,8 +279,9 @@ class _CourseGradeHeader extends StatelessWidget {
 
 class _AssignmentRow extends StatelessWidget {
   final Assignment assignment;
+  final bool restrictQuantitativeData;
 
-  const _AssignmentRow({Key key, this.assignment}) : super(key: key);
+  const _AssignmentRow({Key key, this.assignment, this.restrictQuantitativeData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -372,20 +377,36 @@ class _AssignmentRow extends StatelessWidget {
 
     final submission = assignment.submission(studentId);
     if (submission?.excused ?? false) {
-      text = localizations.gradeFormatScoreOutOfPointsPossible(localizations.excused, points);
-      semantics = localizations.contentDescriptionScoreOutOfPointsPossible('', points);
+      text = _formatGradeText(restrictQuantitativeData, localizations.excused, points, localizations);
+      semantics = _formatGradeSemantics(restrictQuantitativeData, '', points, localizations);
     } else if (submission?.grade != null) {
-      text = localizations.gradeFormatScoreOutOfPointsPossible(submission.grade, points);
-      semantics = localizations.contentDescriptionScoreOutOfPointsPossible(submission.grade, points);
+      text = _formatGradeText(restrictQuantitativeData, submission.grade, points, localizations);
+      semantics = _formatGradeSemantics(restrictQuantitativeData, submission.grade, points, localizations);
     } else {
-      text = localizations.gradeFormatScoreOutOfPointsPossible(localizations.assignmentNoScore, points);
-      semantics = localizations.contentDescriptionScoreOutOfPointsPossible('', points); // Read as "out of x points"
+      text = _formatGradeText(restrictQuantitativeData, localizations.assignmentNoScore, points, localizations);
+      semantics = _formatGradeSemantics(restrictQuantitativeData, '', points, localizations); // Read as "out of x points"
     }
 
     return Text(text,
         semanticsLabel: semantics,
         style: Theme.of(context).textTheme.subtitle1,
         key: Key("assignment_${assignment.id}_grade"));
+  }
+
+  String _formatGradeText(bool restrictQuantitativeData, String score, String pointsPossible, AppLocalizations localizations) {
+    if (restrictQuantitativeData) {
+      return !assignment.isGradingTypeQuantitative() ? score : '';
+    } else {
+      return localizations.gradeFormatScoreOutOfPointsPossible(score, pointsPossible);
+    }
+  }
+
+  String _formatGradeSemantics(bool restrictQuantitativeData, String score, String pointsPossible, AppLocalizations localizations) {
+    if (restrictQuantitativeData) {
+      return !assignment.isGradingTypeQuantitative() ? score : '';
+    } else {
+      return localizations.contentDescriptionScoreOutOfPointsPossible(score, pointsPossible);
+    }
   }
 
   String _formatDate(BuildContext context, DateTime date) {

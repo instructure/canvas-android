@@ -180,6 +180,8 @@ class CourseDetailsModel extends BaseModel {
 
   bool get showSummary => hasHomePageAsSyllabus && (courseSettings?.courseSummary == true);
 
+  bool get restrictQuantitativeData => courseSettings?.restrictQuantitativeData == true;
+
   GradingPeriod currentGradingPeriod() => _currentGradingPeriod;
 
   /// This sets the next grading period to use when loadAssignments is called. [currentGradingPeriod] won't be updated

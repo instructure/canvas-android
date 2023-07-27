@@ -22,6 +22,7 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:intl/intl.dart';
 
 import 'assignment.dart';
+import 'course.dart';
 
 part 'grade_cell_data.g.dart';
 
@@ -61,16 +62,20 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..finalGrade = '';
 
   static GradeCellData forSubmission(
+    Course course,
     Assignment assignment,
     Submission submission,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
+    var restrictQuantitativeData = course.settings?.restrictQuantitativeData ?? false;
+
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' grading type
     if (assignment == null ||
         submission == null ||
-        (submission?.submittedAt == null && submission?.grade == null) ||
-        assignment.gradingType == GradingType.notGraded) {
+        (submission?.submittedAt == null && !(submission?.excused ?? false) && submission?.grade == null) ||
+        assignment.gradingType == GradingType.notGraded ||
+        (restrictQuantitativeData && assignment.isGradingTypeQuantitative())) {
       return GradeCellData();
     }
 
@@ -88,7 +93,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
 
     var pointsPossibleText = NumberFormat.decimalPattern().format(assignment.pointsPossible);
 
-    var outOfText = l10n.outOfPoints(pointsPossibleText, assignment.pointsPossible);
+    var outOfText = restrictQuantitativeData ? '' : l10n.outOfPoints(pointsPossibleText, assignment.pointsPossible);
 
     // Excused
     if (submission.excused) {
@@ -134,18 +139,25 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
       finalGrade = l10n.finalGrade(submission.grade);
     }
 
-    return GradeCellData((b) => b
-      ..state = GradeCellState.graded
-      ..graphPercent = graphPercent
-      ..accentColor = accentColor
-      ..score = score
-      ..showPointsLabel = true
-      ..outOf = outOfText
-      ..grade = grade
-      ..gradeContentDescription = accessibleGradeString
-      ..latePenalty = latePenalty
-      ..finalGrade = finalGrade);
+    return restrictQuantitativeData
+        ? GradeCellData((b) => b
+          ..state = GradeCellState.gradedRestrictQuantitativeData
+          ..graphPercent = 1.0
+          ..accentColor = accentColor
+          ..score = grade
+          ..gradeContentDescription = accessibleGradeString)
+        : GradeCellData((b) => b
+          ..state = GradeCellState.graded
+          ..graphPercent = graphPercent
+          ..accentColor = accentColor
+          ..score = score
+          ..showPointsLabel = true
+          ..outOf = outOfText
+          ..grade = grade
+          ..gradeContentDescription = accessibleGradeString
+          ..latePenalty = latePenalty
+          ..finalGrade = finalGrade);
   }
 }
 
-enum GradeCellState { empty, submitted, graded }
+enum GradeCellState { empty, submitted, graded, gradedRestrictQuantitativeData }
