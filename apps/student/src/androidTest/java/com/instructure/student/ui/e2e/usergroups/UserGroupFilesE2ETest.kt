@@ -16,7 +16,16 @@
  */
 package com.instructure.student.ui.e2e.usergroups
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.core.content.FileProvider
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.panda_annotations.FeatureCategory
@@ -24,11 +33,14 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.SecondaryFeatureCategory
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.core.AllOf
 import org.junit.Test
+import java.io.File
 
 @HiltAndroidTest
 class UserGroupFilesE2ETest : StudentTest() {
@@ -45,6 +57,7 @@ class UserGroupFilesE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
+        setupFileOnDevice("samplepdf.pdf")
 
         Log.d(PREPARATION_TAG,"Seed some group info.")
         val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
@@ -64,11 +77,95 @@ class UserGroupFilesE2ETest : StudentTest() {
         dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
         dashboardPage.assertDisplaysGroup(group2, data.coursesList[0])
 
+        Log.d(STEP_TAG, "Select '${group.name}' group and assert if the group title is correct on the Group Browser Page.")
         dashboardPage.selectGroup(group)
-
         groupBrowserPage.assertTitleCorrect(group)
-        groupBrowserPage.selectFiles()
 
+        Log.d(STEP_TAG, "Select 'Files' tab within the Group Browser Page and assert that the File List Page is displayed.")
+        groupBrowserPage.selectFiles()
         fileListPage.assertPageObjects()
+
+        val testFolderName = "OneWordFolder"
+        Log.d(STEP_TAG, "Click on Add ('+') button and then the 'Add Folder' icon, and create a new folder with the following name: '$testFolderName'.")
+        fileListPage.clickAddButton()
+        fileListPage.clickCreateNewFolderButton()
+        fileListPage.createNewFolder(testFolderName)
+
+        Log.d(STEP_TAG,"Assert that there is a folder called '$testFolderName' is displayed." +
+                "Assert that the '$testFolderName' folder's size is 0, because we just created it.")
+        fileListPage.assertItemDisplayed(testFolderName)
+        fileListPage.assertFolderSize(testFolderName, 0)
+
+        Log.d(STEP_TAG, "Select '$testFolderName' folder and upload a file named 'samplepdf.pdf' within it.")
+        fileListPage.selectItem(testFolderName)
+        fileListPage.clickAddButton()
+        fileListPage.clickUploadFileButton()
+
+        Intents.init()
+        try {
+            stubFilePickerIntent("samplepdf.pdf")
+            fileUploadPage.chooseDevice()
         }
+        finally {
+            Intents.release()
+        }
+        fileUploadPage.clickUpload()
+
+        Log.d(STEP_TAG, "Assert that the file upload was successful.")
+        fileListPage.assertItemDisplayed("samplepdf.pdf")
+
+        Log.d(STEP_TAG, "Navigate back to File List Page. Assert that the '$testFolderName' folder's size is 1, because we just uploaded a file in it.")
+        Espresso.pressBack()
+        fileListPage.assertFolderSize(testFolderName, 1)
+
+        val testFolderName2 = "TwoWord Folder"
+        Log.d(STEP_TAG, "Click on Add ('+') button and then the 'Add Folder' icon, and create a new folder with the following name: '$testFolderName2'.")
+        fileListPage.clickAddButton()
+        fileListPage.clickCreateNewFolderButton()
+        fileListPage.createNewFolder(testFolderName2)
+
+        Log.d(STEP_TAG,"Assert that there is a folder called '$testFolderName2' is displayed." +
+                "Assert that the '$testFolderName2' folder's size is 0, because we just created it.")
+        fileListPage.assertItemDisplayed(testFolderName2)
+        fileListPage.assertFolderSize(testFolderName2, 0)
+
+        Log.d(STEP_TAG, "Select '$testFolderName2' folder and assert that the empty view is displayed.")
+        fileListPage.selectItem(testFolderName2)
+        fileListPage.assertViewEmpty()
+    }
+
+    private fun setupFileOnDevice(fileName: String): Uri {
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+        copyAssetFileToExternalCache(activityRule.activity, fileName)
+
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+
+        val instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        return FileProvider.getUriForFile(
+            instrumentationContext,
+            "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+    }
+
+    private fun stubFilePickerIntent(fileName: String) {
+        val resultData = Intent()
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+        val newFileUri = FileProvider.getUriForFile(
+            activityRule.activity,
+            "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+        resultData.data = newFileUri
+
+        Intents.intending(
+            AllOf.allOf(
+                IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                IntentMatchers.hasType("*/*"),
+            )
+        ).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, resultData))
+    }
+
 }
