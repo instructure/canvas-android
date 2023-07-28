@@ -184,8 +184,14 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
     override fun onQueryTextSubmit(query: String): Boolean = false
 
     override fun onQueryTextChange(newText: String): Boolean {
-        adapter.clear()
-        presenter.searchPeopleList(newText)
+        val searchQuery = newText.trim().takeIf { it.length > 2 }.orEmpty()
+        if(searchQuery.isBlank()) {
+            presenter.searchPeopleList(searchQuery)
+        }
+        else {
+            adapter.clear()
+            presenter.searchPeopleList(searchQuery)
+        }
         return true
     }
 
