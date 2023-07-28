@@ -186,6 +186,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withText(course.name) + withId(R.id.titleTextView)).click()
     }
 
+    fun selectGroup(group: GroupApiModel) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        onView(groupNameMatcher).scrollTo().click()
+    }
+
     fun assertAnnouncementShowing(announcement: AccountNotification) {
         onView(withId(R.id.announcementIcon)).assertDisplayed()
         onView(withId(R.id.announcementTitle) + withText(announcement.subject)).assertDisplayed()
