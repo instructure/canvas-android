@@ -69,18 +69,19 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     AppLocalizations l10n,
   ) {
     var restrictQuantitativeData = course.settings?.restrictQuantitativeData ?? false;
+    var excused = submission?.excused ?? false;
 
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' grading type
     if (assignment == null ||
         submission == null ||
-        (submission?.submittedAt == null && !(submission?.excused ?? false) && submission?.grade == null) ||
+        (submission?.submittedAt == null && !excused && submission?.grade == null) ||
         assignment.gradingType == GradingType.notGraded ||
-        (restrictQuantitativeData && assignment.isGradingTypeQuantitative())) {
+        (restrictQuantitativeData && assignment.isGradingTypeQuantitative() && !excused)) {
       return GradeCellData();
     }
 
     // Return submitted state if the submission has not been graded
-    if (submission.submittedAt != null && submission.grade == null) {
+    if (submission.submittedAt != null && submission.grade == null && !excused) {
       return GradeCellData((b) => b
         ..state = GradeCellState.submitted
         ..submissionText = submission.submittedAt.l10nFormat(

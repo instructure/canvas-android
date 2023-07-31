@@ -250,6 +250,8 @@ class _CourseGradeHeader extends StatelessWidget {
     // Don't show the total if the grade is locked
     if (grade.isCourseGradeLocked(forAllGradingPeriods: model.currentGradingPeriod()?.id == null)) return null;
 
+    if (model.courseSettings.restrictQuantitativeData && (grade.currentGrade() == null || grade.currentGrade().isEmpty)) return null;
+
     final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -377,8 +379,8 @@ class _AssignmentRow extends StatelessWidget {
 
     final submission = assignment.submission(studentId);
     if (submission?.excused ?? false) {
-      text = _formatGradeText(restrictQuantitativeData, localizations.excused, points, localizations);
-      semantics = _formatGradeSemantics(restrictQuantitativeData, '', points, localizations);
+      text = restrictQuantitativeData ? localizations.excused : localizations.gradeFormatScoreOutOfPointsPossible(localizations.excused, points);
+      semantics = restrictQuantitativeData ? localizations.excused : localizations.contentDescriptionScoreOutOfPointsPossible(localizations.excused, points);
     } else if (submission?.grade != null) {
       text = _formatGradeText(restrictQuantitativeData, submission.grade, points, localizations);
       semantics = _formatGradeSemantics(restrictQuantitativeData, submission.grade, points, localizations);
