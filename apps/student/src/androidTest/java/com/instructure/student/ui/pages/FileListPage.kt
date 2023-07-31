@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages
 
 import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -54,7 +55,7 @@ class FileListPage : BasePage(R.id.fileListPage) {
 
     fun assertItemDisplayed(itemName: String) {
         val matcher = allOf(withId(R.id.fileName), withText(itemName))
-        onView(matcher).scrollTo().assertDisplayed()
+        waitForView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertItemNotDisplayed(itemName: String) {
@@ -69,11 +70,11 @@ class FileListPage : BasePage(R.id.fileListPage) {
     }
 
     fun clickAddButton() {
-        addButton.click()
+        onView(allOf(withId(R.id.addFab), isDisplayed())).perform(click())
     }
 
     fun clickUploadFileButton() {
-        uploadFileButton.click()
+        onView(allOf(withId(R.id.addFileFab), isDisplayed())).perform(click())
     }
 
     fun clickCreateNewFolderButton() {
@@ -155,6 +156,6 @@ class FileListPage : BasePage(R.id.fileListPage) {
     }
 
     fun assertFolderSize(folderName: String, expectedSize: Int) {
-        onView(allOf(withId(R.id.fileSize), hasSibling(withId(R.id.fileName) + withText(folderName)))).check(matches(containsTextCaseInsensitive("$expectedSize items")))
+        onView(allOf(withId(R.id.fileSize), hasSibling(withId(R.id.fileName) + withText(folderName)))).check(matches(containsTextCaseInsensitive("$expectedSize ${if (expectedSize == 1) "item" else "items"}")))
     }
 }
