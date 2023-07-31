@@ -61,7 +61,7 @@ class GroupLinksInteractionTest : StudentTest() {
     fun testGroupLink_base() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
-        courseBrowserPage.assertTitleCorrect(group)
+        groupBrowserPage.assertTitleCorrect(group)
     }
 
     // Link to groups opens dashboard - eg: "/groups"

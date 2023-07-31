@@ -27,10 +27,8 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.TextViewColorAssertion
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
@@ -122,16 +120,8 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(course.originalName!!)
     }
 
-    fun assertTitleCorrect(group: Group) {
-        onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(group.name!!)
-    }
-
     fun assertTitleCorrect(course: CourseApiModel) {
         initialBrowserTitle.assertHasText(course.name)
-    }
-
-    fun assertTitleCorrect(group: GroupApiModel) {
-        onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(group.name!!)
     }
 
     fun assertTabDisplayed(tab: Tab) {

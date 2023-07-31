@@ -17,17 +17,25 @@
 package com.instructure.student.ui.utils
 
 import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import androidx.core.content.FileProvider
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.swipeRight
+import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
@@ -92,6 +100,7 @@ import com.instructure.student.ui.pages.UrlSubmissionUploadPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
+import org.hamcrest.core.AllOf
 import org.junit.Before
 import org.junit.Rule
 import java.io.File
@@ -205,6 +214,40 @@ abstract class StudentTest : CanvasTest() {
         else {
             return 0
         }
+    }
+
+    fun setupFileOnDevice(fileName: String): Uri {
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+        copyAssetFileToExternalCache(activityRule.activity, fileName)
+
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+
+        val instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        return FileProvider.getUriForFile(
+            instrumentationContext,
+            "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+    }
+
+    fun stubFilePickerIntent(fileName: String) {
+        val resultData = Intent()
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+        val newFileUri = FileProvider.getUriForFile(
+            activityRule.activity,
+            "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+        resultData.data = newFileUri
+
+        Intents.intending(
+            AllOf.allOf(
+                IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                IntentMatchers.hasType("*/*"),
+            )
+        ).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, resultData))
     }
 }
 
