@@ -48,7 +48,6 @@ class LeftSideNavigationDrawerPage: BasePage() {
     private val help by OnViewWithId(R.id.navigationDrawerItem_help)
     private val changeUser by OnViewWithId(R.id.navigationDrawerItem_changeUser)
     private val logoutButton by OnViewWithId(R.id.navigationDrawerItem_logout)
-    private val version by OnViewWithId(R.id.navigationDrawerVersion)
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
     // in the UI stack.  We want to choose the one that is displayed.
@@ -135,9 +134,7 @@ class LeftSideNavigationDrawerPage: BasePage() {
         settings.assertDisplayed()
         changeUser.assertDisplayed()
         logoutButton.assertDisplayed()
-
-        version.assertDisplayed()
-
+        
         if (isElementaryStudent) {
             assertElementaryNavigationBehaviorMenuItems()
         }
