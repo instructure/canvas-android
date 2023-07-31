@@ -37,6 +37,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -129,7 +130,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
         val data = MockCanvas.init(
                 studentCount = 2,
                 courseCount = 1,
-                favoriteCourseCount = 1
+                favoriteCourseCount = 1,
         )
 
         student1 = data.students.first()
@@ -260,5 +261,41 @@ class NavigationDrawerInteractionTest : StudentTest() {
         finally {
             Intents.release()
         }
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testMenuItemForDefaultStudent() {
+        signInStudent()
+
+        leftSideNavigationDrawerPage.assertMenuItems(false)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testMenuItemForElementaryStudent() {
+        signInElementaryStudent()
+
+        leftSideNavigationDrawerPage.assertMenuItems(true)
+    }
+
+    private fun signInElementaryStudent(
+            courseCount: Int = 1,
+            pastCourseCount: Int = 0,
+            favoriteCourseCount: Int = 0,
+            announcementCount: Int = 0): MockCanvas {
+
+        val data = MockCanvas.init(
+                studentCount = 1,
+                courseCount = courseCount,
+                pastCourseCount = pastCourseCount,
+                favoriteCourseCount = favoriteCourseCount,
+                accountNotificationCount = announcementCount)
+
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLoginElementary(data.domain, token, student)
+        elementaryDashboardPage.waitForRender()
+        return data
     }
 }

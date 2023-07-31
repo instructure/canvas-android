@@ -26,7 +26,6 @@ import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
-
 class LeftSideNavigationDrawerPage: BasePage() {
 
     private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
@@ -39,25 +38,15 @@ class LeftSideNavigationDrawerPage: BasePage() {
     // Navigation items
     private val files by OnViewWithId(R.id.navigationDrawerItem_files)
     private val bookmarks by OnViewWithId(R.id.navigationDrawerItem_bookmarks)
-    private val studio by OnViewWithId(R.id.navigationDrawerItem_studio)
-    private val gauge by OnViewWithId(R.id.navigationDrawerItem_gauge)
     private val settings by OnViewWithId(R.id.navigationDrawerSettings)
-
-    // Divider
-    private val optionsDivider by OnViewWithId(R.id.navigationMenuItemsDivider)
-    private val optionsDividerTitle by OnViewWithId(R.id.optionsMenuTitle)
 
     //Option items
     private val showGrades by OnViewWithId(R.id.navigationDrawerItem_showGrades)
     private val colorOverlay by OnViewWithId(R.id.navigationDrawerItem_colorOverlay)
 
-    // Divider
-    private val accountDivider by OnViewWithId(R.id.optionsMenuItemsDivider)
-
     // Account items
     private val help by OnViewWithId(R.id.navigationDrawerItem_help)
     private val changeUser by OnViewWithId(R.id.navigationDrawerItem_changeUser)
-    private val actAsUser by OnViewWithId(R.id.navigationDrawerItem_startMasquerading)
     private val logoutButton by OnViewWithId(R.id.navigationDrawerItem_logout)
     private val version by OnViewWithId(R.id.navigationDrawerVersion)
 
@@ -138,64 +127,49 @@ class LeftSideNavigationDrawerPage: BasePage() {
         Espresso.pressBack()
     }
 
-    fun openMenu() {
+    fun assertMenuItems(isElementaryStudent: Boolean) {
         hamburgerButton.click()
-    }
-
-    fun assertUserDataDisplayed() {
-        profileImage.assertDisplayed()
         userName.assertDisplayed()
         userEmail.assertDisplayed()
-    }
 
-    fun assertElementaryNavigationMenuItemsDisplayed() {
-        files.assertDisplayed()
         settings.assertDisplayed()
+        changeUser.assertDisplayed()
+        logoutButton.assertDisplayed()
 
-        bookmarks.assertNotDisplayed()
-        studio.assertNotDisplayed()
-        gauge.assertNotDisplayed()
+        version.assertDisplayed()
+
+        if (isElementaryStudent) {
+            assertElementaryNavigationBehaviorMenuItems()
+        }
+        else {
+            assertDefaultNavigationBehaviorMenuItems()
+        }
     }
 
-    fun assertDefaultNavigationMenuItemsDisplayed() {
+    private fun assertDefaultNavigationBehaviorMenuItems() {
         files.assertDisplayed()
         bookmarks.assertDisplayed()
         settings.assertDisplayed()
 
-        studio.assertNotDisplayed()
-        gauge.assertNotDisplayed()
-    }
-
-    fun assertElementaryOptionsMenuItemsDisplayed() {
-        optionsDividerTitle.assertNotDisplayed()
-        showGrades.assertNotDisplayed()
-        colorOverlay.assertNotDisplayed()
-    }
-
-    fun assertDefaultOptionsMenuItemsDisplayed() {
-        optionsDivider.assertDisplayed()
-        optionsDividerTitle.assertDisplayed()
         showGrades.assertDisplayed()
         colorOverlay.assertDisplayed()
-    }
 
-    fun assertElementaryAccountMenuItemsDisplayed() {
         help.assertDisplayed()
         changeUser.assertDisplayed()
-        actAsUser.assertNotDisplayed()
         logoutButton.assertDisplayed()
     }
 
-    fun assertDefaultAccountMenuItemsDisplayed() {
-        accountDivider.assertDisplayed()
+    private fun assertElementaryNavigationBehaviorMenuItems() {
+        files.assertDisplayed()
+        bookmarks.assertNotDisplayed()
+        settings.assertDisplayed()
+
+        showGrades.assertNotDisplayed()
+        colorOverlay.assertNotDisplayed()
+
         help.assertDisplayed()
         changeUser.assertDisplayed()
-        actAsUser.assertNotDisplayed()
         logoutButton.assertDisplayed()
-    }
-
-    fun assertVersionNumberDisplayed() {
-        version.assertDisplayed()
     }
 
     /**
