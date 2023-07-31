@@ -15,9 +15,14 @@
  */
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class CourseSettings(
     @SerializedName("syllabus_course_summary")
-    var courseSummary: Boolean? = null
-)
+    var courseSummary: Boolean? = null,
+    @SerializedName("restrict_quantitative_data")
+    var restrictQuantitativeData: Boolean = false,
+): Parcelable
