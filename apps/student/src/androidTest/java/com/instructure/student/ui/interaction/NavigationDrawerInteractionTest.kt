@@ -123,28 +123,6 @@ class NavigationDrawerInteractionTest : StudentTest() {
         loginLandingPage.assertPageObjects()
     }
 
-    /**
-     * Create two mocked students, sign in the first one, end up on the dashboard page
-     */
-    private fun signInStudent() : MockCanvas {
-        val data = MockCanvas.init(
-                studentCount = 2,
-                courseCount = 1,
-                favoriteCourseCount = 1,
-        )
-
-        student1 = data.students.first()
-        student2 = data.students.last()
-
-        course = data.courses.values.first()
-
-        val token = data.tokenFor(student1)!!
-        tokenLogin(data.domain, token, student1)
-        dashboardPage.waitForRender()
-
-        return data
-    }
-
     // Should open a dialog and send a question for the selected course
     // (Checks to see that we can fill out the question and the SEND button exists.)
     @Test
@@ -277,6 +255,28 @@ class NavigationDrawerInteractionTest : StudentTest() {
         signInElementaryStudent()
 
         leftSideNavigationDrawerPage.assertMenuItems(true)
+    }
+
+    /**
+     * Create two mocked students, sign in the first one, end up on the dashboard page
+     */
+    private fun signInStudent(courseCount: Int = 1, studentCount: Int = 2, favoriteCourseCount: Int = 1) : MockCanvas {
+        val data = MockCanvas.init(
+            studentCount = studentCount,
+            courseCount = courseCount,
+            favoriteCourseCount = favoriteCourseCount
+        )
+
+        student1 = data.students.first()
+        student2 = data.students.last()
+
+        course = data.courses.values.first()
+
+        val token = data.tokenFor(student1)!!
+        tokenLogin(data.domain, token, student1)
+        dashboardPage.waitForRender()
+
+        return data
     }
 
     private fun signInElementaryStudent(
