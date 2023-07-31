@@ -193,10 +193,6 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
             destination file('build/reports/jacoco/jacocoFullReport.csv')
         }
     }
-
-//    doFirst {
-//        executionData.from = files(executionData.findAll { it.exists() })
-//    }
 }
 
 task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
@@ -229,8 +225,4 @@ task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
             destination file('build/reports/jacoco/jacocoFullCombinedReport.csv')
         }
     }
-
-//    doFirst {
-//        executionData.setFrom files(executionData.findAll { it.exists() })
-//    }
 }
