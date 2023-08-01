@@ -145,7 +145,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
           ..state = GradeCellState.gradedRestrictQuantitativeData
           ..graphPercent = 1.0
           ..accentColor = accentColor
-          ..score = grade
+          ..score = submission.grade
           ..gradeContentDescription = accessibleGradeString)
         : GradeCellData((b) => b
           ..state = GradeCellState.graded
