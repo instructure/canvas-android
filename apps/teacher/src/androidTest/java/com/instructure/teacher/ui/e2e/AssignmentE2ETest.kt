@@ -86,6 +86,15 @@ class AssignmentE2ETest : TeacherTest() {
                 pointsPossible = 15.0
         )
 
+        Log.d(PREPARATION_TAG,"Seeding 'Quiz' assignment for ${course.name} course.")
+        val quizAssignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_QUIZ),
+            teacherToken = teacher.token,
+            pointsPossible = 15.0
+        )
+
         Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed." +
                 "Assert that the needs grading count under the corresponding assignment is 1.")
         assignmentListPage.refresh()
@@ -102,15 +111,41 @@ class AssignmentE2ETest : TeacherTest() {
         editAssignmentDetailsPage.clickPublishSwitch()
         editAssignmentDetailsPage.saveAssignment()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that ${assignment[0].name} assignment has been published.")
-        assignmentDetailsPage.refresh()
+        Log.d(STEP_TAG,"Assert that the '${assignment[0].name}' assignment has been published.")
         assignmentDetailsPage.waitForRender()
         assignmentDetailsPage.assertPublishedStatus(false)
 
-        Log.d(STEP_TAG,"Open Edit Page and re-publish the assignment, then click on Save.")
+        Log.d(STEP_TAG,"Open Edit Page and re-publish the assignment, then click on Save. Assert that the assignment is published automatically, without refresh.")
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickPublishSwitch()
         editAssignmentDetailsPage.saveAssignment()
+        assignmentDetailsPage.assertPublishedStatus(true)
+
+        Log.d(STEP_TAG,"Navigate back to Assignment List page. Open edit quiz page and publish ${quizAssignment[0].name} quiz assignment. Click on Save.")
+        Espresso.pressBack()
+        assignmentListPage.clickAssignment(quizAssignment[0])
+        quizDetailsPage.openEditPage()
+        editAssignmentDetailsPage.clickPublishSwitch()
+        editAssignmentDetailsPage.saveAssignment()
+        quizDetailsPage.assertQuizUnpublished()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as UNPUBLISHED. Open the quiz assignment again.")
+        Espresso.pressBack()
+        assignmentListPage.assertAssignmentUnPublished(quizAssignment[0].name)
+        assignmentListPage.clickAssignment(quizAssignment[0])
+
+        Log.d(STEP_TAG, "Open Edit Page and re-publish the assignment, then click on Save. Assert that the quiz assignment is published automatically.")
+        quizDetailsPage.openEditPage()
+        editAssignmentDetailsPage.clickPublishSwitch()
+        editAssignmentDetailsPage.saveAssignment()
+        quizDetailsPage.assertQuizPublished()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as PUBLISHED.")
+        Espresso.pressBack()
+        assignmentListPage.assertAssignmentPublished(quizAssignment[0].name)
+
+        Log.d(STEP_TAG, "Open the '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
 
         Log.d(PREPARATION_TAG,"Seed a submission for ${student.name} student.")
         seedAssignmentSubmission(
