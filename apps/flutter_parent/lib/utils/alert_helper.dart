@@ -18,7 +18,7 @@ import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsHelper {
-  Future<List<Alert>> filterAlerts(List<Alert> list, bool forceRefresh) async {
+  static Future<List<Alert>> filterAlerts(List<Alert> list, bool forceRefresh) async {
     List<Alert> filteredList = [];
     await Future.wait(list.map((element) async {
       var courseId = element.getCourseIdForGradeAlerts();

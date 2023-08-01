@@ -68,7 +68,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    var restrictQuantitativeData = course.settings?.restrictQuantitativeData ?? false;
+    var restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
     var excused = submission?.excused ?? false;
 
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' grading type

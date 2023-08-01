@@ -15,6 +15,7 @@
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/models/login.dart';
@@ -926,68 +927,81 @@ void main() {
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
-      // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
-      verify(alertsApi.getUnreadCount(any)).called(1);
+      verify(alertsApi.getAlertsDepaginated(any, any)).called(1);
     });
 
-    testWidgetsWithAccessibilityChecks('Inbox count of zero hides badge', (tester) async {
+    testWidgetsWithAccessibilityChecks('Alerts count of zero hides badge', (tester) async {
       final alertsApi = MockAlertsApi();
       var interactor = MockInteractor();
-      when(alertsApi.getUnreadCount(any)).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(0))));
+      when(alertsApi.getAlertsDepaginated(any, any)).thenAnswer((_) => Future.value([]));
       await _setupLocator(interactor: interactor, alertsApi: alertsApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
-      // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Assert there's no text in the alerts-count
       expect(find.descendant(of: find.byKey(Key('alerts-count')), matching: find.byType(Text)), findsNothing);
     });
 
-    testWidgetsWithAccessibilityChecks('Displays Inbox count', (tester) async {
+    testWidgetsWithAccessibilityChecks('Displays Alert count', (tester) async {
       final alertsApi = MockAlertsApi();
       var interactor = MockInteractor();
-      when(alertsApi.getUnreadCount(any))
-          .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(88))));
+
+      final date = DateTime.now();
+      final data = List.generate(5, (index) {
+        // Create a list of alerts with dates in ascending order (reversed)
+        return Alert((b) => b
+          ..id = index.toString()
+          ..workflowState = AlertWorkflowState.unread
+          ..actionDate = date.add(Duration(days: index))
+          ..lockedForUser = false);
+      });
+
+      when(alertsApi.getAlertsDepaginated(any, any)).thenAnswer((_) => Future.value(data.toList()));
+
       await _setupLocator(interactor: interactor, alertsApi: alertsApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
-      // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
-      expect(find.text('88'), findsOneWidget);
+      expect(find.text('5'), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Updates Inbox count', (tester) async {
+    testWidgetsWithAccessibilityChecks('Updates Alert count', (tester) async {
       final alertsApi = MockAlertsApi();
       var interactor = MockInteractor();
-      when(alertsApi.getUnreadCount(any))
-          .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(88))));
+
+      final date = DateTime.now();
+      final data = List.generate(5, (index) {
+        // Create a list of alerts with dates in ascending order (reversed)
+        return Alert((b) => b
+          ..id = index.toString()
+          ..workflowState = AlertWorkflowState.unread
+          ..actionDate = date.add(Duration(days: index))
+          ..lockedForUser = false);
+      });
+
+      when(alertsApi.getAlertsDepaginated(any, any)).thenAnswer((_) => Future.value(data.toList()));
+
       await _setupLocator(interactor: interactor, alertsApi: alertsApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
-      // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
-      when(alertsApi.getUnreadCount(any))
-          .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(77))));
+      when(alertsApi.getAlertsDepaginated(any, any)).thenAnswer((_) => Future.value(data.sublist(0, 4).toList()));
 
       interactor.getAlertCountNotifier().update('doesn\'t matter');
       await tester.pumpAndSettle();
 
-      expect(find.text('77'), findsOneWidget);
+      expect(find.text('4'), findsOneWidget);
     });
   });
 

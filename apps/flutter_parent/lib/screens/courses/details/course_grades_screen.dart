@@ -250,7 +250,7 @@ class _CourseGradeHeader extends StatelessWidget {
     // Don't show the total if the grade is locked
     if (grade.isCourseGradeLocked(forAllGradingPeriods: model.currentGradingPeriod()?.id == null)) return null;
 
-    if (model.courseSettings.restrictQuantitativeData && (grade.currentGrade() == null || grade.currentGrade().isEmpty)) return null;
+    if ((model.courseSettings?.restrictQuantitativeData ?? false) && (grade.currentGrade() == null || grade.currentGrade().isEmpty)) return null;
 
     final textTheme = Theme.of(context).textTheme;
     return Padding(

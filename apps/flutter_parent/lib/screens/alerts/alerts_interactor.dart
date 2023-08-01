@@ -22,7 +22,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class AlertsInteractor {
   Future<AlertsList> getAlertsForStudent(String studentId, bool forceRefresh) async {
     final alertsFuture = _alertsApi().getAlertsDepaginated(studentId, forceRefresh)?.then((List<Alert> list) async {
-      return AlertsHelper().filterAlerts(list, forceRefresh);
+      return AlertsHelper.filterAlerts(list, forceRefresh);
     })?.then((list) => list
       ..sort((a, b) {
         if (a.actionDate == null && b.actionDate == null) return 0;

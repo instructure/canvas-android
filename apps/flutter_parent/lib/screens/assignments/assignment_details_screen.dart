@@ -133,7 +133,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
     final l10n = L10n(context);
     final course = snapshot.data.course;
-    final restrictQuantitativeData = course.settings?.restrictQuantitativeData ?? false;
+    final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
     final assignment = snapshot.data.assignment;
     final submission = assignment.submission(_currentStudent.id);
     final fullyLocked = assignment.isFullyLocked;
