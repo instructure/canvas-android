@@ -571,11 +571,7 @@ object CourseQuizListEndpoint : Endpoint(
         response = {
             GET { // Get the list of quizzes for course
                 val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
-                if (quizzesForCourse != null) {
-                    request.successResponse(quizzesForCourse)
-                } else {
-                    request.unauthorizedResponse()
-                }
+                request.successResponse(quizzesForCourse.orEmpty())
             }
         }
 

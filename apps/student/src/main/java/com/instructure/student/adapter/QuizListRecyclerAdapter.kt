@@ -22,6 +22,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.filterWithQuery
@@ -32,6 +33,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
@@ -120,7 +122,8 @@ class QuizListRecyclerAdapter(
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, s: String, quiz: Quiz) {
-        (holder as? QuizViewHolder)?.bind(quiz, adapterToFragmentCallback, context, canvasContext.textAndIconColor)
+        val restrictQuantitativeData = (canvasContext as? Course)?.settings?.restrictQuantitativeData.orDefault()
+        (holder as? QuizViewHolder)?.bind(quiz, adapterToFragmentCallback, context, canvasContext.textAndIconColor, restrictQuantitativeData)
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, s: String, isExpanded: Boolean) {

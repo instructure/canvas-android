@@ -1564,7 +1564,8 @@ fun MockCanvas.addQuizToCourse(
         dueAt: String? = null,
         published: Boolean = true,
         lockAt: String? = null,
-        unlockAt: String? = null
+        unlockAt: String? = null,
+        pointsPossible: Int? = null
 ) : Quiz {
     val quizId = newItemId()
     val quizUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/$quizId"
@@ -1589,21 +1590,21 @@ fun MockCanvas.addQuizToCourse(
     }
 
     val result = Quiz(
-            id = quizId,
-            title = title,
-            description = description,
-            quizType = quizType,
-            mobileUrl = quizUrl,
-            htmlUrl = quizUrl,
-            timeLimit = timeLimitSecs,
-            dueAt = dueAt,
-            published = published,
-            assignmentId = assignment?.id ?: 0,
-            lockAt = lockAt,
-            unlockAt = unlockAt,
-            allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt))
-
-            )
+        id = quizId,
+        title = title,
+        description = description,
+        quizType = quizType,
+        mobileUrl = quizUrl,
+        htmlUrl = quizUrl,
+        timeLimit = timeLimitSecs,
+        dueAt = dueAt,
+        published = published,
+        assignmentId = assignment?.id ?: 0,
+        lockAt = lockAt,
+        unlockAt = unlockAt,
+        allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
+        pointsPossible = pointsPossible?.toString()
+    )
 
     var quizList = courseQuizzes[course.id]
     if(quizList == null) {
