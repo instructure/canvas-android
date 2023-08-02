@@ -22,7 +22,6 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:intl/intl.dart';
 
 import 'assignment.dart';
-import 'course.dart';
 
 part 'grade_cell_data.g.dart';
 
@@ -62,21 +61,21 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..finalGrade = '';
 
   static GradeCellData forSubmission(
-    Course course,
+    bool restrictQuantitativeData,
     Assignment assignment,
     Submission submission,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    var restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
     var excused = submission?.excused ?? false;
 
-    // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' grading type
+    // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' or restricted grading type
+    final restricted = restrictQuantitativeData && assignment.isGradingTypeQuantitative() && !excused;
     if (assignment == null ||
         submission == null ||
         (submission?.submittedAt == null && !excused && submission?.grade == null) ||
         assignment.gradingType == GradingType.notGraded ||
-        (restrictQuantitativeData && assignment.isGradingTypeQuantitative() && !excused)) {
+        restricted) {
       return GradeCellData();
     }
 

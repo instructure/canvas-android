@@ -13,24 +13,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/alert.dart';
-import 'package:flutter_parent/models/course_settings.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsHelper {
-  static Future<List<Alert>> filterAlerts(List<Alert> list, bool forceRefresh) async {
+  Future<List<Alert>> filterAlerts(List<Alert> list) async {
     List<Alert> filteredList = [];
-    await Future.wait(list.map((element) async {
+    for (var element in list) {
       var courseId = element.getCourseIdForGradeAlerts();
       if (courseId == null) {
         filteredList.add(element);
       } else {
-        CourseSettings settings = await locator<CourseApi>().getCourseSettings(courseId, forceRefresh: forceRefresh);
-        if (!settings.restrictQuantitativeData) {
+        Course course = await locator<CourseApi>().getCourse(courseId, forceRefresh: false);
+        if (!course.settings.restrictQuantitativeData) {
           filteredList.add(element);
         }
       }
-    }));
+    }
     return filteredList;
   }
 }
