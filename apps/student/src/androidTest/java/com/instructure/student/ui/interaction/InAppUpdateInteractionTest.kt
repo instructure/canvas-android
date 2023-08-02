@@ -24,7 +24,6 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.utils.toApiString
@@ -83,7 +82,7 @@ class InAppUpdateInteractionTest : StudentTest() {
         updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -97,7 +96,7 @@ class InAppUpdateInteractionTest : StudentTest() {
         updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -115,7 +114,7 @@ class InAppUpdateInteractionTest : StudentTest() {
         updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -138,7 +137,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -157,7 +156,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -176,7 +175,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -196,7 +195,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -207,6 +206,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun showImmediateFlow() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(4)
@@ -246,7 +246,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
         }
 
@@ -272,9 +272,10 @@ class InAppUpdateInteractionTest : StudentTest() {
     @Test
     @Stub("Unstable, there is a ticket to fix this")
     fun flexibleUpdateCompletesIfAppRestarts() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
-            setUpdatePriority(2)
+            setUpdatePriority(3)
             setClientVersionStalenessDays(10)
             userAcceptsUpdate()
             downloadStarts()
@@ -288,6 +289,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun immediateUpdateCompletion() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(4)
@@ -307,6 +309,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun hideImmediateUpdateFlowIfUserCancels() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(4)
