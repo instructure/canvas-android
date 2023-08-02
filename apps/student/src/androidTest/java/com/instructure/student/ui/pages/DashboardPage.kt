@@ -166,6 +166,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.gradeTextView)).assertDisplayed()
     }
 
+    fun assertGradeText(gradeText: String) {
+        onViewWithId(R.id.gradeTextView).assertHasText(gradeText)
+    }
+
     // Assumes one course, which is favorited
     fun assertHidesGrades() {
         onView(withId(R.id.gradeTextView)).assertNotDisplayed()
