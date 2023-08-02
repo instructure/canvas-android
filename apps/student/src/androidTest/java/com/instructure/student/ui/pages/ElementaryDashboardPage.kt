@@ -45,7 +45,7 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
     private val hamburgerButtonMatcher = CoreMatchers.allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
 
     fun selectTab(elementaryTabType: ElementaryTabType) {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(elementaryTabType.tabType))
+        onView(withText(elementaryTabType.tabType))
             .scrollTo()
             .click()
     }
