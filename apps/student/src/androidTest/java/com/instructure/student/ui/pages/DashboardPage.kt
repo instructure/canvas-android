@@ -281,7 +281,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        onView(withText(android.R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
