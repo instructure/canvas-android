@@ -275,4 +275,58 @@ void main() {
     var actual = GradeCellData.forSubmission(false, assignment, submission, theme, l10n);
     expect(actual, expected);
   });
+
+  test('Returns Empty state when quantitative data is restricted and grading type is points and not excused', () {
+    var assignment = baseAssignment.rebuild((b) => b..gradingType = GradingType.points);
+    var submission = Submission((b) => b
+      ..assignmentId = '1'
+      ..score = 10.0
+      ..grade = 'A');
+    var expected = GradeCellData();
+    var actual = GradeCellData.forSubmission(true, assignment, submission, theme, l10n);
+    expect(actual, expected);
+  });
+
+  test('Returns Empty state when quantitative data is restricted and grading type is percent and not excused', () {
+    var assignment = baseAssignment.rebuild((b) => b..gradingType = GradingType.percent);
+    var submission = Submission((b) => b
+      ..assignmentId = '1'
+      ..score = 10.0
+      ..grade = 'A');
+    var expected = GradeCellData();
+    var actual = GradeCellData.forSubmission(true, assignment, submission, theme, l10n);
+    expect(actual, expected);
+  });
+
+  test('Returns correct state when quantitative data is restricted and grading type is percent and excused', () {
+    var assignment = baseAssignment.rebuild((b) => b..gradingType = GradingType.percent);
+    var submission = Submission((b) => b
+      ..assignmentId = '1'
+      ..score = 10.0
+      ..grade = 'A'
+      ..excused = true);
+    var expected = baseGradedState.rebuild((b) => b
+      ..graphPercent = 1.0
+      ..grade = l10n.excused
+      ..outOf = ''
+      ..showCompleteIcon = true);
+    var actual = GradeCellData.forSubmission(true, assignment, submission, theme, l10n);
+    expect(actual, expected);
+  });
+
+  test('Returns correct state when quantitative data is restricted and graded', () {
+    var assignment = baseAssignment.rebuild((b) => b..gradingType = GradingType.letterGrade);
+    var submission = Submission((b) => b
+      ..assignmentId = '1'
+      ..score = 10.0
+      ..grade = 'A');
+    var expected = baseGradedState.rebuild((b) => b
+      ..state = GradeCellState.gradedRestrictQuantitativeData
+      ..graphPercent = 1.0
+      ..score = submission.grade
+      ..gradeContentDescription = submission.grade
+      ..outOf = '');
+    var actual = GradeCellData.forSubmission(true, assignment, submission, theme, l10n);
+    expect(actual, expected);
+  });
 }

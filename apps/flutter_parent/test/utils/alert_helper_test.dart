@@ -61,7 +61,7 @@ void main() {
 
     when(courseApi.getCourse(any)).thenAnswer((_) => Future.value(restrictedCourse));
 
-    expect((await alertsHelper.filterAlerts(alerts)).length, 1);
+    expect((await alertsHelper.filterAlerts(alerts)), alerts.sublist(2, 3));
   });
 
   test('keep course grade alerts if restrictQuantitativeData is false in course settings', () async {
@@ -87,7 +87,7 @@ void main() {
 
     when(courseApi.getCourse(any)).thenAnswer((_) => Future.value(course));
 
-    expect((await alertsHelper.filterAlerts(alerts)).length, 3);
+    expect((await alertsHelper.filterAlerts(alerts)), alerts);
   });
 
   test('filter assignment grade alerts if restrictQuantitativeData is true in course settings', () async {
@@ -115,7 +115,7 @@ void main() {
 
     when(courseApi.getCourse(any)).thenAnswer((_) => Future.value(restrictedCourse));
 
-    expect((await alertsHelper.filterAlerts(alerts)).length, 1);
+    expect((await alertsHelper.filterAlerts(alerts)), alerts.sublist(2, 3));
   });
 
   test('keep assignment grade alerts if restrictQuantitativeData is false in course settings', () async {
@@ -143,7 +143,7 @@ void main() {
 
     when(courseApi.getCourse(any)).thenAnswer((_) => Future.value(course));
 
-    expect((await alertsHelper.filterAlerts(alerts)).length, 3);
+    expect((await alertsHelper.filterAlerts(alerts)), alerts);
   });
 
   test('keep non-grade alerts', () async {
@@ -180,6 +180,6 @@ void main() {
 
     when(courseApi.getCourse(any)).thenAnswer((_) => Future.value(restrictedCourse));
 
-    expect((await alertsHelper.filterAlerts(alerts)).length, 3);
+    expect((await alertsHelper.filterAlerts(alerts)), alerts.sublist(2));
   });
 }
