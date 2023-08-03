@@ -51,6 +51,7 @@ import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.d
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
+import 'package:flutter_parent/utils/alert_helper.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
@@ -77,6 +78,7 @@ import '../courses/course_summary_screen_test.dart';
 void main() {
   mockNetworkImageResponse();
   final analyticsMock = _MockAnalytics();
+  final alertsHelper = AlertsHelper();
 
   _setupLocator({MockInteractor interactor, AlertsApi alertsApi, InboxApi inboxApi}) async {
     await setupTestLocator((locator) {
@@ -98,6 +100,7 @@ void main() {
       locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
       locator.registerLazySingleton<StudentAddedNotifier>(() => StudentAddedNotifier());
       locator.registerLazySingleton<AccountsApi>(() => MockAccountsApi());
+      locator.registerLazySingleton<AlertsHelper>(() => alertsHelper);
     });
   }
 

@@ -16,6 +16,7 @@ import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/utils/alert_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -24,6 +25,7 @@ import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final api = MockAlertsApi();
+  final alertsHelper = AlertsHelper();
 
   setUp(() {
     reset(api);
@@ -31,6 +33,7 @@ void main() {
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<AlertsApi>(() => api);
+    locator.registerLazySingleton<AlertsHelper>(() => alertsHelper);
   });
 
   test('calls the API with the provided student id', () async {
@@ -42,6 +45,7 @@ void main() {
       return Alert((b) => b
         ..id = index.toString()
         ..workflowState = AlertWorkflowState.unread
+        ..alertType = AlertType.unknown
         ..lockedForUser = false);
     });
 
