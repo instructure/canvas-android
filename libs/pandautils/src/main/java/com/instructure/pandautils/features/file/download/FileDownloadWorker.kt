@@ -29,6 +29,7 @@ import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
+import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
@@ -122,6 +123,7 @@ class FileDownloadWorker @AssistedInject constructor(
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
             .setContentTitle(context.getString(R.string.downloadingFile))
             .setContentText(fileName)
+            .setOnlyAlertOnce(true)
             .setProgress(100, progress, false)
             .setOngoing(progress != 100)
             .build()
@@ -145,8 +147,6 @@ class FileDownloadWorker @AssistedInject constructor(
     }
 
     private fun updateNotificationFailed(notificationId: Int, fileName: String) {
-        val viewDownloadIntent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
-
         val notification = NotificationCompat.Builder(applicationContext, FileUploadWorker.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
             .setProgress(100, 100, false)
@@ -157,11 +157,21 @@ class FileDownloadWorker @AssistedInject constructor(
         notificationManager.notify(notificationId + 1, notification)
     }
 
-
     companion object {
         const val INPUT_FILE_NAME = "fileName"
         const val INPUT_FILE_URL = "fileUrl"
 
         const val CHANNEL_ID = "uploadChannel"
+
+        fun createOneTimeWorkRequest(fileName: String, fileUrl: String): OneTimeWorkRequest {
+            val inputData = androidx.work.Data.Builder()
+                .putString(INPUT_FILE_NAME, fileName)
+                .putString(INPUT_FILE_URL, fileUrl)
+                .build()
+
+            return OneTimeWorkRequest.Builder(FileDownloadWorker::class.java)
+                .setInputData(inputData)
+                .build()
+        }
     }
 }

@@ -61,7 +61,6 @@ import com.instructure.student.databinding.FragmentFileListBinding
 import com.instructure.student.dialog.EditTextDialog
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FileDownloadJobIntentService
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
@@ -360,15 +359,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         // First check if the Download Manager exists, and is enabled
         // Then check for permissions
         if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-            val inputData = Data.Builder()
-                .putString(FileDownloadWorker.INPUT_FILE_NAME, item.displayName ?: "")
-                .putString(FileDownloadWorker.INPUT_FILE_URL, item.url ?: "")
-                .build()
-            val worker = OneTimeWorkRequestBuilder<FileDownloadWorker>()
-                .setInputData(inputData)
-                .build()
-
-            workManager.enqueue(worker)
+            workManager.enqueue(FileDownloadWorker.createOneTimeWorkRequest(item.displayName.orEmpty(), item.url.orEmpty()))
         } else {
             // Need permission
             requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)

@@ -50,7 +50,6 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileDetailsBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
-import com.instructure.student.util.FileDownloadJobIntentService
 import com.instructure.student.util.StringUtilities
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
@@ -153,15 +152,7 @@ class FileDetailsFragment : ParentFragment() {
     }
 
     private fun downloadFile() {
-        val inputData = Data.Builder()
-            .putString(FileDownloadWorker.INPUT_FILE_NAME, file?.displayName ?: "")
-            .putString(FileDownloadWorker.INPUT_FILE_URL, file?.url ?: "")
-            .build()
-        val worker = OneTimeWorkRequestBuilder<FileDownloadWorker>()
-            .setInputData(inputData)
-            .build()
-
-        workManager.enqueue(worker)
+        workManager.enqueue(FileDownloadWorker.createOneTimeWorkRequest(file?.displayName.orEmpty(), file?.url.orEmpty()))
         markAsRead()
     }
 
