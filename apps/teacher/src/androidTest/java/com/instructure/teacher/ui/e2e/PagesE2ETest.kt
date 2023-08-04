@@ -154,9 +154,9 @@ class PagesE2ETest : TeacherTest() {
         pageListPage.assertPageIsPublished(newPageTitle)
         pageListPage.assertPageCount(1)
 
-        Log.d(STEP_TAG, "Click on the clear search input button (X) on the toolbar. Assert that the default state, so all the three pages will be displayed.")
+        Log.d(STEP_TAG, "Click on the clear search input button (X) on the toolbar. Assert that the default state, so all the 4 pages will be displayed.")
         pageListPage.clickOnClearSearchButton()
-        pageListPage.assertPageCount(3)
+        pageListPage.assertPageCount(4)
     }
 
     private fun createCoursePage(
