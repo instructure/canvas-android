@@ -30,6 +30,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequest
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
@@ -171,6 +172,7 @@ class FileDownloadWorker @AssistedInject constructor(
 
             return OneTimeWorkRequest.Builder(FileDownloadWorker::class.java)
                 .setInputData(inputData)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
         }
     }
