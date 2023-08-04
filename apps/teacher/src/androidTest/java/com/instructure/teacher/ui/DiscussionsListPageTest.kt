@@ -49,7 +49,7 @@ class DiscussionsListPageTest : TeacherTest() {
     fun searchesDiscussions() {
         val discussions = getToDiscussionsListPage(discussionCount = 3).courseDiscussionTopicHeaders[course.id]!!
         val searchDiscussion = discussions[2]
-        discussionsListPage.assertDiscussionCount(discussions.size + 1) // +1 to account for header
+        discussionsListPage.assertDiscussionCount(discussions.size)
         discussionsListPage.clickOnSearchButton()
         discussionsListPage.typeToSearchBar(searchDiscussion.title!!.take(searchDiscussion.title!!.length / 2))
         discussionsListPage.assertDiscussionCount(1)
