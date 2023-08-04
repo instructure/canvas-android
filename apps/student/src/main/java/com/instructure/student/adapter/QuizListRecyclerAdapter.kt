@@ -20,9 +20,10 @@ package com.instructure.student.adapter
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.filterWithQuery
@@ -50,6 +51,8 @@ class QuizListRecyclerAdapter(
     private var quizzes = emptyList<Quiz>()
 
     private var apiCall: WeaveJob? = null
+
+    private var settings: CourseSettings? = null
 
     var searchQuery = ""
         set(value) {
@@ -96,7 +99,8 @@ class QuizListRecyclerAdapter(
         apiCall = tryWeave {
             val refreshing = isRefresh
             val newQuizzes = mutableListOf<Quiz>()
-            awaitPaginated<List<Quiz>> {
+            settings = CourseManager.getCourseSettingsAsync(canvasContext.id, refreshing).await().dataOrNull
+            awaitPaginated {
                 exhaustive = true
                 onRequestFirst { QuizManager.getFirstPageQuizList(canvasContext, refreshing, it) }
                 onRequestNext { url, callback -> QuizManager.getNextPageQuizList(url, refreshing, callback) }
@@ -122,7 +126,7 @@ class QuizListRecyclerAdapter(
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, s: String, quiz: Quiz) {
-        val restrictQuantitativeData = (canvasContext as? Course)?.settings?.restrictQuantitativeData.orDefault()
+        val restrictQuantitativeData = settings?.restrictQuantitativeData.orDefault()
         (holder as? QuizViewHolder)?.bind(quiz, adapterToFragmentCallback, context, canvasContext.textAndIconColor, restrictQuantitativeData)
     }
 

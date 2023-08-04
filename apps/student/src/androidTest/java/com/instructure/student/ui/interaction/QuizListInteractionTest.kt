@@ -77,10 +77,11 @@ class QuizListInteractionTest : StudentTest() {
             teacherCount = 1
         )
 
-        val course = data.courses.values.first().copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData))
-        data.courses[course.id] = course
+        val course = data.courses.values.first()
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = restrictQuantitativeData)
         val student = data.students.first()
         val quizList = mutableListOf<Quiz>()
+        data.courseQuizzes[course.id] = mutableListOf()
         repeat(itemCount) {
             val quiz = data.addQuizToCourse(course, pointsPossible = 10)
             quizList.add(quiz)
