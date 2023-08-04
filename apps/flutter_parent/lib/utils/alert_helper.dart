@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - present Instructure, Inc.
+// Copyright (C) 2023 - present Instructure, Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,23 +12,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/alert.dart';
-import 'package:flutter_parent/network/api/alert_api.dart';
-import 'package:flutter_parent/utils/alert_helper.dart';
+import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class AlertCountNotifier extends ValueNotifier<int> {
-  AlertCountNotifier() : super(0);
-
-  update(String studentId) async {
-    try {
-      final unreadAlerts = await locator<AlertsApi>().getAlertsDepaginated(studentId, true)?.then((List<Alert> list) async {
-        return await locator<AlertsHelper>().filterAlerts(list.where((element) => element.workflowState == AlertWorkflowState.unread).toList());
-      });
-      value = unreadAlerts.length;
-    } catch (e) {
-      print(e);
+class AlertsHelper {
+  Future<List<Alert>> filterAlerts(List<Alert> list) async {
+    List<Alert> filteredList = [];
+    for (var element in list) {
+      var courseId = element.getCourseIdForGradeAlerts();
+      if (courseId == null) {
+        filteredList.add(element);
+      } else {
+        Course course = await locator<CourseApi>().getCourse(courseId, forceRefresh: false);
+        if (!course.settings.restrictQuantitativeData) {
+          filteredList.add(element);
+        }
+      }
     }
+    return filteredList;
   }
 }

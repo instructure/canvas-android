@@ -26,6 +26,10 @@ abstract class CourseSettings implements Built<CourseSettings, CourseSettingsBui
   @nullable
   bool get courseSummary;
 
+  @BuiltValueField(wireName: 'restrict_quantitative_data')
+  @nullable
+  bool get restrictQuantitativeData;
+
   CourseSettings._();
   factory CourseSettings([void Function(CourseSettingsBuilder) updates]) = _$CourseSettings;
 }

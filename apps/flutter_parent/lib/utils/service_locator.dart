@@ -64,6 +64,7 @@ import 'package:flutter_parent/screens/remote_config/remote_config_interactor.da
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/utils/alert_helper.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
@@ -173,4 +174,5 @@ void setupLocator() {
   locator.registerLazySingleton<QRLoginUtil>(() => QRLoginUtil());
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
   locator.registerLazySingleton<StudentAddedNotifier>(() => StudentAddedNotifier());
+  locator.registerLazySingleton<AlertsHelper>(() => AlertsHelper());
 }
