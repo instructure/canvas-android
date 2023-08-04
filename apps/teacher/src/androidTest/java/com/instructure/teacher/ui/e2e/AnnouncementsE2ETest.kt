@@ -70,15 +70,15 @@ class AnnouncementsE2ETest : TeacherTest() {
         announcementsListPage.assertHasAnnouncement(announcement)
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${announcement2.title}', one of the announcements' name to the search input field.")
-        announcementsListPage.clickSearchButton()
-        announcementsListPage.typeSearchInput(announcement2.title)
+        announcementsListPage.clickOnSearchButton()
+        announcementsListPage.typeToSearchBar(announcement2.title)
 
         Log.d(STEP_TAG, "Assert that only 1 announcement matches for the search text, and it is '${announcement2.title}'.")
         announcementsListPage.assertSearchResultCount(1)
         announcementsListPage.assertHasAnnouncement(announcement2)
 
         Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that all the announcements are displayed (2).")
-        announcementsListPage.clickResetSearchText()
+        announcementsListPage.clickOnClearSearchButton()
         announcementsListPage.assertSearchResultCount(2)
 
         Log.d(STEP_TAG,"Edit ${announcement.title} announcement's name to 'Haha'. Save the modifications.")

@@ -41,6 +41,7 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.interfaces.SearchablePage
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
 /**
@@ -48,7 +49,7 @@ import com.instructure.teacher.ui.utils.TypeInRCETextEditor
  *
  * @constructor Create empty Announcements list page
  */
-class AnnouncementsListPage : BasePage() {
+class AnnouncementsListPage : BasePage(), SearchablePage {
 
     private val announcementListToolbar by OnViewWithId(R.id.discussionListToolbar)
     private val announcementsFAB by OnViewWithId(R.id.createNewDiscussion)
@@ -108,23 +109,6 @@ class AnnouncementsListPage : BasePage() {
      */
     fun assertFAB() {
         announcementsFAB.assertDisplayed()
-    }
-
-    /**
-     * Click on search button.
-     *
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Fill the search input field with the given query string.
-     *
-     * @param query: Query string parameter.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
     }
 
     /**
@@ -210,8 +194,8 @@ class AnnouncementsListPage : BasePage() {
      * Click search button.
      *
      */
-    fun clickSearchButton() {
-        onView(withId(R.id.search)).click()
+    override fun clickOnSearchButton() {
+        searchButton.click()
     }
 
     /**
@@ -219,17 +203,23 @@ class AnnouncementsListPage : BasePage() {
      *
      * @param searchText: The search text query parameter.
      */
-    fun typeSearchInput(searchText: String) {
-        onView(withId(R.id.search_src_text)).replaceText(searchText.dropLast(1))
+    override fun typeToSearchBar(searchText: String) {
+        searchInput.perform(ViewActions.replaceText(searchText))
     }
 
     /**
      * Click reset search text.
      *
      */
-    fun clickResetSearchText() {
+    override fun clickOnClearSearchButton() {
         waitForView(withId(R.id.search_close_btn)).click()
     }
+
+    /**
+     * Click on back button on the search bar.
+     * NOT IMPLEMENTED YET
+     */
+    override fun pressSearchBackButton() = Unit
 
     /**
      * Assert search result count is equals to the expected.

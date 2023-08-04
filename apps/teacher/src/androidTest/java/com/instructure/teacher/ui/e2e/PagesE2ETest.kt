@@ -147,12 +147,16 @@ class PagesE2ETest : TeacherTest() {
         pageListPage.assertPageIsPublished(newPageTitle)
 
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created page's title.")
-        pageListPage.openSearch()
-        pageListPage.enterSearchQuery("Test")
+        pageListPage.clickOnSearchButton()
+        pageListPage.typeToSearchBar("Test")
 
         Log.d(STEP_TAG,"Assert that the '$newPageTitle' titled page is displayed and it is the only one.")
         pageListPage.assertPageIsPublished(newPageTitle)
         pageListPage.assertPageCount(1)
+
+        Log.d(STEP_TAG, "Click on the clear search input button (X) on the toolbar. Assert that the default state, so all the three pages will be displayed.")
+        pageListPage.clickOnClearSearchButton()
+        pageListPage.assertPageCount(3)
     }
 
     private fun createCoursePage(

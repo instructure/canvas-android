@@ -43,11 +43,12 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
+import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import org.hamcrest.Matchers.allOf
 
 // Tests that files submitted for submissions, submission comments and discussions are
 // properly displayed.
-class FileListPage : BasePage(R.id.fileListPage) {
+class FileListPage : BasePage(R.id.fileListPage), SearchablePage {
 
     private val addButton by OnViewWithId(R.id.addFab)
     private val uploadFileButton by OnViewWithId(R.id.addFileFab, autoAssert = false)
@@ -124,16 +125,20 @@ class FileListPage : BasePage(R.id.fileListPage) {
         onView(allOf(withId(R.id.emptyView), isDisplayed())).assertDisplayed()
     }
 
-    fun clickSearchButton() {
+    override fun clickOnSearchButton() {
         onView(withId(R.id.search)).click()
     }
 
-    fun typeSearchInput(searchText: String) {
-        onView(withId(R.id.queryInput)).replaceText(searchText)
+    override fun typeToSearchBar(textToType: String) {
+        onView(withId(R.id.queryInput)).replaceText(textToType)
     }
 
-    fun clickResetSearchText() {
+    override fun clickOnClearSearchButton() {
         waitForView(withId(R.id.clearButton)).click()
+        onView(withId(R.id.backButton)).click()
+    }
+
+    override fun pressSearchBackButton() {
         onView(withId(R.id.backButton)).click()
     }
 
@@ -151,11 +156,7 @@ class FileListPage : BasePage(R.id.fileListPage) {
         )
     }
 
-    fun pressSearchBackButton() {
-        onView(withId(R.id.backButton)).click()
-    }
-
     fun assertFolderSize(folderName: String, expectedSize: Int) {
-        onView(allOf(withId(R.id.fileSize), hasSibling(withId(R.id.fileName) + withText(folderName)))).check(matches(containsTextCaseInsensitive("$expectedSize ${if (expectedSize == 1) "item" else "items"}")))
+        waitForView(allOf(withId(R.id.fileSize), hasSibling(withId(R.id.fileName) + withText(folderName)))).check(matches(containsTextCaseInsensitive("$expectedSize ${if (expectedSize == 1) "item" else "items"}")))
     }
 }

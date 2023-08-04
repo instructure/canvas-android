@@ -45,12 +45,13 @@ import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
+import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.containsString
 
-class DiscussionListPage : BasePage(R.id.discussionListPage) {
+class DiscussionListPage : BasePage(R.id.discussionListPage), SearchablePage {
 
     private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
     private val announcementsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
@@ -150,17 +151,19 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         onView(withContentDescription("Close")).click()
     }
 
-    fun clickOnSearchButton() {
+    override fun clickOnSearchButton() {
         onView(withId(R.id.search)).click()
     }
 
-    fun typeToSearchBar(textToType: String) {
+    override fun typeToSearchBar(textToType: String) {
         waitForViewWithId(R.id.search_src_text).replaceText(textToType)
     }
 
-    fun clickOnClearSearchButton() {
+    override fun clickOnClearSearchButton() {
         onView(withId(R.id.search_close_btn)).click()
     }
+
+    override fun pressSearchBackButton() = Unit
 
     fun verifyExitWithoutSavingDialog() {
         onView(withText(R.string.exitWithoutSavingMessage)).check(matches(isDisplayed()))

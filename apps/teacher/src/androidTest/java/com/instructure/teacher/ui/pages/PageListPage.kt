@@ -29,11 +29,13 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.interfaces.SearchablePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
@@ -44,7 +46,7 @@ import org.hamcrest.Matchers.containsString
  * This page extends the BasePage class and provides functionality for interacting with the elements on the "Page List" page.
  * It contains methods for clicking on the create new page button, opening a page, performing a search, and asserting various page-related conditions.
  */
-class PageListPage : BasePage() {
+class PageListPage : BasePage(), SearchablePage {
 
     private val searchButton by OnViewWithId(R.id.search)
 
@@ -79,22 +81,6 @@ class PageListPage : BasePage() {
         val matcher = getPageMatcherByTitle(pageTitle = pageTitle)
         scrollRecyclerView(R.id.pageRecyclerView, matcher)
         onView(matcher).click()
-    }
-
-    /**
-     * Opens the search bar.
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters the search query in the search bar.
-     *
-     * @param query The search query to be entered.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
     }
 
     /**
@@ -174,5 +160,50 @@ class PageListPage : BasePage() {
                 withText(R.string.frontPage)
             )))
     }
+
+    /**
+     * Opens the search bar.
+     */
+    fun openSearch() {
+        searchButton.click()
+    }
+
+    /**
+     * Enters the search query in the search bar.
+     *
+     * @param query The search query to be entered.
+     */
+    fun enterSearchQuery(query: String) {
+        searchInput.perform(ViewActions.replaceText(query))
+    }
+
+    /**
+     * Opens the search bar.
+     */
+    override fun clickOnSearchButton() {
+        searchButton.click()
+    }
+
+    /**
+     * Enters the search query in the search bar.
+     *
+     * @param textToType The search query to be entered.
+     */
+    override fun typeToSearchBar(textToType: String) {
+        searchInput.perform(ViewActions.replaceText(textToType))
+    }
+
+    /**
+     * Clicks the reset search text button.
+     */
+    override fun clickOnClearSearchButton() {
+        waitForView(withId(R.id.search_close_btn)).click()
+    }
+
+    /**
+     * Click on back button on the search bar.
+     * NOT IMPLEMENTED YET
+     */
+    override fun pressSearchBackButton() = Unit
 }
 

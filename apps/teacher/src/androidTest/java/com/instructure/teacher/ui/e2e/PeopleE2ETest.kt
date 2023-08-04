@@ -139,15 +139,15 @@ class PeopleE2ETest: TeacherTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${gradedStudent.name}', the graded student's name to the search input field.")
-        peopleListPage.clickSearchButton()
-        peopleListPage.typeSearchInput(gradedStudent.name)
+        peopleListPage.clickOnSearchButton()
+        peopleListPage.typeToSearchBar(gradedStudent.name)
 
         Log.d(STEP_TAG, "Assert that only 1 person matches for the search text, and it is '${gradedStudent.name}', the graded student.")
         peopleListPage.assertSearchResultCount(1)
         peopleListPage.assertPersonListed(gradedStudent)
 
-        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that all the poeple are displayed (5).")
-        peopleListPage.clickResetSearchText()
+        Log.d(STEP_TAG, "Click on 'Reset' search (X) icon and assert that all the poeple are displayed (5).")
+        peopleListPage.clickOnClearSearchButton()
         peopleListPage.assertSearchResultCount(5)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Click on the Inbox bottom menu. Assert that the 'All' section is empty.")

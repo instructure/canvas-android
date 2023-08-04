@@ -39,11 +39,12 @@ import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.interfaces.SearchablePage
 
 /**
  * Represents the Discussions List page.
  */
-class DiscussionsListPage : BasePage() {
+class DiscussionsListPage : BasePage(), SearchablePage {
 
     private val discussionListToolbar by OnViewWithId(R.id.discussionListToolbar)
     private val discussionsFAB by OnViewWithId(R.id.createNewDiscussion)
@@ -134,7 +135,7 @@ class DiscussionsListPage : BasePage() {
      * @param count The expected number of discussions.
      */
     fun assertDiscussionCount(count: Int) {
-        discussionsRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+        discussionsRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count + 1)) //Because of the header.
     }
 
     /**
@@ -213,4 +214,34 @@ class DiscussionsListPage : BasePage() {
         waitForView(withId(R.id.discussionTitle) + withText(discussionTitle) +
                 withAncestor(withId(R.id.discussionRecyclerView) + withDescendant(groupChildMatcher))).assertDisplayed()
     }
+
+    /**
+     * Opens the search functionality in the discussions list.
+     */
+    override fun clickOnSearchButton() {
+        searchButton.click()
+    }
+
+    /**
+     * Enters the specified [textToType] into the search input field.
+     *
+     * @param textToType The search query to be entered.
+     */
+    override fun typeToSearchBar(textToType: String) {
+        searchInput.perform(ViewActions.replaceText(textToType))
+    }
+
+    /**
+     * Click reset search text.
+     *
+     */
+    override fun clickOnClearSearchButton() {
+        waitForView(withId(R.id.search_close_btn)).click()
+    }
+
+    /**
+     * Click on back button on the search bar.
+     * NOT IMPLEMENTED YET
+     */
+    override fun pressSearchBackButton() = Unit
 }

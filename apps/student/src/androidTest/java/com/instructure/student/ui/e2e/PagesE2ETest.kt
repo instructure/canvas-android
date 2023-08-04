@@ -81,6 +81,26 @@ class PagesE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Assert that '${pageUnpublished.title}' unpublished page is NOT displayed.")
         pageListPage.assertPageNotDisplayed(pageUnpublished)
 
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${pagePublishedFront.title}', the page's name to the search input field.")
+        pageListPage.clickOnSearchButton()
+        pageListPage.typeToSearchBar(pagePublishedFront.title)
+
+        Log.d(STEP_TAG,"Assert that '${pagePublished.title}' published page is NOT displayed and there is only one page (the front page) is displayed.")
+        pageListPage.assertPageNotDisplayed(pagePublished)
+        pageListPage.assertPageListItemCount(1)
+
+        Log.d(STEP_TAG, "Click on clear search icon (X).")
+        pageListPage.clickOnClearSearchButton()
+
+        Log.d(STEP_TAG,"Assert that '${pagePublishedFront.title}' published front page is displayed.")
+        pageListPage.assertFrontPageDisplayed(pagePublishedFront)
+
+        Log.d(STEP_TAG,"Assert that '${pagePublished.title}' published page is displayed.")
+        pageListPage.assertRegularPageDisplayed(pagePublished)
+
+        Log.d(STEP_TAG,"Assert that '${pageUnpublished.title}' unpublished page is NOT displayed.")
+        pageListPage.assertPageNotDisplayed(pageUnpublished)
+
         Log.d(STEP_TAG,"Open '${pagePublishedFront.title}' page. Assert that it is really a front (published) page via web view assertions.")
         pageListPage.selectFrontPage(pagePublishedFront)
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))

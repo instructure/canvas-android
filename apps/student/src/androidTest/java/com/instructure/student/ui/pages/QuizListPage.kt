@@ -20,7 +20,6 @@ import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -33,10 +32,11 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
+import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
-class QuizListPage : BasePage(R.id.quizListPage) {
+class QuizListPage : BasePage(R.id.quizListPage), SearchablePage {
     fun assertQuizDisplayed(quiz: QuizApiModel) {
         assertMatcherDisplayed(allOf(withId(R.id.title), withText(quiz.title)))
     }
@@ -70,5 +70,21 @@ class QuizListPage : BasePage(R.id.quizListPage) {
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+    }
+
+    override fun clickOnSearchButton() {
+        TODO("Not yet implemented")
+    }
+
+    override fun typeToSearchBar(textToType: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun clickOnClearSearchButton() {
+        TODO("Not yet implemented")
+    }
+
+    override fun pressSearchBackButton() {
+        TODO("Not yet implemented")
     }
 }
