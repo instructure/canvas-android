@@ -87,77 +87,74 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       serializers.serialize(object.restrictEnrollmentsToCourseDates,
           specifiedType: const FullType(bool)),
     ];
-    result.add('original_name');
-    if (object.originalName == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.originalName,
-          specifiedType: const FullType(String)));
-    }
-    result.add('course_code');
-    if (object.courseCode == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.courseCode,
-          specifiedType: const FullType(String)));
-    }
-    result.add('start_at');
-    if (object.startAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.startAt,
+    Object value;
+    value = object.originalName;
+
+    result
+      ..add('original_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.courseCode;
+
+    result
+      ..add('course_code')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.startAt;
+
+    result
+      ..add('start_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('end_at');
-    if (object.endAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.endAt,
+    value = object.endAt;
+
+    result
+      ..add('end_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('syllabus_body');
-    if (object.syllabusBody == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.syllabusBody,
-          specifiedType: const FullType(String)));
-    }
-    result.add('image_download_url');
-    if (object.imageDownloadUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.imageDownloadUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('workflow_state');
-    if (object.workflowState == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.workflowState,
-          specifiedType: const FullType(String)));
-    }
-    result.add('default_view');
-    if (object.homePage == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.homePage,
+    value = object.syllabusBody;
+
+    result
+      ..add('syllabus_body')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.imageDownloadUrl;
+
+    result
+      ..add('image_download_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.workflowState;
+
+    result
+      ..add('workflow_state')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.homePage;
+
+    result
+      ..add('default_view')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(HomePage)));
-    }
-    result.add('term');
-    if (object.term == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.term,
-          specifiedType: const FullType(Term)));
-    }
-    result.add('sections');
-    if (object.sections == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.sections,
+    value = object.term;
+
+    result
+      ..add('term')
+      ..add(serializers.serialize(value, specifiedType: const FullType(Term)));
+    value = object.sections;
+
+    result
+      ..add('sections')
+      ..add(serializers.serialize(value,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Section)])));
-    }
+    value = object.settings;
+
+    result
+      ..add('settings')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(CourseSettings)));
+
     return result;
   }
 
@@ -170,8 +167,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
@@ -265,6 +261,10 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
                       BuiltList, const [const FullType(Section)]))
               as BuiltList<Object>);
           break;
+        case 'settings':
+          result.settings.replace(serializers.deserialize(value,
+              specifiedType: const FullType(CourseSettings)) as CourseSettings);
+          break;
       }
     }
 
@@ -342,6 +342,8 @@ class _$Course extends Course {
   final Term term;
   @override
   final BuiltList<Section> sections;
+  @override
+  final CourseSettings settings;
 
   factory _$Course([void Function(CourseBuilder) updates]) =>
       (new CourseBuilder()..update(updates)).build();
@@ -372,46 +374,28 @@ class _$Course extends Course {
       this.workflowState,
       this.homePage,
       this.term,
-      this.sections})
+      this.sections,
+      this.settings})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Course', 'id');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('Course', 'name');
-    }
-    if (hideFinalGrades == null) {
-      throw new BuiltValueNullFieldError('Course', 'hideFinalGrades');
-    }
-    if (isPublic == null) {
-      throw new BuiltValueNullFieldError('Course', 'isPublic');
-    }
-    if (enrollments == null) {
-      throw new BuiltValueNullFieldError('Course', 'enrollments');
-    }
-    if (needsGradingCount == null) {
-      throw new BuiltValueNullFieldError('Course', 'needsGradingCount');
-    }
-    if (applyAssignmentGroupWeights == null) {
-      throw new BuiltValueNullFieldError(
-          'Course', 'applyAssignmentGroupWeights');
-    }
-    if (isFavorite == null) {
-      throw new BuiltValueNullFieldError('Course', 'isFavorite');
-    }
-    if (accessRestrictedByDate == null) {
-      throw new BuiltValueNullFieldError('Course', 'accessRestrictedByDate');
-    }
-    if (hasWeightedGradingPeriods == null) {
-      throw new BuiltValueNullFieldError('Course', 'hasWeightedGradingPeriods');
-    }
-    if (hasGradingPeriods == null) {
-      throw new BuiltValueNullFieldError('Course', 'hasGradingPeriods');
-    }
-    if (restrictEnrollmentsToCourseDates == null) {
-      throw new BuiltValueNullFieldError(
-          'Course', 'restrictEnrollmentsToCourseDates');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, 'Course', 'id');
+    BuiltValueNullFieldError.checkNotNull(name, 'Course', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        hideFinalGrades, 'Course', 'hideFinalGrades');
+    BuiltValueNullFieldError.checkNotNull(isPublic, 'Course', 'isPublic');
+    BuiltValueNullFieldError.checkNotNull(enrollments, 'Course', 'enrollments');
+    BuiltValueNullFieldError.checkNotNull(
+        needsGradingCount, 'Course', 'needsGradingCount');
+    BuiltValueNullFieldError.checkNotNull(
+        applyAssignmentGroupWeights, 'Course', 'applyAssignmentGroupWeights');
+    BuiltValueNullFieldError.checkNotNull(isFavorite, 'Course', 'isFavorite');
+    BuiltValueNullFieldError.checkNotNull(
+        accessRestrictedByDate, 'Course', 'accessRestrictedByDate');
+    BuiltValueNullFieldError.checkNotNull(
+        hasWeightedGradingPeriods, 'Course', 'hasWeightedGradingPeriods');
+    BuiltValueNullFieldError.checkNotNull(
+        hasGradingPeriods, 'Course', 'hasGradingPeriods');
+    BuiltValueNullFieldError.checkNotNull(restrictEnrollmentsToCourseDates,
+        'Course', 'restrictEnrollmentsToCourseDates');
   }
 
   @override
@@ -451,7 +435,8 @@ class _$Course extends Course {
         workflowState == other.workflowState &&
         homePage == other.homePage &&
         term == other.term &&
-        sections == other.sections;
+        sections == other.sections &&
+        settings == other.settings;
   }
 
   @override
@@ -474,26 +459,26 @@ class _$Course extends Course {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode), name.hashCode), originalName.hashCode),
-                                                                                courseCode.hashCode),
-                                                                            startAt.hashCode),
-                                                                        endAt.hashCode),
-                                                                    syllabusBody.hashCode),
-                                                                hideFinalGrades.hashCode),
-                                                            isPublic.hashCode),
-                                                        enrollments.hashCode),
-                                                    needsGradingCount.hashCode),
-                                                applyAssignmentGroupWeights.hashCode),
-                                            isFavorite.hashCode),
-                                        accessRestrictedByDate.hashCode),
-                                    imageDownloadUrl.hashCode),
-                                hasWeightedGradingPeriods.hashCode),
-                            hasGradingPeriods.hashCode),
-                        restrictEnrollmentsToCourseDates.hashCode),
-                    workflowState.hashCode),
-                homePage.hashCode),
-            term.hashCode),
-        sections.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode), name.hashCode), originalName.hashCode), courseCode.hashCode),
+                                                                                startAt.hashCode),
+                                                                            endAt.hashCode),
+                                                                        syllabusBody.hashCode),
+                                                                    hideFinalGrades.hashCode),
+                                                                isPublic.hashCode),
+                                                            enrollments.hashCode),
+                                                        needsGradingCount.hashCode),
+                                                    applyAssignmentGroupWeights.hashCode),
+                                                isFavorite.hashCode),
+                                            accessRestrictedByDate.hashCode),
+                                        imageDownloadUrl.hashCode),
+                                    hasWeightedGradingPeriods.hashCode),
+                                hasGradingPeriods.hashCode),
+                            restrictEnrollmentsToCourseDates.hashCode),
+                        workflowState.hashCode),
+                    homePage.hashCode),
+                term.hashCode),
+            sections.hashCode),
+        settings.hashCode));
   }
 
   @override
@@ -525,7 +510,8 @@ class _$Course extends Course {
           ..add('workflowState', workflowState)
           ..add('homePage', homePage)
           ..add('term', term)
-          ..add('sections', sections))
+          ..add('sections', sections)
+          ..add('settings', settings))
         .toString();
   }
 }
@@ -651,38 +637,45 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
       _$this._sections ??= new ListBuilder<Section>();
   set sections(ListBuilder<Section> sections) => _$this._sections = sections;
 
+  CourseSettingsBuilder _settings;
+  CourseSettingsBuilder get settings =>
+      _$this._settings ??= new CourseSettingsBuilder();
+  set settings(CourseSettingsBuilder settings) => _$this._settings = settings;
+
   CourseBuilder() {
     Course._initializeBuilder(this);
   }
 
   CourseBuilder get _$this {
-    if (_$v != null) {
-      _currentScore = _$v.currentScore;
-      _finalScore = _$v.finalScore;
-      _currentGrade = _$v.currentGrade;
-      _finalGrade = _$v.finalGrade;
-      _id = _$v.id;
-      _name = _$v.name;
-      _originalName = _$v.originalName;
-      _courseCode = _$v.courseCode;
-      _startAt = _$v.startAt;
-      _endAt = _$v.endAt;
-      _syllabusBody = _$v.syllabusBody;
-      _hideFinalGrades = _$v.hideFinalGrades;
-      _isPublic = _$v.isPublic;
-      _enrollments = _$v.enrollments?.toBuilder();
-      _needsGradingCount = _$v.needsGradingCount;
-      _applyAssignmentGroupWeights = _$v.applyAssignmentGroupWeights;
-      _isFavorite = _$v.isFavorite;
-      _accessRestrictedByDate = _$v.accessRestrictedByDate;
-      _imageDownloadUrl = _$v.imageDownloadUrl;
-      _hasWeightedGradingPeriods = _$v.hasWeightedGradingPeriods;
-      _hasGradingPeriods = _$v.hasGradingPeriods;
-      _restrictEnrollmentsToCourseDates = _$v.restrictEnrollmentsToCourseDates;
-      _workflowState = _$v.workflowState;
-      _homePage = _$v.homePage;
-      _term = _$v.term?.toBuilder();
-      _sections = _$v.sections?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _currentScore = $v.currentScore;
+      _finalScore = $v.finalScore;
+      _currentGrade = $v.currentGrade;
+      _finalGrade = $v.finalGrade;
+      _id = $v.id;
+      _name = $v.name;
+      _originalName = $v.originalName;
+      _courseCode = $v.courseCode;
+      _startAt = $v.startAt;
+      _endAt = $v.endAt;
+      _syllabusBody = $v.syllabusBody;
+      _hideFinalGrades = $v.hideFinalGrades;
+      _isPublic = $v.isPublic;
+      _enrollments = $v.enrollments.toBuilder();
+      _needsGradingCount = $v.needsGradingCount;
+      _applyAssignmentGroupWeights = $v.applyAssignmentGroupWeights;
+      _isFavorite = $v.isFavorite;
+      _accessRestrictedByDate = $v.accessRestrictedByDate;
+      _imageDownloadUrl = $v.imageDownloadUrl;
+      _hasWeightedGradingPeriods = $v.hasWeightedGradingPeriods;
+      _hasGradingPeriods = $v.hasGradingPeriods;
+      _restrictEnrollmentsToCourseDates = $v.restrictEnrollmentsToCourseDates;
+      _workflowState = $v.workflowState;
+      _homePage = $v.homePage;
+      _term = $v.term?.toBuilder();
+      _sections = $v.sections?.toBuilder();
+      _settings = $v.settings?.toBuilder();
       _$v = null;
     }
     return this;
@@ -690,9 +683,7 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
 
   @override
   void replace(Course other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Course;
   }
 
@@ -711,29 +702,38 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
               finalScore: finalScore,
               currentGrade: currentGrade,
               finalGrade: finalGrade,
-              id: id,
-              name: name,
+              id: BuiltValueNullFieldError.checkNotNull(id, 'Course', 'id'),
+              name:
+                  BuiltValueNullFieldError.checkNotNull(name, 'Course', 'name'),
               originalName: originalName,
               courseCode: courseCode,
               startAt: startAt,
               endAt: endAt,
               syllabusBody: syllabusBody,
-              hideFinalGrades: hideFinalGrades,
-              isPublic: isPublic,
+              hideFinalGrades: BuiltValueNullFieldError.checkNotNull(
+                  hideFinalGrades, 'Course', 'hideFinalGrades'),
+              isPublic: BuiltValueNullFieldError.checkNotNull(
+                  isPublic, 'Course', 'isPublic'),
               enrollments: enrollments.build(),
-              needsGradingCount: needsGradingCount,
-              applyAssignmentGroupWeights: applyAssignmentGroupWeights,
-              isFavorite: isFavorite,
-              accessRestrictedByDate: accessRestrictedByDate,
+              needsGradingCount: BuiltValueNullFieldError.checkNotNull(
+                  needsGradingCount, 'Course', 'needsGradingCount'),
+              applyAssignmentGroupWeights: BuiltValueNullFieldError.checkNotNull(
+                  applyAssignmentGroupWeights, 'Course', 'applyAssignmentGroupWeights'),
+              isFavorite: BuiltValueNullFieldError.checkNotNull(
+                  isFavorite, 'Course', 'isFavorite'),
+              accessRestrictedByDate: BuiltValueNullFieldError.checkNotNull(
+                  accessRestrictedByDate, 'Course', 'accessRestrictedByDate'),
               imageDownloadUrl: imageDownloadUrl,
-              hasWeightedGradingPeriods: hasWeightedGradingPeriods,
-              hasGradingPeriods: hasGradingPeriods,
-              restrictEnrollmentsToCourseDates:
-                  restrictEnrollmentsToCourseDates,
+              hasWeightedGradingPeriods: BuiltValueNullFieldError.checkNotNull(
+                  hasWeightedGradingPeriods, 'Course', 'hasWeightedGradingPeriods'),
+              hasGradingPeriods:
+                  BuiltValueNullFieldError.checkNotNull(hasGradingPeriods, 'Course', 'hasGradingPeriods'),
+              restrictEnrollmentsToCourseDates: BuiltValueNullFieldError.checkNotNull(restrictEnrollmentsToCourseDates, 'Course', 'restrictEnrollmentsToCourseDates'),
               workflowState: workflowState,
               homePage: homePage,
               term: _term?.build(),
-              sections: _sections?.build());
+              sections: _sections?.build(),
+              settings: _settings?.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -744,6 +744,8 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
         _term?.build();
         _$failedField = 'sections';
         _sections?.build();
+        _$failedField = 'settings';
+        _settings?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Course', _$failedField, e.toString());
@@ -755,4 +757,4 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
