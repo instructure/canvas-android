@@ -39,10 +39,14 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.sample
 import java.io.File
 import kotlin.random.Random
 
 @HiltWorker
+@OptIn(FlowPreview::class)
 class FileDownloadWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
@@ -67,6 +71,7 @@ class FileDownloadWorker @AssistedInject constructor(
         var result = Result.retry()
 
         fileDownloadApi.downloadFile(fileUrl).saveFile(downloadedFile)
+            .sample(500)
             .collect { downloadState ->
                 when (downloadState) {
                     is DownloadState.InProgress -> {

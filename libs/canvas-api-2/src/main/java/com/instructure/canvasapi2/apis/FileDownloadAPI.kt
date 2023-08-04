@@ -40,11 +40,8 @@ sealed class DownloadState {
 }
 
 fun ResponseBody.saveFile(file: File): Flow<DownloadState> {
-    val debounce = 500L
-
     return flow {
         emit(DownloadState.InProgress(0))
-        var lastUpdate = System.currentTimeMillis()
         try {
             byteStream().use { inputStream ->
                 file.outputStream().use { outputStream ->
@@ -58,10 +55,7 @@ fun ResponseBody.saveFile(file: File): Flow<DownloadState> {
                         progressBytes += bytes
                         bytes = inputStream.read(buffer)
 
-                        if (System.currentTimeMillis() - lastUpdate > debounce) {
-                            emit(DownloadState.InProgress((progressBytes * 100 / totalBytes).toInt()))
-                            lastUpdate = System.currentTimeMillis()
-                        }
+                        emit(DownloadState.InProgress((progressBytes * 100 / totalBytes).toInt()))
                     }
                 }
             }
