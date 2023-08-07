@@ -161,6 +161,12 @@ data class Assignment(
 
         }
 
+    val isGradingTypeQuantitative: Boolean
+        get() {
+            val gradingType = getGradingTypeFromAPIString(this.gradingType ?: "")
+            return gradingType == GradingType.PERCENT || gradingType == GradingType.POINTS
+        }
+
     enum class SubmissionType(val apiString: String) {
         ONLINE_QUIZ("online_quiz"),
         NONE("none"),

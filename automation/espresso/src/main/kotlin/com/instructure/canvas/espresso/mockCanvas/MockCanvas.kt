@@ -943,7 +943,9 @@ fun MockCanvas.addSubmissionForAssignment(
         comment: SubmissionComment? = null,
         state: String = "submitted",
         grade: String? = null,
-        attempt: Long = 1
+        attempt: Long = 1,
+        score: Double? = null,
+        excused: Boolean = false
 ) : Submission {
     val assignment = assignments[assignmentId]!!
     val assignmentDueDate = assignment.dueAt?.toDate()
@@ -965,7 +967,10 @@ fun MockCanvas.addSubmissionForAssignment(
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
             submissionComments = if(comment != null) listOf(comment) else listOf(),
             mediaContentType = attachment?.contentType,
-            grade = grade
+            grade = grade,
+            score = score ?: 0.0,
+            postedAt = Date(),
+            excused = excused
     )
 
     // Get the submission list for the assignment, creating it if necessary
@@ -993,7 +998,10 @@ fun MockCanvas.addSubmissionForAssignment(
                 attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
                 submissionComments = if(comment != null) listOf(comment) else listOf(),
                 mediaContentType = attachment?.contentType,
-                grade = grade
+                grade = grade,
+                score = score ?: 0.0,
+                postedAt = Date(),
+                excused = excused
         )
         submissionList.add(userRootSubmission)
     }
