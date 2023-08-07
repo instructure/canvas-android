@@ -132,7 +132,7 @@ abstract class AssignmentListRecyclerAdapter (
             if changes are made here, check if they are needed in the other recycler adapters.*/
         val course = canvasContext as Course
 
-        if (course.settings != null) {
+        if (course.settings != null && !isRefresh) {
             restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
             loadAssignmentsData(course)
         } else {
