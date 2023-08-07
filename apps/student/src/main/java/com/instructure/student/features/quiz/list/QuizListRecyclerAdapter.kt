@@ -22,6 +22,7 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
@@ -50,6 +51,8 @@ class QuizListRecyclerAdapter(
 ) : ExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder>(context, String::class.java, Quiz::class.java) {
 
     private var quizzes = emptyList<Quiz>()
+
+    private var settings: CourseSettings? = null
 
     var searchQuery = ""
         set(value) {
@@ -94,6 +97,7 @@ class QuizListRecyclerAdapter(
 
     override fun loadFirstPage() {
         lifecycleScope.tryLaunch {
+            settings = CourseManager.getCourseSettingsAsync(canvasContext.id, isRefresh).await().dataOrNull
             quizzes = repository.loadQuizzes(canvasContext.type.apiString, canvasContext.id, isRefresh)
             populateData()
             onCallbackFinished(ApiType.API)
