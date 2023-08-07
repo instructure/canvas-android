@@ -130,8 +130,7 @@ object BinderUtils {
         return when (grade) {
             "complete" -> return DisplayGrade(context.getString(R.string.gradeComplete))
             "incomplete" -> return DisplayGrade(context.getString(R.string.gradeIncomplete))
-            // Other remaining case is where the grade is displayed as a percentage
-            else -> if (restrictQuantitativeData) DisplayGrade() else DisplayGrade(grade, gradeContentDescription)
+            else -> DisplayGrade(grade, gradeContentDescription)
         }
     }
 
@@ -140,11 +139,10 @@ object BinderUtils {
         textView: TextView,
         assignment: Assignment,
         submission: Submission,
-        color: Int,
-        restrictQuantitativeData: Boolean
+        color: Int
     ) {
         val hasGrade = submission.grade.isValid()
-        val (grade, contentDescription) = getGrade(assignment, submission, context, restrictQuantitativeData)
+        val (grade, contentDescription) = getGrade(assignment, submission, context)
         if (hasGrade) {
             textView.text = grade
             textView.contentDescription = contentDescription
