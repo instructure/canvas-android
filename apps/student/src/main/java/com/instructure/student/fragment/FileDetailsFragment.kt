@@ -23,6 +23,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.instructure.canvasapi2.managers.FileFolderManager
@@ -41,19 +42,25 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileDetailsBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
-import com.instructure.student.util.FileDownloadJobIntentService
 import com.instructure.student.util.StringUtilities
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import java.util.*
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_FILE_DETAILS)
 @PageView(url = "{canvasContext}/files/{fileId}")
+@AndroidEntryPoint
 class FileDetailsFragment : ParentFragment() {
+
+    @Inject
+    lateinit var workManager: WorkManager
 
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
 
@@ -143,7 +150,7 @@ class FileDetailsFragment : ParentFragment() {
     }
 
     private fun downloadFile() {
-        FileDownloadJobIntentService.scheduleDownloadJob(requireContext(), file)
+        workManager.enqueue(FileDownloadWorker.createOneTimeWorkRequest(file?.displayName.orEmpty(), file?.url.orEmpty()))
         markAsRead()
     }
 

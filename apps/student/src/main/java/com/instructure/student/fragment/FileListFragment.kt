@@ -31,6 +31,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -47,6 +48,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.*
@@ -57,16 +59,21 @@ import com.instructure.student.databinding.FragmentFileListBinding
 import com.instructure.student.dialog.EditTextDialog
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FileDownloadJobIntentService
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
+@AndroidEntryPoint
 class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent {
+
+    @Inject
+    lateinit var workManager: WorkManager
 
     private val binding by viewBinding(FragmentFileListBinding::bind)
 
@@ -350,7 +357,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         // First check if the Download Manager exists, and is enabled
         // Then check for permissions
         if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-            FileDownloadJobIntentService.scheduleDownloadJob(requireContext(), item)
+            workManager.enqueue(FileDownloadWorker.createOneTimeWorkRequest(item.displayName.orEmpty(), item.url.orEmpty()))
         } else {
             // Need permission
             requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
