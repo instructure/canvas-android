@@ -22,7 +22,9 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.filterWithQuery
@@ -31,6 +33,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
@@ -48,6 +51,8 @@ class QuizListRecyclerAdapter(
 ) : ExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder>(context, String::class.java, Quiz::class.java) {
 
     private var quizzes = emptyList<Quiz>()
+
+    private var settings: CourseSettings? = null
 
     var searchQuery = ""
         set(value) {
@@ -92,6 +97,7 @@ class QuizListRecyclerAdapter(
 
     override fun loadFirstPage() {
         lifecycleScope.tryLaunch {
+            settings = CourseManager.getCourseSettingsAsync(canvasContext.id, isRefresh).await().dataOrNull
             quizzes = repository.loadQuizzes(canvasContext.type.apiString, canvasContext.id, isRefresh)
             populateData()
             onCallbackFinished(ApiType.API)
@@ -112,7 +118,8 @@ class QuizListRecyclerAdapter(
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, s: String, quiz: Quiz) {
-        (holder as? QuizViewHolder)?.bind(quiz, adapterToFragmentCallback, context, canvasContext.textAndIconColor)
+        val restrictQuantitativeData = settings?.restrictQuantitativeData.orDefault()
+        (holder as? QuizViewHolder)?.bind(quiz, adapterToFragmentCallback, context, canvasContext.textAndIconColor, restrictQuantitativeData)
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, s: String, isExpanded: Boolean) {

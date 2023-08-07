@@ -42,6 +42,7 @@ import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.fragments.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.spotify.mobius.functions.Consumer
 import org.greenrobot.eventbus.EventBus
@@ -94,6 +95,7 @@ class SyllabusView(
         binding.toolbar.apply {
             title = context.getString(com.instructure.pandares.R.string.syllabus)
             subtitle = canvasContext.name
+            setupBackButton(activity)
         }
 
         binding.syllabusPager.adapter = SyllabusTabAdapter(getTabTitles())

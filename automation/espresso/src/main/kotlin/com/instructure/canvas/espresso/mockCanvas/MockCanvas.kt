@@ -943,7 +943,9 @@ fun MockCanvas.addSubmissionForAssignment(
         comment: SubmissionComment? = null,
         state: String = "submitted",
         grade: String? = null,
-        attempt: Long = 1
+        attempt: Long = 1,
+        score: Double? = null,
+        excused: Boolean = false
 ) : Submission {
     val assignment = assignments[assignmentId]!!
     val assignmentDueDate = assignment.dueAt?.toDate()
@@ -965,7 +967,10 @@ fun MockCanvas.addSubmissionForAssignment(
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
             submissionComments = if(comment != null) listOf(comment) else listOf(),
             mediaContentType = attachment?.contentType,
-            grade = grade
+            grade = grade,
+            score = score ?: 0.0,
+            postedAt = Date(),
+            excused = excused
     )
 
     // Get the submission list for the assignment, creating it if necessary
@@ -993,7 +998,10 @@ fun MockCanvas.addSubmissionForAssignment(
                 attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
                 submissionComments = if(comment != null) listOf(comment) else listOf(),
                 mediaContentType = attachment?.contentType,
-                grade = grade
+                grade = grade,
+                score = score ?: 0.0,
+                postedAt = Date(),
+                excused = excused
         )
         submissionList.add(userRootSubmission)
     }
@@ -1564,7 +1572,8 @@ fun MockCanvas.addQuizToCourse(
         dueAt: String? = null,
         published: Boolean = true,
         lockAt: String? = null,
-        unlockAt: String? = null
+        unlockAt: String? = null,
+        pointsPossible: Int? = null
 ) : Quiz {
     val quizId = newItemId()
     val quizUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/$quizId"
@@ -1589,21 +1598,21 @@ fun MockCanvas.addQuizToCourse(
     }
 
     val result = Quiz(
-            id = quizId,
-            title = title,
-            description = description,
-            quizType = quizType,
-            mobileUrl = quizUrl,
-            htmlUrl = quizUrl,
-            timeLimit = timeLimitSecs,
-            dueAt = dueAt,
-            published = published,
-            assignmentId = assignment?.id ?: 0,
-            lockAt = lockAt,
-            unlockAt = unlockAt,
-            allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt))
-
-            )
+        id = quizId,
+        title = title,
+        description = description,
+        quizType = quizType,
+        mobileUrl = quizUrl,
+        htmlUrl = quizUrl,
+        timeLimit = timeLimitSecs,
+        dueAt = dueAt,
+        published = published,
+        assignmentId = assignment?.id ?: 0,
+        lockAt = lockAt,
+        unlockAt = unlockAt,
+        allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
+        pointsPossible = pointsPossible?.toString()
+    )
 
     var quizList = courseQuizzes[course.id]
     if(quizList == null) {

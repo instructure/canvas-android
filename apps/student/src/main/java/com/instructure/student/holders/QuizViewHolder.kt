@@ -36,7 +36,13 @@ import java.util.Date
 
 class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(item: Quiz, adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?, context: Context, iconAndTextColor: Int) = with(ViewholderQuizBinding.bind(itemView)) {
+    fun bind(
+        item: Quiz,
+        adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?,
+        context: Context,
+        iconAndTextColor: Int,
+        restrictQuantitativeData: Boolean
+    ) = with(ViewholderQuizBinding.bind(itemView)) {
         root.onClickWithRequireNetwork { adapterToFragmentCallback?.onRowClicked(item, adapterPosition, true) }
 
         // Title
@@ -62,7 +68,7 @@ class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         // Points and Questions
         val possiblePoints = item.pointsPossible?.toDoubleOrNull() ?: 0.0
-        points.setVisible(possiblePoints > 0).text = context.resources.getQuantityString(
+        points.setVisible(possiblePoints > 0 && !restrictQuantitativeData).text = context.resources.getQuantityString(
             R.plurals.pointCount,
             possiblePoints.toInt(),
             NumberHelper.formatDecimal(possiblePoints, 2, true)

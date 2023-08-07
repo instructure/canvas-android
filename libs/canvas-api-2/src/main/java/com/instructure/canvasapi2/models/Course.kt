@@ -80,7 +80,9 @@ data class Course(
         @SerializedName("grading_periods")
         val gradingPeriods: List<GradingPeriod>? = null,
         @SerializedName("tabs")
-        val tabs: List<Tab>? = null
+        val tabs: List<Tab>? = null,
+        @SerializedName("settings")
+        val settings: CourseSettings? = null
 ) : CanvasContext(), Comparable<CanvasContext> {
     override val type: Type get() = Type.COURSE
 

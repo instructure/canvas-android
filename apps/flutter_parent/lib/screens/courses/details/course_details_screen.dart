@@ -145,7 +145,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
       return TabBarView(
         controller: _tabController,
         children: [
-          CourseGradesScreen(),
+          CourseGradesScreen(model.restrictQuantitativeData),
           if (model.hasHomePageAsFrontPage) CourseFrontPageScreen(courseId: model.courseId),
           if (model.hasHomePageAsSyllabus) CourseSyllabusScreen(model.course.syllabusBody),
           if (model.showSummary) CourseSummaryScreen(),

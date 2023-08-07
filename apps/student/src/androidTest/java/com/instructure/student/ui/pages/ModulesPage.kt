@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.action.ViewActions.swipeDown
@@ -29,11 +28,18 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.dataseeding.model.ModuleApiModel
+import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.waitForCheck
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
@@ -102,7 +108,7 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     }
 
     // Assert that a module item is displayed and, optionally, click it
-    private fun assertAndClickModuleItem(moduleName: String, itemTitle: String, clickItem: Boolean = false) {
+    fun assertAndClickModuleItem(moduleName: String, itemTitle: String, clickItem: Boolean = false) {
         try {
             scrollRecyclerView(R.id.listView, withText(itemTitle))
             if(clickItem) {
@@ -132,5 +138,13 @@ class ModulesPage : BasePage(R.id.modulesPage) {
 
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout),isDisplayed())).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
+    }
+
+    fun clickOnModuleExpandCollapseIcon(moduleName: String) {
+        onView(withId(R.id.expandCollapse) + hasSibling(withChild(withText(moduleName) + withId(R.id.title)))).click()
+    }
+
+    fun assertModulesAndItemsCount(expectedCount: Int) {
+        onView(withId(R.id.listView) + withDescendant(withId(R.id.title))).waitForCheck(RecyclerViewItemCountAssertion(expectedCount))
     }
 }

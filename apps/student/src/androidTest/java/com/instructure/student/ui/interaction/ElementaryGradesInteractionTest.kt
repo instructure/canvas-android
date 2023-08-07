@@ -34,7 +34,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class GradesInteractionTest : StudentTest() {
+class ElementaryGradesInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
 

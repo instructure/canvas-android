@@ -108,20 +108,35 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             } else {
                 gradeTextView.setVisible()
                 lockedGradeImage.setGone()
-                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, root.context)
+                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, root.context, course.settings?.restrictQuantitativeData ?: false)
             }
         } else {
             gradeLayout.setGone()
         }
     }
 
-    private fun setGradeView(textView: TextView, courseGrade: CourseGrade, color: Int, context: Context) {
+    private fun setGradeView(
+        textView: TextView,
+        courseGrade: CourseGrade,
+        color: Int,
+        context: Context,
+        restrictQuantitativeData: Boolean
+    ) {
         if(courseGrade.noCurrentGrade) {
             textView.text = context.getString(R.string.noGradeText)
         } else {
-            val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
-            textView.text = "${if(courseGrade.hasCurrentGradeString()) courseGrade.currentGrade else ""} $scoreString"
-            textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade ?: "", context)
+            if (restrictQuantitativeData) {
+                if (courseGrade.currentGrade.isNullOrEmpty()) {
+                    textView.text = context.getString(R.string.noGradeText)
+                } else {
+                    textView.text = "${courseGrade.currentGrade.orEmpty()}"
+                    textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade.orEmpty(), context)
+                }
+            } else {
+                val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
+                textView.text = "${if(courseGrade.hasCurrentGradeString()) courseGrade.currentGrade else ""} $scoreString"
+                textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade ?: "", context)
+            }
         }
         textView.setTextColor(color)
     }

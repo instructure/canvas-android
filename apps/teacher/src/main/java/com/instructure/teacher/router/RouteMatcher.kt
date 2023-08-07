@@ -126,6 +126,7 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(ViewPdfFragment::class.java)
         fullscreenFragments.add(ViewHtmlFragment::class.java)
         fullscreenFragments.add(EditDashboardFragment::class.java)
+        fullscreenFragments.add(CourseBrowserFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)

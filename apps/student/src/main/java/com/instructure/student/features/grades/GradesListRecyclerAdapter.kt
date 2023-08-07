@@ -76,7 +76,7 @@ open class GradesListRecyclerAdapter(
 
     interface AdapterToGradesCallback {
         val isEdit: Boolean
-        fun notifyGradeChanged(courseGrade: CourseGrade?)
+        fun notifyGradeChanged(courseGrade: CourseGrade?, restrictQuantitativeData: Boolean)
         fun setTermSpinnerState(isEnabled: Boolean)
         fun setIsWhatIfGrading(isWhatIfGrading: Boolean)
     }
@@ -191,7 +191,8 @@ open class GradesListRecyclerAdapter(
                     course.enrollments?.find { it.userId == student.id }?.let {
                         course.enrollments = mutableListOf(it)
                         courseGrade = course.getCourseGradeFromEnrollment(it, false)
-                        adapterToGradesCallback?.notifyGradeChanged(courseGrade)
+                        val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
+                            adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData)
                     }
                 }
             } catch (e: CancellationException) {
@@ -265,7 +266,8 @@ open class GradesListRecyclerAdapter(
             if (enrollment.isStudent && enrollment.userId == ApiPrefs.user!!.id) {
                 val course = canvasContext as Course?
                 courseGrade = course!!.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment = enrollment)
-                adapterToGradesCallback?.notifyGradeChanged(courseGrade)
+                val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
+                adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData)
                 // We need to update the course that the fragment is using
                 course.addEnrollment(enrollment)
             }
@@ -275,7 +277,8 @@ open class GradesListRecyclerAdapter(
     private fun updateCourseGrade() {
         // All grading periods and no grading periods are the same case
         courseGrade = (canvasContext as Course).getCourseGrade(true)
-        adapterToGradesCallback?.notifyGradeChanged(courseGrade)
+        val restrictQuantitativeData = (canvasContext as Course).settings?.restrictQuantitativeData ?: false
+        adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData)
     }
 
     private fun updateWithAllAssignments(forceNetwork: Boolean) {
@@ -315,7 +318,8 @@ open class GradesListRecyclerAdapter(
         isAllPagesLoaded = true
 
         // We want to disable what if grading if MGP weights are enabled, or assignment groups are enabled
-        if ((canvasContext as Course).isWeightedGradingPeriods || hasValidGroupRule) {
+        val course = (canvasContext as Course)
+        if (course.isWeightedGradingPeriods || hasValidGroupRule || course.settings?.restrictQuantitativeData == true) {
             adapterToGradesCallback?.setIsWhatIfGrading(false)
         } else {
             adapterToGradesCallback?.setIsWhatIfGrading(true)

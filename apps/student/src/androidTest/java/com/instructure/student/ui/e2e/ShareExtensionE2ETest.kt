@@ -19,7 +19,6 @@ package com.instructure.student.ui.e2e
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.core.content.FileProvider
 import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -34,14 +33,12 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
-import java.io.File
 
 @HiltAndroidTest
 class ShareExtensionE2ETest: StudentTest() {
@@ -223,20 +220,6 @@ class ShareExtensionE2ETest: StudentTest() {
                 pointsPossible = pointsPossible,
                 dueAt = dueAt
             )
-        )
-    }
-
-    private fun setupFileOnDevice(fileName: String): Uri {
-        copyAssetFileToExternalCache(activityRule.activity, fileName)
-
-        val dir = activityRule.activity.externalCacheDir
-        val file = File(dir?.path, fileName)
-
-        val instrumentationContext = InstrumentationRegistry.getInstrumentation().context
-        return FileProvider.getUriForFile(
-            instrumentationContext,
-            "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
-            file
         )
     }
 

@@ -237,4 +237,9 @@ class ApiModule {
     fun provideFeaturesApi(): FeaturesAPI.FeaturesInterface {
         return RestBuilder().build(FeaturesAPI.FeaturesInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideFileDownloadApi(): FileDownloadAPI {
+        return RestBuilder().build(FileDownloadAPI::class.java, RestParams())
+    }
 }

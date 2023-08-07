@@ -15,6 +15,10 @@
  */
 package com.instructure.espresso
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import org.apache.commons.lang3.StringUtils
+import java.time.LocalDateTime
 import java.util.*
 
 private val RANDOM = Random()
@@ -28,3 +32,21 @@ fun randomString(length: Int = 20): String = StringBuilder().apply {
 fun randomDouble(length: Int = 8): Double = StringBuilder().apply {
     repeat(length) { append(DIGITS[RANDOM.nextInt(DIGITS.length)]) }
 }.toString().toDouble()
+
+fun capitalizeFirstLetter(inputText: String): String {
+    return if (inputText.isNotEmpty()) {
+        val firstLetter = inputText.substring(0, 1).uppercase()
+        val restOfWord = inputText.substring(1).lowercase()
+        firstLetter + restOfWord
+    } else StringUtils.EMPTY
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getCurrentDateInCanvasFormat(): String {
+    val expectedDate = LocalDateTime.now()
+    val monthString = capitalizeFirstLetter(expectedDate.month.name.take(3))
+    val dayString = expectedDate.dayOfMonth
+    val yearString = expectedDate.year
+    return "$monthString $dayString, $yearString"
+}

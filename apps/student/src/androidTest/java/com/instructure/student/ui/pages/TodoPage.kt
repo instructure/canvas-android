@@ -98,7 +98,7 @@ class TodoPage: BasePage(R.id.todoPage) {
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
         onView(withText(R.string.favoritedCoursesLabel) + withParent(R.id.select_dialog_listview)).click()
-        onView(withText(R.string.ok)).click()
+        onView(withText(android.R.string.ok)).click()
     }
 
     fun clearFilter() {

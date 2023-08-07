@@ -61,21 +61,26 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..finalGrade = '';
 
   static GradeCellData forSubmission(
+    bool restrictQuantitativeData,
     Assignment assignment,
     Submission submission,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' grading type
+    var excused = submission?.excused ?? false;
+
+    // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' or restricted grading type
+    final restricted = restrictQuantitativeData && assignment.isGradingTypeQuantitative() && !excused;
     if (assignment == null ||
         submission == null ||
-        (submission?.submittedAt == null && submission?.grade == null) ||
-        assignment.gradingType == GradingType.notGraded) {
+        (submission?.submittedAt == null && !excused && submission?.grade == null) ||
+        assignment.gradingType == GradingType.notGraded ||
+        restricted) {
       return GradeCellData();
     }
 
     // Return submitted state if the submission has not been graded
-    if (submission.submittedAt != null && submission.grade == null) {
+    if (submission.submittedAt != null && submission.grade == null && !excused) {
       return GradeCellData((b) => b
         ..state = GradeCellState.submitted
         ..submissionText = submission.submittedAt.l10nFormat(
@@ -88,7 +93,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
 
     var pointsPossibleText = NumberFormat.decimalPattern().format(assignment.pointsPossible);
 
-    var outOfText = l10n.outOfPoints(pointsPossibleText, assignment.pointsPossible);
+    var outOfText = restrictQuantitativeData ? '' : l10n.outOfPoints(pointsPossibleText, assignment.pointsPossible);
 
     // Excused
     if (submission.excused) {
@@ -134,18 +139,25 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
       finalGrade = l10n.finalGrade(submission.grade);
     }
 
-    return GradeCellData((b) => b
-      ..state = GradeCellState.graded
-      ..graphPercent = graphPercent
-      ..accentColor = accentColor
-      ..score = score
-      ..showPointsLabel = true
-      ..outOf = outOfText
-      ..grade = grade
-      ..gradeContentDescription = accessibleGradeString
-      ..latePenalty = latePenalty
-      ..finalGrade = finalGrade);
+    return restrictQuantitativeData
+        ? GradeCellData((b) => b
+          ..state = GradeCellState.gradedRestrictQuantitativeData
+          ..graphPercent = 1.0
+          ..accentColor = accentColor
+          ..score = submission.grade
+          ..gradeContentDescription = accessibleGradeString)
+        : GradeCellData((b) => b
+          ..state = GradeCellState.graded
+          ..graphPercent = graphPercent
+          ..accentColor = accentColor
+          ..score = score
+          ..showPointsLabel = true
+          ..outOf = outOfText
+          ..grade = grade
+          ..gradeContentDescription = accessibleGradeString
+          ..latePenalty = latePenalty
+          ..finalGrade = finalGrade);
   }
 }
 
-enum GradeCellState { empty, submitted, graded }
+enum GradeCellState { empty, submitted, graded, gradedRestrictQuantitativeData }
