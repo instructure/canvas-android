@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
@@ -34,7 +35,9 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -43,17 +46,27 @@ import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.databinding.FragmentApplicationSettingsBinding
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_APPLICATION_SETTINGS)
 @PageView(url = "profile/settings")
+@AndroidEntryPoint
 class ApplicationSettingsFragment : ParentFragment() {
+
+    @Inject
+    lateinit var syncSettingsFacade: SyncSettingsFacade
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private val binding by viewBinding(FragmentApplicationSettingsBinding::bind)
 
     override fun title(): String = getString(R.string.settings)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_application_settings, container, false)
+        inflater.inflate(R.layout.fragment_application_settings, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -111,6 +124,8 @@ class ApplicationSettingsFragment : ParentFragment() {
             AboutFragment.newInstance().show(childFragmentManager, null)
         }
 
+        setUpSyncSettings()
+
         if (ApiPrefs.canvasForElementary) {
             elementaryViewSwitch.isChecked = ApiPrefs.elementaryDashboardEnabledOverride
             elementaryViewLayout.setVisible()
@@ -154,11 +169,37 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
     }
 
+    private fun setUpSyncSettings() {
+        lifecycleScope.launch {
+            if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
+                binding.offlineContentDivider.setGone()
+                binding.offlineContentTitle.setGone()
+                binding.offlineSyncSettingsContainer.setGone()
+            } else {
+                syncSettingsFacade.getSyncSettingsListenable().observe(viewLifecycleOwner) { syncSettings ->
+                    if (syncSettings == null) {
+                        binding.offlineSyncSettingsContainer.setGone()
+                    } else {
+                        binding.offlineSyncSettingsStatus.text = if (syncSettings.autoSyncEnabled) {
+                            getString(syncSettings.syncFrequency.readable)
+                        } else {
+                            getString(R.string.syncSettings_manualDescription)
+                        }
+                    }
+                }
+
+                binding.offlineSyncSettingsContainer.onClick {
+                    addFragment(SyncSettingsFragment.newInstance())
+                }
+            }
+        }
+    }
+
     private fun setUpSubscribeToCalendarFeed() {
         val calendarFeed = ApiPrefs.user?.calendar?.ics
         if (!calendarFeed.isNullOrEmpty()) {
             binding.subscribeToCalendar.apply {
-               setVisible()
+                setVisible()
                 onClick {
                     AlertDialog.Builder(requireContext())
                         .setMessage(R.string.subscribeToCalendarMessage)
@@ -166,7 +207,7 @@ class ApplicationSettingsFragment : ParentFragment() {
                             dialog.dismiss()
                             openCalendarLink(calendarFeed)
                         }
-                        .setNegativeButton(R.string.cancel, {dialog, _ -> dialog.dismiss()})
+                        .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
                         .showThemed()
                 }
             }

@@ -46,6 +46,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentWebviewBinding
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus

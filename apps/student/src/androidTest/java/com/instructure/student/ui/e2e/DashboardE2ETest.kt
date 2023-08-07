@@ -88,7 +88,7 @@ class DashboardE2ETest : StudentTest() {
             dashboardPage.assertDisplaysCourse(course)
         }
 
-        Log.d(STEP_TAG, "Switch to back to Card View.")
+        Log.d(STEP_TAG, "Switch to back to Grid View.")
         dashboardPage.switchCourseView()
 
         for(course in data.coursesList) {

@@ -26,6 +26,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.databinding.AdapterCourseBrowserBinding
@@ -118,7 +119,7 @@ class CourseBrowserWebViewHolder(view: View, val color: Int) : RecyclerView.View
         binding.unsupportedLabel.text = tab.label
         binding.unsupportedIcon.setImageDrawable(drawable)
         binding.unsupportedSubLabel.setText(R.string.opensInWebView)
-        itemView.setOnClickListener { callback(tab) }
+        itemView.onClickWithRequireNetwork({ callback(tab) })
     }
 
     companion object {
@@ -170,8 +171,12 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
         val binding = AdapterCourseBrowserBinding.bind(itemView)
         binding.label.text = tab.label
         binding.icon.setImageDrawable(drawable)
-        itemView.setOnClickListener {
-            callback(tab)
+        if (tab.type == Tab.TYPE_EXTERNAL) {
+            itemView.onClickWithRequireNetwork({ callback(tab) })
+        } else {
+            itemView.setOnClickListener {
+                callback(tab)
+            }
         }
     }
 

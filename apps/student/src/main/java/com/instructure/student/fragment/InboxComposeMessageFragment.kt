@@ -39,6 +39,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.di.APP_DATABASE
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.room.common.daos.AttachmentDao
@@ -60,6 +61,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 @PageView(url = "conversations/compose")
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
@@ -86,6 +88,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     private var sendCall: WeaveJob? = null
 
     @Inject
+    @Named(APP_DATABASE)
     lateinit var attachmentDao: AttachmentDao
 
     override fun onStart() {

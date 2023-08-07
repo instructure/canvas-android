@@ -27,8 +27,8 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
@@ -69,7 +69,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertDisplaysCourse(courseName: String) {
         val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
-        scrollAndAssertDisplayed(matcher)
+        waitForView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: Course) {
@@ -103,16 +103,16 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().assertDisplayed()
+        waitForView(groupNameMatcher).scrollTo().assertDisplayed()
         val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView), hasSibling(groupNameMatcher))
-        onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
+        waitForView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
         emptyView.assertDisplayed()
-        onViewWithText(R.string.welcome).assertDisplayed()
-        onViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
-        onViewWithId(R.id.addCoursesButton).assertDisplayed()
+        waitForViewWithText(R.string.welcome).assertDisplayed()
+        waitForViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
+        waitForViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
     fun assertCourseLabelTextColor(expectedTextColor: String) {
@@ -182,7 +182,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().click()
+        waitForView(groupNameMatcher).scrollTo().click()
     }
 
     fun selectCourse(course: CourseApiModel) {
@@ -254,7 +254,9 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun switchCourseView() {
-        onView(ViewMatchers.withId(R.id.menu_dashboard_cards)).click()
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        onView(withText(containsString("Switch to")))
+            .perform(click());
     }
 
     fun clickEditDashboard() {

@@ -62,6 +62,7 @@ import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import kotlinx.coroutines.Job
@@ -559,6 +560,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 // If there is no discussion (ID not set), then we need to load one
                 if (discussionTopicHeader.id == 0L) {
                     discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, it, true) }
+                }
+
+                // If we had an offline discussion on the list it might need some additional fields so we need to fetch the whole discussion.
+                // We might not need this if we implement offline mode on the discussion details screen.
+                if (discussionTopicHeader.offline) {
+                    discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeader.id, it, true) }
                 }
             }
 

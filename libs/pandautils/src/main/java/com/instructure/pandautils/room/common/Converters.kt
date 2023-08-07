@@ -13,7 +13,7 @@ class Converters {
 
     @TypeConverter
     fun fromStringToListString(s: String): List<String> {
-        return s.split(", ")
+        return s.takeIf { it.isNotEmpty() }?.split(", ").orEmpty()
     }
 
     @TypeConverter
@@ -27,6 +27,16 @@ class Converters {
     }
 
     @TypeConverter
+    fun fromLongArray(array: LongArray?) : String? {
+        return array?.joinToString()
+    }
+
+    @TypeConverter
+    fun fromStringToLongArray(s: String?): LongArray? {
+        return s?.split(", ")?.mapNotNull { it.toLongOrNull() }?.toLongArray()
+    }
+
+    @TypeConverter
     fun dateToLong(date: Date?): Long? {
         return date?.time
     }
@@ -34,6 +44,16 @@ class Converters {
     @TypeConverter
     fun longToDate(timestamp: Long?): Date? {
         return timestamp?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun fromIntList(list: List<Int>?): String? {
+        return list?.joinToString(",")
+    }
+
+    @TypeConverter
+    fun toIntList(s: String?): List<Int>? {
+        return s?.split(",")?.map { it.toInt() }
     }
 
     @TypeConverter

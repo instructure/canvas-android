@@ -15,15 +15,13 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails
 
-import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.managers.ExternalToolManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffect
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffectHandler
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ChannelSource
@@ -42,7 +40,8 @@ import java.util.concurrent.Executors
 
 class SubmissionDetailsEffectHandlerTest : Assert() {
     private val view: SubmissionDetailsView = mockk(relaxed = true)
-    private val effectHandler = SubmissionDetailsEffectHandler().apply { view = this@SubmissionDetailsEffectHandlerTest.view }
+    private val repository: SubmissionDetailsRepository = mockk(relaxed = true)
+    private val effectHandler = SubmissionDetailsEffectHandler(repository).apply { view = this@SubmissionDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
@@ -63,21 +62,13 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val assignmentId = 1L
         val errorMessage = "Error"
 
-        mockkObject(AssignmentManager)
-        mockkObject(SubmissionManager)
-        mockkObject(EnrollmentManager)
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Fail(Failure.Network(errorMessage))
 
-        every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
-        }
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Fail(Failure.Network(errorMessage))
 
-        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
-        }
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Fail(Failure.Network(errorMessage))
 
-        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
-        }
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Fail(Failure.Network(errorMessage))
 
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
@@ -93,7 +84,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
-                    assignmentEnhancementsEnabled = true
+                    assignmentEnhancementsEnabled = false
                 )
             )
         }
@@ -108,16 +99,13 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val assignmentId = 1L
         val errorMessage = "Error"
 
-        mockkObject(AssignmentManager)
-        mockkObject(SubmissionManager)
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Fail(Failure.Authorization(errorMessage))
 
-        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(Failure.Authorization(errorMessage))
-        }
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Fail(Failure.Authorization(errorMessage))
 
-        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(Failure.Authorization(errorMessage))
-        }
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Fail(Failure.Authorization(errorMessage))
+
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Fail(Failure.Authorization(errorMessage))
 
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
@@ -133,7 +121,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
-                    assignmentEnhancementsEnabled = true
+                    assignmentEnhancementsEnabled = false
                 )
             )
         }
@@ -159,25 +147,15 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val user = User()
         val ltiTool = LTITool(url = "https://www.instructure.com")
 
-        mockkObject(AssignmentManager)
-        mockkObject(SubmissionManager)
-        mockkObject(EnrollmentManager)
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Success(listOf())
 
-       every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(listOf())
-        }
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Success(assignment)
 
-        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(assignment)
-        }
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Success(submission)
 
-        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(submission)
-        }
+        coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(ltiTool)
 
-        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(ltiTool)
-        }
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Success(listOf("assignments_2_student"))
 
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
@@ -218,25 +196,15 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val submission = Submission()
         val user = User()
 
-        mockkObject(AssignmentManager)
-        mockkObject(SubmissionManager)
-        mockkObject(EnrollmentManager)
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Success(listOf())
 
-        every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(listOf())
-        }
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Success(assignment)
 
-        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(assignment)
-        }
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Success(submission)
 
-        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(submission)
-        }
+        coEvery { repository.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns DataResult.Success(ltiTool)
 
-        every { AssignmentManager.getExternalToolLaunchUrlAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(ltiTool)
-        }
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Success(listOf("assignments_2_student"))
 
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
@@ -270,25 +238,15 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val user = User()
         val ltiTool = LTITool(url = "https://www.instructure.com")
 
-        mockkObject(AssignmentManager)
-        mockkObject(SubmissionManager)
-        mockkObject(EnrollmentManager)
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Success(listOf(observeeEnrollment))
 
-        every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(listOf(observeeEnrollment))
-        }
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Success(assignment)
 
-        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(assignment)
-        }
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Success(submission)
 
-        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), observerId, any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(submission)
-        }
+        coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(ltiTool)
 
-        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(ltiTool)
-        }
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Success(listOf("assignments_2_student"))
 
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
@@ -312,8 +270,6 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         confirmVerified(eventConsumer)
     }
 
-
-
     @Test
     fun `loadData gets quiz if assignment is a quiz`() {
         val courseId = 1L
@@ -323,25 +279,17 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val quiz = Quiz(quizId)
         val user = User()
 
-        mockkObject(AssignmentManager)
-        mockkObject(SubmissionManager)
-        mockkObject(QuizManager)
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Success(listOf())
 
-        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(assignment)
-        }
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Success(assignment)
 
-        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(submission)
-        }
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Success(submission)
 
-        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(null)
-        }
+        coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Fail(null)
 
-        every { QuizManager.getQuizAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(quiz)
-        }
+        coEvery { repository.getQuiz(any(), any(), any()) } returns DataResult.Success(quiz)
+
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Success(listOf("assignments_2_student"))
 
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
@@ -374,21 +322,19 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val user = User()
         val studioLTITool = LTITool(url = "instructuremedia.com/lti/launch")
 
-        mockkObject(AssignmentManager)
-        mockkObject(SubmissionManager)
         mockkObject(ExternalToolManager)
 
-        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(assignment)
-        }
+        coEvery { repository.isOnline() } returns true
 
-        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(submission)
-        }
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Success(listOf())
 
-        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(null)
-        }
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Success(assignment)
+
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Success(submission)
+
+        coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Fail(null)
+
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Success(listOf())
 
         every { ExternalToolManager.getExternalToolsForCanvasContextAsync(any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(listOf(studioLTITool))
@@ -408,7 +354,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     isStudioEnabled = true,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Success(studioLTITool),
-                    assignmentEnhancementsEnabled = true
+                    assignmentEnhancementsEnabled = false
                 )
             )
         }

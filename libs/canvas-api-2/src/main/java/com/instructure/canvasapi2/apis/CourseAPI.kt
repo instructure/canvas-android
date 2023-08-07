@@ -39,10 +39,13 @@ object CourseAPI {
         @get:GET("dashboard/dashboard_cards")
         val dashboardCourses: Call<List<DashboardCard>>
 
+        @GET("dashboard/dashboard_cards")
+        suspend fun getDashboardCourses(@Tag params: RestParams): DataResult<List<DashboardCard>>
+
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&include[]=settings&state[]=completed&state[]=available")
         val firstPageCourses: Call<List<Course>>
 
-        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available")
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available&include[]=tabs")
         suspend fun getFirstPageCourses(@Tag params: RestParams): DataResult<List<Course>>
 
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&state[]=unpublished")
@@ -54,6 +57,9 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users&include[]=settings")
         val firstPageCoursesWithSyllabus: Call<List<Course>>
 
+        @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users")
+        suspend fun firstPageCoursesWithSyllabus(@Tag params: RestParams): DataResult<List<Course>>
+
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=license&include[]=is_public&include[]=permissions&enrollment_state=active")
         val firstPageCoursesWithSyllabusWithActiveEnrollment: Call<List<Course>>
 
@@ -63,8 +69,14 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image")
         fun getCourse(@Path("courseId") courseId: Long): Call<Course>
 
+        @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image&include[]=tabs")
+        suspend fun getCourse(@Path("courseId") courseId: Long, @Tag params: RestParams): DataResult<Course>
+
         @GET("courses/{courseId}/settings")
         fun getCourseSettings(@Path("courseId") courseId: Long): Call<CourseSettings>
+
+        @GET("courses/{courseId}/settings")
+        suspend fun getCourseSettings(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<CourseSettings>
 
         @PUT("courses/{course_id}/settings")
         fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>
@@ -72,8 +84,17 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
         fun getCourseWithSyllabus(@Path("courseId") courseId: Long): Call<Course>
 
+        @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
+        suspend fun getCourseWithSyllabus(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<Course>
+
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image&include[]=settings")
         fun getCourseWithGrade(@Path("courseId") courseId: Long): Call<Course>
+
+        @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image")
+        suspend fun getCourseWithGrade(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<Course>
+
+        @GET("courses/{courseId}?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=public_description&include[]=grading_periods&include[]=account&include[]=course_progress&include[]=storage_quota_used_mb&include[]=total_students&include[]=passback_status&include[]=teachers&include[]=tabs&include[]=banner_image&include[]=concluded&include[]=observed_users")
+        suspend fun getFullCourseContent(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<Course>
 
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=current_and_concluded")
         fun firstPageCoursesByEnrollmentState(@Query("enrollment_state") enrollmentState: String): Call<List<Course>>
@@ -90,6 +111,9 @@ object CourseAPI {
         // TODO: Set up pagination when API is fixed and remove per_page query parameterø
         @GET("courses/{courseId}/grading_periods?per_page=100")
         fun getGradingPeriodsForCourse(@Path("courseId") courseId: Long): Call<GradingPeriodResponse>
+
+        @GET("courses/{courseId}/grading_periods?per_page=100")
+        suspend fun getGradingPeriodsForCourse(@Path("courseId") courseId: Long, @Tag params: RestParams): DataResult<GradingPeriodResponse>
 
         @GET("courses/{courseId}/users/{studentId}?include[]=avatar_url&include[]=enrollments&include[]=inactive_enrollments&include[]=current_grading_period_scores&include[]=email")
         fun getCourseStudent(@Path("courseId") courseId: Long, @Path("studentId") studentId: Long): Call<User>
@@ -115,8 +139,19 @@ object CourseAPI {
         @GET("courses/{courseId}/permissions")
         fun getCoursePermissions(@Path("courseId") courseId: Long, @Query("permissions[]") requestedPermissions: List<String>): Call<CanvasContextPermission>
 
+        @GET("courses/{courseId}/permissions")
+        suspend fun getCoursePermissions(@Path("courseId") courseId: Long, @Query("permissions[]") requestedPermissions: List<String>, @Tag params: RestParams): DataResult<CanvasContextPermission>
+
         @GET("courses/{courseId}/enrollments?state[]=current_and_concluded")
         fun getUserEnrollmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("user_id") userId: Long, @Query("grading_period_id") gradingPeriodId: Long): Call<List<Enrollment>>
+
+        @GET("courses/{courseId}/enrollments?state[]=current_and_concluded")
+        suspend fun getUserEnrollmentsForGradingPeriod(
+            @Path("courseId") courseId: Long,
+            @Query("user_id") userId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long,
+            @Tag params: RestParams
+        ): DataResult<List<Enrollment>>
 
         @GET("courses/{courseId}/rubrics/{rubricId}")
         fun getRubricSettings(@Path("courseId") courseId: Long, @Path("rubricId") rubricId: Long): Call<RubricSettings>

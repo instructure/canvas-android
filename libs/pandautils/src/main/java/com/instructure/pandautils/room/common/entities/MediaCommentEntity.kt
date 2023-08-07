@@ -13,7 +13,7 @@ data class MediaCommentEntity(
     var mediaType: String? = null,
     var contentType: String? = null
 ) {
-    constructor(mediaComment: MediaComment): this(
+    constructor(mediaComment: MediaComment) : this(
         mediaComment.mediaId!!,
         mediaComment.displayName,
         mediaComment.url,
@@ -21,13 +21,11 @@ data class MediaCommentEntity(
         mediaComment.contentType
     )
 
-    fun toApiModel(): MediaComment {
-        return MediaComment(
-            mediaId,
-            displayName,
-            url,
-            mediaType?.let { MediaComment.MediaType.valueOf(it) },
-            contentType
-        )
-    }
+    fun toApiModel() = MediaComment(
+        mediaId,
+        displayName,
+        url,
+        mediaType?.let { MediaComment.MediaType.valueOf(it) },
+        contentType
+    )
 }

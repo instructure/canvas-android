@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderCourseCardBinding
@@ -41,7 +42,9 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(course: Course, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
+    fun bind(courseItem: DashboardCourseItem, isOfflineEnabled: Boolean, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
+        val course = courseItem.course
+
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
@@ -56,6 +59,18 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
         courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
 
+        if (courseItem.available || !isOfflineEnabled) {
+            cardView.alpha = 1f
+            cardView.isEnabled = true
+            overflow.isEnabled = true
+        } else {
+            cardView.alpha = 0.5f
+            cardView.isEnabled = false
+            overflow.isEnabled = false
+        }
+
+        offlineSyncIcon.setVisible(courseItem.availableOffline)
+
         cardView.setOnClickListener { callback.onCourseSelected(course)}
 
         overflow.onClickWithRequireNetwork {
@@ -65,12 +80,16 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             // Add things to the popup menu
             menu.add(0, 0, 0, R.string.editNickname)
             menu.add(0, 1, 1, R.string.editCourseColor)
+            if (isOfflineEnabled) {
+                menu.add(0, 2, 2, R.string.course_menu_manage_offline_content)
+            }
 
             // Add click listener
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     0 -> callback.onEditCourseNickname(course)
                     1 -> callback.onPickCourseColor(course)
+                    2 -> callback.onManageOfflineContent(course)
                 }
                 true
             }

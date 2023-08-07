@@ -79,6 +79,9 @@ data class Course(
         val courseColor: String? = null,
         @SerializedName("grading_periods")
         val gradingPeriods: List<GradingPeriod>? = null,
+        @SerializedName("tabs")
+        val tabs: List<Tab>? = null
+        val gradingPeriods: List<GradingPeriod>? = null,
         @SerializedName("settings")
         val settings: CourseSettings? = null
 ) : CanvasContext(), Comparable<CanvasContext> {

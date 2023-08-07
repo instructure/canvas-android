@@ -48,6 +48,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -72,6 +73,7 @@ import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomShee
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
@@ -84,6 +86,7 @@ import com.instructure.student.databinding.LoadingCanvasViewBinding
 import com.instructure.student.databinding.NavigationDrawerBinding
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.*
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -130,6 +133,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var updateManager: UpdateManager
+
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
+    @Inject
+    lateinit var databaseProvider: DatabaseProvider
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
@@ -180,13 +189,21 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }, route)
                 }
                 R.id.navigationDrawerItem_changeUser -> {
-                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS, typefaceBehavior = typefaceBehavior).execute()
+                    StudentLogoutTask(
+                        if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS,
+                        typefaceBehavior = typefaceBehavior,
+                        databaseProvider = databaseProvider
+                    ).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
                             .setPositiveButton(android.R.string.yes) { _, _ ->
-                                StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
+                                StudentLogoutTask(
+                                    LogoutTask.Type.LOGOUT,
+                                    typefaceBehavior = typefaceBehavior,
+                                    databaseProvider = databaseProvider
+                                ).execute()
                             }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
@@ -284,6 +301,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         requestNotificationsPermission()
+
+        if (!networkStateProvider.isOnline()) {
+            Snackbar.make(binding.fullScreenCoordinatorLayout, R.string.offlineModeSnackbar, Snackbar.LENGTH_LONG).show()
+        }
     }
 
     private fun loadFeatureFlags() {
@@ -338,7 +359,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
-            StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
         }
 
         setupBottomNavigation()

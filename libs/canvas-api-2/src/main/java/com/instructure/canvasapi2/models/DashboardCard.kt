@@ -24,5 +24,6 @@ data class DashboardCard(
     val isK5Subject: Boolean = false,
     val shortName: String? = null,
     val originalName: String? = null,
-    val courseCode: String? = null
+    val courseCode: String? = null,
+    val position: Int = Int.MAX_VALUE // We should always get back the position, but in case it's missing we just put it at the end
 ) : CanvasModel<DashboardCard>()

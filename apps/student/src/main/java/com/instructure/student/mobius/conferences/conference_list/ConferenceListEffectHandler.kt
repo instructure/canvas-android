@@ -16,17 +16,15 @@
  */
 package com.instructure.student.mobius.conferences.conference_list
 
-import com.instructure.canvasapi2.managers.ConferenceManager
-import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ConferenceListEffectHandler : EffectHandler<ConferenceListView, ConferenceListEvent, ConferenceListEffect>() {
+class ConferenceListEffectHandler(
+    private val repository: ConferenceListRepository
+) : EffectHandler<ConferenceListView, ConferenceListEvent, ConferenceListEffect>() {
     override fun accept(effect: ConferenceListEffect) {
         when (effect) {
             is ConferenceListEffect.LoadData -> loadData(effect)
@@ -37,9 +35,7 @@ class ConferenceListEffectHandler : EffectHandler<ConferenceListView, Conference
 
     private fun loadData(effect: ConferenceListEffect.LoadData) {
         launch {
-            val conferencesResult = ConferenceManager
-                .getConferencesForContextAsync(effect.canvasContext, effect.forceNetwork)
-                .await()
+            val conferencesResult = repository.getConferencesForContext(effect.canvasContext, effect.forceNetwork)
             consumer.accept(ConferenceListEvent.DataLoaded(conferencesResult))
         }
     }
@@ -48,8 +44,7 @@ class ConferenceListEffectHandler : EffectHandler<ConferenceListView, Conference
         launch {
             var authenticatedUrl = url
             try {
-                val authSession = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }
-                authenticatedUrl = authSession.sessionUrl
+                authenticatedUrl = repository.getAuthenticatedSession(url).sessionUrl
             } catch (e: Throwable) {
                 // Try launching without authenticated URL
             }
