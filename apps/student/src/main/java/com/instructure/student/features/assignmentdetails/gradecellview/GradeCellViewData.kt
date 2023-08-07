@@ -43,7 +43,7 @@ data class GradeCellViewData(
             courseColor: ThemedColor,
             assignment: Assignment?,
             submission: Submission?,
-            restrictQuantitativeData: Boolean,
+            restrictQuantitativeData: Boolean = false,
             uploading: Boolean = false,
             failed: Boolean = false
         ): GradeCellViewData {
