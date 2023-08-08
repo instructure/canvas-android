@@ -142,7 +142,7 @@ class GradesViewModelTest {
         val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ThemedColor(0), "www.1.com", 90.0, "A")
         val expectedGradeRow2 = GradeRowViewData(2, "Course with Score", ThemedColor(0), "www.1.com", 75.6, "76%")
         val expectedGradeRow3 = GradeRowViewData(3, "Course without scores", ThemedColor(0), "www.1.com", null, "--")
-        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", ThemedColor(0), "www.1.com", 0.0, "--")
+        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", ThemedColor(0), "www.1.com", 0.0, "--", hideProgress = true)
 
         assertEquals(expectedGradeRow1, gradeRows[0].data)
         assertEquals(expectedGradeRow2, gradeRows[1].data)

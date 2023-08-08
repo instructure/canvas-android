@@ -31,7 +31,8 @@ data class GradeRowViewData(
     val courseColor: ThemedColor,
     val courseImageUrl: String,
     val score: Double?,
-    val gradeText: String)
+    val gradeText: String,
+    val hideProgress: Boolean = false)
 
 sealed class GradesAction {
     data class OpenCourseGrades(val course: Course) : GradesAction()
