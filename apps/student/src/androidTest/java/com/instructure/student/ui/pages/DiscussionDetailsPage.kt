@@ -26,9 +26,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.getText
-import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.DriverAtoms.*
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.*
 import com.instructure.canvasapi2.models.DiscussionEntry
@@ -55,8 +53,8 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun assertDescriptionText(descriptionText: String) {
         onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionTopicHeaderWebViewWrapper))
-                .withElement(findElement(Locator.ID,"content"))
-                .check(webMatches(getText(), containsString(descriptionText)))
+            .withElement(findElement(Locator.ID, "content"))
+            .check(webMatches(getText(), containsString(descriptionText)))
     }
 
     fun assertTopicInfoShowing(topicHeader: DiscussionTopicHeader) {
@@ -64,16 +62,16 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         assertDescriptionText(topicHeader.message!!)
     }
 
-    fun clickLinkInDescription(linkElementId : String) {
-        onWebView(withId(R.id.contentWebView)  + withAncestor(R.id.discussionTopicHeaderWebViewWrapper))
-                .withElement(findElement(Locator.ID,linkElementId))
-                .perform(webClick())
+    fun clickLinkInDescription(linkElementId: String) {
+        onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionTopicHeaderWebViewWrapper))
+            .withElement(findElement(Locator.ID, linkElementId))
+            .perform(webClick())
     }
 
     fun refresh() {
         scrollToTop()
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
-                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
     fun scrollToRepliesWebview() {
@@ -116,14 +114,13 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     fun assertReplyDisplayed(reply: DiscussionEntry, refreshesAllowed: Int = 0) {
 
         // Allow up to refreshesAllowed attempt/refresh cycles
-        for(i in 0..refreshesAllowed-1) {
+        for (i in 0 until refreshesAllowed) {
             try {
                 onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                        .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
-                        .check(webMatches(getText(),containsString(reply.message)))
+                    .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
+                    .check(webMatches(getText(), containsString(reply.message)))
                 return
-            }
-            catch(t: Throwable) {
+            } catch (t: Throwable) {
                 refresh()
             }
         }
@@ -134,8 +131,8 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         // (It can take a *long* time for the reply to get rendered to the webview on
         // tablets (in FTL, anyway).)
         onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 3)
-                .check(webMatches(getText(),containsString(reply.message)))
+            .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 3)
+            .check(webMatches(getText(), containsString(reply.message)))
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry) {
@@ -152,9 +149,8 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     fun assertFavoritingEnabled(reply: DiscussionEntry) {
         try {
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                    .withElement(findElement(Locator.CLASS_NAME, "likes_icon_wrapper_${reply.id}"))
-        }
-        catch(t: Throwable) {
+                .withElement(findElement(Locator.CLASS_NAME, "likes_icon_wrapper_${reply.id}"))
+        } catch (t: Throwable) {
             assertTrue("Favoriting icon is disabled", false)
         }
     }
@@ -162,31 +158,28 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     fun assertFavoritingDisabled(reply: DiscussionEntry) {
         try {
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                    .withElement(findElement(Locator.CLASS_NAME, "likes_icon_wrapper_${reply.id}"))
+                .withElement(findElement(Locator.CLASS_NAME, "likes_icon_wrapper_${reply.id}"))
             // We shouldn't reach this point if the favoriting icon is disabled -- we should throw
             assertTrue("Favoriting icon is enabled", false)
-        }
-        catch(t: Throwable) {
-        }
+        } catch (_: Throwable) {}
     }
 
     fun clickLikeOnEntry(reply: DiscussionEntry) {
         onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                .withElement(findElement(Locator.CLASS_NAME, "likes_icon_wrapper_${reply.id}"))
-                .perform(webClick())
+            .withElement(findElement(Locator.CLASS_NAME, "likes_icon_wrapper_${reply.id}"))
+            .perform(webClick())
     }
 
     fun assertLikeCount(reply: DiscussionEntry, count: Int, refreshesAllowed: Int = 0) {
-        if(count > 0) {
+        if (count > 0) {
 
-            for(i in 0..refreshesAllowed-1) {
+            for (i in 0 until refreshesAllowed) {
                 try {
                     onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                            .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
-                            .check(webMatches(getText(), containsString(count.toString())))
+                        .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
+                        .check(webMatches(getText(), containsString(count.toString())))
                     return
-                }
-                catch(t: Throwable) {
+                } catch (t: Throwable) {
                     refresh()
                 }
             }
@@ -194,52 +187,48 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
             // If we haven't verified our info by now, let's make one last call to either
             // (1) succeed or (2) throw a sensible error.
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                    .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
-                    .check(webMatches(getText(), containsString(count.toString())))
-        }
-        else {
+                .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
+                .check(webMatches(getText(), containsString(count.toString())))
+        } else {
             try {
                 onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                        .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
+                    .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
                 assertTrue("Didn't expect to see like count with 0 count", false)
-            }
-            catch(t: Throwable) { }
-
+            } catch (_: Throwable) {}
         }
     }
 
     fun assertReplyAttachment(reply: DiscussionEntry) {
         try {
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                    .withElement(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"))
-        }
-        catch(t: Throwable) {
+                .withElement(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"))
+        } catch (t: Throwable) {
             assertTrue("Discussion entry did not have an attachment", false)
         }
     }
 
-    fun previewAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks : WebViewTextCheck) {
+    fun previewAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks: WebViewTextCheck) {
 
         // Sometimes clicking the attachment logo fails to do anything.
         // We'll give it 3 chances.
         var triesRemaining = 3;
-        while(!isElementDisplayed(R.id.canvasWebViewWrapper) && triesRemaining > 0) {
-            if(triesRemaining < 3) {
+        while (!isElementDisplayed(R.id.canvasWebViewWrapper) && triesRemaining > 0) {
+            if (triesRemaining < 3) {
                 refresh() // Maybe web content was incorrectly rendered?  Try again
                 sleep(1500) // Allow webview some time to render
             }
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                    .withElementRepeat(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"), 20)
-                    .perform(webClick())
+                .withElementRepeat(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"), 20)
+                .perform(webClick())
             triesRemaining -= 1
         }
 
         assertTrue("FAILED to bring up reply attachment", isElementDisplayed(R.id.canvasWebViewWrapper));
 
-        for(check in checks) {
+        for (check in checks) {
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.canvasWebViewWrapper))
-                    .withElement(findElement(check.locatorType, check.locatorValue))
-                    .check(webMatches(getText(), containsString(check.textValue)))
+                .withElement(findElement(check.locatorType, check.locatorValue))
+                .check(webMatches(getText(), containsString(check.textValue)))
         }
         Espresso.pressBack()
 
@@ -250,14 +239,14 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         // It appears that sometimes the click to reply doesn't work.
         // Let's give it 3 chances.
         var triesRemaining = 3
-        while(!isElementDisplayed(R.id.rce_webView) && triesRemaining > 0) {
-            if(triesRemaining < 3) {
+        while (!isElementDisplayed(R.id.rce_webView) && triesRemaining > 0) {
+            if (triesRemaining < 3) {
                 refresh() // maybe the html was rendered badly and needs refreshing?
                 sleep(2000) // A little time for the webview to render
             }
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                    .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
-                    .perform(webClick())
+                .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
+                .perform(webClick())
             triesRemaining -= 1
         }
 
@@ -278,10 +267,10 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
      */
     fun previewAndCheckMainAttachment(vararg checks: WebViewTextCheck) {
         onView(withId(R.id.attachmentIcon)).click()
-        for(check in checks) {
+        for (check in checks) {
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.canvasWebViewWrapper))
-                    .withElement(findElement(check.locatorType, check.locatorValue))
-                    .check(webMatches(getText(), containsString(check.textValue)))
+                .withElement(findElement(check.locatorType, check.locatorValue))
+                .check(webMatches(getText(), containsString(check.textValue)))
         }
         Espresso.pressBack()
     }
@@ -298,7 +287,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
      */
     fun waitForUnreadIndicatorToDisappear(reply: DiscussionEntry) {
         repeat(10) {
-            if(!isUnreadIndicatorVisible(reply)) return
+            if (!isUnreadIndicatorVisible(reply)) return
             sleep(1000)
         }
 
@@ -309,24 +298,23 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onView(withId(R.id.pointsTextView)).check(matches(containsTextCaseInsensitive(points)))
     }
 
-    private fun isUnreadIndicatorVisible(reply: DiscussionEntry) : Boolean {
-        try {
+    fun assertPointsPossibleNotDisplayed() {
+        onView(withId(R.id.pointsTextView)).assertNotDisplayed()
+    }
+
+    private fun isUnreadIndicatorVisible(reply: DiscussionEntry): Boolean {
+        return try {
             onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
-                    .withElement(findElement(Locator.ID, "unread_indicator_${reply.id}"))
-                    .withElement(findElement(Locator.CLASS_NAME, "unread"))
-            return true
-        }
-        catch(t: Throwable) {
-            return false
+                .withElement(findElement(Locator.ID, "unread_indicator_${reply.id}"))
+                .withElement(findElement(Locator.CLASS_NAME, "unread"))
+            true
+        } catch (t: Throwable) {
+            false
         }
     }
 
-    fun scrollToTop() {
+    private fun scrollToTop() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
-                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 }
-
-
-
-
