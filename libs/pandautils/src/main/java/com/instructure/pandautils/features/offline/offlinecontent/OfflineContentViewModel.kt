@@ -366,7 +366,7 @@ class OfflineContentViewModel @Inject constructor(
             val courseId = courseSettingsEntry.key
             val fileSettings = courseSelectedFilesMap[courseId].orEmpty().mapNotNull { fileId ->
                 courseFilesMap[courseId]?.get(fileId)?.let {
-                    FileSyncSettingsEntity(it.id, courseId, it.url)
+                    FileSyncSettingsEntity(it.id, it.displayName, courseId, it.url)
                 }
             }
             offlineContentRepository.updateCourseSyncSettings(courseSettingsEntry.key, courseSettingsEntry.value.courseSyncSettings, fileSettings)

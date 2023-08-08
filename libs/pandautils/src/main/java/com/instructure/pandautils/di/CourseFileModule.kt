@@ -16,26 +16,23 @@
  *
  */
 
-package com.instructure.pandautils.room.offline.entities
+package com.instructure.pandautils.di
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.apis.FileFolderAPI
+import com.instructure.pandautils.features.offline.offlinecontent.CourseFileRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-@Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = CourseSyncSettingsEntity::class,
-            parentColumns = ["courseId"],
-            childColumns = ["courseId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
-data class FileSyncSettingsEntity(
-    @PrimaryKey
-    val id: Long,
-    val fileName: String?,
-    val courseId: Long,
-    val url: String?
-)
+@Module
+@InstallIn(SingletonComponent::class)
+class CourseFileModule {
+
+    @Provides
+    @Singleton
+    fun provideCourseFileRepository(fileFolderApi: FileFolderAPI.FilesFoldersInterface): CourseFileRepository {
+        return CourseFileRepository(fileFolderApi)
+    }
+}

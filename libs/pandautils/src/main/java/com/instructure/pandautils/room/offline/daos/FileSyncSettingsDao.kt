@@ -33,6 +33,9 @@ abstract class FileSyncSettingsDao {
     @Query("DELETE FROM FileSyncSettingsEntity WHERE courseId=:courseId")
     abstract suspend fun deleteByCourseId(courseId: Long)
 
+    @Query("SELECT * FROM FileSyncSettingsEntity WHERE courseId=:courseId")
+    abstract suspend fun findByCourseId(courseId: Long): List<FileSyncSettingsEntity>
+
     @Transaction
     open suspend fun updateCourseFiles(courseId: Long, fileSyncSettings: List<FileSyncSettingsEntity>) {
         deleteByCourseId(courseId)

@@ -23,9 +23,11 @@ import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import androidx.work.await
 import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
@@ -43,7 +45,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val featureFlagProvider: FeatureFlagProvider,
     private val courseApi: CourseAPI.CoursesInterface,
     private val dashboardCardDao: DashboardCardDao,
-    private val courseSyncSettingsDao: CourseSyncSettingsDao
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val fileSyncSettingsDao: FileSyncSettingsDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -58,6 +61,14 @@ class OfflineSyncWorker @AssistedInject constructor(
             courseSyncSettingsDao.findByIds(courseIds.toList())
         } ?: courseSyncSettingsDao.findAll()
 
+        val fileWorkers = courses.map {
+            fileSyncSettingsDao.findByCourseId(it.courseId)
+        }
+            .flatten()
+            .map {
+                FileDownloadWorker.createOneTimeWorkRequest(it.fileName.orEmpty(), it.url.orEmpty())
+            }
+
         val works = courses.filter { it.anySyncEnabled }
             .map {
                 val inputData = workDataOf(CourseSyncWorker.COURSE_ID to it.courseId)
@@ -66,7 +77,9 @@ class OfflineSyncWorker @AssistedInject constructor(
                     .build()
             }
 
-        workManager.enqueue(works)
+        workManager.beginWith(works)
+            .then(fileWorkers)
+            .enqueue()
 
         return Result.success()
     }
