@@ -20,6 +20,7 @@ package com.instructure.pandautils.features.offline.sync
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -30,6 +31,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
@@ -46,7 +48,6 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseApi: CourseAPI.CoursesInterface,
     private val dashboardCardDao: DashboardCardDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val fileSyncSettingsDao: FileSyncSettingsDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -58,30 +59,31 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         val courseIds = inputData.getLongArray(COURSE_IDS)
         val courses = courseIds?.let {
-            courseSyncSettingsDao.findByIds(courseIds.toList())
-        } ?: courseSyncSettingsDao.findAll()
+            courseSyncSettingsDao.findWithFilesByIds(courseIds.toList())
+        } ?: courseSyncSettingsDao.findAllWithFiles()
 
-        val fileWorkers = courses.map {
-            fileSyncSettingsDao.findByCourseId(it.courseId)
-        }
-            .flatten()
-            .map {
-                FileDownloadWorker.createOneTimeWorkRequest(it.fileName.orEmpty(), it.url.orEmpty())
-            }
+        val filteredCourseSettings = courses.filter { it.courseSyncSettings.anySyncEnabled }
 
-        val works = courses.filter { it.anySyncEnabled }
-            .map {
-                val inputData = workDataOf(CourseSyncWorker.COURSE_ID to it.courseId)
-                OneTimeWorkRequestBuilder<CourseSyncWorker>()
-                    .setInputData(inputData)
-                    .build()
-            }
+        val courseWorkers = filteredCourseSettings.map { createCourseWorker(it.courseSyncSettings.courseId) }
+        val fileWorkers = filteredCourseSettings.map { createFileWorkers(it) }.flatten()
 
-        workManager.beginWith(works)
+        workManager.beginWith(courseWorkers)
             .then(fileWorkers)
             .enqueue()
 
         return Result.success()
+    }
+
+    private fun createCourseWorker(courseId: Long): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<CourseSyncWorker>()
+            .setInputData(workDataOf(CourseSyncWorker.COURSE_ID to courseId))
+            .build()
+    }
+
+    private fun createFileWorkers(courseSyncSettingsWithFiles: CourseSyncSettingsWithFiles): List<OneTimeWorkRequest> {
+        return courseSyncSettingsWithFiles.files.map {
+            FileSyncWorker.createOneTimeWorkRequest(it.fileName.orEmpty(), it.url.orEmpty())
+        }
     }
 
 }
