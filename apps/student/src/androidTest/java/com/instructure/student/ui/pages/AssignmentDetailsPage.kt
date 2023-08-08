@@ -36,6 +36,7 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -92,6 +93,31 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
+    }
+
+    fun assertGradeDisplayed(grade: String) {
+        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
+        onView(withId(R.id.grade)).scrollTo().assertContainsText(grade)
+    }
+
+    fun assertGradeNotDisplayed() {
+        onView(withId(R.id.grade)).assertNotDisplayed()
+    }
+
+    fun assertOutOfTextDisplayed(outOfText: String) {
+        onView(withId(R.id.outOf)).scrollTo().assertContainsText(outOfText)
+    }
+
+    fun assertOutOfTextNotDisplayed() {
+        onView(withId(R.id.outOf)).assertNotDisplayed()
+    }
+
+    fun assertScoreDisplayed(score: String) {
+        onView(withId(R.id.score)).scrollTo().assertContainsText(score)
+    }
+
+    fun assertScoreNotDisplayed() {
+        onView(withId(R.id.score)).assertNotDisplayed()
     }
 
     fun assertAssignmentLocked() {
