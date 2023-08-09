@@ -16,23 +16,24 @@
  *
  */
 
-package com.instructure.pandautils.di
+package com.instructure.pandautils.room.offline.daos
 
-import com.instructure.canvasapi2.apis.FileFolderAPI
-import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Update
+import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 
-@Module
-@InstallIn(SingletonComponent::class)
-class CourseFileModule {
+@Dao
+interface FileFolderDao {
 
-    @Provides
-    @Singleton
-    fun provideCourseFileRepository(fileFolderApi: FileFolderAPI.FilesFoldersInterface): CourseFileSharedRepository {
-        return CourseFileSharedRepository(fileFolderApi)
-    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(fileFolder: FileFolderEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(fileFolders: List<FileFolderEntity>)
+
+    @Update
+    suspend fun update(fileFolder: FileFolderEntity)
+
 }

@@ -19,10 +19,8 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -47,10 +45,10 @@ class OfflineContentRepositoryTest {
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
     private val fileSyncSettingsDao: FileSyncSettingsDao = mockk(relaxed = true)
-    private val courseFileRepository: CourseFileRepository = mockk(relaxed = true)
+    private val courseFileSharedRepository: CourseFileSharedRepository = mockk(relaxed = true)
 
     private val repository =
-        OfflineContentRepository(coursesApi, courseSyncSettingsDao, fileSyncSettingsDao, courseFileRepository)
+        OfflineContentRepository(coursesApi, courseSyncSettingsDao, fileSyncSettingsDao, courseFileSharedRepository)
 
     @Test
     fun `Returns course`() = runTest {

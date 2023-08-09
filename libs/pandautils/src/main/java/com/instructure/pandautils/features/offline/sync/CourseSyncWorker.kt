@@ -41,13 +41,15 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
+import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
@@ -87,10 +89,13 @@ class CourseSyncWorker @AssistedInject constructor(
     private val moduleFacade: ModuleFacade,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val courseFeaturesDao: CourseFeaturesDao,
-) : CoroutineWorker(context, workerParameters) {
+    private val courseFileSharedRepository: CourseFileSharedRepository,
+    private val fileFolderDao: FileFolderDao
+    ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
 
-        val courseSettings = courseSyncSettingsDao.findById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
+        val courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
+        val courseSettings = courseSettingsWithFiles.courseSyncSettings
 
         val syllabusCourseIds = mutableListOf<Long>()
 
@@ -122,10 +127,21 @@ class CourseSyncWorker @AssistedInject constructor(
         if (courseSettings.isTabSelected(Tab.QUIZZES_ID)) {
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseSettings.courseId)
         }
+        if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
+            fetchFiles(courseSettings.courseId)
+        }
 
         fetchSyllabus(syllabusCourseIds)
 
         return Result.success()
+    }
+
+    private suspend fun fetchFiles(courseId: Long) {
+        val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
+
+        val entities = fileFolders.map { FileFolderEntity(it) }
+
+        fileFolderDao.insertAll(entities)
     }
 
     private suspend fun fetchSyllabus(courseIds: List<Long>) {

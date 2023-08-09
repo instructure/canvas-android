@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3f0779261fbeeac5cf1873b3a352c155",
+    "identityHash": "88f32aecbbac925d69bdbc7f69ee89be",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -1819,6 +1819,182 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "FileFolderEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `createdDate` INTEGER, `updatedDate` INTEGER, `unlockDate` INTEGER, `lockDate` INTEGER, `isLocked` INTEGER NOT NULL, `isHidden` INTEGER NOT NULL, `isLockedForUser` INTEGER NOT NULL, `isHiddenForUser` INTEGER NOT NULL, `folderId` INTEGER NOT NULL, `size` INTEGER NOT NULL, `contentType` TEXT, `url` TEXT, `displayName` TEXT, `thumbnailUrl` TEXT, `parentFolderId` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `filesCount` INTEGER NOT NULL, `position` INTEGER NOT NULL, `foldersCount` INTEGER NOT NULL, `contextType` TEXT, `name` TEXT, `foldersUrl` TEXT, `filesUrl` TEXT, `fullName` TEXT, `forSubmissions` INTEGER NOT NULL, `canUpload` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "createdDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedDate",
+            "columnName": "updatedDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unlockDate",
+            "columnName": "unlockDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lockDate",
+            "columnName": "lockDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isLocked",
+            "columnName": "isLocked",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isHidden",
+            "columnName": "isHidden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLockedForUser",
+            "columnName": "isLockedForUser",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isHiddenForUser",
+            "columnName": "isHiddenForUser",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "folderId",
+            "columnName": "folderId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentType",
+            "columnName": "contentType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "displayName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailUrl",
+            "columnName": "thumbnailUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parentFolderId",
+            "columnName": "parentFolderId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contextId",
+            "columnName": "contextId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "filesCount",
+            "columnName": "filesCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "foldersCount",
+            "columnName": "foldersCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contextType",
+            "columnName": "contextType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "foldersUrl",
+            "columnName": "foldersUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "filesUrl",
+            "columnName": "filesUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "forSubmissions",
+            "columnName": "forSubmissions",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "canUpload",
+            "columnName": "canUpload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       },
       {
         "tableName": "ExternalToolAttributesEntity",
@@ -4820,7 +4996,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3f0779261fbeeac5cf1873b3a352c155')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88f32aecbbac925d69bdbc7f69ee89be')"
     ]
   }
 }

@@ -29,11 +29,11 @@ import org.junit.Assert
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class CourseFileRepositoryTest {
+class CourseFileSharedRepositoryTest {
 
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
 
-    private val repository = CourseFileRepository(fileFolderApi)
+    private val repository = CourseFileSharedRepository(fileFolderApi)
 
     @Test
     fun `Returns course files`() = runTest {

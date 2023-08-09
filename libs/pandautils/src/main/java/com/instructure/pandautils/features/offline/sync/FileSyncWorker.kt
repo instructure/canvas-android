@@ -19,7 +19,6 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import android.os.Environment
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequest
@@ -28,7 +27,6 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
-import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File

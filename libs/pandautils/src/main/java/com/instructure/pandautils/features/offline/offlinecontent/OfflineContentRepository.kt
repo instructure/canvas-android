@@ -18,9 +18,7 @@
 package com.instructure.pandautils.features.offline.offlinecontent
 
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.depaginate
@@ -36,7 +34,7 @@ class OfflineContentRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val fileSyncSettingsDao: FileSyncSettingsDao,
-    private val courseFileRepository: CourseFileRepository
+    private val courseFileSharedRepository: CourseFileSharedRepository
 ) {
     suspend fun getCourse(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -54,7 +52,7 @@ class OfflineContentRepository(
 
 
     suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
-        return courseFileRepository.getCourseFiles(courseId)
+        return courseFileSharedRepository.getCourseFiles(courseId)
     }
 
     suspend fun findCourseSyncSettings(courseId: Long): CourseSyncSettingsWithFiles {

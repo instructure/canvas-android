@@ -24,7 +24,37 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.depaginate
 
-class CourseFileRepository(private val fileFolderApi: FileFolderAPI.FilesFoldersInterface) {
+class CourseFileSharedRepository(private val fileFolderApi: FileFolderAPI.FilesFoldersInterface) {
+
+    suspend fun getCourseFoldersAndFiles(courseId: Long): List<FileFolder> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        val rootFolderResult =
+            fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
+
+        if (rootFolderResult.isFail) return emptyList()
+
+        val result = mutableListOf(rootFolderResult.dataOrThrow)
+
+        result.addAll(getAllFoldersAndFiles(rootFolderResult.dataOrThrow))
+
+        return result
+    }
+
+    private suspend fun getAllFoldersAndFiles(folder: FileFolder): List<FileFolder> {
+        val result = mutableListOf<FileFolder>()
+        result.add(folder)
+        val subFolders = getFolders(folder)
+
+        val currentFolderFiles = getFiles(folder)
+        result.addAll(currentFolderFiles)
+
+        for (subFolder in subFolders) {
+            val subFolderFiles = getAllFoldersAndFiles(subFolder)
+            result.addAll(subFolderFiles)
+        }
+
+        return result
+    }
 
     suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
         val params = RestParams(isForceReadFromNetwork = true)
