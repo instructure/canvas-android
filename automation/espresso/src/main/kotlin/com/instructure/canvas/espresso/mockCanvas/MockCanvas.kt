@@ -1970,37 +1970,40 @@ private val canvaDocInk = CanvaDocInkList(
  * Consider doing this automatically whenever a submission is processed?
  */
 fun MockCanvas.addSubmissionStreamItem(
-        user: User,
-        course: Course,
-        assignment: Assignment,
-        submission: Submission,
-        submittedAt: String? = null,
-        message: String = Faker.instance().lorem().sentence(),
-        type : String = "submission"
-) : StreamItem {
+    user: User,
+    course: Course,
+    assignment: Assignment,
+    submission: Submission,
+    submittedAt: String? = null,
+    message: String = Faker.instance().lorem().sentence(),
+    type: String = "submission",
+    score: Double = -1.0,
+    grade: String? = null
+): StreamItem {
     // Create the StreamItem
     val item = StreamItem(
-            id = newItemId(),
-            course_id = course.id,
-            assignment_id = assignment.id,
-            title = assignment.name,
-            message = message,
-            assignment = assignment,
-            type = type,
-            submittedAt = submittedAt,
-            userId = user.id,
-            user = user,
-            updatedAt = submittedAt ?: "",
-            htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${submission.id}",
-            context_type = CanvasContext.Type.USER.apiString
-            //canvasContext = user // This seems to break the notifications page so that it does not load
-
+        id = newItemId(),
+        course_id = course.id,
+        assignment_id = assignment.id,
+        title = assignment.name,
+        message = message,
+        assignment = assignment,
+        type = type,
+        submittedAt = submittedAt,
+        userId = user.id,
+        user = user,
+        updatedAt = submittedAt ?: "",
+        htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${submission.id}",
+        context_type = CanvasContext.Type.USER.apiString,
+        score = score,
+        grade = grade
+        //canvasContext = user // This seems to break the notifications page so that it does not load
     )
 
     // Record the StreamItem
     var list = streamItems[user.id]
     if (list == null) {
-        list = mutableListOf<StreamItem>()
+        list = mutableListOf()
         streamItems[user.id] = list
     }
     list.add(item)

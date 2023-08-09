@@ -24,6 +24,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -98,8 +99,10 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 drawableResId = R.drawable.ic_assignment
                 icon.contentDescription = context.getString(R.string.assignmentIcon)
 
+                val restrictQuantitativeData = (item.canvasContext as? Course)?.settings?.restrictQuantitativeData.orDefault()
+                        && item.assignment?.isGradingTypeQuantitative.orDefault()
                 // Need to prepend "Grade" in the message if there is a valid score
-                if (item.score != -1.0) {
+                if (item.score != -1.0 && !restrictQuantitativeData) {
                     // If the submission has a grade (like a letter or percentage) display it
                     if (item.grade != null
                         && item.grade != ""
@@ -109,6 +112,9 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                     } else {
                         description.text = context.resources.getString(R.string.grade) + description.text
                     }
+                } else {
+                    description.text = ""
+                    description.setGone()
                 }
             }
             StreamItem.Type.CONVERSATION -> {
