@@ -459,8 +459,15 @@ fun MockCanvas.updateUserEnrollments() {
     }
 }
 
-fun MockCanvas.addCourseWithEnrollment(user: User, enrollmentType: Enrollment.EnrollmentType, score: Double = 0.0, grade: String = "", isHomeroom: Boolean = false): Course {
-    val course = addCourse(isHomeroom = isHomeroom)
+fun MockCanvas.addCourseWithEnrollment(
+    user: User,
+    enrollmentType: Enrollment.EnrollmentType,
+    score: Double = 0.0,
+    grade: String = "",
+    isHomeroom: Boolean = false,
+    restrictQuantitativeData: Boolean = false
+): Course {
+    val course = addCourse(isHomeroom = isHomeroom, restrictQuantitativeData = restrictQuantitativeData)
 
     addEnrollment(
         user = user,
@@ -482,7 +489,8 @@ fun MockCanvas.addCourse(
     section: Section? = null,
     isPublic: Boolean = true,
     withGradingPeriod: Boolean = false,
-    isHomeroom: Boolean = false
+    isHomeroom: Boolean = false,
+    restrictQuantitativeData: Boolean = false
 ): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
@@ -508,7 +516,8 @@ fun MockCanvas.addCourse(
         homeroomCourse = isHomeroom,
         gradingPeriods = gradingPeriodList,
         courseColor = "#008EE2",
-        restrictEnrollmentsToCourseDate = concluded
+        restrictEnrollmentsToCourseDate = concluded,
+        settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData)
     )
     courses += course.id to course
 

@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
@@ -75,6 +76,11 @@ class GradesPage : BasePage(R.id.gradesPage) {
 
     fun assertRecyclerViewNotVisible() {
         gradesRecyclerView.assertNotDisplayed()
+    }
+
+    fun assertProgressNotDisplayed(courseName: String) {
+        val courseNameMatcher = withId(R.id.gradesCourseNameText) + withText(courseName)
+        onView(withId(R.id.progressLayout) + hasSibling(courseNameMatcher)).assertNotDisplayed()
     }
 
     fun clickGradeRow(courseName: String) {
