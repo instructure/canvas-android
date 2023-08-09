@@ -970,7 +970,8 @@ fun MockCanvas.addSubmissionForAssignment(
             grade = grade,
             score = score ?: 0.0,
             postedAt = Date(),
-            excused = excused
+            excused = excused,
+            enteredScore = score ?: 0.0,
     )
 
     // Get the submission list for the assignment, creating it if necessary
@@ -1001,7 +1002,8 @@ fun MockCanvas.addSubmissionForAssignment(
                 grade = grade,
                 score = score ?: 0.0,
                 postedAt = Date(),
-                excused = excused
+                excused = excused,
+                enteredScore = score ?: 0.0,
         )
         submissionList.add(userRootSubmission)
     }
@@ -1482,7 +1484,8 @@ fun MockCanvas.addItemToModule(
         course: Course,
         moduleId: Long,
         item: Any,
-        published: Boolean = true
+        published: Boolean = true,
+        moduleContentDetails: ModuleContentDetails? = null
 ) : ModuleItem {
 
     // Placeholders for itemType and itemTitle values that we will compute below
@@ -1544,7 +1547,8 @@ fun MockCanvas.addItemToModule(
             // I don't really know if these two should be the same, but I needed
             // htmlUrl populated in order to get external url module items to work.
             url = itemUrl,
-            htmlUrl = itemUrl
+            htmlUrl = itemUrl,
+            moduleDetails = moduleContentDetails
     )
 
     // Copy/update/replace the module

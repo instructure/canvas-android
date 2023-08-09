@@ -1117,6 +1117,7 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
     <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Grade: %s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
