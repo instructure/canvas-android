@@ -24,8 +24,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.util.ArrayList
-import java.util.Locale
+import java.util.*
 
 @Parcelize
 data class StreamItem(
@@ -93,7 +92,8 @@ data class StreamItem(
         val assignment: Assignment? = null,
         @SerializedName("user_id")
         val userId: Long = -1,
-        val user: User = User()
+        val user: User = User(),
+        val excused: Boolean = false
 ) : CanvasModel<StreamItem>() {
     // We want opposite of natural sorting order of date since we want the newest one to come first
     override val comparisonDate get() = updatedDate

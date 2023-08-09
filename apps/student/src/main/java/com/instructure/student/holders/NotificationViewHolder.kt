@@ -112,9 +112,11 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                     } else {
                         description.text = context.resources.getString(R.string.grade) + description.text
                     }
+                } else if (item.excused) {
+                    description.text = context.resources.getString(R.string.gradeExcused)
+                    description.setVisible()
                 } else {
-                    description.text = ""
-                    description.setGone()
+                    description.text = context.resources.getString(R.string.gradeUpdated)
                 }
             }
             StreamItem.Type.CONVERSATION -> {

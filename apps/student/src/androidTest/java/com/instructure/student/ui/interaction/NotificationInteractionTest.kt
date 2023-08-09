@@ -131,30 +131,34 @@ class NotificationInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
-    fun testNotificationList_hideGradeIfRestricted_points() {
+    fun testNotificationList_showGradeUpdatedIfRestricted_points() {
         val grade = "10.0"
-        goToNotifications(
+        val data = goToNotifications(
             restrictQuantitativeData = true,
             gradingType = Assignment.GradingType.POINTS,
             score = 10.0,
             grade = grade
         )
 
-        notificationPage.assertGradeNotDisplayed()
+        val assignment = data.assignments.values.first()
+
+        notificationPage.assertGradeUpdated(assignment.name!!)
     }
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
-    fun testNotificationList_hideGradeIfRestricted_percent() {
+    fun testNotificationList_showGradeUpdatedIfRestricted_percent() {
         val grade = "10%"
-        goToNotifications(
+        val data = goToNotifications(
             restrictQuantitativeData = true,
             gradingType = Assignment.GradingType.PERCENT,
             score = 10.0,
             grade = grade
         )
 
-        notificationPage.assertGradeNotDisplayed()
+        val assignment = data.assignments.values.first()
+
+        notificationPage.assertGradeUpdated(assignment.name!!)
     }
 
     @Test
@@ -205,12 +209,27 @@ class NotificationInteractionTest : StudentTest() {
         notificationPage.assertHasGrade(assignment.name!!, grade)
     }
 
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    fun testNotificationList_showExcused() {
+        val data = goToNotifications(
+            restrictQuantitativeData = true,
+            gradingType = Assignment.GradingType.POINTS,
+            excused = true
+        )
+
+        val assignment = data.assignments.values.first()
+
+        notificationPage.assertExcused(assignment.name!!)
+    }
+
     private fun goToNotifications(
         numSubmissions: Int = 1,
         restrictQuantitativeData: Boolean = false,
         gradingType: Assignment.GradingType = Assignment.GradingType.POINTS,
         score: Double = -1.0,
-        grade: String? = null
+        grade: String? = null,
+        excused: Boolean = false
     ): MockCanvas {
         val data = MockCanvas.init(courseCount = 1, favoriteCourseCount = 1, studentCount = 1, teacherCount = 1)
 
@@ -241,7 +260,8 @@ class NotificationInteractionTest : StudentTest() {
                 submittedAt = 1.days.ago.iso8601,
                 type = "submission",
                 score = score,
-                grade = grade
+                grade = grade,
+                excused = excused
             )
         }
 

@@ -45,8 +45,14 @@ class NotificationPage : BasePage() {
         onView(matcher).scrollTo().assertDisplayed()
     }
 
-    fun assertGradeNotDisplayed() {
-        onView(withId(R.id.description)).assertNotDisplayed()
+    fun assertGradeUpdated(title: String) {
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade updated")))
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertExcused(title: String) {
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Excused")))
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun clickNotification(title: String) {

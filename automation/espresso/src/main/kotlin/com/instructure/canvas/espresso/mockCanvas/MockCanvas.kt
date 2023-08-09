@@ -1982,7 +1982,8 @@ fun MockCanvas.addSubmissionStreamItem(
     message: String = Faker.instance().lorem().sentence(),
     type: String = "submission",
     score: Double = -1.0,
-    grade: String? = null
+    grade: String? = null,
+    excused: Boolean = false
 ): StreamItem {
     // Create the StreamItem
     val item = StreamItem(
@@ -2000,7 +2001,8 @@ fun MockCanvas.addSubmissionStreamItem(
         htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${submission.id}",
         context_type = CanvasContext.Type.USER.apiString,
         score = score,
-        grade = grade
+        grade = grade,
+        excused = excused
         //canvasContext = user // This seems to break the notifications page so that it does not load
     )
 
