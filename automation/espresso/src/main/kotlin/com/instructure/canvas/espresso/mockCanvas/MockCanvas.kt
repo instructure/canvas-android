@@ -970,7 +970,8 @@ fun MockCanvas.addSubmissionForAssignment(
             grade = grade,
             score = score ?: 0.0,
             postedAt = Date(),
-            excused = excused
+            excused = excused,
+            enteredScore = score ?: 0.0,
     )
 
     // Get the submission list for the assignment, creating it if necessary
@@ -1001,7 +1002,8 @@ fun MockCanvas.addSubmissionForAssignment(
                 grade = grade,
                 score = score ?: 0.0,
                 postedAt = Date(),
-                excused = excused
+                excused = excused,
+                enteredScore = score ?: 0.0,
         )
         submissionList.add(userRootSubmission)
     }
