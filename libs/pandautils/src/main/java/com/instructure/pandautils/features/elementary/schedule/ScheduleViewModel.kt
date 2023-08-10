@@ -188,7 +188,7 @@ class ScheduleViewModel @Inject constructor(
                                         simpleDateFormat.format(it)
                                 )
                             },
-                            points = getPointsText(assignment.pointsPossible),
+                            points = getPointsText(assignment.pointsPossible, assignment.courseId),
                             type = if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
                             courseName = coursesMap[assignment.courseId]?.name,
                             courseColor = color,
@@ -342,7 +342,7 @@ class ScheduleViewModel @Inject constructor(
                 SchedulePlannerItemData(
                         plannerItem.plannable.title,
                         getTypeForPlannerItem(plannerItem),
-                        getPointsText(plannerItem.plannable.pointsPossible),
+                        getPointsText(plannerItem.plannable.pointsPossible, plannerItem.courseId ?: 0),
                         getDueText(plannerItem),
                         isPlannableOpenable(plannerItem),
                         createContentDescription(plannerItem),
@@ -513,8 +513,12 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-    private fun getPointsText(points: Double?): String? {
+    private fun getPointsText(points: Double?, courseId: Long): String? {
         if (points == null) return null
+
+        val course = coursesMap[courseId]
+        if (course?.settings?.restrictQuantitativeData == true) return null
+
         val numberFormatter = DecimalFormat("##.##")
         return resources.getQuantityString(R.plurals.schedule_points, points.toInt(), numberFormatter.format(points))
     }
