@@ -135,6 +135,7 @@ object Const {
     const val QUIZ_ANSWER_ID = "answer_id"
     const val ANONYMOUS_GRADING = "anonymousGrading"
     const val UNSUPPORTED_DESCRIPTION = "unsupportedDescription"
+    const val RESTRICT_QUANTITATIVE_DATA = "restrictQuantitativeData"
 
     // Shared File
     const val FILENAME = "fileName"
