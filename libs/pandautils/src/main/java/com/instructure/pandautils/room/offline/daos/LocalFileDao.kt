@@ -41,6 +41,9 @@ interface LocalFileDao {
     @Query("SELECT * FROM LocalFileEntity WHERE id = :id")
     suspend fun findById(id: Long): LocalFileEntity?
 
+    @Query("SELECT * FROM LocalFileEntity WHERE id IN (:ids)")
+    suspend fun findByIds(ids: List<Long>): List<LocalFileEntity>
+
     @Query("SELECT * FROM LocalFileEntity WHERE courseId = :courseId AND id NOT IN (:ids)")
     suspend fun findRemovedFiles(courseId: Long, ids: List<Long>): List<LocalFileEntity>
 }

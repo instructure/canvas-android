@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.adapter.BaseListRecyclerAdapter
-import com.instructure.student.adapter.FileFolderCallback
+import com.instructure.student.features.files.list.FileFolderCallback
 import com.instructure.student.holders.FileViewHolder
 
 class FileSearchAdapter(

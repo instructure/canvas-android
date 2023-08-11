@@ -86,6 +86,7 @@ import com.instructure.student.databinding.LoadingCanvasViewBinding
 import com.instructure.student.databinding.NavigationDrawerBinding
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.*
+import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*

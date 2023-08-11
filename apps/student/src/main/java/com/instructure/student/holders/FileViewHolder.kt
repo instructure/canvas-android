@@ -26,9 +26,9 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.FileFolderCallback
+import com.instructure.student.features.files.list.FileFolderCallback
 import com.instructure.student.databinding.ViewholderFileBinding
-import com.instructure.student.fragment.FileListFragment
+import com.instructure.student.features.files.list.FileListFragment
 
 class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -42,6 +42,9 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Set up click listeners
         root.onClick { callback.onItemClicked(item) }
         root.onLongClick { overflowButton.performClick() }
+
+        root.alpha = if (item.isFile && item.url == null) 0.5f else 1f
+        root.isEnabled = !(item.isFile && item.url == null)
 
         if (hasOptions.isNotEmpty()) {
             // User has options

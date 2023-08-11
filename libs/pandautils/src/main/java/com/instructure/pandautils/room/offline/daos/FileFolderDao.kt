@@ -44,6 +44,18 @@ abstract class FileFolderDao {
     @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)")
     abstract suspend fun findAllFilesByCourseId(courseId: Long): List<FileFolderEntity>
 
+    @Query("SELECT * FROM FileFolderEntity WHERE id = :id")
+    abstract fun findById(id: Long): FileFolderEntity?
+
+    @Query("SELECT * FROM FileFolderEntity WHERE parentFolderId = :parentId")
+    abstract suspend fun findFoldersByParentId(parentId: Long): List<FileFolderEntity>
+
+    @Query("SELECT * FROM FileFolderEntity WHERE folderId = :folderId")
+    abstract suspend fun findFilesByFolderId(folderId: Long): List<FileFolderEntity>
+
+    @Query("SELECT * FROM FileFolderEntity WHERE contextId = :contextId AND parentFolderId = 0")
+    abstract suspend fun findRootFolderForContext(contextId: Long): FileFolderEntity?
+
     @Transaction
     open suspend fun replaceAll(fileFolders: List<FileFolderEntity>) {
         deleteAll()

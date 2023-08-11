@@ -29,6 +29,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
+import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.grades.GradesListFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment

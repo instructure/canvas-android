@@ -59,7 +59,7 @@ data class FileFolderEntity(
     val canUpload: Boolean
 ) {
 
-    constructor(fileFolder: FileFolder): this(
+    constructor(fileFolder: FileFolder) : this(
         fileFolder.id,
         fileFolder.createdDate,
         fileFolder.updatedDate,
@@ -88,4 +88,38 @@ data class FileFolderEntity(
         fileFolder.forSubmissions,
         fileFolder.canUpload
     )
+
+    fun toApiModel(): FileFolder {
+        return FileFolder(
+            id,
+            createdDate,
+            updatedDate,
+            unlockDate,
+            lockDate,
+            isLocked,
+            isHidden,
+            isLockedForUser,
+            isHiddenForUser,
+            folderId,
+            size,
+            contentType,
+            url,
+            displayName,
+            thumbnailUrl,
+            null,
+            parentFolderId,
+            contextId,
+            filesCount,
+            position,
+            foldersCount,
+            contextType,
+            name,
+            foldersUrl,
+            filesUrl,
+            fullName,
+            null,
+            forSubmissions,
+            canUpload
+        )
+    }
 }
