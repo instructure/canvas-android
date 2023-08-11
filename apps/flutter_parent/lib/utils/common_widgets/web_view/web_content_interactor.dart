@@ -44,10 +44,13 @@ class WebContentInteractor {
 
     for (RegExpMatch element in matches) {
       final iframe = element.group(0);
-      if (RegExp('id=\"cnvs_content\"').hasMatch(iframe)) {
-        authContent = await _handleCanvasContent(iframe, authContent);
-      } else if (RegExp('external_tool').hasMatch(iframe)) {
-        authContent = await _handleLti(iframe, authContent, externalToolButtonText);
+      if (iframe != null) {
+        if (RegExp('id=\"cnvs_content\"').hasMatch(iframe)) {
+          authContent = await _handleCanvasContent(iframe, authContent);
+        } else if (RegExp('external_tool').hasMatch(iframe)) {
+          authContent =
+              await _handleLti(iframe, authContent, externalToolButtonText);
+        }
       }
     }
 
@@ -60,9 +63,11 @@ class WebContentInteractor {
 
     if (matcher != null) {
       final sourceUrl = matcher.group(1);
-      final authUrl = await _authUrl(sourceUrl);
-      final newIframe = iframe.replaceFirst(sourceUrl, authUrl);
-      content = content.replaceFirst(iframe, newIframe);
+      if (sourceUrl != null) {
+        final authUrl = await _authUrl(sourceUrl);
+        final newIframe = iframe.replaceFirst(sourceUrl, authUrl);
+        content = content.replaceFirst(iframe, newIframe);
+      }
     }
 
     return content;
@@ -73,7 +78,7 @@ class WebContentInteractor {
     if (matcher != null) {
       final sourceUrl = matcher.group(1);
       // Make sure this REALLY is an LTI src, this check might need to be upgraded in the future...
-      if (sourceUrl.contains('external_tools')) {
+      if (sourceUrl != null && sourceUrl.contains('external_tools')) {
         final authUrl = await _authUrl(sourceUrl);
         final newIframe = iframe.replaceFirst(sourceUrl, authUrl);
 

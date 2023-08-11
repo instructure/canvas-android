@@ -24,7 +24,7 @@ class AttachmentIndicatorWidget extends StatelessWidget {
   final Attachment attachment;
   final Function(Attachment) onAttachmentClicked;
 
-  const AttachmentIndicatorWidget({Key key, @required this.attachment, this.onAttachmentClicked}) : super(key: key);
+  const AttachmentIndicatorWidget(this.attachment, this.onAttachmentClicked, {super.key});
 
   @override
   Widget build(BuildContext context) {

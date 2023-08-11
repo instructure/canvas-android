@@ -31,7 +31,7 @@ class NotificationUtil {
   static const notificationChannelReminders =
       'com.instructure.parentapp/reminders';
 
-  static FlutterLocalNotificationsPlugin _plugin;
+  static FlutterLocalNotificationsPlugin? _plugin;
 
   @visibleForTesting
   static initForTest(FlutterLocalNotificationsPlugin plugin) {
@@ -47,7 +47,7 @@ class NotificationUtil {
       _plugin = FlutterLocalNotificationsPlugin();
     }
 
-    await _plugin.initialize(
+    await _plugin!.initialize(
       initializationSettings,
       onSelectNotification: (rawPayload) async {
         await handlePayload(rawPayload, appCompleter);
@@ -81,7 +81,7 @@ class NotificationUtil {
     await locator<ReminderDb>().deleteById(reminder.id);
 
     // Create route
-    String route;
+    String? route;
     switch (reminder.type) {
       case Reminder.TYPE_ASSIGNMENT:
         route =
@@ -94,7 +94,7 @@ class NotificationUtil {
 
     // Push route, but only after the app has finished building
     appCompleter.future
-        .then((_) => WidgetsBinding.instance?.handlePushRoute(route));
+        .then((_) => WidgetsBinding.instance.handlePushRoute(route!));
   }
 
   Future<void> scheduleReminder(
@@ -119,7 +119,7 @@ class NotificationUtil {
           .logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
     }
 
-    return _plugin.schedule(
+    return _plugin!.schedule(
       reminder.id,
       title,
       body,
@@ -129,9 +129,9 @@ class NotificationUtil {
     );
   }
 
-  Future<void> deleteNotification(int id) => _plugin.cancel(id);
+  Future<void> deleteNotification(int id) => _plugin!.cancel(id);
 
   Future<void> deleteNotifications(List<int> ids) async {
-    for (int id in ids) await _plugin.cancel(id);
+    for (int id in ids) await _plugin!.cancel(id);
   }
 }

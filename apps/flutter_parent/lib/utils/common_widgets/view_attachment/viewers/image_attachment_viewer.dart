@@ -23,14 +23,14 @@ import 'package:photo_view/photo_view.dart';
 class ImageAttachmentViewer extends StatelessWidget {
   final Attachment attachment;
 
-  const ImageAttachmentViewer(this.attachment, {Key key}) : super(key: key);
+  const ImageAttachmentViewer(this.attachment, {super.key});
 
   @override
   Widget build(BuildContext context) {
     var minScale = PhotoViewComputedScale.contained;
     var backgroundDecoration = BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor);
 
-    if (attachment.inferContentType()?.contains('svg') == true) {
+    if (attachment.inferContentType().contains('svg') == true) {
       return PhotoView.customChild(
         backgroundDecoration: backgroundDecoration,
         child: SvgPicture.network(

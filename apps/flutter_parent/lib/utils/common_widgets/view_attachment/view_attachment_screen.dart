@@ -24,7 +24,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ViewAttachmentScreen extends StatefulWidget {
-  const ViewAttachmentScreen(this.attachment, {Key key}) : super(key: key);
+  const ViewAttachmentScreen(this.attachment, {super.key});
 
   final Attachment attachment;
 

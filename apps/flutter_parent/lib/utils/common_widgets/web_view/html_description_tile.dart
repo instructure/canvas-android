@@ -32,26 +32,26 @@ class HtmlDescriptionTile extends StatelessWidget {
 
   /// Only used if an emptyDescription is not null or not empty.
   /// Defaults to AppLocalizations.descriptionTitle
-  final String descriptionTitle;
+  final String? descriptionTitle;
 
   /// Only used if html is not null and not empty.
   /// Defaults to AppLocalizations.viewDescription
-  final String buttonLabel;
+  final String? buttonLabel;
 
   /// If null or empty, this will render an empty container and nothing else.
-  final String emptyDescription;
+  final String? emptyDescription;
 
   const HtmlDescriptionTile({
-    Key key,
-    @required this.html,
+    required this.html,
     this.descriptionTitle,
     this.buttonLabel,
     this.emptyDescription,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (html == null || html.isEmpty) {
+    if (html.isEmpty) {
       return _buildEmptyState(context);
     }
 
@@ -88,7 +88,7 @@ class HtmlDescriptionTile extends StatelessWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     // No empty text, so just be empty
-    if (emptyDescription == null || emptyDescription.isEmpty) return Container();
+    if (emptyDescription == null || emptyDescription!.isEmpty) return Container();
 
     final parentTheme = ParentTheme.of(context);
     return Padding(
@@ -107,7 +107,7 @@ class HtmlDescriptionTile extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                emptyDescription,
+                emptyDescription!,
                 style: Theme.of(context).textTheme.subtitle2.copyWith(color: parentTheme.onSurfaceColor),
               ),
             ),

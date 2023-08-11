@@ -39,7 +39,7 @@ class BadgeOptions {
   /// True if the badge colors should be changed to look better against the primary color background
   final bool onPrimarySurface;
 
-  const BadgeOptions({this.count, this.maxCount = 99, this.includeBorder = false, this.onPrimarySurface = false});
+  const BadgeOptions(this.count, {this.maxCount = 99, this.includeBorder = false, this.onPrimarySurface = false});
 }
 
 /// Adds a badge to a widget. If a count or a listenable is provided, a circle with the count is used as the badge.
@@ -58,9 +58,7 @@ class WidgetBadge extends StatelessWidget {
   final GetSemantics semantics;
   final ValueListenable countListenable;
 
-  const WidgetBadge(this.icon, {Key key, this.options = const BadgeOptions(), this.semantics, this.countListenable})
-      : assert(icon != null),
-        super(key: key);
+  const WidgetBadge(this.icon, {this.options = const BadgeOptions(), this.semantics, this.countListenable, super.key});
 
   @override
   Widget build(BuildContext context) {

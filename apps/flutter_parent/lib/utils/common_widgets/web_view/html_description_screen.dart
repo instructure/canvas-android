@@ -21,7 +21,7 @@ class HtmlDescriptionScreen extends StatelessWidget {
   final String html;
   final String appBarTitle;
 
-  const HtmlDescriptionScreen(this.html, this.appBarTitle, {Key key}) : super(key: key);
+  const HtmlDescriptionScreen(this.html, this.appBarTitle, {super.key});
 
   @override
   Widget build(BuildContext context) {

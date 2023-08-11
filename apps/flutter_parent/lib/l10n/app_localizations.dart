@@ -78,7 +78,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   @override
   bool shouldReload(LocalizationsDelegate<AppLocalizations> old) => false;
 
-  LocaleResolutionCallback resolution({Locale fallback, bool matchCountry = true}) {
+  LocaleResolutionCallback resolution(Locale fallback, {bool matchCountry = true}) {
     return (Locale locale, Iterable<Locale> supported) {
       return _resolve(locale, fallback, supported, matchCountry);
     };

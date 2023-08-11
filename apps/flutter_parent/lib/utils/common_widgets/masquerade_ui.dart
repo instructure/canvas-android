@@ -30,20 +30,20 @@ import 'package:flutter_parent/utils/style_slicer.dart';
 import '../features_utils.dart';
 
 class MasqueradeUI extends StatefulWidget {
-  final Widget child;
-  final GlobalKey<NavigatorState> navKey;
+  final Widget? child;
+  final GlobalKey<NavigatorState>? navKey;
 
-  const MasqueradeUI({Key key, this.child, this.navKey}) : super(key: key);
+  const MasqueradeUI({this.child, this.navKey, super.key});
 
   @override
   MasqueradeUIState createState() => MasqueradeUIState();
 
-  static MasqueradeUIState of(BuildContext context) {
+  static MasqueradeUIState? of(BuildContext context) {
     return context.findAncestorStateOfType<MasqueradeUIState>();
   }
 
   static void showMasqueradeCancelDialog(GlobalKey<NavigatorState> navKey) {
-    bool logout = ApiPrefs.getCurrentLogin()?.isMasqueradingFromQRCode == true;
+    bool logout = ApiPrefs.getCurrentLogin().isMasqueradingFromQRCode == true;
     User user = ApiPrefs.getUser();
     showDialogWithNavigatorKey(
       navKey: navKey,

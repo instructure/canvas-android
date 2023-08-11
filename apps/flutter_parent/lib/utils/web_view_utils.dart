@@ -26,18 +26,20 @@ extension WebViewUtils on WebViewController {
    *
    * See html_wrapper.html for more details
    */
-  Future<void> loadHtml(String html,
-      {String baseUrl, Map<String, String> headers, double horizontalPadding = 0}) async {
-    assert(horizontalPadding != null);
-
-    String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
-    html = _applyWorkAroundForDoubleSlashesAsUrlSource(html);
-    html = _addProtocolToLinks(html);
-    html = _checkForMathTags(html);
-    html = fileText.replaceAll('{CANVAS_CONTENT}', html);
-    html = html.replaceAll('{PADDING}', horizontalPadding.toString());
-    this.loadData(baseUrl, html, 'text/html', 'utf-8');
-  }
+  Future<void> loadHtml(
+    String html, {
+    required String baseUrl,
+    required Map<String, String> headers,
+    double horizontalPadding = 0})
+    async {
+      String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
+      html = _applyWorkAroundForDoubleSlashesAsUrlSource(html);
+      html = _addProtocolToLinks(html);
+      html = _checkForMathTags(html);
+      html = fileText.replaceAll('{CANVAS_CONTENT}', html);
+      html = html.replaceAll('{PADDING}', horizontalPadding.toString());
+      this.loadData(baseUrl, html, 'text/html', 'utf-8');
+    }
 
   /**
    * Loads html content w/o any change to formatting
@@ -89,7 +91,7 @@ String _addProtocolToLinks(String html) {
 ///   https://github.com/flutter/flutter/issues/36304
 ///   https://github.com/flutter/flutter/issues/35394
 class WebViewGestureRecognizer extends VerticalDragGestureRecognizer {
-  WebViewGestureRecognizer({PointerDeviceKind kind}) : super(kind: kind);
+  WebViewGestureRecognizer({super.kind});
 
   @override
   get onUpdate => (_) {};

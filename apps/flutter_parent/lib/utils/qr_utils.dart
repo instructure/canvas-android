@@ -32,10 +32,9 @@ class QRUtils {
   static const String QR_PAIR_PARAM_CODE = 'code';
   static const String QR_PAIR_PARAM_ACCOUNT_ID = 'account_id';
 
-  static Uri verifySSOLogin(String url) {
+  static Uri? verifySSOLogin(String url) {
     try {
       var uri = Uri.parse(url);
-      if (uri == null) return null;
       var hostList = [QR_HOST, QR_HOST_BETA, QR_HOST_TEST];
       if (hostList.contains(uri.host) &&
           uri.queryParameters[QR_DOMAIN] != null &&
@@ -79,7 +78,7 @@ class QRUtils {
       if (QR_PAIR_PATH == uri.pathSegments.first &&
           params[QR_PAIR_PARAM_CODE] != null &&
           params[QR_PAIR_PARAM_ACCOUNT_ID] != null) {
-        return QRPairingScanResult.success(params[QR_PAIR_PARAM_CODE], uri.host, params[QR_PAIR_PARAM_ACCOUNT_ID]);
+        return QRPairingScanResult.success(params[QR_PAIR_PARAM_CODE]!, uri.host, params[QR_PAIR_PARAM_ACCOUNT_ID]!);
       }
     } catch (e) {
       // Intentionally left blank

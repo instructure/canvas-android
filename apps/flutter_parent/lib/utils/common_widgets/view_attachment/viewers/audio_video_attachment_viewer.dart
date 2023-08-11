@@ -28,9 +28,9 @@ import 'audio_video_attachment_viewer_interactor.dart';
 class AudioVideoAttachmentViewer extends StatefulWidget {
   final Attachment attachment;
 
-  bool get isAudio => attachment.inferContentType()?.startsWith('audio') == true;
+  bool get isAudio => attachment.inferContentType().startsWith('audio') == true;
 
-  const AudioVideoAttachmentViewer(this.attachment, {Key key}) : super(key: key);
+  const AudioVideoAttachmentViewer(this.attachment, {super.key});
 
   @override
   _AudioVideoAttachmentViewerState createState() => _AudioVideoAttachmentViewerState();
@@ -39,12 +39,12 @@ class AudioVideoAttachmentViewer extends StatefulWidget {
 class _AudioVideoAttachmentViewerState extends State<AudioVideoAttachmentViewer> {
   static const defaultAspectRatio = 16 / 9;
 
-  VideoPlayerController _videoController;
-  ChewieController _chewieController;
+  late VideoPlayerController _videoController;
+  late ChewieController _chewieController;
 
   final _interactor = locator<AudioVideoAttachmentViewerInteractor>();
 
-  Future<ChewieController> controllerFuture;
+  late Future<ChewieController> controllerFuture;
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _AudioVideoAttachmentViewerState extends State<AudioVideoAttachmentViewer>
       builder: (BuildContext context, AsyncSnapshot<ChewieController> snapshot) {
         if (snapshot.hasData) {
           return Center(
-            child: Chewie(controller: snapshot.data),
+            child: Chewie(controller: snapshot.data!),
           );
         } else if (snapshot.hasError) {
           return _error(context);

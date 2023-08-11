@@ -34,7 +34,7 @@ class CanvasWebView extends StatefulWidget {
   final String content;
 
   /// The empty description to show when the provided content is blank
-  final String emptyDescription;
+  final String? emptyDescription;
 
   /// Flag to set the webview as fullscreen, otherwise it resizes to fit it's content size (used for embedding html content on a screen with other widgets)
   ///
@@ -42,7 +42,7 @@ class CanvasWebView extends StatefulWidget {
   final bool fullScreen;
 
   /// If set, delays loading the page once the webview is created
-  final Future futureDelay;
+  final Future? futureDelay;
 
   /// The horizontal padding to add to the content being loaded
   final double horizontalPadding;
@@ -51,27 +51,23 @@ class CanvasWebView extends StatefulWidget {
   final double initialHeight;
 
   const CanvasWebView({
-    Key key,
     this.authContentIfNecessary = true,
-    this.content,
+    required this.content,
     this.emptyDescription,
     this.fullScreen = true,
     this.futureDelay = null,
     this.horizontalPadding = 0,
     this.initialHeight = 1,
-  })  : assert(initialHeight != null),
-        assert(horizontalPadding != null),
-        assert(authContentIfNecessary != null),
-        assert(fullScreen != null),
-        super(key: key);
+    super.key,
+  });
 
   @override
   _CanvasWebViewState createState() => _CanvasWebViewState();
 }
 
 class _CanvasWebViewState extends State<CanvasWebView> {
-  String _content;
-  Future<String> _contentFuture;
+  late String _content;
+  late Future<String> _contentFuture;
 
   WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
@@ -85,7 +81,7 @@ class _CanvasWebViewState extends State<CanvasWebView> {
   Widget build(BuildContext context) {
     if (!widget.authContentIfNecessary) {
       _contentFuture = Future.value(widget.content);
-    } else if (_contentFuture == null || _content != widget.content) {
+    } else if (_content != widget.content) {
       // If we don't have a future or if the content has changed (i.e., PTR changed the data), update the content future
       _content = widget.content;
       _contentFuture = _interactor.authContent(_content, L10n(context).launchExternalTool);
@@ -104,34 +100,34 @@ class _CanvasWebViewState extends State<CanvasWebView> {
 
 class _ResizingWebView extends StatefulWidget {
   final Future<String> contentFuture;
-  final String emptyDescription;
+  final String? emptyDescription;
 
   final double initialHeight;
   final double horizontalPadding;
 
   final bool fullScreen;
-  final Future futureDelay;
+  final Future? futureDelay;
 
   const _ResizingWebView({
-    Key key,
-    this.contentFuture,
-    this.emptyDescription,
-    this.initialHeight,
-    this.horizontalPadding,
-    this.fullScreen,
-    this.futureDelay,
-  }) : super(key: key);
+    required this.contentFuture,
+    required this.emptyDescription,
+    required this.initialHeight,
+    required this.horizontalPadding,
+    required this.fullScreen,
+    required this.futureDelay,
+    super.key
+  });
 
   @override
   _ResizingWebViewState createState() => _ResizingWebViewState();
 }
 
 class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingObserver {
-  String _content;
-  WebViewController _controller;
-  double _height;
-  bool _loading;
-  bool _inactive;
+  late String _content;
+  WebViewController? _controller;
+  late double _height;
+  late bool _loading;
+  late bool _inactive;
 
   WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
@@ -193,7 +189,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
               delay.connectionState == ConnectionState.waiting;
 
           // If there is no content, and we're not delaying, then we can stop showing loading since pageFinished will never get called
-          final emptyContent = (snapshot.data == null || snapshot.data.isEmpty);
+          final emptyContent = (snapshot.data == null || snapshot.data!.isEmpty);
           if (!delaying && emptyContent) _loading = false;
 
           return Stack(
@@ -212,15 +208,15 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
     );
   }
 
-  Widget _contentBody(String widgetContent, bool emptyContent) {
+  Widget _contentBody(String? widgetContent, bool emptyContent) {
     // Check for empty content
     if (emptyContent) {
-      if (widget.emptyDescription == null || widget.emptyDescription.isEmpty) {
+      if (widget.emptyDescription?.isEmpty ?? false) {
         return Container(); // No empty text, so just be empty
       } else {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-          child: Text(widget.emptyDescription, style: Theme.of(context).textTheme.bodyText2),
+          child: Text(widget.emptyDescription!, style: Theme.of(context).textTheme.bodyText2),
         );
       }
     }
@@ -233,7 +229,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
     // Handle being rebuilt by parent widgets (refresh)
     if (_content != widgetContent) {
       _height = widget.initialHeight;
-      _content = widgetContent;
+      _content = widgetContent!;
       _controller?.loadHtml(_content, horizontalPadding: widget.horizontalPadding);
     }
 

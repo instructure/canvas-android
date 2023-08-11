@@ -43,17 +43,17 @@ class ParentTheme extends StatefulWidget {
   final Widget Function(BuildContext context, ThemeData themeData) builder;
 
   const ParentTheme({
-    Key key,
-    this.builder,
+    required this.builder,
     this.themePrefs = const ThemePrefs(),
-  }) : super(key: key);
+    super.key
+  });
 
   final ThemePrefs themePrefs;
 
   @override
   _ParentThemeState createState() => _ParentThemeState();
 
-  static _ParentThemeState of(BuildContext context) {
+  static _ParentThemeState? of(BuildContext context) {
     return context.findAncestorStateOfType<_ParentThemeState>();
   }
 }
@@ -64,9 +64,9 @@ class ParentTheme extends StatefulWidget {
 class _ParentThemeState extends State<ParentTheme> {
   ParentThemeStateChangeNotifier _notifier = ParentThemeStateChangeNotifier();
 
-  StudentColorSet _studentColorSet;
+  StudentColorSet? _studentColorSet;
 
-  String _selectedStudentId;
+  late String _selectedStudentId;
 
   Future<void> refreshStudentColor() => setSelectedStudent(_selectedStudentId);
 
@@ -76,9 +76,8 @@ class _ParentThemeState extends State<ParentTheme> {
     _studentColorSet = null;
     _selectedStudentId = studentId;
 
-    if (studentId != null) {
-      _studentColorSet = await getColorsForStudent(studentId);
-    }
+    _studentColorSet = await getColorsForStudent(studentId);
+
     setState(() {});
   }
 
@@ -86,7 +85,7 @@ class _ParentThemeState extends State<ParentTheme> {
     // Get saved color for this user
     UserColor userColor = await locator<UserColorsDb>().getByContext(
       ApiPrefs.getDomain(),
-      ApiPrefs.getUser()?.id,
+      ApiPrefs.getUser().id,
       'user_$studentId',
     );
 
@@ -191,10 +190,10 @@ class _ParentThemeState extends State<ParentTheme> {
       _appBarDivider(isDarkMode ? ParentColors.oxford : ParentColors.appBarDividerLight);
 
   /// Returns a light divider if in dark mode, dark divider in light mode unless shadowInLightMode is true, wrapping the optional bottom passed in
-  PreferredSizeWidget appBarDivider({PreferredSizeWidget bottom, bool shadowInLightMode = true}) =>
+  PreferredSizeWidget? appBarDivider({PreferredSizeWidget? bottom, bool shadowInLightMode = true}) =>
       (isDarkMode || !shadowInLightMode)
           ? PreferredSize(
-              preferredSize: Size.fromHeight(1.0 + (bottom?.preferredSize?.height ?? 0)), // Bottom height plus divider
+              preferredSize: Size.fromHeight(1.0 + (bottom?.preferredSize.height ?? 0)), // Bottom height plus divider
               child: Column(
                 children: [
                   if (bottom != null) bottom,

@@ -26,15 +26,14 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 class ErrorPandaWidget extends StatelessWidget {
   final Function callback;
   final String errorString;
-  final Widget header;
+  final Widget? header;
 
   ErrorPandaWidget(this.errorString, this.callback, {this.header});
 
   @override
   Widget build(BuildContext context) {
     return FullScreenScrollContainer(
-      header: header,
-      children: <Widget>[
+      <Widget>[
         Icon(CanvasIcons.warning, size: 40, color: ParentColors.failure),
         Padding(
           padding: const EdgeInsets.fromLTRB(48, 28, 48, 32),
@@ -55,6 +54,7 @@ class ErrorPandaWidget extends StatelessWidget {
           ),
         )
       ],
+      header: header,
     );
   }
 }

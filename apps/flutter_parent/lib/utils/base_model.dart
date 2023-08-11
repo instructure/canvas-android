@@ -23,8 +23,8 @@ class BaseModel extends ChangeNotifier {
 
   ViewState get state => _state;
 
-  void setState({ViewState viewState}) {
-    if (viewState != null) _state = viewState;
+  void setState({required ViewState viewState}) {
+    _state = viewState;
     notifyListeners();
   }
 
@@ -32,7 +32,7 @@ class BaseModel extends ChangeNotifier {
   Future<void> work(Future Function() loadBlock) async {
     try {
       setState(viewState: ViewState.Busy);
-      if (loadBlock != null) await loadBlock();
+      await loadBlock();
       setState(viewState: ViewState.Idle);
     } catch (e) {
       print('error while doing work: $e');

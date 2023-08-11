@@ -67,8 +67,8 @@ class ThemeTransitionOverlay extends StatefulWidget {
 class _ThemeTransitionOverlayState extends State<ThemeTransitionOverlay> with TickerProviderStateMixin {
   static const maxSplashOpacity = 0.35;
 
-  AnimationController _animationController;
-  Animation _animation;
+  late AnimationController _animationController;
+  late Animation _animation;
   bool _onReadyCalled = false;
 
   @override

@@ -18,11 +18,11 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 
 class Avatar extends StatelessWidget {
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final String url;
   final double radius;
-  final Widget overlay;
-  final String name; // Generally should be the shortname of the user
+  final Widget? overlay;
+  final String? name; // Generally should be the shortname of the user
   final bool showInitials;
 
   static const List<String> noPictureUrls = const [
@@ -34,20 +34,20 @@ class Avatar extends StatelessWidget {
 
   const Avatar(
     this.url, {
-    Key key,
     this.backgroundColor,
     this.radius = 20,
     this.overlay,
     this.name,
     this.showInitials = true,
-  }) : super(key: key);
+    super.key,
+  });
 
   Avatar.fromUser(
     User user, {
-    Color backgroundColor,
+    Color? backgroundColor,
     double radius = 20,
-    Widget overlay,
-  }) : this(user.avatarUrl, name: user.shortName, backgroundColor: backgroundColor, radius: radius, overlay: overlay);
+    Widget? overlay,
+  }) : this(user.avatarUrl!, name: user.shortName, backgroundColor: backgroundColor, radius: radius, overlay: overlay);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class Avatar extends StatelessWidget {
     var isTest = WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding;
 
     // Url is valid if it's not null or empty, does not contain any noPictureUrls, and we're not testing
-    bool isUrlValid = !isTest && url != null && url.isNotEmpty && !noPictureUrls.any((it) => url.contains(it));
+    bool isUrlValid = !isTest && url.isNotEmpty && !noPictureUrls.any((it) => url.contains(it));
 
     return Semantics(
       excludeSemantics: true,
@@ -105,7 +105,7 @@ class Avatar extends StatelessWidget {
       child: CircleAvatar(
         child: showInitials
             ? Text(
-                getUserInitials(name),
+                getUserInitials(name!),
                 style: TextStyle(fontSize: radius * 0.8, fontWeight: FontWeight.bold, color: ParentColors.ash),
               )
             : Container(),
@@ -117,7 +117,7 @@ class Avatar extends StatelessWidget {
 
   // This method is static to make it easier to test!
   static String getUserInitials(String shortName) {
-    if (shortName == null || shortName.isEmpty) return '?';
+    if (shortName.isEmpty) return '?';
 
     var name = shortName;
 

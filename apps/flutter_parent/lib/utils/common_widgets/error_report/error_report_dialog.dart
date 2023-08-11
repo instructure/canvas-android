@@ -42,19 +42,20 @@ class ErrorReportDialog extends StatefulWidget {
     this.includeEmail,
     this.hideSeverityPicker,
     this.error, {
-    Key key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _ErrorReportDialogState createState() => _ErrorReportDialogState();
 
-  static Future<void> asDialog(BuildContext context,
-      {String title,
-      String subject,
-      ErrorReportSeverity severity,
+  static Future<void> asDialog(
+      BuildContext context, {
+      required String title,
+      required String subject,
+      required ErrorReportSeverity severity,
       bool includeEmail = false,
       bool hideSeverityPicker = false,
-      FlutterErrorDetails error}) {
+      required FlutterErrorDetails error}) {
     return showDialog(
       context: context,
       builder: (context) => ErrorReportDialog._internal(
@@ -74,13 +75,13 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
 
   // Non state changing variables
   FocusScopeNode _focusScopeNode = FocusScopeNode();
-  String _subject;
-  String _email;
-  String _description;
+  late String _subject;
+  String? _email;
+  String? _description;
 
   // State changing variables
-  ErrorReportSeverity _selectedSeverity;
-  bool _autoValidate;
+  late ErrorReportSeverity _selectedSeverity;
+  late bool _autoValidate;
 
   @override
   void initState() {

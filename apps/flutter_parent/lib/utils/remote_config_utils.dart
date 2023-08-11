@@ -23,8 +23,8 @@ enum RemoteConfigParams {
 }
 
 class RemoteConfigUtils {
-  static RemoteConfig _remoteConfig = null;
-  static SharedPreferences _prefs;
+  static RemoteConfig? _remoteConfig = null;
+  static SharedPreferences? _prefs;
 
   // I bifurcated initialize() into initialize() and initializeExplicit() to allow for
   // tests to pass in a mocked RemoteConfig object.

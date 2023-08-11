@@ -24,23 +24,23 @@ class QuickNav {
   @Deprecated('Deprecated in favor of using PushRoute etc, end goal is for all routes to go through PandaRouter')
   Future<T> push<T extends Object>(BuildContext context, Widget widget) {
     _logShow(widget);
-    return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget));
+    return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget)) as Future<T>;
   }
 
   /// Default method for pushing screens, uses material transition
   Future<T> pushRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return PandaRouter.router.navigateTo(context, route, transition: transitionType);
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType) as Future<T>;
   }
 
   Future<T> replaceRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return PandaRouter.router.navigateTo(context, route, transition: transitionType, replace: true);
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType, replace: true) as Future<T>;
   }
 
   Future<T> pushRouteAndClearStack<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true);
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true) as Future<T>;
   }
 
   Future<T> pushRouteWithCustomTransition<T extends Object>(BuildContext context, String route, bool clearStack,
@@ -50,7 +50,7 @@ class QuickNav {
         clearStack: clearStack,
         transitionDuration: transitionDuration,
         transition: transitionType,
-        transitionBuilder: transitionsBuilder);
+        transitionBuilder: transitionsBuilder) as Future<T>;
   }
 
   Future<void> routeInternally(BuildContext context, String url) {
@@ -65,11 +65,11 @@ class QuickNav {
   }
 
   Future<T> showDialog<T>({
-    @required BuildContext context,
+    required BuildContext context,
     bool barrierDismissible = true,
-    WidgetBuilder builder,
+    required WidgetBuilder builder,
     bool useRootNavigator = true,
-    RouteSettings routeSettings,
+    required RouteSettings routeSettings,
   }) =>
       Material.showDialog(
         context: context,
@@ -77,5 +77,5 @@ class QuickNav {
         builder: builder,
         useRootNavigator: useRootNavigator,
         routeSettings: routeSettings,
-      );
+      ) as Future<T>;
 }
