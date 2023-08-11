@@ -17,6 +17,7 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult

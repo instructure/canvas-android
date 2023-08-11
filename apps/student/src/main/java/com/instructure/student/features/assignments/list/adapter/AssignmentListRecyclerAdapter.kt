@@ -19,6 +19,7 @@ package com.instructure.student.features.assignments.list.adapter
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.Logger
