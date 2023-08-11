@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "88f32aecbbac925d69bdbc7f69ee89be",
+    "identityHash": "11dc4c04dbfcfcc4e632da3feace1eb8",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -2317,6 +2317,44 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "LocalFileEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `createdDate` INTEGER NOT NULL, `path` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "createdDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       },
       {
         "tableName": "MasteryPathAssignmentEntity",
@@ -4996,7 +5034,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88f32aecbbac925d69bdbc7f69ee89be')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '11dc4c04dbfcfcc4e632da3feace1eb8')"
     ]
   }
 }

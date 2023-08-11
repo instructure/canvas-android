@@ -27,26 +27,32 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
+import java.util.Date
 
 @HiltWorker
 class FileSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val fileDownloadApi: FileDownloadAPI
+    private val fileDownloadApi: FileDownloadAPI,
+    private val localFileDao: LocalFileDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private var fileExists = false
 
     override suspend fun doWork(): Result {
-        val fileName = inputData.getString(INPUT_FILE_NAME) ?: ""
+        val fileId = inputData.getLong(INPUT_FILE_ID, -1)
+        val fileName = "${fileId}_${inputData.getString(INPUT_FILE_NAME) ?: ""}"
         val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
+        val courseId = inputData.getLong(INPUT_COURSE_ID, -1)
 
         var result = Result.failure()
 
-        val downloadedFile = getDownloadFile(fileName)
+        var downloadedFile = getDownloadFile(fileName)
 
         fileDownloadApi.downloadFile(fileUrl)
             .saveFile(downloadedFile)
@@ -58,8 +64,9 @@ class FileSyncWorker @AssistedInject constructor(
 
                     is DownloadState.Success -> {
                         if (fileExists) {
-                            rewriteOriginalFile(downloadedFile, fileName)
+                            downloadedFile = rewriteOriginalFile(downloadedFile, fileName)
                         }
+                        localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
                         result = Result.success()
                     }
 
@@ -83,20 +90,25 @@ class FileSyncWorker @AssistedInject constructor(
         return downloadFile
     }
 
-    private fun rewriteOriginalFile(newFile: File, fileName: String) {
+    private fun rewriteOriginalFile(newFile: File, fileName: String): File {
         val originalFile = File(context.filesDir, fileName)
         originalFile.delete()
         newFile.renameTo(originalFile)
+        return originalFile
     }
 
     companion object {
+        const val INPUT_FILE_ID = "INPUT_FILE_ID"
         const val INPUT_FILE_NAME = "INPUT_FILE_NAME"
         const val INPUT_FILE_URL = "INPUT_FILE_URL"
+        const val INPUT_COURSE_ID = "INPUT_COURSE_ID"
 
-        fun createOneTimeWorkRequest(fileName: String, fileUrl: String): OneTimeWorkRequest {
+        fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String): OneTimeWorkRequest {
             val inputData = androidx.work.Data.Builder()
                 .putString(INPUT_FILE_NAME, fileName)
                 .putString(INPUT_FILE_URL, fileUrl)
+                .putLong(INPUT_FILE_ID, fileId)
+                .putLong(INPUT_COURSE_ID, courseId)
                 .build()
 
             return OneTimeWorkRequest.Builder(FileSyncWorker::class.java)

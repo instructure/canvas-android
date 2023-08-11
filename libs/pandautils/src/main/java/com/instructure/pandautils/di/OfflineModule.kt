@@ -466,4 +466,9 @@ class OfflineModule {
     fun provideFileFolderDao(appDatabase: OfflineDatabase): FileFolderDao {
         return appDatabase.fileFolderDao()
     }
+
+    @Provides
+    fun provideLocalFileDao(appDatabase: OfflineDatabase): LocalFileDao {
+        return appDatabase.localFileDao()
+    }
 }

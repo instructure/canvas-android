@@ -41,4 +41,10 @@ abstract class FileSyncSettingsDao {
         deleteByCourseId(courseId)
         insertAll(fileSyncSettings)
     }
+
+    @Query("DELETE FROM FileSyncSettingsEntity WHERE courseId = :courseId AND id NOT IN (:ids)")
+    abstract suspend fun deleteAllExcept(courseId: Long, ids: List<Long>)
+
+    @Query("SELECT * FROM FileSyncSettingsEntity WHERE courseId = :courseId AND id NOT IN (:ids)")
+    abstract suspend fun findComplements(courseId: Long, ids: List<Long>): List<FileSyncSettingsEntity>
 }

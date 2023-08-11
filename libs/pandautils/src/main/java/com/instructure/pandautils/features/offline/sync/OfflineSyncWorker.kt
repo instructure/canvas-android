@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
@@ -59,16 +60,16 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         val courseIds = inputData.getLongArray(COURSE_IDS)
         val courses = courseIds?.let {
-            courseSyncSettingsDao.findWithFilesByIds(courseIds.toList())
-        } ?: courseSyncSettingsDao.findAllWithFiles()
+            courseSyncSettingsDao.findByIds(courseIds.toList())
+        } ?: courseSyncSettingsDao.findAll()
 
-        val filteredCourseSettings = courses.filter { it.courseSyncSettings.anySyncEnabled }
+        val filteredCourseSettings = courses.filter { it.anySyncEnabled }
 
-        val courseWorkers = filteredCourseSettings.map { createCourseWorker(it.courseSyncSettings.courseId) }
-        val fileWorkers = filteredCourseSettings.map { createFileWorkers(it) }.flatten()
+        val courseWorkers = filteredCourseSettings.map { createCourseWorker(it.courseId) }
+        val courseFileWorkers = filteredCourseSettings.map { createFileWorkers(it) }
 
         workManager.beginWith(courseWorkers)
-            .then(fileWorkers)
+            .then(courseFileWorkers)
             .enqueue()
 
         return Result.success()
@@ -80,10 +81,8 @@ class OfflineSyncWorker @AssistedInject constructor(
             .build()
     }
 
-    private fun createFileWorkers(courseSyncSettingsWithFiles: CourseSyncSettingsWithFiles): List<OneTimeWorkRequest> {
-        return courseSyncSettingsWithFiles.files.map {
-            FileSyncWorker.createOneTimeWorkRequest(it.fileName.orEmpty(), it.url.orEmpty())
-        }
+    private fun createFileWorkers(courseSettings: CourseSyncSettingsEntity): OneTimeWorkRequest {
+        return CourseFileWorker.createOneTimeWorkRequest(courseSettings.courseId)
     }
 
 }

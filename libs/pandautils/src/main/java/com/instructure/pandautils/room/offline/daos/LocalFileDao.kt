@@ -19,34 +19,28 @@
 package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
-import com.instructure.pandautils.room.offline.entities.FileFolderEntity
+import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 
 @Dao
-abstract class FileFolderDao {
+interface LocalFileDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insert(fileFolder: FileFolderEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertAll(fileFolders: List<FileFolderEntity>)
-
-    @Query("DELETE FROM FileFolderEntity")
-    abstract suspend fun deleteAll()
+    suspend fun insert(localFile: LocalFileEntity)
 
     @Update
-    abstract suspend fun update(fileFolder: FileFolderEntity)
+    suspend fun update(localFile: LocalFileEntity)
 
-    @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)")
-    abstract suspend fun findAllFilesByCourseId(courseId: Long): List<FileFolderEntity>
+    @Delete
+    suspend fun delete(localFile: LocalFileEntity)
 
-    @Transaction
-    open suspend fun replaceAll(fileFolders: List<FileFolderEntity>) {
-        deleteAll()
-        insertAll(fileFolders)
-    }
+    @Query("SELECT * FROM LocalFileEntity WHERE id = :id")
+    suspend fun findById(id: Long): LocalFileEntity?
+
+    @Query("SELECT * FROM LocalFileEntity WHERE courseId = :courseId AND id NOT IN (:ids)")
+    suspend fun findRemovedFiles(courseId: Long, ids: List<Long>): List<LocalFileEntity>
 }

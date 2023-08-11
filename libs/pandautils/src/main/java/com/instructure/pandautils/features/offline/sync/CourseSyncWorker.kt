@@ -140,8 +140,7 @@ class CourseSyncWorker @AssistedInject constructor(
         val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
 
         val entities = fileFolders.map { FileFolderEntity(it) }
-
-        fileFolderDao.insertAll(entities)
+        fileFolderDao.replaceAll(entities)
     }
 
     private suspend fun fetchSyllabus(courseIds: List<Long>) {
