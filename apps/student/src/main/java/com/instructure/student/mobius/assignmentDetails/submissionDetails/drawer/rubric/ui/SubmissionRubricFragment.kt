@@ -30,12 +30,14 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
+private const val RESTRICT_QUANTITATIVE_DATA = "restrictQuantitativeData"
+
 @ScreenView(SCREEN_VIEW_SUBMISSION_RUBRIC)
 class SubmissionRubricFragment :
     MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState, FragmentSubmissionRubricBinding>() {
     private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
     private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
-    private var restrictQuantitativeData by BooleanArg(key = Const.RESTRICT_QUANTITATIVE_DATA)
+    private var restrictQuantitativeData by BooleanArg(key = RESTRICT_QUANTITATIVE_DATA)
 
     override fun makeEffectHandler() = SubmissionRubricEffectHandler()
 
