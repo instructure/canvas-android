@@ -15,6 +15,7 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails
 
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.*
