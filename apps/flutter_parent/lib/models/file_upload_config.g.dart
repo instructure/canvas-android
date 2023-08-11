@@ -17,48 +17,47 @@ class _$FileUploadConfigSerializer
   final String wireName = 'FileUploadConfig';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, FileUploadConfig object,
+  Iterable<Object?> serialize(Serializers serializers, FileUploadConfig object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
-    result.add('upload_url');
-    if (object.url == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('upload_params');
-    if (object.params == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.params,
+    final result = <Object?>[];
+    Object? value;
+    value = object.url;
+
+    result
+      ..add('upload_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.params;
+
+    result
+      ..add('upload_params')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(BuiltMap,
               const [const FullType(String), const FullType(String)])));
-    }
+
     return result;
   }
 
   @override
   FileUploadConfig deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new FileUploadConfigBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'upload_url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'upload_params':
           result.params.replace(serializers.deserialize(value,
               specifiedType: const FullType(BuiltMap,
-                  const [const FullType(String), const FullType(String)])));
+                  const [const FullType(String), const FullType(String)]))!);
           break;
       }
     }
@@ -69,13 +68,13 @@ class _$FileUploadConfigSerializer
 
 class _$FileUploadConfig extends FileUploadConfig {
   @override
-  final String url;
+  final String? url;
   @override
-  final BuiltMap<String, String> params;
+  final BuiltMap<String, String>? params;
 
   factory _$FileUploadConfig(
-          [void Function(FileUploadConfigBuilder) updates]) =>
-      (new FileUploadConfigBuilder()..update(updates)).build();
+          [void Function(FileUploadConfigBuilder)? updates]) =>
+      (new FileUploadConfigBuilder()..update(updates))._build();
 
   _$FileUploadConfig._({this.url, this.params}) : super._();
 
@@ -97,12 +96,16 @@ class _$FileUploadConfig extends FileUploadConfig {
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, url.hashCode), params.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, params.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('FileUploadConfig')
+    return (newBuiltValueToStringHelper(r'FileUploadConfig')
           ..add('url', url)
           ..add('params', params))
         .toString();
@@ -111,23 +114,24 @@ class _$FileUploadConfig extends FileUploadConfig {
 
 class FileUploadConfigBuilder
     implements Builder<FileUploadConfig, FileUploadConfigBuilder> {
-  _$FileUploadConfig _$v;
+  _$FileUploadConfig? _$v;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  MapBuilder<String, String> _params;
+  MapBuilder<String, String>? _params;
   MapBuilder<String, String> get params =>
       _$this._params ??= new MapBuilder<String, String>();
-  set params(MapBuilder<String, String> params) => _$this._params = params;
+  set params(MapBuilder<String, String>? params) => _$this._params = params;
 
   FileUploadConfigBuilder();
 
   FileUploadConfigBuilder get _$this {
-    if (_$v != null) {
-      _url = _$v.url;
-      _params = _$v.params?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _url = $v.url;
+      _params = $v.params?.toBuilder();
       _$v = null;
     }
     return this;
@@ -135,31 +139,31 @@ class FileUploadConfigBuilder
 
   @override
   void replace(FileUploadConfig other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$FileUploadConfig;
   }
 
   @override
-  void update(void Function(FileUploadConfigBuilder) updates) {
+  void update(void Function(FileUploadConfigBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$FileUploadConfig build() {
+  FileUploadConfig build() => _build();
+
+  _$FileUploadConfig _build() {
     _$FileUploadConfig _$result;
     try {
       _$result =
           _$v ?? new _$FileUploadConfig._(url: url, params: _params?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'params';
         _params?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'FileUploadConfig', _$failedField, e.toString());
+            r'FileUploadConfig', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -168,4 +172,4 @@ class FileUploadConfigBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

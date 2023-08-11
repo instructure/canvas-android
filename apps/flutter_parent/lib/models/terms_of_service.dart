@@ -26,16 +26,14 @@ abstract class TermsOfService implements Built<TermsOfService, TermsOfServiceBui
   String get id;
 
   @BuiltValueField(wireName: 'terms_type')
-  @nullable
-  String get termsType;
+  String? get termsType;
 
   bool get passive;
 
   @BuiltValueField(wireName: 'account_id')
   String get accountId;
 
-  @nullable
-  String get content;
+  String? get content;
 
   TermsOfService._();
   factory TermsOfService([void Function(TermsOfServiceBuilder) updates]) = _$TermsOfService;

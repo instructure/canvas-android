@@ -26,9 +26,8 @@ abstract class SchoolDomain implements Built<SchoolDomain, SchoolDomainBuilder> 
   String get domain;
   String get name;
 
-  @nullable
   @BuiltValueField(wireName: 'authentication_provider')
-  String get authenticationProvider;
+  String? get authenticationProvider;
 
   SchoolDomain._();
   factory SchoolDomain([void Function(SchoolDomainBuilder) updates]) = _$SchoolDomain;

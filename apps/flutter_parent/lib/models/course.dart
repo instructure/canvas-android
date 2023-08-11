@@ -16,6 +16,7 @@ library course;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_parent/models/section.dart';
 import 'package:flutter_parent/models/term.dart';
 
@@ -35,45 +36,36 @@ abstract class Course implements Built<Course, CourseBuilder> {
   factory Course([void Function(CourseBuilder) updates]) = _$Course;
 
   // Helper variables
-  @nullable
   @BuiltValueField(serialize: false)
-  double get currentScore;
+  double? get currentScore;
 
-  @nullable
   @BuiltValueField(serialize: false)
-  double get finalScore;
+  double? get finalScore;
 
-  @nullable
   @BuiltValueField(serialize: false)
-  String get currentGrade;
+  String? get currentGrade;
 
-  @nullable
   @BuiltValueField(serialize: false)
-  String get finalGrade;
+  String? get finalGrade;
 
   String get id;
 
   String get name;
 
-  @nullable
   @BuiltValueField(wireName: 'original_name')
-  String get originalName;
+  String? get originalName;
 
-  @nullable
   @BuiltValueField(wireName: 'course_code')
-  String get courseCode;
+  String? get courseCode;
 
-  @nullable
   @BuiltValueField(wireName: 'start_at')
-  DateTime get startAt;
+  DateTime? get startAt;
 
-  @nullable
   @BuiltValueField(wireName: 'end_at')
-  DateTime get endAt;
+  DateTime? get endAt;
 
-  @nullable
   @BuiltValueField(wireName: 'syllabus_body')
-  String get syllabusBody;
+  String? get syllabusBody;
 
   @BuiltValueField(wireName: 'hide_final_grades')
   bool get hideFinalGrades;
@@ -81,7 +73,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'is_public')
   bool get isPublic;
 
-  BuiltList<Enrollment> get enrollments;
+  BuiltList<Enrollment>? get enrollments;
 
   @BuiltValueField(wireName: 'needs_grading_count')
   int get needsGradingCount;
@@ -95,10 +87,8 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'access_restricted_by_date')
   bool get accessRestrictedByDate;
 
-  @nullable
   @BuiltValueField(wireName: 'image_download_url')
-  @nullable
-  String get imageDownloadUrl;
+  String? get imageDownloadUrl;
 
   @BuiltValueField(wireName: 'has_weighted_grading_periods')
   bool get hasWeightedGradingPeriods;
@@ -109,19 +99,15 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'restrict_enrollments_to_course_dates')
   bool get restrictEnrollmentsToCourseDates;
 
-  @nullable
   @BuiltValueField(wireName: 'workflow_state')
-  String get workflowState;
+  String? get workflowState;
 
-  @nullable
   @BuiltValueField(wireName: 'default_view')
-  HomePage get homePage;
+  HomePage? get homePage;
 
-  @nullable
-  Term get term;
+  Term? get term;
 
-  @nullable
-  BuiltList<Section> get sections;
+  BuiltList<Section>? get sections;
 
   static void _initializeBuilder(CourseBuilder b) => b
     ..id = ''
@@ -148,20 +134,19 @@ abstract class Course implements Built<Course, CourseBuilder> {
   ///   from the course will also match based on [Enrollment.currentGradingPeriodId]
   CourseGrade getCourseGrade(
     String studentId, {
-    Enrollment enrollment,
-    String gradingPeriodId,
+    Enrollment? enrollment,
+    String? gradingPeriodId,
     bool forceAllPeriods = false,
   }) =>
       CourseGrade(
         this,
         enrollment ??
-            enrollments.firstWhere(
+            enrollments?.firstWhere(
               (enrollment) =>
                   enrollment.userId == studentId &&
                   (gradingPeriodId == null ||
                       gradingPeriodId.isEmpty ||
-                      gradingPeriodId == enrollment.currentGradingPeriodId),
-              orElse: () => null,
+                      gradingPeriodId == enrollment.currentGradingPeriodId)
             ),
         forceAllPeriods: forceAllPeriods,
       );

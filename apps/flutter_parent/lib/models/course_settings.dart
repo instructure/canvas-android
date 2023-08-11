@@ -23,8 +23,7 @@ abstract class CourseSettings implements Built<CourseSettings, CourseSettingsBui
   static Serializer<CourseSettings> get serializer => _$courseSettingsSerializer;
 
   @BuiltValueField(wireName: 'syllabus_course_summary')
-  @nullable
-  bool get courseSummary;
+  bool? get courseSummary;
 
   CourseSettings._();
   factory CourseSettings([void Function(CourseSettingsBuilder) updates]) = _$CourseSettings;

@@ -31,28 +31,22 @@ abstract class AssignmentOverride implements Built<AssignmentOverride, Assignmen
   String get assignmentId;
 
   @BuiltValueField(wireName: 'title')
-  @nullable
-  String get title;
+  String? get title;
 
   @BuiltValueField(wireName: 'due_at')
-  @nullable
-  DateTime get dueAt;
+  DateTime? get dueAt;
 
   @BuiltValueField(wireName: 'all_day')
-  @nullable
-  bool get allDay;
+  bool? get allDay;
 
   @BuiltValueField(wireName: 'all_day_date')
-  @nullable
-  DateTime get allDayDate;
+  DateTime? get allDayDate;
 
   @BuiltValueField(wireName: 'unlock_at')
-  @nullable
-  DateTime get unlockAt;
+  DateTime? get unlockAt;
 
   @BuiltValueField(wireName: 'lock_at')
-  @nullable
-  DateTime get lockAt;
+  DateTime? get lockAt;
 
   @BuiltValueField(wireName: 'student_ids')
   BuiltList<String> get studentIds;

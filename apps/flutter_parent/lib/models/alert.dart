@@ -178,7 +178,7 @@ class AlertType extends EnumClass {
       case AlertType.courseGradeLow:
         return 'course_grade_low';
       default:
-        return null;
+        return '';
     }
   }
 }

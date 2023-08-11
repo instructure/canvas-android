@@ -61,15 +61,15 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..finalGrade = '';
 
   static GradeCellData forSubmission(
-    Assignment assignment,
-    Submission submission,
+    Assignment? assignment,
+    Submission? submission,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' grading type
     if (assignment == null ||
         submission == null ||
-        (submission?.submittedAt == null && submission?.grade == null) ||
+        (submission.submittedAt == null && submission.grade == null) ||
         assignment.gradingType == GradingType.notGraded) {
       return GradeCellData();
     }
@@ -78,13 +78,13 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     if (submission.submittedAt != null && submission.grade == null) {
       return GradeCellData((b) => b
         ..state = GradeCellState.submitted
-        ..submissionText = submission.submittedAt.l10nFormat(
+        ..submissionText = submission.submittedAt!.l10nFormat(
           l10n.submissionStatusSuccessSubtitle,
           dateFormat: DateFormat.MMMMd(supportedDateLocale),
         ));
     }
 
-    var accentColor = theme.accentColor;
+    var accentColor = theme.colorScheme.secondary;
 
     var pointsPossibleText = NumberFormat.decimalPattern().format(assignment.pointsPossible);
 
@@ -131,7 +131,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
       grade = ''; // Grade will be shown in the 'final grade' text
       var pointsDeducted = NumberFormat.decimalPattern().format(submission.pointsDeducted ?? 0.0);
       latePenalty = l10n.latePenalty(pointsDeducted);
-      finalGrade = l10n.finalGrade(submission.grade);
+      finalGrade = l10n.finalGrade(submission.grade ?? grade);
     }
 
     return GradeCellData((b) => b

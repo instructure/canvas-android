@@ -29,14 +29,11 @@ abstract class CanvasToken implements Built<CanvasToken, CanvasTokenBuilder> {
   @BuiltValueField(wireName: 'access_token')
   String get accessToken;
 
-  @nullable
   @BuiltValueField(wireName: 'refresh_token')
-  String get refreshToken;
+  String? get refreshToken;
 
-  @nullable
-  User get user;
+  User? get user;
 
-  @nullable
   @BuiltValueField(wireName: 'real_user')
-  User get realUser;
+  User? get realUser;
 }

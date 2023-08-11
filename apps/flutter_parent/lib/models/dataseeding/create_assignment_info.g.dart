@@ -20,10 +20,10 @@ class _$CreateAssignmentInfoSerializer
   final String wireName = 'CreateAssignmentInfo';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, CreateAssignmentInfo object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
       'points_possible',
@@ -36,238 +36,216 @@ class _$CreateAssignmentInfoSerializer
       serializers.serialize(object.published,
           specifiedType: const FullType(bool)),
     ];
-    result.add('description');
-    if (object.description == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.description,
-          specifiedType: const FullType(String)));
-    }
-    result.add('due_at');
-    if (object.dueAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.dueAt,
+    Object? value;
+    value = object.description;
+
+    result
+      ..add('description')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.dueAt;
+
+    result
+      ..add('due_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('grading_type');
-    if (object.gradingType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.gradingType,
+    value = object.gradingType;
+
+    result
+      ..add('grading_type')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(GradingType)));
-    }
-    result.add('html_url');
-    if (object.htmlUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.htmlUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('url');
-    if (object.url == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('quiz_id');
-    if (object.quizId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.quizId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('use_rubric_for_grading');
-    if (object.useRubricForGrading == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.useRubricForGrading,
-          specifiedType: const FullType(bool)));
-    }
-    result.add('assignment_group_id');
-    if (object.assignmentGroupId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.assignmentGroupId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('position');
-    if (object.position == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.position,
-          specifiedType: const FullType(int)));
-    }
-    result.add('lock_info');
-    if (object.lockInfo == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockInfo,
+    value = object.htmlUrl;
+
+    result
+      ..add('html_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.url;
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.quizId;
+
+    result
+      ..add('quiz_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.useRubricForGrading;
+
+    result
+      ..add('use_rubric_for_grading')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+    value = object.assignmentGroupId;
+
+    result
+      ..add('assignment_group_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.position;
+
+    result
+      ..add('position')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.lockInfo;
+
+    result
+      ..add('lock_info')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(LockInfo)));
-    }
-    result.add('locked_for_user');
-    if (object.lockedForUser == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockedForUser,
-          specifiedType: const FullType(bool)));
-    }
-    result.add('lock_at');
-    if (object.lockAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockAt,
+    value = object.lockedForUser;
+
+    result
+      ..add('locked_for_user')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+    value = object.lockAt;
+
+    result
+      ..add('lock_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('unlock_at');
-    if (object.unlockAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.unlockAt,
+    value = object.unlockAt;
+
+    result
+      ..add('unlock_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('lock_explanation');
-    if (object.lockExplanation == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockExplanation,
-          specifiedType: const FullType(String)));
-    }
-    result.add('free_form_criterion_comments');
-    if (object.freeFormCriterionComments == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.freeFormCriterionComments,
-          specifiedType: const FullType(bool)));
-    }
-    result.add('muted');
-    if (object.muted == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.muted,
-          specifiedType: const FullType(bool)));
-    }
-    result.add('group_category_id');
-    if (object.groupCategoryId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.groupCategoryId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('submission_types');
-    if (object.submissionTypes == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.submissionTypes,
+    value = object.lockExplanation;
+
+    result
+      ..add('lock_explanation')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.freeFormCriterionComments;
+
+    result
+      ..add('free_form_criterion_comments')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+    value = object.muted;
+
+    result
+      ..add('muted')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+    value = object.groupCategoryId;
+
+    result
+      ..add('group_category_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.submissionTypes;
+
+    result
+      ..add('submission_types')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(
               BuiltList, const [const FullType(SubmissionTypes)])));
-    }
+
     return result;
   }
 
   @override
   CreateAssignmentInfo deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CreateAssignmentInfoBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'description':
           result.description = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'due_at':
           result.dueAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'points_possible':
           result.pointsPossible = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
+              specifiedType: const FullType(double))! as double;
           break;
         case 'course_id':
           result.courseId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'grading_type':
           result.gradingType = serializers.deserialize(value,
-              specifiedType: const FullType(GradingType)) as GradingType;
+              specifiedType: const FullType(GradingType)) as GradingType?;
           break;
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'quiz_id':
           result.quizId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'use_rubric_for_grading':
           result.useRubricForGrading = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case 'assignment_group_id':
           result.assignmentGroupId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'position':
           result.position = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'lock_info':
           result.lockInfo.replace(serializers.deserialize(value,
-              specifiedType: const FullType(LockInfo)) as LockInfo);
+              specifiedType: const FullType(LockInfo))! as LockInfo);
           break;
         case 'locked_for_user':
           result.lockedForUser = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case 'lock_at':
           result.lockAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'unlock_at':
           result.unlockAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'lock_explanation':
           result.lockExplanation = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'free_form_criterion_comments':
           result.freeFormCriterionComments = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case 'published':
           result.published = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'muted':
           result.muted = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case 'group_category_id':
           result.groupCategoryId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'submission_types':
           result.submissionTypes.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(SubmissionTypes)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(SubmissionTypes)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -280,58 +258,58 @@ class _$CreateAssignmentInfo extends CreateAssignmentInfo {
   @override
   final String name;
   @override
-  final String description;
+  final String? description;
   @override
-  final DateTime dueAt;
+  final DateTime? dueAt;
   @override
   final double pointsPossible;
   @override
   final String courseId;
   @override
-  final GradingType gradingType;
+  final GradingType? gradingType;
   @override
-  final String htmlUrl;
+  final String? htmlUrl;
   @override
-  final String url;
+  final String? url;
   @override
-  final String quizId;
+  final String? quizId;
   @override
-  final bool useRubricForGrading;
+  final bool? useRubricForGrading;
   @override
-  final String assignmentGroupId;
+  final String? assignmentGroupId;
   @override
-  final int position;
+  final int? position;
   @override
-  final LockInfo lockInfo;
+  final LockInfo? lockInfo;
   @override
-  final bool lockedForUser;
+  final bool? lockedForUser;
   @override
-  final DateTime lockAt;
+  final DateTime? lockAt;
   @override
-  final DateTime unlockAt;
+  final DateTime? unlockAt;
   @override
-  final String lockExplanation;
+  final String? lockExplanation;
   @override
-  final bool freeFormCriterionComments;
+  final bool? freeFormCriterionComments;
   @override
   final bool published;
   @override
-  final bool muted;
+  final bool? muted;
   @override
-  final String groupCategoryId;
+  final String? groupCategoryId;
   @override
-  final BuiltList<SubmissionTypes> submissionTypes;
+  final BuiltList<SubmissionTypes>? submissionTypes;
 
   factory _$CreateAssignmentInfo(
-          [void Function(CreateAssignmentInfoBuilder) updates]) =>
-      (new CreateAssignmentInfoBuilder()..update(updates)).build();
+          [void Function(CreateAssignmentInfoBuilder)? updates]) =>
+      (new CreateAssignmentInfoBuilder()..update(updates))._build();
 
   _$CreateAssignmentInfo._(
-      {this.name,
+      {required this.name,
       this.description,
       this.dueAt,
-      this.pointsPossible,
-      this.courseId,
+      required this.pointsPossible,
+      required this.courseId,
       this.gradingType,
       this.htmlUrl,
       this.url,
@@ -345,24 +323,19 @@ class _$CreateAssignmentInfo extends CreateAssignmentInfo {
       this.unlockAt,
       this.lockExplanation,
       this.freeFormCriterionComments,
-      this.published,
+      required this.published,
       this.muted,
       this.groupCategoryId,
       this.submissionTypes})
       : super._() {
-    if (name == null) {
-      throw new BuiltValueNullFieldError('CreateAssignmentInfo', 'name');
-    }
-    if (pointsPossible == null) {
-      throw new BuiltValueNullFieldError(
-          'CreateAssignmentInfo', 'pointsPossible');
-    }
-    if (courseId == null) {
-      throw new BuiltValueNullFieldError('CreateAssignmentInfo', 'courseId');
-    }
-    if (published == null) {
-      throw new BuiltValueNullFieldError('CreateAssignmentInfo', 'published');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        name, r'CreateAssignmentInfo', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        pointsPossible, r'CreateAssignmentInfo', 'pointsPossible');
+    BuiltValueNullFieldError.checkNotNull(
+        courseId, r'CreateAssignmentInfo', 'courseId');
+    BuiltValueNullFieldError.checkNotNull(
+        published, r'CreateAssignmentInfo', 'published');
   }
 
   @override
@@ -404,49 +377,36 @@ class _$CreateAssignmentInfo extends CreateAssignmentInfo {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        $jc(
-                                                                            $jc($jc($jc($jc(0, name.hashCode), description.hashCode), dueAt.hashCode),
-                                                                                pointsPossible.hashCode),
-                                                                            courseId.hashCode),
-                                                                        gradingType.hashCode),
-                                                                    htmlUrl.hashCode),
-                                                                url.hashCode),
-                                                            quizId.hashCode),
-                                                        useRubricForGrading.hashCode),
-                                                    assignmentGroupId.hashCode),
-                                                position.hashCode),
-                                            lockInfo.hashCode),
-                                        lockedForUser.hashCode),
-                                    lockAt.hashCode),
-                                unlockAt.hashCode),
-                            lockExplanation.hashCode),
-                        freeFormCriterionComments.hashCode),
-                    published.hashCode),
-                muted.hashCode),
-            groupCategoryId.hashCode),
-        submissionTypes.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, description.hashCode);
+    _$hash = $jc(_$hash, dueAt.hashCode);
+    _$hash = $jc(_$hash, pointsPossible.hashCode);
+    _$hash = $jc(_$hash, courseId.hashCode);
+    _$hash = $jc(_$hash, gradingType.hashCode);
+    _$hash = $jc(_$hash, htmlUrl.hashCode);
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, quizId.hashCode);
+    _$hash = $jc(_$hash, useRubricForGrading.hashCode);
+    _$hash = $jc(_$hash, assignmentGroupId.hashCode);
+    _$hash = $jc(_$hash, position.hashCode);
+    _$hash = $jc(_$hash, lockInfo.hashCode);
+    _$hash = $jc(_$hash, lockedForUser.hashCode);
+    _$hash = $jc(_$hash, lockAt.hashCode);
+    _$hash = $jc(_$hash, unlockAt.hashCode);
+    _$hash = $jc(_$hash, lockExplanation.hashCode);
+    _$hash = $jc(_$hash, freeFormCriterionComments.hashCode);
+    _$hash = $jc(_$hash, published.hashCode);
+    _$hash = $jc(_$hash, muted.hashCode);
+    _$hash = $jc(_$hash, groupCategoryId.hashCode);
+    _$hash = $jc(_$hash, submissionTypes.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CreateAssignmentInfo')
+    return (newBuiltValueToStringHelper(r'CreateAssignmentInfo')
           ..add('name', name)
           ..add('description', description)
           ..add('dueAt', dueAt)
@@ -475,103 +435,104 @@ class _$CreateAssignmentInfo extends CreateAssignmentInfo {
 
 class CreateAssignmentInfoBuilder
     implements Builder<CreateAssignmentInfo, CreateAssignmentInfoBuilder> {
-  _$CreateAssignmentInfo _$v;
+  _$CreateAssignmentInfo? _$v;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _description;
-  String get description => _$this._description;
-  set description(String description) => _$this._description = description;
+  String? _description;
+  String? get description => _$this._description;
+  set description(String? description) => _$this._description = description;
 
-  DateTime _dueAt;
-  DateTime get dueAt => _$this._dueAt;
-  set dueAt(DateTime dueAt) => _$this._dueAt = dueAt;
+  DateTime? _dueAt;
+  DateTime? get dueAt => _$this._dueAt;
+  set dueAt(DateTime? dueAt) => _$this._dueAt = dueAt;
 
-  double _pointsPossible;
-  double get pointsPossible => _$this._pointsPossible;
-  set pointsPossible(double pointsPossible) =>
+  double? _pointsPossible;
+  double? get pointsPossible => _$this._pointsPossible;
+  set pointsPossible(double? pointsPossible) =>
       _$this._pointsPossible = pointsPossible;
 
-  String _courseId;
-  String get courseId => _$this._courseId;
-  set courseId(String courseId) => _$this._courseId = courseId;
+  String? _courseId;
+  String? get courseId => _$this._courseId;
+  set courseId(String? courseId) => _$this._courseId = courseId;
 
-  GradingType _gradingType;
-  GradingType get gradingType => _$this._gradingType;
-  set gradingType(GradingType gradingType) => _$this._gradingType = gradingType;
+  GradingType? _gradingType;
+  GradingType? get gradingType => _$this._gradingType;
+  set gradingType(GradingType? gradingType) =>
+      _$this._gradingType = gradingType;
 
-  String _htmlUrl;
-  String get htmlUrl => _$this._htmlUrl;
-  set htmlUrl(String htmlUrl) => _$this._htmlUrl = htmlUrl;
+  String? _htmlUrl;
+  String? get htmlUrl => _$this._htmlUrl;
+  set htmlUrl(String? htmlUrl) => _$this._htmlUrl = htmlUrl;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  String _quizId;
-  String get quizId => _$this._quizId;
-  set quizId(String quizId) => _$this._quizId = quizId;
+  String? _quizId;
+  String? get quizId => _$this._quizId;
+  set quizId(String? quizId) => _$this._quizId = quizId;
 
-  bool _useRubricForGrading;
-  bool get useRubricForGrading => _$this._useRubricForGrading;
-  set useRubricForGrading(bool useRubricForGrading) =>
+  bool? _useRubricForGrading;
+  bool? get useRubricForGrading => _$this._useRubricForGrading;
+  set useRubricForGrading(bool? useRubricForGrading) =>
       _$this._useRubricForGrading = useRubricForGrading;
 
-  String _assignmentGroupId;
-  String get assignmentGroupId => _$this._assignmentGroupId;
-  set assignmentGroupId(String assignmentGroupId) =>
+  String? _assignmentGroupId;
+  String? get assignmentGroupId => _$this._assignmentGroupId;
+  set assignmentGroupId(String? assignmentGroupId) =>
       _$this._assignmentGroupId = assignmentGroupId;
 
-  int _position;
-  int get position => _$this._position;
-  set position(int position) => _$this._position = position;
+  int? _position;
+  int? get position => _$this._position;
+  set position(int? position) => _$this._position = position;
 
-  LockInfoBuilder _lockInfo;
+  LockInfoBuilder? _lockInfo;
   LockInfoBuilder get lockInfo => _$this._lockInfo ??= new LockInfoBuilder();
-  set lockInfo(LockInfoBuilder lockInfo) => _$this._lockInfo = lockInfo;
+  set lockInfo(LockInfoBuilder? lockInfo) => _$this._lockInfo = lockInfo;
 
-  bool _lockedForUser;
-  bool get lockedForUser => _$this._lockedForUser;
-  set lockedForUser(bool lockedForUser) =>
+  bool? _lockedForUser;
+  bool? get lockedForUser => _$this._lockedForUser;
+  set lockedForUser(bool? lockedForUser) =>
       _$this._lockedForUser = lockedForUser;
 
-  DateTime _lockAt;
-  DateTime get lockAt => _$this._lockAt;
-  set lockAt(DateTime lockAt) => _$this._lockAt = lockAt;
+  DateTime? _lockAt;
+  DateTime? get lockAt => _$this._lockAt;
+  set lockAt(DateTime? lockAt) => _$this._lockAt = lockAt;
 
-  DateTime _unlockAt;
-  DateTime get unlockAt => _$this._unlockAt;
-  set unlockAt(DateTime unlockAt) => _$this._unlockAt = unlockAt;
+  DateTime? _unlockAt;
+  DateTime? get unlockAt => _$this._unlockAt;
+  set unlockAt(DateTime? unlockAt) => _$this._unlockAt = unlockAt;
 
-  String _lockExplanation;
-  String get lockExplanation => _$this._lockExplanation;
-  set lockExplanation(String lockExplanation) =>
+  String? _lockExplanation;
+  String? get lockExplanation => _$this._lockExplanation;
+  set lockExplanation(String? lockExplanation) =>
       _$this._lockExplanation = lockExplanation;
 
-  bool _freeFormCriterionComments;
-  bool get freeFormCriterionComments => _$this._freeFormCriterionComments;
-  set freeFormCriterionComments(bool freeFormCriterionComments) =>
+  bool? _freeFormCriterionComments;
+  bool? get freeFormCriterionComments => _$this._freeFormCriterionComments;
+  set freeFormCriterionComments(bool? freeFormCriterionComments) =>
       _$this._freeFormCriterionComments = freeFormCriterionComments;
 
-  bool _published;
-  bool get published => _$this._published;
-  set published(bool published) => _$this._published = published;
+  bool? _published;
+  bool? get published => _$this._published;
+  set published(bool? published) => _$this._published = published;
 
-  bool _muted;
-  bool get muted => _$this._muted;
-  set muted(bool muted) => _$this._muted = muted;
+  bool? _muted;
+  bool? get muted => _$this._muted;
+  set muted(bool? muted) => _$this._muted = muted;
 
-  String _groupCategoryId;
-  String get groupCategoryId => _$this._groupCategoryId;
-  set groupCategoryId(String groupCategoryId) =>
+  String? _groupCategoryId;
+  String? get groupCategoryId => _$this._groupCategoryId;
+  set groupCategoryId(String? groupCategoryId) =>
       _$this._groupCategoryId = groupCategoryId;
 
-  ListBuilder<SubmissionTypes> _submissionTypes;
+  ListBuilder<SubmissionTypes>? _submissionTypes;
   ListBuilder<SubmissionTypes> get submissionTypes =>
       _$this._submissionTypes ??= new ListBuilder<SubmissionTypes>();
-  set submissionTypes(ListBuilder<SubmissionTypes> submissionTypes) =>
+  set submissionTypes(ListBuilder<SubmissionTypes>? submissionTypes) =>
       _$this._submissionTypes = submissionTypes;
 
   CreateAssignmentInfoBuilder() {
@@ -579,29 +540,30 @@ class CreateAssignmentInfoBuilder
   }
 
   CreateAssignmentInfoBuilder get _$this {
-    if (_$v != null) {
-      _name = _$v.name;
-      _description = _$v.description;
-      _dueAt = _$v.dueAt;
-      _pointsPossible = _$v.pointsPossible;
-      _courseId = _$v.courseId;
-      _gradingType = _$v.gradingType;
-      _htmlUrl = _$v.htmlUrl;
-      _url = _$v.url;
-      _quizId = _$v.quizId;
-      _useRubricForGrading = _$v.useRubricForGrading;
-      _assignmentGroupId = _$v.assignmentGroupId;
-      _position = _$v.position;
-      _lockInfo = _$v.lockInfo?.toBuilder();
-      _lockedForUser = _$v.lockedForUser;
-      _lockAt = _$v.lockAt;
-      _unlockAt = _$v.unlockAt;
-      _lockExplanation = _$v.lockExplanation;
-      _freeFormCriterionComments = _$v.freeFormCriterionComments;
-      _published = _$v.published;
-      _muted = _$v.muted;
-      _groupCategoryId = _$v.groupCategoryId;
-      _submissionTypes = _$v.submissionTypes?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _name = $v.name;
+      _description = $v.description;
+      _dueAt = $v.dueAt;
+      _pointsPossible = $v.pointsPossible;
+      _courseId = $v.courseId;
+      _gradingType = $v.gradingType;
+      _htmlUrl = $v.htmlUrl;
+      _url = $v.url;
+      _quizId = $v.quizId;
+      _useRubricForGrading = $v.useRubricForGrading;
+      _assignmentGroupId = $v.assignmentGroupId;
+      _position = $v.position;
+      _lockInfo = $v.lockInfo?.toBuilder();
+      _lockedForUser = $v.lockedForUser;
+      _lockAt = $v.lockAt;
+      _unlockAt = $v.unlockAt;
+      _lockExplanation = $v.lockExplanation;
+      _freeFormCriterionComments = $v.freeFormCriterionComments;
+      _published = $v.published;
+      _muted = $v.muted;
+      _groupCategoryId = $v.groupCategoryId;
+      _submissionTypes = $v.submissionTypes?.toBuilder();
       _$v = null;
     }
     return this;
@@ -609,28 +571,31 @@ class CreateAssignmentInfoBuilder
 
   @override
   void replace(CreateAssignmentInfo other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CreateAssignmentInfo;
   }
 
   @override
-  void update(void Function(CreateAssignmentInfoBuilder) updates) {
+  void update(void Function(CreateAssignmentInfoBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CreateAssignmentInfo build() {
+  CreateAssignmentInfo build() => _build();
+
+  _$CreateAssignmentInfo _build() {
     _$CreateAssignmentInfo _$result;
     try {
       _$result = _$v ??
           new _$CreateAssignmentInfo._(
-              name: name,
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'CreateAssignmentInfo', 'name'),
               description: description,
               dueAt: dueAt,
-              pointsPossible: pointsPossible,
-              courseId: courseId,
+              pointsPossible: BuiltValueNullFieldError.checkNotNull(
+                  pointsPossible, r'CreateAssignmentInfo', 'pointsPossible'),
+              courseId: BuiltValueNullFieldError.checkNotNull(
+                  courseId, r'CreateAssignmentInfo', 'courseId'),
               gradingType: gradingType,
               htmlUrl: htmlUrl,
               url: url,
@@ -644,12 +609,13 @@ class CreateAssignmentInfoBuilder
               unlockAt: unlockAt,
               lockExplanation: lockExplanation,
               freeFormCriterionComments: freeFormCriterionComments,
-              published: published,
+              published: BuiltValueNullFieldError.checkNotNull(
+                  published, r'CreateAssignmentInfo', 'published'),
               muted: muted,
               groupCategoryId: groupCategoryId,
               submissionTypes: _submissionTypes?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'lockInfo';
         _lockInfo?.build();
@@ -658,7 +624,7 @@ class CreateAssignmentInfoBuilder
         _submissionTypes?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'CreateAssignmentInfo', _$failedField, e.toString());
+            r'CreateAssignmentInfo', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -667,4 +633,4 @@ class CreateAssignmentInfoBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint
