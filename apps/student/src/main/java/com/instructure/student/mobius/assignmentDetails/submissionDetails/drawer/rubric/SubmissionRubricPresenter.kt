@@ -24,12 +24,10 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
-import java.util.HashMap
 
 object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRubricViewState> {
 
@@ -46,7 +44,7 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
 
         // Show the grade cell only if the submission is graded and the rubric is used for grading
         if (model.submission.isGraded && model.assignment.isUseRubricForGrading) {
-            val gradeState = GradeCellViewState.fromSubmission(context, model.assignment, model.submission)
+            val gradeState = GradeCellViewState.fromSubmission(context, model.assignment, model.submission, model.restrictQuantitativeData)
             items += RubricListData.Grade(gradeState)
         }
 
@@ -104,15 +102,15 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
 
         val selectedRatingId = model.selectedRatingMap[criterion.id] ?: assessedRating?.id
 
+        // If points are hidden, show the rating title instead of points
+        val hidePoints = model.assignment.rubricSettings?.hidePoints == true || model.restrictQuantitativeData
+
         // Free-form assessments should only show the assessment comments and the matching assessment rating
         if (model.assignment.freeFormCriterionComments) {
             ratings = ratings
-                .filter { it.id == assessment?.ratingId && model.assignment.rubricSettings?.hidePoints != true}
+                .filter { it.id == assessment?.ratingId && !hidePoints}
                 .map { it.copy(description = null) }
         }
-
-        // If points are hidden, show the rating title instead of points
-        val hidePoints = model.assignment.rubricSettings?.hidePoints == true
 
         // Map criterion ratings to view state data
         var ratingData = ratings.map { rating ->

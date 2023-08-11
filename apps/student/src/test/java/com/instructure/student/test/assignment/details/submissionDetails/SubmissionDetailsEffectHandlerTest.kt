@@ -50,8 +50,12 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         mockkObject(FeaturesManager)
+        mockkObject(CourseManager)
         every { FeaturesManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(listOf("assignments_2_student"))
+        }
+        every { CourseManager.getCourseSettingsAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings())
         }
     }
 

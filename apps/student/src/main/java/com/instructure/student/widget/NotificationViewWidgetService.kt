@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.managers.StreamManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.utils.ColorKeeper
@@ -86,8 +87,9 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
 
             if (!BaseRemoteViewsService.shouldHideDetails(appWidgetId)) {
-                if (streamItem.getMessage(ContextKeeper.appContext) != null) {
-                    row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext), Html.FROM_HTML_MODE_LEGACY)))
+                val restrictQuantitativeData = (streamItem.canvasContext as? Course)?.settings?.restrictQuantitativeData ?: false
+                if (streamItem.getMessage(ContextKeeper.appContext, restrictQuantitativeData) != null) {
+                    row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext, restrictQuantitativeData), Html.FROM_HTML_MODE_LEGACY)))
                     row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setTextViewText(R.id.message, "")

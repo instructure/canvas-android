@@ -39,132 +39,119 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
       serializers.serialize(object.limitPrivilegesToCourseSection,
           specifiedType: const FullType(bool)),
     ];
-    result.add('role');
-    if (object.role == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.role,
-          specifiedType: const FullType(String)));
-    }
-    result.add('type');
-    if (object.type == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.type,
-          specifiedType: const FullType(String)));
-    }
-    result.add('course_id');
-    if (object.courseId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.courseId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('course_section_id');
-    if (object.courseSectionId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.courseSectionId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('grades');
-    if (object.grades == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.grades,
-          specifiedType: const FullType(Grade)));
-    }
-    result.add('computed_current_score');
-    if (object.computedCurrentScore == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.computedCurrentScore,
-          specifiedType: const FullType(double)));
-    }
-    result.add('computed_final_score');
-    if (object.computedFinalScore == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.computedFinalScore,
-          specifiedType: const FullType(double)));
-    }
-    result.add('computed_current_grade');
-    if (object.computedCurrentGrade == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.computedCurrentGrade,
-          specifiedType: const FullType(String)));
-    }
-    result.add('computed_final_grade');
-    if (object.computedFinalGrade == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.computedFinalGrade,
-          specifiedType: const FullType(String)));
-    }
-    result.add('current_period_computed_current_score');
-    if (object.currentPeriodComputedCurrentScore == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.currentPeriodComputedCurrentScore,
-          specifiedType: const FullType(double)));
-    }
-    result.add('current_period_computed_final_score');
-    if (object.currentPeriodComputedFinalScore == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.currentPeriodComputedFinalScore,
-          specifiedType: const FullType(double)));
-    }
-    result.add('current_period_computed_current_grade');
-    if (object.currentPeriodComputedCurrentGrade == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.currentPeriodComputedCurrentGrade,
-          specifiedType: const FullType(String)));
-    }
-    result.add('current_period_computed_final_grade');
-    if (object.currentPeriodComputedFinalGrade == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.currentPeriodComputedFinalGrade,
-          specifiedType: const FullType(String)));
-    }
-    result.add('current_grading_period_id');
-    if (object.currentGradingPeriodId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.currentGradingPeriodId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('current_grading_period_title');
-    if (object.currentGradingPeriodTitle == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.currentGradingPeriodTitle,
-          specifiedType: const FullType(String)));
-    }
-    result.add('last_activity_at');
-    if (object.lastActivityAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lastActivityAt,
+    Object value;
+    value = object.role;
+
+    result
+      ..add('role')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.type;
+
+    result
+      ..add('type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.courseId;
+
+    result
+      ..add('course_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.courseSectionId;
+
+    result
+      ..add('course_section_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.grades;
+
+    result
+      ..add('grades')
+      ..add(serializers.serialize(value, specifiedType: const FullType(Grade)));
+    value = object.computedCurrentScore;
+
+    result
+      ..add('computed_current_score')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(double)));
+    value = object.computedFinalScore;
+
+    result
+      ..add('computed_final_score')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(double)));
+    value = object.computedCurrentGrade;
+
+    result
+      ..add('computed_current_grade')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.computedFinalGrade;
+
+    result
+      ..add('computed_final_grade')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.computedCurrentLetterGrade;
+
+    result
+      ..add('computed_current_letter_grade')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.currentPeriodComputedCurrentScore;
+
+    result
+      ..add('current_period_computed_current_score')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(double)));
+    value = object.currentPeriodComputedFinalScore;
+
+    result
+      ..add('current_period_computed_final_score')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(double)));
+    value = object.currentPeriodComputedCurrentGrade;
+
+    result
+      ..add('current_period_computed_current_grade')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.currentPeriodComputedFinalGrade;
+
+    result
+      ..add('current_period_computed_final_grade')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.currentGradingPeriodId;
+
+    result
+      ..add('current_grading_period_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.currentGradingPeriodTitle;
+
+    result
+      ..add('current_grading_period_title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.lastActivityAt;
+
+    result
+      ..add('last_activity_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('observed_user');
-    if (object.observedUser == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.observedUser,
-          specifiedType: const FullType(User)));
-    }
-    result.add('user');
-    if (object.user == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.user,
-          specifiedType: const FullType(User)));
-    }
+    value = object.observedUser;
+
+    result
+      ..add('observed_user')
+      ..add(serializers.serialize(value, specifiedType: const FullType(User)));
+    value = object.user;
+
+    result
+      ..add('user')
+      ..add(serializers.serialize(value, specifiedType: const FullType(User)));
+
     return result;
   }
 
@@ -177,8 +164,7 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object value = iterator.current;
       switch (key) {
         case 'role':
           result.role = serializers.deserialize(value,
@@ -226,6 +212,10 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
           break;
         case 'computed_final_grade':
           result.computedFinalGrade = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'computed_current_letter_grade':
+          result.computedCurrentLetterGrade = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'multiple_grading_periods_enabled':
@@ -317,6 +307,8 @@ class _$Enrollment extends Enrollment {
   @override
   final String computedFinalGrade;
   @override
+  final String computedCurrentLetterGrade;
+  @override
   final bool multipleGradingPeriodsEnabled;
   @override
   final bool totalsForAllGradingPeriodsOption;
@@ -359,6 +351,7 @@ class _$Enrollment extends Enrollment {
       this.computedFinalScore,
       this.computedCurrentGrade,
       this.computedFinalGrade,
+      this.computedCurrentLetterGrade,
       this.multipleGradingPeriodsEnabled,
       this.totalsForAllGradingPeriodsOption,
       this.currentPeriodComputedCurrentScore,
@@ -373,30 +366,18 @@ class _$Enrollment extends Enrollment {
       this.observedUser,
       this.user})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Enrollment', 'id');
-    }
-    if (enrollmentState == null) {
-      throw new BuiltValueNullFieldError('Enrollment', 'enrollmentState');
-    }
-    if (userId == null) {
-      throw new BuiltValueNullFieldError('Enrollment', 'userId');
-    }
-    if (multipleGradingPeriodsEnabled == null) {
-      throw new BuiltValueNullFieldError(
-          'Enrollment', 'multipleGradingPeriodsEnabled');
-    }
-    if (totalsForAllGradingPeriodsOption == null) {
-      throw new BuiltValueNullFieldError(
-          'Enrollment', 'totalsForAllGradingPeriodsOption');
-    }
-    if (associatedUserId == null) {
-      throw new BuiltValueNullFieldError('Enrollment', 'associatedUserId');
-    }
-    if (limitPrivilegesToCourseSection == null) {
-      throw new BuiltValueNullFieldError(
-          'Enrollment', 'limitPrivilegesToCourseSection');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, 'Enrollment', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        enrollmentState, 'Enrollment', 'enrollmentState');
+    BuiltValueNullFieldError.checkNotNull(userId, 'Enrollment', 'userId');
+    BuiltValueNullFieldError.checkNotNull(multipleGradingPeriodsEnabled,
+        'Enrollment', 'multipleGradingPeriodsEnabled');
+    BuiltValueNullFieldError.checkNotNull(totalsForAllGradingPeriodsOption,
+        'Enrollment', 'totalsForAllGradingPeriodsOption');
+    BuiltValueNullFieldError.checkNotNull(
+        associatedUserId, 'Enrollment', 'associatedUserId');
+    BuiltValueNullFieldError.checkNotNull(limitPrivilegesToCourseSection,
+        'Enrollment', 'limitPrivilegesToCourseSection');
   }
 
   @override
@@ -422,6 +403,7 @@ class _$Enrollment extends Enrollment {
         computedFinalScore == other.computedFinalScore &&
         computedCurrentGrade == other.computedCurrentGrade &&
         computedFinalGrade == other.computedFinalGrade &&
+        computedCurrentLetterGrade == other.computedCurrentLetterGrade &&
         multipleGradingPeriodsEnabled == other.multipleGradingPeriodsEnabled &&
         totalsForAllGradingPeriodsOption ==
             other.totalsForAllGradingPeriodsOption &&
@@ -463,13 +445,13 @@ class _$Enrollment extends Enrollment {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc(0, role.hashCode), type.hashCode), id.hashCode), courseId.hashCode), courseSectionId.hashCode), enrollmentState.hashCode),
-                                                                                userId.hashCode),
-                                                                            grades.hashCode),
-                                                                        computedCurrentScore.hashCode),
-                                                                    computedFinalScore.hashCode),
-                                                                computedCurrentGrade.hashCode),
-                                                            computedFinalGrade.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, role.hashCode), type.hashCode), id.hashCode), courseId.hashCode), courseSectionId.hashCode), enrollmentState.hashCode), userId.hashCode),
+                                                                                grades.hashCode),
+                                                                            computedCurrentScore.hashCode),
+                                                                        computedFinalScore.hashCode),
+                                                                    computedCurrentGrade.hashCode),
+                                                                computedFinalGrade.hashCode),
+                                                            computedCurrentLetterGrade.hashCode),
                                                         multipleGradingPeriodsEnabled.hashCode),
                                                     totalsForAllGradingPeriodsOption.hashCode),
                                                 currentPeriodComputedCurrentScore.hashCode),
@@ -500,6 +482,7 @@ class _$Enrollment extends Enrollment {
           ..add('computedFinalScore', computedFinalScore)
           ..add('computedCurrentGrade', computedCurrentGrade)
           ..add('computedFinalGrade', computedFinalGrade)
+          ..add('computedCurrentLetterGrade', computedCurrentLetterGrade)
           ..add('multipleGradingPeriodsEnabled', multipleGradingPeriodsEnabled)
           ..add('totalsForAllGradingPeriodsOption',
               totalsForAllGradingPeriodsOption)
@@ -579,6 +562,11 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
   String get computedFinalGrade => _$this._computedFinalGrade;
   set computedFinalGrade(String computedFinalGrade) =>
       _$this._computedFinalGrade = computedFinalGrade;
+
+  String _computedCurrentLetterGrade;
+  String get computedCurrentLetterGrade => _$this._computedCurrentLetterGrade;
+  set computedCurrentLetterGrade(String computedCurrentLetterGrade) =>
+      _$this._computedCurrentLetterGrade = computedCurrentLetterGrade;
 
   bool _multipleGradingPeriodsEnabled;
   bool get multipleGradingPeriodsEnabled =>
@@ -661,34 +649,34 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
   }
 
   EnrollmentBuilder get _$this {
-    if (_$v != null) {
-      _role = _$v.role;
-      _type = _$v.type;
-      _id = _$v.id;
-      _courseId = _$v.courseId;
-      _courseSectionId = _$v.courseSectionId;
-      _enrollmentState = _$v.enrollmentState;
-      _userId = _$v.userId;
-      _grades = _$v.grades?.toBuilder();
-      _computedCurrentScore = _$v.computedCurrentScore;
-      _computedFinalScore = _$v.computedFinalScore;
-      _computedCurrentGrade = _$v.computedCurrentGrade;
-      _computedFinalGrade = _$v.computedFinalGrade;
-      _multipleGradingPeriodsEnabled = _$v.multipleGradingPeriodsEnabled;
-      _totalsForAllGradingPeriodsOption = _$v.totalsForAllGradingPeriodsOption;
-      _currentPeriodComputedCurrentScore =
-          _$v.currentPeriodComputedCurrentScore;
-      _currentPeriodComputedFinalScore = _$v.currentPeriodComputedFinalScore;
-      _currentPeriodComputedCurrentGrade =
-          _$v.currentPeriodComputedCurrentGrade;
-      _currentPeriodComputedFinalGrade = _$v.currentPeriodComputedFinalGrade;
-      _currentGradingPeriodId = _$v.currentGradingPeriodId;
-      _currentGradingPeriodTitle = _$v.currentGradingPeriodTitle;
-      _associatedUserId = _$v.associatedUserId;
-      _lastActivityAt = _$v.lastActivityAt;
-      _limitPrivilegesToCourseSection = _$v.limitPrivilegesToCourseSection;
-      _observedUser = _$v.observedUser?.toBuilder();
-      _user = _$v.user?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _role = $v.role;
+      _type = $v.type;
+      _id = $v.id;
+      _courseId = $v.courseId;
+      _courseSectionId = $v.courseSectionId;
+      _enrollmentState = $v.enrollmentState;
+      _userId = $v.userId;
+      _grades = $v.grades?.toBuilder();
+      _computedCurrentScore = $v.computedCurrentScore;
+      _computedFinalScore = $v.computedFinalScore;
+      _computedCurrentGrade = $v.computedCurrentGrade;
+      _computedFinalGrade = $v.computedFinalGrade;
+      _computedCurrentLetterGrade = $v.computedCurrentLetterGrade;
+      _multipleGradingPeriodsEnabled = $v.multipleGradingPeriodsEnabled;
+      _totalsForAllGradingPeriodsOption = $v.totalsForAllGradingPeriodsOption;
+      _currentPeriodComputedCurrentScore = $v.currentPeriodComputedCurrentScore;
+      _currentPeriodComputedFinalScore = $v.currentPeriodComputedFinalScore;
+      _currentPeriodComputedCurrentGrade = $v.currentPeriodComputedCurrentGrade;
+      _currentPeriodComputedFinalGrade = $v.currentPeriodComputedFinalGrade;
+      _currentGradingPeriodId = $v.currentGradingPeriodId;
+      _currentGradingPeriodTitle = $v.currentGradingPeriodTitle;
+      _associatedUserId = $v.associatedUserId;
+      _lastActivityAt = $v.lastActivityAt;
+      _limitPrivilegesToCourseSection = $v.limitPrivilegesToCourseSection;
+      _observedUser = $v.observedUser?.toBuilder();
+      _user = $v.user?.toBuilder();
       _$v = null;
     }
     return this;
@@ -696,9 +684,7 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
 
   @override
   void replace(Enrollment other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Enrollment;
   }
 
@@ -715,19 +701,25 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
           new _$Enrollment._(
               role: role,
               type: type,
-              id: id,
+              id: BuiltValueNullFieldError.checkNotNull(id, 'Enrollment', 'id'),
               courseId: courseId,
               courseSectionId: courseSectionId,
-              enrollmentState: enrollmentState,
-              userId: userId,
+              enrollmentState: BuiltValueNullFieldError.checkNotNull(
+                  enrollmentState, 'Enrollment', 'enrollmentState'),
+              userId: BuiltValueNullFieldError.checkNotNull(
+                  userId, 'Enrollment', 'userId'),
               grades: _grades?.build(),
               computedCurrentScore: computedCurrentScore,
               computedFinalScore: computedFinalScore,
               computedCurrentGrade: computedCurrentGrade,
               computedFinalGrade: computedFinalGrade,
-              multipleGradingPeriodsEnabled: multipleGradingPeriodsEnabled,
-              totalsForAllGradingPeriodsOption:
+              computedCurrentLetterGrade: computedCurrentLetterGrade,
+              multipleGradingPeriodsEnabled: BuiltValueNullFieldError.checkNotNull(
+                  multipleGradingPeriodsEnabled, 'Enrollment', 'multipleGradingPeriodsEnabled'),
+              totalsForAllGradingPeriodsOption: BuiltValueNullFieldError.checkNotNull(
                   totalsForAllGradingPeriodsOption,
+                  'Enrollment',
+                  'totalsForAllGradingPeriodsOption'),
               currentPeriodComputedCurrentScore:
                   currentPeriodComputedCurrentScore,
               currentPeriodComputedFinalScore: currentPeriodComputedFinalScore,
@@ -736,9 +728,13 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
               currentPeriodComputedFinalGrade: currentPeriodComputedFinalGrade,
               currentGradingPeriodId: currentGradingPeriodId,
               currentGradingPeriodTitle: currentGradingPeriodTitle,
-              associatedUserId: associatedUserId,
+              associatedUserId: BuiltValueNullFieldError.checkNotNull(
+                  associatedUserId, 'Enrollment', 'associatedUserId'),
               lastActivityAt: lastActivityAt,
-              limitPrivilegesToCourseSection: limitPrivilegesToCourseSection,
+              limitPrivilegesToCourseSection: BuiltValueNullFieldError.checkNotNull(
+                  limitPrivilegesToCourseSection,
+                  'Enrollment',
+                  'limitPrivilegesToCourseSection'),
               observedUser: _observedUser?.build(),
               user: _user?.build());
     } catch (_) {
@@ -762,4 +758,4 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

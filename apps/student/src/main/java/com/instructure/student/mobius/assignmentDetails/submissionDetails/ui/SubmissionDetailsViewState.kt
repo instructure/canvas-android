@@ -50,7 +50,8 @@ sealed class SubmissionDetailsTabData(val tabName: String) {
     data class RubricData(
         val name: String,
         val assignment: Assignment,
-        val submission: Submission
+        val submission: Submission,
+        val restrictQuantitativeData: Boolean = false
     ) : SubmissionDetailsTabData(name)
 }
 

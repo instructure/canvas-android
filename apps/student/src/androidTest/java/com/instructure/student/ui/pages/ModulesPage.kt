@@ -28,18 +28,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.dataseeding.model.ModuleApiModel
-import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withDescendant
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withText
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.waitForCheck
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
@@ -68,8 +58,8 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     // Asserts that an assignment (presumably from a module) is locked
     fun assertAssignmentLocked(assignment: Assignment, course: Course) {
         val matcher = allOf(
-                hasSibling(withText(assignment.name)),
-                withId(R.id.indicator)
+            hasSibling(withText(assignment.name)),
+            withId(R.id.indicator)
         )
 
         // Scroll to the assignment
@@ -96,13 +86,21 @@ class ModulesPage : BasePage(R.id.modulesPage) {
         onView(withText(itemTitle)).check(doesNotExist())
     }
 
+    fun assertPossiblePointsDisplayed(points: String) {
+        onView(withId(R.id.points) + withText("$points pts")).assertDisplayed()
+    }
+
+    fun assertPossiblePointsNotDisplayed(name: String) {
+        onView(withParent(hasSibling(withChild(withId(R.id.title) + withText(name)))) + withId(R.id.points)).assertNotDisplayed()
+    }
+
     /**
      * It is occasionally the case that we need to click a few extra buttons to get "fully" into
      * the item.  Thus the [extraClickIds] vararg param.
      */
     fun clickModuleItem(module: ModuleObject, itemTitle: String, vararg extraClickIds: Int) {
         assertAndClickModuleItem(module.name!!, itemTitle, true)
-        for(extraClickId in extraClickIds) {
+        for (extraClickId in extraClickIds) {
             onView(allOf(withId(extraClickId), isDisplayed())).click()
         }
     }
@@ -111,19 +109,18 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     fun assertAndClickModuleItem(moduleName: String, itemTitle: String, clickItem: Boolean = false) {
         try {
             scrollRecyclerView(R.id.listView, withText(itemTitle))
-            if(clickItem) {
+            if (clickItem) {
                 onView(withText(itemTitle)).click()
             }
-        }
-        catch(ex: Exception) {
-            when(ex) {
+        } catch (ex: Exception) {
+            when (ex) {
                 is NoMatchingViewException, is PerformException -> {
                     // Maybe our module hasn't been expanded.  Click the module and try again.
                     val moduleMatcher = withText(moduleName)
                     scrollRecyclerView(R.id.listView, moduleMatcher)
                     onView(moduleMatcher).click()
                     scrollRecyclerView(R.id.listView, withText(itemTitle))
-                    if(clickItem) {
+                    if (clickItem) {
                         onView(withText(itemTitle)).click()
                     }
                 }
@@ -137,7 +134,7 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     }
 
     fun refresh() {
-        onView(allOf(withId(R.id.swipeRefreshLayout),isDisplayed())).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed())).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
     }
 
     fun clickOnModuleExpandCollapseIcon(moduleName: String) {
