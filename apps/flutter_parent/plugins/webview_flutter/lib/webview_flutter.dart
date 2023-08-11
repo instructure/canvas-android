@@ -44,7 +44,7 @@ typedef void JavascriptMessageHandler(JavascriptMessage message);
 
 /// Information about a navigation action that is about to be executed.
 class NavigationRequest {
-  NavigationRequest._({this.url, this.isForMainFrame});
+  NavigationRequest._({ required this.url, required this.isForMainFrame});
 
   /// The URL that will be loaded if the navigation is executed.
   final String url;
@@ -79,11 +79,11 @@ enum NavigationDecision {
 class SurfaceAndroidWebView extends AndroidWebView {
   @override
   Widget build({
-    BuildContext context,
-    CreationParams creationParams,
-    WebViewPlatformCreatedCallback onWebViewPlatformCreated,
-    Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers,
-    @required WebViewPlatformCallbacksHandler webViewPlatformCallbacksHandler,
+    BuildContext? context,
+    CreationParams? creationParams,
+    WebViewPlatformCreatedCallback? onWebViewPlatformCreated,
+    Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
+    WebViewPlatformCallbacksHandler? webViewPlatformCallbacksHandler,
   }) {
     assert(webViewPlatformCallbacksHandler != null);
     return PlatformViewLink(
@@ -93,7 +93,7 @@ class SurfaceAndroidWebView extends AndroidWebView {
         PlatformViewController controller,
       ) {
         return AndroidViewSurface(
-          controller: controller,
+          controller: controller as AndroidViewController,
           gestureRecognizers: gestureRecognizers ??
               const <Factory<OneSequenceGestureRecognizer>>{},
           hitTestBehavior: PlatformViewHitTestBehavior.opaque,
@@ -107,14 +107,12 @@ class SurfaceAndroidWebView extends AndroidWebView {
           // we explicitly set it here so that the widget doesn't require an ambient
           // directionality.
           layoutDirection: TextDirection.rtl,
-          creationParams: MethodChannelWebViewPlatform.creationParamsToMap(
-            creationParams,
-          ),
+          creationParams: creationParams != null ? MethodChannelWebViewPlatform.creationParamsToMap(creationParams) : null,
           creationParamsCodec: const StandardMessageCodec(),
         )
           ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
           ..addOnPlatformViewCreatedListener((int id) {
-            if (onWebViewPlatformCreated == null) {
+            if (onWebViewPlatformCreated == null || webViewPlatformCallbacksHandler == null) {
               return;
             }
             onWebViewPlatformCreated(
@@ -172,11 +170,9 @@ class JavascriptChannel {
   ///
   /// The parameters `name` and `onMessageReceived` must not be null.
   JavascriptChannel({
-    @required this.name,
-    @required this.onMessageReceived,
-  })  : assert(name != null),
-        assert(onMessageReceived != null),
-        assert(_validChannelNames.hasMatch(name));
+    required this.name,
+    required this.onMessageReceived,
+  }) : assert(_validChannelNames.hasMatch(name));
 
   /// The channel's name.
   ///
@@ -208,7 +204,7 @@ class WebView extends StatefulWidget {
   ///
   /// The `javascriptMode` and `autoMediaPlaybackPolicy` parameters must not be null.
   const WebView({
-    Key key,
+    Key? key,
     this.onWebViewCreated,
     this.initialUrl,
     this.javascriptMode = JavascriptMode.disabled,
@@ -224,11 +220,9 @@ class WebView extends StatefulWidget {
     this.userAgent,
     this.initialMediaPlaybackPolicy =
         AutoMediaPlaybackPolicy.require_user_action_for_all_media_types,
-  })  : assert(javascriptMode != null),
-        assert(initialMediaPlaybackPolicy != null),
-        super(key: key);
+  }) : super(key: key);
 
-  static WebViewPlatform _platform;
+  static WebViewPlatform? _platform;
 
   /// Sets a custom [WebViewPlatform].
   ///
@@ -258,11 +252,11 @@ class WebView extends StatefulWidget {
               "Trying to use the default webview implementation for $defaultTargetPlatform but there isn't a default one");
       }
     }
-    return _platform;
+    return _platform!;
   }
 
   /// If not null invoked once the web view is created.
-  final WebViewCreatedCallback onWebViewCreated;
+  final WebViewCreatedCallback? onWebViewCreated;
 
   /// Which gestures should be consumed by the web view.
   ///
@@ -273,10 +267,10 @@ class WebView extends StatefulWidget {
   ///
   /// When this set is empty or null, the web view will only handle pointer events for gestures that
   /// were not claimed by any other gesture recognizer.
-  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
+  final Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers;
 
   /// The initial URL to load.
-  final String initialUrl;
+  final String? initialUrl;
 
   /// Whether Javascript execution is enabled.
   final JavascriptMode javascriptMode;
@@ -308,7 +302,7 @@ class WebView extends StatefulWidget {
   /// channels in the list.
   ///
   /// A null value is equivalent to an empty set.
-  final Set<JavascriptChannel> javascriptChannels;
+  final Set<JavascriptChannel>? javascriptChannels;
 
   /// A delegate function that decides how to handle navigation actions.
   ///
@@ -332,10 +326,10 @@ class WebView extends StatefulWidget {
   ///     * When a navigationDelegate is set pages with frames are not properly handled by the
   ///       webview, and frames will be opened in the main frame.
   ///     * When a navigationDelegate is set HTTP requests do not include the HTTP referer header.
-  final NavigationDelegate navigationDelegate;
+  final NavigationDelegate? navigationDelegate;
 
   /// Invoked when a page starts loading.
-  final PageStartedCallback onPageStarted;
+  final PageStartedCallback? onPageStarted;
 
   /// Invoked when a page has finished loading.
   ///
@@ -347,15 +341,15 @@ class WebView extends StatefulWidget {
   /// When invoked on iOS or Android, any Javascript code that is embedded
   /// directly in the HTML has been loaded and code injected with
   /// [WebViewController.evaluateJavascript] can assume this.
-  final PageFinishedCallback onPageFinished;
+  final PageFinishedCallback? onPageFinished;
 
   /// Invoked when a web resource has failed to load.
   ///
   /// This can be called for any resource (iframe, image, etc.), not just for
   /// the main page.
-  final WebResourceErrorCallback onWebResourceError;
+  final WebResourceErrorCallback? onWebResourceError;
 
-  final bool darkMode;
+  final bool? darkMode;
 
   /// Controls whether WebView debugging is enabled.
   ///
@@ -389,7 +383,7 @@ class WebView extends StatefulWidget {
   /// user agent.
   ///
   /// By default `userAgent` is null.
-  final String userAgent;
+  final String? userAgent;
 
   /// Which restrictions apply on automatic media playback.
   ///

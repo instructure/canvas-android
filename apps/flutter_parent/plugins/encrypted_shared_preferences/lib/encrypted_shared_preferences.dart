@@ -15,7 +15,7 @@ class EncryptedSharedPreferences {
   EncryptedSharedPreferences._(this._preferenceCache);
 
   static const String _prefix = 'flutter.';
-  static Completer<EncryptedSharedPreferences> _completer;
+  static Completer<EncryptedSharedPreferences>? _completer;
 
   static EncryptedSharedPreferencesStorePlatform get _store => EncryptedSharedPreferencesStorePlatform.instance;
 
@@ -28,17 +28,17 @@ class EncryptedSharedPreferences {
       _completer = Completer<EncryptedSharedPreferences>();
       try {
         final Map<String, Object> preferencesMap = await _getSharedPreferencesMap();
-        _completer.complete(EncryptedSharedPreferences._(preferencesMap));
+        _completer!.complete(EncryptedSharedPreferences._(preferencesMap));
       } on Exception catch (e) {
         // If there's an error, explicitly return the future with an error.
         // then set the completer to null so we can retry.
-        _completer.completeError(e);
-        final Future<EncryptedSharedPreferences> sharedPrefsFuture = _completer.future;
+        _completer!.completeError(e);
+        final Future<EncryptedSharedPreferences> sharedPrefsFuture = _completer!.future;
         _completer = null;
         return sharedPrefsFuture;
       }
     }
-    return _completer.future;
+    return _completer!.future;
   }
 
   /// The cache that holds all preferences.
@@ -58,19 +58,19 @@ class EncryptedSharedPreferences {
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// bool.
-  bool getBool(String key) => _preferenceCache[key];
+  bool getBool(String key) => _preferenceCache[key] as bool;
 
   /// Reads a value from persistent storage, throwing an exception if it's not
   /// an int.
-  int getInt(String key) => _preferenceCache[key];
+  int getInt(String key) => _preferenceCache[key] as int;
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// double.
-  double getDouble(String key) => _preferenceCache[key];
+  double getDouble(String key) => _preferenceCache[key] as double;
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// String.
-  String getString(String key) => _preferenceCache[key];
+  String getString(String key) => _preferenceCache[key] as String;
 
   /// Returns true if persistent storage the contains the given [key].
   bool containsKey(String key) => _preferenceCache.containsKey(key);
@@ -78,13 +78,13 @@ class EncryptedSharedPreferences {
   /// Reads a set of string values from persistent storage, throwing an
   /// exception if it's not a string set.
   List<String> getStringList(String key) {
-    List<Object> list = _preferenceCache[key];
+    List<Object>? list = _preferenceCache[key] as List<Object>?;
     if (list != null && list is! List<String>) {
       list = list.cast<String>().toList();
       _preferenceCache[key] = list;
     }
     // Make a copy of the list so that later mutations won't propagate
-    return list?.toList();
+    return list?.toList() as List<String>? ?? <String>[];
   }
 
   /// Saves a boolean [value] to persistent storage in the background.
@@ -117,7 +117,7 @@ class EncryptedSharedPreferences {
   /// Removes an entry from persistent storage.
   Future<bool> remove(String key) => _setValue(null, key, null);
 
-  Future<bool> _setValue(String valueType, String key, Object value) {
+  Future<bool> _setValue(String? valueType, String key, Object? value) {
     final String prefixedKey = '$_prefix$key';
     if (value == null) {
       _preferenceCache.remove(key);
@@ -129,7 +129,7 @@ class EncryptedSharedPreferences {
       } else {
         _preferenceCache[key] = value;
       }
-      return _store.setValue(valueType, prefixedKey, value);
+      return _store.setValue(valueType!, prefixedKey, value);
     }
   }
 
@@ -156,12 +156,11 @@ class EncryptedSharedPreferences {
 
   static Future<Map<String, Object>> _getSharedPreferencesMap() async {
     final Map<String, Object> fromSystem = await _store.getAll();
-    assert(fromSystem != null);
     // Strip the flutter. prefix from the returned preferences.
     final Map<String, Object> preferencesMap = <String, Object>{};
     for (String key in fromSystem.keys) {
       assert(key.startsWith(_prefix));
-      preferencesMap[key.substring(_prefix.length)] = fromSystem[key];
+      preferencesMap[key.substring(_prefix.length)] = fromSystem[key]!;
     }
     return preferencesMap;
   }
@@ -178,7 +177,7 @@ class EncryptedSharedPreferences {
       }
       return MapEntry<String, dynamic>(newKey, value);
     });
-    EncryptedSharedPreferencesStorePlatform.instance = InMemoryEncryptedSharedPreferencesStore.withData(newValues);
+    EncryptedSharedPreferencesStorePlatform.instance = InMemoryEncryptedSharedPreferencesStore.withData(newValues as Map<String, String>);
     _completer = null;
   }
 }

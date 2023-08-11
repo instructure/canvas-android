@@ -25,7 +25,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   static const MethodChannel _cookieManagerChannel =
       MethodChannel('plugins.flutter.io/cookie_manager');
 
-  Future<bool> _onMethodCall(MethodCall call) async {
+  Future<bool?> _onMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'javascriptChannelMessage':
         final String channel = call.arguments['channel'];
@@ -51,7 +51,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
             domain: call.arguments['domain'],
             failingUrl: call.arguments['failingUrl'],
             errorType: call.arguments['errorType'] == null
-                ? null
+                ? WebResourceErrorType.unknown
                 : WebResourceErrorType.values.firstWhere(
                     (WebResourceErrorType type) {
                       return type.toString() ==

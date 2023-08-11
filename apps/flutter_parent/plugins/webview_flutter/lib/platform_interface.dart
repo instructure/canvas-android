@@ -103,13 +103,12 @@ class WebResourceError {
   /// A user should not need to instantiate this class, but will receive one in
   /// [WebResourceErrorCallback].
   WebResourceError({
-    @required this.errorCode,
-    @required this.description,
+    required this.errorCode,
+    required this.description,
     this.domain,
     this.errorType,
     this.failingUrl,
-  })  : assert(errorCode != null),
-        assert(description != null);
+  }) {}
 
   /// Raw code of the error from the respective platform.
   ///
@@ -131,7 +130,7 @@ class WebResourceError {
   /// in Objective-C. See
   /// https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ErrorHandlingCocoa/ErrorObjectsDomains/ErrorObjectsDomains.html
   /// for more information on error handling on iOS.
-  final String domain;
+  final String? domain;
 
   /// Description of the error that can be used to communicate the problem to the user.
   final String description;
@@ -139,13 +138,13 @@ class WebResourceError {
   /// The type this error can be categorized as.
   ///
   /// This will never be `null` on Android, but can be `null` on iOS.
-  final WebResourceErrorType errorType;
+  final WebResourceErrorType? errorType;
 
   /// Gets the URL for which the resource request was made.
   ///
   /// This value is not provided on iOS. Alternatively, you can keep track of
   /// the last values provided to [WebViewPlatformController.loadUrl].
-  final String failingUrl;
+  final String? failingUrl;
 }
 
 /// Interface for talking to the webview's platform implementation.
@@ -355,7 +354,7 @@ class WebSetting<T> {
       : _value = value,
         isPresent = true;
 
-  final T _value;
+  final T? _value;
 
   /// The setting's value.
   ///
@@ -364,8 +363,11 @@ class WebSetting<T> {
     if (!isPresent) {
       throw StateError('Cannot access a value of an absent WebSetting');
     }
+    if (_value == null) {
+      throw StateError('Cannot access a value of an absent WebSetting');
+    }
     assert(isPresent);
-    return _value;
+    return _value!;
   }
 
   /// True when this web setting instance contains a value.
@@ -374,8 +376,9 @@ class WebSetting<T> {
   final bool isPresent;
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(other) {
     if (other.runtimeType != runtimeType) return false;
+    if (other is! WebSetting<T>) return false;
     final WebSetting<T> typedOther = other;
     return typedOther.isPresent == isPresent && typedOther._value == _value;
   }
@@ -401,21 +404,21 @@ class WebSettings {
     this.darkMode,
     this.debuggingEnabled,
     this.gestureNavigationEnabled,
-    @required this.userAgent,
-  }) : assert(userAgent != null);
+    required this.userAgent,
+  }) {}
 
   /// The JavaScript execution mode to be used by the webview.
-  final JavascriptMode javascriptMode;
+  final JavascriptMode? javascriptMode;
 
   /// Whether the [WebView] has a [NavigationDelegate] set.
-  final bool hasNavigationDelegate;
+  final bool? hasNavigationDelegate;
 
-  final bool darkMode;
+  final bool? darkMode;
 
   /// Whether to enable the platform's webview content debugging tools.
   ///
   /// See also: [WebView.debuggingEnabled].
-  final bool debuggingEnabled;
+  final bool? debuggingEnabled;
 
   /// The value used for the HTTP `User-Agent:` request header.
   ///
@@ -430,7 +433,7 @@ class WebSettings {
   /// Whether to allow swipe based navigation in iOS.
   ///
   /// See also: [WebView.gestureNavigationEnabled]
-  final bool gestureNavigationEnabled;
+  final bool? gestureNavigationEnabled;
 
   @override
   String toString() {
@@ -453,17 +456,17 @@ class CreationParams {
     this.userAgent,
     this.autoMediaPlaybackPolicy =
         AutoMediaPlaybackPolicy.require_user_action_for_all_media_types,
-  }) : assert(autoMediaPlaybackPolicy != null);
+  }) {}
 
   /// The initialUrl to load in the webview.
   ///
   /// When null the webview will be created without loading any page.
-  final String initialUrl;
+  final String? initialUrl;
 
   /// The initial [WebSettings] for the new webview.
   ///
   /// This can later be updated with [WebViewPlatformController.updateSettings].
-  final WebSettings webSettings;
+  final WebSettings? webSettings;
 
   /// The initial set of JavaScript channels that are configured for this webview.
   ///
@@ -476,12 +479,12 @@ class CreationParams {
   /// ```
   // TODO(amirh): describe what should happen when postMessage is called once that code is migrated
   // to PlatformWebView.
-  final Set<String> javascriptChannelNames;
+  final Set<String>? javascriptChannelNames;
 
   /// The value used for the HTTP User-Agent: request header.
   ///
   /// When null the platform's webview default is used for the User-Agent header.
-  final String userAgent;
+  final String? userAgent;
 
   /// Which restrictions apply on automatic media playback.
   final AutoMediaPlaybackPolicy autoMediaPlaybackPolicy;
