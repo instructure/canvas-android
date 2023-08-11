@@ -553,7 +553,15 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
             // Do we have a discussion topic header? if not fetch it, or if forceRefresh is true force a fetch
 
-            courseSettings = CourseManager.getCourseSettingsAsync(canvasContext.id, forceRefresh).await().dataOrNull
+            val courseId = when (canvasContext) {
+                is Course -> canvasContext.id
+                is Group -> (canvasContext as Group).courseId
+                else -> null
+            }
+
+            if (courseId != null) {
+                courseSettings = CourseManager.getCourseSettingsAsync(courseId, forceRefresh).await().dataOrNull
+            }
 
             if (forceRefresh) {
                 val discussionTopicHeaderId = if (discussionTopicHeaderId == 0L && discussionTopicHeader.id != 0L) discussionTopicHeader.id else discussionTopicHeaderId
