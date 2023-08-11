@@ -22,6 +22,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -36,6 +37,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testNavigateToElementaryDashboard() {
+        RatingDialog.Prefs.dontShowAgain = true
         // User should be able to tap and navigate to dashboard page
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertPageObjects()
@@ -48,6 +50,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testTabsNavigation() {
+        RatingDialog.Prefs.dontShowAgain = true
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
         homeroomPage.assertPageObjects()
@@ -72,6 +75,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyElementarySpecificNavigationItemsShownInTheNavigationDrawer() {
+        RatingDialog.Prefs.dontShowAgain = true
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.openDrawer()
         elementaryDashboardPage.assertElementaryMenuItemsShownInDrawer()
