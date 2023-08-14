@@ -18,6 +18,7 @@ package com.instructure.student.ui.interaction
 import android.text.Html
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.dataseeding.util.days
@@ -372,8 +373,9 @@ class ModuleInteractionTest : StudentTest() {
 
     // Hide possible points for assignments in modules if restricted
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
-    fun testModules_hidePossiblePointsIfRestricted() {
+    @Stub
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    fun testModules_hidePossiblePointsIfRestricted() { // TODO MBL-16957
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course = data.courses.values.first()
         val module = data.courseModules[course.id]!!.first()
