@@ -70,7 +70,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Let's attach an html attachment after the fact
         val attachmentHtml =
-                """
+            """
         <!DOCTYPE html>
         <html>
         <head>
@@ -94,8 +94,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertDescriptionText(topicDescription)
         discussionDetailsPage.assertMainAttachmentDisplayed()
         discussionDetailsPage.previewAndCheckMainAttachment(
-                WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
-                WebViewTextCheck(Locator.ID, "p1", "-- Socrates")
+            WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
+            WebViewTextCheck(Locator.ID, "p1", "-- Socrates")
         )
 
     }
@@ -126,10 +126,10 @@ class DiscussionsInteractionTest : StudentTest() {
         val topicName = "Discussion with link in description"
 
         data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = topicName,
-                topicDescription = course2Html
+            course = course1,
+            user = user1,
+            topicTitle = topicName,
+            topicDescription = course2Html
         )
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
@@ -151,16 +151,16 @@ class DiscussionsInteractionTest : StudentTest() {
         val replyMessage = "I'm unread (at first)"
 
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course,
-                user = user,
-                topicTitle = topicName,
-                topicDescription = topicDescription
+            course = course,
+            user = user,
+            topicTitle = topicName,
+            topicDescription = topicDescription
         )
 
         val discussionEntry = data.addReplyToDiscussion(
-                topicHeader = topicHeader,
-                user = user,
-                replyMessage = replyMessage
+            topicHeader = topicHeader,
+            user = user,
+            replyMessage = replyMessage
         )
 
         // Bring up discussion page
@@ -187,7 +187,7 @@ class DiscussionsInteractionTest : StudentTest() {
         val course = data.courses.values.first()
 
         val attachmentHtml =
-        """
+            """
         <!DOCTYPE html>
         <html>
         <head>
@@ -201,12 +201,12 @@ class DiscussionsInteractionTest : StudentTest() {
         </html> """
 
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course,
-                user = data.users.values.first(),
-                topicTitle = "Awesome topic",
-                topicDescription = "With an attachment!"
+            course = course,
+            user = data.users.values.first(),
+            topicTitle = "Awesome topic",
+            topicDescription = "With an attachment!"
         )
-        val attachment = createHtmlAttachment(data,attachmentHtml)
+        val attachment = createHtmlAttachment(data, attachmentHtml)
         topicHeader.attachments = mutableListOf(attachment)
 
         courseBrowserPage.selectDiscussions()
@@ -214,8 +214,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertTopicInfoShowing(topicHeader)
         discussionDetailsPage.assertMainAttachmentDisplayed()
         discussionDetailsPage.previewAndCheckMainAttachment(
-                WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
-                WebViewTextCheck(Locator.ID, "p1", "No matter where you go")
+            WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
+            WebViewTextCheck(Locator.ID, "p1", "No matter where you go")
         )
     }
 
@@ -233,15 +233,15 @@ class DiscussionsInteractionTest : StudentTest() {
         val replyMessage = "Like me!"
 
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course,
-                user = user,
-                topicTitle = topicName,
-                topicDescription = topicDescription
+            course = course,
+            user = user,
+            topicTitle = topicName,
+            topicDescription = topicDescription
         )
         val discussionEntry = data.addReplyToDiscussion(
-                topicHeader = topicHeader,
-                user = user,
-                replyMessage = replyMessage
+            topicHeader = topicHeader,
+            user = user,
+            replyMessage = replyMessage
         )
 
         // Bring up discussion page
@@ -273,18 +273,18 @@ class DiscussionsInteractionTest : StudentTest() {
         val replyMessage = "A grader liked me!"
 
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course,
-                user = user,
-                topicTitle = topicName,
-                topicDescription = topicDescription,
-                allowRating = true,
-                onlyGradersCanRate = true
+            course = course,
+            user = user,
+            topicTitle = topicName,
+            topicDescription = topicDescription,
+            allowRating = true,
+            onlyGradersCanRate = true
         )
         val discussionEntry = data.addReplyToDiscussion(
-                topicHeader = topicHeader,
-                user = user,
-                replyMessage = replyMessage,
-                ratingSum = 1
+            topicHeader = topicHeader,
+            user = user,
+            replyMessage = replyMessage,
+            ratingSum = 1
         )
 
         // Bring up discussion page
@@ -308,16 +308,16 @@ class DiscussionsInteractionTest : StudentTest() {
         val course1 = data.courses.values.first()
         val user1 = data.users.values.first()
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion with unlikable posts",
-                topicDescription = "unlikable discussion",
-                allowRating = false
+            course = course1,
+            user = user1,
+            topicTitle = "Discussion with unlikable posts",
+            topicDescription = "unlikable discussion",
+            allowRating = false
         )
         val discussionEntry = data.addReplyToDiscussion(
-                topicHeader = topicHeader,
-                user = user1,
-                replyMessage = "You can't touch this!"
+            topicHeader = topicHeader,
+            user = user1,
+            replyMessage = "You can't touch this!"
         )
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
@@ -335,10 +335,10 @@ class DiscussionsInteractionTest : StudentTest() {
         val course1 = data.courses.values.first()
         val user1 = data.users.values.first()
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion view base",
-                topicDescription = "A viewed discussion"
+            course = course1,
+            user = user1,
+            topicTitle = "Discussion view base",
+            topicDescription = "A viewed discussion"
         )
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
@@ -355,15 +355,15 @@ class DiscussionsInteractionTest : StudentTest() {
         val course1 = data.courses.values.first()
         val user1 = data.users.values.first()
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion with replies",
-                topicDescription = "Reply-o-rama"
+            course = course1,
+            user = user1,
+            topicTitle = "Discussion with replies",
+            topicDescription = "Reply-o-rama"
         )
         val discussionEntry = data.addReplyToDiscussion(
-                topicHeader = topicHeader,
-                user = user1,
-                replyMessage = "Replied"
+            topicHeader = topicHeader,
+            user = user1,
+            replyMessage = "Replied"
         )
 
         courseBrowserPage.selectDiscussions()
@@ -383,11 +383,11 @@ class DiscussionsInteractionTest : StudentTest() {
         val user1 = data.users.values.first()
         data.discussionRepliesEnabled = false // Do we still need these?
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion with replies disabled",
-                topicDescription = "Replies disabled",
-                allowReplies = false
+            course = course1,
+            user = user1,
+            topicTitle = "Discussion with replies disabled",
+            topicDescription = "Replies disabled",
+            allowReplies = false
         )
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
@@ -403,10 +403,10 @@ class DiscussionsInteractionTest : StudentTest() {
         val course1 = data.courses.values.first()
         val user1 = data.users.values.first()
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion with replies enabled",
-                topicDescription = "Replies enabled"
+            course = course1,
+            user = user1,
+            topicTitle = "Discussion with replies enabled",
+            topicDescription = "Replies enabled"
         )
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
@@ -432,10 +432,10 @@ class DiscussionsInteractionTest : StudentTest() {
         val user = data.users.values.first()
 
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user,
-                topicTitle = "Hey!  A Discussion!",
-                topicDescription = "Awesome!"
+            course = course1,
+            user = user,
+            topicTitle = "Hey!  A Discussion!",
+            topicDescription = "Awesome!"
         )
 
         courseBrowserPage.selectDiscussions()
@@ -449,7 +449,7 @@ class DiscussionsInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentHtml =
-                """
+            """
         <!DOCTYPE html>
         <html>
         <head>
@@ -470,9 +470,11 @@ class DiscussionsInteractionTest : StudentTest() {
         Thread.sleep(3000) //allow some time to the reply to propagate
         discussionDetailsPage.assertReplyDisplayed(discussionEntry)
         discussionDetailsPage.assertReplyAttachment(discussionEntry)
-        discussionDetailsPage.previewAndCheckReplyAttachment(discussionEntry,
-                WebViewTextCheck(Locator.ID,"header1", "Famous Quote"),
-                WebViewTextCheck(Locator.ID, "p1", "That's one small step"))
+        discussionDetailsPage.previewAndCheckReplyAttachment(
+            discussionEntry,
+            WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
+            WebViewTextCheck(Locator.ID, "p1", "That's one small step")
+        )
     }
 
     // Tests that we can make a threaded reply to a reply
@@ -484,10 +486,10 @@ class DiscussionsInteractionTest : StudentTest() {
         val user = data.users.values.first()
 
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user,
-                topicTitle = "Wow!  A Discussion!",
-                topicDescription = "Cool!"
+            course = course1,
+            user = user,
+            topicTitle = "Wow!  A Discussion!",
+            topicDescription = "Cool!"
         )
 
         courseBrowserPage.selectDiscussions()
@@ -503,7 +505,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        discussionDetailsPage.replyToReply(replyEntry,replyReplyText)
+        discussionDetailsPage.replyToReply(replyEntry, replyReplyText)
 
         // And verify that our reply-to-reply is showing
         val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
@@ -521,10 +523,10 @@ class DiscussionsInteractionTest : StudentTest() {
         val user = data.users.values.first()
 
         val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user,
-                topicTitle = "Discussion threaded reply attachment",
-                topicDescription = "Cool!"
+            course = course1,
+            user = user,
+            topicTitle = "Discussion threaded reply attachment",
+            topicDescription = "Cool!"
         )
 
         courseBrowserPage.selectDiscussions()
@@ -540,14 +542,14 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        discussionDetailsPage.replyToReply(replyEntry,replyReplyText)
+        discussionDetailsPage.replyToReply(replyEntry, replyReplyText)
 
         // And verify that our reply-to-reply is showing
         val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
 
         // Lets attach an html attachment behind the scenes
         val attachmentHtml =
-                """
+            """
         <!DOCTYPE html>
         <html>
         <head>
@@ -560,16 +562,18 @@ class DiscussionsInteractionTest : StudentTest() {
         </body>
         </html> """
 
-        val attachment = createHtmlAttachment(data,attachmentHtml)
+        val attachment = createHtmlAttachment(data, attachmentHtml)
         replyReplyEntry.attachments = mutableListOf(attachment)
 
         discussionDetailsPage.refresh() // To pick up updated discussion reply
         Thread.sleep(3000) //Need this because somehow sometimes refresh does "double-refresh" and assert is failing below.
         discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
         discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
-        discussionDetailsPage.previewAndCheckReplyAttachment(replyReplyEntry,
-                WebViewTextCheck(Locator.ID,"header1", "Famous Quote"),
-                WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear"))
+        discussionDetailsPage.previewAndCheckReplyAttachment(
+            replyReplyEntry,
+            WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
+            WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear")
+        )
 
     }
 
@@ -590,17 +594,17 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Add an assignment
         val assignment = data.addAssignment(
-                courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                name = assignmentName,
-                pointsPossible = 12
+            courseId = course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            name = assignmentName,
+            pointsPossible = 12
         )
 
         // Now create a discussion associated with the assignment
         val discussion = data.addDiscussionTopicToCourse(
-                course = course,
-                user = teacher,
-                assignment = assignment
+            course = course,
+            user = teacher,
+            assignment = assignment
         )
 
         // Sign in
@@ -614,13 +618,101 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
     }
 
+    // Tests a discussion with a linked assignment, show possible points if not restricted
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussion_showPointsIfNotRestricted() {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val teacher = data.teachers[0]
+        val assignmentName = "Assignment up for discussion"
+
+        // Make sure we have a discussions tab
+        val discussionsTab = Tab(position = 2, label = "Discussions", visibility = "public", tabId = Tab.DISCUSSIONS_ID)
+        data.courseTabs[course.id]!! += discussionsTab
+
+        // Add an assignment
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            name = assignmentName,
+            pointsPossible = 12
+        )
+
+        // Now create a discussion associated with the assignment
+        val discussion = data.addDiscussionTopicToCourse(
+            course = course,
+            user = teacher,
+            assignment = assignment
+        )
+
+        // Setup course settings
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = false)
+
+        // Sign in
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+
+        // Navigate to discussions
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(discussion.title!!)
+        discussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
+    }
+
+
+    // Tests a discussion with a linked assignment, hide possible points if restricted
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussion_hidePointsIfRestricted() {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val teacher = data.teachers[0]
+        val assignmentName = "Assignment up for discussion"
+
+        // Make sure we have a discussions tab
+        val discussionsTab = Tab(position = 2, label = "Discussions", visibility = "public", tabId = Tab.DISCUSSIONS_ID)
+        data.courseTabs[course.id]!! += discussionsTab
+
+        // Add an assignment
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            name = assignmentName,
+            pointsPossible = 12
+        )
+
+        // Now create a discussion associated with the assignment
+        val discussion = data.addDiscussionTopicToCourse(
+            course = course,
+            user = teacher,
+            assignment = assignment
+        )
+
+        // Setup course settings
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = true)
+
+        // Sign in
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+
+        // Navigate to discussions
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(discussion.title!!)
+        discussionDetailsPage.assertPointsPossibleNotDisplayed()
+    }
 
     //
     // Utilities
     //
 
     // Needed to grab the discussion entry associated with a manual discussion reply
-    private fun findDiscussionEntry(data: MockCanvas, topicName: String, replyMessage: String) : DiscussionEntry {
+    private fun findDiscussionEntry(data: MockCanvas, topicName: String, replyMessage: String): DiscussionEntry {
         // Gotta grab our reply message...
         val myCourse = data.courses.values.first()
         val topicHeader = data.courseDiscussionTopicHeaders[myCourse.id]?.find { it.title.equals(topicName) }
@@ -628,11 +720,11 @@ class DiscussionsInteractionTest : StudentTest() {
         val topic = data.discussionTopics[topicHeader!!.id]
         assertNotNull("Can't find topic", topic)
         var discussionEntry = topic!!.views.find { it.message.equals(replyMessage) }
-        if(discussionEntry == null) {
+        if (discussionEntry == null) {
             // It might be a threaded reply
             topic.views.forEach { view ->
                 view.replies?.forEach { reply ->
-                    if(reply.message.equals(replyMessage)) {
+                    if (reply.message.equals(replyMessage)) {
                         return reply
                     }
                 }
@@ -645,13 +737,15 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Mock a specified number of students and courses, and navigate to the first course
     private fun getToCourse(
-            studentCount: Int = 1,
-            courseCount: Int = 1,
-            enableDiscussionTopicCreation: Boolean = true): MockCanvas {
+        studentCount: Int = 1,
+        courseCount: Int = 1,
+        enableDiscussionTopicCreation: Boolean = true
+    ): MockCanvas {
         val data = MockCanvas.init(
-                studentCount = studentCount,
-                courseCount = courseCount,
-                favoriteCourseCount = courseCount)
+            studentCount = studentCount,
+            courseCount = courseCount,
+            favoriteCourseCount = courseCount
+        )
 
         if (enableDiscussionTopicCreation) {
             data.courses.values.forEach { course ->
@@ -677,19 +771,19 @@ class DiscussionsInteractionTest : StudentTest() {
         fun createHtmlAttachment(data: MockCanvas, html: String): RemoteFile {
             val course1 = data.courses.values.first()
             val fileId = data.addFileToCourse(
-                    courseId = course1.id,
-                    displayName = "page.html",
-                    contentType = "text/html",
-                    fileContent = html
+                courseId = course1.id,
+                displayName = "page.html",
+                contentType = "text/html",
+                fileContent = html
             )
 
             val attachment = RemoteFile(
-                    id = fileId,
-                    displayName = "page.html",
-                    fileName = "page.html",
-                    contentType = "text/html",
-                    url = "https://mock-data.instructure.com/files/$fileId/preview",
-                    size = html.length.toLong()
+                id = fileId,
+                displayName = "page.html",
+                fileName = "page.html",
+                contentType = "text/html",
+                url = "https://mock-data.instructure.com/files/$fileId/preview",
+                size = html.length.toLong()
             )
 
             return attachment

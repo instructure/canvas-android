@@ -15,6 +15,7 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails
 
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.*
@@ -50,8 +51,12 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         mockkObject(FeaturesManager)
+        mockkObject(CourseManager)
         every { FeaturesManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(listOf("assignments_2_student"))
+        }
+        every { CourseManager.getCourseSettingsAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings())
         }
     }
 

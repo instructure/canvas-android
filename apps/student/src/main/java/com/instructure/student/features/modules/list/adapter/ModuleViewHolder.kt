@@ -32,7 +32,8 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         adapterToFragmentCallback: ModuleAdapterToFragmentCallback?,
         courseColor: Int,
         isFirstItem: Boolean,
-        isLastItem: Boolean
+        isLastItem: Boolean,
+        restrictQuantitativeData: Boolean
     ) = with(ViewholderModuleBinding.bind(itemView)) {
 
         val isLocked = ModuleUtility.isGroupLocked(moduleObject)
@@ -147,7 +148,7 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 hasDate = false
             }
             val pointsPossible = details.pointsPossible
-            if (pointsPossible.isValid()) {
+            if (pointsPossible.isValid() && !restrictQuantitativeData) {
                 points.text = context.getString(
                     R.string.totalPoints,
                     NumberHelper.formatDecimal(pointsPossible.toDouble(), 2, true)

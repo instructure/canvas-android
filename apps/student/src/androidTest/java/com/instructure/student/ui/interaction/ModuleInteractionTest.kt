@@ -18,34 +18,13 @@ package com.instructure.student.ui.interaction
 import android.text.Html
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
-import com.instructure.canvas.espresso.mockCanvas.addItemToModule
-import com.instructure.canvas.espresso.mockCanvas.addLTITool
-import com.instructure.canvas.espresso.mockCanvas.addModuleToCourse
-import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
-import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
-import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
-import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.canvasapi2.models.LockedModule
-import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizAnswer
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.SecondaryFeatureCategory
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.panda_annotations.*
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
@@ -123,7 +102,7 @@ class ModuleInteractionTest : StudentTest() {
         val module = data.courseModules[course1.id]!!.first()
 
         // click the external url module item
-        modulesPage.clickModuleItem(module,externalUrl)
+        modulesPage.clickModuleItem(module, externalUrl)
         // Not much we can test here, as it is an external URL, but testModules_navigateToNextAndPreviousModuleItems
         // will test that the module name and module item name are displayed correctly.
         canvasWebViewPage.checkWebViewURL("https://www.google.com")
@@ -139,7 +118,7 @@ class ModuleInteractionTest : StudentTest() {
         val module = data.courseModules[course1.id]!!.first()
 
         // Click the file module and verify that the file appears
-        modulesPage.clickModuleItem(module,fileName, R.id.openButton)
+        modulesPage.clickModuleItem(module, fileName, R.id.openButton)
         canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(fileCheck!!)
     }
@@ -163,9 +142,9 @@ class ModuleInteractionTest : StudentTest() {
         // Also, just use the first 10 chars because you risk encountering multiple-newlines
         // (which show as single newlines in webview, or even no-newlines if at the end
         // of the string) if you go much longer
-        var expectedBody = Html.fromHtml(page!!.body!!).toString().substring(0,10)
+        var expectedBody = Html.fromHtml(page!!.body!!).toString().substring(0, 10)
         canvasWebViewPage.runTextChecks(
-                WebViewTextCheck(Locator.ID, "content", expectedBody)
+            WebViewTextCheck(Locator.ID, "content", expectedBody)
         )
 
     }
@@ -208,11 +187,11 @@ class ModuleInteractionTest : StudentTest() {
         // the initial assertModuleItemDisplayed() would expand the module if it was not expanded
         // already.
         modulesPage.assertModuleDisplayed(module)
-        modulesPage.assertModuleItemDisplayed(module,firstModuleItem.title!!)
+        modulesPage.assertModuleItemDisplayed(module, firstModuleItem.title!!)
         modulesPage.clickModule(module)
         modulesPage.assertModuleItemNotDisplayed(firstModuleItem.title!!)
         modulesPage.clickModule(module)
-        modulesPage.assertModuleItemDisplayed(module,firstModuleItem.title!!)
+        modulesPage.assertModuleItemDisplayed(module, firstModuleItem.title!!)
 
     }
 
@@ -228,10 +207,10 @@ class ModuleInteractionTest : StudentTest() {
 
         // For each module item, go into the module detail page, click the back button,
         // and verify that we've returned to the module list page.
-        for(moduleItem in module.items) {
-            modulesPage.clickModuleItem(module,moduleItem.title!!)
+        for (moduleItem in module.items) {
+            modulesPage.clickModuleItem(module, moduleItem.title!!)
             Espresso.pressBack()
-            modulesPage.assertModuleItemDisplayed(module,moduleItem.title!!)
+            modulesPage.assertModuleItemDisplayed(module, moduleItem.title!!)
         }
 
     }
@@ -248,25 +227,23 @@ class ModuleInteractionTest : StudentTest() {
 
         // Iterate through the module items, starting at the first
         val moduleItemList = module.items
-        modulesPage.clickModuleItem(module,moduleItemList[0].title!!)
+        modulesPage.clickModuleItem(module, moduleItemList[0].title!!)
 
         var moduleIndex = 0; // we start here
-        while(moduleIndex < moduleItemList.count()) {
+        while (moduleIndex < moduleItemList.count()) {
             val moduleItem = moduleItemList[moduleIndex]
 
             // Make sure that the previous button is appropriately displayed/gone
-            if(moduleIndex == 0) {
+            if (moduleIndex == 0) {
                 moduleProgressionPage.assertPreviousButtonInvisible()
-            }
-            else {
+            } else {
                 moduleProgressionPage.assertPreviousButtonDisplayed()
             }
 
             // Make sure that the next button is appropriately displayed/gone
-            if(moduleIndex == moduleItemList.count() - 1) {
+            if (moduleIndex == moduleItemList.count() - 1) {
                 moduleProgressionPage.assertNextButtonInvisible()
-            }
-            else {
+            } else {
                 moduleProgressionPage.assertNextButtonDisplayed()
             }
 
@@ -278,12 +255,12 @@ class ModuleInteractionTest : StudentTest() {
 
             // Let's navigate to our next page
             moduleIndex += 1
-            if(moduleIndex < moduleItemList.count()) {
+            if (moduleIndex < moduleItemList.count()) {
                 moduleProgressionPage.clickNextButton()
             }
         }
 
-        if(moduleItemList.count() > 1) {
+        if (moduleItemList.count() > 1) {
             // Let's make sure that the "previous" button works as well.
             moduleProgressionPage.clickPreviousButton()
             val moduleItem = moduleItemList[moduleItemList.count() - 2]
@@ -303,26 +280,27 @@ class ModuleInteractionTest : StudentTest() {
 
         // Let's add a second module that has the first one as a prerequisite
         val module2 = data.addModuleToCourse(
-                course = course1,
-                moduleName = "Prereq Module",
-                prerequisiteIds = longArrayOf(module.id),
-                state = ModuleObject.State.Locked.toString()
+            course = course1,
+            moduleName = "Prereq Module",
+            prerequisiteIds = longArrayOf(module.id),
+            state = ModuleObject.State.Locked.toString()
         )
 
         // And let's add an assignment to the new module
         var unavailableAssignment = data.addAssignment(
-                courseId = course1.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                // Man, this is a bit hokey, but it's what I had to do to get the assignment to show
-                // up as unavailable in the assignment details page
-                lockInfo = LockInfo(
-                        modulePrerequisiteNames = arrayListOf(module.name!!),
-                        contextModule = LockedModule(name = module.name!!) )
+            courseId = course1.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            // Man, this is a bit hokey, but it's what I had to do to get the assignment to show
+            // up as unavailable in the assignment details page
+            lockInfo = LockInfo(
+                modulePrerequisiteNames = arrayListOf(module.name!!),
+                contextModule = LockedModule(name = module.name!!)
+            )
         )
         data.addItemToModule(
-                course = course1,
-                moduleId = module2.id,
-                item = unavailableAssignment
+            course = course1,
+            moduleId = module2.id,
+            item = unavailableAssignment
         )
 
         // Refresh to get module list update, select module2, and assert that unavailableAssignment is locked
@@ -343,20 +321,20 @@ class ModuleInteractionTest : StudentTest() {
 
         // Let's add a second module with a lockUntil setting
         val module2 = data.addModuleToCourse(
-                course = course1,
-                moduleName = "Locked Module",
-                unlockAt = 2.days.fromNow.iso8601
+            course = course1,
+            moduleName = "Locked Module",
+            unlockAt = 2.days.fromNow.iso8601
         )
 
         // And let's create an assignment and add it to the "locked" module.
         val lockedAssignment = data.addAssignment(
-                courseId = course1.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            courseId = course1.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
         data.addItemToModule(
-                course = course1,
-                moduleId = module2.id,
-                item = lockedAssignment
+            course = course1,
+            moduleId = module2.id,
+            item = lockedAssignment
         )
 
         // Refresh to get module list update, then assert that module2 is locked
@@ -366,17 +344,74 @@ class ModuleInteractionTest : StudentTest() {
         modulesPage.assertAssignmentLocked(lockedAssignment, course1)
     }
 
+    // Show possible points for assignments in modules if not restricted
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+    fun testModules_showPossiblePointsIfNotRestricted() {
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
+        val course = data.courses.values.first()
+        val module = data.courseModules[course.id]!!.first()
+
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = false)
+
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            pointsPossible = 10
+        )
+
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = assignment,
+            moduleContentDetails = ModuleContentDetails(pointsPossible = assignment.pointsPossible.toString())
+        )
+
+        modulesPage.refresh()
+        modulesPage.assertPossiblePointsDisplayed(assignment.pointsPossible.toInt().toString())
+    }
+
+    // Hide possible points for assignments in modules if restricted
+    @Test
+    @Stub
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    fun testModules_hidePossiblePointsIfRestricted() { // TODO MBL-16957
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
+        val course = data.courses.values.first()
+        val module = data.courseModules[course.id]!!.first()
+
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = true)
+
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            pointsPossible = 10
+        )
+
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = assignment,
+            moduleContentDetails = ModuleContentDetails(pointsPossible = assignment.pointsPossible.toString())
+        )
+
+        modulesPage.refresh()
+        modulesPage.assertPossiblePointsNotDisplayed(assignment.name.orEmpty())
+    }
+
     // Mock a specified number of students and courses, add some assorted assignments, discussions, etc...
     // in the form of module items, and navigate to the modules page of the course
     private fun getToCourseModules(
-            studentCount: Int = 1,
-            courseCount: Int = 1): MockCanvas {
+        studentCount: Int = 1,
+        courseCount: Int = 1
+    ): MockCanvas {
 
         // Basic info
         val data = MockCanvas.init(
-                studentCount = studentCount,
-                courseCount = courseCount,
-                favoriteCourseCount = courseCount)
+            studentCount = studentCount,
+            courseCount = courseCount,
+            favoriteCourseCount = courseCount
+        )
 
         // Add a course tab
         val course1 = data.courses.values.first()
@@ -386,32 +421,32 @@ class ModuleInteractionTest : StudentTest() {
 
         // Create a module
         val module = data.addModuleToCourse(
-                course = course1,
-                moduleName = "Big Module"
+            course = course1,
+            moduleName = "Big Module"
         )
 
         // Create a discussion and add it as a module item
         topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion in module",
-                topicDescription = "In. A. Module."
+            course = course1,
+            user = user1,
+            topicTitle = "Discussion in module",
+            topicDescription = "In. A. Module."
         )
         data.addItemToModule(
-                course = course1,
-                moduleId = module.id,
-                item = topicHeader!!
+            course = course1,
+            moduleId = module.id,
+            item = topicHeader!!
         )
 
         // Create an assignment and add it as a module item
         assignment = data.addAssignment(
-                courseId = course1.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            courseId = course1.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
         data.addItemToModule(
-                course = course1,
-                moduleId = module.id,
-                item = assignment!!
+            course = course1,
+            moduleId = module.id,
+            item = assignment!!
         )
 
         // Create a page and add it as a module item
@@ -423,74 +458,74 @@ class ModuleInteractionTest : StudentTest() {
             url = URLEncoder.encode("Page In Course", "UTF-8")
         )
         data.addItemToModule(
-                course = course1,
-                moduleId = module.id,
-                item = page!!
+            course = course1,
+            moduleId = module.id,
+            item = page!!
         )
 
         // Create a file and add it as a module item
         val fileContent = "<h1 id=\"heading1\">A Heading</h1>"
-        fileCheck = WebViewTextCheck(Locator.ID,"heading1","A Heading")
+        fileCheck = WebViewTextCheck(Locator.ID, "heading1", "A Heading")
 
         val fileId = data.addFileToCourse(
-                courseId = course1.id,
-                displayName = fileName,
-                fileContent = fileContent,
-                contentType = "text/html"
+            courseId = course1.id,
+            displayName = fileName,
+            fileContent = fileContent,
+            contentType = "text/html"
         )
         val rootFolderId = data.courseRootFolders[course1.id]!!.id
-        val fileFolder = data.folderFiles[rootFolderId]?.find {it.id == fileId}
+        val fileFolder = data.folderFiles[rootFolderId]?.find { it.id == fileId }
         data.addItemToModule(
-                course = course1,
-                moduleId = module.id,
-                item = fileFolder!!
+            course = course1,
+            moduleId = module.id,
+            item = fileFolder!!
         )
 
         // Create an external URL and add it as a module item
         data.addItemToModule(
-                course = course1,
-                moduleId = module.id,
-                item = externalUrl
+            course = course1,
+            moduleId = module.id,
+            item = externalUrl
         )
 
         // Create a quiz and add it as a module item
         quiz = data.addQuizToCourse(
-                course = course1
+            course = course1
         )
 
         data.addQuestionToQuiz(
-                course = course1,
-                quizId = quiz!!.id,
-                questionName = "Math 1",
-                questionText = "What is 2 + 5?",
-                questionType = "multiple_choice_question",
-                answers = arrayOf(
-                        QuizAnswer(answerText = "7"),
-                        QuizAnswer(answerText = "25"),
-                        QuizAnswer(answerText = "-7")
-                )
+            course = course1,
+            quizId = quiz!!.id,
+            questionName = "Math 1",
+            questionText = "What is 2 + 5?",
+            questionType = "multiple_choice_question",
+            answers = arrayOf(
+                QuizAnswer(answerText = "7"),
+                QuizAnswer(answerText = "25"),
+                QuizAnswer(answerText = "-7")
+            )
         )
 
         data.addQuestionToQuiz(
-                course = course1,
-                quizId = quiz!!.id,
-                questionName = "Math 2",
-                questionText = "Pi is greater than the square root of 2",
-                questionType = "true_false_question"
+            course = course1,
+            quizId = quiz!!.id,
+            questionName = "Math 2",
+            questionText = "Pi is greater than the square root of 2",
+            questionType = "true_false_question"
         )
 
         data.addQuestionToQuiz(
-                course = course1,
-                quizId = quiz!!.id,
-                questionName = "Math 3",
-                questionText = "Write an essay on why math is so awesome",
-                questionType = "essay_question"
+            course = course1,
+            quizId = quiz!!.id,
+            questionName = "Math 3",
+            questionText = "Write an essay on why math is so awesome",
+            questionType = "essay_question"
         )
 
         data.addItemToModule(
-                course = course1,
-                moduleId = module.id,
-                item = quiz!!
+            course = course1,
+            moduleId = module.id,
+            item = quiz!!
         )
 
         val ltiTool = data.addLTITool("Google Drive", "http://google.com", course1, 1234L)

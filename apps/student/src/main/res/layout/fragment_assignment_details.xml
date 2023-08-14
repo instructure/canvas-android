@@ -74,6 +74,7 @@
                         android:text="@{viewModel.data.points}"
                         android:textColor="@color/textDark"
                         android:textSize="16sp"
+                        app:visible="@{!viewModel.data.points.isEmpty()}"
                         app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
@@ -90,6 +91,7 @@
                         app:imageRes="@{viewModel.data.submissionStatusIcon}"
                         app:layout_constraintStart_toEndOf="@id/points"
                         app:layout_constraintTop_toBottomOf="@id/assignmentName"
+                        app:layout_goneMarginStart="16dp"
                         app:tint="@{viewModel.data.submissionStatusTint}"
                         tools:src="@drawable/ic_complete_solid"
                         tools:tint="@color/textSuccess" />

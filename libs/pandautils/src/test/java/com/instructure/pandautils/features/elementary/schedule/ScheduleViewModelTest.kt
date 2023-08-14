@@ -201,7 +201,8 @@ class ScheduleViewModelTest {
                 1,
                 courseId = 1,
                 createSubmission(id = 1, grade = null, late = false, excused = false),
-                name = "Assignment 1"
+                name = "Assignment 1",
+                pointsPossible = 20.0
             ),
             createAssignment(
                 2,
@@ -232,10 +233,53 @@ class ScheduleViewModelTest {
         val firstMissingItem = missingItemHeader.items[0] as ScheduleMissingItemViewModel
         assertEquals("Assignment 1", firstMissingItem.data.title)
         assertEquals("Course 1", firstMissingItem.data.courseName)
+        assertEquals("20 pts", firstMissingItem.data.points)
 
         val secondMissingItem = missingItemHeader.items[1] as ScheduleMissingItemViewModel
         assertEquals("Assignment 2", secondMissingItem.data.title)
         assertEquals("Course 2", secondMissingItem.data.courseName)
+    }
+
+    @Test
+    fun `Missing item points are not displayed if quantitative data is restricted`() {
+        val courses = listOf(Course(id = 1, name = "Course 1", settings = CourseSettings(restrictQuantitativeData = true)),)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        val missingItems = listOf(
+            createAssignment(
+                1,
+                courseId = 1,
+                createSubmission(id = 1, grade = null, late = false, excused = false),
+                name = "Assignment 1",
+                pointsPossible = 20.0
+            )
+        )
+
+        every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(missingItems)
+        }
+
+        viewModel = createViewModel()
+        viewModel.getDataForDate(Date().toApiString())
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val missingItemHeader =
+            todayHeader?.items?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
+        assertEquals(1, missingItemHeader.items.size)
+
+        val firstMissingItem = missingItemHeader.items.first() as ScheduleMissingItemViewModel
+        assertEquals("Assignment 1", firstMissingItem.data.title)
+        assertEquals("Course 1", firstMissingItem.data.courseName)
+        assertEquals(null, firstMissingItem.data.points)
     }
 
     @Test
@@ -640,7 +684,54 @@ class ScheduleViewModelTest {
                 assignmentId = 1,
                 PlannableType.ASSIGNMENT,
                 SubmissionState(),
-                Date()
+                Date(),
+                pointsPossible = 20.0
+            )
+        )
+
+        every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(plannerItems)
+        }
+
+        viewModel = createViewModel()
+        viewModel.getDataForDate(Date().toApiString())
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItemViewModel = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
+
+        assertEquals(true, courseItemViewModel.data.openable)
+
+        assertEquals(1, courseItemViewModel.data.plannerItems.size)
+        val plannerItemViewModel = courseItemViewModel.data.plannerItems[0]
+
+        assertEquals("Plannable 1", plannerItemViewModel.data.title)
+        assertEquals(true, plannerItemViewModel.data.openable)
+        assertEquals(PlannerItemType.ASSIGNMENT, plannerItemViewModel.data.type)
+        assertEquals("20 pts", plannerItemViewModel.data.points)
+    }
+
+    @Test
+    fun `Assignment points are not displayed with restricted quantitative data`() {
+        val course = Course(id = 1, settings = CourseSettings(restrictQuantitativeData = true))
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val plannerItems = listOf(
+            createPlannerItem(
+                courseId = course.id,
+                assignmentId = 1,
+                PlannableType.ASSIGNMENT,
+                SubmissionState(),
+                Date(),
+                pointsPossible = 20.0
             )
         )
 
@@ -818,7 +909,8 @@ class ScheduleViewModelTest {
         date: Date,
         plannerOverride: PlannerOverride? = null,
         newActivity: Boolean = false,
-        todoDate: String? = null
+        todoDate: String? = null,
+        pointsPossible: Double? = null
     ): PlannerItem {
         val plannable = Plannable(
             id = assignmentId,
@@ -826,7 +918,7 @@ class ScheduleViewModelTest {
             courseId,
             null,
             null,
-            null,
+            pointsPossible,
             date,
             assignmentId,
             todoDate
@@ -866,14 +958,16 @@ class ScheduleViewModelTest {
         courseId: Long,
         submission: Submission? = null,
         discussionTopicHeader: DiscussionTopicHeader? = null,
-        name: String? = null
+        name: String? = null,
+        pointsPossible: Double? = null
     ): Assignment {
         return Assignment(
             id = id,
             submission = submission,
             discussionTopicHeader = discussionTopicHeader,
             courseId = courseId,
-            name = name
+            name = name,
+            pointsPossible = pointsPossible ?: 0.0
         )
     }
 
@@ -912,6 +1006,7 @@ class ScheduleViewModelTest {
         every { resources.getString(R.string.schedule_todo_title) } returns "To Do"
         every { resources.getQuantityString(R.plurals.schedule_tag_replies, 2, 2) } returns "2 Replies"
         every { resources.getQuantityString(R.plurals.schedule_tag_replies, 1, 1) } returns "1 Reply"
+        every { resources.getQuantityString(R.plurals.schedule_points, 20, "20") } returns "20 pts"
     }
 
     private fun createViewModel(): ScheduleViewModel {
