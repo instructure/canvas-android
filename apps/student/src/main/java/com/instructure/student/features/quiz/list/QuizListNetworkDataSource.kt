@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.depaginate
 
-class QuizListNetworkDataSource(private val quizApi: QuizAPI.QuizInterface, private val coureseApi: CourseAPI.CoursesInterface) : QuizListDataSource {
+class QuizListNetworkDataSource(private val quizApi: QuizAPI.QuizInterface, private val courseApi: CourseAPI.CoursesInterface) : QuizListDataSource {
 
     override suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -36,6 +36,6 @@ class QuizListNetworkDataSource(private val quizApi: QuizAPI.QuizInterface, priv
 
     override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-        return coureseApi.getCourseSettings(courseId, restParams).dataOrNull
+        return courseApi.getCourseSettings(courseId, restParams).dataOrNull
     }
 }

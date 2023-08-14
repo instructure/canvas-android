@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.depaginate
 
@@ -59,5 +60,10 @@ class AssignmentListNetworkDataSource(
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         return courseApi.getGradingPeriodsForCourse(courseId, params).dataOrThrow.gradingPeriodList
+    }
+
+    override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        return courseApi.getCourseSettings(courseId, restParams).dataOrNull
     }
 }

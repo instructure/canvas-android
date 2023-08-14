@@ -19,6 +19,7 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -38,9 +39,10 @@ class AssignmentListModule {
     @Provides
     fun provideAssignmentListLocalDataSource(
         assignmentFacade: AssignmentFacade,
-        courseFacade: CourseFacade
+        courseFacade: CourseFacade,
+        courseSettingsDao: CourseSettingsDao
     ): AssignmentListLocalDataSource {
-        return AssignmentListLocalDataSource(assignmentFacade, courseFacade)
+        return AssignmentListLocalDataSource(assignmentFacade, courseFacade, courseSettingsDao)
     }
 
     @Provides

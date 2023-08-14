@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.utils.depaginate
 class ModuleListNetworkDataSource(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val tabApi: TabAPI.TabsInterface,
-    private val coureseApi: CourseAPI.CoursesInterface) : ModuleListDataSource {
+    private val courseApi: CourseAPI.CoursesInterface) : ModuleListDataSource {
 
     override suspend fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -67,6 +67,6 @@ class ModuleListNetworkDataSource(
 
     override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-        return coureseApi.getCourseSettings(courseId, restParams).dataOrNull
+        return courseApi.getCourseSettings(courseId, restParams).dataOrNull
     }
 }

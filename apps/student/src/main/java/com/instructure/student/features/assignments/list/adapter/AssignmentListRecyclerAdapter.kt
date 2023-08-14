@@ -113,7 +113,7 @@ abstract class AssignmentListRecyclerAdapter(
             loadAssignmentsData(course)
         } else {
             settingsJob = tryWeave {
-                val settings = CourseManager.getCourseSettingsAsync(canvasContext.id, isRefresh).await().dataOrNull
+                val settings = repository.loadCourseSettings(canvasContext.id, isRefresh)
                 restrictQuantitativeData = settings?.restrictQuantitativeData ?: false
                 loadAssignmentsData(course)
             } catch {
