@@ -61,6 +61,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
     private var page: Page by ParcelableArg(default = Page(), key = PAGE)
     private var pageUrl: String? by NullableStringArg(key = PAGE_URL)
+    private var navigatedFromModules: Boolean by BooleanArg(key = NAVIGATED_FROM_MODULES)
 
     // Flag for the webview client to know whether or not we should clear the history
     private var isUpdated = false
@@ -185,7 +186,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         setPageObject(page)
 
         if (page.lockInfo != null) {
-            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(page.lockInfo!!, requireContext(), R.string.lockedPageDesc)
+            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(page.lockInfo!!, requireContext(), R.string.lockedPageDesc, !navigatedFromModules)
             populateWebView(lockedMessage, getString(R.string.pages))
             return
         }
@@ -323,6 +324,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         const val PAGE_NAME = "pageDetailsName"
         const val PAGE = "pageDetails"
         const val PAGE_URL = "pageUrl"
+        const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
 
         fun newInstance(route: Route): PageDetailsFragment? {
             return if (validRoute(route)) PageDetailsFragment().apply {
@@ -345,8 +347,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { if (pageName != null) putString(PAGE_NAME, pageName) }))
         }
 
-        fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?): Route {
+        fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?, navigatedFromModules: Boolean): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
+                putBoolean(NAVIGATED_FROM_MODULES, navigatedFromModules)
                 if (pageName != null)
                     putString(PAGE_NAME, pageName)
                 if (pageUrl != null)

@@ -431,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Deleted</string>
+    <string name="gradeUpdated">Grade updated</string>
 
     <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
 
@@ -1117,6 +1118,7 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
     <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Grade: %s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1397,4 +1399,5 @@
     <string name="aboutLoginTitle">Login ID</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
 </resources>

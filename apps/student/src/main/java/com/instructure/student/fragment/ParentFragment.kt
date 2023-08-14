@@ -112,7 +112,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
                                 InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(loadedMedia.bundle!!))
                             } else if (loadedMedia.intent != null && context != null) {
                                 // Show pdf with PSPDFkit
-                                if (loadedMedia.intent!!.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
+                                if (loadedMedia.intent?.type?.contains("pdf") == true && !loadedMedia.isUseOutsideApps) {
                                     val uri = loadedMedia.intent!!.data
                                     FileUtils.showPdfDocument(uri!!, loadedMedia, requireContext())
                                 } else if (loadedMedia.intent?.type == "video/mp4") {

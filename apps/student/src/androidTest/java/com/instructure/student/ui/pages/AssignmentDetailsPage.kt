@@ -27,12 +27,31 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.clearText
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.typeText
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -74,6 +93,31 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
+    }
+
+    fun assertGradeDisplayed(grade: String) {
+        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
+        onView(withId(R.id.grade)).scrollTo().assertContainsText(grade)
+    }
+
+    fun assertGradeNotDisplayed() {
+        onView(withId(R.id.grade)).assertNotDisplayed()
+    }
+
+    fun assertOutOfTextDisplayed(outOfText: String) {
+        onView(withId(R.id.outOf)).scrollTo().assertContainsText(outOfText)
+    }
+
+    fun assertOutOfTextNotDisplayed() {
+        onView(withId(R.id.outOf)).assertNotDisplayed()
+    }
+
+    fun assertScoreDisplayed(score: String) {
+        onView(withId(R.id.score)).scrollTo().assertContainsText(score)
+    }
+
+    fun assertScoreNotDisplayed() {
+        onView(withId(R.id.score)).assertNotDisplayed()
     }
 
     fun assertAssignmentLocked() {
@@ -135,6 +179,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         Espresso.onView(withText("Add Bookmark")).click()
         Espresso.onView(withId(R.id.bookmarkEditText)).clearText()
         Espresso.onView(withId(R.id.bookmarkEditText)).typeText(bookmarkName)
+        if(CanvasTest.isLandscapeDevice()) Espresso.pressBack()
         Espresso.onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("Save"))).click()
     }
 

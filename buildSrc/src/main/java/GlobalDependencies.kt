@@ -24,7 +24,7 @@ object Versions {
 
     /* Others */
     const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
-    const val PSPDFKIT = "8.4.1"
+    const val PSPDFKIT = "8.7.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.5.4"
@@ -160,7 +160,7 @@ object Libs {
 }
 
 object Plugins {
-    const val FIREBASE_CRASHLYTICS =  "com.google.firebase:firebase-crashlytics-gradle:2.9.4"
+    const val FIREBASE_CRASHLYTICS =  "com.google.firebase:firebase-crashlytics-gradle:2.9.2"
     const val ANDROID_GRADLE_TOOLS = "com.android.tools.build:gradle:${Versions.ANDROID_GRADLE_TOOLS}"
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"

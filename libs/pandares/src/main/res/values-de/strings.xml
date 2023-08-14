@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Fortschrittsdialog schließen</string>
     <string name="fileUploadProgress">%1$s von %2$s</string>
     <string name="fileUploadProgressSubtitle">Wird nach „Dateien“ hochgeladen</string>
+    <string name="fileUploadFailedSubtitle">Eine oder mehrere Dateien wurden nicht hochgeladen. Überprüfen Sie Ihre Internetverbindung, und versuchen Sie es erneut.</string>
     <string name="submissionProgressSubtitle">Abgabe wird zu \"%s\" hochgeladen</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Abgabe wird hochgeladen</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Abgabe erfolgreichAbgabe erfolgreich</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Erfolgreich gesendet</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Abgabe fehlgeschlagen</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Dateien hochladen</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Datei wird hochgeladen</item>
+        <item quantity="other">Dateien werden hochgeladen</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Hochladen der Datei erfolgreich</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Hochladen der Datei fehlgeschlagen</string>
     <string name="cancelSubmissionDialogTitle">Abgabe abbrechen</string>
     <string name="cancelSubmissionDialogMessage">Dadurch wird Ihre Abgabe storniert und gelöscht.</string>
     <string name="fileUploadError">Hochladen der Datei fehlgeschlagen</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Der Auswahlmodus ist deaktiviert.</string>
     <string name="a11y_avatarContentDescription">Avatar von %s</string>
     <string name="inboxUndo">Rückgängig machen</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domäne</string>
+    <string name="aboutLoginTitle">Anmelde-ID</string>
+    <string name="aboutEmailTitle">E-Mail</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Beim erneuten Laden der Aufgabe ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.</string>
 </resources>

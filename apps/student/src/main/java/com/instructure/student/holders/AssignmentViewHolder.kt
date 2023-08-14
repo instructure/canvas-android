@@ -35,7 +35,8 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         context: Context,
         assignment: Assignment,
         courseColor: Int,
-        adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>
+        adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>,
+        restrictQuantitativeData: Boolean
     ) = with(ViewholderCardGenericBinding.bind(itemView)) {
         title.text = assignment.name
 
@@ -47,12 +48,13 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val submission = assignment.submission
 
         // Posted At now determines if an assignment is muted, even for old gradebook
-        if (submission?.postedAt == null) {
+        val hideGrade = restrictQuantitativeData && assignment.isGradingTypeQuantitative && submission?.excused != true
+        if (submission?.postedAt == null || hideGrade) {
             // Mute that score
             points.visibility = View.GONE
         } else {
             points.visibility = View.VISIBLE
-            BinderUtils.setupGradeText(context, points, assignment, submission, courseColor)
+            BinderUtils.setupGradeText(context, points, assignment, submission, courseColor, restrictQuantitativeData)
         }
 
         val drawable = BinderUtils.getAssignmentIcon(assignment)

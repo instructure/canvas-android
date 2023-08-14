@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Luk statusdialog</string>
     <string name="fileUploadProgress">%1$s af %2$s</string>
     <string name="fileUploadProgressSubtitle">Uploader til filer</string>
+    <string name="fileUploadFailedSubtitle">En eller flere filer kunne ikke uploades. Kontroller din internetforbindelse, og prøv igen for at aflevere.</string>
     <string name="submissionProgressSubtitle">Uploader indsendelse til \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploader aflevering</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Aflevering lykkedes</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Aflevering mislykkedes</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Uploader filer</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Uploader fil</item>
+        <item quantity="other">Uploader filer</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Filupload lykkedes</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Filupload mislykkedes</string>
     <string name="cancelSubmissionDialogTitle">Annuller aflevering</string>
     <string name="cancelSubmissionDialogMessage">Dette annullerer og sletter din aflevering.</string>
     <string name="fileUploadError">Filupload mislykkedes</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Valgtilstand deaktiveret.</string>
     <string name="a11y_avatarContentDescription">Avatar for %s</string>
     <string name="inboxUndo">Fortryd</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domæne</string>
+    <string name="aboutLoginTitle">Login-id</string>
+    <string name="aboutEmailTitle">E-mail</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Der opstod et problem med at genindlæse denne opgave. Kontrollér forbindelsen, og prøv igen.</string>
 </resources>

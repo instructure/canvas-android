@@ -21,6 +21,11 @@ import com.instructure.espresso.page.*
 
 import com.instructure.teacher.R
 
+/**
+ * Assignment due dates page
+ *
+ * @constructor Create empty Assignment due dates page
+ */
 @Suppress("unused")
 class AssignmentDueDatesPage : BasePage(pageResId = R.id.dueDatesPage) {
 
@@ -29,8 +34,16 @@ class AssignmentDueDatesPage : BasePage(pageResId = R.id.dueDatesPage) {
     private val editButton by OnViewWithId(R.id.menu_edit)
     private val recyclerView by WaitForViewWithId(R.id.recyclerView)
 
+    /**
+     * Open edit page (by clicking on Edit button).
+     *
+     */
     fun openEditPage() = editButton.click()
 
+    /**
+     * Assert that the 'No Due Date' string is displayed as due date text.
+     *
+     */
     fun assertDisplaysNoDueDate() {
         recyclerView.check(RecyclerViewItemCountAssertion(1))
         assertLabelsDisplayedOnce()
@@ -39,10 +52,19 @@ class AssignmentDueDatesPage : BasePage(pageResId = R.id.dueDatesPage) {
         onViewWithId(R.id.dueDateTextView).assertDisplayed().assertHasText(R.string.no_due_date)
     }
 
+    /**
+     * Assert that the due date count is the expected.
+     *
+     * @param expectedCount: The expected due date count parameter.
+     */
     fun assertDueDatesCount(expectedCount: Int) {
         recyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
     }
 
+    /**
+     * Assert that the due date count is 1.
+     *
+     */
     fun assertDisplaysSingleDueDate() {
         recyclerView.check(RecyclerViewItemCountAssertion(1))
         assertLabelsDisplayedOnce()
@@ -51,18 +73,37 @@ class AssignmentDueDatesPage : BasePage(pageResId = R.id.dueDatesPage) {
         onViewWithId(R.id.dueDateTextView).assertDisplayed().assertNotHasText(R.string.no_due_date)
     }
 
+    /**
+     * Assert that the 'Due For' text is the expected.
+     *
+     * @param dueForString: The expected due date integer parameter.
+     */
     fun assertDueFor(dueForString: Int) {
         onView(withId(R.id.dueForTextView) + withText(dueForString)).assertDisplayed()
     }
 
+    /**
+     * Assert that the 'Due For' text is the expected.
+     *
+     * @param dueForString: The expected due date string parameter.
+     */
     fun assertDueFor(dueForString: String) {
         onView(withId(R.id.dueForTextView) + withText(dueForString)).assertDisplayed()
     }
 
+    /**
+     * Assert that the 'Due Date' text is the expected.
+     *
+     * @param dueDateString: The expected due date string parameter.
+     */
     fun assertDueDateTime(dueDateString: String) {
         onView(withId(R.id.dueDateTextView) + withText(dueDateString))
     }
 
+    /**
+     * Assert displays availability dates.
+     *
+     */
     fun assertDisplaysAvailabilityDates() {
         recyclerView.check(RecyclerViewItemCountAssertion(1))
         assertLabelsDisplayedOnce()
@@ -70,12 +111,20 @@ class AssignmentDueDatesPage : BasePage(pageResId = R.id.dueDatesPage) {
         onViewWithId(R.id.availableToTextView).assertDisplayed().assertNotHasText(R.string.no_date_filler)
     }
 
+    /**
+     * Assert that the corresponding labels ('For', 'Available from', 'Available to') are displayed.
+     *
+     */
     private fun assertLabelsDisplayedOnce() {
         onViewWithText(R.string.details_due_for_label).assertDisplayed()
         onViewWithText(R.string.details_available_from_label).assertDisplayed()
         onViewWithText(R.string.details_available_to_label).assertDisplayed()
     }
 
+    /**
+     * Assert that no availability dates given.
+     *
+     */
     private fun assertNoAvailabilityDates() {
         onViewWithId(R.id.availableFromTextView).assertDisplayed().assertHasText(R.string.no_date_filler)
         onViewWithId(R.id.availableToTextView).assertDisplayed().assertHasText(R.string.no_date_filler)

@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Zapri pogovorno okno za napredovanje</string>
     <string name="fileUploadProgress">%1$s od %2$s</string>
     <string name="fileUploadProgressSubtitle">Nalagam v datoteke</string>
+    <string name="fileUploadFailedSubtitle">Nalaganje ene ali več datotek ni uspelo. Preverite internetno povezavo in poskusite poslati znova.</string>
     <string name="submissionProgressSubtitle">Nalagam oddajo v \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Nalaganje oddaje</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Oddaja je uspela</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Oddaja ni uspela</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Nalaganje datotek</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Nalagam datoteko</item>
+        <item quantity="other">Nalagam datoteke</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Datoteka je uspešno naložena</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Nalaganje datoteke ni uspelo</string>
     <string name="cancelSubmissionDialogTitle">Prekliči oddajo</string>
     <string name="cancelSubmissionDialogMessage">S tem boste preklicali in izbrisali oddajo.</string>
     <string name="fileUploadError">Nalaganje datoteke ni uspelo</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Način izbire je deaktiviran.</string>
     <string name="a11y_avatarContentDescription">Avatar osebe %s</string>
     <string name="inboxUndo">Razveljavi</string>
+    <string name="aboutAppTitle">Aplikacija</string>
+    <string name="aboutDomainTitle">Domena</string>
+    <string name="aboutLoginTitle">ID prijave</string>
+    <string name="aboutEmailTitle">E-pošta</string>
+    <string name="aboutVersionTitle">Različica</string>
+    <string name="assignmentRefreshError">Prišlo je do težave z ponovnim nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
 </resources>

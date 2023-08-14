@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -37,6 +38,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_CONVERSATION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxConversationAdapter
@@ -46,15 +48,20 @@ import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.interfaces.MessageAdapterCallback
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FileDownloadJobIntentService
 import com.instructure.student.view.AttachmentView
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_INBOX_CONVERSATION)
 @PageView(url = "conversations")
+@AndroidEntryPoint
 class InboxConversationFragment : ParentFragment() {
+
+    @Inject
+    lateinit var workManager: WorkManager
 
     private val binding by viewBinding(FragmentInboxConversationBinding::bind)
     private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
@@ -111,7 +118,7 @@ class InboxConversationFragment : ParentFragment() {
 
                 AttachmentView.AttachmentAction.DOWNLOAD -> {
                     if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-                        FileDownloadJobIntentService.scheduleDownloadJob(requireContext(), attachment = attachment)
+                        workManager.enqueue(FileDownloadWorker.createOneTimeWorkRequest(attachment.displayName.orEmpty(), attachment.url.orEmpty()))
                     } else {
                         requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
                     }
@@ -401,7 +408,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun refreshConversationData() {
-        initConversationDetails()
+        if (view != null) initConversationDetails()
     }
 
     private fun onConversationUpdated(goBack: Boolean) {

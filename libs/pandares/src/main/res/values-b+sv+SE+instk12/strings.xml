@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Stäng förloppsdialog</string>
     <string name="fileUploadProgress">%1$s av %2$s</string>
     <string name="fileUploadProgressSubtitle">Laddar upp till Filer</string>
+    <string name="fileUploadFailedSubtitle">En eller fler filer laddades inte upp. Kontrollera din internetanslutning och försök lämna in igen.</string>
     <string name="submissionProgressSubtitle">Laddar upp inlämning till \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Laddar upp inlämning</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Inlämningen lyckades</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Inlämningen slutfördes</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Inlämningen misslyckades</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Laddar upp filer</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Laddar upp fil</item>
+        <item quantity="other">Laddar upp filer</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Filuppladdningen slutfördes</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Filuppladdningen misslyckades</string>
     <string name="cancelSubmissionDialogTitle">Avbryt inlämningen</string>
     <string name="cancelSubmissionDialogMessage">Detta avbryter och tar bort din inlämning.</string>
     <string name="fileUploadError">Filuppladdningen misslyckades</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Urvalsläget inaktiverat.</string>
     <string name="a11y_avatarContentDescription">Avatar för %s</string>
     <string name="inboxUndo">Ångra</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domän</string>
+    <string name="aboutLoginTitle">Inloggnings-ID</string>
+    <string name="aboutEmailTitle">E-post</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Det uppstod ett problem när den här uppgiften skulle laddas om. Kontrollera din anslutning och försök igen.</string>
 </resources>

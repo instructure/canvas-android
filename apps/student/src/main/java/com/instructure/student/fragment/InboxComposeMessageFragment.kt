@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
@@ -40,7 +41,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.room.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
@@ -60,6 +61,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
 
+@PageView(url = "conversations/compose")
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 @AndroidEntryPoint
 class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {

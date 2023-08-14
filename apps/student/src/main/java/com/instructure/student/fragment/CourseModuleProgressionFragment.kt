@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.ModuleObject.State
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
@@ -57,23 +58,22 @@ import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore
 import com.instructure.student.util.ModuleProgressionUtility
 import com.instructure.student.util.ModuleUtility
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
+import javax.inject.Inject
 
 @PageView(url = "courses/{canvasContext}/modules")
 @ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
+@AndroidEntryPoint
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(CourseModuleProgressionBinding::bind)
 
-    private val discussionRouteHelper = DiscussionRouteHelper(
-        FeaturesManager,
-        FeatureFlagProvider(UserManager, ApiPrefs),
-        DiscussionManager,
-        GroupManager
-    )
+    @Inject
+    lateinit var discussionRouteHelper: DiscussionRouteHelper
 
     private var routeModuleProgressionJob: Job? = null
     private var moduleItemsJob: Job? = null
@@ -88,6 +88,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var assetId: String by StringArg(key = ASSET_ID)
     private var assetType: String by StringArg(key = ASSET_TYPE, default = ModuleItemAsset.MODULE_ITEM.assetType)
     private var route: Route by ParcelableArg(key = ROUTE)
+    private var navigatedFromModules: Boolean by BooleanArg(key = NAVIGATED_FROM_MODULES)
 
     // Default number will get reset
     private var itemsCount = 3
@@ -142,8 +143,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // This function is mostly for the internal web view fragments so we can go back in the webview
     override fun handleBackPressed(): Boolean = with(binding) {
         if (items.isNotEmpty()) {
-            val pFrag = childFragmentManager.fragments[0] as ParentFragment
-            if (pFrag.handleBackPressed()) {
+            val pFrag = childFragmentManager.fragments.firstOrNull() as? ParentFragment
+            if (pFrag?.handleBackPressed() == true) {
                 return true
             }
         }
@@ -269,7 +270,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private fun showFragment(item: Fragment?) {
         item?.let {
-            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commit()
+            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commitAllowingStateLoss()
             applyFragmentTheme(it)
         }
     }
@@ -296,7 +297,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         updatePrevNextButtons(currentPos)
 
-        val completionRequirement = getCurrentModuleItem(currentPos)!!.completionRequirement
+        val currentModuleItem = getCurrentModuleItem(currentPos) ?: return
+
+        val completionRequirement = currentModuleItem.completionRequirement
         if (completionRequirement != null && modules[groupPos].sequentialProgress) {
             // Reload the sequential module object to update the subsequent items that may now be unlocked
             // The user has viewed the item, and may have completed the contribute/submit requirements for a
@@ -304,28 +307,38 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             addLockedIconIfNeeded(modules, items, groupPos, childPos)
 
             // Mark the item as viewed
-            markAsRead(modules[groupPos].id, getCurrentModuleItem(currentPos)!!.id)
+            markAsRead(currentModuleItem.moduleId, currentModuleItem.id)
         }
 
-        val moduleItem = getCurrentModuleItem(currentPos)
-
-        updateModuleMarkDoneView(moduleItem)
+        updateModuleMarkDoneView(currentModuleItem)
     }
 
     private fun markAsRead(moduleId: Long, moduleItemId: Long) {
         markAsReadJob = tryWeave {
             // mark the moduleItem as viewed if we have a valid module id and item id,
             // but not the files, because they need to open or download those to view them
-            if(moduleId != 0L && moduleItemId != 0L && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()) {
-                awaitApi<ResponseBody> { ModuleManager.markModuleItemAsRead(canvasContext, moduleId, moduleItemId, it) }
+            if (moduleId != 0L && moduleItemId != 0L && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()) {
+                awaitApi { ModuleManager.markModuleItemAsRead(canvasContext, moduleId, moduleItemId, it) }
 
                 // Update the module item locally, needed to unlock modules as the user ViewPages through them
                 getCurrentModuleItem(currentPos)?.completionRequirement?.completed = true
 
                 setupNextModule(getModuleItemGroup(currentPos))
 
+                // Update the module state to indicate in the list that the module is completed
+                val module = modules.find { it.id == moduleId } ?: return@tryWeave
+                val isModuleCompleted = items.flatten().filter { it.moduleId == moduleId }.all { it.completionRequirement?.completed.orDefault() }
+                val updatedState = if (isModuleCompleted) State.Completed.apiString else module.state
+
                 // Update the module list fragment to show that these requirements are done,
-                ModuleUpdatedEvent(modules[groupPos]).post()
+                ModuleUpdatedEvent(module.copy(state = updatedState)).post()
+
+                // Update the state of the next module to indicate in the list that it is unlocked
+                modules.getOrNull(modules.indexOf(module) + 1)?.let {
+                    if (isModuleCompleted && it.state != State.Completed.apiString) {
+                        ModuleUpdatedEvent(it.copy(state = State.Unlocked.apiString)).post()
+                    }
+                }
             }
         } catch {
             Logger.e("Error marking module item as read. " + it.message)
@@ -622,7 +635,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         // so we need to find the correct one overall
         val moduleItem = getCurrentModuleItem(position) ?: getCurrentModuleItem(0) // Default to the first item, band-aid for NPE
 
-        val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos], isDiscussionRedesignEnabled)
+        val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos], isDiscussionRedesignEnabled, navigatedFromModules)
         var args: Bundle? = fragment!!.arguments
         if (args == null) {
             args = Bundle()
@@ -735,6 +748,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         private const val ASSET_ID = "asset_id"
         private const val ASSET_TYPE = "asset_type"
         private const val ROUTE = "route"
+        private const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
 
 
         //we don't want to add subheaders or external tools into the list. subheaders don't do anything and we
@@ -749,6 +763,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             return Route(null, CourseModuleProgressionFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
                 putInt(GROUP_POSITION, groupPos)
                 putInt(CHILD_POSITION, childPos)
+                putBoolean(NAVIGATED_FROM_MODULES, true)
             }))
         }
 

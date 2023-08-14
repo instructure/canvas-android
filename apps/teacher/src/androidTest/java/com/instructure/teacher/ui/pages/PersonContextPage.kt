@@ -29,6 +29,13 @@ import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 
+/**
+ * Represents the Person Context Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the elements on the "Person Context" page.
+ * It contains properties for accessing various views on the page such as the toolbar, student name, student email, course name, section name, and last activity.
+ * Additionally, it provides methods for asserting the display of course information, section name based on the user role, and the person name.
+ */
 open class PersonContextPage : BasePage(R.id.studentContextPage) {
 
     val toolbar by WaitForViewWithId(R.id.toolbar)
@@ -38,10 +45,20 @@ open class PersonContextPage : BasePage(R.id.studentContextPage) {
     val sectionName by WaitForViewWithId(R.id.sectionNameView)
     val lastActivity by WaitForViewWithId(R.id.lastActivityView, autoAssert = false)
 
+    /**
+     * Asserts the display of course information.
+     *
+     * @param course The course to assert.
+     */
     fun assertDisplaysCourseInfo(course: CourseApiModel) {
         courseName.assertHasText(course.name)
     }
 
+    /**
+     * Asserts the section name view based on the user role.
+     *
+     * @param userRole The user role.
+     */
     fun assertSectionNameView(userRole: UserRole) {
         when (userRole) {
             UserRole.TEACHER -> sectionName.check(matches(containsTextCaseInsensitive("Teacher")))
@@ -50,10 +67,18 @@ open class PersonContextPage : BasePage(R.id.studentContextPage) {
         }
     }
 
+    /**
+     * Asserts that the person name is displayed.
+     *
+     * @param personName The name of the person to assert.
+     */
     fun assertPersonNameIsDisplayed(personName: String) {
         studentName.check(matches(withText(personName))).assertDisplayed()
     }
 
+    /**
+     * Enum class representing the user roles.
+     */
     enum class UserRole {
         TEACHER, STUDENT, OBSERVER
     }

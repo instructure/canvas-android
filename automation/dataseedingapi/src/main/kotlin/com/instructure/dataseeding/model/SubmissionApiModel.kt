@@ -75,7 +75,7 @@ data class SubmitCourseAssignmentSubmission(
 
 data class GradeSubmission(
         @SerializedName("posted_grade")
-        val grade: String,
+        val grade: String? = null,
 
         @SerializedName("excuse")
         val excused: Boolean

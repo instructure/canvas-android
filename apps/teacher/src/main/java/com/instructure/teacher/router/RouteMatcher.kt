@@ -39,6 +39,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -122,6 +123,10 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(LtiLaunchFragment::class.java)
         fullscreenFragments.add(SpeedGraderQuizWebViewFragment::class.java)
         fullscreenFragments.add(HtmlContentFragment::class.java)
+        fullscreenFragments.add(ViewPdfFragment::class.java)
+        fullscreenFragments.add(ViewHtmlFragment::class.java)
+        fullscreenFragments.add(EditDashboardFragment::class.java)
+        fullscreenFragments.add(CourseBrowserFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)

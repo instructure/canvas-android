@@ -91,6 +91,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var dbSubmission: DatabaseSubmission? = null
     private var isUploading = false
+    private var restrictQuantitativeData = false
 
     var assignment: Assignment? = null
         private set
@@ -131,7 +132,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 }
                 if (isUploading && submission.errorFlag) {
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
-                        removeFirst()
+                        if (isNotEmpty()) removeFirst()
                         add(0, AssignmentDetailsAttemptItemViewModel(
                             AssignmentDetailsAttemptViewData(
                                 resources.getString(R.string.attempt, attempts.size),
@@ -163,6 +164,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), forceNetwork).await().dataOrThrow
+                restrictQuantitativeData = courseResult.settings?.restrictQuantitativeData ?: false
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
@@ -220,23 +222,31 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun refreshAssignment() {
         viewModelScope.launch {
-            val assignmentResult = if (isObserver) {
-                assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), true)
-            } else {
-                assignmentManager.getAssignmentWithHistoryAsync(assignmentId, course?.id.orDefault(), true)
-            }.await().dataOrThrow as Assignment
+            try {
+                val assignmentResult = if (isObserver) {
+                    assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), true)
+                } else {
+                    assignmentManager.getAssignmentWithHistoryAsync(assignmentId, course?.id.orDefault(), true)
+                }.await().dataOrThrow as Assignment
 
-            _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))
+                _data.postValue(getViewData(assignmentResult, dbSubmission?.isDraft.orDefault()))
+            } catch (e: Exception) {
+                _events.value = Event(AssignmentDetailAction.ShowToast(resources.getString(R.string.assignmentRefreshError)))
+            }
         }
     }
 
     @Suppress("DEPRECATION")
     private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailsViewData {
-        val points = resources.getQuantityString(
-            R.plurals.quantityPointsAbbreviated,
-            assignment.pointsPossible.toInt(),
-            NumberHelper.formatDecimal(assignment.pointsPossible, 1, true)
-        )
+        val points = if (restrictQuantitativeData) {
+            ""
+        } else {
+            resources.getQuantityString(
+                R.plurals.quantityPointsAbbreviated,
+                assignment.pointsPossible.toInt(),
+                NumberHelper.formatDecimal(assignment.pointsPossible, 1, true)
+            )
+        }
 
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
 
@@ -430,7 +440,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 resources,
                 colorKeeper.getOrGenerateColor(course),
                 assignment,
-                assignment.submission
+                assignment.submission,
+                restrictQuantitativeData
             ),
             dueDate = due,
             submissionTypes = submissionTypes,
@@ -462,6 +473,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             colorKeeper.getOrGenerateColor(course),
             assignment,
             selectedSubmission,
+            restrictQuantitativeData,
             attempt?.isUploading.orDefault(),
             attempt?.isFailed.orDefault()
         )

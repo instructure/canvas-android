@@ -1,7 +1,11 @@
 package com.instructure.pandautils.di
 
-import com.instructure.pandautils.room.AppDatabase
-import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.appdatabase.AppDatabase
+import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,5 +56,11 @@ class DatabaseModule {
     @Singleton
     fun provideDashboardFileUploadDao(appDatabase: AppDatabase): DashboardFileUploadDao {
         return appDatabase.dashboardFileUploadDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEnvironmentFeatureFlagsDao(appDatabase: AppDatabase): EnvironmentFeatureFlagsDao {
+        return appDatabase.environmentFeatureFlagsDao()
     }
 }

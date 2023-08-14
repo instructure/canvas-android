@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
-import com.instructure.pandautils.room.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic

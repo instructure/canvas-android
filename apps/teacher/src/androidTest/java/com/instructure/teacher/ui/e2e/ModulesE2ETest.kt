@@ -5,7 +5,13 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.QuizzesApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.ModuleApiModel
+import com.instructure.dataseeding.model.ModuleItemTypes
+import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -63,8 +69,8 @@ class   ModulesE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Refresh the page. Assert that ${module.name} module is displayed and it is unpublished by default.")
         modulesPage.refresh()
-        modulesPage.assertModuleIsPresent(module.name)
-        modulesPage.assertModuleIsUnpublished()
+        modulesPage.assertModuleIsDisplayed(module.name)
+        modulesPage.assertModuleNotPublished()
 
         Log.d(PREPARATION_TAG,"Publish ${module.name} module via API.")
         ModulesApi.updateModule(
@@ -76,12 +82,20 @@ class   ModulesE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Refresh the page. Assert that ${module.name} module is displayed and it is published.")
         modulesPage.refresh()
-        modulesPage.assertModuleIsPresent(module.name)
+        modulesPage.assertModuleIsDisplayed(module.name)
         modulesPage.assertModuleIsPublished()
 
-        Log.d(STEP_TAG,"Assert that ${assignment.name} assignment and ${quiz.title} quiz are present as module items.")
-        modulesPage.assertModuleItemIsPresent(assignment.name)
-        modulesPage.assertModuleItemIsPresent(quiz.title)
+        Log.d(STEP_TAG,"Assert that ${assignment.name} assignment and ${quiz.title} quiz are present as module items, and they are published since their module is published.")
+        modulesPage.assertModuleItemIsDisplayed(assignment.name)
+        modulesPage.assertModuleItemIsPublished(assignment.name)
+        modulesPage.assertModuleItemIsDisplayed(quiz.title)
+        modulesPage.assertModuleItemIsPublished(quiz.title)
+
+        modulesPage.clickOnCollapseExpandIcon()
+        modulesPage.assertItemCountInModule(module.name, 0)
+
+        modulesPage.clickOnCollapseExpandIcon()
+        modulesPage.assertItemCountInModule(module.name, 2)
     }
 
     private fun createModuleQuizItem(

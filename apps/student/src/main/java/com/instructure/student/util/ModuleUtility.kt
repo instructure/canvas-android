@@ -37,8 +37,8 @@ import com.instructure.student.fragment.PageDetailsFragment.Companion.makeRoute
 import java.util.*
 
 object ModuleUtility {
-    fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?, isDiscussionRedesignEnabled: Boolean): Fragment? = when (item.type) {
-        "Page" -> PageDetailsFragment.newInstance(makeRoute(course, item.title, item.pageUrl))
+    fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?, isDiscussionRedesignEnabled: Boolean, navigatedFromModules: Boolean): Fragment? = when (item.type) {
+        "Page" -> PageDetailsFragment.newInstance(makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
         "Assignment" -> AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
         "Discussion" -> {
             if (isDiscussionRedesignEnabled) {

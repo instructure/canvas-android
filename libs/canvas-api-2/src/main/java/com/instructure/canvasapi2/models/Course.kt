@@ -78,7 +78,9 @@ data class Course(
         @SerializedName("course_color")
         val courseColor: String? = null,
         @SerializedName("grading_periods")
-        val gradingPeriods: List<GradingPeriod>? = null
+        val gradingPeriods: List<GradingPeriod>? = null,
+        @SerializedName("settings")
+        val settings: CourseSettings? = null
 ) : CanvasContext(), Comparable<CanvasContext> {
     override val type: Type get() = Type.COURSE
 

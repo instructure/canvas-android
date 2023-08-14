@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Chiudi finestra di dialogo avanzamento</string>
     <string name="fileUploadProgress">%1$s di %2$s</string>
     <string name="fileUploadProgressSubtitle">Caricamento nei file</string>
+    <string name="fileUploadFailedSubtitle">Impossibile caricare uno o più file. Controlla la tua connessione Internet e riprova a inviare.</string>
     <string name="submissionProgressSubtitle">Caricamento consegna in \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Caricamento consegna</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Consegna eseguita correttamente</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Consegna non riuscita</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Caricamento file</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Caricamento file</item>
+        <item quantity="other">Caricamento file</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Caricamento file eseguito correttamente</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Errore di caricamento file</string>
     <string name="cancelSubmissionDialogTitle">Annulla invio</string>
     <string name="cancelSubmissionDialogMessage">Questa operazione annullerà ed eliminerà il tuo invio.</string>
     <string name="fileUploadError">Errore di caricamento file</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Modalità selezione disattivata.</string>
     <string name="a11y_avatarContentDescription">Avatar di %s</string>
     <string name="inboxUndo">Annulla</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Dominio</string>
+    <string name="aboutLoginTitle">ID di accesso</string>
+    <string name="aboutEmailTitle">E-mail</string>
+    <string name="aboutVersionTitle">Versione</string>
+    <string name="assignmentRefreshError">Si è verificato un problema durante la ricarica di questo compito. Verifica la connessione e riprova.</string>
 </resources>

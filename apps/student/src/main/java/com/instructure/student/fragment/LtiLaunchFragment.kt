@@ -103,10 +103,18 @@ class LtiLaunchFragment : ParentFragment() {
                     when {
                         sessionLessLaunch -> {
                             // This is specific for Studio and Gauge
-                            url = when (canvasContext) {
-                                is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
-                                is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
-                                else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                            val id = url.substringAfterLast("/external_tools/").substringBefore("?")
+                            url = when {
+                                (id.toIntOrNull() != null) -> when (canvasContext) {
+                                    is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?id=$id"
+                                    is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?id=$id"
+                                    else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?id=$id"
+                                }
+                                else -> when (canvasContext) {
+                                    is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
+                                    is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
+                                    else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                                }
                             }
                             loadSessionlessLtiUrl(url)
                         }

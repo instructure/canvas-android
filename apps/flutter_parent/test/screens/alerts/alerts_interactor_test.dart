@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/utils/alert_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -29,10 +30,12 @@ void main() {
 
   final api = MockAlertsApi();
   final notifier = MockAlertCountNotifier();
+  final alertsHelper = AlertsHelper();
 
   setupTestLocator((_locator) {
     _locator.registerFactory<AlertsApi>(() => api);
     _locator.registerLazySingleton<AlertCountNotifier>(() => notifier);
+    _locator.registerLazySingleton<AlertsHelper>(() => alertsHelper);
   });
 
   setUp(() {

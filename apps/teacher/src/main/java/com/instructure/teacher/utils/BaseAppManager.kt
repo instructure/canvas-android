@@ -27,6 +27,7 @@ import com.heapanalytics.android.Heap
 import com.heapanalytics.android.config.Options
 import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
@@ -34,6 +35,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
+import com.instructure.teacher.services.TeacherPageViewService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
@@ -88,6 +90,8 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configu
         val options = Options()
         options.disableTracking()
         Heap.init(this, BuildConfig.HEAP_APP_ID, options)
+
+        PageViewUploadService.schedule(this, TeacherPageViewService::class.java)
     }
 
     override fun performLogoutOnAuthError() {

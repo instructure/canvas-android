@@ -11,12 +11,12 @@ gcloud:
   test-targets:
     - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.StubTablet
   device:
-    - model: Nexus7_clone_16_9
-      version: 26
+    - model: MediumTablet.arm
+      version: 29
       locale: en_US
       orientation: landscape
-    - model: Nexus7_clone_16_9
-      version: 26
+    - model: MediumTablet.arm
+      version: 29
       locale: en_US
       orientation: portrait
 

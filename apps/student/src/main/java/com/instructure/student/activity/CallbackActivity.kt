@@ -21,11 +21,7 @@ import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
-import com.instructure.canvasapi2.managers.ThemeManager
-import com.instructure.canvasapi2.managers.UnreadCountManager
-import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PandataInfo

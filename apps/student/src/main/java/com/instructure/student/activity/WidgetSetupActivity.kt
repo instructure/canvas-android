@@ -39,7 +39,7 @@ class WidgetSetupActivity : AppCompatActivity() {
         // Sets the result canceled so if the user decides not to setup the widget it does not get added
         setResult(Activity.RESULT_CANCELED)
 
-        setContentView(R.layout.activity_widget_setup)
+        setContentView(binding.root)
 
         binding.cardDark.setOnClickListener(cardClickListener)
         binding.cardLight.setOnClickListener(cardClickListener)

@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Cerrar diálogo de progreso</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">Cargando a Archivos</string>
+    <string name="fileUploadFailedSubtitle">No se pudieron cargar uno o más archivos. Compruebe su conexión a Internet y vuelva a entregarlos.</string>
     <string name="submissionProgressSubtitle">Cargando entrega a \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Cargando la entrega</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Entrega exitosa</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">No se pudo presentar</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Carga de archivos</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Carga de archivo</item>
+        <item quantity="other">Carga de archivos</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Carga de archivo exitosa</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">No se pudo cargar el archivo</string>
     <string name="cancelSubmissionDialogTitle">Cancelar entrega</string>
     <string name="cancelSubmissionDialogMessage">Esto cancelará y eliminará su entrega.</string>
     <string name="fileUploadError">No se pudo cargar el archivo</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Modo de selección desactivado.</string>
     <string name="a11y_avatarContentDescription">Avatar de %s</string>
     <string name="inboxUndo">Deshacer</string>
+    <string name="aboutAppTitle">Aplicación</string>
+    <string name="aboutDomainTitle">Dominio</string>
+    <string name="aboutLoginTitle">ID de inicio de sesión</string>
+    <string name="aboutEmailTitle">Correo electrónico</string>
+    <string name="aboutVersionTitle">Versión</string>
+    <string name="assignmentRefreshError">Se produjo un problema al volver a cargar esta tarea. Compruebe su conexión y vuelva a intentarlo.</string>
 </resources>

@@ -19,26 +19,30 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
-import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import instructure.androidblueprint.PresenterFactory
 
 class SpeedGraderCommentsPresenterFactory(
-        val rawComments: java.util.ArrayList<SubmissionComment>,
-        val submissionHistory: List<Submission>,
-        val assignee: Assignee,
-        val courseId: Long,
-        val assignmentId: Long,
-        val groupMessage: Boolean,
-        val submissionCommentDao: SubmissionCommentDao,
-        val attachmentDao: AttachmentDao,
-        val authorDao: AuthorDao,
-        val mediaCommentDao: MediaCommentDao,
-        val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
-        val fileUploadInputDao: FileUploadInputDao,
-        val selectedAttemptId: Long,
-        val assignmentEnhancementsEnabled: Boolean
+    val rawComments: java.util.ArrayList<SubmissionComment>,
+    val submissionHistory: List<Submission>,
+    val assignee: Assignee,
+    val courseId: Long,
+    val assignmentId: Long,
+    val groupMessage: Boolean,
+    val submissionCommentDao: SubmissionCommentDao,
+    val attachmentDao: AttachmentDao,
+    val authorDao: AuthorDao,
+    val mediaCommentDao: MediaCommentDao,
+    val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
+    val fileUploadInputDao: FileUploadInputDao,
+    val selectedAttemptId: Long,
+    val assignmentEnhancementsEnabled: Boolean
 ) : PresenterFactory<SpeedGraderCommentsView, SpeedGraderCommentsPresenter> {
         override fun create() = SpeedGraderCommentsPresenter(
                 rawComments,

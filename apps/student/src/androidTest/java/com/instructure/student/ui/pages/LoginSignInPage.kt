@@ -16,17 +16,17 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
-import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
+import androidx.test.espresso.web.webdriver.DriverAtoms.*
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
+import org.hamcrest.CoreMatchers.containsString
 
 @Suppress("unused")
 class LoginSignInPage: BasePage() {
@@ -36,6 +36,7 @@ class LoginSignInPage: BasePage() {
     private val LOGIN_BUTTON_CSS = "button[type=\"submit\"]"
     private val FORGOT_PASSWORD_BUTTON_CSS = "a[class=\"forgot-password flip-to-back\"]"
     private val AUTHORIZE_BUTTON_CSS = "button[type=\"submit\"]"
+    private val LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[class='error']"
 
     private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
     private val toolbar by OnViewWithId(R.id.toolbar, autoAssert = false)
@@ -62,6 +63,10 @@ class LoginSignInPage: BasePage() {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, AUTHORIZE_BUTTON_CSS))
     }
 
+    private fun loginErrorMessageHolder(): Web.WebInteraction<*> {
+        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, LOGIN_ERROR_MESSAGE_HOLDER_CSS))
+    }
+
     //endregion
 
     //region Assertion Helpers
@@ -81,10 +86,12 @@ class LoginSignInPage: BasePage() {
     //region UI Action Helpers
 
     private fun enterEmail(email: String) {
+        emailField().perform(clearElement())
         emailField().perform(webKeys(email))
     }
 
     private fun enterPassword(password: String) {
+        passwordField().perform(clearElement())
         passwordField().perform(webKeys(password))
     }
 
@@ -96,11 +103,15 @@ class LoginSignInPage: BasePage() {
         forgotPasswordButton().perform(webClick())
     }
 
+    fun assertLoginErrorMessage(errorMessage: String) {
+        loginErrorMessageHolder().check(webMatches(getText(), containsString(errorMessage)))
+    }
+
     fun loginAs(user: CanvasUserApiModel) {
         loginAs(user.loginId, user.password)
     }
 
-    private fun loginAs(loginId: String, password: String) {
+    fun loginAs(loginId: String, password: String) {
         enterEmail(loginId)
         enterPassword(password)
         clickLoginButton()

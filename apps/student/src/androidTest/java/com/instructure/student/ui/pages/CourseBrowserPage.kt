@@ -27,17 +27,20 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.espresso.*
+import com.instructure.espresso.TextViewColorAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
-class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
+open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
 
     private val initialBrowserTitle by WaitForViewWithId(R.id.courseBrowserTitle)
 
@@ -115,10 +118,6 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         // You might have multiple of these if you navigate from one course to another.
         // In that event, we'll have to choose the one that is displayed.
         onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(course.originalName!!)
-    }
-
-    fun assertTitleCorrect(group: Group) {
-        onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(group.name!!)
     }
 
     fun assertTitleCorrect(course: CourseApiModel) {

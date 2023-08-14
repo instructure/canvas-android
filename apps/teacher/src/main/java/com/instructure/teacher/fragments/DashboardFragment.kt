@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
@@ -54,6 +55,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 private const val LIST_SPAN_COUNT = 1
 
+@PageView
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
 

@@ -170,6 +170,8 @@ object CourseManager {
         CourseAPI.getGradingPeriodsForCourse(adapter, callback, params, courseId)
     }
 
+    fun getCourseAsync(courseId: Long, forceNetwork: Boolean) = apiAsync { getCourse(courseId, it, forceNetwork) }
+
     fun getCourse(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

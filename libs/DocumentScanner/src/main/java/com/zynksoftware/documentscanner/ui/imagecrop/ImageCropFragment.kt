@@ -61,7 +61,7 @@ internal class ImageCropFragment : BaseFragment<FragmentImageCropBinding>(Fragme
             }
         }
         binding.holderImageView.post {
-            initializeCropping()
+            if (this.view != null) initializeCropping()
         }
 
         initListeners()

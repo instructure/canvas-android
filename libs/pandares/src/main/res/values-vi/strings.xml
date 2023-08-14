@@ -1295,11 +1295,17 @@
     <string name="a11y_closeProgress">Đóng hộp thoại tiến trình</string>
     <string name="fileUploadProgress">%1$s / %2$s</string>
     <string name="fileUploadProgressSubtitle">Đang tải lên tới Các Tập Tin</string>
+    <string name="fileUploadFailedSubtitle">Tải lên một hoặc nhiều tập tin không thành công. Hãy kiểm tra kết nối internet của bạn rồi thử lại để nộp.</string>
     <string name="submissionProgressSubtitle">Đang tải bài nộp tới \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Tải Lên Bài Nộp</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Nộp Thành Công</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Nộp Thất Bại</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Đang tải Các Tập Tin</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Đang Tải Lên Tập Tin</item>
+        <item quantity="other">Đang Tải Lên Các Tập Tin</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Tải Lên Tập Tin Thành Công</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Tải Lên Tập Tin Không Thành Công</string>
     <string name="cancelSubmissionDialogTitle">Hủy Nộp</string>
     <string name="cancelSubmissionDialogMessage">Thao tác này sẽ hủy và xóa bài nộp của bạn.</string>
     <string name="fileUploadError">Tải Lên Các Tập Tin Không Thành Công</string>
@@ -1378,4 +1384,10 @@
     <string name="a11y_selectionModeDeactivated">Đã hủy kích hoạt chế độ lựa chọn.</string>
     <string name="a11y_avatarContentDescription">Hình Đại Diện của %s</string>
     <string name="inboxUndo">Hoàn tác</string>
+    <string name="aboutAppTitle">Ứng Dụng</string>
+    <string name="aboutDomainTitle">Tên Miền</string>
+    <string name="aboutLoginTitle">ID Đăng Nhập</string>
+    <string name="aboutEmailTitle">Email</string>
+    <string name="aboutVersionTitle">Phiên bản</string>
+    <string name="assignmentRefreshError">Đã xảy ra vấn đề khi tải lại bài tập này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
 </resources>

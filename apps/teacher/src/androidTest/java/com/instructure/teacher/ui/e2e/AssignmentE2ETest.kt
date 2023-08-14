@@ -22,8 +22,10 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -36,7 +38,12 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.seedAssignmentSubmission
+import com.instructure.teacher.ui.utils.seedAssignments
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
+import com.instructure.teacher.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -79,7 +86,17 @@ class AssignmentE2ETest : TeacherTest() {
                 pointsPossible = 15.0
         )
 
-        Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed.")
+        Log.d(PREPARATION_TAG,"Seeding 'Quiz' assignment for ${course.name} course.")
+        val quizAssignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_QUIZ),
+            teacherToken = teacher.token,
+            pointsPossible = 15.0
+        )
+
+        Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed." +
+                "Assert that the needs grading count under the corresponding assignment is 1.")
         assignmentListPage.refresh()
         assignmentListPage.assertHasAssignment(assignment[0])
 
@@ -94,15 +111,41 @@ class AssignmentE2ETest : TeacherTest() {
         editAssignmentDetailsPage.clickPublishSwitch()
         editAssignmentDetailsPage.saveAssignment()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that ${assignment[0].name} assignment has been published.")
-        assignmentDetailsPage.refresh()
+        Log.d(STEP_TAG,"Assert that the '${assignment[0].name}' assignment has been published.")
         assignmentDetailsPage.waitForRender()
         assignmentDetailsPage.assertPublishedStatus(false)
 
-        Log.d(STEP_TAG,"Open Edit Page and re-publish the assignment, then click on Save.")
+        Log.d(STEP_TAG,"Open Edit Page and re-publish the assignment, then click on Save. Assert that the assignment is published automatically, without refresh.")
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickPublishSwitch()
         editAssignmentDetailsPage.saveAssignment()
+        assignmentDetailsPage.assertPublishedStatus(true)
+
+        Log.d(STEP_TAG,"Navigate back to Assignment List page. Open edit quiz page and publish ${quizAssignment[0].name} quiz assignment. Click on Save.")
+        Espresso.pressBack()
+        assignmentListPage.clickAssignment(quizAssignment[0])
+        quizDetailsPage.openEditPage()
+        editAssignmentDetailsPage.clickPublishSwitch()
+        editAssignmentDetailsPage.saveAssignment()
+        quizDetailsPage.assertQuizUnpublished()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as UNPUBLISHED. Open the quiz assignment again.")
+        Espresso.pressBack()
+        assignmentListPage.assertAssignmentUnPublished(quizAssignment[0].name)
+        assignmentListPage.clickAssignment(quizAssignment[0])
+
+        Log.d(STEP_TAG, "Open Edit Page and re-publish the assignment, then click on Save. Assert that the quiz assignment is published automatically.")
+        quizDetailsPage.openEditPage()
+        editAssignmentDetailsPage.clickPublishSwitch()
+        editAssignmentDetailsPage.saveAssignment()
+        quizDetailsPage.assertQuizPublished()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as PUBLISHED.")
+        Espresso.pressBack()
+        assignmentListPage.assertAssignmentPublished(quizAssignment[0].name)
+
+        Log.d(STEP_TAG, "Open the '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
 
         Log.d(PREPARATION_TAG,"Seed a submission for ${student.name} student.")
         seedAssignmentSubmission(
@@ -132,6 +175,12 @@ class AssignmentE2ETest : TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that because of the other submission there will be 2 'Needs Grading' and only 1 remains as 'Not Submitted'.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.waitForRender()
+        assignmentDetailsPage.assertNotSubmitted(1,3)
+        assignmentDetailsPage.assertNeedsGrading(2,3)
+
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
         gradeSubmission(teacher, course, assignment, gradedStudent)
 
@@ -141,6 +190,11 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentDetailsPage.assertNotSubmitted(1,3)
         assignmentDetailsPage.assertNeedsGrading(1,3)
         assignmentDetailsPage.assertHasGraded(1,3)
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page. Assert that the '${assignment[0].name}' assignment has 1 'Needs Grading' submission.")
+        Espresso.pressBack()
+        assignmentListPage.assertHasAssignment(assignment[0])
+        assignmentListPage.assertNeedsGradingCountOfAssignment(assignment[0].name, 1)
 
         val newAssignmentName = "New Assignment Name"
         Log.d(STEP_TAG,"Edit ${assignment[0].name} assignment's name  to: $newAssignmentName.")
@@ -285,6 +339,61 @@ class AssignmentE2ETest : TeacherTest() {
 
     }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)
+    fun testAddFileCommentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seed a text assignment/file/submission.")
+        val assignment = createAssignment(course, teacher)
+
+        Log.d(PREPARATION_TAG, "Seed a text file.")
+        val submissionUploadInfo = uploadTextFile(
+            assignmentId = assignment.id,
+            courseId = course.id,
+            token = student.token,
+            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
+        )
+
+        Log.d(PREPARATION_TAG, "Submit the ${assignment.name} assignment.")
+        submitCourseAssignment(course, assignment, submissionUploadInfo, student)
+
+        Log.d(PREPARATION_TAG,"Seed a comment attachment upload.")
+        val commentUploadInfo = uploadTextFile(
+            assignmentId = assignment.id,
+            courseId = course.id,
+            token = student.token,
+            fileUploadType = FileUploadType.COMMENT_ATTACHMENT
+        )
+
+        commentOnSubmission(student, course, assignment, commentUploadInfo)
+
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG,"Click on ${assignment.name} assignment and navigate to Submissions Page.")
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.openSubmissionsPage()
+
+        Log.d(STEP_TAG,"Click on ${student.name} student's submission.")
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(STEP_TAG,"Assert that ${submissionUploadInfo.fileName} file. Navigate to Comments Tab and ${commentUploadInfo.fileName} comment attachment is displayed.")
+        speedGraderPage.selectCommentsTab()
+        assignmentSubmissionListPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
+    }
+
     private fun gradeSubmission(
         teacher: CanvasUserApiModel,
         course: CourseApiModel,
@@ -298,6 +407,50 @@ class AssignmentE2ETest : TeacherTest() {
             studentId = gradedStudent.id,
             postedGrade = "15",
             excused = false
+        )
+    }
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                withDescription = false,
+                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+                allowedExtensions = listOf("txt"),
+                teacherToken = teacher.token
+            )
+        )
+    }
+
+    private fun submitCourseAssignment(
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        submissionUploadInfo: AttachmentApiModel,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_UPLOAD,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(submissionUploadInfo.id),
+            studentToken = student.token
+        )
+    }
+
+    private fun commentOnSubmission(
+        student: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        commentUploadInfo: AttachmentApiModel
+    ) {
+        SubmissionsApi.commentOnSubmission(
+            studentToken = student.token,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(commentUploadInfo.id)
         )
     }
 
