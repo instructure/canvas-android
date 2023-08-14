@@ -21,7 +21,11 @@ package com.instructure.pandautils.features.offline.sync
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
@@ -46,9 +50,12 @@ import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -61,6 +68,7 @@ import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import com.instructure.pandautils.room.offline.facade.UserFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.io.File
 
 @HiltWorker
 class CourseSyncWorker @AssistedInject constructor(
@@ -90,14 +98,15 @@ class CourseSyncWorker @AssistedInject constructor(
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val courseFeaturesDao: CourseFeaturesDao,
     private val courseFileSharedRepository: CourseFileSharedRepository,
-    private val fileFolderDao: FileFolderDao
+    private val fileFolderDao: FileFolderDao,
+    private val fileSyncSettingsDao: FileSyncSettingsDao,
+    private val localFileDao: LocalFileDao,
+    private val workManager: WorkManager
     ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
 
         val courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
-
-        val syllabusCourseIds = mutableListOf<Long>()
 
         fetchCourseDetails(courseSettings.courseId)
         if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
@@ -107,7 +116,7 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchAssignments(courseSettings.courseId)
         }
         if (courseSettings.isTabSelected(Tab.SYLLABUS_ID)) {
-            syllabusCourseIds.add(courseSettings.courseId)
+            fetchSyllabus(listOf(courseSettings.courseId))
         }
         if (courseSettings.isTabSelected(Tab.CONFERENCES_ID)) {
             fetchConferences(courseSettings.courseId)
@@ -131,16 +140,9 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchFiles(courseSettings.courseId)
         }
 
-        fetchSyllabus(syllabusCourseIds)
+        syncFiles(courseSettings)
 
         return Result.success()
-    }
-
-    private suspend fun fetchFiles(courseId: Long) {
-        val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
-
-        val entities = fileFolders.map { FileFolderEntity(it) }
-        fileFolderDao.replaceAll(entities)
     }
 
     private suspend fun fetchSyllabus(courseIds: List<Long>) {
@@ -322,7 +324,71 @@ class CourseSyncWorker @AssistedInject constructor(
         moduleFacade.insertModules(moduleObjects, courseId)
     }
 
+    private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity) {
+        val courseId = syncSettings.courseId
+        val allFiles = getAllFiles(courseId)
+        val allFileIds = allFiles.map { it.id }
+
+        cleanupSyncedFiles(courseId, allFileIds)
+
+        val fileWorkers = if (syncSettings.fullFileSync) {
+            allFiles.map { FileDownloadObject(it.id, it.url.orEmpty(), it.displayName.orEmpty()) }
+        } else {
+            fileSyncSettingsDao.findByCourseId(courseId)
+                .map { FileDownloadObject(it.id, it.url.orEmpty(), it.fileName.orEmpty()) }
+        }.map { FileSyncWorker.createOneTimeWorkRequest(courseId, it.id, it.name, it.url) }.chunked(6)
+
+        if (fileWorkers.isEmpty()) return
+
+        var continuation = workManager
+            .beginWith(fileWorkers.first())
+
+        fileWorkers.drop(1).forEach {
+            continuation = continuation.then(it)
+        }
+
+        continuation.enqueue()
+
+    }
+
+    private suspend fun fetchFiles(courseId: Long) {
+        val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
+
+        val entities = fileFolders.map { FileFolderEntity(it) }
+        fileFolderDao.replaceAll(entities)
+    }
+
+    private suspend fun cleanupSyncedFiles(courseId: Long, remoteIds: List<Long>) {
+        val syncedIds = fileSyncSettingsDao.findByCourseId(courseId).map { it.id }
+        val localRemovedFiles = localFileDao.findRemovedFiles(courseId, syncedIds)
+        val remoteRemovedFiles = localFileDao.findRemovedFiles(courseId, remoteIds)
+
+        (localRemovedFiles + remoteRemovedFiles).forEach {
+            File(it.path).delete()
+            localFileDao.delete(it)
+        }
+
+        fileSyncSettingsDao.deleteAllExcept(courseId, remoteIds)
+    }
+
+    private suspend fun getAllFiles(courseId: Long): List<FileFolderEntity> {
+        return fileFolderDao.findAllFilesByCourseId(courseId)
+    }
+
     companion object {
         const val COURSE_ID = "course_id"
+
+        fun createOnTimeWork(courseId: Long): OneTimeWorkRequest {
+            val data = workDataOf(COURSE_ID to courseId)
+            return OneTimeWorkRequestBuilder<CourseSyncWorker>()
+                .setInputData(data)
+                .build()
+        }
     }
 }
+
+data class FileDownloadObject(
+    val id: Long,
+    val url: String,
+    val name: String
+)
