@@ -61,4 +61,9 @@ abstract class FileFolderDao {
         deleteAll()
         insertAll(fileFolders)
     }
+
+    @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)" +
+            " AND (updatedDate > IFNULL((SELECT createdDate FROM LocalFileEntity WHERE id = FileFolderEntity.id), 0) OR createdDate > IFNULL((SELECT createdDate FROM LocalFileEntity WHERE id = FileFolderEntity.id), 0))" +
+            " AND IIF(:fullFileSync, 1, id in (SELECT id FROM FileSyncSettingsEntity WHERE courseId = :courseId))")
+    abstract suspend fun findFilesNeedSync(courseId: Long, fullFileSync: Boolean): List<FileFolderEntity>
 }
