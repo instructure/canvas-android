@@ -17,7 +17,6 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
-import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -129,8 +128,7 @@ class SubmissionDetailsEffectHandler(
             val featureFlags = repository.getCourseFeatures(effect.courseId, true).dataOrNull
             val assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
 
-            val restrictQuantitativeData = CourseManager.getCourseSettingsAsync(effect.courseId, true)
-                .await().dataOrNull?.restrictQuantitativeData.orDefault()
+            val restrictQuantitativeData = repository.loadCourseSettings(effect.courseId, true)?.restrictQuantitativeData.orDefault()
 
             consumer.accept(
                 SubmissionDetailsEvent.DataLoaded(

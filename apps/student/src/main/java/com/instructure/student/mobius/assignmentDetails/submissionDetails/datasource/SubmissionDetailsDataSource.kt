@@ -35,4 +35,6 @@ interface SubmissionDetailsDataSource {
     suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): DataResult<Quiz>
 
     suspend fun getCourseFeatures(courseId: Long, forceNetwork: Boolean): DataResult<List<String>>
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings?
 }
