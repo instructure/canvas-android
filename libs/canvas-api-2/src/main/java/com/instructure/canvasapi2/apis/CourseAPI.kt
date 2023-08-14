@@ -57,7 +57,7 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users&include[]=settings")
         val firstPageCoursesWithSyllabus: Call<List<Course>>
 
-        @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users")
+        @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users&include[]=settings")
         suspend fun firstPageCoursesWithSyllabus(@Tag params: RestParams): DataResult<List<Course>>
 
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=license&include[]=is_public&include[]=permissions&enrollment_state=active")
@@ -90,7 +90,7 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image&include[]=settings")
         fun getCourseWithGrade(@Path("courseId") courseId: Long): Call<Course>
 
-        @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image")
+        @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image&include[]=settings")
         suspend fun getCourseWithGrade(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<Course>
 
         @GET("courses/{courseId}?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=public_description&include[]=grading_periods&include[]=account&include[]=course_progress&include[]=storage_quota_used_mb&include[]=total_students&include[]=passback_status&include[]=teachers&include[]=tabs&include[]=banner_image&include[]=concluded&include[]=observed_users&include[]=settings")
