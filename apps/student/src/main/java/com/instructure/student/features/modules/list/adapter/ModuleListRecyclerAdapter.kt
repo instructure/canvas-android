@@ -29,6 +29,7 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.APIHelper
@@ -42,6 +43,7 @@ import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
@@ -63,10 +65,11 @@ open class ModuleListRecyclerAdapter(
     private val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
 ) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
 
-    private var checkCourseTabsJob: Job? = null
+    private var initialDataJob: Job? = null
     private var moduleObjectJob: Job? = null
 
     private val moduleFromNetworkOrDb = HashMap<Long, Boolean>()
+    private var courseSettings: CourseSettings? = null
 
     /* For testing purposes only */
     protected constructor(context: Context, repository: ModuleListRepository, lifecycleScope: CoroutineScope) : this(CanvasContext.defaultCanvasContext(), context, false, repository, lifecycleScope, null) // Callback not needed for testing, cast to null
@@ -112,7 +115,7 @@ open class ModuleListRecyclerAdapter(
             val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
 
             (holder as ModuleViewHolder).bind(moduleObject, moduleItem, context, adapterToFragmentCallback, courseColor,
-                    itemPosition == 0, itemPosition == groupItemCount - 1, false) // TODO MBL-16957
+                    itemPosition == 0, itemPosition == groupItemCount - 1, courseSettings?.restrictQuantitativeData.orDefault())
         }
     }
 
@@ -143,7 +146,7 @@ open class ModuleListRecyclerAdapter(
     override fun refresh() {
         shouldExhaustPagination = false
         moduleFromNetworkOrDb.clear()
-        checkCourseTabsJob?.cancel()
+        initialDataJob?.cancel()
         collapseAll()
         super.refresh()
     }
@@ -332,8 +335,9 @@ open class ModuleListRecyclerAdapter(
     }
 
     override fun loadFirstPage() {
-        checkCourseTabsJob = lifecycleScope.tryLaunch {
+        initialDataJob = lifecycleScope.tryLaunch {
             val tabs = repository.getTabs(courseContext, isRefresh)
+            courseSettings = repository.loadCourseSettings(courseContext.id, isRefresh)
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {

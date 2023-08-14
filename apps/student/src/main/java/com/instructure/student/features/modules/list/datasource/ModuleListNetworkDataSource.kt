@@ -16,17 +16,22 @@
  */
 package com.instructure.student.features.modules.list.datasource
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 
-class ModuleListNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterface, private val tabApi: TabAPI.TabsInterface) : ModuleListDataSource {
+class ModuleListNetworkDataSource(
+    private val moduleApi: ModuleAPI.ModuleInterface,
+    private val tabApi: TabAPI.TabsInterface,
+    private val coureseApi: CourseAPI.CoursesInterface) : ModuleListDataSource {
 
     override suspend fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -58,5 +63,10 @@ class ModuleListNetworkDataSource(private val moduleApi: ModuleAPI.ModuleInterfa
     suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return moduleApi.getNextPageModuleItemList(nextUrl, params)
+    }
+
+    override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        return coureseApi.getCourseSettings(courseId, restParams).dataOrNull
     }
 }
