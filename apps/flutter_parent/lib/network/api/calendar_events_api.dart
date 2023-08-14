@@ -20,8 +20,8 @@ class CalendarEventsApi {
   Future<List<ScheduleItem>> getAllCalendarEvents({
     bool allEvents = false,
     String type = ScheduleItem.apiTypeCalendar,
-    String startDate = null,
-    String endDate = null,
+    String? startDate = null,
+    String? endDate = null,
     List<String> contexts = const [],
     bool forceRefresh = false,
   }) {

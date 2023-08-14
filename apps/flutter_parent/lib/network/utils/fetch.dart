@@ -21,7 +21,7 @@ import 'package:flutter_parent/network/utils/paged_list.dart';
 Future<T> fetch<T>(Future<Response<dynamic>> request) async {
   try {
     final response = await request;
-    return deserialize<T>(response.data);
+    return deserialize<T>(response.data)!;
   } catch (e) {
     print(e);
     return Future.error(e);
@@ -54,7 +54,7 @@ Future<PagedList<T>> fetchNextPage<T>(String nextUrl) async {
 /// with subsequent page requests (cache behavior, authentications headers, etc).
 Future<List<T>> fetchList<T>(
   Future<Response<dynamic>> request, {
-  Dio depaginateWith: null,
+  Dio? depaginateWith = null,
 }) async {
   try {
     var response = await request;

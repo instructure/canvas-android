@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class InboxApi {
-  Future<List<Conversation>> getConversations({String scope: null, bool forceRefresh: false}) async {
+  Future<List<Conversation>> getConversations({String? scope = null, bool forceRefresh = false}) async {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'scope': scope,
@@ -28,7 +28,7 @@ class InboxApi {
     return fetchList(dio.get('conversations', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Conversation> getConversation(String id, {bool refresh: false}) {
+  Future<Conversation> getConversation(String id, {bool refresh = false}) {
     return fetch(canvasDio(forceRefresh: refresh).get('conversations/$id'));
   }
 
@@ -58,7 +58,7 @@ class InboxApi {
     return conversation;
   }
 
-  Future<List<Recipient>> getRecipients(String courseId, {bool forceRefresh: false}) {
+  Future<List<Recipient>> getRecipients(String courseId, {bool forceRefresh = false}) {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var params = {
       'permissions[]': ['send_messages_all'],

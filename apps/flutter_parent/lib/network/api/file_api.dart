@@ -53,12 +53,12 @@ class FileApi {
     }
 
     // Build the form data for upload
-    FormData formData = FormData.fromMap(uploadConfig.params.toMap());
+    FormData formData = FormData.fromMap(uploadConfig.params!.toMap());
     formData.files.add(MapEntry('file', await MultipartFile.fromFile(file.path, filename: name)));
 
     // Perform upload with progress
     return fetch(Dio().post(
-      uploadConfig.url,
+      uploadConfig.url!,
       data: formData,
       onSendProgress: (count, total) {
         if (total > 0 && count >= total) {
@@ -75,8 +75,8 @@ class FileApi {
   Future<File> downloadFile(
     String url,
     String savePath, {
-    CancelToken cancelToken,
-    ProgressCallback onProgress,
+    CancelToken? cancelToken,
+    ProgressCallback? onProgress,
   }) async {
     await DioConfig.core(forceRefresh: true).dio.download(
           url,

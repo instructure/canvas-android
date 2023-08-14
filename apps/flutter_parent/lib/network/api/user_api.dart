@@ -30,7 +30,7 @@ class UserApi {
   }
 
   Future<UserPermission> getSelfPermissions() =>
-      fetch<User>(canvasDio(forceRefresh: true).get('users/self')).then((user) => user.permissions);
+      fetch<User>(canvasDio(forceRefresh: true).get('users/self')).then((user) => user.permissions!);
 
   Future<UserColors> getUserColors({bool refresh = false}) async {
     return fetch(canvasDio(forceRefresh: refresh).get('users/self/colors'));
@@ -47,6 +47,6 @@ class UserApi {
     return fetch(canvasDio().put(
         'users/self/colors/$contextId',
         queryParameters: queryParams,
-        options: Options(validateStatus: (status) => status < 500))); // Workaround, because this request fails for some legacy users, but we can't catch the error.));
+        options: Options(validateStatus: (status) => status != null && status < 500))); // Workaround, because this request fails for some legacy users, but we can't catch the error.));
   }
 }

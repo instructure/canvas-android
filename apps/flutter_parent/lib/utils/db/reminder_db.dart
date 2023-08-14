@@ -100,7 +100,7 @@ class ReminderDb {
     return null;
   }
 
-  Future<List<Reminder>> getAllForUser(String userDomain, String userId) async {
+  Future<List<Reminder>>? getAllForUser(String userDomain, String userId) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,

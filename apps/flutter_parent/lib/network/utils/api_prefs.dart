@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:collection/collection.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
@@ -48,9 +49,9 @@ class ApiPrefs {
   static const String KEY_LAST_ACCOUNT = 'last_account';
   static const String KEY_LAST_ACCOUNT_LOGIN_FLOW = 'last_account_login_flow';
 
-  static EncryptedSharedPreferences _prefs;
-  static PackageInfo _packageInfo;
-  static Login _currentLogin;
+  static EncryptedSharedPreferences? _prefs;
+  static PackageInfo? _packageInfo;
+  static Login? _currentLogin;
 
   static Future<void> init() async {
     if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
@@ -59,28 +60,28 @@ class ApiPrefs {
   }
 
   static void _migrateToEncryptedPrefs() async {
-    if (_prefs.getBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
+    if (_prefs?.getBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
       return;
     }
 
     // Set the bool flag so we don't migrate multiple times
-    await _prefs.setBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
+    await _prefs?.setBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
 
     final oldPrefs = await SharedPreferences.getInstance();
 
-    await _prefs.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
+    await _prefs?.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS)!);
     await oldPrefs.remove(KEY_LOGINS);
 
-    await _prefs.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
+    await _prefs?.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED)!);
     await oldPrefs.remove(KEY_HAS_MIGRATED);
 
-    await _prefs.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
+    await _prefs?.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS)!);
     await oldPrefs.remove(KEY_HAS_CHECKED_OLD_REMINDERS);
 
-    await _prefs.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
+    await _prefs?.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID)!);
     await oldPrefs.remove(KEY_CURRENT_LOGIN_UUID);
 
-    await _prefs.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
+    await _prefs?.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT)!);
     await oldPrefs.remove(KEY_CURRENT_STUDENT);
   }
 
@@ -104,11 +105,11 @@ class ApiPrefs {
     return token.isNotEmpty && domain.isNotEmpty;
   }
 
-  static Login getCurrentLogin() {
+  static Login? getCurrentLogin() {
     _checkInit();
     if (_currentLogin == null) {
       final currentLoginUuid = getCurrentLoginUuid();
-      _currentLogin = getLogins().firstWhere((it) => it.uuid == currentLoginUuid, orElse: () => null);
+      _currentLogin = getLogins().firstWhereOrNull((it) => it.uuid == currentLoginUuid);
     }
     return _currentLogin;
   }
@@ -116,7 +117,7 @@ class ApiPrefs {
   static Future<void> switchLogins(Login login) async {
     _checkInit();
     _currentLogin = login;
-    await _prefs.setString(KEY_CURRENT_LOGIN_UUID, login.uuid);
+    await _prefs?.setString(KEY_CURRENT_LOGIN_UUID, login.uuid);
   }
 
   static bool isMasquerading() {
@@ -136,7 +137,7 @@ class ApiPrefs {
       // Remove reminders
       ReminderDb reminderDb = locator<ReminderDb>();
       final reminders = await reminderDb.getAllForUser(getDomain(), getUser().id);
-      final reminderIds = reminders?.map((it) => it.id)?.toList();
+      final reminderIds = reminders?.map((it) => it.id).toList();
       await locator<NotificationUtil>().deleteNotifications(reminderIds);
       await reminderDb.deleteAllForUser(getDomain(), getUser().id);
 
@@ -241,9 +242,9 @@ class ApiPrefs {
     }
   }
 
-  static Locale effectiveLocale() {
+  static Locale? effectiveLocale() {
     _checkInit();
-    User user = getUser();
+    User? user = getUser();
     List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split('-x-');
 
     if (userLocale[0].isEmpty) {
@@ -271,7 +272,7 @@ class ApiPrefs {
 
   static String getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
 
-  static User getUser() => getCurrentLogin()?.currentUser;
+  static User? getUser() => getCurrentLogin()?.currentUser;
 
   static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
@@ -349,8 +350,8 @@ class ApiPrefs {
 
   static Map<String, String> getHeaderMap({
     bool forceDeviceLanguage = false,
-    String token = null,
-    Map<String, String> extraHeaders = null,
+    String? token = null,
+    Map<String, String>? extraHeaders = null,
   }) {
     if (token == null) {
       token = getAuthToken();

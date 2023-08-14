@@ -36,7 +36,7 @@ class EnrollmentsApi {
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<List<Enrollment>> getEnrollmentsByGradingPeriod(String courseId, String studentId, String gradingPeriodId,
+  Future<List<Enrollment>> getEnrollmentsByGradingPeriod(String courseId, String studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) {
     final dio = canvasDio(forceRefresh: forceRefresh);
     final params = {
@@ -49,21 +49,21 @@ class EnrollmentsApi {
       dio.get(
         'courses/$courseId/enrollments',
         queryParameters: params,
-        options: Options(validateStatus: (status) => status < 500)), // Workaround, because this request fails for some legacy users, but we can't catch the error.
+        options: Options(validateStatus: (status) => status != null && status < 500)), // Workaround, because this request fails for some legacy users, but we can't catch the error.
       depaginateWith: dio,
     );
   }
 
   /// Attempts to pair a student and observer using the given pairing code. The returned future will produce true if
   /// successful, false if the code is invalid or expired, and null if there was a network issue.
-  Future<bool> pairWithStudent(String pairingCode) async {
+  Future<bool?> pairWithStudent(String pairingCode) async {
     try {
       var pairingResponse = await canvasDio().post(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),
           queryParameters: {'pairing_code': pairingCode});
       return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       // The API returns status code 422 on pairing failure
-      if (e.type == DioErrorType.response && e.response.statusCode == 422) return false;
+      if (e.response?.statusCode == 422) return false;
       return null;
     }
   }
@@ -74,7 +74,7 @@ class EnrollmentsApi {
         ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees/$studentId'),
       );
       return (response.statusCode == 200 || response.statusCode == 201);
-    } on DioError {
+    } on DioException {
       return false;
     }
   }
@@ -85,7 +85,7 @@ class EnrollmentsApi {
         ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees/$studentId'),
       );
       return response.statusCode == 200;
-    } on DioError {
+    } on DioException {
       return false;
     }
   }

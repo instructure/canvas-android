@@ -21,7 +21,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CourseApi {
-  Future<List<Course>> getObserveeCourses({bool forceRefresh: false}) async {
+  Future<List<Course>> getObserveeCourses({bool forceRefresh = false}) async {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'include[]': [
@@ -43,7 +43,7 @@ class CourseApi {
     return fetchList(dio.get('courses', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Course> getCourse(String courseId, {bool forceRefresh: false}) async {
+  Future<Course> getCourse(String courseId, {bool forceRefresh = false}) async {
     final params = {
       'include[]': [
         'syllabus_body',
@@ -66,11 +66,11 @@ class CourseApi {
     return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/grading_periods?per_page=100'));
   }
 
-  Future<List<CourseTab>> getCourseTabs(String courseId, {bool forceRefresh}) {
+  Future<List<CourseTab>> getCourseTabs(String courseId, {bool forceRefresh = false}) {
     return fetchList(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/tabs'));
   }
 
-  Future<CourseSettings> getCourseSettings(String courseId, {bool forceRefresh}) {
+  Future<CourseSettings> getCourseSettings(String courseId, {bool forceRefresh = false}) {
     return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/settings'));
   }
 

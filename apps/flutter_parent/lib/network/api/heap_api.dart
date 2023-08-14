@@ -14,7 +14,6 @@
 
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
@@ -26,7 +25,8 @@ class HeapApi {
     final currentLogin = ApiPrefs.getCurrentLogin();
     if (currentLogin == null) return false;
 
-    final userId = ApiPrefs.getCurrentLogin().user.id;
+    final userId = ApiPrefs.getCurrentLogin()?.user.id;
+    if (userId == null) return false;
 
     final encrypter = encrypt.Encrypter(encrypt.AES(encrypt.Key.fromUtf8(ENCRYPT_KEY)));
     final encryptedId = encrypter.encrypt(userId, iv: encrypt.IV.fromUtf8(ENCRYPT_IV)).base64;

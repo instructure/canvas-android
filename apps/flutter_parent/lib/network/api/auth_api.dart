@@ -21,7 +21,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 
 class AuthApi {
-  Future<CanvasToken> refreshToken() async {
+  Future<CanvasToken?> refreshToken() async {
     var dio = DioConfig.canvas(includeApiPath: false).dio;
     var params = {
       'client_id': ApiPrefs.getClientId(),

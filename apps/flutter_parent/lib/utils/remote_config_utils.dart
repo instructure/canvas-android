@@ -96,7 +96,7 @@ class RemoteConfigUtils {
   }
 
   /** Fetch the value (in string form) of the specified RemoteConfigParams element. */
-  static String getStringValue(RemoteConfigParams rcParam) {
+  static String? getStringValue(RemoteConfigParams rcParam) {
     if (_remoteConfig == null)
       throw StateError('RemoteConfigUtils not yet initialized');
 

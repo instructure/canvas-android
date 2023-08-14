@@ -18,15 +18,15 @@ class ErrorReportApi {
   static const DEFAULT_DOMAIN = 'https://canvas.instructure.com';
 
   Future<void> submitErrorReport({
-    String subject,
-    String description,
-    String email,
-    String severity,
-    String stacktrace,
-    String domain,
-    String name,
-    String becomeUser,
-    String userRoles,
+    String? subject,
+    String? description,
+    String? email,
+    String? severity,
+    String? stacktrace,
+    String? domain,
+    String? name,
+    String? becomeUser,
+    String? userRoles,
   }) {
     var config = domain == DEFAULT_DOMAIN ? DioConfig.core() : DioConfig.canvas();
 

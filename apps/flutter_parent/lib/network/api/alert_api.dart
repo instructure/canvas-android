@@ -47,7 +47,7 @@ class AlertsApi {
     return fetch(canvasDio().delete('$_alertThresholdsEndpoint/${threshold.id}'));
   }
 
-  Future<AlertThreshold> createThreshold(AlertType type, String studentId, {String value}) {
+  Future<AlertThreshold> createThreshold(AlertType type, String studentId, {String? value}) {
     return fetch(canvasDio().post(_alertThresholdsEndpoint, data: {
       'observer_alert_threshold': {
         'alert_type': type.toApiString(),
