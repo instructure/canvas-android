@@ -71,7 +71,8 @@ class QRUtils {
   }
 
   /// Attempts to parse and return QR pairing information from the provided uri. Returns null if parsing failed.
-  static QRPairingScanResult parsePairingInfo(String rawUri) {
+  static QRPairingScanResult parsePairingInfo(String? rawUri) {
+    if (rawUri == null) return QRPairingScanResult.error(QRPairingScanErrorType.invalidCode);
     try {
       var uri = Uri.parse(rawUri);
       var params = uri.queryParameters;

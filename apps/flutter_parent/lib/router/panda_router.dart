@@ -117,7 +117,7 @@ class PandaRouter {
   static String loginWeb(
     String domain, {
     String accountName = '',
-    String authenticationProvider = null,
+    String? authenticationProvider = null,
     LoginFlow loginFlow = LoginFlow.normal,
   }) =>
       '$_loginWeb?${_RouterKeys.domain}=${Uri.encodeQueryComponent(domain)}&${_RouterKeys.accountName}=${Uri.encodeQueryComponent(accountName)}&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
@@ -135,7 +135,7 @@ class PandaRouter {
 
   static String _qrPairing = '/qr_pairing';
 
-  static String qrPairing({String pairingUri, bool isCreatingAccount = false}) {
+  static String qrPairing({String? pairingUri, bool isCreatingAccount = false}) {
     if (isCreatingAccount) return '$_qrPairing?${_RouterKeys.isCreatingAccount}=${isCreatingAccount}';
     if (pairingUri == null) return _qrPairing;
     return '$_qrPairing?${_RouterKeys.qrPairingInfo}=${Uri.encodeQueryComponent(pairingUri)}';
@@ -160,7 +160,7 @@ class PandaRouter {
 
   static String syllabus(String courseId) => '/courses/$courseId/assignments/syllabus';
 
-  static String termsOfUse({String accountId, String domain}) {
+  static String termsOfUse({String? accountId, String? domain}) {
     if (accountId != null && domain != null) {
       return '/terms_of_use?${_RouterKeys.accountId}=${Uri.encodeQueryComponent(accountId)}&${_RouterKeys.url}=${Uri.encodeQueryComponent(domain)}';
     } else {
@@ -217,27 +217,27 @@ class PandaRouter {
 
   // Handlers
   static Handler _accountCreationHandler =
-      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     var pairingInfo = QRPairingScanResult.success(
-        params[_RouterKeys.pairingCode][0], params[_RouterKeys.domain][0], params[_RouterKeys.accountId][0]);
+        params[_RouterKeys.pairingCode]![0], params[_RouterKeys.domain]![0], params[_RouterKeys.accountId]![0]);
     return AccountCreationScreen(pairingInfo);
   });
 
-  static Handler _alertHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _alertHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return DashboardScreen(
       startingPage: DashboardContentScreens.Alerts,
     );
   });
 
   static Handler _assignmentDetailsHandler =
-      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return AssignmentDetailsScreen(
       courseId: params[_RouterKeys.courseId][0],
       assignmentId: params[_RouterKeys.assignmentId][0],
     );
   });
 
-  static Handler _calendarHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _calendarHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     var calendarParams = {
       CalendarScreen.startDateKey:
           DateTime.tryParse(params[_RouterKeys.calendarStart]?.elementAt(0) ?? '') ?? DateTime.now(),
@@ -253,78 +253,78 @@ class PandaRouter {
     return widget;
   });
 
-  static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return ConversationListScreen();
   });
 
   static Handler _courseAnnouncementDetailsHandler =
-      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return AnnouncementDetailScreen(
-        params[_RouterKeys.announcementId][0], AnnouncementType.COURSE, params[_RouterKeys.courseId][0], context);
+        params[_RouterKeys.announcementId]![0], AnnouncementType.COURSE, params[_RouterKeys.courseId]![0], context!);
   });
 
-  static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
   });
 
-  static Handler _coursesHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _coursesHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return DashboardScreen(
       startingPage: DashboardContentScreens.Courses,
     );
   });
 
-  static Handler _dashboardHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _dashboardHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return DashboardScreen();
   });
 
-  static Handler _domainSearchHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _domainSearchHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     // Login flow
-    String loginFlowString = params[_RouterKeys.loginFlow].elementAt(0) ?? LoginFlow.normal.toString();
+    String loginFlowString = params[_RouterKeys.loginFlow]?.elementAt(0) ?? LoginFlow.normal.toString();
     LoginFlow loginFlow = LoginFlow.values.firstWhere((e) => e.toString() == loginFlowString);
 
     return DomainSearchScreen(loginFlow: loginFlow);
   });
 
-  static Handler _eventDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _eventDetailsHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return EventDetailsScreen.withId(
       eventId: params[_RouterKeys.eventId][0],
       courseId: params[_RouterKeys.courseId][0],
     );
   });
 
-  static Handler _frontPageHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _frontPageHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return CourseRoutingShellScreen(params[_RouterKeys.courseId][0], CourseShellType.frontPage);
   });
 
-  static Handler _gradesPageHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _gradesPageHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
   });
 
-  static Handler _helpHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _helpHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return HelpScreen();
   });
 
   static Handler _institutionAnnouncementDetailsHandler =
-      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return AnnouncementDetailScreen(
-        params[_RouterKeys.accountNotificationId][0], AnnouncementType.INSTITUTION, '', context);
+        params[_RouterKeys.accountNotificationId]![0], AnnouncementType.INSTITUTION, '', context!);
   });
 
-  static Handler _legalHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _legalHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return LegalScreen();
   });
 
-  static Handler _loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _loginHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return LoginLandingScreen();
   });
 
-  static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     // Auth provider
-    String authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
+    String? authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
     if ('null' == authProvider) authProvider = null;
 
     // Login flow
-    String loginFlowString = params[_RouterKeys.loginFlow].elementAt(0);
+    String? loginFlowString = params[_RouterKeys.loginFlow]?.elementAt(0);
     if (loginFlowString == null || loginFlowString == 'null') loginFlowString = LoginFlow.normal.toString();
     LoginFlow loginFlow = LoginFlow.values.firstWhere((e) => e.toString() == loginFlowString);
 
@@ -336,20 +336,20 @@ class PandaRouter {
     );
   });
 
-  static Handler _notParentHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _notParentHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return NotAParentScreen();
   });
 
-  static Handler _qrLoginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    String qrLoginUrl = params[_RouterKeys.qrLoginUrl]?.elementAt(0);
+  static Handler _qrLoginHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    String? qrLoginUrl = params[_RouterKeys.qrLoginUrl]?.elementAt(0);
     return SplashScreen(qrLoginUrl: qrLoginUrl);
   });
 
-  static Handler _qrTutorialHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _qrTutorialHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return QRLoginTutorialScreen();
   });
 
-  static Handler _qrPairingHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _qrPairingHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     var pairingInfo = QRUtils.parsePairingInfo(params[_RouterKeys.qrPairingInfo]?.elementAt(0));
     var isCreatingAccount = params[_RouterKeys.isCreatingAccount]?.elementAt(0) == 'true';
     if (pairingInfo is QRPairingInfo) {
@@ -361,30 +361,30 @@ class PandaRouter {
     }
   });
 
-  static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return SplashScreen();
   });
 
-  static Handler _routerErrorHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _routerErrorHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
     return RouterErrorScreen(url);
   });
 
-  static Handler _settingsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _settingsHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return SettingsScreen();
   });
 
-  static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    final url = params[_RouterKeys.url][0];
+  static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    final url = params[_RouterKeys.url]![0];
     final infoText = params[_RouterKeys.infoText]?.elementAt(0);
     return SimpleWebViewScreen(url, url, infoText: infoText == null || infoText == 'null' ? null : infoText);
   });
 
-  static Handler _syllabusHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return CourseRoutingShellScreen(params[_RouterKeys.courseId][0], CourseShellType.syllabus);
+  static Handler _syllabusHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return CourseRoutingShellScreen(params[_RouterKeys.courseId]![0], CourseShellType.syllabus);
   });
 
-  static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     final domain = params[_RouterKeys.url]?.elementAt(0);
     final accountId = params[_RouterKeys.accountId]?.elementAt(0);
 
@@ -395,14 +395,14 @@ class PandaRouter {
     }
   });
 
-  static Handler _aupHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _aupHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return AcceptableUsePolicyScreen();
   });
 
   /// Used to handled external urls routed by the intent-filter -> MainActivity.kt
   static Handler _rootWithExternalUrlHandler =
-      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var link = params[_RouterKeys.url][0];
+      Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    var link = params[_RouterKeys.url]![0];
 
     // QR Login: we need to modify the url slightly
     var qrUri = QRUtils.verifySSOLogin(link);
@@ -412,7 +412,7 @@ class PandaRouter {
 
     // QR Pairing
     var pairingParseResult = QRUtils.parsePairingInfo(link);
-    QRPairingInfo pairingInfo = pairingParseResult is QRPairingInfo ? pairingParseResult : null;
+    QRPairingInfo? pairingInfo = pairingParseResult is QRPairingInfo ? pairingParseResult : null;
     if (pairingInfo != null) {
       link = qrPairing(pairingUri: link);
     }
@@ -427,8 +427,8 @@ class PandaRouter {
         // Before deep linking, we need to make sure a current student is set
         if (ApiPrefs.getCurrentStudent() != null || qrUri != null) {
           // If its a link we can handle natively and within our domain, route
-          return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
-              .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
+          return (urlRouteWrapper.appRouteMatch?.route.handler as Handler)
+              .handlerFunc(context, urlRouteWrapper.appRouteMatch!.parameters);
         } else {
           // This might be a migrated user or an error case, let's route them to the dashboard
           return _dashboardHandler.handlerFunc(context, {});
@@ -462,12 +462,12 @@ class PandaRouter {
       final url = await _interactor.getAuthUrl(link);
       if (limitWebAccess) {
         // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
-        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage));
+        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context)!.webAccessLimitedMessage));
       } else if (await locator<UrlLauncher>().canLaunch(link) ?? false) {
         // No native route found, let's launch the url if possible, or show an error toast
         locator<UrlLauncher>().launch(url);
       } else {
-        locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).routerLaunchErrorMessage);
+        locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context)!.routerLaunchErrorMessage);
       }
     }
   }
@@ -534,7 +534,7 @@ class _RouterKeys {
 class _UrlRouteWrapper {
   final String path;
   final bool validHost;
-  final AppRouteMatch appRouteMatch;
+  final AppRouteMatch? appRouteMatch;
 
   _UrlRouteWrapper(this.path, this.validHost, this.appRouteMatch);
 }

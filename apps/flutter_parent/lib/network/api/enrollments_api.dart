@@ -58,7 +58,7 @@ class EnrollmentsApi {
   /// successful, false if the code is invalid or expired, and null if there was a network issue.
   Future<bool?> pairWithStudent(String pairingCode) async {
     try {
-      var pairingResponse = await canvasDio().post(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),
+      var pairingResponse = await canvasDio().post(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser()?.id}/observees'),
           queryParameters: {'pairing_code': pairingCode});
       return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
     } on DioException catch (e) {
@@ -71,7 +71,7 @@ class EnrollmentsApi {
   Future<bool> unpairStudent(String studentId) async {
     try {
       var response = await canvasDio().delete(
-        ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees/$studentId'),
+        ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser()?.id}/observees/$studentId'),
       );
       return (response.statusCode == 200 || response.statusCode == 201);
     } on DioException {
@@ -82,7 +82,7 @@ class EnrollmentsApi {
   Future<bool> canUnpairStudent(String studentId) async {
     try {
       var response = await canvasDio().get(
-        ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees/$studentId'),
+        ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser()?.id}/observees/$studentId'),
       );
       return response.statusCode == 200;
     } on DioException {

@@ -278,15 +278,15 @@ class ApiPrefs {
 
   static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
-  static String getDomain() => getCurrentLogin()?.currentDomain;
+  static String? getDomain() => getCurrentLogin()?.currentDomain;
 
-  static String getAuthToken() => getCurrentLogin()?.accessToken;
+  static String? getAuthToken() => getCurrentLogin()?.accessToken;
 
-  static String getRefreshToken() => getCurrentLogin()?.refreshToken;
+  static String? getRefreshToken() => getCurrentLogin()?.refreshToken;
 
-  static String getClientId() => getCurrentLogin()?.clientId;
+  static String? getClientId() => getCurrentLogin()?.clientId;
 
-  static String getClientSecret() => getCurrentLogin()?.clientSecret;
+  static String? getClientSecret() => getCurrentLogin()?.clientSecret;
 
   static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED);
 
@@ -307,7 +307,7 @@ class ApiPrefs {
   }
 
   static Future<void> setRatingNextShowDate(DateTime nextShowDate) =>
-      _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate?.toIso8601String());
+      _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate.toIso8601String());
 
   static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN);
 
@@ -316,34 +316,34 @@ class ApiPrefs {
 
   /// Pref helpers
 
-  static Future<void> _setPrefBool(String key, bool value) async {
+  static Future<bool> _setPrefBool(String key, bool value) async {
     _checkInit();
-    await _prefs.setBool(key, value);
+    return _prefs!.setBool(key, value);
   }
 
   static bool _getPrefBool(String key) {
     _checkInit();
-    return _prefs.getBool(key);
+    return _prefs!.getBool(key);
   }
 
-  static Future<void> _setPrefString(String key, String value) async {
+  static Future<bool> _setPrefString(String key, String value) async {
     _checkInit();
-    await _prefs.setString(key, value);
+    return _prefs!.setString(key, value);
   }
 
   static String _getPrefString(String key) {
     _checkInit();
-    return _prefs.getString(key);
+    return _prefs!.getString(key);
   }
 
   static int _getPrefInt(String key) {
     _checkInit();
-    return _prefs.getInt(key);
+    return _prefs!.getInt(key);
   }
 
-  static Future<void> _setPrefInt(String key, int value) async {
+  static Future<bool> _setPrefInt(String key, int value) async {
     _checkInit();
-    return _prefs.setInt(key, value);
+    return _prefs!.setInt(key, value);
   }
 
   /// Utility functions
@@ -372,18 +372,18 @@ class ApiPrefs {
     return headers;
   }
 
-  static setCurrentStudent(User currentStudent) {
+  static setCurrentStudent(User? currentStudent) {
     _checkInit();
     if (currentStudent == null) {
-      _prefs.remove(KEY_CURRENT_STUDENT);
+      _prefs!.remove(KEY_CURRENT_STUDENT);
     } else {
-      _prefs.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
+      _prefs!.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
     }
   }
 
-  static User getCurrentStudent() {
+  static User? getCurrentStudent() {
     _checkInit();
-    final studentJson = _prefs.getString(KEY_CURRENT_STUDENT);
+    final studentJson = _prefs?.getString(KEY_CURRENT_STUDENT);
     if (studentJson == null || studentJson.isEmpty) return null;
     return deserialize<User>(json.decode(studentJson));
   }

@@ -119,7 +119,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 }
 
-AppLocalizations? L10n(BuildContext context) => Localizations.of<AppLocalizations>(context, AppLocalizations);
+AppLocalizations L10n(BuildContext context) => Localizations.of<AppLocalizations>(context, AppLocalizations)!;
 
 ///
 /// App Localization class.
