@@ -17,6 +17,7 @@
 package com.instructure.student.features.quiz.list.datasource
 
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.student.features.quiz.list.QuizListLocalDataSource
@@ -30,8 +31,9 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class QuizListLocalDataSourceTest {
     private val quizDao: QuizDao = mockk(relaxed = true)
+    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
 
-    private val dataSource = QuizListLocalDataSource(quizDao)
+    private val dataSource = QuizListLocalDataSource(quizDao, courseSettingsDao)
 
     @Test
     fun `Quizzes returned`() = runTest {

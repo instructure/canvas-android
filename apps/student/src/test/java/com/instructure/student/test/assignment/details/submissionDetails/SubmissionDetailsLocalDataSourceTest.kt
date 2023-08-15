@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
@@ -47,11 +48,12 @@ class SubmissionDetailsLocalDataSourceTest {
     private val assignmentFacade: AssignmentFacade = mockk(relaxed = true)
     private val quizDao: QuizDao = mockk(relaxed = true)
     private val courseFeaturesDao: CourseFeaturesDao = mockk(relaxed = true)
+    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
     private lateinit var localDataSource: SubmissionDetailsLocalDataSource
 
     @Before
     fun setup() {
-        localDataSource = SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao)
+        localDataSource = SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao, courseSettingsDao)
     }
 
     @Test

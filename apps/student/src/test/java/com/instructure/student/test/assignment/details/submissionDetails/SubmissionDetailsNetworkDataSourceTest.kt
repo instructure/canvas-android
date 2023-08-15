@@ -39,11 +39,12 @@ class SubmissionDetailsNetworkDataSourceTest {
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val quizApi: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private lateinit var networkDataSource: SubmissionDetailsNetworkDataSource
 
     @Before
     fun setup() {
-        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi)
+        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi)
     }
 
     @Test

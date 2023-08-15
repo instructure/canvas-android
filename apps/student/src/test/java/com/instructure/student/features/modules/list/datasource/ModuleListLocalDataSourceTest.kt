@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
@@ -37,8 +38,9 @@ class ModuleListLocalDataSourceTest {
 
     private val tabDao = mockk<TabDao>(relaxed = true)
     private val moduleFacade = mockk<ModuleFacade>(relaxed = true)
+    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
 
-    private val dataSource = ModuleListLocalDataSource(tabDao, moduleFacade)
+    private val dataSource = ModuleListLocalDataSource(tabDao, moduleFacade, courseSettingsDao)
 
     @Test
     fun `getAllModuleObjects returns all module objects with DB api type`() = runTest {

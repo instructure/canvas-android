@@ -16,6 +16,7 @@
  */
 package com.instructure.student.features.quiz.list.datasource
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
@@ -30,8 +31,9 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class QuizListNetworkDataSourceTest {
     private val quizApi: QuizAPI.QuizInterface = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
 
-    private val dataSource = QuizListNetworkDataSource(quizApi)
+    private val dataSource = QuizListNetworkDataSource(quizApi, courseApi)
 
     @Test
     fun `Quizzes are returned`() = runTest {

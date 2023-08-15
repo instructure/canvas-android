@@ -16,6 +16,7 @@
  */
 package com.instructure.student.features.modules.list.datasource
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.models.Course
@@ -36,8 +37,9 @@ class ModuleListNetworkDataSourceTest {
 
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
     private val tabApi: TabAPI.TabsInterface = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
 
-    private val dataSource = ModuleListNetworkDataSource(moduleApi, tabApi)
+    private val dataSource = ModuleListNetworkDataSource(moduleApi, tabApi, courseApi)
 
     @Test
     fun `Return failed result when getAllModuleObjects fails`() = runTest {

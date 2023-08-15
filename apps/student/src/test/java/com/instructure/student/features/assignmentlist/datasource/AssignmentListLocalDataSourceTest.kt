@@ -19,6 +19,7 @@ package com.instructure.student.features.assignmentlist.datasource
 
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
@@ -34,8 +35,9 @@ class AssignmentListLocalDataSourceTest {
 
     private val assignmentFacade: AssignmentFacade = mockk(relaxed = true)
     private val courseFacade: CourseFacade = mockk(relaxed = true)
+    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
 
-    private val dataSource = AssignmentListLocalDataSource(assignmentFacade, courseFacade)
+    private val dataSource = AssignmentListLocalDataSource(assignmentFacade, courseFacade, courseSettingsDao)
 
     @Test
     fun `Get assignment groups with assignments for grading period successfully returns api model`() = runTest {
