@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "11dc4c04dbfcfcc4e632da3feace1eb8",
+    "identityHash": "01e8bd80bab57b108979082d33b1ea1d",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -2320,7 +2320,7 @@
       },
       {
         "tableName": "LocalFileEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `createdDate` INTEGER NOT NULL, `path` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `createdDate` INTEGER NOT NULL, `path` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -2354,7 +2354,19 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "CourseEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "MasteryPathAssignmentEntity",
@@ -5034,7 +5046,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '11dc4c04dbfcfcc4e632da3feace1eb8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '01e8bd80bab57b108979082d33b1ea1d')"
     ]
   }
 }
