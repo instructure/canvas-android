@@ -37,7 +37,7 @@ class FileListLocalDataSource(
         val localFileMap = localFileDao.findByIds(fileIds).associate { it.id to it.path }
 
         return files.map {
-            it.copy(url = localFileMap[it.id])
+            it.copy(url = localFileMap[it.id], thumbnailUrl = null)
         }
     }
 

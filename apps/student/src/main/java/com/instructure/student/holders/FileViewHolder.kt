@@ -43,8 +43,9 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         root.onClick { callback.onItemClicked(item) }
         root.onLongClick { overflowButton.performClick() }
 
-        root.alpha = if (item.isFile && item.url == null) 0.5f else 1f
-        root.isEnabled = !(item.isFile && item.url == null)
+        val fileUnavailable = item.isFile && item.url == null
+        root.isEnabled = fileUnavailable.not()
+        root.alpha = if (fileUnavailable) 0.5f else 1f
 
         if (hasOptions.isNotEmpty()) {
             // User has options

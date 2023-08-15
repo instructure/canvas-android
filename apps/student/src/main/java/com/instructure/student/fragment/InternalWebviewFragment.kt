@@ -27,8 +27,10 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.webkit.WebView
 import android.widget.ProgressBar
+import androidx.core.content.FileProvider
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -52,6 +54,7 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.io.File
 
 open class InternalWebviewFragment : ParentFragment() {
 
@@ -373,6 +376,13 @@ open class InternalWebviewFragment : ParentFragment() {
     fun loadUrl(targetUrl: String?) {
         if (!html.isNullOrBlank()) {
             binding.canvasWebViewWrapper.loadHtml(html!!, title ?: "")
+            return
+        }
+
+        if (!URLUtil.isNetworkUrl(targetUrl)) {
+            val file = File(targetUrl)
+            val uri = FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+            binding.canvasWebViewWrapper.webView.loadUrl(uri.toString())
             return
         }
 

@@ -18,6 +18,7 @@
 package com.instructure.student.features.files.list
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
@@ -65,8 +67,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.io.File
 import java.util.*
 import javax.inject.Inject
+
 
 @ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
@@ -209,25 +213,26 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             override fun onItemClicked(item: FileFolder) {
                 if (item.fullName != null) {
                     RouteMatcher.route(requireContext(), makeRoute(canvasContext, item))
-                } else {
-                    recordFilePreviewEvent(item)
-                    if (item.isHtmlFile) {
-                        /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
-                        accessed as an authenticated preview to work correctly */
-                        RouteMatcher.route(requireContext(), InternalWebviewFragment.makeRoute(
-                            canvasContext = canvasContext,
-                            url = item.getFilePreviewUrl(ApiPrefs.fullDomain, canvasContext),
-                            authenticate = true,
-                            isUnsupportedFeature = false,
-                            allowUnsupportedRouting = false,
-                            shouldRouteInternally = true,
-                            allowRoutingTheSameUrlInternally = false
-                        )
-                        )
-                    } else {
-                        openMedia(item.contentType, item.url, item.displayName, canvasContext)
-                    }
+                    return
                 }
+
+                recordFilePreviewEvent(item)
+
+                if (item.isHtmlFile) {
+                    if (item.isLocalFile) {
+                        openHtmlFile(item)
+                    } else {
+                        openHtmlUrl(item)
+                    }
+                    return
+                }
+
+                if (item.isLocalFile) {
+                    openLocalMedia(item)
+                    return
+                }
+
+                openMedia(item.contentType, item.url, item.displayName, canvasContext)
             }
 
             override fun onOpenItemMenu(item: FileFolder, anchorView: View) {
@@ -268,6 +273,48 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             ViewStyler.themeFAB(addFileFab)
             ViewStyler.themeFAB(addFolderFab)
         }
+    }
+
+    private fun openHtmlUrl(fileFolder: FileFolder) {
+        /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
+                    accessed as an authenticated preview to work correctly */
+        RouteMatcher.route(
+            requireContext(), InternalWebviewFragment.makeRoute(
+                canvasContext = canvasContext,
+                url = fileFolder.getFilePreviewUrl(ApiPrefs.fullDomain, canvasContext),
+                authenticate = true,
+                isUnsupportedFeature = false,
+                allowUnsupportedRouting = false,
+                shouldRouteInternally = true,
+                allowRoutingTheSameUrlInternally = false
+            )
+        )
+    }
+
+    private fun openHtmlFile(fileFolder: FileFolder) {
+        RouteMatcher.route(
+            requireContext(), InternalWebviewFragment.makeRoute(
+                canvasContext = canvasContext,
+                url = fileFolder.url.orEmpty(),
+                authenticate = false,
+                isUnsupportedFeature = false,
+                allowUnsupportedRouting = false,
+                shouldRouteInternally = true,
+                allowRoutingTheSameUrlInternally = false
+            )
+        )
+    }
+
+    private fun openLocalMedia(fileFolder: FileFolder) {
+        val file = File(fileFolder.url)
+        val uri = FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+        val mimeType = requireContext().contentResolver.getType(uri)
+
+        val intent = Intent()
+        intent.action = Intent.ACTION_VIEW
+        intent.setDataAndType(uri, mimeType)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(intent)
     }
 
     private fun themeToolbar() = with(binding) {
