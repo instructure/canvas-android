@@ -25,7 +25,9 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
+import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.espresso.TeacherHiltTestApplication_Application
 import com.instructure.teacher.ui.pages.AboutPage
@@ -121,7 +123,7 @@ abstract class TeacherTest : CanvasTest() {
      * Required for auto complete of page objects within tests
      */
     val addMessagePage = AddMessagePage()
-    val announcementsListPage = AnnouncementsListPage()
+    val announcementsListPage = AnnouncementsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assigneeListPage = AssigneeListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentDueDatesPage = AssignmentDueDatesPage()
@@ -144,7 +146,7 @@ abstract class TeacherTest : CanvasTest() {
     val profileSettingsPage = ProfileSettingsPage()
     val editProfileSettingsPage = EditProfileSettingsPage()
     val discussionsDetailsPage = DiscussionsDetailsPage()
-    val discussionsListPage = DiscussionsListPage()
+    val discussionsListPage = DiscussionsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val editAnnouncementPage = EditAnnouncementPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()
     val editDiscussionsDetailsPage = EditDiscussionsDetailsPage()
@@ -159,10 +161,10 @@ abstract class TeacherTest : CanvasTest() {
     val modulesPage = ModulesPage()
     val navDrawerPage = NavDrawerPage()
     val notATeacherPage = NotATeacherPage()
-    val pageListPage = PageListPage()
-    val peopleListPage = PeopleListPage()
+    val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
+    val peopleListPage = PeopleListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val quizDetailsPage = QuizDetailsPage()
-    val quizListPage = QuizListPage()
+    val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.clearButton, R.id.backButton))
     val quizSubmissionListPage = QuizSubmissionListPage()
     val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderFilesPage = SpeedGraderFilesPage()
@@ -174,7 +176,7 @@ abstract class TeacherTest : CanvasTest() {
     val syllabusPage = SyllabusPage()
     val todoPage = TodoPage()
     val webViewLoginPage = WebViewLoginPage()
-    val fileListPage = FileListPage()
+    val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
 
 }
 
