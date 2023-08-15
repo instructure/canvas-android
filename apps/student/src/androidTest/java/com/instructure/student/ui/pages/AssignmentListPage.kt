@@ -33,6 +33,8 @@ import com.instructure.espresso.Searchable
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.WaitForViewWithText
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -88,6 +90,18 @@ class AssignmentListPage(val searchable: Searchable) : BasePage(pageResId = R.id
 
     fun assertHasAssignment(assignment: Assignment, expectedGrade: String? = null) {
         assertHasAssignmentCommon(assignment.name!!, assignment.dueAt, expectedGrade)
+    }
+
+    fun assertAssignmentDisplayedWithGrade(assignmentName: String, gradeString: String) {
+        onView(withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)).assertDisplayed()
+        val pointsMatcher = withId(R.id.title) + withText(assignmentName)
+        onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertHasText(gradeString)
+    }
+
+    fun assertAssignmentDisplayedWithoutGrade(assignmentName: String) {
+        onView(withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)).assertDisplayed()
+        val pointsMatcher = withId(R.id.title) + withText(assignmentName)
+        onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertNotDisplayed()
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {
