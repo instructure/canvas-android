@@ -1801,7 +1801,7 @@ fun MockCanvas.addGroupToCourse(
 
     result.permissions = CanvasContextPermission(canCreateAnnouncement = true)
 
-    groups[result.id] = result
+    if(result.isFavorite) groups[result.id] = result
 
     return result
 }

@@ -72,6 +72,14 @@ class GroupLinksInteractionTest : StudentTest() {
         dashboardPage.assertDisplaysGroup(group, course)
     }
 
+    // Test not favorite group on dashboard
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
+    fun testGroupLink_dashboard_favoriteLogics() {
+        setUpGroupAndSignIn(isFavorite = false)
+        dashboardPage.assertGroupNotDisplayed(group)
+    }
+
     // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_FILES)
@@ -196,7 +204,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Mock a single student and course, mock a group and a number of items associated with the group,
     // sign in, then navigate to the dashboard.
-    private fun setUpGroupAndSignIn(): MockCanvas {
+    private fun setUpGroupAndSignIn(isFavorite: Boolean = true): MockCanvas {
 
         // Basic info
         val data = MockCanvas.init(
@@ -211,7 +219,7 @@ class GroupLinksInteractionTest : StudentTest() {
         group = data.addGroupToCourse(
                 course = course,
                 members = listOf(user),
-                isFavorite = true
+                isFavorite = isFavorite
         )
 
         // Add a discussion
