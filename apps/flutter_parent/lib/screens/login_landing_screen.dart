@@ -111,9 +111,9 @@ class LoginLandingScreen extends StatelessWidget {
             _filledButton(
                 context,
                 lastLoginAccount.item1.name == null ||
-                        lastLoginAccount.item1.name.isEmpty
+                        lastLoginAccount.item1.name!.isEmpty
                     ? lastLoginAccount.item1.domain
-                    : lastLoginAccount.item1.name, () {
+                    : lastLoginAccount.item1.name!, () {
               onSavedSchoolPressed(context, lastLoginAccount);
             }),
           SizedBox(height: 16),
@@ -167,9 +167,9 @@ class LoginLandingScreen extends StatelessWidget {
                     _filledButton(
                         context,
                         lastLoginAccount.item1.name == null ||
-                                lastLoginAccount.item1.name.isEmpty
+                                lastLoginAccount.item1.name!.isEmpty
                             ? lastLoginAccount.item1.domain
-                            : lastLoginAccount.item1.name, () {
+                            : lastLoginAccount.item1.name!, () {
                       onSavedSchoolPressed(context, lastLoginAccount);
                     }),
                   SizedBox(height: 16),
@@ -197,7 +197,7 @@ class LoginLandingScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 48.0),
       child: ButtonTheme(
         minWidth: double.infinity,
-        child: FlatButton(
+        child: TextButton(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
@@ -206,10 +206,13 @@ class LoginLandingScreen extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          color: Theme.of(context).colorScheme.secondary,
-          textColor: Colors.white,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4))),
+          style: TextButton.styleFrom(
+            textStyle: TextStyle(color: Colors.white),
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4))
+            ),
+          ),
           onPressed: onPressed,
         ),
       ),
@@ -310,7 +313,7 @@ class LoginLandingScreen extends StatelessWidget {
                             context, PandaRouter.rootSplash());
                       },
                       leading: Stack(
-                        overflow: Overflow.visible,
+                        clipBehavior: Clip.none,
                         children: <Widget>[
                           Avatar.fromUser(login.currentUser),
                           if (login.isMasquerading)
@@ -364,7 +367,7 @@ class LoginLandingScreen extends StatelessWidget {
     locator<QuickNav>().pushRoute(
         context,
         PandaRouter.loginWeb(lastAccount.item1.domain,
-            accountName: lastAccount.item1.name, loginFlow: lastAccount.item2));
+            accountName: lastAccount.item1.name!, loginFlow: lastAccount.item2));
   }
 
   void _changeLoginFlow(BuildContext context) {
@@ -386,7 +389,7 @@ class LoginLandingScreen extends StatelessWidget {
         break;
     }
 
-    _scaffoldKey.currentState?.removeCurrentSnackBar();
-    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(flowDescription)));
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(flowDescription)));
   }
 }

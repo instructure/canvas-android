@@ -59,11 +59,11 @@ Future<List<T>> fetchList<T>(
   try {
     var response = await request;
     if (depaginateWith == null) return deserializeList(response.data);
-    depaginateWith.options.baseUrl = null;
-    depaginateWith.options.queryParameters?.remove('per_page');
+    depaginateWith.options.baseUrl = '';
+    depaginateWith.options.queryParameters.remove('per_page');
     var pagedList = PagedList<T>(response);
     while (pagedList.nextUrl != null) {
-      response = await depaginateWith.get(pagedList.nextUrl);
+      response = await depaginateWith.get(pagedList.nextUrl ?? '');
       pagedList.updateWithResponse(response);
     }
     return pagedList.data;

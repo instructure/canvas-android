@@ -122,20 +122,22 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
                       padding: const EdgeInsets.only(top: 16),
                       child: Text(
                         L10n(context).deleteStudentFailure,
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ParentColors.failure),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ParentColors.failure),
                       ),
                     )
                 ],
               ),
               actions: <Widget>[
                 if (!busy)
-                  FlatButton(
+                  TextButton(
                     child: Text(L10n(context).cancel.toUpperCase()),
                     onPressed: () => Navigator.of(context).pop(),
-                    textColor: ParentColors.ash,
+                    style: TextButton.styleFrom(
+                      textStyle: TextStyle(color: ParentColors.ash),
+                    ),
                   ),
                 if (!busy)
-                  FlatButton(
+                  TextButton(
                     child: Text(L10n(context).delete.toUpperCase()),
                     onPressed: () async {
                       setState(() {
@@ -182,7 +184,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
           ),
           title: UserName.fromUser(
             widget._student,
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         SizedBox(
@@ -197,7 +199,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
               ),
               child: Text(
                 L10n(context).alertMeWhen,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ParentColors.ash),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ParentColors.ash),
               ),
             )),
         Expanded(
@@ -238,11 +240,11 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
     return ListTile(
       title: Text(
         type.getTitle(context),
-        style: Theme.of(context).textTheme.subtitle1,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       trailing: Text(
         value != null ? NumberFormat.percentPattern().format(value / 100) : L10n(context).never,
-        style: Theme.of(context).textTheme.subtitle1?.copyWith(color: StudentColorSet.electric.light),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: StudentColorSet.electric.light),
       ),
       onTap: () async {
         AlertThreshold? update = await showDialog(

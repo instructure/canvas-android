@@ -46,7 +46,7 @@ class ReminderDb {
         columnType: data.type,
         columnItemId: data.itemId,
         columnCourseId: data.courseId,
-        columnDate: data.date.toIso8601String(),
+        columnDate: data.date?.toIso8601String(),
       };
 
   static Reminder fromMap(Map<String, dynamic> map) => Reminder((b) => b

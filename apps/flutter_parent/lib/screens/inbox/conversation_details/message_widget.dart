@@ -30,13 +30,13 @@ import 'package:flutter_parent/utils/style_slicer.dart';
 import 'package:intl/intl.dart';
 
 class MessageWidget extends StatefulWidget {
-  final Conversation conversation;
-  final Message message;
+  final Conversation? conversation;
+  final Message? message;
   final String? currentUserId;
   final Function(Attachment)? onAttachmentClicked;
 
   const MessageWidget({
-    required this.conversation,
+    this.conversation,
     required this.message,
     required this.currentUserId,
     this.onAttachmentClicked = null,
@@ -52,11 +52,11 @@ class _MessageWidgetState extends State<MessageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var author = widget.conversation.participants?.firstWhere(
-      (it) => it.id == widget.message.authorId,
+    var author = widget.conversation?.participants?.firstWhere(
+      (it) => it.id == widget.message?.authorId,
       orElse: () => BasicUser((b) => b..name = L10n(context).unknownUser),
     );
-    var date = widget.message.createdAt.l10nFormat(L10n(context).dateAtTime);
+    var date = widget.message?.createdAt.l10nFormat(L10n(context).dateAtTime);
     if (author == null || date == null) return Container();
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16),
@@ -68,7 +68,7 @@ class _MessageWidgetState extends State<MessageWidget> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Linkify(
-              text: widget.message.body!,
+              text: widget.message?.body ?? '',
               options: LinkifyOptions(humanize: false),
               onOpen: (link) => locator<QuickNav>().routeInternally(context, link.url),
             ),
@@ -84,7 +84,7 @@ class _MessageWidgetState extends State<MessageWidget> {
       key: Key('message-header'),
       child: InkWell(
         onTap:
-        widget.message.participatingUserIds != null && widget.message.participatingUserIds!.length > 1 // Only allow expansion if there are non-author participants
+        widget.message?.participatingUserIds != null && widget.message!.participatingUserIds!.length > 1 // Only allow expansion if there are non-author participants
                 ? () => setState(() => _participantsExpanded = !_participantsExpanded)
                 : null,
         child: Padding(
@@ -100,7 +100,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        _authorText(context, widget.conversation, widget.message, author),
+                        if (widget.message != null) _authorText(context, widget.conversation, widget.message!, author),
                         SizedBox(height: 2),
                         Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.titleSmall),
                       ],
@@ -118,10 +118,10 @@ class _MessageWidgetState extends State<MessageWidget> {
   }
 
   Widget _participants(BasicUser author) {
-    var participants = widget.message.participatingUserIds!
-        .map((id) => widget.conversation.participants!.firstWhere((it) => it.id == id))
+    var participants = widget.message!.participatingUserIds!
+        .map((id) => widget.conversation?.participants!.firstWhere((it) => it.id == id))
         .toList()
-          ..retainWhere((it) => it.id != author.id);
+          ..retainWhere((it) => it?.id != author.id);
     return Padding(
       key: Key('participants'),
       padding: const EdgeInsetsDirectional.only(top: 16, start: 52),
@@ -133,7 +133,7 @@ class _MessageWidgetState extends State<MessageWidget> {
           var user = participants[index];
           return Row(
             children: <Widget>[
-              if (user.avatarUrl != null) Avatar(user.avatarUrl!, name: user.name, radius: 16),
+              Avatar(user!.avatarUrl!, name: user.name, radius: 16),
               SizedBox(width: 12),
               Expanded(
                   child: Text(user.name!,
@@ -146,7 +146,7 @@ class _MessageWidgetState extends State<MessageWidget> {
     );
   }
 
-  Widget _authorText(BuildContext context, Conversation conversation, Message message, BasicUser author) {
+  Widget _authorText(BuildContext context, Conversation? conversation, Message message, BasicUser author) {
     String authorInfo = '';
     List<StyleSlicer> slicers = [];
     Color? authorColor = ParentTheme.of(context)?.onSurfaceColor;
@@ -155,11 +155,11 @@ class _MessageWidgetState extends State<MessageWidget> {
       var authorName = toBeginningOfSentenceCase(L10n(context).userNameMe) ?? '';
       slicers.add(PatternSlice(authorName, style: TextStyle(color: authorColor), maxMatches: 1));
       if (message.participatingUserIds!.length == 2) {
-        var otherUser = conversation.participants!.firstWhere(
+        var otherUser = conversation?.participants?.firstWhere(
           (it) => it.id != message.authorId,
           orElse: () => BasicUser((b) => b..name = L10n(context).unknownUser),
         );
-        var recipientName = UserName.fromBasicUser(otherUser).text;
+      var recipientName = UserName.fromBasicUser(otherUser!).text;
         slicers.add(PronounSlice(otherUser.pronouns));
         authorInfo = L10n(context).authorToRecipient(authorName, recipientName);
       } else if (message.participatingUserIds!.length > 2) {
@@ -191,9 +191,9 @@ class _MessageWidgetState extends State<MessageWidget> {
     );
   }
 
-  Widget _attachmentsWidget(BuildContext context, Message message) {
-    List<Attachment> attachments = message.attachments?.toList() ?? [];
-    if (message.mediaComment != null) attachments.add(message.mediaComment!.toAttachment());
+  Widget _attachmentsWidget(BuildContext context, Message? message) {
+    List<Attachment> attachments = message?.attachments?.toList() ?? [];
+    if (message?.mediaComment != null) attachments.add(message!.mediaComment!.toAttachment());
     if (attachments.isEmpty) return Container();
     return Container(
       height: 108,

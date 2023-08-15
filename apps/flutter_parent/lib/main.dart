@@ -18,6 +18,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,8 @@ void main() async {
       RemoteConfigUtils.initialize(),
       CrashUtils.init(),
       FlutterDownloader.initialize(),
-      DbUtil.init()
+      WidgetsFlutterBinding.ensureInitialized(),
+    DbUtil.init()
     ]);
     PandaRouter.init();
 
@@ -60,8 +62,9 @@ void main() async {
     await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
     if (Platform.isAndroid) {
-      final AndroidDeviceInfo info = await DeviceInfoPlugin().androidInfo;
-      if (info.version.sdkInt >= 29) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      if (androidInfo.version.sdkInt >= 29) {
         WebView.platform = SurfaceAndroidWebView();
       }
     }

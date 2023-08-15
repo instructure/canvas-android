@@ -28,8 +28,8 @@ extension WebViewUtils on WebViewController {
    */
   Future<void> loadHtml(
     String html, {
-    required String baseUrl,
-    required Map<String, String> headers,
+    String? baseUrl,
+    Map<String, String>? headers,
     double horizontalPadding = 0})
     async {
       String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
@@ -91,7 +91,7 @@ String _addProtocolToLinks(String html) {
 ///   https://github.com/flutter/flutter/issues/36304
 ///   https://github.com/flutter/flutter/issues/35394
 class WebViewGestureRecognizer extends VerticalDragGestureRecognizer {
-  WebViewGestureRecognizer({super.kind});
+  WebViewGestureRecognizer();
 
   @override
   get onUpdate => (_) {};

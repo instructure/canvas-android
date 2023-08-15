@@ -49,8 +49,8 @@ class NotificationUtil {
 
     await _plugin!.initialize(
       initializationSettings,
-      onSelectNotification: (rawPayload) async {
-        await handlePayload(rawPayload, appCompleter);
+      onDidReceiveBackgroundNotificationResponse: (rawPayload) async {
+        await handlePayload(rawPayload.payload ?? '', appCompleter);
       },
     );
   }
@@ -78,7 +78,7 @@ class NotificationUtil {
     Reminder reminder = Reminder.fromNotification(payload);
 
     // Delete reminder from db
-    await locator<ReminderDb>().deleteById(reminder.id);
+    await locator<ReminderDb>().deleteById(reminder.id!);
 
     // Create route
     String? route;
@@ -119,8 +119,8 @@ class NotificationUtil {
           .logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
     }
 
-    return _plugin!.schedule(
-      reminder.id,
+    return _plugin!.zonedSchedule(
+      reminder.id!,
       title,
       body,
       reminder.date,

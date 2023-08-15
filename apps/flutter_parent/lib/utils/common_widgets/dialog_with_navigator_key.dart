@@ -74,10 +74,10 @@ class _DialogRoute<T> extends PopupRoute<T> {
 /// Similar to [showDialog], but instead of taking a [BuildContext] this takes a [GlobalKey] of type [NavigatorState].
 /// This is useful in situations where [showDialog] will not work because a [Navigator] is not accessible via the
 /// available [BuildContext], such as the masquerading UI which is an ancestor of the [Navigator].
-Future<T?> showDialogWithNavigatorKey<T>(
-  GlobalKey<NavigatorState> navKey,
-  WidgetBuilder builder,
-  {bool barrierDismissible = true,
+Future<T?> showDialogWithNavigatorKey<T>({
+  required GlobalKey<NavigatorState> navKey,
+  required WidgetBuilder builder,
+  bool barrierDismissible = true,
 }) {
   BuildContext context = navKey.currentContext!;
   assert(debugCheckHasMaterialLocalizations(context));

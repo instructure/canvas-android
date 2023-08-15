@@ -79,7 +79,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   @override
   bool shouldReload(LocalizationsDelegate<AppLocalizations> old) => false;
 
-  LocaleResolutionCallback resolution(Locale fallback, {bool matchCountry = true}) {
+  LocaleResolutionCallback resolution({Locale? fallback, bool matchCountry = true}) {
     return (Locale? locale, Iterable<Locale> supported) {
       return _resolve(locale, fallback, supported, matchCountry);
     };
@@ -106,7 +106,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   ///
   /// Internal method to resolve a locale from a list of locales.
   ///
-  Locale? _resolve(Locale? locale, Locale fallback, Iterable<Locale> supported, bool matchCountry) {
+  Locale? _resolve(Locale? locale, Locale? fallback, Iterable<Locale> supported, bool matchCountry) {
     if (locale == Locale('zh', 'Hant')) {
       // Special case Traditional Chinese (server sends us zh-Hant but translators give us zh-HK)
       locale = Locale('zh', 'HK');

@@ -26,13 +26,13 @@ import '../attachment_utils/attachment_picker.dart';
 
 class ConversationReplyInteractor {
   Future<Conversation> createReply(
-    Conversation conversation,
+    Conversation? conversation,
     Message? message,
     String body,
     List<String> attachmentIds,
     bool replyAll,
   ) async {
-    Message replyMessage = message ?? conversation.messages![0];
+    Message replyMessage = message ?? conversation!.messages![0];
     List<String> includedMessageIds = [if (message != null || !replyAll) replyMessage.id];
     List<String> recipientIds = [];
 
@@ -44,7 +44,7 @@ class ConversationReplyInteractor {
       }
     } else {
       // We need to make sure the recipients list doesn't contain any off limit users, such as non-observed students.
-      final courseId = conversation.getContextId();
+      final courseId = conversation?.getContextId();
       final userId = ApiPrefs.getUser()?.id;
       final enrollments = await locator<EnrollmentsApi>().getObserveeEnrollments();
       final observeeIds = enrollments
@@ -73,7 +73,7 @@ class ConversationReplyInteractor {
           .toList();
     }
 
-    return locator<InboxApi>().addMessage(conversation.id, body, recipientIds, attachmentIds, includedMessageIds);
+    return locator<InboxApi>().addMessage(conversation?.id, body, recipientIds, attachmentIds, includedMessageIds);
   }
 
   Future<AttachmentHandler?> addAttachment(BuildContext context) async {

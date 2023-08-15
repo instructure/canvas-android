@@ -82,14 +82,14 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
           content: TextFormField(
             key: _formKey,
             autofocus: true,
-            autovalidate: true,
+            autovalidateMode: AutovalidateMode.always,
             keyboardType: TextInputType.number,
             initialValue: _threshold?.threshold,
             maxLength: 3,
-            buildCounter: (_, {currentLength, maxLength, isFocused}) => null, // Don't show the counter
+            buildCounter: (_, {required currentLength, maxLength, required isFocused}) => null, // Don't show the counter
             inputFormatters: [
               // Only accept numbers, no other characters (including '-')
-              BlacklistingTextInputFormatter(RegExp('[^0-9]')),
+              FilteringTextInputFormatter.deny(RegExp('[^0-9]')),
             ],
             onChanged: (input) {
               errorMsg = null;
@@ -170,15 +170,15 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
                 child: Text(L10n(context).cancel.toUpperCase()),
-                disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
                 onPressed: () {
                   Navigator.of(context).pop(null);
                 }),
-            FlatButton(
+            TextButton(
                 child: Text(L10n(context).never.toUpperCase()),
-                disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
                 onPressed: () async {
                   if (_threshold == null) {
                     // Threshold is already disabled
@@ -190,10 +190,10 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
                   _showNetworkError(false);
                   _formKey.currentState?.save();
                 }),
-            FlatButton(
+            TextButton(
               key: okButtonKey,
               child: Text(L10n(context).ok),
-              disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+              style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
               onPressed: _disableButtons
                   ? null
                   : () async {

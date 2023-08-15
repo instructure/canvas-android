@@ -101,9 +101,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
             Container(
               width: 48,
               height: 48,
-              child: RaisedButton(
-                padding: EdgeInsets.zero,
-                color: Theme.of(context).scaffoldBackgroundColor,
+              child: ElevatedButton(
                 child: Semantics(
                   label: L10n(context).tapToPairNewStudent,
                   child: Icon(
@@ -111,12 +109,16 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-                shape: CircleBorder(
-                  side: BorderSide(
-                      color: ParentTheme.of(context)?.isDarkMode == true ? Theme.of(context).colorScheme.secondary : Colors.white,
-                      width: 1),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  shape: CircleBorder(
+                    side: BorderSide(
+                        color: ParentTheme.of(context)?.isDarkMode == true ? Theme.of(context).colorScheme.secondary : Colors.white,
+                        width: 1),
+                  ),
+                  elevation: 8,
                 ),
-                elevation: 8,
                 onPressed: () {
                   locator<PairingUtil>().pairNewStudent(context, () => { if (widget.onAddStudent != null) widget.onAddStudent!() });
                 },

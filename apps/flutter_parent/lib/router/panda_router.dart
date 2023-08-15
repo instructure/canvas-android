@@ -29,7 +29,6 @@ import 'package:flutter_parent/screens/aup/acceptable_use_policy_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
-import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
@@ -220,7 +219,7 @@ class PandaRouter {
       Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     var pairingInfo = QRPairingScanResult.success(
         params[_RouterKeys.pairingCode]![0], params[_RouterKeys.domain]![0], params[_RouterKeys.accountId]![0]);
-    return AccountCreationScreen(pairingInfo);
+    return AccountCreationScreen(pairingInfo as QRPairingInfo);
   });
 
   static Handler _alertHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -232,8 +231,8 @@ class PandaRouter {
   static Handler _assignmentDetailsHandler =
       Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return AssignmentDetailsScreen(
-      courseId: params[_RouterKeys.courseId][0],
-      assignmentId: params[_RouterKeys.assignmentId][0],
+      courseId: params[_RouterKeys.courseId]![0],
+      assignmentId: params[_RouterKeys.assignmentId]![0],
     );
   });
 
@@ -264,7 +263,7 @@ class PandaRouter {
   });
 
   static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
+    return CourseDetailsScreen(params[_RouterKeys.courseId]![0]);
   });
 
   static Handler _coursesHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -287,17 +286,17 @@ class PandaRouter {
 
   static Handler _eventDetailsHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return EventDetailsScreen.withId(
-      eventId: params[_RouterKeys.eventId][0],
-      courseId: params[_RouterKeys.courseId][0],
+      eventId: params[_RouterKeys.eventId]![0],
+      courseId: params[_RouterKeys.courseId]![0],
     );
   });
 
   static Handler _frontPageHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return CourseRoutingShellScreen(params[_RouterKeys.courseId][0], CourseShellType.frontPage);
+    return CourseRoutingShellScreen(params[_RouterKeys.courseId]![0], CourseShellType.frontPage);
   });
 
   static Handler _gradesPageHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
+    return CourseDetailsScreen(params[_RouterKeys.courseId]![0]);
   });
 
   static Handler _helpHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -329,8 +328,8 @@ class PandaRouter {
     LoginFlow loginFlow = LoginFlow.values.firstWhere((e) => e.toString() == loginFlowString);
 
     return WebLoginScreen(
-      params[_RouterKeys.domain][0],
-      accountName: params[_RouterKeys.accountName][0],
+      params[_RouterKeys.domain]![0],
+      accountName: params[_RouterKeys.accountName]![0],
       authenticationProvider: authProvider,
       loginFlow: loginFlow,
     );
@@ -366,7 +365,7 @@ class PandaRouter {
   });
 
   static Handler _routerErrorHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    final url = params[_RouterKeys.url][0];
+    final url = params[_RouterKeys.url]![0];
     return RouterErrorScreen(url);
   });
 
@@ -462,12 +461,12 @@ class PandaRouter {
       final url = await _interactor.getAuthUrl(link);
       if (limitWebAccess) {
         // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
-        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context)!.webAccessLimitedMessage));
+        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage));
       } else if (await locator<UrlLauncher>().canLaunch(link) ?? false) {
         // No native route found, let's launch the url if possible, or show an error toast
         locator<UrlLauncher>().launch(url);
       } else {
-        locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context)!.routerLaunchErrorMessage);
+        locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).routerLaunchErrorMessage);
       }
     }
   }

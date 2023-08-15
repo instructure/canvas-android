@@ -41,7 +41,7 @@ class CalendarMonth extends StatefulWidget {
 
   static List<DateTime> generateWeekStarts(int year, int month) {
     DateTime firstDayOfMonth = DateTime(year, month);
-    DateTime firstDayOfWeek = firstDayOfMonth.withFirstDayOfWeek();
+    DateTime firstDayOfWeek = firstDayOfMonth.withFirstDayOfWeek()!;
 
     List<DateTime> weekStarts = [firstDayOfWeek];
 

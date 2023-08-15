@@ -43,11 +43,11 @@ class MethodChannelEncryptedSharedPreferencesStore extends EncryptedSharedPrefer
 
   @override
   Future<bool> clear() {
-    return _kChannel.invokeMethod<bool>('clear');
+    return _kChannel.invokeMethod<bool>('clear') as Future<bool>;
   }
 
   @override
   Future<Map<String, Object>> getAll() {
-    return _kChannel.invokeMapMethod<String, Object>('getAll');
+    return _kChannel.invokeMapMethod<String, Object>('getAll') as Future<Map<String, Object>>;
   }
 }

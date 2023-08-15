@@ -96,16 +96,16 @@ class RemoteConfigUtils {
   }
 
   /** Fetch the value (in string form) of the specified RemoteConfigParams element. */
-  static String? getStringValue(RemoteConfigParams rcParam) {
+  static String getStringValue(RemoteConfigParams rcParam) {
     if (_remoteConfig == null)
       throw StateError('RemoteConfigUtils not yet initialized');
 
     var rcDefault = _getRemoteConfigDefaultValue(rcParam);
     var rcPreferencesName = _getSharedPreferencesName(rcParam);
-    var result = _prefs.getString(rcPreferencesName);
+    var result = _prefs?.getString(rcPreferencesName);
     if (result == null) {
       result = rcDefault;
-      _prefs.setString(rcPreferencesName, rcDefault);
+      _prefs?.setString(rcPreferencesName, rcDefault);
     }
     return result;
   }

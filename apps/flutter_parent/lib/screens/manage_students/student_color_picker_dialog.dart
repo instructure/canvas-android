@@ -62,7 +62,7 @@ class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
       ),
       actions: <Widget>[
         if (_saving)
-          FlatButton(
+          TextButton(
             child: Container(
               width: 18,
               height: 18,
@@ -70,8 +70,8 @@ class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
             ),
             onPressed: null,
           ),
-        if (!_saving) FlatButton(child: Text(L10n(context).cancel), onPressed: () => Navigator.of(context).pop(false)),
-        if (!_saving) FlatButton(child: Text(L10n(context).ok), onPressed: _save),
+        if (!_saving) TextButton(child: Text(L10n(context).cancel), onPressed: () => Navigator.of(context).pop(false)),
+        if (!_saving) TextButton(child: Text(L10n(context).ok), onPressed: _save),
       ],
     );
   }

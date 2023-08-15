@@ -137,7 +137,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
             },
             title: Padding(
               padding: const EdgeInsetsDirectional.only(top: 16, start: 16, end: 16),
-              child: Text(group.name, style: Theme.of(context).textTheme.overline),
+              child: Text(group.name, style: Theme.of(context).textTheme.labelSmall),
             ),
             trailing: Padding(
               padding: const EdgeInsetsDirectional.only(top: 16, start: 16, end: 16),

@@ -175,14 +175,14 @@ abstract class WebViewPlatformController {
   /// Throws an ArgumentError if `url` is not a valid URL string.
   Future<void> loadUrl(
     String url,
-    Map<String, String> headers,
+    Map<String, String>? headers,
   ) {
     throw UnimplementedError(
         "WebView loadUrl is not implemented on the current platform");
   }
 
   Future<void> loadData(
-    String baseUrl,
+    String? baseUrl,
     String data,
     String mimeType,
     String encoding
@@ -534,9 +534,9 @@ abstract class WebViewPlatform {
     // I'm starting without it as the PR is starting to become pretty big.
     // I'll followup with the conversion PR.
     CreationParams creationParams,
-    @required WebViewPlatformCallbacksHandler webViewPlatformCallbacksHandler,
+    required WebViewPlatformCallbacksHandler webViewPlatformCallbacksHandler,
     WebViewPlatformCreatedCallback onWebViewPlatformCreated,
-    Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers,
+    Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
   });
 
   /// Clears all cookies for all [WebView] instances.

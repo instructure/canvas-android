@@ -98,9 +98,9 @@ class CalendarDayListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 16),
-                Text(_getContextName(context, _item), style: textTheme.caption),
+                Text(_getContextName(context, _item), style: textTheme.bodySmall),
                 SizedBox(height: 2),
-                Text(_item.plannable.title, style: textTheme.subtitle1),
+                Text(_item.plannable.title, style: textTheme.titleMedium),
                 ..._getDueDate(context, _item),
                 ..._getPointsOrStatus(context, _item),
                 SizedBox(height: 12),
@@ -155,7 +155,7 @@ class CalendarDayListTile extends StatelessWidget {
     if (plannerItem.plannable.dueAt != null) {
       return [
         SizedBox(height: 4),
-        Text(plannerItem.plannable.dueAt!.l10nFormat(L10n(context).dueDateAtTime),
+        Text(plannerItem.plannable.dueAt!.l10nFormat(L10n(context).dueDateAtTime) ?? '',
             style: Theme.of(context).textTheme.bodySmall),
       ];
     }

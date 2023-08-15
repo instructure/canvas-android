@@ -36,7 +36,7 @@ class PagedList<T> {
     if (headers == null) return null;
 
     final links = headers['link']?.first.split(',');
-    final next = links?.firstWhereOrNull((link) => link.contains('rel="next"');
+    final next = links?.firstWhereOrNull((link) => link.contains('rel="next"'));
 
     return next?.substring(1, next.lastIndexOf('>'));
   }

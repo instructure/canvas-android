@@ -24,8 +24,7 @@ import 'package:flutter_parent/utils/design/theme_transition/theme_transition_ta
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:package_info/package_info.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
 import '../theme_viewer_screen.dart';
 
 class SettingsInteractor {
@@ -73,7 +72,7 @@ class SettingsInteractor {
                     children: [
                       Text(L10n(context).aboutAppTitle,
                           style: TextStyle(fontSize: 16)),
-                      Text(snapshot.data.appName, style: TextStyle(fontSize: 14)),
+                      Text(snapshot.data!.appName, style: TextStyle(fontSize: 14)),
                       SizedBox(height: 24),
                       Text(L10n(context).aboutDomainTitle,
                           style: TextStyle(fontSize: 16)),
@@ -91,7 +90,7 @@ class SettingsInteractor {
                       SizedBox(height: 24),
                       Text(L10n(context).aboutVersionTitle,
                           style: TextStyle(fontSize: 16)),
-                      Text(snapshot.data.version, style: TextStyle(fontSize: 14)),
+                      Text(snapshot.data!.version, style: TextStyle(fontSize: 14)),
                       SizedBox(height: 32),
                       SvgPicture.asset(
                         'assets/svg/ic_instructure_logo.svg',

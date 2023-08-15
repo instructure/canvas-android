@@ -46,6 +46,7 @@ import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboard_interactor.dart';
@@ -249,7 +250,7 @@ class DashboardState extends State<DashboardScreen> {
 
                 flexibleSpace: Semantics(
                   label: 'Tap to open the student selector',
-                  child: _appBarStudents(_students, model.value),
+                  child: _appBarStudents(_students, model.value!),
                 ),
                 centerTitle: true,
                 bottom: ParentTheme.of(context)?.appBarDivider(),
@@ -516,7 +517,7 @@ class DashboardState extends State<DashboardScreen> {
                 title: Text(L10n(context).oldReminderMessageTitle),
                 content: Text(L10n(context).oldReminderMessage),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Text(L10n(context).ok),
                     onPressed: () {
                       locator<Analytics>().logEvent(AnalyticsEventConstants.VIEWED_OLD_REMINDER_MESSAGE);
@@ -558,7 +559,7 @@ class DashboardState extends State<DashboardScreen> {
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     try {
       await ParentTheme.of(context)?.setSelectedStudent(null);
-      await locator<Analytics>().logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
+      locator<Analytics>().logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
       await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
       MasqueradeUI.of(context)?.refresh();
       locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
@@ -585,7 +586,7 @@ class DashboardState extends State<DashboardScreen> {
         padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
         child: Text(
           user.primaryEmail ?? '',
-          style: Theme.of(context).textTheme.caption,
+          style: Theme.of(context).textTheme.bodySmall,
           overflow: TextOverflow.fade,
         ),
       )
@@ -663,12 +664,12 @@ class DashboardState extends State<DashboardScreen> {
               return AlertDialog(
                 content: Text(L10n(context).logoutConfirmation),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Text(
                         MaterialLocalizations.of(context).cancelButtonLabel),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
-                  FlatButton(
+                  TextButton(
                     child:
                         Text(MaterialLocalizations.of(context).okButtonLabel),
                     onPressed: () => _performLogOut(context),
@@ -709,7 +710,7 @@ class DashboardState extends State<DashboardScreen> {
         title: Text(L10n(context).stopActAsUser),
         onTap: () {
           Navigator.of(context).pop();
-          MasqueradeUI.showMasqueradeCancelDialog(Navigator.of(context).widget.key!);
+          MasqueradeUI.showMasqueradeCancelDialog(GlobalKey());
         },
       );
 
@@ -723,8 +724,8 @@ class DashboardState extends State<DashboardScreen> {
                 future: PackageInfo.fromPlatform(),
                 builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
-                    L10n(context).appVersion(snapshot.data?.version),
-                    style: Theme.of(context).textTheme.subtitle2,
+                    L10n(context).appVersion(snapshot.data?.version ?? ''),
+                    style: Theme.of(context).textTheme.titleSmall,
                   );
                 },
               ),

@@ -124,7 +124,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
       _allRecipients = data.recipients;
       String courseId = widget.courseId;
       _selectedRecipients =
-          _allRecipients.where((it) => it.commonCourses[courseId]?.contains('TeacherEnrollment') == true).toList();
+          _allRecipients.where((it) => it.commonCourses?[courseId]?.contains('TeacherEnrollment') == true).toList();
       setState(() {
         _loading = false;
       });
@@ -151,7 +151,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
           .showSnackBar(SnackBar(content: Text(L10n(context).messageSent)));
     } catch (e) {
       setState(() => _sending = false);
-      _scaffoldKey.currentState?.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(L10n(context).errorSendingMessage)),
       );
     }
@@ -166,11 +166,11 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
             title: new Text(L10n(context).unsavedChangesDialogTitle),
             content: new Text(L10n(context).unsavedChangesDialogBody),
             actions: <Widget>[
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text(L10n(context).no),
               ),
-              new FlatButton(
+              new TextButton(
                 onPressed: () {
                   _attachments.forEach((it) => it.deleteAttachment());
                   Navigator.of(context).pop(true);
@@ -192,7 +192,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
           node: _focusScopeNode,
           child: Scaffold(
             key: _scaffoldKey,
-            appBar: _appBar(context),
+            appBar: _appBar(context) as PreferredSizeWidget?,
             body: _content(context),
           ),
         ),
@@ -327,17 +327,19 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
                     ),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: _loadRecipients,
                     child: Text(
                       L10n(context).retry,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(24.0),
-                      side: BorderSide(color: ParentColors.tiara),
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(24.0),
+                        side: BorderSide(color: ParentColors.tiara),
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -349,7 +351,6 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
 
   Widget _recipientsWidget(BuildContext context) {
     return AnimatedSize(
-      vsync: this,
       alignment: Alignment.topLeft,
       curve: Curves.easeInOutBack,
       duration: Duration(milliseconds: 350),
@@ -675,10 +676,10 @@ class AttachmentWidget extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                handler.attachment?.getIcon(),
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              // Icon(
+              //   handler.attachment?.getIcon(),
+              //   color: Theme.of(context).colorScheme.secondary,
+              // ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 11, 12, 0),
                 child: Text(

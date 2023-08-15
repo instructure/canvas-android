@@ -30,7 +30,7 @@ import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 
@@ -56,7 +56,7 @@ class ApiPrefs {
   static Future<void> init() async {
     if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
-    await _migrateToEncryptedPrefs();
+    _migrateToEncryptedPrefs();
   }
 
   static void _migrateToEncryptedPrefs() async {
@@ -170,7 +170,7 @@ class ApiPrefs {
 
   static List<Login> getLogins() {
     _checkInit();
-    return _prefs!.getStringList(KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList().nonNulls.toList() ?? [];
+    return _prefs!.getStringList(KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList().nonNulls.toList();
   }
 
   static setLastAccount(SchoolDomain lastAccount, LoginFlow loginFlow) {
@@ -190,12 +190,12 @@ class ApiPrefs {
     final lastAccount = deserialize<SchoolDomain>(json.decode(accountJson));
     final loginFlow = _prefs!.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[_prefs!.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW)] : LoginFlow.normal;
 
-    return Tuple2(lastAccount, loginFlow);
+    return Tuple2(lastAccount!, loginFlow);
   }
 
   static Future<void> removeLogin(Login login) => removeLoginByUuid(login.uuid);
 
-  static Future<void> removeLoginByUuid(String uuid) async {
+  static Future<void> removeLoginByUuid(String? uuid) async {
     _checkInit();
     var logins = getLogins();
     Login? login = logins.firstWhereOrNull((it) => it.uuid == uuid);
@@ -270,11 +270,11 @@ class ApiPrefs {
 
   /// Prefs
 
-  static String getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
+  static String?getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
 
   static User? getUser() => getCurrentLogin()?.currentUser;
 
-  static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
+  static String getUserAgent() => 'androidParent/${_packageInfo?.version} (${_packageInfo?.buildNumber})';
 
   static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
@@ -300,7 +300,7 @@ class ApiPrefs {
 
   static Future<void> setCameraCount(int count) => _setPrefInt(KEY_CAMERA_COUNT, count);
 
-  static DateTime getRatingNextShowDate() {
+  static DateTime? getRatingNextShowDate() {
     final nextShow = _getPrefString(KEY_RATING_NEXT_SHOW_DATE);
     if (nextShow == null) return null;
     return DateTime.parse(nextShow);
@@ -359,9 +359,7 @@ class ApiPrefs {
 
     var headers = {
       'Authorization': 'Bearer $token',
-      'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
-          .replaceAll('-', ',')
-          .replaceAll('_', '-'),
+      'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())?.replaceAll('-', ',').replaceAll('_', '-') ?? '',
       'User-Agent': getUserAgent(),
     };
 

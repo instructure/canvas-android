@@ -14,7 +14,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
@@ -55,7 +54,7 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
 
   @override
   void initState() {
-    _enableDomainInput = _interactor.getDomain().contains(MasqueradeScreenInteractor.siteAdminDomain);
+    _enableDomainInput = _interactor.getDomain()?.contains(MasqueradeScreenInteractor.siteAdminDomain) ?? false;
 
     // Set up Domain input controller
     _domainController = TextEditingController(text: _enableDomainInput ? null : _interactor.getDomain());
@@ -152,8 +151,10 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
                   Container(
                     width: double.maxFinite,
                     height: 64,
-                    child: RaisedButton(
-                      textColor: Colors.white,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        textStyle: TextStyle(color: Colors.white),
+                      ),
                       child: Text(L10n(context).actAsUser),
                       onPressed: () => _startMasquerading(),
                     ),
@@ -172,7 +173,7 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
         width: double.maxFinite,
         height: 146,
         child: Stack(
-          overflow: Overflow.visible,
+          clipBehavior: Clip.none,
           children: <Widget>[
             Positioned(child: SvgPicture.asset('assets/svg/masquerade-white-panda.svg'), left: 0, right: 0),
             AnimatedPositioned(
@@ -220,7 +221,7 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
       Respawn.of(context)?.restart();
     } else {
       setState(() => _startingMasquerade = false);
-      _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(L10n(context).actAsUserError)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(L10n(context).actAsUserError)));
     }
   }
 }

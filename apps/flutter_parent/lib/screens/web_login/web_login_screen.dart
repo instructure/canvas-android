@@ -14,6 +14,7 @@
 
 import 'dart:async';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
@@ -97,8 +98,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       _verifyFuture = (widget.loginFlow == LoginFlow.skipMobileVerify)
           ? Future.delayed(Duration.zero, () => _SkipVerifyDialog.asDialog(context, widget.domain)).then((result) {
               // Use the result if we have it, otherwise continue on with mobile verify
-              return result ?? _interactor.mobileVerify(widget.domain);
-            })
+              result ?? _interactor.mobileVerify(widget.domain);
+          })
           : _interactor.mobileVerify(widget.domain);
     }
 
@@ -108,7 +109,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         } else {
-          _isMobileVerifyError = snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success);
+          _isMobileVerifyError = snapshot.hasError || (snapshot.hasData && snapshot.data!.result != VerifyResultEnum.success);
           if (_isMobileVerifyError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _showErrorDialog(context, snapshot);
@@ -123,7 +124,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
-    final verifyResult = snapshot.data;
+    final verifyResult = snapshot.data!;
 
     return Stack(
       children: [
@@ -131,9 +132,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             navigationDelegate: (request) =>
                 _navigate(context, request, verifyResult),
             javascriptMode: JavascriptMode.unrestricted,
-            darkMode: ParentTheme
-                .of(context)
-                .isWebViewDarkMode,
+            darkMode: ParentTheme.of(context)?.isWebViewDarkMode,
             userAgent: ApiPrefs.getUserAgent(),
             onPageFinished: (url) => _pageFinished(url, verifyResult),
             onPageStarted: (url) => _showLoadingState(),
@@ -150,8 +149,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     _controller = controller;
 
     // WebView's created, time to load
-    await _buildAuthUrl(verifyResult);
-    await _loadAuthUrl();
+    _buildAuthUrl(verifyResult);
+    _loadAuthUrl();
 
     if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
   }
@@ -299,7 +298,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
           title: Text(L10n(context).unexpectedError),
           content: Text(_getErrorMessage(context, snapshot)),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(L10n(context).ok),
               onPressed: () => Navigator.of(context).pop(),
             ),
@@ -367,11 +366,11 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
       title: Text(L10n(context).skipMobileVerifyTitle), // Non translated string
       content: _content(),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(L10n(context).cancel.toUpperCase()),
           onPressed: () => Navigator.of(context).pop(null),
         ),
-        FlatButton(
+        TextButton(
           child: Text(L10n(context).ok.toUpperCase()),
           onPressed: () => _popWithResult(),
         ),
@@ -399,7 +398,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
         node: _focusScopeNode,
         child: Form(
           key: _formKey,
-          autovalidate: _autoValidate,
+          autovalidateMode: _autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[

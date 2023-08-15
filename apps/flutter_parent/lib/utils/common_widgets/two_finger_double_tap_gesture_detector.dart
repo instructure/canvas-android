@@ -20,10 +20,10 @@ class TwoFingerDoubleTapGestureDetector extends StatelessWidget {
   final VoidCallback onDoubleTap;
   final bool excludeFromSemantics;
 
-  const TwoFingerDoubleTapGestureDetector(
-    this.child,
-    this.onDoubleTap,
-    {this.excludeFromSemantics = false,
+  const TwoFingerDoubleTapGestureDetector({
+    required this.child,
+    required this.onDoubleTap,
+    this.excludeFromSemantics = false,
     super.key,
   });
 

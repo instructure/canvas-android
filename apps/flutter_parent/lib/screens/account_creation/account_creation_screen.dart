@@ -359,7 +359,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   Widget _createAccountButton() {
     return ButtonTheme(
-      child: RaisedButton(
+      child: ElevatedButton(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: _isLoading
@@ -369,9 +369,11 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   style: TextStyle(fontSize: 16),
                 ),
         ),
-        color: Theme.of(context).colorScheme.secondary,
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Theme.of(context).colorScheme.secondary,
+          textStyle: TextStyle(color: Colors.white),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        ),
         onPressed: () {
           if (!_isLoading) _handleCreateAccount();
         },
@@ -434,7 +436,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         if (e is DioException) {
           _handleDioException(e);
         } else {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(L10n(context).unexpectedError)),
           );
         }
@@ -459,7 +461,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     try {
       pairingError = e.response?.data['errors']['pairing_code']['code'][0]['message'];
       if (pairingError.isNotEmpty) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(L10n(context).errorPairingFailed)),
         );
       }
@@ -469,7 +471,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
     if (pairingError.isEmpty && emailError.isEmpty) {
       // Show generic error case
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(L10n(context).errorGenericPairingFailed)),
       );
     }

@@ -214,7 +214,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
     return ListView(
       children: <Widget>[
         AppBar(
-          textTheme: Theme.of(context).textTheme,
+          // titleTextStyle: Theme.of(context).textTheme,
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Column(
@@ -222,7 +222,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text('Inverse AppBar'),
-              Text('Inbox, creating/editing, etc', style: Theme.of(context).textTheme.caption),
+              Text('Inbox, creating/editing, etc', style: Theme.of(context).textTheme.bodySmall),
             ],
           ),
           actions: <Widget>[
@@ -263,11 +263,11 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
-                child: Text('Essay: The Rocky Planet', style: Theme.of(context).textTheme.headline4),
+                child: Text('Essay: The Rocky Planet', style: Theme.of(context).textTheme.headlineMedium),
               ),
               Row(
                 children: [
-                  Text('100 pts', style: Theme.of(context).textTheme.caption),
+                  Text('100 pts', style: Theme.of(context).textTheme.bodySmall),
                   Padding(
                     padding: const EdgeInsets.only(left: 12, right: 4),
                     child: Icon(Icons.check_circle, size: 20, color: ParentTheme.of(context)?.successColor),
@@ -318,7 +318,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         Divider(),
         Padding(
           padding: const EdgeInsets.only(left: 16, top: 16),
-          child: Text('BIO 102', style: Theme.of(context).textTheme.overline),
+          child: Text('BIO 102', style: Theme.of(context).textTheme.labelSmall),
         ),
         ListTile(
           title: Text('ListTile Title'),
@@ -332,15 +332,18 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text('Flat button'),
-              textTheme: ButtonTextTheme.accent,
+              style: TextButton.styleFrom(
+                textStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+              ),
               onPressed: () {},
             ),
-            RaisedButton(
+            ElevatedButton(
               child: Text('Raised Button'),
-              color: Theme.of(context).colorScheme.secondary,
-              colorBrightness: Brightness.dark,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.onSecondary,
+              ),
               onPressed: () {},
             )
           ],
@@ -349,15 +352,18 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text('Flat button (disabled)'),
-              textTheme: ButtonTextTheme.accent,
+              style: TextButton.styleFrom(
+                textStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+              ),
               onPressed: null,
             ),
-            RaisedButton(
+            ElevatedButton(
               child: Text('Raised Button (disabled)'),
-              color: Theme.of(context).colorScheme.secondary,
-              colorBrightness: Brightness.dark,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.onSecondary,
+              ),
               onPressed: null,
             )
           ],

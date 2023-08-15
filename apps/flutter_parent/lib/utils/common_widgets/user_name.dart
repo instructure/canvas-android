@@ -34,7 +34,7 @@ class UserName extends StatelessWidget {
         pronouns = user.pronouns;
 
   UserName.fromBasicUser(BasicUser user, {this.style = null, this.overflow = null})
-      : userName = user.name,
+      : userName = user.name!,
         pronouns = user.pronouns;
 
   UserName.fromRecipient(Recipient recipient, {this.style = null, this.overflow = null})

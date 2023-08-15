@@ -23,6 +23,7 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'help_screen_interactor.dart';
 
@@ -131,7 +132,7 @@ class _HelpScreenState extends State<HelpScreen> {
     final parentId = ApiPrefs.getUser()?.id ?? 0;
     final email = ApiPrefs.getUser()?.primaryEmail ?? '';
     final domain = ApiPrefs.getDomain() ?? '';
-    final locale = ApiPrefs.effectiveLocale().toLanguageTag();
+    final locale = ApiPrefs.effectiveLocale()?.toLanguageTag();
 
     PackageInfo package = await PackageInfo.fromPlatform();
 

@@ -69,7 +69,7 @@ class QuickNav {
     bool barrierDismissible = true,
     required WidgetBuilder builder,
     bool useRootNavigator = true,
-    required RouteSettings routeSettings,
+    RouteSettings? routeSettings,
   }) =>
       Material.showDialog(
         context: context,

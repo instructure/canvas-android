@@ -36,7 +36,7 @@ class CalendarDayPlannerState extends State<CalendarDayPlanner> {
   @override
   Widget build(BuildContext context) {
     return Selector<PlannerFetcher, AsyncSnapshot<List<PlannerItem>>>(
-      selector: (_, fetcher) => fetcher.getSnapshotForDate(widget._day)!,
+      selector: (_, fetcher) => fetcher.getSnapshotForDate(widget._day),
       builder: (_, snapshot, __) {
         Widget body;
         if (snapshot.hasError) {

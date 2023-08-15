@@ -237,7 +237,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
       javascriptMode: JavascriptMode.unrestricted,
       onPageFinished: _handlePageLoaded,
       onWebViewCreated: _handleWebViewCreated,
-      darkMode: ParentTheme.of(context).isWebViewDarkMode,
+      darkMode: ParentTheme.of(context)?.isWebViewDarkMode == true,
       navigationDelegate: _handleNavigation,
       gestureRecognizers: _webViewGestures(),
       javascriptChannels: _webViewChannels(),
@@ -260,7 +260,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   }
 
   void _handleWebViewCreated(WebViewController webViewController) async {
-    webViewController.loadHtml(_content, baseUrl: ApiPrefs.getDomain(), horizontalPadding: widget.horizontalPadding);
+    webViewController.loadHtml(_content, baseUrl: ApiPrefs.getDomain()!, horizontalPadding: widget.horizontalPadding);
     _controller = webViewController;
   }
 

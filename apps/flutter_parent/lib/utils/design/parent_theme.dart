@@ -66,13 +66,13 @@ class _ParentThemeState extends State<ParentTheme> {
 
   StudentColorSet? _studentColorSet;
 
-  late String _selectedStudentId;
+  late String? _selectedStudentId;
 
   Future<void> refreshStudentColor() => setSelectedStudent(_selectedStudentId);
 
   /// Set the id of the selected student, used for updating the student color. Setting this to null
   /// effectively resets the color state.
-  Future<void> setSelectedStudent(String studentId) async {
+  Future<void> setSelectedStudent(String? studentId) async {
     _studentColorSet = null;
     _selectedStudentId = studentId;
 
@@ -81,23 +81,23 @@ class _ParentThemeState extends State<ParentTheme> {
     setState(() {});
   }
 
-  Future<StudentColorSet> getColorsForStudent(String studentId) async {
+  Future<StudentColorSet> getColorsForStudent(String? studentId) async {
     // Get saved color for this user
-    UserColor userColor = await locator<UserColorsDb>().getByContext(
+    UserColor? userColor = await locator<UserColorsDb>().getByContext(
       ApiPrefs.getDomain(),
-      ApiPrefs.getUser().id,
+      ApiPrefs.getUser()?.id,
       'user_$studentId',
     );
 
     StudentColorSet colorSet;
-    if (userColor == null) {
+    if (userColor == null && studentId != null) {
       // No saved color for this user, fall back to existing color sets based on user id
       var numId = studentId.replaceAll(RegExp(r'[^\d]'), '');
       var index = (int.tryParse(numId) ?? studentId.length) % StudentColorSet.all.length;
       colorSet = StudentColorSet.all[index];
     } else {
       // Check if there is a matching color set and prefer that for a better dark/HC mode experience
-      Color color = userColor.color;
+      Color color = userColor!.color;
       colorSet = StudentColorSet.all.firstWhere(
         (colorSet) => colorSet.light == color,
         orElse: () => StudentColorSet(color, color, color, color),
@@ -232,7 +232,7 @@ class _ParentThemeState extends State<ParentTheme> {
   /// Color similar to the surface color but is slightly darker in light mode and slightly lighter in dark mode.
   /// This should be used elements that should be visually distinguishable from the surface color but must also contrast
   /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
-  Color get nearSurfaceColor => isDarkMode ? Colors.grey[850] : ParentColors.porcelain;
+  Color get nearSurfaceColor => isDarkMode ? Colors.grey[850] ?? ParentColors.porcelain : ParentColors.porcelain;
 
   /// The green 'success' color appropriate for the current light/dark/HC mode
   Color get successColor => getColorVariantForCurrentState(StudentColorSet.shamrock);
@@ -244,22 +244,21 @@ class _ParentThemeState extends State<ParentTheme> {
     if (isHC) textTheme = textTheme.apply(displayColor: onSurfaceColor, bodyColor: onSurfaceColor);
 
     var swatch = ParentColors.makeSwatch(themeColor);
+
+    final ThemeData theme = ThemeData();
     return ThemeData(
-      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+      colorScheme: theme.colorScheme.copyWith(
+          brightness: isDarkMode ? Brightness.dark : Brightness.light,
+          secondary: swatch[500],
+      ),
       primarySwatch: swatch,
-      primaryColor: isDarkMode ? Colors.black : null,
-      accentColor: swatch[500],
-      toggleableActiveColor: swatch[500],
-      textSelectionHandleColor: swatch[300],
       scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
+      textSelectionTheme: TextSelectionThemeData(
+        selectionHandleColor: swatch[300],
+      ),
       canvasColor: isDarkMode ? Colors.black : Colors.white,
-      accentColorBrightness: isDarkMode ? Brightness.light : Brightness.dark,
       textTheme: textTheme,
-      primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
-      accentTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
       iconTheme: IconThemeData(color: onSurfaceColor),
-      primaryIconTheme: IconThemeData(color: isDarkMode ? ParentColors.tiara : Colors.white),
-      accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
       dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
       fontFamily: 'Lato'
@@ -272,39 +271,39 @@ class _ParentThemeState extends State<ParentTheme> {
 
       // Comments for each text style represent the nomenclature of the designs we have
       // Caption
-      subtitle2: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.w500),
+      titleSmall: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.w500),
 
       // Subhead
-      overline: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 0),
+      labelSmall: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 0),
 
       // Body
-      bodyText2: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.normal),
+      bodyMedium: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.normal),
 
       // Subtitle
-      caption: TextStyle(color: fadeColor, fontSize: 14, fontWeight: FontWeight.w500),
+      bodySmall: TextStyle(color: fadeColor, fontSize: 14, fontWeight: FontWeight.w500),
 
       // Title
-      subtitle1: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w500),
+      titleMedium: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w500),
 
       // Heading
-      headline5: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w500),
+      headlineSmall: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w500),
 
       // Display
-      headline4: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.w500),
+      headlineMedium: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.w500),
 
       /// Other/unmapped styles
 
-      headline6: TextStyle(color: color),
+      titleLarge: TextStyle(color: color),
 
-      headline1: TextStyle(color: fadeColor),
+      displayLarge: TextStyle(color: fadeColor),
 
-      headline2: TextStyle(color: fadeColor),
+      displayMedium: TextStyle(color: fadeColor),
 
-      headline3: TextStyle(color: fadeColor),
+      displaySmall: TextStyle(color: fadeColor),
 
-      bodyText1: TextStyle(color: color),
+      bodyLarge: TextStyle(color: color),
 
-      button: TextStyle(color: color),
+      labelLarge: TextStyle(color: color),
     );
   }
 }
@@ -326,11 +325,11 @@ class DefaultParentTheme extends StatelessWidget {
   final WidgetBuilder builder;
   final bool useNonPrimaryAppBar;
 
-  const DefaultParentTheme({Key key, @required this.builder, this.useNonPrimaryAppBar = true}) : super(key: key);
+  const DefaultParentTheme({required this.builder, this.useNonPrimaryAppBar = true, super.key});
 
   @override
   Widget build(BuildContext context) {
-    var theme = ParentTheme.of(context).defaultTheme;
+    var theme = ParentTheme.of(context)!.defaultTheme;
     if (useNonPrimaryAppBar) theme = theme.copyWith(appBarTheme: _scaffoldColoredAppBarTheme(context));
 
     return Consumer<ParentThemeStateChangeNotifier>(
@@ -345,8 +344,8 @@ class DefaultParentTheme extends StatelessWidget {
     final theme = Theme.of(context);
     return AppBarTheme(
       color: theme.scaffoldBackgroundColor,
-      toolbarTextStyle: theme.textTheme.bodyText2,
-      titleTextStyle: theme.textTheme.headline6,
+      toolbarTextStyle: theme.textTheme.bodyMedium,
+      titleTextStyle: theme.textTheme.titleLarge,
       iconTheme: theme.iconTheme,
       elevation: 0,
     );

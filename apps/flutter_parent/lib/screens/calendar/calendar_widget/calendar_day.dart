@@ -132,7 +132,7 @@ class CalendarDay extends StatelessWidget {
       height: 4,
       child: _RepeatTween(
         duration: Duration(milliseconds: 350),
-        delay: Duration(milliseconds: 100 * (date.localDayOfWeek)),
+        delay: Duration(milliseconds: 100 * (date.localDayOfWeek!)),
         builder: (BuildContext context, Animation animation) {
           return ScaleTransition(
             scale: animation as Animation<double>,

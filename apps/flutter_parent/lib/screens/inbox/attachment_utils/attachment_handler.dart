@@ -85,10 +85,13 @@ class AttachmentHandler with ChangeNotifier {
         pathProvider.getExternalStorageDirectory(),
       ]);
 
-      var dirPaths = dirs.map((it) => it.absolute.path);
+      var dirPaths = dirs.map((it) => it?.absolute.path);
       var filePath = _file?.absolute.path;
 
-      if (dirPaths.any((it) => filePath?.startsWith(it) == true)) {
+      if (dirPaths.any((it) {
+        if (it == null) return false;
+          return (filePath?.startsWith(it) == true);
+      })) {
         await _file?.delete();
       }
     } on Error catch (e) {

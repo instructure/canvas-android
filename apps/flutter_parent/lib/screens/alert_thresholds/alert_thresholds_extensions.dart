@@ -60,7 +60,7 @@ extension GetThresholdFromType on List<AlertThreshold?>? {
 }
 
 extension GetThresholdMinMax on AlertType {
-  List<String> getMinMax(List<AlertThreshold> thresholds) {
+  List<String> getMinMax(List<AlertThreshold?>? thresholds) {
     String max = '';
     String min = '';
 

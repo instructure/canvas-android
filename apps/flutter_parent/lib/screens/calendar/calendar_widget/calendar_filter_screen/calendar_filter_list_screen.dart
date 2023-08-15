@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
@@ -100,7 +99,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
               selectedContextIds.addAll(tempList);
               selectAllIfEmpty = false;
             }
-            _body = (_courses == null || _courses.isEmpty)
+            _body = (_courses.isEmpty)
                 ? EmptyPandaWidget(
                     svgPath: 'assets/svg/panda-book.svg',
                     title: L10n(context).noCoursesTitle,
@@ -147,8 +146,8 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                     } else {
                       if (selectedContextIds.length == 1) {
                         // The list cannot be empty, the calendar wouldn't do anything!
-                        _scaffoldKey.currentState?.removeCurrentSnackBar();
-                        _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(L10n(context).minimumCalendarsError)));
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(L10n(context).minimumCalendarsError)));
                       } else {
                         selectedContextIds.remove(c.contextFilterId());
                       }
@@ -206,7 +205,7 @@ class LabeledCheckbox extends StatelessWidget {
               },
             ),
             SizedBox(width: 21.0),
-            Expanded(child: Text(label, style: Theme.of(context).textTheme.subtitle1)),
+            Expanded(child: Text(label, style: Theme.of(context).textTheme.titleMedium)),
           ],
         ),
       ),

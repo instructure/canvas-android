@@ -40,37 +40,39 @@ class EmptyPandaWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FullScreenScrollContainer(
-      <Widget>[
+      children: <Widget>[
         if (svgPath != null) SvgPicture.asset(svgPath!, excludeFromSemantics: true),
         if (svgPath != null && (title != null || subtitle != null)) SizedBox(height: 64),
         if (title != null)
           Text(
             title!,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 20, fontWeight: FontWeight.normal),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 20, fontWeight: FontWeight.normal),
           ),
         if (title != null && subtitle != null) SizedBox(height: 8),
         if (subtitle != null)
           Text(
             subtitle!,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.normal),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.normal),
           ),
         if (buttonText != null)
           Padding(
             padding: const EdgeInsets.only(top: 48),
-            child: FlatButton(
+            child: TextButton(
               onPressed: onButtonTap,
               child: Text(
                 buttonText!,
-                style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(4),
-                side: BorderSide(color: ParentColors.tiara),
-              ),
+              style: TextButton.styleFrom(
+                shape:RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4),
+                  side: BorderSide(color: ParentColors.tiara),
+                ),
             ),
           ),
+        ),
       ],
       header: header,
     );

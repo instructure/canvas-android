@@ -52,7 +52,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var _selectedStudent = Provider.of<SelectedStudentNotifier>(context, listen: true).value;
+    var _selectedStudent = Provider.of<SelectedStudentNotifier>(context, listen: true).value!;
     if (_alertsFuture == null) {
       // First time
       _student = _selectedStudent;
@@ -156,11 +156,11 @@ class __AlertsListState extends State<_AlertsList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 16),
-                Text(_alertTitle(context, alert), style: textTheme.subtitle2?.copyWith(color: alertColor)),
+                Text(_alertTitle(context, alert), style: textTheme.titleSmall?.copyWith(color: alertColor)),
                 SizedBox(height: 4),
-                Text(alert.title, style: textTheme.subtitle1),
+                Text(alert.title, style: textTheme.titleMedium),
                 SizedBox(height: 4),
-                Text(_formatDate(context, alert.actionDate!), style: textTheme.subtitle2),
+                Text(_formatDate(context, alert.actionDate!) ?? '', style: textTheme.titleSmall),
                 SizedBox(height: 12),
               ],
             ),
@@ -252,7 +252,7 @@ class __AlertsListState extends State<_AlertsList> {
     return title;
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
+  String? _formatDate(BuildContext context, DateTime date) {
     return date.l10nFormat(L10n(context).dateAtTime);
   }
 

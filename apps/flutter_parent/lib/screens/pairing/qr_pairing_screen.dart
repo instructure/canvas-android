@@ -110,10 +110,12 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
     return ButtonTheme(
       textTheme: Theme.of(context).buttonTheme.textTheme,
       minWidth: 48,
-      child: FlatButton(
-        visualDensity: VisualDensity.compact,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          visualDensity: VisualDensity.compact,
+          shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+        ),
         child: Text(L10n(context).next.toUpperCase()),
-        shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
         onPressed: () async {
           QRPairingScanResult result = await _interactor.scanQRCode();
           _handleScanResult(result);

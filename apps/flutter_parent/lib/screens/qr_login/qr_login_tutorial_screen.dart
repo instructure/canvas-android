@@ -108,7 +108,7 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
   }
 
   _showSnackBarError(BuildContext context, String error) {
-    _scaffoldKey.currentState?.removeCurrentSnackBar();
-    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(error)));
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
   }
 }

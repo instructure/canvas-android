@@ -35,7 +35,7 @@ class InboxApi {
   Future<UnreadCount> getUnreadCount() => fetch(canvasDio(forceRefresh: true).get('conversations/unread_count'));
 
   Future<Conversation> addMessage(
-    String conversationId,
+    String? conversationId,
     String body,
     List<String> recipientIds,
     List<String> attachmentIds,

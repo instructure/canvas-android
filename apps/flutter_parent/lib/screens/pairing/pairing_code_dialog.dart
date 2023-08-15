@@ -67,7 +67,7 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                 key: _formKey,
                 autofocus: true,
                 autocorrect: false,
-                autovalidate: false,
+                autovalidateMode: AutovalidateMode.disabled,
                 initialValue: widget._pairingCode,
                 onChanged: (value) {
                   _showPairingCodeError(false);
@@ -115,9 +115,9 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
-            disabledTextColor: ParentColors.parentApp.withAlpha(100),
+          TextButton(
             child: Text(L10n(context).cancel.toUpperCase()),
+            style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(100)),
             onPressed: _makingApiCall
                 ? null
                 : () {
@@ -125,8 +125,8 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                     Navigator.of(context).pop(false);
                   },
           ),
-          FlatButton(
-            disabledTextColor: ParentColors.parentApp.withAlpha(100),
+          TextButton(
+            style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(100)),
             child: Text(L10n(context).ok),
             onPressed: _makingApiCall
                 ? null

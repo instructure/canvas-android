@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class CrashScreen extends StatelessWidget {
   final FlutterErrorDetails error;
@@ -69,15 +71,17 @@ class CrashScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  FlatButton(
+                  TextButton(
                     onPressed: () => ErrorReportDialog.asDialog(context, error: error),
                     child: Text(
                       L10n(context).crashScreenContact,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(4),
-                      side: BorderSide(color: ParentColors.tiara),
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(4),
+                        side: BorderSide(color: ParentColors.tiara),
+                      ),
                     ),
                   ),
                 ],
@@ -94,21 +98,21 @@ class CrashScreen extends StatelessWidget {
       future: Future.wait([PackageInfo.fromPlatform(), DeviceInfoPlugin().androidInfo]),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
-        PackageInfo packageInfo = snapshot.data[0];
-        AndroidDeviceInfo deviceInfo = snapshot.data[1];
-        return FlatButton(
+        PackageInfo packageInfo = snapshot.data![0] as PackageInfo;
+        AndroidDeviceInfo deviceInfo = snapshot.data![1] as AndroidDeviceInfo;
+        return TextButton(
           onPressed: () => _showDetailsDialog(context, packageInfo, deviceInfo),
           child: Text(
             L10n(context).crashScreenViewDetails,
-            style: Theme.of(context).textTheme.subtitle2,
+            style: Theme.of(context).textTheme.titleSmall,
           ),
         );
       },
     );
   }
 
-  FlatButton _restartButton(BuildContext context) {
-    return FlatButton(
+  TextButton _restartButton(BuildContext context) {
+    return TextButton(
       onPressed: () => Respawn.of(context)?.restart(),
       child: Text(
         L10n(context).crashScreenRestart,
@@ -173,7 +177,7 @@ class CrashScreen extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(L10n(context).done),
             onPressed: () => Navigator.of(context).pop(),
           ),

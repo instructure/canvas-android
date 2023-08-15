@@ -144,14 +144,14 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   static DateTime _dayForIndex(int index) {
     final today = DateTime.now();
     final diff = index - _todayDayIndex;
-    return DateTime(today.year, today.month, today.day).add(Duration(days: diff)).roundToMidnight();
+    return DateTime(today.year, today.month, today.day).add(Duration(days: diff)).roundToMidnight()!;
   }
 
   // Returns the DateTime that represents the first day of the week associated with the specified week pager index
   static DateTime _weekStartForIndex(int index) {
     final today = DateTime.now();
     int weekOffset = index - _todayWeekIndex;
-    return DateTime(today.year, today.month, today.day + (weekOffset * 7)).withFirstDayOfWeek();
+    return DateTime(today.year, today.month, today.day + (weekOffset * 7)).withFirstDayOfWeek()!;
   }
 
   // Returns the year and month associated with the specified month pager index
@@ -179,7 +179,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   static int _weekIndexForDay(DateTime day) {
     final weekStart = day.withFirstDayOfWeek();
     final thisWeekStart = DateTime.now().withFirstDayOfWeek();
-    double weeksDiff = thisWeekStart.difference(weekStart).inDays / 7;
+    double weeksDiff = thisWeekStart!.difference(weekStart!).inDays / 7;
     return _todayWeekIndex - weeksDiff.round();
   }
 

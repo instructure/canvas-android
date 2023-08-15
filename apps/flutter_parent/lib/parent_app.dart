@@ -42,7 +42,7 @@ class ParentApp extends StatefulWidget {
 }
 
 class _ParentAppState extends State<ParentApp> {
-  late Locale _locale;
+  late Locale? _locale;
   GlobalKey<NavigatorState> _navKey = GlobalKey();
 
   rebuild(locale) {
@@ -89,10 +89,10 @@ class _ParentAppState extends State<ParentApp> {
   // Get notified when there's a new system locale so we can rebuild the app with the new language
   LocaleResolutionCallback _localeCallback() => (locale, supportedLocales) {
         // If there is no user locale, they want the system locale. If there is a user locale, we should use it over the system locale
-        Locale newLocale = ApiPrefs.getUser().locale == null ? locale! : _locale;
+        Locale newLocale = ApiPrefs.getUser()?.locale == null ? locale! : _locale!;
 
         const fallback = Locale('en');
-        Locale resolvedLocale =
+        Locale? resolvedLocale =
             AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(newLocale, supportedLocales);
 
         // Update the state if the locale changed

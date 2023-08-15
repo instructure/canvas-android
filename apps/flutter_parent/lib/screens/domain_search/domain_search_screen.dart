@@ -15,7 +15,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
@@ -206,10 +205,12 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             ),
             if (_schoolDomains.isNotEmpty) Divider(height: 0),
             Center(
-              child: FlatButton(
+              child: TextButton(
                 key: Key('help-button'),
                 child: Text(L10n(context).domainSearchHelpLabel),
-                textTheme: ButtonTextTheme.accent,
+                style: TextButton.styleFrom(
+                  textStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                ),
                 onPressed: () {
                   _showHelpDialog(context);
                 },
@@ -251,7 +252,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
               key: DomainSearchScreen.helpDialogBodyKey,
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(L10n(context).ok),
                 onPressed: () => Navigator.of(context).pop(),
               ),

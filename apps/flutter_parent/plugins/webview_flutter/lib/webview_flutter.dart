@@ -33,7 +33,7 @@ class JavascriptMessage {
   /// Constructs a JavaScript message object.
   ///
   /// The `message` parameter must not be null.
-  const JavascriptMessage(this.message) : assert(message != null);
+  const JavascriptMessage(this.message);
 
   /// The contents of the message that was sent by the JavaScript code.
   final String message;
@@ -401,7 +401,7 @@ class _WebViewState extends State<WebView> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
-  _PlatformCallbacksHandler _platformCallbacksHandler;
+  late _PlatformCallbacksHandler _platformCallbacksHandler;
 
   @override
   Widget build(BuildContext context) {
@@ -436,17 +436,17 @@ class _WebViewState extends State<WebView> {
         WebViewController._(widget, webViewPlatform, _platformCallbacksHandler);
     _controller.complete(controller);
     if (widget.onWebViewCreated != null) {
-      widget.onWebViewCreated(controller);
+      widget.onWebViewCreated!(controller);
     }
   }
 
   void _assertJavascriptChannelNamesAreUnique() {
     if (widget.javascriptChannels == null ||
-        widget.javascriptChannels.isEmpty) {
+        widget.javascriptChannels!.isEmpty) {
       return;
     }
-    assert(_extractChannelNames(widget.javascriptChannels).length ==
-        widget.javascriptChannels.length);
+    assert(_extractChannelNames(widget.javascriptChannels)?.length ==
+        widget.javascriptChannels!.length);
   }
 }
 
@@ -467,7 +467,7 @@ WebSettings _webSettingsFromWidget(WebView widget) {
     darkMode: widget.darkMode,
     debuggingEnabled: widget.debuggingEnabled,
     gestureNavigationEnabled: widget.gestureNavigationEnabled,
-    userAgent: WebSetting<String>.of(widget.userAgent),
+    userAgent: WebSetting<String>.of(widget.userAgent!),
   );
 }
 
@@ -485,10 +485,10 @@ WebSettings _clearUnchangedWebSettings(
   assert(newValue.debuggingEnabled != null);
   assert(newValue.userAgent.isPresent);
 
-  JavascriptMode javascriptMode;
-  bool hasNavigationDelegate;
-  bool darkMode;
-  bool debuggingEnabled;
+  JavascriptMode? javascriptMode;
+  bool? hasNavigationDelegate;
+  bool? darkMode;
+  bool? debuggingEnabled;
   WebSetting<String> userAgent = WebSetting<String>.absent();
   if (currentValue.javascriptMode != newValue.javascriptMode) {
     javascriptMode = newValue.javascriptMode;
@@ -515,7 +515,7 @@ WebSettings _clearUnchangedWebSettings(
   );
 }
 
-Set<String> _extractChannelNames(Set<JavascriptChannel> channels) {
+Set<String>? _extractChannelNames(Set<JavascriptChannel>? channels) {
   final Set<String> channelNames = channels == null
       ? <String>{}
       : channels.map((JavascriptChannel channel) => channel.name).toSet();
@@ -535,15 +535,15 @@ class _PlatformCallbacksHandler implements WebViewPlatformCallbacksHandler {
 
   @override
   void onJavaScriptChannelMessage(String channel, String message) {
-    _javascriptChannels[channel].onMessageReceived(JavascriptMessage(message));
+    _javascriptChannels[channel]?.onMessageReceived(JavascriptMessage(message));
   }
 
   @override
-  FutureOr<bool> onNavigationRequest({String url, bool isForMainFrame}) async {
+  FutureOr<bool> onNavigationRequest({String? url, bool? isForMainFrame}) async {
     final NavigationRequest request =
-        NavigationRequest._(url: url, isForMainFrame: isForMainFrame);
+        NavigationRequest._(url: url!, isForMainFrame: isForMainFrame!);
     final bool allowNavigation = _widget.navigationDelegate == null ||
-        await _widget.navigationDelegate(request) ==
+        await _widget.navigationDelegate!(request) ==
             NavigationDecision.navigate;
     return allowNavigation;
   }
@@ -551,25 +551,25 @@ class _PlatformCallbacksHandler implements WebViewPlatformCallbacksHandler {
   @override
   void onPageStarted(String url) {
     if (_widget.onPageStarted != null) {
-      _widget.onPageStarted(url);
+      _widget.onPageStarted!(url);
     }
   }
 
   @override
   void onPageFinished(String url) {
     if (_widget.onPageFinished != null) {
-      _widget.onPageFinished(url);
+      _widget.onPageFinished!(url);
     }
   }
 
   @override
   void onWebResourceError(WebResourceError error) {
     if (_widget.onWebResourceError != null) {
-      _widget.onWebResourceError(error);
+      _widget.onWebResourceError!(error);
     }
   }
 
-  void _updateJavascriptChannelsFromSet(Set<JavascriptChannel> channels) {
+  void _updateJavascriptChannelsFromSet(Set<JavascriptChannel>? channels) {
     _javascriptChannels.clear();
     if (channels == null) {
       return;
@@ -589,7 +589,7 @@ class WebViewController {
     this._widget,
     this._webViewPlatformController,
     this._platformCallbacksHandler,
-  ) : assert(_webViewPlatformController != null) {
+  ) {
     _settings = _webSettingsFromWidget(_widget);
   }
 
@@ -597,7 +597,7 @@ class WebViewController {
 
   final _PlatformCallbacksHandler _platformCallbacksHandler;
 
-  WebSettings _settings;
+  late WebSettings _settings;
 
   WebView _widget;
 
@@ -611,15 +611,14 @@ class WebViewController {
   /// Throws an ArgumentError if `url` is not a valid URL string.
   Future<void> loadUrl(
     String url, {
-    Map<String, String> headers,
+    Map<String, String>? headers,
   }) async {
-    assert(url != null);
     _validateUrlString(url);
     return _webViewPlatformController.loadUrl(url, headers);
   }
 
   Future<void> loadData(
-    String baseUrl,
+    String? baseUrl,
     String data,
     String mimeType,
     String encoding) async {
@@ -709,10 +708,10 @@ class WebViewController {
   }
 
   Future<void> _updateJavascriptChannels(
-      Set<JavascriptChannel> newChannels) async {
+      Set<JavascriptChannel>? newChannels) async {
     final Set<String> currentChannels =
         _platformCallbacksHandler._javascriptChannels.keys.toSet();
-    final Set<String> newChannelNames = _extractChannelNames(newChannels);
+    final Set<String> newChannelNames = _extractChannelNames(newChannels)!;
     final Set<String> channelsToAdd =
         newChannelNames.difference(currentChannels);
     final Set<String> channelsToRemove =
@@ -743,7 +742,7 @@ class WebViewController {
   /// When evaluating Javascript in a [WebView], it is best practice to wait for
   /// the [WebView.onPageFinished] callback. This guarantees all the Javascript
   /// embedded in the main frame HTML has been loaded.
-  Future<String> evaluateJavascript(String javascriptString) {
+  Future<String?> evaluateJavascript(String? javascriptString) {
     if (_settings.javascriptMode == JavascriptMode.disabled) {
       return Future<String>.error(FlutterError(
           'JavaScript mode must be enabled/unrestricted when calling evaluateJavascript.'));
@@ -801,7 +800,7 @@ class CookieManager {
 
   CookieManager._();
 
-  static CookieManager _instance;
+  static CookieManager? _instance;
 
   /// Clears all cookies for all [WebView] instances.
   ///

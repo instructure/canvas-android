@@ -161,7 +161,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
           itemCount: conversation.messages?.length ?? 0,
           separatorBuilder: (context, index) => SizedBox(height: 12),
           itemBuilder: (context, index) {
-            var message = conversation.messages[index];
+            var message = conversation.messages![index];
             return _message(context, conversation, message, index);
           },
         ),
@@ -177,35 +177,26 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
       },
       child: Slidable(
         key: Key('message-${message.id}'),
-        actionPane: SlidableDrawerActionPane(),
-        secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: L10n(context).replyAll,
-            color: ParentTheme.of(context)?.isDarkMode == true ? ParentColors.tiara : ParentColors.oxford,
-            foregroundColor: Theme.of(context).colorScheme.secondary,
-            iconWidget: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Icon(
-                CanvasIconsSolid.reply_all_2,
-                color: Theme.of(context).colorScheme.secondary,
+        endActionPane: ActionPane(
+            motion: const DrawerMotion(),
+            extentRatio: 0.25,
+            children: [
+              SlidableAction(
+                label: L10n(context).replyAll,
+                backgroundColor: ParentTheme.of(context)?.isDarkMode == true ? ParentColors.tiara : ParentColors.oxford,
+                foregroundColor: Theme.of(context).colorScheme.secondary,
+                icon: CanvasIconsSolid.reply_all_2,
+                onPressed: (context) => _reply(context, conversation, message, true),
               ),
-            ),
-            onTap: () => _reply(context, conversation, message, true),
-          ),
-          IconSlideAction(
-            caption: L10n(context).reply,
-            color: Theme.of(context).colorScheme.secondary,
-            foregroundColor: Theme.of(context).colorScheme.secondary,
-            iconWidget: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Icon(
-                CanvasIconsSolid.reply,
-                color: Theme.of(context).colorScheme.secondary
+              SlidableAction(
+                label: L10n(context).reply,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: Theme.of(context).colorScheme.secondary,
+                icon: CanvasIconsSolid.reply,
+                onPressed: (context) => _reply(context, conversation, message, false),
               ),
-            ),
-            onTap: () => _reply(context, conversation, message, false),
-          ),
-        ],
+            ],
+        ),
         child: MessageWidget(
           conversation: conversation,
           message: message,

@@ -95,12 +95,12 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
       children: <Widget>[
         Text(
           announcementViewState.announcementTitle,
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         SizedBox(height: 4),
         Text(
-          announcementViewState.postedAt.l10nFormat(L10n(context).dateAtTime),
-          style: Theme.of(context).textTheme.caption,
+          announcementViewState.postedAt.l10nFormat(L10n(context).dateAtTime) ?? '',
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         SizedBox(height: 16),
         Divider(),

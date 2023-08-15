@@ -29,7 +29,7 @@ class UserApi {
     return fetch(dio.get('users/$userId/profile'));
   }
 
-  Future<UserPermission> getSelfPermissions() =>
+  Future<UserPermission?> getSelfPermissions() =>
       fetch<User>(canvasDio(forceRefresh: true).get('users/self')).then((user) => user.permissions!);
 
   Future<UserColors> getUserColors({bool refresh = false}) async {
