@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
@@ -35,23 +36,20 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
-import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
-import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.containsString
 
-class DiscussionListPage : BasePage(R.id.discussionListPage), SearchablePage {
+class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discussionListPage) {
 
     private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
     private val announcementsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
@@ -150,20 +148,6 @@ class DiscussionListPage : BasePage(R.id.discussionListPage), SearchablePage {
         createNewDiscussion.click()
         onView(withContentDescription("Close")).click()
     }
-
-    override fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    override fun typeToSearchBar(textToType: String) {
-        waitForViewWithId(R.id.search_src_text).replaceText(textToType)
-    }
-
-    override fun clickOnClearSearchButton() {
-        onView(withId(R.id.search_close_btn)).click()
-    }
-
-    override fun pressSearchBackButton() = Unit
 
     fun verifyExitWithoutSavingDialog() {
         onView(withText(R.string.exitWithoutSavingMessage)).check(matches(isDisplayed()))

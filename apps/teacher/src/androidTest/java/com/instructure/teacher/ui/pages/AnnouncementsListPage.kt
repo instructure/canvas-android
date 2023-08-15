@@ -17,14 +17,13 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -32,7 +31,6 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
@@ -41,7 +39,6 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.interfaces.SearchablePage
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
 /**
@@ -49,13 +46,11 @@ import com.instructure.teacher.ui.utils.TypeInRCETextEditor
  *
  * @constructor Create empty Announcements list page
  */
-class AnnouncementsListPage : BasePage(), SearchablePage {
+class AnnouncementsListPage(val searchable: Searchable) : BasePage() {
 
     private val announcementListToolbar by OnViewWithId(R.id.discussionListToolbar)
     private val announcementsFAB by OnViewWithId(R.id.createNewDiscussion)
     private val announcementsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
-    private val searchButton by OnViewWithId(R.id.search)
-    private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
     private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
 
     /**
@@ -189,37 +184,6 @@ class AnnouncementsListPage : BasePage(), SearchablePage {
     fun acceptExitWithoutSaveDialog() {
         onViewWithText(R.string.exitUnsaved).click()
     }
-
-    /**
-     * Click search button.
-     *
-     */
-    override fun clickOnSearchButton() {
-        searchButton.click()
-    }
-
-    /**
-     * Type the given search text into the search input field.
-     *
-     * @param searchText: The search text query parameter.
-     */
-    override fun typeToSearchBar(searchText: String) {
-        searchInput.perform(ViewActions.replaceText(searchText))
-    }
-
-    /**
-     * Click reset search text.
-     *
-     */
-    override fun clickOnClearSearchButton() {
-        waitForView(withId(R.id.search_close_btn)).click()
-    }
-
-    /**
-     * Click on back button on the search bar.
-     * NOT IMPLEMENTED YET
-     */
-    override fun pressSearchBackButton() = Unit
 
     /**
      * Assert search result count is equals to the expected.

@@ -16,14 +16,13 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -39,18 +38,15 @@ import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.interfaces.SearchablePage
 
 /**
  * Represents the Discussions List page.
  */
-class DiscussionsListPage : BasePage(), SearchablePage {
+class DiscussionsListPage(val searchable: Searchable) : BasePage() {
 
     private val discussionListToolbar by OnViewWithId(R.id.discussionListToolbar)
     private val discussionsFAB by OnViewWithId(R.id.createNewDiscussion)
     private val discussionsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
-    private val searchButton by OnViewWithId(R.id.search)
-    private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
 
     /**
      * Clicks on the specified [discussion] in the discussions list.
@@ -111,22 +107,6 @@ class DiscussionsListPage : BasePage(), SearchablePage {
      */
     fun assertHasDiscussion(discussion: DiscussionTopicHeader) {
         waitForViewWithText(discussion.title!!).assertDisplayed()
-    }
-
-    /**
-     * Opens the search functionality in the discussions list.
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters the specified [query] into the search input field.
-     *
-     * @param query The search query to be entered.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
     }
 
     /**
@@ -214,34 +194,4 @@ class DiscussionsListPage : BasePage(), SearchablePage {
         waitForView(withId(R.id.discussionTitle) + withText(discussionTitle) +
                 withAncestor(withId(R.id.discussionRecyclerView) + withDescendant(groupChildMatcher))).assertDisplayed()
     }
-
-    /**
-     * Opens the search functionality in the discussions list.
-     */
-    override fun clickOnSearchButton() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters the specified [textToType] into the search input field.
-     *
-     * @param textToType The search query to be entered.
-     */
-    override fun typeToSearchBar(textToType: String) {
-        searchInput.perform(ViewActions.replaceText(textToType))
-    }
-
-    /**
-     * Click reset search text.
-     *
-     */
-    override fun clickOnClearSearchButton() {
-        waitForView(withId(R.id.search_close_btn)).click()
-    }
-
-    /**
-     * Click on back button on the search bar.
-     * NOT IMPLEMENTED YET
-     */
-    override fun pressSearchBackButton() = Unit
 }

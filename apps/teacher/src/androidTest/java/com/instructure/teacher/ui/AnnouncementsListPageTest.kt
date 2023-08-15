@@ -76,8 +76,8 @@ class AnnouncementsListPageTest : TeacherTest() {
         val searchAnnouncement = announcements[2]
 
         announcementsListPage.assertAnnouncementCount(announcements.size + 1) // +1 to account for header
-        announcementsListPage.clickOnSearchButton()
-        announcementsListPage.typeToSearchBar(searchAnnouncement.title!!.take(searchAnnouncement.title!!.length / 2))
+        announcementsListPage.searchable.clickOnSearchButton()
+        announcementsListPage.searchable.typeToSearchBar(searchAnnouncement.title!!.take(searchAnnouncement.title!!.length / 2))
         announcementsListPage.assertSearchResultCount(1)
         announcementsListPage.assertHasAnnouncement(searchAnnouncement)
     }

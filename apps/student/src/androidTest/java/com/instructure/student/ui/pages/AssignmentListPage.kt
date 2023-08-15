@@ -29,6 +29,7 @@ import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.WaitForViewWithText
 import com.instructure.espresso.assertDisplayed
@@ -38,23 +39,20 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
-import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
-import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 
-class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage), SearchablePage {
+class AssignmentListPage(val searchable: Searchable) : BasePage(pageResId = R.id.assignmentListPage) {
 
     private val assignmentListToolbar by OnViewWithId(R.id.toolbar)
     private val gradingPeriodHeader by WaitForViewWithId(R.id.termSpinnerLayout)
@@ -90,17 +88,6 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage), Search
 
     fun assertHasAssignment(assignment: Assignment, expectedGrade: String? = null) {
         assertHasAssignmentCommon(assignment.name!!, assignment.dueAt, expectedGrade)
-    }
-
-    override fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    override fun clickOnClearSearchButton() = Unit
-    override fun pressSearchBackButton() = Unit
-
-    override fun typeToSearchBar(textToType: String) {
-        waitForViewWithId(R.id.search_src_text).replaceText(textToType)
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {

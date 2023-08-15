@@ -28,6 +28,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.clearText
@@ -39,16 +40,14 @@ import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
-import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import org.hamcrest.Matchers.allOf
 
 // Tests that files submitted for submissions, submission comments and discussions are
 // properly displayed.
-class FileListPage : BasePage(R.id.fileListPage), SearchablePage {
+class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
 
     private val addButton by OnViewWithId(R.id.addFab)
     private val uploadFileButton by OnViewWithId(R.id.addFileFab, autoAssert = false)
@@ -123,23 +122,6 @@ class FileListPage : BasePage(R.id.fileListPage), SearchablePage {
         // Weird to have "displayed" as the filter and the check, but it's the only way
         // to distinguish from other emptyViews in the stack.
         onView(allOf(withId(R.id.emptyView), isDisplayed())).assertDisplayed()
-    }
-
-    override fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    override fun typeToSearchBar(textToType: String) {
-        onView(withId(R.id.queryInput)).replaceText(textToType)
-    }
-
-    override fun clickOnClearSearchButton() {
-        waitForView(withId(R.id.clearButton)).click()
-        onView(withId(R.id.backButton)).click()
-    }
-
-    override fun pressSearchBackButton() {
-        onView(withId(R.id.backButton)).click()
     }
 
     fun assertSearchResultCount(expectedCount: Int) {

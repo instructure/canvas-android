@@ -23,6 +23,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -33,9 +34,7 @@ import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
-import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.interfaces.SearchablePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
@@ -46,7 +45,7 @@ import org.hamcrest.Matchers
  * It contains methods for clicking on a person, asserting the presence of a person in the list with optional role filtering, asserting the search result count,
  * scrolling to a specific person, performing search actions, and asserting the visibility of the empty view and person role.
  */
-class PeopleListPage : BasePage(R.id.peopleListPage), SearchablePage {
+class PeopleListPage(val searchable: Searchable) : BasePage(R.id.peopleListPage) {
 
     /**
      * Clicks on a person in the list.
@@ -139,33 +138,4 @@ class PeopleListPage : BasePage(R.id.peopleListPage), SearchablePage {
         STUDENT("Student"),
         OBSERVER("Observer")
     }
-
-    /**
-     * Clicks the search button.
-     */
-    override fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    /**
-     * Enters the search text.
-     *
-     * @param textToType The text to enter in the search input.
-     */
-    override fun typeToSearchBar(textToType: String) {
-        onView(withId(R.id.search_src_text)).replaceText(textToType)
-    }
-
-    /**
-     * Clicks the reset search text button.
-     */
-    override fun clickOnClearSearchButton() {
-        waitForView(withId(R.id.search_close_btn)).click()
-    }
-
-    /**
-     * Click on back button on the search bar.
-     * NOT IMPLEMENTED YET
-     */
-    override fun pressSearchBackButton() = Unit
 }

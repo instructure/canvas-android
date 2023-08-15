@@ -147,15 +147,15 @@ class PagesE2ETest : TeacherTest() {
         pageListPage.assertPageIsPublished(newPageTitle)
 
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created page's title.")
-        pageListPage.clickOnSearchButton()
-        pageListPage.typeToSearchBar("Test")
+        pageListPage.searchable.clickOnSearchButton()
+        pageListPage.searchable.typeToSearchBar("Test")
 
         Log.d(STEP_TAG,"Assert that the '$newPageTitle' titled page is displayed and it is the only one.")
         pageListPage.assertPageIsPublished(newPageTitle)
         pageListPage.assertPageCount(1)
 
         Log.d(STEP_TAG, "Click on the clear search input button (X) on the toolbar. Assert that the default state, so all the 4 pages will be displayed.")
-        pageListPage.clickOnClearSearchButton()
+        pageListPage.searchable.clickOnClearSearchButton()
         pageListPage.assertPageCount(4)
     }
 

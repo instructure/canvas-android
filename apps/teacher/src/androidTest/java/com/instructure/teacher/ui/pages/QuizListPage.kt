@@ -16,23 +16,20 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.action.ViewActions
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.replaceText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.interfaces.SearchablePage
 
 /**
  * Represents the Quiz List Page.
@@ -42,7 +39,7 @@ import com.instructure.teacher.ui.interfaces.SearchablePage
  * Additionally, it provides methods for asserting the display of the "No Quizzes" view, checking the presence of a quiz, clicking on a quiz, opening the search bar, entering a search query,
  * asserting the quiz count, and refreshing the page.
  */
-class QuizListPage : BasePage(), SearchablePage {
+class QuizListPage(val searchable: Searchable) : BasePage() {
 
     /**
      * The quiz list toolbar view on the page.
@@ -104,22 +101,6 @@ class QuizListPage : BasePage(), SearchablePage {
     }
 
     /**
-     * Opens the search bar.
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters a search query in the search input.
-     *
-     * @param query The search query to be entered.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
-    }
-
-    /**
      * Asserts the count of quizzes on the page.
      *
      * @param count The expected count of quizzes.
@@ -133,37 +114,6 @@ class QuizListPage : BasePage(), SearchablePage {
      */
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout)).swipeDown()
-    }
-
-    /**
-     * Clicks the search button.
-     */
-    override fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    /**
-     * Types the specified search text into the search input field.
-     *
-     * @param textToType The text to be typed in the search input field.
-     */
-    override fun typeToSearchBar(textToType: String) {
-        onView(withId(R.id.queryInput)).replaceText(textToType)
-    }
-
-    /**
-     * Clicks the reset search text button.
-     */
-    override fun clickOnClearSearchButton() {
-        waitForView(withId(R.id.clearButton)).click()
-        onView(withId(R.id.backButton)).click()
-    }
-
-    /**
-     * Presses the back button in the search view.
-     */
-    override fun pressSearchBackButton() {
-        onView(withId(R.id.backButton)).click()
     }
 }
 

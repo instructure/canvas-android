@@ -42,7 +42,6 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
-import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
@@ -53,7 +52,7 @@ import org.hamcrest.Matchers.containsString
 import org.junit.Test
 
 @HiltAndroidTest
-class QuizzesE2ETest: StudentTest(), SearchablePage {
+class QuizzesE2ETest: StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -250,11 +249,4 @@ class QuizzesE2ETest: StudentTest(), SearchablePage {
     //                )
     )
 
-    override fun clickOnSearchButton() = Unit
-
-    override fun typeToSearchBar(textToType: String) = Unit
-
-    override fun clickOnClearSearchButton() = Unit
-
-    override fun pressSearchBackButton() = Unit
 }

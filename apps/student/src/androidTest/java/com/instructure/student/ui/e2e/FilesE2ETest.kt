@@ -185,14 +185,14 @@ class FilesE2ETest: StudentTest() {
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${discussionAttachmentFile.name}', the file's name to the search input field.")
-        fileListPage.clickOnSearchButton()
-        fileListPage.typeToSearchBar(discussionAttachmentFile.name)
+        fileListPage.searchable.clickOnSearchButton()
+        fileListPage.searchable.typeToSearchBar(discussionAttachmentFile.name)
 
         Log.d(STEP_TAG, "Assert that only 1 file matches for the search text, and it is '${discussionAttachmentFile.name}', and no directories has been shown in the result. Press search back button the quit from search result view.")
         fileListPage.assertSearchResultCount(1)
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
         fileListPage.assertItemNotDisplayed("unfiled")
-        fileListPage.pressSearchBackButton()
+        fileListPage.searchable.pressSearchBackButton()
 
         Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")

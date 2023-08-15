@@ -17,25 +17,22 @@ package com.instructure.teacher.ui.pages
 
 import android.view.View
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.models.Page
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.interfaces.SearchablePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
@@ -46,11 +43,7 @@ import org.hamcrest.Matchers.containsString
  * This page extends the BasePage class and provides functionality for interacting with the elements on the "Page List" page.
  * It contains methods for clicking on the create new page button, opening a page, performing a search, and asserting various page-related conditions.
  */
-class PageListPage : BasePage(), SearchablePage {
-
-    private val searchButton by OnViewWithId(R.id.search)
-
-    private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
+class PageListPage(val searchable: Searchable) : BasePage() {
 
     private val pageRecyclerView by OnViewWithId(R.id.pageRecyclerView)
 
@@ -160,50 +153,5 @@ class PageListPage : BasePage(), SearchablePage {
                 withText(R.string.frontPage)
             )))
     }
-
-    /**
-     * Opens the search bar.
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters the search query in the search bar.
-     *
-     * @param query The search query to be entered.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
-    }
-
-    /**
-     * Opens the search bar.
-     */
-    override fun clickOnSearchButton() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters the search query in the search bar.
-     *
-     * @param textToType The search query to be entered.
-     */
-    override fun typeToSearchBar(textToType: String) {
-        searchInput.perform(ViewActions.replaceText(textToType))
-    }
-
-    /**
-     * Clicks the reset search text button.
-     */
-    override fun clickOnClearSearchButton() {
-        waitForView(withId(R.id.search_close_btn)).click()
-    }
-
-    /**
-     * Click on back button on the search bar.
-     * NOT IMPLEMENTED YET
-     */
-    override fun pressSearchBackButton() = Unit
 }
 

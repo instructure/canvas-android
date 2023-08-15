@@ -121,8 +121,8 @@ class DiscussionsE2ETest : TeacherTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
-        discussionsListPage.clickOnSearchButton()
-        discussionsListPage.typeToSearchBar("Test Discussion")
+        discussionsListPage.searchable.clickOnSearchButton()
+        discussionsListPage.searchable.typeToSearchBar("Test Discussion")
 
         Log.d(STEP_TAG,"Assert that the '$newDiscussionTitle' discussion is displayed and it is the only one.")
         discussionsListPage.assertDiscussionCount(1)
@@ -140,7 +140,7 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
 
         Log.d(STEP_TAG, "Click on the clear search input button (X) on the toolbar. Assert that the default state, so both of the discussions will be displayed.")
-        discussionsListPage.clickOnClearSearchButton()
+        discussionsListPage.searchable.clickOnClearSearchButton()
         discussionsListPage.assertHasDiscussion(discussion)
         discussionsListPage.assertHasDiscussion(discussion2)
         discussionsListPage.assertDiscussionCount(2)

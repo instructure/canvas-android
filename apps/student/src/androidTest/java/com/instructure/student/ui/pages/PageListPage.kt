@@ -25,22 +25,20 @@ import com.instructure.canvasapi2.models.Page
 import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.replaceText
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
-import com.instructure.student.ui.e2e.interfaces.SearchablePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
-class PageListPage : BasePage(R.id.pageListPage), SearchablePage {
+class PageListPage(val searchable: Searchable) : BasePage(R.id.pageListPage) {
 
     fun assertFrontPageDisplayed(page: PageApiModel) {
         val matcher = getFrontPageMatcher(page)
@@ -109,20 +107,6 @@ class PageListPage : BasePage(R.id.pageListPage), SearchablePage {
         // Check for regular page
         onView(allOf(withId(R.id.title), withText(page.title))).check(DoesNotExistAssertion(10000L))
     }
-
-    override fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    override fun typeToSearchBar(textToType: String) {
-        waitForViewWithId(R.id.search_src_text).replaceText(textToType)
-    }
-
-    override fun clickOnClearSearchButton() {
-        onView(withId(R.id.search_close_btn)).click()
-    }
-
-    override fun pressSearchBackButton() = Unit
 
     fun assertPageListItemCount(expectedCount: Int) {
         onView(allOf(withId(R.id.listView) +

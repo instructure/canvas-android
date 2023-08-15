@@ -28,6 +28,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
@@ -37,11 +38,9 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.interfaces.SearchablePage
 import org.hamcrest.Matchers.allOf
 
 /**
@@ -55,7 +54,7 @@ import org.hamcrest.Matchers.allOf
  *
  * @constructor Creates an instance of the FileListPage class.
  */
-class FileListPage : BasePage(R.id.fileListPage), SearchablePage {
+class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
 
     private val addButton by OnViewWithId(R.id.addFab)
     private val uploadFileButton by OnViewWithId(R.id.addFileFab, autoAssert = false)
@@ -192,36 +191,5 @@ class FileListPage : BasePage(R.id.fileListPage), SearchablePage {
         onView(withId(R.id.fileListRecyclerView) + withAncestor(R.id.container)).check(
             ViewAssertions.matches(hasChildCount(expectedCount))
         )
-    }
-
-    /**
-     * Clicks the search button.
-     */
-    override fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    /**
-     * Types the specified search text into the search input field.
-     *
-     * @param textToType The text to be typed in the search input field.
-     */
-    override fun typeToSearchBar(textToType: String) {
-        onView(withId(R.id.queryInput)).replaceText(textToType)
-    }
-
-    /**
-     * Clicks the reset search text button.
-     */
-    override fun clickOnClearSearchButton() {
-        waitForView(withId(R.id.clearButton)).click()
-        onView(withId(R.id.backButton)).click()
-    }
-
-    /**
-     * Presses the back button in the search view.
-     */
-    override fun pressSearchBackButton() {
-        onView(withId(R.id.backButton)).click()
     }
 }
