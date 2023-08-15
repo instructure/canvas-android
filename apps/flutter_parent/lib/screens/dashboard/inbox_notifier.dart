@@ -22,7 +22,7 @@ class InboxCountNotifier extends ValueNotifier<int> {
   update() async {
     try {
       var unreadCount = await locator<InboxApi>().getUnreadCount();
-      value = int.parse(unreadCount?.count?.asString);
+      value = int.parse(unreadCount.count.asString);
     } catch (e) {
       print(e);
     }

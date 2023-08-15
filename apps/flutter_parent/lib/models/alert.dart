@@ -46,7 +46,7 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
   AlertWorkflowState get workflowState;
 
   @BuiltValueField(wireName: 'action_date')
-  DateTime get actionDate;
+  DateTime? get actionDate;
 
   String get title;
 

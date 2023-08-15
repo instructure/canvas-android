@@ -24,21 +24,19 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class CourseFrontPageScreen extends StatefulWidget {
   final String courseId;
 
-  CourseFrontPageScreen({Key key, this.courseId})
-      : assert(courseId != null),
-        super(key: key);
+  CourseFrontPageScreen({required this.courseId, super.key});
 
   @override
   _CourseFrontPageScreenState createState() => _CourseFrontPageScreenState();
 }
 
 class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with AutomaticKeepAliveClientMixin {
-  Future<CanvasPage> _pageFuture;
+  Future<CanvasPage>? _pageFuture;
 
   @override
   bool get wantKeepAlive => true;
 
-  Future<CanvasPage> _refreshPage() {
+  Future<CanvasPage>? _refreshPage() {
     setState(() {
       _pageFuture = _interactor.loadFrontPage(widget.courseId, forceRefresh: true);
     });
@@ -65,8 +63,8 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
           return LoadingIndicator();
         } else {
           return CanvasWebView(
-            content: snapshot.data.body,
-            emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound,
+            content: snapshot.data!.body!,
+            emptyDescription: snapshot.data!.lockExplanation ?? L10n(context).noPageFound,
             horizontalPadding: 16,
           );
         }

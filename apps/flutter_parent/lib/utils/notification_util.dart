@@ -98,7 +98,7 @@ class NotificationUtil {
   }
 
   Future<void> scheduleReminder(
-      AppLocalizations l10n, String title, String body, Reminder reminder) {
+      AppLocalizations l10n, String? title, String body, Reminder reminder) {
     final payload = NotificationPayload((b) => b
       ..type = NotificationPayloadType.reminder
       ..data = json.encode(serialize(reminder)));

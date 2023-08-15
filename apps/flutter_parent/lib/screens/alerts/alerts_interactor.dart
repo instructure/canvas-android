@@ -20,12 +20,12 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsInteractor {
   Future<AlertsList> getAlertsForStudent(String studentId, bool forceRefresh) async {
-    final alertsFuture = _alertsApi().getAlertsDepaginated(studentId, forceRefresh)?.then((list) => list
+    final alertsFuture = _alertsApi().getAlertsDepaginated(studentId, forceRefresh).then((list) => list
       ..sort((a, b) {
         if (a.actionDate == null && b.actionDate == null) return 0;
         if (a.actionDate == null && b.actionDate != null) return -1;
         if (a.actionDate != null && b.actionDate == null) return 1;
-        return b.actionDate.compareTo(a.actionDate);
+        return b.actionDate!.compareTo(a.actionDate!);
       }));
 
     final thresholdsFuture = _alertsApi().getAlertThresholds(studentId, forceRefresh);
@@ -47,8 +47,8 @@ class AlertsInteractor {
 }
 
 class AlertsList {
-  final List<Alert> alerts;
-  final List<AlertThreshold> thresholds;
+  final List<Alert>? alerts;
+  final List<AlertThreshold>? thresholds;
 
   AlertsList(this.alerts, this.thresholds);
 }

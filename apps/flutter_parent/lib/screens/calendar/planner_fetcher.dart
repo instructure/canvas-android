@@ -39,25 +39,24 @@ class PlannerFetcher extends ChangeNotifier {
 
   final String userId;
 
-  Future<List<Course>> courseListFuture;
+  Future<List<Course>>? courseListFuture;
   bool firstFilterUpdateFlag = false;
 
   String _observeeId;
 
   String get observeeId => _observeeId;
 
-  PlannerFetcher({DateTime fetchFirst, @required String observeeId, @required this.userDomain, @required this.userId}) {
-    this._observeeId = observeeId;
+  PlannerFetcher({DateTime? fetchFirst, required String observeeId, required this.userDomain, required this.userId}): _observeeId = observeeId {
     if (fetchFirst != null) getSnapshotForDate(fetchFirst);
   }
 
   Future<Set<String>> getContexts() async {
-    CalendarFilter calendarFilter = await locator<CalendarFilterDb>().getByObserveeId(
+    CalendarFilter? calendarFilter = await locator<CalendarFilterDb>().getByObserveeId(
       userDomain,
       userId,
       _observeeId,
     );
-    if (calendarFilter == null || (courseNameMap[_observeeId] == null || courseNameMap[_observeeId].isEmpty)) {
+    if (calendarFilter == null || (courseNameMap[_observeeId] == null || courseNameMap[_observeeId]!.isEmpty)) {
       // We need to fetch the courses for a couple of reasons:
       // First, scheduleItems don't have a context name.
       // Second, calendar is opposite planner, in that 0 contexts means no calendar items. In order to deal with that
@@ -74,9 +73,9 @@ class PlannerFetcher extends ChangeNotifier {
 
       // Add the names to our map so we can fill those in later
       // We have to handle the case where their filter is from before the api migration, so we trim it down.
-      courses.forEach((course) => courseNameMap[_observeeId][course.id] = course.name);
-      var tempCourseList = courses.map((course) => course.contextFilterId()).toList();
-      Set<String> courseSet = Set.from(tempCourseList);
+      courses?.forEach((course) => courseNameMap[_observeeId]![course.id] = course.name);
+      var tempCourseList = courses?.map((course) => course.contextFilterId()).toList();
+      Set<String> courseSet = Set.from(tempCourseList as Iterable<dynamic>);
 
       if (calendarFilter != null) {
         return calendarFilter.filters.toSet();
@@ -98,9 +97,9 @@ class PlannerFetcher extends ChangeNotifier {
     }
   }
 
-  AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) {
+  AsyncSnapshot<List<PlannerItem>>? getSnapshotForDate(DateTime date) {
     final dayKey = dayKeyForDate(date);
-    AsyncSnapshot<List<PlannerItem>> daySnapshot = daySnapshots[dayKey];
+    AsyncSnapshot<List<PlannerItem>>? daySnapshot = daySnapshots[dayKey];
     if (daySnapshot != null) return daySnapshot;
     _beginMonthFetch(date);
     return daySnapshots[dayKey];
@@ -108,7 +107,7 @@ class PlannerFetcher extends ChangeNotifier {
 
   Future<void> refreshItemsForDate(DateTime date) async {
     String dayKey = dayKeyForDate(date);
-    bool hasError = daySnapshots[dayKey].hasError;
+    bool hasError = daySnapshots[dayKey]?.hasError ?? true;
     bool monthFailed = failedMonths[monthKeyForYearMonth(date.year, date.month)] ?? false;
     if (hasError && monthFailed) {
       // Previous fetch failed, retry the whole month
@@ -119,7 +118,7 @@ class PlannerFetcher extends ChangeNotifier {
       if (hasError) {
         daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.nothing().inState(ConnectionState.waiting);
       } else {
-        daySnapshots[dayKey] = daySnapshots[dayKey].inState(ConnectionState.waiting);
+        daySnapshots[dayKey] = daySnapshots[dayKey]!.inState(ConnectionState.waiting);
       }
       notifyListeners();
       try {
@@ -178,7 +177,7 @@ class PlannerFetcher extends ChangeNotifier {
 
     List<ScheduleItem> scheduleItems = tempItems[0] + tempItems[1];
     scheduleItems.retainWhere((it) => it.isHidden != true); // Exclude hidden items
-    return scheduleItems.map((item) => item.toPlannerItem(courseNameMap[_observeeId][item.getContextId()])).toList();
+    return scheduleItems.map((item) => item.toPlannerItem(courseNameMap[_observeeId]![item.getContextId()])).toList();
   }
 
   _completeMonth(List<PlannerItem> items, DateTime date) {
@@ -190,8 +189,8 @@ class PlannerFetcher extends ChangeNotifier {
     }
     items.forEach((item) {
       if (item.plannableDate != null) {
-        String dayKey = dayKeyForDate(item.plannableDate.toLocal());
-        dayItems[dayKey].add(item);
+        String dayKey = dayKeyForDate(item.plannableDate!.toLocal());
+        dayItems[dayKey]?.add(item);
       }
     });
 

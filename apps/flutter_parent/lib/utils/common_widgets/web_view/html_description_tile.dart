@@ -28,7 +28,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 /// not null or empty.
 class HtmlDescriptionTile extends StatelessWidget {
   /// Html passed to a full screen web view
-  final String html;
+  final String? html;
 
   /// Only used if an emptyDescription is not null or not empty.
   /// Defaults to AppLocalizations.descriptionTitle
@@ -51,7 +51,7 @@ class HtmlDescriptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (html.isEmpty) {
+    if (html == null || html?.isEmpty == true) {
       return _buildEmptyState(context);
     }
 
@@ -68,7 +68,7 @@ class HtmlDescriptionTile extends StatelessWidget {
                 _title(context),
                 Text(
                   buttonLabel ?? L10n(context).viewDescription,
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(color: ParentTheme.of(context).studentColor),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ParentTheme.of(context)?.studentColor),
                 ),
               ],
             ),
@@ -82,7 +82,7 @@ class HtmlDescriptionTile extends StatelessWidget {
   Widget _title(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(descriptionTitle ?? L10n(context).descriptionTitle, style: Theme.of(context).textTheme.overline),
+      child: Text(descriptionTitle ?? L10n(context).descriptionTitle, style: Theme.of(context).textTheme.labelSmall),
     );
   }
 
@@ -102,13 +102,13 @@ class HtmlDescriptionTile extends StatelessWidget {
             height: 72,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: parentTheme.nearSurfaceColor,
+              color: parentTheme?.nearSurfaceColor,
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(
               child: Text(
                 emptyDescription!,
-                style: Theme.of(context).textTheme.subtitle2.copyWith(color: parentTheme.onSurfaceColor),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(color: parentTheme?.onSurfaceColor),
               ),
             ),
           ),
@@ -122,6 +122,6 @@ class HtmlDescriptionTile extends StatelessWidget {
     // may have personally identifiable information (and shouldn't be logged by the screen parameter analytics).
     // We'll at least get a screen view for that screen name, and a log entry, so we should still be able to track
     // any issues that come from navigating to this screen.
-    locator<QuickNav>().push(context, HtmlDescriptionScreen(html, L10n(context).descriptionTitle));
+    locator<QuickNav>().push(context, HtmlDescriptionScreen(html!, L10n(context).descriptionTitle));
   }
 }

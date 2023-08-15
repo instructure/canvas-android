@@ -30,15 +30,15 @@ import 'conversation_details_interactor.dart';
 
 class ConversationDetailsScreen extends StatefulWidget {
   final String conversationId;
-  final String conversationSubject;
-  final String courseName;
+  final String? conversationSubject;
+  final String? courseName;
 
   const ConversationDetailsScreen({
-    Key key,
-    this.conversationId,
+    required this.conversationId,
     this.conversationSubject,
     this.courseName,
-  }) : super(key: key);
+    super.key
+  });
 
   @override
   _ConversationDetailsScreenState createState() => _ConversationDetailsScreenState();
@@ -46,7 +46,7 @@ class ConversationDetailsScreen extends StatefulWidget {
 
 class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
   ConversationDetailsInteractor _interactor = locator<ConversationDetailsInteractor>();
-  Future<Conversation> _conversationFuture;
+  late Future<Conversation> _conversationFuture;
 
   bool _hasBeenUpdated = false;
 
@@ -68,7 +68,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         builder: (context) => FutureBuilder(
           future: _conversationFuture,
           builder: (BuildContext context, AsyncSnapshot<Conversation> snapshot) => Scaffold(
-            appBar: _appBar(context),
+            appBar: _appBar(context) as PreferredSizeWidget?,
             body: _body(context, snapshot),
             floatingActionButton: _fab(context, snapshot),
           ),
@@ -84,21 +84,21 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
-              widget.conversationSubject == null || widget.conversationSubject.isEmpty
+              widget.conversationSubject == null || widget.conversationSubject!.isEmpty
                   ? L10n(context).noSubject
-                  : widget.conversationSubject,
+                  : widget.conversationSubject!,
               key: ValueKey('subjectText')),
-          if (widget.courseName != null && widget.courseName.isNotEmpty)
-            Text(widget.courseName, style: Theme.of(context).textTheme.caption, key: ValueKey('courseText')),
+          if (widget.courseName != null && widget.courseName!.isNotEmpty)
+            Text(widget.courseName!, style: Theme.of(context).textTheme.bodySmall, key: ValueKey('courseText')),
         ],
       ),
-      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+      bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
     );
   }
 
   Widget _fab(BuildContext context, AsyncSnapshot<Conversation> snapshot) {
     if (!snapshot.hasData) return Container();
-    Conversation conversation = snapshot.data;
+    Conversation conversation = snapshot.data!;
     return FloatingActionButton(
       child: Icon(CanvasIconsSolid.reply, size: 20),
       tooltip: L10n(context).reply,
@@ -134,7 +134,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
 
   Widget _body(BuildContext context, AsyncSnapshot<Conversation> snapshot) {
     if (snapshot.hasError) return _errorState(context);
-    if (snapshot.hasData) return _successState(context, snapshot.data);
+    if (snapshot.hasData) return _successState(context, snapshot.data!);
     return LoadingIndicator();
   }
 
@@ -148,7 +148,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
 
   Widget _successState(BuildContext context, Conversation conversation) {
     return Container(
-      color: ParentTheme.of(context).nearSurfaceColor,
+      color: ParentTheme.of(context)?.nearSurfaceColor,
       child: RefreshIndicator(
         onRefresh: () {
           setState(() {
@@ -181,26 +181,26 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         secondaryActions: <Widget>[
           IconSlideAction(
             caption: L10n(context).replyAll,
-            color: ParentTheme.of(context).isDarkMode ? ParentColors.tiara : ParentColors.oxford,
-            foregroundColor: Theme.of(context).accentIconTheme.color,
+            color: ParentTheme.of(context)?.isDarkMode == true ? ParentColors.tiara : ParentColors.oxford,
+            foregroundColor: Theme.of(context).colorScheme.secondary,
             iconWidget: Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Icon(
                 CanvasIconsSolid.reply_all_2,
-                color: Theme.of(context).accentIconTheme.color,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
             onTap: () => _reply(context, conversation, message, true),
           ),
           IconSlideAction(
             caption: L10n(context).reply,
-            color: Theme.of(context).accentColor,
-            foregroundColor: Theme.of(context).accentIconTheme.color,
+            color: Theme.of(context).colorScheme.secondary,
+            foregroundColor: Theme.of(context).colorScheme.secondary,
             iconWidget: Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Icon(
                 CanvasIconsSolid.reply,
-                color: Theme.of(context).accentIconTheme.color,
+                color: Theme.of(context).colorScheme.secondary
               ),
             ),
             onTap: () => _reply(context, conversation, message, false),
@@ -219,7 +219,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
     );
   }
 
-  Future<void> _reply(BuildContext context, Conversation conversation, Message message, bool replyAll) async {
+  Future<void> _reply(BuildContext context, Conversation? conversation, Message? message, bool replyAll) async {
     var newConversation = await _interactor.addReply(context, conversation, message, replyAll);
     if (newConversation != null) {
       _hasBeenUpdated = true;

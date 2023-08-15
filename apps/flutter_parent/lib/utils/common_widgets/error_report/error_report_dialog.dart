@@ -50,9 +50,9 @@ class ErrorReportDialog extends StatefulWidget {
 
   static Future<void> asDialog(
       BuildContext context, {
-      required String title,
-      required String subject,
-      required ErrorReportSeverity severity,
+      String? title,
+      String? subject,
+      ErrorReportSeverity? severity,
       bool includeEmail = false,
       bool hideSeverityPicker = false,
       required FlutterErrorDetails error}) {
@@ -114,7 +114,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
             FlatButton(
               child: Text(L10n(context).sendReport.toUpperCase()),
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
+                if (_formKey.currentState?.validate() == true) {
                   await _submitReport();
                   Navigator.of(context).pop();
                 } else {

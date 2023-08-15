@@ -36,7 +36,7 @@ class CalendarDayPlannerState extends State<CalendarDayPlanner> {
   @override
   Widget build(BuildContext context) {
     return Selector<PlannerFetcher, AsyncSnapshot<List<PlannerItem>>>(
-      selector: (_, fetcher) => fetcher.getSnapshotForDate(widget._day),
+      selector: (_, fetcher) => fetcher.getSnapshotForDate(widget._day)!,
       builder: (_, snapshot, __) {
         Widget body;
         if (snapshot.hasError) {
@@ -44,7 +44,7 @@ class CalendarDayPlannerState extends State<CalendarDayPlanner> {
         } else if (!snapshot.hasData) {
           body = LoadingIndicator();
         } else {
-          if (snapshot.data.isEmpty) {
+          if (snapshot.data!.isEmpty) {
             body = EmptyPandaWidget(
               svgPath: 'assets/svg/panda-no-events.svg',
               title: L10n(context).noEventsTitle,
@@ -52,7 +52,7 @@ class CalendarDayPlannerState extends State<CalendarDayPlanner> {
               header: SizedBox(height: 32),
             );
           } else {
-            body = CalendarDayList(snapshot.data);
+            body = CalendarDayList(snapshot.data!);
           }
         }
 

@@ -61,6 +61,7 @@ class CourseGrade {
 
   /// Current score value, a double representation of a percentage grade, for the current grading period or the current
   /// term (see Course.getCourseGrade, ignoreMGP). Needs formatting prior to use.
+  double? currentScore() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentScore() : _getCurrentScore();
 
   /// Current grade string value, for the current grading period or the current term. (see Course.getCourseGrade)
   String? currentGrade() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentGrade() : _getCurrentGrade();

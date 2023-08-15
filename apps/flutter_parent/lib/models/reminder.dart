@@ -42,7 +42,7 @@ abstract class Reminder implements Built<Reminder, ReminderBuilder> {
 
   String get courseId;
 
-  DateTime get date;
+  DateTime? get date;
 
   Reminder._();
   factory Reminder([void Function(ReminderBuilder) updates]) = _$Reminder;

@@ -12,21 +12,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:package_info/package_info.dart';
 
 class CrashScreen extends StatelessWidget {
   final FlutterErrorDetails error;
 
-  const CrashScreen(this.error, {Key key}) : super(key: key);
+  const CrashScreen(this.error, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +33,7 @@ class CrashScreen extends StatelessWidget {
               elevation: 0,
               backgroundColor: Colors.transparent,
               iconTheme: Theme.of(context).iconTheme,
-              bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+              bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
             )
           : null,
       body: _body(context),
@@ -76,7 +73,7 @@ class CrashScreen extends StatelessWidget {
                     onPressed: () => ErrorReportDialog.asDialog(context, error: error),
                     child: Text(
                       L10n(context).crashScreenContact,
-                      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(4),
@@ -112,10 +109,10 @@ class CrashScreen extends StatelessWidget {
 
   FlatButton _restartButton(BuildContext context) {
     return FlatButton(
-      onPressed: () => Respawn.of(context).restart(),
+      onPressed: () => Respawn.of(context)?.restart(),
       child: Text(
         L10n(context).crashScreenRestart,
-        style: Theme.of(context).textTheme.subtitle2,
+        style: Theme.of(context).textTheme.titleSmall,
       ),
     );
   }
@@ -162,7 +159,7 @@ class CrashScreen extends StatelessWidget {
                       key: Key('full-error-message'),
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                          color: ParentTheme.of(context).nearSurfaceColor,
+                          color: ParentTheme.of(context)?.nearSurfaceColor,
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Text(
                         _getFullErrorMessage(),

@@ -133,7 +133,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   /// [gradingPeriodId] -> Only used when [enrollment] is not provided or is null, when pulling the student's enrollment
   ///   from the course will also match based on [Enrollment.currentGradingPeriodId]
   CourseGrade getCourseGrade(
-    String studentId, {
+    String? studentId, {
     Enrollment? enrollment,
     String? gradingPeriodId,
     bool forceAllPeriods = false,
@@ -154,7 +154,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   String contextFilterId() => 'course_${this.id}';
 
   /// Filters enrollments by those associated with the currently selected user
-  bool isValidForCurrentStudent(String currentStudentId) {
+  bool isValidForCurrentStudent(String? currentStudentId) {
     return enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
   }
 }

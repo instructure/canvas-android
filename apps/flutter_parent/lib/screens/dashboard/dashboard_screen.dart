@@ -46,31 +46,30 @@ import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboard_interactor.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({Key key, this.students, this.startingPage, this.deepLinkParams}) : super(key: key);
+  DashboardScreen({this.students, this.startingPage, this.deepLinkParams, super.key});
 
-  final List<User> students;
+  final List<User>? students;
 
   // Used when deep linking into the courses, calendar, or alert screen
-  final DashboardContentScreens startingPage;
-  final Map<String, Object> deepLinkParams;
+  final DashboardContentScreens? startingPage;
+  final Map<String, Object>? deepLinkParams;
 
   @override
   State<StatefulWidget> createState() => DashboardState();
 }
 
 class DashboardState extends State<DashboardScreen> {
-  GlobalKey<ScaffoldState> scaffoldKey;
+  late GlobalKey<ScaffoldState> scaffoldKey;
   DashboardInteractor _interactor = locator<DashboardInteractor>();
 
   // Dashboard State
   List<User> _students = [];
-  User _self;
+  late User _self;
 
   bool _studentsLoading = false;
   bool _selfLoading = false;
@@ -79,18 +78,18 @@ class DashboardState extends State<DashboardScreen> {
   // ignore: unused_field
   bool _studentsError = false;
 
-  User _selectedStudent;
-  DashboardContentScreens _currentIndex;
+  User? _selectedStudent;
+  late DashboardContentScreens _currentIndex;
 
   bool expand = false;
 
-  SelectedStudentNotifier _selectedStudentNotifier;
-  CalendarTodayNotifier _showTodayNotifier;
+  late SelectedStudentNotifier _selectedStudentNotifier;
+  late CalendarTodayNotifier _showTodayNotifier;
 
   @visibleForTesting
-  Map<String, Object> currentDeepLinkParams;
+  Map<String, Object>? currentDeepLinkParams;
 
-  Function() _onStudentAdded;
+  late Function() _onStudentAdded;
 
   @override
   void initState() {
@@ -101,13 +100,13 @@ class DashboardState extends State<DashboardScreen> {
     _showTodayNotifier = CalendarTodayNotifier();
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
-      _students = widget.students;
-      String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
+      _students = widget.students!;
+      String? selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
       _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
-      _updateStudentColor(_selectedStudent.id);
-      _selectedStudentNotifier.value = _selectedStudent;
+      _updateStudentColor(_selectedStudent!.id);
+      _selectedStudentNotifier.value = _selectedStudent!;
       ApiPrefs.setCurrentStudent(_selectedStudent);
-      _interactor.getAlertCountNotifier().update(_selectedStudent.id);
+      _interactor.getAlertCountNotifier().update(_selectedStudent!.id);
     } else {
       _loadStudents();
     }
@@ -132,13 +131,13 @@ class DashboardState extends State<DashboardScreen> {
 
   void _updateStudentColor(String studentId) {
     WidgetsBinding.instance.scheduleFrameCallback((_) {
-      ParentTheme.of(context).setSelectedStudent(studentId);
+      ParentTheme.of(context)?.setSelectedStudent(studentId);
     });
   }
 
   void _loadSelf() {
     setState(() {
-      _self = ApiPrefs.getUser();
+      _self = ApiPrefs.getUser()!;
       _selfLoading = true;
     });
 
@@ -166,12 +165,12 @@ class DashboardState extends State<DashboardScreen> {
 
       if (_selectedStudent == null && _students.isNotEmpty) {
         setState(() {
-          String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
+          String? selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
           _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
-          _selectedStudentNotifier.value = _selectedStudent;
-          _updateStudentColor(_selectedStudent.id);
+          _selectedStudentNotifier.value = _selectedStudent!;
+          _updateStudentColor(_selectedStudent!.id);
           ApiPrefs.setCurrentStudent(_selectedStudent);
-          _interactor.getAlertCountNotifier().update(_selectedStudent.id);
+          _interactor.getAlertCountNotifier().update(_selectedStudent!.id);
         });
       }
 
@@ -253,7 +252,7 @@ class DashboardState extends State<DashboardScreen> {
                   child: _appBarStudents(_students, model.value),
                 ),
                 centerTitle: true,
-                bottom: ParentTheme.of(context).appBarDivider(),
+                bottom: ParentTheme.of(context)?.appBarDivider(),
                 leading: IconButton(
                   icon: WidgetBadge(
                     Icon(
@@ -264,7 +263,7 @@ class DashboardState extends State<DashboardScreen> {
                     countListenable: _interactor.getInboxCountNotifier(),
                     options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
                   ),
-                  onPressed: () => scaffoldKey.currentState.openDrawer(),
+                  onPressed: () => scaffoldKey.currentState?.openDrawer(),
                   tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               ),
@@ -291,7 +290,7 @@ class DashboardState extends State<DashboardScreen> {
                       preferredSize: Size.fromHeight(1),
                       child: Divider(
                           height: 1,
-                          color: ParentTheme.of(context).isDarkMode
+                          color: ParentTheme.of(context)?.isDarkMode == true
                               ? ParentColors.oxford
                               : ParentColors.appBarDividerLight),
                     ),
@@ -300,11 +299,11 @@ class DashboardState extends State<DashboardScreen> {
               ),
               Expanded(child: _currentPage())
             ]),
-            bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
+            bottomNavigationBar: ParentTheme.of(context)?.bottomNavigationDivider(
               _students.isEmpty
                   ? Container()
                   : BottomNavigationBar(
-                      unselectedItemColor: ParentTheme.of(context).onSurfaceColor,
+                      unselectedItemColor: ParentTheme.of(context)?.onSurfaceColor,
                       selectedFontSize: 10,
                       unselectedFontSize: 10,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -330,7 +329,7 @@ class DashboardState extends State<DashboardScreen> {
         return Center(
           child: Text(
             L10n(context).noStudents,
-            style: Theme.of(context).primaryTextTheme.headline6,
+            style: Theme.of(context).primaryTextTheme.titleLarge,
           ),
         );
     }
@@ -344,14 +343,17 @@ class DashboardState extends State<DashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Avatar(selectedStudent.avatarUrl,
-                  name: selectedStudent.shortName, radius: 24, key: Key("student_expansion_touch_target")),
+              if (selectedStudent.avatarUrl != null)
+                Avatar(selectedStudent.avatarUrl!,
+                    name: selectedStudent.shortName,
+                    radius: 24,
+                    key: Key("student_expansion_touch_target")),
               SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.subtitle1),
+                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.titleMedium),
                   SizedBox(width: 6),
                   DropdownArrow(rotate: expand),
                 ],
@@ -375,10 +377,7 @@ class DashboardState extends State<DashboardScreen> {
           light: 'assets/svg/bottom-nav/courses-light-selected.svg',
           dark: 'assets/svg/bottom-nav/courses-dark-selected.svg',
         ),
-        title: Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: Text(L10n(context).coursesLabel),
-        ),
+        label: L10n(context).coursesLabel,
       ),
       BottomNavigationBarItem(
         icon: _navBarIcon(
@@ -390,10 +389,7 @@ class DashboardState extends State<DashboardScreen> {
           light: 'assets/svg/bottom-nav/calendar-light-selected.svg',
           dark: 'assets/svg/bottom-nav/calendar-dark-selected.svg',
         ),
-        title: Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: Text(L10n(context).calendarLabel),
-        ),
+        label: L10n(context).calendarLabel,
       ),
       BottomNavigationBarItem(
         icon: WidgetBadge(
@@ -415,19 +411,16 @@ class DashboardState extends State<DashboardScreen> {
           options: BadgeOptions(includeBorder: true),
           key: Key('alerts-count'),
         ),
-        title: Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: Text(L10n(context).alertsLabel),
-        ),
+        label: L10n(context).alertsLabel
       ),
     ];
   }
 
-  Widget _navBarIcon({@required String light, @required String dark, bool active: false}) {
-    bool darkMode = ParentTheme.of(context).isDarkMode;
+  Widget _navBarIcon({required String light, required String dark, bool active = false}) {
+    bool darkMode = ParentTheme.of(context)?.isDarkMode ?? false;
     return SvgPicture.asset(
       darkMode ? dark : light,
-      color: active? ParentTheme.of(context).studentColor : null,
+      color: active? ParentTheme.of(context)?.studentColor : null,
       width: 24,
       height: 24,
     );
@@ -486,13 +479,13 @@ class DashboardState extends State<DashboardScreen> {
       case DashboardContentScreens.Calendar:
         _page = CalendarScreen(
           startDate: currentDeepLinkParams != null
-              ? (currentDeepLinkParams.containsKey(CalendarScreen.startDateKey)
-                  ? currentDeepLinkParams[CalendarScreen.startDateKey] as DateTime
+              ? (currentDeepLinkParams?.containsKey(CalendarScreen.startDateKey) == true
+                  ? currentDeepLinkParams![CalendarScreen.startDateKey] as DateTime?
                   : null)
               : null,
           startView: currentDeepLinkParams != null
-              ? (currentDeepLinkParams.containsKey(CalendarScreen.startViewKey)
-                  ? currentDeepLinkParams[CalendarScreen.startViewKey] as CalendarView
+              ? (currentDeepLinkParams?.containsKey(CalendarScreen.startViewKey) == true
+                  ? currentDeepLinkParams![CalendarScreen.startViewKey] as CalendarView
                   : null)
               : null,
         );
@@ -546,10 +539,8 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToManageStudents(context) async {
     // Close the drawer, then push the Manage Children screen in
     Navigator.of(context).pop();
-    var _addedStudentFuture = await locator<QuickNav>().push(context, ManageStudentsScreen(_students));
-    if (_addedStudentFuture) {
-      _addStudent();
-    }
+    await locator<QuickNav>().push(context, ManageStudentsScreen(_students));
+    _addStudent();
   }
 
   _navigateToSettings(context) {
@@ -566,11 +557,10 @@ class DashboardState extends State<DashboardScreen> {
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     try {
-      await ParentTheme.of(context).setSelectedStudent(null);
-      await locator<Analytics>()
-          .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
+      await ParentTheme.of(context)?.setSelectedStudent(null);
+      await locator<Analytics>().logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
       await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
-      MasqueradeUI.of(context).refresh();
+      MasqueradeUI.of(context)?.refresh();
       locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
       await FeaturesUtils.performLogout();
     } catch (e) {
@@ -579,21 +569,22 @@ class DashboardState extends State<DashboardScreen> {
     }
   }
 
-  _navDrawerHeader(User user) => Column(
+  _navDrawerHeader(User? user) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(24, 16, 0, 8),
-        child: Avatar(user.avatarUrl, name: user.shortName, radius: 40),
-      ),
+      if (user?.avatarUrl != null)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 0, 8),
+          child: Avatar(user!.avatarUrl!, name: user.shortName, radius: 40),
+        ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: UserName.fromUser(user, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+        child: UserName.fromUser(user!, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
       ),
       Padding(
         padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
         child: Text(
-          user?.primaryEmail ?? '',
+          user.primaryEmail ?? '',
           style: Theme.of(context).textTheme.caption,
           overflow: TextOverflow.fade,
         ),
@@ -718,7 +709,7 @@ class DashboardState extends State<DashboardScreen> {
         title: Text(L10n(context).stopActAsUser),
         onTap: () {
           Navigator.of(context).pop();
-          MasqueradeUI.showMasqueradeCancelDialog(Navigator.of(context).widget.key);
+          MasqueradeUI.showMasqueradeCancelDialog(Navigator.of(context).widget.key!);
         },
       );
 

@@ -28,7 +28,7 @@ class QuickNav {
   }
 
   /// Default method for pushing screens, uses material transition
-  Future<T> pushRoute<T extends Object>(BuildContext context, String route,
+  Future<T?> pushRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
     return PandaRouter.router.navigateTo(context, route, transition: transitionType) as Future<T>;
   }

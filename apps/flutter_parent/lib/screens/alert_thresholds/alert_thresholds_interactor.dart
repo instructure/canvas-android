@@ -31,8 +31,8 @@ class AlertThresholdsInteractor {
   /// [value] is only used when creating percentages
   ///
   ///
-  Future<AlertThreshold> updateAlertThreshold(AlertType type, String studentId, AlertThreshold threshold,
-      {String value}) {
+  Future<AlertThreshold?> updateAlertThreshold(AlertType type, String studentId, AlertThreshold? threshold,
+      {String? value}) {
     var api = locator<AlertsApi>();
     if (type.isSwitch()) {
       if (threshold == null) {
@@ -49,7 +49,7 @@ class AlertThresholdsInteractor {
         return api.createThreshold(type, studentId, value: value);
       } else
         // Disable the threshold
-        return api.deleteAlert(threshold);
+        return api.deleteAlert(threshold!);
     }
   }
 

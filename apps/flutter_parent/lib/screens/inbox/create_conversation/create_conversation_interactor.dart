@@ -32,14 +32,14 @@ class CreateConversationInteractor {
 
     final permissions = await permissionsFuture;
     final recipients = await recipientFuture;
-    final userId = ApiPrefs.getUser().id;
+    final userId = ApiPrefs.getUser()?.id;
 
     recipients.retainWhere((recipient) {
       // Allow self and specified student as recipients if the sendMessages permission is granted
       if (permissions.sendMessages == true && (recipient.id == studentId || recipient.id == userId)) return true;
 
       // Always allow instructors (teachers and TAs) as recipients
-      var enrollments = recipient.commonCourses[courseId];
+      var enrollments = recipient.commonCourses?[courseId];
       if (enrollments == null) return false;
       return enrollments.contains('TeacherEnrollment') || enrollments.contains('TaEnrollment');
     });
@@ -57,7 +57,7 @@ class CreateConversationInteractor {
     return locator<InboxApi>().createConversation(courseId, recipientIds, subject, body, attachmentIds);
   }
 
-  Future<AttachmentHandler> addAttachment(BuildContext context) async {
+  Future<AttachmentHandler?>addAttachment(BuildContext context) async {
     return AttachmentPicker.asBottomSheet(context);
   }
 }

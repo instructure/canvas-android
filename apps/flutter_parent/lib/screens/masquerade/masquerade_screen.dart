@@ -33,13 +33,13 @@ class MasqueradeScreen extends StatefulWidget {
 class MasqueradeScreenState extends State<MasqueradeScreen> {
   static Offset pandaMaskOffset = const Offset(150, 40);
 
-  TextEditingController _domainController;
-  TextEditingController _userIdController;
+  late TextEditingController _domainController;
+  late TextEditingController _userIdController;
   MasqueradeScreenInteractor _interactor = locator<MasqueradeScreenInteractor>();
-  bool _enableDomainInput;
+  late bool _enableDomainInput;
 
-  String _domainErrorText;
-  String _userIdErrorText;
+  String? _domainErrorText;
+  String? _userIdErrorText;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -51,7 +51,7 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
 
   bool _startingMasquerade = false;
 
-  Timer timer;
+  late Timer timer;
 
   @override
   void initState() {
@@ -99,7 +99,7 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text(L10n(context).actAsUser),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -217,10 +217,10 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
     setState(() => _startingMasquerade = true);
     bool success = await _interactor.startMasquerading(userId, domain);
     if (success) {
-      Respawn.of(context).restart();
+      Respawn.of(context)?.restart();
     } else {
       setState(() => _startingMasquerade = false);
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(L10n(context).actAsUserError)));
+      _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(L10n(context).actAsUserError)));
     }
   }
 }

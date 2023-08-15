@@ -39,7 +39,7 @@ class AccountCreationScreen extends StatefulWidget {
 
   final QRPairingInfo pairingInfo;
 
-  const AccountCreationScreen(this.pairingInfo, {Key key}) : super(key: key);
+  const AccountCreationScreen(this.pairingInfo, {super.key});
 
   @override
   _AccountCreationScreenState createState() => _AccountCreationScreenState();
@@ -49,7 +49,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   TextStyle _defaultSpanStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
   TextStyle _linkSpanStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
 
-  Future<TermsOfService> _tosFuture;
+  Future<TermsOfService>? _tosFuture;
 
   Future<TermsOfService> _getToS() {
     return locator<AccountCreationInteractor>()
@@ -61,7 +61,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   final FocusNode _emailFocus = FocusNode();
   final _emailController = TextEditingController();
-  String _emailErrorText = null;
+  String? _emailErrorText = null;
 
   final FocusNode _passwordFocus = FocusNode();
   final _passwordController = TextEditingController();
@@ -152,7 +152,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         _fieldFocusChange(_nameFocus, _emailFocus);
       },
       validator: (value) {
-        if (value.isEmpty) {
+        if (value == null || value.isEmpty) {
           return L10n(context).qrCreateAccountNameError;
         } else {
           return null;
@@ -187,10 +187,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         validator: (value) => _validateEmail(value));
   }
 
-  String _validateEmail(String value, {bool apiError = false}) {
+  String? _validateEmail(String? value, {bool apiError = false}) {
     if (apiError) {
       return L10n(context).qrCreateAccountInvalidEmailError;
-    } else if (value.isEmpty) {
+    } else if (value == null || value.isEmpty) {
       return L10n(context).qrCreateAccountEmailError;
     } else if (!EmailValidator.validate(value)) {
       return L10n(context).qrCreateAccountInvalidEmailError;
@@ -233,10 +233,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           )),
       onFieldSubmitted: (term) {
         _clearFieldFocus();
-        _formKey.currentState.validate();
+        _formKey.currentState?.validate();
       },
       validator: (value) {
-        if (value.isEmpty) {
+        if (value == null || value.isEmpty) {
           return L10n(context).qrCreateAccountPasswordError;
         } else if (value.length < 8) {
           return L10n(context).qrCreateAccountPasswordLengthError;
@@ -284,7 +284,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
             return _getTosSpan(null);
           } else {
             var terms = snapshot.data;
-            if (terms.passive) {
+            if (terms == null || terms.passive) {
               return _getPrivacyPolicySpan();
             } else {
               return _getTosSpan(snapshot.data);
@@ -307,8 +307,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     );
   }
 
-  TextSpan _getTosSpanHelper({@required String text, @required List<TextSpan> inputSpans}) {
-    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
+  TextSpan _getTosSpanHelper({required String text, required List<TextSpan> inputSpans}) {
+    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text!), it)).toList();
     indexedSpans.sort((a, b) => a.key.compareTo(b.key));
 
     int index = 0;
@@ -317,14 +317,14 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     for (var indexedSpan in indexedSpans) {
       spans.add(TextSpan(text: text.substring(index, indexedSpan.key)));
       spans.add(indexedSpan.value);
-      index = indexedSpan.key + indexedSpan.value.text.length;
+      index = indexedSpan.key + indexedSpan.value.text!.length;
     }
     spans.add(TextSpan(text: text.substring(index)));
 
     return TextSpan(children: spans);
   }
 
-  Widget _getTosSpan(TermsOfService terms) {
+  Widget _getTosSpan(TermsOfService? terms) {
     var termsOfService = L10n(context).qrCreateAccountTermsOfService;
     var privacyPolicy = L10n(context).qrCreateAccountPrivacyPolicy;
     var body = L10n(context).qrCreateAccountTos(termsOfService, privacyPolicy);
@@ -369,7 +369,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   style: TextStyle(fontSize: 16),
                 ),
         ),
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         textColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         onPressed: () {
@@ -401,7 +401,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   }
 
   void _handleCreateAccount() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState?.validate() == true) {
       setState(() => _isLoading = true);
       try {
         var response = await locator<AccountCreationInteractor>().createNewAccount(
@@ -431,8 +431,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
         );
 
-        if (e is DioError) {
-          _handleDioError(e);
+        if (e is DioException) {
+          _handleDioException(e);
         } else {
           _scaffoldKey.currentState.showSnackBar(
             SnackBar(content: Text(L10n(context).unexpectedError)),
@@ -442,11 +442,11 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
   }
 
-  _handleDioError(DioError e) {
+  _handleDioException(DioException e) {
     String emailError = '';
     String pairingError = '';
     try {
-      emailError = e.response.data['errors']['user']['pseudonyms'][0]['message'];
+      emailError = e.response?.data['errors']['user']['pseudonyms'][0]['message'];
       if (emailError.isNotEmpty) {
         setState(() {
           _emailErrorText = _validateEmail('', apiError: true);
@@ -457,7 +457,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
 
     try {
-      pairingError = e.response.data['errors']['pairing_code']['code'][0]['message'];
+      pairingError = e.response?.data['errors']['pairing_code']['code'][0]['message'];
       if (pairingError.isNotEmpty) {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(content: Text(L10n(context).errorPairingFailed)),

@@ -74,7 +74,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                       child: Row(
                         children: [
                           Text(L10n(context).acceptableUsePolicyTitle,
-                            style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16)),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16)),
                           Spacer(),
                           Icon(
                             CanvasIcons.arrow_open_right,
@@ -109,9 +109,9 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
   _close() async {
     try {
       await locator<Analytics>().logEvent(AnalyticsEventConstants.LOGOUT);
-      await ParentTheme.of(context).setSelectedStudent(null);
+      await ParentTheme.of(context)?.setSelectedStudent(null);
       await ApiPrefs.performLogout(app: ParentApp.of(context));
-      MasqueradeUI.of(context).refresh();
+      MasqueradeUI.of(context)?.refresh();
       locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
       await FeaturesUtils.performLogout();
     } catch (e) {
@@ -130,7 +130,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
     _interactor.getTermsOfService().then((termsOfService) => locator<QuickNav>()
         .push(
             context,
-            HtmlDescriptionScreen(termsOfService.content,
+            HtmlDescriptionScreen(termsOfService.content!,
                 L10n(context).acceptableUsePolicyTitle)));
   }
 

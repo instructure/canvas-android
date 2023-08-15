@@ -34,11 +34,11 @@ class ConversationDetailsInteractor {
     return conversation;
   }
 
-  Future<Conversation> addReply(BuildContext context, Conversation conversation, Message message, bool replyAll) async {
+  Future<Conversation?> addReply(BuildContext context, Conversation? conversation, Message? message, bool replyAll) async {
     return locator<QuickNav>().push(context, ConversationReplyScreen(conversation, message, replyAll));
   }
 
-  String getCurrentUserId() => ApiPrefs.getUser().id;
+  String? getCurrentUserId() => ApiPrefs.getUser()?.id;
 
   void viewAttachment(BuildContext context, Attachment attachment) {
     locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));

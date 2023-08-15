@@ -27,7 +27,7 @@ class HtmlDescriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: ParentTheme.of(context).appBarDivider(),
+        bottom: ParentTheme.of(context)?.appBarDivider(),
         title: Text(appBarTitle),
       ),
       body: CanvasWebView(content: html, horizontalPadding: 16),

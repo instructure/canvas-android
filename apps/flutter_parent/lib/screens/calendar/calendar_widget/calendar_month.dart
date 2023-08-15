@@ -28,13 +28,13 @@ class CalendarMonth extends StatefulWidget {
   final MonthExpansionNotifier monthExpansionListener;
 
   CalendarMonth({
-    Key key,
-    @required this.year,
-    @required this.month,
-    @required this.selectedDay,
-    @required this.onDaySelected,
-    @required this.monthExpansionListener,
-  }) : super(key: key);
+    required this.year,
+    required this.month,
+    required this.selectedDay,
+    required this.onDaySelected,
+    required this.monthExpansionListener,
+    super.key,
+  });
 
   /// The maximum possible height of this widget
   static double maxHeight = DayOfWeekHeaders.headerHeight + (6 * CalendarDay.dayHeight);
@@ -62,7 +62,7 @@ class CalendarMonth extends StatefulWidget {
 }
 
 class _CalendarMonthState extends State<CalendarMonth> {
-  List<DateTime> weekStarts;
+  late List<DateTime> weekStarts;
 
   @override
   void initState() {
@@ -83,7 +83,7 @@ class _CalendarMonthState extends State<CalendarMonth> {
       return ValueListenableBuilder<double>(
         child: weekWidget,
         valueListenable: widget.monthExpansionListener,
-        builder: (BuildContext context, double value, Widget child) {
+        builder: (BuildContext context, double value, Widget? child) {
           final top = DayOfWeekHeaders.headerHeight + (value * index * CalendarDay.dayHeight);
           return Positioned(
             top: top,

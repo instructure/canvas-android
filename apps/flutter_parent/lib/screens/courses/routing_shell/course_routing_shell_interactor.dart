@@ -24,7 +24,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class CourseRoutingShellInteractor {
   Future<CourseShellData> loadCourseShell(CourseShellType type, String courseId, {bool forceRefresh = false}) async {
     var course = await _loadCourse(courseId, forceRefresh: forceRefresh);
-    CanvasPage frontPage = null;
+    CanvasPage? frontPage = null;
 
     if (type == CourseShellType.frontPage) {
       frontPage = await _loadHomePage(courseId, forceRefresh: forceRefresh);
@@ -44,14 +44,14 @@ class CourseRoutingShellInteractor {
     return locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
   }
 
-  Future<CanvasPage> _loadHomePage(String courseId, {bool forceRefresh = false}) {
+  Future<CanvasPage?> _loadHomePage(String courseId, {bool forceRefresh = false}) {
     return locator<PageApi>().getCourseFrontPage(courseId, forceRefresh: forceRefresh);
   }
 }
 
 class CourseShellData {
   final Course course;
-  final CanvasPage frontPage;
+  final CanvasPage? frontPage;
 
   CourseShellData(this.course, {this.frontPage});
 }

@@ -26,7 +26,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertThresholdsPercentageDialog extends StatefulWidget {
   final AlertType _alertType;
-  final List<AlertThreshold> thresholds;
+  final List<AlertThreshold?>? thresholds;
   final String _studentId;
 
   AlertThresholdsPercentageDialog(this.thresholds, this._alertType, this._studentId);
@@ -37,18 +37,18 @@ class AlertThresholdsPercentageDialog extends StatefulWidget {
 
 class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercentageDialog> {
   bool _disableButtons = false;
-  AlertThreshold _threshold;
+  AlertThreshold? _threshold;
   bool _networkError = false;
   bool _neverClicked = false;
 
-  String maxValue;
-  String minValue;
+  String? maxValue;
+  String? minValue;
 
   final int _disabledAlpha = 80;
 
   static final UniqueKey okButtonKey = UniqueKey(); // For testing
 
-  String errorMsg;
+  String? errorMsg;
 
   final GlobalKey<FormFieldState> _formKey = GlobalKey<FormFieldState>();
 
@@ -94,20 +94,22 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
             onChanged: (input) {
               errorMsg = null;
               // Check if we had a network error
-              if (input == null || input.isEmpty) {
+              if (input.isEmpty) {
                 // Don't validate when there's no input (no error)
                 errorMsg = null;
               } else {
                 var inputParsed = int.tryParse(input);
-                var maxParsed = maxValue != null ? int.tryParse(maxValue) : 100;
-                var minParsed = minValue != null ? int.tryParse(minValue) : null;
+                var maxParsed = maxValue != null ? int.tryParse(maxValue!) : 100;
+                var minParsed = minValue != null ? int.tryParse(minValue!) : null;
 
-                if (maxParsed == 100 && inputParsed > 100) {
-                  errorMsg = L10n(context).mustBeBelow100;
-                } else if (maxParsed != 100 && inputParsed >= maxParsed) {
-                  errorMsg = L10n(context).mustBeBelowN(maxParsed);
-                } else if (minParsed != null && inputParsed <= minParsed) {
-                  errorMsg = L10n(context).mustBeAboveN(minParsed);
+                if (inputParsed != null && minParsed != null && maxParsed != null) {
+                  if (maxParsed == 100 && inputParsed > 100) {
+                    errorMsg = L10n(context).mustBeBelow100;
+                  } else if (maxParsed != 100 && inputParsed >= maxParsed) {
+                    errorMsg = L10n(context).mustBeBelowN(maxParsed);
+                  } else if (inputParsed <= minParsed) {
+                    errorMsg = L10n(context).mustBeAboveN(minParsed);
+                  }
                 }
               }
 
@@ -128,9 +130,9 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
             },
             onSaved: (input) async {
               // Don't do anything if there are existing validation errors and the user didn't click 'Never'
-              if (!_formKey.currentState.validate() && !_neverClicked) return;
+              if (_formKey.currentState?.validate() == false && !_neverClicked) return;
 
-              if (_threshold == null && input.isEmpty) {
+              if (_threshold == null && (input == null || input.isEmpty)) {
                 // Threshold is already disabled
                 Navigator.of(context).pop(null);
               }
@@ -139,14 +141,14 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
 
               var result = await locator<AlertThresholdsInteractor>()
                   .updateAlertThreshold(widget._alertType, widget._studentId, _threshold,
-                      value: input.isNotEmpty && !_neverClicked ? input : '-1')
+                      value: ((input == null || input.isNotEmpty) && !_neverClicked) ? input : '-1')
                   .catchError((_) => null);
 
               if (result != null) {
                 // Threshold was updated/deleted successfully
-                if (input.isEmpty || _neverClicked) {
+                if (input == null || input.isEmpty || _neverClicked) {
                   // Deleted a threshold
-                  Navigator.of(context).pop(_threshold.rebuild((b) => b.threshold = '-1'));
+                  Navigator.of(context).pop(_threshold?.rebuild((b) => b.threshold = '-1'));
                 } else {
                   // Updated a threshold
                   Navigator.of(context).pop(result);
@@ -159,7 +161,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
               _neverClicked = false;
             },
             onFieldSubmitted: (input) async {
-              _formKey.currentState.save();
+              _formKey.currentState?.save();
             },
             decoration: InputDecoration(
               hintText: L10n(context).gradePercentage,
@@ -186,7 +188,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
                   _threshold = _threshold?.rebuild((b) => b.threshold = '-1');
                   _neverClicked = true;
                   _showNetworkError(false);
-                  _formKey.currentState.save();
+                  _formKey.currentState?.save();
                 }),
             FlatButton(
               key: okButtonKey,
@@ -196,7 +198,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
                   ? null
                   : () async {
                       _showNetworkError(false);
-                      _formKey.currentState.save();
+                      _formKey.currentState?.save();
                     },
             ),
           ],
@@ -206,7 +208,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
   }
 
   void _showNetworkError(bool show) {
-    _formKey.currentState.validate();
+    _formKey.currentState?.validate();
     setState(() {
       _networkError = show;
     });

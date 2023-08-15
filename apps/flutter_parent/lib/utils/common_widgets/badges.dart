@@ -28,10 +28,10 @@ typedef String GetSemantics(BuildContext context, int count);
 /// A simple class to wrap options for [NumberBadge] and [WidgetBadge]
 class BadgeOptions {
   /// The initial count to show for the badge
-  final int count;
+  final int? count;
 
   /// The max count a badge can show, for counts greater than this the string shown will be '$maxCount+'
-  final int maxCount;
+  final int? maxCount;
 
   /// True if the badge should include a border
   final bool includeBorder;
@@ -39,7 +39,7 @@ class BadgeOptions {
   /// True if the badge colors should be changed to look better against the primary color background
   final bool onPrimarySurface;
 
-  const BadgeOptions(this.count, {this.maxCount = 99, this.includeBorder = false, this.onPrimarySurface = false});
+  const BadgeOptions({this.count, this.maxCount = 99, this.includeBorder = false, this.onPrimarySurface = false});
 }
 
 /// Adds a badge to a widget. If a count or a listenable is provided, a circle with the count is used as the badge.

@@ -206,7 +206,7 @@ class LoginLandingScreen extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           textColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4))),
@@ -226,7 +226,7 @@ class LoginLandingScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               title,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
           style: OutlinedButton.styleFrom(
@@ -235,7 +235,7 @@ class LoginLandingScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(4.0),
             ),
             side: BorderSide(
-                width: 1, color: ParentTheme.of(context).onSurfaceColor),
+                width: 1, color: ParentTheme.of(context)?.onSurfaceColor ?? Colors.transparent),
           ),
           onPressed: onPressed,
         ),
@@ -264,7 +264,7 @@ class LoginLandingScreen extends StatelessWidget {
                 SizedBox(width: 8),
                 Text(
                   L10n(context).loginWithQRCode,
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ]),
         ));
@@ -285,7 +285,7 @@ class LoginLandingScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 48),
                 child: Text(L10n(context).previousLogins,
-                    style: Theme.of(context).textTheme.subtitle1),
+                    style: Theme.of(context).textTheme.titleMedium),
               ),
               SizedBox(height: 6),
               Padding(
@@ -386,8 +386,7 @@ class LoginLandingScreen extends StatelessWidget {
         break;
     }
 
-    _scaffoldKey.currentState.removeCurrentSnackBar();
-    _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(flowDescription)));
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(flowDescription)));
   }
 }

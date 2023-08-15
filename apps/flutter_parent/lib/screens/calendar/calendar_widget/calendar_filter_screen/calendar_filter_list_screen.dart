@@ -33,7 +33,7 @@ class CalendarFilterListScreen extends StatefulWidget {
 }
 
 class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
-  Future<List<Course>> _coursesFuture;
+  late Future<List<Course>> _coursesFuture;
   Set<String> selectedContextIds = {}; // Public, to allow for testing
   final GlobalKey<RefreshIndicatorState> _refreshCoursesKey = new GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -60,7 +60,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
           key: _scaffoldKey,
           appBar: AppBar(
             title: Text(L10n(context).calendars),
-            bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+            bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +68,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
               SizedBox(height: 16.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(L10n(context).calendarTapToFavoriteDesc, style: Theme.of(context).textTheme.bodyText2),
+                child: Text(L10n(context).calendarTapToFavoriteDesc, style: Theme.of(context).textTheme.bodyMedium),
               ),
               SizedBox(height: 24.0),
               Expanded(child: _body())
@@ -84,11 +84,11 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
         future: _coursesFuture,
         builder: (context, snapshot) {
           Widget _body;
-          List<Course> _courses;
+          List<Course>?_courses;
           if (snapshot.hasError) {
-            _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshCoursesKey.currentState.show());
+            _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshCoursesKey.currentState?.show());
           } else if (snapshot.hasData) {
-            _courses = snapshot.data;
+            _courses = snapshot.data!;
             courseLength = _courses.length;
             if (selectedContextIds.isEmpty && selectAllIfEmpty) {
               // We only want to do this the first time we load, otherwise if the user ever deselects all the
@@ -147,9 +147,8 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                     } else {
                       if (selectedContextIds.length == 1) {
                         // The list cannot be empty, the calendar wouldn't do anything!
-                        _scaffoldKey.currentState.removeCurrentSnackBar();
-                        _scaffoldKey.currentState
-                            .showSnackBar(SnackBar(content: Text(L10n(context).minimumCalendarsError)));
+                        _scaffoldKey.currentState?.removeCurrentSnackBar();
+                        _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(L10n(context).minimumCalendarsError)));
                       } else {
                         selectedContextIds.remove(c.contextFilterId());
                       }
@@ -171,7 +170,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Text(
           title,
-          style: Theme.of(context).textTheme.overline,
+          style: Theme.of(context).textTheme.labelSmall,
         ),
       );
 }
@@ -179,10 +178,10 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
 // Custom checkbox to better control the padding at the start
 class LabeledCheckbox extends StatelessWidget {
   const LabeledCheckbox({
-    this.label,
-    this.padding,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -202,7 +201,7 @@ class LabeledCheckbox extends StatelessWidget {
           children: <Widget>[
             Checkbox(
               value: value,
-              onChanged: (bool newValue) {
+              onChanged: (bool? newValue) {
                 onChanged(newValue);
               },
             ),

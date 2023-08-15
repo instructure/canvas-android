@@ -19,7 +19,7 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 
 class Avatar extends StatelessWidget {
   final Color? backgroundColor;
-  final String url;
+  final String? url;
   final double radius;
   final Widget? overlay;
   final String? name; // Generally should be the shortname of the user
@@ -59,7 +59,7 @@ class Avatar extends StatelessWidget {
     var isTest = WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding;
 
     // Url is valid if it's not null or empty, does not contain any noPictureUrls, and we're not testing
-    bool isUrlValid = !isTest && url.isNotEmpty && !noPictureUrls.any((it) => url.contains(it));
+    bool isUrlValid = !isTest && url != null && url!.isNotEmpty && !noPictureUrls.any((it) => url!.contains(it));
 
     return Semantics(
       excludeSemantics: true,

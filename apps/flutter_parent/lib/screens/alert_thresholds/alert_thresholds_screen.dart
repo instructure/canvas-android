@@ -41,12 +41,12 @@ class AlertThresholdsScreen extends StatefulWidget {
 }
 
 class AlertThresholdsState extends State<AlertThresholdsScreen> {
-  Future<List<AlertThreshold>> _thresholdsFuture;
-  Future<bool> _canDeleteStudentFuture;
+  late Future<List<AlertThreshold>> _thresholdsFuture;
+  late Future<bool> _canDeleteStudentFuture;
 
   Future<List<AlertThreshold>> _loadThresholds() =>
       locator<AlertThresholdsInteractor>().getAlertThresholdsForStudent(widget._student.id);
-  List<AlertThreshold> _thresholds = [];
+  List<AlertThreshold?>? _thresholds = [];
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(L10n(context).alertSettings),
-          bottom: ParentTheme.of(context).appBarDivider(),
+          bottom: ParentTheme.of(context)?.appBarDivider(),
           actions: <Widget>[_deleteOption()],
         ),
         body: FutureBuilder(
@@ -74,7 +74,9 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               view = LoadingIndicator();
             } else {
-              _thresholds = snapshot.data;
+              if (snapshot.hasData) {
+                _thresholds = snapshot.data!;
+              }
               view = _body();
             }
             return view;
@@ -120,7 +122,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
                       padding: const EdgeInsets.only(top: 16),
                       child: Text(
                         L10n(context).deleteStudentFailure,
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: ParentColors.failure),
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(color: ParentColors.failure),
                       ),
                     )
                 ],
@@ -195,7 +197,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
               ),
               child: Text(
                 L10n(context).alertMeWhen,
-                style: Theme.of(context).textTheme.subtitle1.copyWith(color: ParentColors.ash),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ParentColors.ash),
               ),
             )),
         Expanded(
@@ -232,7 +234,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   Widget _generateAlertThresholdTile(AlertType type) => type.isPercentage() ? _percentageTile(type) : _switchTile(type);
 
   Widget _percentageTile(AlertType type) {
-    int value = int.tryParse(_thresholds.getThreshold(type)?.threshold ?? '');
+    int? value = int.tryParse(_thresholds?.getThreshold(type)?.threshold ?? '');
     return ListTile(
       title: Text(
         type.getTitle(context),
@@ -240,10 +242,10 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
       ),
       trailing: Text(
         value != null ? NumberFormat.percentPattern().format(value / 100) : L10n(context).never,
-        style: Theme.of(context).textTheme.subtitle1.copyWith(color: StudentColorSet.electric.light),
+        style: Theme.of(context).textTheme.subtitle1?.copyWith(color: StudentColorSet.electric.light),
       ),
       onTap: () async {
-        AlertThreshold update = await showDialog(
+        AlertThreshold? update = await showDialog(
             context: context, builder: (context) => AlertThresholdsPercentageDialog(_thresholds, type, widget._student.id));
 
         if (update == null) {
@@ -252,24 +254,24 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
         }
 
         // Grab the index of the threshold, if it exists
-        var idx = _thresholds.indexWhere((threshold) => threshold?.alertType == type);
+        var idx = _thresholds?.indexWhere((threshold) => threshold?.alertType == type);
 
         // Update the UI
         setState(() {
           if (update.threshold != '-1') {
             // Threshold was created or updated
-            if (idx == -1) {
+            if (idx == null || idx == -1) {
               // Threshold got created
-              _thresholds.add(update);
+              _thresholds?.add(update);
             } else {
               // Existing threshold was updated
-              _thresholds[idx] = update;
+              _thresholds?[idx] = update;
             }
           } else {
             // Threshold was either deleted or left at 'never'
-            if (idx != -1) {
+            if (idx != null && idx != -1) {
               // Threshold exists but was deleted
-              _thresholds[idx] = null;
+              _thresholds?[idx] = null;
             }
           }
         });
@@ -278,7 +280,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   }
 
   Widget _switchTile(AlertType type) {
-    AlertThreshold threshold = _thresholds.getThreshold(type);
+    AlertThreshold? threshold = _thresholds?.getThreshold(type);
     bool value = threshold != null;
     return _TalkbackSwitchTile(
       title: type.getTitle(context),
@@ -289,18 +291,18 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
     );
   }
 
-  Future<void> _updateThreshold(AlertType type, AlertThreshold threshold) async {
+  Future<void> _updateThreshold(AlertType type, AlertThreshold? threshold) async {
     var update = await locator<AlertThresholdsInteractor>().updateAlertThreshold(type, widget._student.id, threshold);
 
     // Grab the index of the threshold, if it exists
-    var idx = _thresholds.indexWhere((t) => t?.alertType == type);
+    var idx = _thresholds?.indexWhere((t) => t?.alertType == type);
     setState(() {
-      if (idx == -1) {
+      if (idx == null || idx == -1) {
         // Threshold got created
-        _thresholds.add(update);
+        _thresholds?.add(update);
       } else {
         // Existing threshold was deleted
-        _thresholds[idx] = null;
+        _thresholds?[idx] = null;
       }
     });
   }
@@ -310,17 +312,17 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
 /// update the value too late for talkback, so it reads the previous value.
 class _TalkbackSwitchTile extends StatefulWidget {
   final String title;
-  final bool initValue;
+  final bool? initValue;
   final ValueChanged<bool> onChange;
 
-  const _TalkbackSwitchTile({Key key, this.title, this.initValue, this.onChange}) : super(key: key);
+  const _TalkbackSwitchTile({required this.title, this.initValue, required this.onChange, super.key});
 
   @override
   _TalkbackSwitchTileState createState() => _TalkbackSwitchTileState();
 }
 
 class _TalkbackSwitchTileState extends State<_TalkbackSwitchTile> {
-  bool _value;
+  late bool _value;
 
   @override
   void initState() {

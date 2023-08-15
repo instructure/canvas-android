@@ -25,7 +25,7 @@ class StudentColorPickerInteractor {
     final userColorsResponse = await locator<UserApi>().setUserColor(contextId, newColor);
     if (userColorsResponse.hexCode != null) {
       UserColor data = UserColor((b) => b
-        ..userId = ApiPrefs.getUser().id
+        ..userId = ApiPrefs.getUser()?.id
         ..userDomain = ApiPrefs.getDomain()
         ..canvasContext = contextId
         ..color = newColor);

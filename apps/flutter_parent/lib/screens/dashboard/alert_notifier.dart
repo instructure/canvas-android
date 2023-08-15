@@ -22,7 +22,7 @@ class AlertCountNotifier extends ValueNotifier<int> {
   update(String studentId) async {
     try {
       final unreadCount = await locator<AlertsApi>().getUnreadCount(studentId);
-      value = unreadCount?.count?.asNum;
+      value = unreadCount.count.asNum.toInt();
     } catch (e) {
       print(e);
     }

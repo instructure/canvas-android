@@ -78,43 +78,43 @@ class ReminderDb {
     }
   }
 
-  Future<Reminder> insert(Reminder data) async {
+  Future<Reminder?> insert(Reminder data) async {
     var id = await db.insert(tableName, toMap(data));
     return getById(id);
   }
 
-  Future<Reminder> getById(int id) async {
+  Future<Reminder?> getById(int id) async {
     List<Map> maps = await db.query(tableName, columns: allColumns, where: '$columnId = ?', whereArgs: [id]);
-    if (maps.isNotEmpty) return fromMap(maps.first);
+    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
     return null;
   }
 
-  Future<Reminder> getByItem(String userDomain, String userId, String type, String itemId) async {
+  Future<Reminder?> getByItem(String? userDomain, String? userId, String? type, String itemId) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,
       where: '$columnUserDomain = ? AND $columnUserId = ? AND $columnType = ? AND $columnItemId = ?',
       whereArgs: [userDomain, userId, type, itemId],
     );
-    if (maps.isNotEmpty) return fromMap(maps.first);
+    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
     return null;
   }
 
-  Future<List<Reminder>>? getAllForUser(String userDomain, String userId) async {
+  Future<List<Reminder>>? getAllForUser(String? userDomain, String? userId) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,
       where: '$columnUserDomain = ? AND $columnUserId = ?',
       whereArgs: [userDomain, userId],
     );
-    return maps.map((it) => fromMap(it)).toList();
+    return maps.map((it) => fromMap(it as Map<String, dynamic>)).toList();
   }
 
   Future<int> deleteById(int id) {
     return db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<int> deleteAllForUser(String userDomain, String userId) {
+  Future<int> deleteAllForUser(String? userDomain, String? userId) {
     return db.delete(
       tableName,
       where: '$columnUserDomain = ? AND $columnUserId = ?',

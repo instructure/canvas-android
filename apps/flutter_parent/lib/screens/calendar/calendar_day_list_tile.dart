@@ -32,32 +32,40 @@ class CalendarDayListTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     Widget tile = InkWell(
       onTap: () {
-        switch (_item.plannableType) {
-          case 'assignment':
-            locator<QuickNav>()
-                .pushRoute(context, PandaRouter.assignmentDetails(_item.courseId, _item.plannable.assignmentId));
-            break;
-          case 'calendar_event':
-            // Case where the observed user has a personal calendar event
-            locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(_item.courseId, _item.plannable.id));
-            break;
-          case 'quiz':
-            // This is a quiz assignment, go to the assignment page
-            locator<QuickNav>()
-                .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
-            break;
-          case 'discussion_topic':
-            // This is a discussion assignment, go to the assignment page
-            locator<QuickNav>()
-                .pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.assignmentId));
-            break;
+        if (_item.courseId != null && _item.plannable.assignmentId != null) {
+          switch (_item.plannableType) {
+            case 'assignment':
+              locator<QuickNav>().pushRoute(
+                  context,
+                  PandaRouter.assignmentDetails(
+                      _item.courseId!, _item.plannable.assignmentId!));
+              break;
+            case 'calendar_event':
+              // Case where the observed user has a personal calendar event
+              locator<QuickNav>().pushRoute(context,
+                  PandaRouter.eventDetails(_item.courseId!, _item.plannable.id));
+              break;
+            case 'quiz':
+              // This is a quiz assignment, go to the assignment page
+              locator<QuickNav>().pushRoute(
+                  context,
+                  PandaRouter.quizAssignmentDetails(
+                      _item.courseId!, _item.plannable.assignmentId!));
+              break;
+            case 'discussion_topic':
+              // This is a discussion assignment, go to the assignment page
+              locator<QuickNav>().pushRoute(
+                  context,
+                  PandaRouter.discussionDetails(
+                      _item.courseId!, _item.plannable.assignmentId!));
+              break;
 //          case 'quiz': TODO - keep in place for potentially moving back to planner api
 //            if (_item.plannable.assignmentId != null) {
-          // This is a quiz assignment, go to the assignment page
+            // This is a quiz assignment, go to the assignment page
 //              locator<QuickNav>()
 //                  .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
 //            } else {
-          // No routes will match this url currently, so routing internally will throw it in an implicit intent
+            // No routes will match this url currently, so routing internally will throw it in an implicit intent
 //              PandaRouter.routeInternally(context, ApiPrefs.getDomain() + _item.htmlUrl);
 //            }
 //            break;
@@ -70,9 +78,10 @@ class CalendarDayListTile extends StatelessWidget {
 //            locator<QuickNav>()
 //                .pushRoute(context, PandaRouter.courseAnnouncementDetails(_item.courseId, _item.plannable.id));
 //            break;
-          default:
-            // This is a type that we don't handle - do nothing
-            break;
+            default:
+              // This is a type that we don't handle - do nothing
+              break;
+          }
         }
       },
       child: Row(
@@ -107,7 +116,7 @@ class CalendarDayListTile extends StatelessWidget {
   }
 
   String _getContextName(BuildContext context, PlannerItem item) {
-    if (item.contextName != null) return item.contextName;
+    if (item.contextName != null) return item.contextName!;
 
     // Planner notes don't have a context name so we'll use 'Planner Note'
     // TODO - Keep in place for potentially moving back to planner api
@@ -117,7 +126,7 @@ class CalendarDayListTile extends StatelessWidget {
   }
 
   Widget _getIcon(BuildContext context, PlannerItem item) {
-    IconData icon;
+    IconData? icon = null;
     switch (item.plannableType) {
       case 'assignment':
         icon = CanvasIcons.assignment;
@@ -139,15 +148,15 @@ class CalendarDayListTile extends StatelessWidget {
 //        icon = CanvasIcons.note;
 //        break;
     }
-    return Icon(icon, size: 20, semanticLabel: '', color: Theme.of(context).accentColor);
+    return Icon(icon, size: 20, semanticLabel: '', color: Theme.of(context).colorScheme.secondary);
   }
 
   List<Widget> _getDueDate(BuildContext context, PlannerItem plannerItem) {
     if (plannerItem.plannable.dueAt != null) {
       return [
         SizedBox(height: 4),
-        Text(plannerItem.plannable.dueAt.l10nFormat(L10n(context).dueDateAtTime),
-            style: Theme.of(context).textTheme.caption),
+        Text(plannerItem.plannable.dueAt!.l10nFormat(L10n(context).dueDateAtTime),
+            style: Theme.of(context).textTheme.bodySmall),
       ];
     }
     return [];
@@ -155,8 +164,8 @@ class CalendarDayListTile extends StatelessWidget {
 
   List<Widget> _getPointsOrStatus(BuildContext context, PlannerItem plannerItem) {
     var submissionStatus = plannerItem.submissionStatus;
-    String pointsOrStatus = null;
-    String semanticLabel = null;
+    String? pointsOrStatus = null;
+    String? semanticLabel = null;
     // Submission status can be null for non-assignment contexts like announcements
     if (submissionStatus != null) {
       if (submissionStatus.excused) {
@@ -181,7 +190,7 @@ class CalendarDayListTile extends StatelessWidget {
         SizedBox(height: 4),
         Text(
           pointsOrStatus,
-          style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).accentColor),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
           semanticsLabel: semanticLabel,
         ),
       ];

@@ -32,15 +32,14 @@ class AnnouncementDetailScreen extends StatefulWidget {
   final String courseId;
   final AnnouncementType announcementType;
 
-  AnnouncementDetailScreen(this.announcementId, this.announcementType, this.courseId, BuildContext context, {Key key})
-      : super(key: key);
+  AnnouncementDetailScreen(this.announcementId, this.announcementType, this.courseId, BuildContext context, {super. key});
 
   @override
   State createState() => _AnnouncementDetailScreenState();
 }
 
 class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
-  Future<AnnouncementViewState> _announcementFuture;
+  Future<AnnouncementViewState>? _announcementFuture;
 
   Future<AnnouncementViewState> _loadAnnouncement(BuildContext context, {bool forceRefresh = false}) =>
       _interactor.getAnnouncement(
@@ -68,7 +67,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         if (snapshot.hasError || snapshot.data == null) {
           return _error();
         } else {
-          return _announcementScaffold(snapshot.data);
+          return _announcementScaffold(snapshot.data!);
         }
       },
     );
@@ -84,7 +83,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
             setState(() {
               _announcementFuture = _loadAnnouncement(context, forceRefresh: true);
             });
-            return _announcementFuture.catchError((_) {});
+            return _announcementFuture!.catchError((_) {});
           },
           child: _announcementBody(announcementViewState)),
     );
@@ -123,7 +122,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         }));
   }
 
-  Widget _attachmentsWidget(BuildContext context, Attachment attachment) {
+  Widget _attachmentsWidget(BuildContext context, Attachment? attachment) {
     if (attachment == null) return Container();
     return Container(
         height: 108,

@@ -41,8 +41,8 @@ class AlertsScreen extends StatefulWidget {
 }
 
 class _AlertsScreenState extends State<AlertsScreen> {
-  Future<AlertsList> _alertsFuture;
-  User _student;
+  Future<AlertsList>? _alertsFuture;
+  late User _student;
 
   Future<AlertsList> _loadAlerts({bool forceRefresh = false}) =>
       widget._interactor.getAlertsForStudent(_student.id, forceRefresh);
@@ -79,17 +79,17 @@ class _AlertsScreenState extends State<AlertsScreen> {
 
         // Get the child widget to show in the refresh indicator
         Widget child;
-        if (snapshot.hasError) {
+        if (!snapshot.hasData || snapshot.hasError) {
           child = _error(context);
         } else {
-          child = _AlertsList(_student, snapshot.data);
+          child = _AlertsList(_student, snapshot.data!);
         }
 
         return RefreshIndicator(
           onRefresh: () {
             _alertsFuture = _loadAlerts(forceRefresh: true);
             setState(() {});
-            return _alertsFuture;
+            return _alertsFuture!;
           },
           child: child,
         );
@@ -108,7 +108,7 @@ class _AlertsList extends StatefulWidget {
   final AlertsList _data;
   final User _student;
 
-  _AlertsList(this._student, this._data, {Key key}) : super(key: key);
+  _AlertsList(this._student, this._data, {super.key});
 
   @override
   __AlertsListState createState() => __AlertsListState();
@@ -116,7 +116,7 @@ class _AlertsList extends StatefulWidget {
 
 class __AlertsListState extends State<_AlertsList> {
   GlobalKey<AnimatedListState> _listKey = GlobalKey();
-  AlertsList _data;
+  AlertsList? _data;
 
   @override
   void initState() {
@@ -126,18 +126,18 @@ class __AlertsListState extends State<_AlertsList> {
 
   @override
   Widget build(BuildContext context) {
-    if (_data == null || _data.alerts == null || _data.alerts.isEmpty) {
+    if (_data == null || _data?.alerts == null || _data?.alerts?.isEmpty == true) {
       return _empty(context);
     } else {
       return AnimatedList(
         key: _listKey,
-        initialItemCount: _data.alerts.length,
-        itemBuilder: (context, index, animation) => _alertTile(context, _data.alerts[index], index),
+        initialItemCount: _data!.alerts!.length,
+        itemBuilder: (context, index, animation) => _alertTile(context, _data!.alerts![index], index),
       );
     }
   }
 
-  Widget _alertTile(BuildContext context, Alert alert, int index, {Animation animation = null}) {
+  Widget _alertTile(BuildContext context, Alert alert, int index, {Animation? animation = null}) {
     final textTheme = Theme.of(context).textTheme;
     final alertColor = _alertColor(context, alert);
     Widget tile = InkWell(
@@ -156,11 +156,11 @@ class __AlertsListState extends State<_AlertsList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 16),
-                Text(_alertTitle(context, alert), style: textTheme.subtitle2.copyWith(color: alertColor)),
+                Text(_alertTitle(context, alert), style: textTheme.subtitle2?.copyWith(color: alertColor)),
                 SizedBox(height: 4),
                 Text(alert.title, style: textTheme.subtitle1),
                 SizedBox(height: 4),
-                Text(_formatDate(context, alert.actionDate), style: textTheme.subtitle2),
+                Text(_formatDate(context, alert.actionDate!), style: textTheme.subtitle2),
                 SizedBox(height: 12),
               ],
             ),
@@ -183,7 +183,7 @@ class __AlertsListState extends State<_AlertsList> {
 
     if (animation != null) {
       tile = SizeTransition(
-        sizeFactor: animation,
+        sizeFactor: animation as Animation<double>,
         axis: Axis.vertical,
         child: tile,
       );
@@ -212,7 +212,7 @@ class __AlertsListState extends State<_AlertsList> {
 
   Color _alertColor(BuildContext context, Alert alert) {
     if (alert.isAlertInfo()) return ParentColors.ash;
-    if (alert.isAlertPositive()) return ParentTheme.of(context).defaultTheme.accentColor;
+    if (alert.isAlertPositive()) return ParentTheme.of(context)!.defaultTheme.colorScheme.secondary;
     if (alert.isAlertNegative()) return ParentColors.failure;
 
     return ParentColors.failure;
@@ -220,8 +220,8 @@ class __AlertsListState extends State<_AlertsList> {
 
   String _alertTitle(BuildContext context, Alert alert) {
     final l10n = L10n(context);
-    final threshold = _data.thresholds?.getThreshold(alert.alertType)?.threshold;
-    String title;
+    final threshold = _data?.thresholds?.getThreshold(alert.alertType)?.threshold;
+    String title = '';
     switch (alert.alertType) {
       case AlertType.institutionAnnouncement:
         title = l10n.institutionAnnouncement;
@@ -233,16 +233,16 @@ class __AlertsListState extends State<_AlertsList> {
         title = l10n.assignmentMissing;
         break;
       case AlertType.courseGradeHigh:
-        title = l10n.courseGradeAboveThreshold(threshold);
+        title = l10n.courseGradeAboveThreshold(threshold!);
         break;
       case AlertType.courseGradeLow:
-        title = l10n.courseGradeBelowThreshold(threshold);
+        title = l10n.courseGradeBelowThreshold(threshold!);
         break;
       case AlertType.assignmentGradeHigh:
-        title = l10n.assignmentGradeAboveThreshold(threshold);
+        title = l10n.assignmentGradeAboveThreshold(threshold!);
         break;
       case AlertType.assignmentGradeLow:
-        title = l10n.assignmentGradeBelowThreshold(threshold);
+        title = l10n.assignmentGradeBelowThreshold(threshold!);
         break;
     }
 
@@ -273,7 +273,7 @@ class __AlertsListState extends State<_AlertsList> {
 
       final readAlert = await widget._interactor.markAlertRead(
           widget._student.id, alert.id);
-      setState(() => _data.alerts.setRange(index, index + 1, [readAlert]));
+      setState(() => _data!.alerts!.setRange(index, index + 1, [readAlert]));
       locator<AlertCountNotifier>().update(widget._student.id);
     }
   }
@@ -281,13 +281,13 @@ class __AlertsListState extends State<_AlertsList> {
   void _dismissAlert(Alert alert) async {
     _markAlertDismissed(alert);
 
-    int itemIndex = _data.alerts.indexOf(alert);
+    int itemIndex = _data!.alerts!.indexOf(alert);
 
-    _listKey.currentState.removeItem(
+    _listKey.currentState?.removeItem(
         itemIndex, (context, animation) => _alertTile(context, alert, itemIndex, animation: animation),
         duration: const Duration(milliseconds: 200));
 
-    setState(() => _data.alerts.remove(alert));
+    setState(() => _data!.alerts!.remove(alert));
   }
 
   void _markAlertDismissed(Alert alert) async {

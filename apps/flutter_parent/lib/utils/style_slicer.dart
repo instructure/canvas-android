@@ -39,7 +39,7 @@ abstract class StyleSlicer {
   /// later in the list of [slicers] will be used.
   ///
   /// A base style for the entire text can be applied by specifying [baseStyle]
-  static TextSpan apply(String source, List<StyleSlicer> slicers, {TextStyle baseStyle = const TextStyle()}) {
+  static TextSpan apply(String? source, List<StyleSlicer>? slicers, {TextStyle? baseStyle = const TextStyle()}) {
     if (source == null || source.isEmpty) return TextSpan(text: '');
     if (slicers == null || slicers.isEmpty) return TextSpan(text: source);
 
@@ -49,7 +49,7 @@ abstract class StyleSlicer {
     Map<int, List<_SlicerOp>> opsMap = {};
 
     slicers.forEach((slicer) {
-      slicer?.getSlices(source)?.forEach((slice) {
+      slicer.getSlices(source).forEach((slice) {
         opsMap.putIfAbsent(slice.item1, () => []).add(_SlicerOp(true, slicer));
         opsMap.putIfAbsent(slice.item2, () => []).add(_SlicerOp(false, slicer));
       });

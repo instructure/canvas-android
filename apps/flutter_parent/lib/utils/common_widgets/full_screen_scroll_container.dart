@@ -24,7 +24,7 @@ class FullScreenScrollContainer extends StatelessWidget {
   final List<Widget> children;
   final double horizontalPadding;
 
-  const FullScreenScrollContainer(this.children, {this.header, this.horizontalPadding = 32, super.key});
+  const FullScreenScrollContainer({required this.children, this.header, this.horizontalPadding = 32, super.key});
 
   @override
   Widget build(BuildContext context) {

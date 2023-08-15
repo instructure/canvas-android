@@ -148,7 +148,7 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
       ..missing = submission.missing);
   }
 
-  PlannerItem toPlannerItem(String courseName) {
+  PlannerItem toPlannerItem(String? courseName) {
     final plannable = Plannable((b) => b
       ..id = id
       ..title = title

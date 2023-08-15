@@ -28,8 +28,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  Key _lightModeKey = GlobalKey();
-  Key _darkModeKey = GlobalKey();
+  var _lightModeKey = GlobalKey();
+  var _darkModeKey = GlobalKey();
   Key _highContrastModeKey = GlobalKey();
 
   SettingsInteractor _interactor = locator<SettingsInteractor>();
@@ -41,8 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         builder: (context) => Scaffold(
           appBar: AppBar(
             title: Text(L10n(context).settings),
-            bottom:
-                ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+            bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
           ),
           body: ListView(
             children: [
@@ -53,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _themeButtons(context),
               SizedBox(height: 16),
-              if (ParentTheme.of(context).isDarkMode)
+              if (ParentTheme.of(context)?.isDarkMode == true)
                 _webViewDarkModeSwitch(context),
               _highContrastModeSwitch(context),
               _about(context),
@@ -76,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             anchorKey: _lightModeKey,
             buttonKey: Key('light-mode-button'),
             context: context,
-            selected: !ParentTheme.of(context).isDarkMode,
+            selected: ParentTheme.of(context)?.isDarkMode == false,
             semanticsLabel: L10n(context).lightModeLabel,
             child: SvgPicture.asset(
               'assets/svg/panda-light-mode.svg',
@@ -88,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             anchorKey: _darkModeKey,
             buttonKey: Key('dark-mode-button'),
             context: context,
-            selected: ParentTheme.of(context).isDarkMode,
+            selected: ParentTheme.of(context)?.isDarkMode == true,
             semanticsLabel: L10n(context).darkModeLabel,
             child: SvgPicture.asset(
               'assets/svg/panda-dark-mode.svg',
@@ -102,12 +101,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _themeOption({
-    GlobalKey anchorKey,
-    Key buttonKey,
-    BuildContext context,
-    bool selected,
-    String semanticsLabel,
-    Widget child,
+    GlobalKey? anchorKey,
+    Key? buttonKey,
+    required BuildContext context,
+    required bool selected,
+    String? semanticsLabel,
+    required Widget child,
   }) {
     double size = 140;
     return Semantics(
@@ -124,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 border:
-                    Border.all(color: Theme.of(context).accentColor, width: 2),
+                    Border.all(color: Theme.of(context).colorScheme.secondary, width: 2),
               )
             : null,
         child: ClipRRect(
@@ -153,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: ListTile(
         title: Text(L10n(context).webViewDarkModeLabel),
         trailing: Switch(
-          value: ParentTheme.of(context).isWebViewDarkMode,
+          value: ParentTheme.of(context)?.isWebViewDarkMode == true,
           onChanged: (_) => _toggleWebViewDarkMode(context),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
@@ -163,12 +162,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   _toggleWebViewDarkMode(BuildContext context) {
-    if (ParentTheme.of(context).isWebViewDarkMode) {
+    if (ParentTheme.of(context)?.isWebViewDarkMode == true) {
       locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_WEB_MODE_OFF);
     } else {
       locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_WEB_MODE_ON);
     }
-    ParentTheme.of(context).toggleWebViewDarkMode();
+    ParentTheme.of(context)?.toggleWebViewDarkMode();
   }
 
   Widget _highContrastModeSwitch(BuildContext context) {
@@ -177,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text(L10n(context).highContrastLabel),
         trailing: Switch(
           key: _highContrastModeKey,
-          value: ParentTheme.of(context).isHC,
+          value: ParentTheme.of(context)?.isHC == true,
           onChanged: (_) => _onHighContrastModeChanged(context),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
@@ -224,12 +223,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Container _debugLabel(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(32),
       ),
       padding: const EdgeInsets.all(4),
       child: Icon(Icons.bug_report,
-          color: Theme.of(context).accentIconTheme.color, size: 16),
+          color: Theme.of(context).colorScheme.secondary, size: 16),
     );
   }
 }

@@ -77,7 +77,7 @@ class UserColorsDb {
     return null;
   }
 
-  Future<void> insertOrUpdateAll(String domain, String userId, UserColors colors) async {
+  Future<void> insertOrUpdateAll(String? domain, String? userId, UserColors colors) async {
     for (var entry in colors.customColors.entries) {
       await insertOrUpdate(UserColor((b) => b
         ..userDomain = domain

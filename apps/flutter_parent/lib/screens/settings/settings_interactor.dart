@@ -40,7 +40,7 @@ class SettingsInteractor {
   }
 
   void toggleDarkMode(context, anchorKey) {
-    if (ParentTheme.of(context).isDarkMode) {
+    if (ParentTheme.of(context)?.isDarkMode == true) {
       locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_MODE_OFF);
     } else {
       locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_MODE_ON);
@@ -49,12 +49,12 @@ class SettingsInteractor {
   }
 
   void toggleHCMode(context) {
-    if (ParentTheme.of(context).isHC) {
+    if (ParentTheme.of(context)?.isHC == true) {
       locator<Analytics>().logEvent(AnalyticsEventConstants.HC_MODE_OFF);
     } else {
       locator<Analytics>().logEvent(AnalyticsEventConstants.HC_MODE_ON);
     }
-    ParentTheme.of(context).toggleHC();
+    ParentTheme.of(context)?.toggleHC();
   }
 
   void showAboutDialog(context) {
@@ -77,16 +77,16 @@ class SettingsInteractor {
                       SizedBox(height: 24),
                       Text(L10n(context).aboutDomainTitle,
                           style: TextStyle(fontSize: 16)),
-                      Text(ApiPrefs.getDomain(), style: TextStyle(fontSize: 14)),
+                      Text(ApiPrefs.getDomain() ?? '', style: TextStyle(fontSize: 14)),
                       SizedBox(height: 24),
                       Text(L10n(context).aboutLoginIdTitle,
                           style: TextStyle(fontSize: 16)),
-                      Text(ApiPrefs.getUser().loginId,
+                      Text(ApiPrefs.getUser()?.loginId ?? '',
                           style: TextStyle(fontSize: 14)),
                       SizedBox(height: 24),
                       Text(L10n(context).aboutEmailTitle,
                           style: TextStyle(fontSize: 16)),
-                      Text(ApiPrefs.getUser().primaryEmail,
+                      Text(ApiPrefs.getUser()?.primaryEmail ?? '',
                           style: TextStyle(fontSize: 14)),
                       SizedBox(height: 24),
                       Text(L10n(context).aboutVersionTitle,

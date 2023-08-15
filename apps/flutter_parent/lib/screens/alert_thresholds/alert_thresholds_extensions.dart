@@ -49,29 +49,29 @@ extension GetTitleFromAlert on AlertType {
   }
 }
 
-extension GetThresholdFromType on List<AlertThreshold> {
-  AlertThreshold getThreshold(AlertType type) {
-    var index = this.indexWhere((threshold) => threshold?.alertType == type);
-    if (index == -1)
+extension GetThresholdFromType on List<AlertThreshold?>? {
+  AlertThreshold? getThreshold(AlertType type) {
+    var index = this?.indexWhere((threshold) => threshold?.alertType == type);
+    if (index == null || index == -1)
       return null;
     else
-      return this[index];
+      return this?[index];
   }
 }
 
 extension GetThresholdMinMax on AlertType {
   List<String> getMinMax(List<AlertThreshold> thresholds) {
-    String max;
-    String min;
+    String max = '';
+    String min = '';
 
     if (this == AlertType.courseGradeLow) {
-      max = thresholds.getThreshold(AlertType.courseGradeHigh)?.threshold;
+      max = thresholds.getThreshold(AlertType.courseGradeHigh)?.threshold ?? '';
     } else if (this == AlertType.courseGradeHigh) {
-      min = thresholds.getThreshold(AlertType.courseGradeLow)?.threshold;
+      min = thresholds.getThreshold(AlertType.courseGradeLow)?.threshold ?? '';
     } else if (this == AlertType.assignmentGradeLow) {
-      max = thresholds.getThreshold(AlertType.assignmentGradeHigh)?.threshold;
+      max = thresholds.getThreshold(AlertType.assignmentGradeHigh)?.threshold ?? '';
     } else if (this == AlertType.assignmentGradeHigh) {
-      min = thresholds.getThreshold(AlertType.assignmentGradeLow)?.threshold;
+      min = thresholds.getThreshold(AlertType.assignmentGradeLow)?.threshold ?? '';
     }
 
     return [min, max];

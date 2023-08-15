@@ -31,7 +31,7 @@ class DomainSearchScreen extends StatefulWidget {
   @visibleForTesting
   static final GlobalKey helpDialogBodyKey = GlobalKey();
 
-  const DomainSearchScreen({Key key, this.loginFlow}) : super(key: key);
+  const DomainSearchScreen({required this.loginFlow, super.key});
 
   final LoginFlow loginFlow;
 
@@ -42,7 +42,7 @@ class DomainSearchScreen extends StatefulWidget {
 class _DomainSearchScreenState extends State<DomainSearchScreen> {
   var _interactor = locator<DomainSearchInteractor>();
 
-  var _schoolDomains = List<SchoolDomain>();
+  var _schoolDomains = [];
 
   /// The minimum length of a trimmed query required to trigger a search
   static const int _MIN_SEARCH_LENGTH = 2;
@@ -57,7 +57,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   bool _error = false;
 
   /// The current query, tracked to help prevent race conditions when a previous search completes after a more recent search
-  String _currentQuery;
+  String? _currentQuery;
 
   Debouncer _debouncer = Debouncer(Duration(milliseconds: 500));
 
@@ -108,13 +108,13 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             L10n(context).findSchool,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
             MaterialButton(
               minWidth: 20,
               highlightColor: Colors.transparent,
-              splashColor: Theme.of(context).accentColor.withAlpha(100),
-              textColor: Theme.of(context).accentColor,
+              splashColor: Theme.of(context).colorScheme.secondary.withAlpha(100),
+              textColor: Theme.of(context).colorScheme.secondary,
               shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
               onPressed: _query.isEmpty ? null : () => _next(context),
               child: Text(
@@ -197,7 +197,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                     title: Text(item.name),
                     onTap: () {
                       final accountName = (item.name == null || item.name.isEmpty) ? item.domain : item.name;
-                      return locator<QuickNav>().pushRoute(context,
+                      locator<QuickNav>().pushRoute(context,
                         PandaRouter.loginWeb(item.domain, accountName: accountName, authenticationProvider: item.authenticationProvider));
                     },
                   );
@@ -238,12 +238,12 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                 inputSpans: [
                   TextSpan(
                     text: canvasGuidesText,
-                    style: TextStyle(color: Theme.of(context).accentColor),
+                    style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                     recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasGuides,
                   ),
                   TextSpan(
                     text: canvasSupportText,
-                    style: TextStyle(color: Theme.of(context).accentColor),
+                    style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                     recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasSupport,
                   ),
                 ],
@@ -260,8 +260,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         });
   }
 
-  TextSpan _helpBodySpan({@required String text, @required List<TextSpan> inputSpans}) {
-    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
+  TextSpan _helpBodySpan({required String text, required List<TextSpan> inputSpans}) {
+    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text!), it)).toList();
     indexedSpans.sort((a, b) => a.key.compareTo(b.key));
 
     int index = 0;
@@ -270,7 +270,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
     for (var indexedSpan in indexedSpans) {
       spans.add(TextSpan(text: text.substring(index, indexedSpan.key)));
       spans.add(indexedSpan.value);
-      index = indexedSpan.key + indexedSpan.value.text.length;
+      index = indexedSpan.key + indexedSpan.value.text!.length;
     }
     spans.add(TextSpan(text: text.substring(index)));
 
@@ -278,9 +278,9 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   }
 
   void _next(BuildContext context) {
-    var domain = _query;
+    String domain = _query;
     RegExp regExp = new RegExp(r'(.*)([a-zA-Z0-9]){1}');
-    if (regExp.hasMatch(domain)) domain = regExp.stringMatch(domain);
+    if (regExp.hasMatch(domain)) domain = regExp.stringMatch(domain)!;
     if (domain.startsWith('www.')) domain = domain.substring(4); // Strip off www. if they typed it
     if (!domain.contains('.') || domain.endsWith('.beta')) domain += '.instructure.com';
     locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, accountName: domain, loginFlow: widget.loginFlow));

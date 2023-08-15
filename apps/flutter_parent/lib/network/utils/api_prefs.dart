@@ -136,20 +136,20 @@ class ApiPrefs {
     if (!switchingLogins) {
       // Remove reminders
       ReminderDb reminderDb = locator<ReminderDb>();
-      final reminders = await reminderDb.getAllForUser(getDomain(), getUser().id);
-      final reminderIds = reminders?.map((it) => it.id).toList();
+      final reminders = await reminderDb.getAllForUser(getDomain(), getUser()?.id);
+      final reminderIds = reminders?.map((it) => it.id).toList().nonNulls.toList() ?? [];
       await locator<NotificationUtil>().deleteNotifications(reminderIds);
-      await reminderDb.deleteAllForUser(getDomain(), getUser().id);
+      await reminderDb.deleteAllForUser(getDomain(), getUser()?.id);
 
       // Remove calendar filters
-      locator<CalendarFilterDb>().deleteAllForUser(getDomain(), getUser().id);
+      locator<CalendarFilterDb>().deleteAllForUser(getDomain(), getUser()?.id);
 
       // Remove saved Login data
       await removeLoginByUuid(getCurrentLoginUuid());
     }
 
     // Clear current Login
-    await _prefs.remove(KEY_CURRENT_LOGIN_UUID);
+    await _prefs!.remove(KEY_CURRENT_LOGIN_UUID);
     _currentLogin = null;
     app?.rebuild(effectiveLocale());
   }
@@ -157,7 +157,7 @@ class ApiPrefs {
   static Future<void> saveLogins(List<Login> logins) async {
     _checkInit();
     List<String> jsonList = logins.map((it) => json.encode(serialize(it))).toList();
-    await _prefs.setStringList(KEY_LOGINS, jsonList);
+    await _prefs!.setStringList(KEY_LOGINS, jsonList);
   }
 
   static Future<void> addLogin(Login login) async {
@@ -170,25 +170,25 @@ class ApiPrefs {
 
   static List<Login> getLogins() {
     _checkInit();
-    return _prefs.getStringList(KEY_LOGINS)?.map((it) => deserialize<Login>(json.decode(it)))?.toList() ?? [];
+    return _prefs!.getStringList(KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList().nonNulls.toList() ?? [];
   }
 
   static setLastAccount(SchoolDomain lastAccount, LoginFlow loginFlow) {
     _checkInit();
     final lastAccountJson = json.encode(serialize(lastAccount));
-    _prefs.setString(KEY_LAST_ACCOUNT, lastAccountJson);
-    _prefs.setInt(KEY_LAST_ACCOUNT_LOGIN_FLOW, loginFlow.index);
+    _prefs!.setString(KEY_LAST_ACCOUNT, lastAccountJson);
+    _prefs!.setInt(KEY_LAST_ACCOUNT_LOGIN_FLOW, loginFlow.index);
   }
 
-  static Tuple2<SchoolDomain, LoginFlow> getLastAccount() {
+  static Tuple2<SchoolDomain, LoginFlow>? getLastAccount() {
     _checkInit();
-    if (!_prefs.containsKey(KEY_LAST_ACCOUNT)) return null;
+    if (!_prefs!.containsKey(KEY_LAST_ACCOUNT)) return null;
 
-    final accountJson = _prefs.getString(KEY_LAST_ACCOUNT);
-    if (accountJson == null || accountJson.isEmpty) return null;
+    final accountJson = _prefs!.getString(KEY_LAST_ACCOUNT);
+    if (accountJson.isEmpty) return null;
 
     final lastAccount = deserialize<SchoolDomain>(json.decode(accountJson));
-    final loginFlow = _prefs.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[_prefs.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW)] : LoginFlow.normal;
+    final loginFlow = _prefs!.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[_prefs!.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW)] : LoginFlow.normal;
 
     return Tuple2(lastAccount, loginFlow);
   }
@@ -198,7 +198,7 @@ class ApiPrefs {
   static Future<void> removeLoginByUuid(String uuid) async {
     _checkInit();
     var logins = getLogins();
-    Login login = logins.firstWhere((it) => it.uuid == uuid, orElse: () => null);
+    Login? login = logins.firstWhereOrNull((it) => it.uuid == uuid);
     if (login != null) {
       // Delete token (fire and forget - no need to await)
       locator<AuthApi>().deleteToken(login.domain, login.accessToken);
@@ -296,7 +296,7 @@ class ApiPrefs {
 
   static Future<void> setHasCheckedOldReminders(bool checked) => _setPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS, checked);
 
-  static int getCameraCount() => _getPrefInt(KEY_CAMERA_COUNT);
+  static int? getCameraCount() => _getPrefInt(KEY_CAMERA_COUNT);
 
   static Future<void> setCameraCount(int count) => _setPrefInt(KEY_CAMERA_COUNT, count);
 
@@ -331,14 +331,14 @@ class ApiPrefs {
     return _prefs!.setString(key, value);
   }
 
-  static String _getPrefString(String key) {
+  static String? _getPrefString(String key) {
     _checkInit();
-    return _prefs!.getString(key);
+    return _prefs?.getString(key);
   }
 
-  static int _getPrefInt(String key) {
+  static int? _getPrefInt(String key) {
     _checkInit();
-    return _prefs!.getInt(key);
+    return _prefs?.getInt(key);
   }
 
   static Future<bool> _setPrefInt(String key, int value) async {

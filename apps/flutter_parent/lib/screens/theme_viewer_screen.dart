@@ -36,20 +36,20 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
     setState(() => _allToggle = !_allToggle);
   }
 
-  Map<String, TextStyle> getStyles(TextTheme theme) => {
-        'subtitle2 / caption': theme.subtitle2,
-        'overline / subhead': theme.overline,
-        'bodyText2 / body': theme.bodyText2,
-        'caption / subtitle': theme.caption,
-        'subtitle1 / title': theme.subtitle1,
-        'headline5 / heading': theme.headline5,
-        'headline4 / display': theme.headline4,
-        'button / -': theme.button,
-        'bodyText1 / -': theme.bodyText1,
-        'headline6 / -': theme.headline6,
-        'headline3 / -': theme.headline3,
-        'headline2 / -': theme.headline2,
-        'headline1 / -': theme.headline1,
+  Map<String, TextStyle?> getStyles(TextTheme theme) => {
+        'subtitle2 / caption': theme.titleSmall,
+        'overline / subhead': theme.labelSmall,
+        'bodyText2 / body': theme.bodyMedium,
+        'caption / subtitle': theme.bodySmall,
+        'subtitle1 / title': theme.titleMedium,
+        'headline5 / heading': theme.headlineSmall,
+        'headline4 / display': theme.headlineMedium,
+        'button / -': theme.labelLarge,
+        'bodyText1 / -': theme.bodyLarge,
+        'headline6 / -': theme.titleLarge,
+        'headline3 / -': theme.displaySmall,
+        'headline2 / -': theme.displayMedium,
+        'headline1 / -': theme.displayLarge,
       };
 
   @override
@@ -73,10 +73,10 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                           key: ThemeViewerScreen.studentColorKey,
                           width: 48,
                           height: 48,
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
-                        Text('Theme configuration', style: Theme.of(context).textTheme.headline6),
-                        Text('Play around with some values', style: Theme.of(context).textTheme.caption),
+                        Text('Theme configuration', style: Theme.of(context).textTheme.titleLarge),
+                        Text('Play around with some values', style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
                   ),
@@ -92,14 +92,14 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text('Theme Viewer'),
-              Text('View all the things', style: Theme.of(context).primaryTextTheme.caption),
+              Text('View all the things', style: Theme.of(context).primaryTextTheme.bodySmall),
             ],
           ),
           actions: <Widget>[
             IconButton(icon: Icon(CanvasIcons.email), onPressed: () {}),
             IconButton(icon: Icon(CanvasIcons.search), onPressed: () {}),
           ],
-          bottom: ParentTheme.of(context).appBarDivider(
+          bottom: ParentTheme.of(context)?.appBarDivider(
             bottom: TabBar(
               indicatorColor: Theme.of(context).primaryIconTheme.color,
               tabs: [
@@ -133,21 +133,21 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                   Divider(height: 0.5, thickness: 0.5),
                   BottomNavigationBar(
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    unselectedItemColor: Theme.of(context).textTheme.caption.color,
+                    unselectedItemColor: Theme.of(context).textTheme.bodySmall?.color,
                     onTap: (value) => setState(() => selectedIdx = value), // new
                     currentIndex: selectedIdx, // new
                     items: [
                       new BottomNavigationBarItem(
                         icon: Icon(CanvasIcons.courses),
-                        title: Text('Courses'),
+                        label: 'Courses',
                       ),
                       new BottomNavigationBarItem(
                         icon: Icon(CanvasIcons.calendar_month),
-                        title: Text('Calendar'),
+                        label: 'Calendar',
                       ),
                       new BottomNavigationBarItem(
                         icon: Icon(CanvasIcons.alerts),
-                        title: Text('Alerts'),
+                        label: 'Alerts',
                       ),
                     ],
                   ),
@@ -161,7 +161,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   }
 
   List<Widget> _drawerContents(BuildContext context) {
-    var selectedColorSet = ParentTheme.of(context).studentColorSet;
+    var selectedColorSet = ParentTheme.of(context)!.studentColorSet;
     var colorIndex = StudentColorSet.all.indexOf(selectedColorSet);
     if (colorIndex == -1) colorIndex = 0;
     return [
@@ -170,7 +170,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         child: DropdownButton<int>(
           hint: Text('Tralala'),
           value: colorIndex,
-          onChanged: (index) => ParentTheme.of(context).setSelectedStudent(index.toString()),
+          onChanged: (index) => ParentTheme.of(context)?.setSelectedStudent(index.toString()),
           isExpanded: true,
           items: StudentColorSet.all
               .asMap()
@@ -184,7 +184,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                       Container(
                         width: 12,
                         height: 12,
-                        color: ParentTheme.of(context).getColorVariantForCurrentState(it.value),
+                        color: ParentTheme.of(context)?.getColorVariantForCurrentState(it.value),
                       ),
                       SizedBox(width: 8),
                       Flexible(child: Text('Student Color ${it.key + 1}')),
@@ -198,19 +198,19 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
       SwitchListTile(
         title: Text('Dark Mode'),
         subtitle: Text('Subtitle'),
-        value: ParentTheme.of(context).isDarkMode,
-        onChanged: (_) => ParentTheme.of(context).toggleDarkMode(),
+        value: ParentTheme.of(context)?.isDarkMode == true,
+        onChanged: (_) => ParentTheme.of(context)?.toggleDarkMode(),
       ),
       SwitchListTile(
         title: Text('High Contrast Mode'),
-        value: ParentTheme.of(context).isHC,
-        onChanged: (_) => ParentTheme.of(context).toggleHC(),
+        value: ParentTheme.of(context)?.isHC == true,
+        onChanged: (_) => ParentTheme.of(context)?.toggleHC(),
       ),
     ];
   }
 
   Widget _content(BuildContext context) {
-    var swatch = ParentColors.makeSwatch(ParentTheme.of(context).studentColor);
+    var swatch = ParentColors.makeSwatch(ParentTheme.of(context)!.studentColor);
     return ListView(
       children: <Widget>[
         AppBar(
@@ -247,7 +247,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                         i == 0 ? '50' : i.toString(),
                         style: TextStyle(
                             fontSize: 8,
-                            color: swatch[i == 0 ? 50 : i].computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                            color: (swatch[i == 0 ? 50 : i]?.computeLuminance() ?? 0) > 0.5 ? Colors.black : Colors.white),
                       ),
                     ),
                   ),
@@ -270,10 +270,10 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                   Text('100 pts', style: Theme.of(context).textTheme.caption),
                   Padding(
                     padding: const EdgeInsets.only(left: 12, right: 4),
-                    child: Icon(Icons.check_circle, size: 20, color: ParentTheme.of(context).successColor),
+                    child: Icon(Icons.check_circle, size: 20, color: ParentTheme.of(context)?.successColor),
                   ),
                   Text('Submitted',
-                      style: Theme.of(context).textTheme.caption.apply(color: ParentTheme.of(context).successColor)),
+                      style: Theme.of(context).textTheme.bodySmall?.apply(color: ParentTheme.of(context)?.successColor)),
                 ],
               ),
             ],
@@ -287,11 +287,11 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text('Due', style: Theme.of(context).textTheme.overline),
+          child: Text('Due', style: Theme.of(context).textTheme.labelSmall),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text('April 1 at 11:59pm', style: Theme.of(context).textTheme.subtitle1),
+          child: Text('April 1 at 11:59pm', style: Theme.of(context).textTheme.titleMedium),
         ),
         Divider(),
         SwitchListTile(
@@ -325,7 +325,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
           subtitle: Text('ListTile Subtitle'),
           leading: Icon(
             Icons.assignment,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
         Divider(),
@@ -339,7 +339,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             ),
             RaisedButton(
               child: Text('Raised Button'),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               colorBrightness: Brightness.dark,
               onPressed: () {},
             )
@@ -356,7 +356,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             ),
             RaisedButton(
               child: Text('Raised Button (disabled)'),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               colorBrightness: Brightness.dark,
               onPressed: null,
             )
@@ -388,15 +388,15 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             var style = entry.value;
             return DataRow(cells: [
               DataCell(Text(name)),
-              DataCell(Text(style.fontSize.toString())),
-              DataCell(Text(style.fontWeight.toString().replaceFirst('FontWeight.w', ''))),
+              DataCell(Text(style?.fontSize?.toString() ?? '')),
+              DataCell(Text(style?.fontWeight?.toString().replaceFirst('FontWeight.w', '') ?? '')),
               DataCell(Row(
                 children: <Widget>[
                   Container(
                     child: Container(
                       width: 20,
                       height: 20,
-                      color: style.color,
+                      color: style?.color,
                     ),
                     //color: bgColor,
                     padding: EdgeInsets.all(4),
@@ -406,8 +406,8 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('#' + style.color.value.toRadixString(16).substring(2).toUpperCase()),
-                      Text((100 * style.color.opacity).toStringAsFixed(0) + '% opacity')
+                      Text('#' + (style?.color?.value.toRadixString(16).substring(2).toUpperCase() ?? '')),
+                      Text((100 * (style?.color?.opacity ?? 1)).toStringAsFixed(0) + '% opacity')
                     ],
                   )
                 ],

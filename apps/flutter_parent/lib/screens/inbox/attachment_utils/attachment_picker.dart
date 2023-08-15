@@ -28,8 +28,8 @@ class AttachmentPicker extends StatefulWidget {
   @override
   _AttachmentPickerState createState() => _AttachmentPickerState();
 
-  static Future<AttachmentHandler> asBottomSheet(BuildContext context) {
-    return showModalBottomSheet(context: context, builder: (context) => AttachmentPicker());
+  static Future<AttachmentHandler?> asBottomSheet(BuildContext context) {
+    return showModalBottomSheet(context: context, builder: (context) => AttachmentPicker()) as Future<AttachmentHandler?>;
   }
 }
 
@@ -43,7 +43,7 @@ class _AttachmentPickerState extends State<AttachmentPicker> {
 
   Widget _pickerWidget(BuildContext context) {
     final interactor = locator<AttachmentPickerInteractor>();
-    final iconColor = ParentTheme.of(context).onSurfaceColor;
+    final iconColor = ParentTheme.of(context)?.onSurfaceColor;
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 8),
       shrinkWrap: true,
@@ -67,7 +67,7 @@ class _AttachmentPickerState extends State<AttachmentPicker> {
     );
   }
 
-  Widget _item({Widget icon, String title, GestureTapCallback onTap}) {
+  Widget _item({required Widget icon, required String title, required GestureTapCallback onTap}) {
     return ListTile(
       leading: Container(width: 20, alignment: Alignment.center, child: icon),
       title: Text(title),
@@ -95,7 +95,7 @@ class _AttachmentPickerState extends State<AttachmentPicker> {
     );
   }
 
-  _performImport(Future<File> Function() import) async {
+  _performImport(Future<File?> Function() import) async {
     setState(() => _importing = true);
     var file = await import();
     if (file != null) {

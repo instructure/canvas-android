@@ -31,11 +31,11 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 
 class SplashScreenInteractor {
-  Future<SplashScreenData> getData({String qrLoginUrl}) async {
+  Future<SplashScreenData> getData({String? qrLoginUrl}) async {
     if (qrLoginUrl != null) {
       // Double check the loginUrl
       final qrLoginUri = QRUtils.verifySSOLogin(qrLoginUrl);
-      if (qrLoginUrl == null) {
+      if (qrLoginUri == null) {
         locator<Analytics>().logEvent(AnalyticsEventConstants.QR_LOGIN_FAILURE);
         return Future.error(QRLoginError());
       } else {
@@ -61,8 +61,8 @@ class SplashScreenInteractor {
     var isObserver = students.isNotEmpty;
 
     // Check for masquerade permissions if we haven't already
-    if (ApiPrefs.getCurrentLogin().canMasquerade == null) {
-      if (ApiPrefs.getDomain().contains(MasqueradeScreenInteractor.siteAdminDomain)) {
+    if (ApiPrefs.getCurrentLogin()?.canMasquerade == null) {
+      if (ApiPrefs.getDomain()?.contains(MasqueradeScreenInteractor.siteAdminDomain) == true) {
         ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = true);
       } else {
         try {
@@ -74,7 +74,7 @@ class SplashScreenInteractor {
       }
     }
 
-    SplashScreenData data = SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
+    SplashScreenData data = SplashScreenData(isObserver, ApiPrefs.getCurrentLogin()?.canMasquerade == true);
 
     if (data.isObserver || data.canMasquerade) await updateUserColors();
 
@@ -85,7 +85,7 @@ class SplashScreenInteractor {
 
   Future<void> updateUserColors() async {
     var colors = await locator<UserApi>().getUserColors(refresh: true);
-    await locator<UserColorsDb>().insertOrUpdateAll(ApiPrefs.getDomain(), ApiPrefs.getUser().id, colors);
+    await locator<UserColorsDb>().insertOrUpdateAll(ApiPrefs.getDomain(), ApiPrefs.getUser()?.id, colors);
   }
 
   Future<int> getCameraCount() async {
@@ -94,13 +94,13 @@ class SplashScreenInteractor {
       await ApiPrefs.setCameraCount(cameraCount);
       return cameraCount;
     } else {
-      return ApiPrefs.getCameraCount();
+      return ApiPrefs.getCameraCount() ?? 0;
     }
   }
 
   Future<bool> _performSSOLogin(Uri qrLoginUri) async {
-    final domain = qrLoginUri.queryParameters[QRUtils.QR_DOMAIN];
-    final oAuthCode = qrLoginUri.queryParameters[QRUtils.QR_AUTH_CODE];
+    final domain = qrLoginUri.queryParameters[QRUtils.QR_DOMAIN] ?? '';
+    final oAuthCode = qrLoginUri.queryParameters[QRUtils.QR_AUTH_CODE] ?? '';
 
     final mobileVerifyResult = await locator<AuthApi>().mobileVerify(domain);
 
@@ -123,11 +123,11 @@ class SplashScreenInteractor {
       ..domain = mobileVerifyResult.baseUrl
       ..clientId = mobileVerifyResult.clientId
       ..clientSecret = mobileVerifyResult.clientSecret
-      ..masqueradeUser = isMasquerading ? tokenResponse.user.toBuilder() : null
+      ..masqueradeUser = isMasquerading ? tokenResponse.user?.toBuilder() : null
       ..masqueradeDomain = isMasquerading ? mobileVerifyResult.baseUrl : null
       ..isMasqueradingFromQRCode = isMasquerading ? true : null
       ..canMasquerade = isMasquerading ? true : null
-      ..user = tokenResponse.user.toBuilder());
+      ..user = tokenResponse.user?.toBuilder());
 
     ApiPrefs.addLogin(login);
     ApiPrefs.switchLogins(login);
@@ -137,12 +137,15 @@ class SplashScreenInteractor {
   }
 
   Future<bool> _requiresTermsAcceptance(String targetUrl) async {
-    return (await locator.get<OAuthApi>().getAuthenticatedUrl(targetUrl))?.requiresTermsAcceptance ?? false;
+    return (await locator.get<OAuthApi>().getAuthenticatedUrl(targetUrl)).requiresTermsAcceptance;
   }
 
   Future<bool> isTermsAcceptanceRequired() async {
-    final targetUrl = '${ApiPrefs.getCurrentLogin().domain}/users/self';
-    if (targetUrl.contains(ApiPrefs.getDomain())) {
+    final targetUrl = '${ApiPrefs.getCurrentLogin()?.domain}/users/self';
+    String? domain = ApiPrefs.getDomain();
+    if (domain == null) {
+      return false;
+    } else if (targetUrl.contains(domain)) {
       return _requiresTermsAcceptance(targetUrl);
     } else {
       return false;

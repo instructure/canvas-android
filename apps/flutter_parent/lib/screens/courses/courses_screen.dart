@@ -35,9 +35,9 @@ class CoursesScreen extends StatefulWidget {
 }
 
 class _CoursesScreenState extends State<CoursesScreen> {
-  User _student;
+  User? _student;
 
-  Future<List<Course>> _coursesFuture;
+  Future<List<Course>>? _coursesFuture;
 
   CoursesInteractor _interactor = locator<CoursesInteractor>();
 
@@ -56,7 +56,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Future<List<Course>> _loadCourses({bool forceRefresh = false}) =>
-      _interactor.getCourses(isRefresh: forceRefresh, studentId: _student?.id?.isEmpty == true ? null : _student.id);
+      _interactor.getCourses(isRefresh: forceRefresh, studentId: _student?.id.isEmpty == true ? null : _student!.id);
 
   @override
   Widget build(BuildContext context) => _content(context);
@@ -67,15 +67,15 @@ class _CoursesScreenState extends State<CoursesScreen> {
       builder: (context, AsyncSnapshot<List<Course>> snapshot) {
         Widget _body;
         if (snapshot.hasError) {
-          _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshKey.currentState.show());
+          _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshKey.currentState?.show());
         } else if (snapshot.hasData) {
-          _body = (snapshot.data.isEmpty)
+          _body = (snapshot.data!.isEmpty)
               ? EmptyPandaWidget(
                   svgPath: 'assets/svg/panda-book.svg',
                   title: L10n(context).noCoursesTitle,
                   subtitle: L10n(context).noCoursesMessage,
                 )
-              : _success(snapshot.data);
+              : _success(snapshot.data!);
         } else {
           return LoadingIndicator();
         }
@@ -104,11 +104,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 8),
-                Text(course.name ?? '',
-                    style: Theme.of(context).textTheme.subtitle1, key: Key("${course.courseCode}_name")),
+                Text(course.name,
+                    style: Theme.of(context).textTheme.titleMedium, key: Key("${course.courseCode}_name")),
                 SizedBox(height: 2),
                 Text(course.courseCode ?? '',
-                    style: Theme.of(context).textTheme.caption, key: Key("${course.courseCode}_code")),
+                    style: Theme.of(context).textTheme.bodySmall, key: Key("${course.courseCode}_code")),
                 if (grade != null) SizedBox(height: 4),
                 if (grade != null) grade,
                 SizedBox(height: 8),
@@ -118,13 +118,13 @@ class _CoursesScreenState extends State<CoursesScreen> {
         });
   }
 
-  Widget _courseGrade(context, Course course) {
+  Widget? _courseGrade(context, Course course) {
     CourseGrade grade = course.getCourseGrade(_student?.id);
     var format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
     if (grade.isCourseGradeLocked(
-      forAllGradingPeriods: course?.enrollments?.any((enrollment) => enrollment.hasActiveGradingPeriod()) != true,
+      forAllGradingPeriods: course.enrollments?.any((enrollment) => enrollment.hasActiveGradingPeriod()) != true,
     )) {
       return null;
     }
@@ -133,13 +133,13 @@ class _CoursesScreenState extends State<CoursesScreen> {
     // or a score
     var text = grade.noCurrentGrade()
         ? L10n(context).noGrade
-        : grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade() : format.format(grade.currentScore() / 100);
+        : grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade()! : format.format(grade.currentScore()! / 100);
 
     return Text(
       text,
       key: Key("${course.courseCode}_grade"),
       style: TextStyle(
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),
@@ -150,10 +150,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
     locator<QuickNav>().pushRoute(context, PandaRouter.courseDetails(course.id));
   }
 
-  Future<void> _refresh() {
+  Future<void> _refresh() async {
     setState(() {
       _coursesFuture = _loadCourses(forceRefresh: true);
     });
-    return _coursesFuture;
   }
 }

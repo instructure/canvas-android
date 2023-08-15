@@ -35,21 +35,19 @@ import 'package:provider/provider.dart';
 class CourseDetailsScreen extends StatefulWidget {
   final CourseDetailsModel _model;
 
-  CourseDetailsScreen(String courseId, {Key key})
-      : this._model = CourseDetailsModel(ApiPrefs.getCurrentStudent(), courseId),
-        super(key: key);
+  CourseDetailsScreen(String courseId, {super.key})
+      : this._model = CourseDetailsModel(ApiPrefs.getCurrentStudent()!, courseId);
 
   // A convenience constructor when we already have the course data, so we don't load something we already have
-  CourseDetailsScreen.withCourse(Course course, {Key key})
-      : this._model = CourseDetailsModel.withCourse(ApiPrefs.getCurrentStudent(), course),
-        super(key: key);
+  CourseDetailsScreen.withCourse(Course course, {super.key})
+      : this._model = CourseDetailsModel.withCourse(ApiPrefs.getCurrentStudent()! , course);
 
   @override
   _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
 }
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void initState() {
@@ -85,7 +83,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
   Widget _body(BuildContext context, CourseDetailsModel model) {
     if (_tabController == null) _tabController = TabController(initialIndex: 0, length: model.tabCount(), vsync: this);
     return Scaffold(
-      appBar: _appBar(context, model),
+      appBar: _appBar(context, model) as PreferredSizeWidget?,
       body: _tabBody(context, model),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _sendMessage(model.hasHomePageAsSyllabus),
@@ -116,7 +114,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
             },
           ),
       ],
-      bottom: ParentTheme.of(context).appBarDivider(
+      bottom: ParentTheme.of(context)?.appBarDivider(
         bottom: (tabCount <= 1)
             ? null // Don't show the tab bar if we only have one tab
             : TabBar(
@@ -147,7 +145,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
         children: [
           CourseGradesScreen(),
           if (model.hasHomePageAsFrontPage) CourseFrontPageScreen(courseId: model.courseId),
-          if (model.hasHomePageAsSyllabus) CourseSyllabusScreen(model.course.syllabusBody),
+          if (model.hasHomePageAsSyllabus) CourseSyllabusScreen(model.course!.syllabusBody!),
           if (model.showSummary) CourseSummaryScreen(),
         ],
       );
@@ -157,7 +155,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
   void _sendMessage(bool hasSyllabus) {
     String subject;
     String urlLink = '${ApiPrefs.getDomain()}/courses/${widget._model.courseId}';
-    if (_tabController.index == 0) {
+    if (_tabController?.index == 0) {
       // Grades
       subject = L10n(context).gradesSubjectMessage(widget._model.student.name);
       urlLink += '/grades';

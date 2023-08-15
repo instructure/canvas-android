@@ -32,7 +32,7 @@ class WebLoginInteractor {
       ..domain = result.baseUrl
       ..clientId = result.clientId
       ..clientSecret = result.clientSecret
-      ..user = tokens.user.toBuilder());
+      ..user = tokens.user?.toBuilder());
 
     ApiPrefs.addLogin(login);
     ApiPrefs.switchLogins(login);
