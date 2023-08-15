@@ -17,6 +17,7 @@
 package com.instructure.student.features.modules.list.datasource
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
@@ -24,6 +25,7 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
 import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import io.mockk.coEvery
@@ -31,6 +33,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -86,5 +89,16 @@ class ModuleListLocalDataSourceTest {
         Assert.assertEquals(2, result.dataOrNull?.size)
         Assert.assertEquals("modules", result.dataOrNull!![0].tabId)
         Assert.assertEquals("grades", result.dataOrNull!![1].tabId)
+    }
+
+    @Test
+    fun `Load course settings successfully returns api model`() = runTest {
+        val expected = CourseSettings(restrictQuantitativeData = true)
+
+        coEvery { courseSettingsDao.findByCourseId(any()) } returns CourseSettingsEntity(expected, 1L)
+
+        val result = dataSource.loadCourseSettings(1, true)
+
+        assertEquals(expected, result)
     }
 }

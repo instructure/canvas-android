@@ -17,6 +17,7 @@
 package com.instructure.student.features.modules.list
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
@@ -188,5 +189,27 @@ class ModuleListRepositoryTest {
         Assert.assertEquals(2, result.size)
         Assert.assertEquals(onlineTabs.first(), result.first())
         Assert.assertEquals(onlineTabs[1], result[1])
+    }
+
+    @Test
+    fun `Load curse settings from local storage when device is offline`() = runTest {
+        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
+        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+        coEvery { networkStateProvider.isOnline() } returns false
+
+        val result = repository.loadCourseSettings(1, true)
+
+        Assert.assertTrue(result!!.restrictQuantitativeData)
+    }
+
+    @Test
+    fun `Load curse settings from network when device is online`() = runTest {
+        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
+        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+        coEvery { networkStateProvider.isOnline() } returns true
+
+        val result = repository.loadCourseSettings(1, true)
+
+        Assert.assertFalse(result!!.restrictQuantitativeData)
     }
 }

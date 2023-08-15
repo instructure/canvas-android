@@ -18,6 +18,7 @@
 package com.instructure.student.features.assignmentlist
 
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -31,6 +32,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -126,5 +128,27 @@ class AssignmentListRepositoryTest {
 
         coVerify { localDataSource.getGradingPeriodsForCourse(1, true) }
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Load curse settings from local storage when device is offline`() = runTest {
+        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
+        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+        coEvery { networkStateProvider.isOnline() } returns false
+
+        val result = repository.loadCourseSettings(1, true)
+
+        Assert.assertTrue(result!!.restrictQuantitativeData)
+    }
+
+    @Test
+    fun `Load curse settings from network when device is online`() = runTest {
+        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
+        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+        coEvery { networkStateProvider.isOnline() } returns true
+
+        val result = repository.loadCourseSettings(1, true)
+
+        Assert.assertFalse(result!!.restrictQuantitativeData)
     }
 }
