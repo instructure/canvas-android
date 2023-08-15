@@ -459,8 +459,15 @@ fun MockCanvas.updateUserEnrollments() {
     }
 }
 
-fun MockCanvas.addCourseWithEnrollment(user: User, enrollmentType: Enrollment.EnrollmentType, score: Double = 0.0, grade: String = "", isHomeroom: Boolean = false): Course {
-    val course = addCourse(isHomeroom = isHomeroom)
+fun MockCanvas.addCourseWithEnrollment(
+    user: User,
+    enrollmentType: Enrollment.EnrollmentType,
+    score: Double = 0.0,
+    grade: String = "",
+    isHomeroom: Boolean = false,
+    restrictQuantitativeData: Boolean = false
+): Course {
+    val course = addCourse(isHomeroom = isHomeroom, restrictQuantitativeData = restrictQuantitativeData)
 
     addEnrollment(
         user = user,
@@ -482,7 +489,8 @@ fun MockCanvas.addCourse(
     section: Section? = null,
     isPublic: Boolean = true,
     withGradingPeriod: Boolean = false,
-    isHomeroom: Boolean = false
+    isHomeroom: Boolean = false,
+    restrictQuantitativeData: Boolean = false
 ): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
@@ -508,7 +516,8 @@ fun MockCanvas.addCourse(
         homeroomCourse = isHomeroom,
         gradingPeriods = gradingPeriodList,
         courseColor = "#008EE2",
-        restrictEnrollmentsToCourseDate = concluded
+        restrictEnrollmentsToCourseDate = concluded,
+        settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData)
     )
     courses += course.id to course
 
@@ -943,7 +952,9 @@ fun MockCanvas.addSubmissionForAssignment(
         comment: SubmissionComment? = null,
         state: String = "submitted",
         grade: String? = null,
-        attempt: Long = 1
+        attempt: Long = 1,
+        score: Double? = null,
+        excused: Boolean = false
 ) : Submission {
     val assignment = assignments[assignmentId]!!
     val assignmentDueDate = assignment.dueAt?.toDate()
@@ -965,7 +976,11 @@ fun MockCanvas.addSubmissionForAssignment(
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
             submissionComments = if(comment != null) listOf(comment) else listOf(),
             mediaContentType = attachment?.contentType,
-            grade = grade
+            grade = grade,
+            score = score ?: 0.0,
+            postedAt = Date(),
+            excused = excused,
+            enteredScore = score ?: 0.0,
     )
 
     // Get the submission list for the assignment, creating it if necessary
@@ -993,7 +1008,11 @@ fun MockCanvas.addSubmissionForAssignment(
                 attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
                 submissionComments = if(comment != null) listOf(comment) else listOf(),
                 mediaContentType = attachment?.contentType,
-                grade = grade
+                grade = grade,
+                score = score ?: 0.0,
+                postedAt = Date(),
+                excused = excused,
+                enteredScore = score ?: 0.0,
         )
         submissionList.add(userRootSubmission)
     }
@@ -1474,7 +1493,8 @@ fun MockCanvas.addItemToModule(
         course: Course,
         moduleId: Long,
         item: Any,
-        published: Boolean = true
+        published: Boolean = true,
+        moduleContentDetails: ModuleContentDetails? = null
 ) : ModuleItem {
 
     // Placeholders for itemType and itemTitle values that we will compute below
@@ -1536,7 +1556,8 @@ fun MockCanvas.addItemToModule(
             // I don't really know if these two should be the same, but I needed
             // htmlUrl populated in order to get external url module items to work.
             url = itemUrl,
-            htmlUrl = itemUrl
+            htmlUrl = itemUrl,
+            moduleDetails = moduleContentDetails
     )
 
     // Copy/update/replace the module
@@ -1962,37 +1983,42 @@ private val canvaDocInk = CanvaDocInkList(
  * Consider doing this automatically whenever a submission is processed?
  */
 fun MockCanvas.addSubmissionStreamItem(
-        user: User,
-        course: Course,
-        assignment: Assignment,
-        submission: Submission,
-        submittedAt: String? = null,
-        message: String = Faker.instance().lorem().sentence(),
-        type : String = "submission"
-) : StreamItem {
+    user: User,
+    course: Course,
+    assignment: Assignment,
+    submission: Submission,
+    submittedAt: String? = null,
+    message: String = Faker.instance().lorem().sentence(),
+    type: String = "submission",
+    score: Double = -1.0,
+    grade: String? = null,
+    excused: Boolean = false
+): StreamItem {
     // Create the StreamItem
     val item = StreamItem(
-            id = newItemId(),
-            course_id = course.id,
-            assignment_id = assignment.id,
-            title = assignment.name,
-            message = message,
-            assignment = assignment,
-            type = type,
-            submittedAt = submittedAt,
-            userId = user.id,
-            user = user,
-            updatedAt = submittedAt ?: "",
-            htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${submission.id}",
-            context_type = CanvasContext.Type.USER.apiString
-            //canvasContext = user // This seems to break the notifications page so that it does not load
-
+        id = newItemId(),
+        course_id = course.id,
+        assignment_id = assignment.id,
+        title = assignment.name,
+        message = message,
+        assignment = assignment,
+        type = type,
+        submittedAt = submittedAt,
+        userId = user.id,
+        user = user,
+        updatedAt = submittedAt ?: "",
+        htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${submission.id}",
+        context_type = CanvasContext.Type.USER.apiString,
+        score = score,
+        grade = grade,
+        excused = excused
+        //canvasContext = user // This seems to break the notifications page so that it does not load
     )
 
     // Record the StreamItem
     var list = streamItems[user.id]
     if (list == null) {
-        list = mutableListOf<StreamItem>()
+        list = mutableListOf()
         streamItems[user.id] = list
     }
     list.add(item)

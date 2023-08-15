@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
@@ -69,10 +68,12 @@ sealed class GradeCellViewState {
         fun fromSubmission(
             context: Context,
             assignment: Assignment,
-            submission: Submission?
+            submission: Submission?,
+            restrictQuantitativeData: Boolean = false
         ): GradeCellViewState {
-            // Return empty state if unsubmitted and ungraded, or "Not Graded" grading type
-            if ((submission?.submittedAt == null && submission?.isGraded != true) || assignment.gradingType == Assignment.NOT_GRADED_TYPE) {
+            // Return empty state if unsubmitted and ungraded, or "Not Graded" grading type or quantitative data is restricted
+            val hideGrades = restrictQuantitativeData && assignment.isGradingTypeQuantitative && submission?.excused != true
+            if ((submission?.submittedAt == null && submission?.isGraded != true) || assignment.gradingType == Assignment.NOT_GRADED_TYPE || hideGrades) {
                 return Empty
             }
 
@@ -87,8 +88,8 @@ sealed class GradeCellViewState {
             /* The 'Out of' text abbreviates the word "points" to "pts" which is read as "P T S" by screen readers, so
              * we use a second string with the full word "points" as a content description. */
             val pointsPossibleText = NumberHelper.formatDecimal(assignment.pointsPossible, 2, true)
-            val outOfText = context.getString(R.string.outOfPointsAbbreviatedFormatted, pointsPossibleText)
-            val outOfContentDescriptionText = context.getString(R.string.outOfPointsFormatted, pointsPossibleText)
+            val outOfText = if (restrictQuantitativeData) "" else context.getString(R.string.outOfPointsAbbreviatedFormatted, pointsPossibleText)
+            val outOfContentDescriptionText = if (restrictQuantitativeData) "" else context.getString(R.string.outOfPointsFormatted, pointsPossibleText)
 
             // Excused
             if (submission.excused) {
@@ -113,6 +114,21 @@ sealed class GradeCellViewState {
                     outOf = outOfText,
                     outOfContentDescription = outOfContentDescriptionText,
                     graphPercent = 1.0f
+                )
+            }
+
+            if (restrictQuantitativeData) {
+                val grade = submission.grade.orEmpty()
+                val accessibleGradeString = getContentDescriptionForMinusGradeString(grade, context)
+                val gradeCellContentDescription = context.getString(R.string.a11y_gradeCellContentDescriptionLetterGradeOnly, accessibleGradeString)
+
+                return GradeData(
+                    showCompleteIcon = true,
+                    graphPercent = 1.0f,
+                    accentColor = accentColor,
+                    grade = grade,
+                    gradeContentDescription = accessibleGradeString,
+                    gradeCellContentDescription = gradeCellContentDescription
                 )
             }
 

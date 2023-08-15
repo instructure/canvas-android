@@ -277,10 +277,6 @@
             android:name="com.instructure.pandautils.services.NotoriousUploadService"
             android:exported="false" />
 
-        <service
-            android:name=".util.FileDownloadJobIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <receiver android:name=".receivers.InitializeReceiver"
             android:exported="true">
             <intent-filter>

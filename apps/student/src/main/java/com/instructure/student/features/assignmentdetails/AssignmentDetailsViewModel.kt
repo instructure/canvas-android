@@ -91,6 +91,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var dbSubmission: DatabaseSubmission? = null
     private var isUploading = false
+    private var restrictQuantitativeData = false
 
     var assignment: Assignment? = null
         private set
@@ -163,6 +164,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), forceNetwork).await().dataOrThrow
+                restrictQuantitativeData = courseResult.settings?.restrictQuantitativeData ?: false
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
@@ -236,11 +238,15 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     @Suppress("DEPRECATION")
     private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailsViewData {
-        val points = resources.getQuantityString(
-            R.plurals.quantityPointsAbbreviated,
-            assignment.pointsPossible.toInt(),
-            NumberHelper.formatDecimal(assignment.pointsPossible, 1, true)
-        )
+        val points = if (restrictQuantitativeData) {
+            ""
+        } else {
+            resources.getQuantityString(
+                R.plurals.quantityPointsAbbreviated,
+                assignment.pointsPossible.toInt(),
+                NumberHelper.formatDecimal(assignment.pointsPossible, 1, true)
+            )
+        }
 
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
 
@@ -434,7 +440,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 resources,
                 colorKeeper.getOrGenerateColor(course),
                 assignment,
-                assignment.submission
+                assignment.submission,
+                restrictQuantitativeData
             ),
             dueDate = due,
             submissionTypes = submissionTypes,
@@ -466,6 +473,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             colorKeeper.getOrGenerateColor(course),
             assignment,
             selectedSubmission,
+            restrictQuantitativeData,
             attempt?.isUploading.orDefault(),
             attempt?.isFailed.orDefault()
         )
