@@ -168,7 +168,7 @@ void main() {
     }).toList();
 
     // We expect X positions to be in ascending order
-    final List<double> expectedCenters = List<double>.from(centers).sortBy([(it) => it]);
+    final List<double> expectedCenters = List<double>.from(centers).sortBySelector([(it) => it]);
 
     expect(centers, expectedCenters);
   });
@@ -195,7 +195,7 @@ void main() {
     }).toList();
 
     // We expect X positions to be in descending order
-    final List<double> expectedCenters = List<double>.from(centers).sortBy([(it) => it], descending: true);
+    final List<double> expectedCenters = List<double>.from(centers).sortBySelector([(it) => it], descending: true);
 
     expect(centers, expectedCenters);
   });

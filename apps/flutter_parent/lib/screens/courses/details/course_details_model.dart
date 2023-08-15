@@ -25,6 +25,7 @@ import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/utils/base_model.dart';
+import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
@@ -153,11 +154,10 @@ class CourseDetailsModel extends BaseModel {
 
     // Sort by ascending date, using a future date as a fallback so that undated items appear at the end
     // If dates match (which will be the case for undated items), then sort by title
-    return items.sorted((a, b) {
-      int cmp = (b.startAt ?? b.allDayDate!).compareTo(a.startAt ?? a.allDayDate!);
-      if (cmp != 0) return cmp;
-      return b.title!.compareTo(a.title!);
-    });
+    return items.sortBySelector([
+          (it) => it?.startAt ?? it?.allDayDate,
+          (it) => it?.title,
+    ])?.toList().nonNulls.toList() ?? [];
   }
 
   CourseDetailsInteractor _interactor() => locator<CourseDetailsInteractor>();

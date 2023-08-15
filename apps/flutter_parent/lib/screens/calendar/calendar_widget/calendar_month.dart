@@ -74,7 +74,7 @@ class _CalendarMonthState extends State<CalendarMonth> {
   Widget build(BuildContext context) {
     final weekWidgets = weekStarts.mapIndexed<Widget>((index, weekStart) {
       final weekWidget = CalendarWeek(
-        firstDay: weekStart,
+        firstDay: weekStart!,
         selectedDay: widget.selectedDay,
         onDaySelected: widget.onDaySelected,
         displayDayOfWeekHeader: false,
@@ -103,7 +103,7 @@ class _CalendarMonthState extends State<CalendarMonth> {
     return Stack(
       children: [
         DayOfWeekHeaders(),
-        ...weekWidgets,
+        ...weekWidgets!,
       ],
     );
   }

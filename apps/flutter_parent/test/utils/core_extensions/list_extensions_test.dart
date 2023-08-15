@@ -19,21 +19,21 @@ void main() {
   group('sortBy', () {
     test('sortBy returns null if list is null', () {
       final List<int> unsorted = null;
-      final List<int> actual = unsorted.sortBy([(it) => it]);
+      final List<int> actual = unsorted.sortBySelector([(it) => it]);
       expect(actual, isNull);
     });
 
     test('sortBy correctly sorts in ascending order', () {
       final List<int> unsorted = [3, 4, 2, 5, 1];
       final List<int> expected = [1, 2, 3, 4, 5];
-      final List<int> actual = unsorted.sortBy([(it) => it]);
+      final List<int> actual = unsorted.sortBySelector([(it) => it]);
       expect(actual, expected);
     });
 
     test('sortBy correctly sorts in descending order', () {
       final List<int> unsorted = [3, 4, 2, 5, 1];
       final List<int> expected = [5, 4, 3, 2, 1];
-      final List<int> actual = unsorted.sortBy([(it) => it], descending: true);
+      final List<int> actual = unsorted.sortBySelector([(it) => it], descending: true);
       expect(actual, expected);
     });
 
@@ -44,7 +44,7 @@ void main() {
         _TestClass(number: null),
       ];
       expect(
-        () => unsorted.sortBy([(it) => it.number], nullSortOrder: NullSortOrder.none),
+        () => unsorted.sortBySelector([(it) => it.number], nullSortOrder: NullSortOrder.none),
         throwsArgumentError,
       );
     });
@@ -56,7 +56,7 @@ void main() {
         _TestClass(number: null),
       ];
       expect(
-        unsorted.sortBy([(it) => it.number], nullSortOrder: NullSortOrder.none),
+        unsorted.sortBySelector([(it) => it.number], nullSortOrder: NullSortOrder.none),
         unsorted,
       );
     });
@@ -68,7 +68,7 @@ void main() {
         _TestClass(number: null, text: '3'),
       ];
       final expected = [unsorted[1], unsorted[0], unsorted[2]];
-      final actual = unsorted.sortBy([(it) => it.number, (it) => it.text], nullSortOrder: NullSortOrder.greaterThan);
+      final actual = unsorted.sortBySelector([(it) => it.number, (it) => it.text], nullSortOrder: NullSortOrder.greaterThan);
       expect(actual, expected);
     });
 
@@ -79,7 +79,7 @@ void main() {
         _TestClass(number: null, text: '3'),
       ];
       final expected = [unsorted[0], unsorted[2], unsorted[1]];
-      final actual = unsorted.sortBy([(it) => it.number, (it) => it.text], nullSortOrder: NullSortOrder.lessThan);
+      final actual = unsorted.sortBySelector([(it) => it.number, (it) => it.text], nullSortOrder: NullSortOrder.lessThan);
       expect(actual, expected);
     });
 
@@ -90,7 +90,7 @@ void main() {
         _TestClass(number: null, text: '3'),
       ];
       final expected = [unsorted[0], unsorted[1], unsorted[2]];
-      final actual = unsorted.sortBy([(it) => it.number, (it) => it.text], nullSortOrder: NullSortOrder.equal);
+      final actual = unsorted.sortBySelector([(it) => it.number, (it) => it.text], nullSortOrder: NullSortOrder.equal);
       expect(actual, expected);
     });
 
@@ -105,7 +105,7 @@ void main() {
         _TestClass(number: 7, text: '7'),
       ];
       final expected = [unsorted[0], unsorted[2], unsorted[4], unsorted[6], unsorted[1], unsorted[3], unsorted[5]];
-      final actual = unsorted.sortBy([(it) => it.number]);
+      final actual = unsorted.sortBySelector([(it) => it.number]);
       expect(actual, expected);
     });
 
@@ -121,7 +121,7 @@ void main() {
         _TestClass(date: now, number: 123, text: '5'),
       ];
       final expected = [unsorted[4], unsorted[3], unsorted[1], unsorted[2], unsorted[0], unsorted[6], unsorted[5]];
-      final actual = unsorted.sortBy([(it) => it.date, (it) => it.number, (it) => it.text]);
+      final actual = unsorted.sortBySelector([(it) => it.date, (it) => it.number, (it) => it.text]);
       expect(actual, expected);
     });
   });

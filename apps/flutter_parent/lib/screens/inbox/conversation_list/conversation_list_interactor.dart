@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:tuple/tuple.dart';
 
@@ -74,11 +75,9 @@ class ConversationListInteractor {
         .toList() as List<Tuple2<User, Course>>;
 
     // Sort users in alphabetical order and sort their courses alphabetically
-    thing.sort((a, b) {
-      int cmp = b.item1.shortName!.compareTo(a.item1.shortName!);
-      if (cmp != 0) return cmp;
-      return b.item2.name.compareTo(a.item2.name);
-    });
+    thing.sortBySelector(
+      [(it) => it?.item1.shortName, (it) => it?.item2.name],
+    );
 
     return thing;
   }
