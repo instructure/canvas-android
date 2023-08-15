@@ -33,6 +33,7 @@ import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +49,7 @@ void main() async {
       FlutterDownloader.initialize(),
       WidgetsFlutterBinding.ensureInitialized(),
     DbUtil.init()
-    ]);
+    ] as Iterable<Future>);
     PandaRouter.init();
 
     await FlutterDownloader.registerCallback(downloadCallback);
@@ -75,8 +76,8 @@ void main() async {
 }
 
 @pragma('vm:entry-point')
-void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-  final SendPort send =
+void downloadCallback(String id, int status, int progress) {
+  final SendPort? send =
       IsolateNameServer.lookupPortByName('downloader_send_port');
-  send.send([id, status, progress]);
+  send?.send([id, status, progress]);
 }

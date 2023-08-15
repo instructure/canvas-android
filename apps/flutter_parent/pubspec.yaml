@@ -57,8 +57,8 @@ dependencies:
 
   # File handling
   path_provider: ^2.0.15
-#  flutter_downloader: 1.7.4 # !!
-  flutter_file_downloader: ^1.1.2
+  flutter_downloader: ^1.11.1
+#  flutter_file_downloader: ^1.1.2
   mime: ^1.0.4
   file_picker: ^5.3.2
 
