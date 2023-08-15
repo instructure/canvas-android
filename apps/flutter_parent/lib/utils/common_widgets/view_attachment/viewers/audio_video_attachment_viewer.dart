@@ -28,7 +28,7 @@ import 'audio_video_attachment_viewer_interactor.dart';
 class AudioVideoAttachmentViewer extends StatefulWidget {
   final Attachment attachment;
 
-  bool get isAudio => attachment.inferContentType().startsWith('audio') == true;
+  bool get isAudio => attachment.inferContentType()?.startsWith('audio') == true;
 
   const AudioVideoAttachmentViewer(this.attachment, {super.key});
 
@@ -39,8 +39,8 @@ class AudioVideoAttachmentViewer extends StatefulWidget {
 class _AudioVideoAttachmentViewerState extends State<AudioVideoAttachmentViewer> {
   static const defaultAspectRatio = 16 / 9;
 
-  late VideoPlayerController _videoController;
-  late ChewieController _chewieController;
+  late VideoPlayerController? _videoController;
+  late ChewieController? _chewieController;
 
   final _interactor = locator<AudioVideoAttachmentViewerInteractor>();
 
@@ -53,22 +53,22 @@ class _AudioVideoAttachmentViewerState extends State<AudioVideoAttachmentViewer>
   }
 
   Future<ChewieController> _initController() async {
-    _videoController = _interactor.makeController(widget.attachment.url);
+    _videoController = _interactor.makeController(widget.attachment.url!);
 
     try {
       // Initialized the video controller so we can get the aspect ratio
-      await _videoController.initialize();
+      await _videoController?.initialize();
     } catch (e) {
       // Intentionally left blank. Errors will be handled by ChewieController.errorBuilder.
     }
 
     // Get aspect ratio from controller, fall back to 16:9
-    var aspectRatio = _videoController.value?.aspectRatio;
+    var aspectRatio = _videoController?.value.aspectRatio;
     if (aspectRatio == null || aspectRatio.isNaN || aspectRatio <= 0) aspectRatio = defaultAspectRatio;
 
     // Set up controller
     _chewieController = ChewieController(
-      videoPlayerController: _videoController,
+      videoPlayerController: _videoController!,
       aspectRatio: aspectRatio,
       autoInitialize: true,
       autoPlay: true,
@@ -83,7 +83,7 @@ class _AudioVideoAttachmentViewerState extends State<AudioVideoAttachmentViewer>
           : Container(),
       errorBuilder: (context, error) => _error(context),
     );
-    return _chewieController;
+    return _chewieController!;
   }
 
   @override

@@ -37,8 +37,8 @@ class ViewAttachmentInteractor {
     if (!await checkStoragePermission()) return;
     var dirs = await locator<PathProviderVeneer>().getExternalStorageDirectories(type: StorageDirectory.downloads);
     locator<FlutterDownloaderVeneer>().enqueue(
-      url: attachment.url,
-      savedDir: dirs[0].path,
+      url: attachment.url!,
+      savedDir: dirs![0].path,
       showNotification: true,
       openFileFromNotification: true,
     );

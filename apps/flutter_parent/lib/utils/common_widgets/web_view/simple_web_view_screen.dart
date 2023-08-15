@@ -42,13 +42,13 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           iconTheme: Theme.of(context).iconTheme,
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
-          title: Text(widget._title, style: Theme.of(context).textTheme.headline6),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
+          title: Text(widget._title, style: Theme.of(context).textTheme.titleLarge),
         ),
         body: WebView(
           javascriptMode: JavascriptMode.unrestricted,
           userAgent: ApiPrefs.getUserAgent(),
-          darkMode: ParentTheme.of(context).isWebViewDarkMode,
+          darkMode: ParentTheme.of(context)?.isWebViewDarkMode,
           gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
           navigationDelegate: _handleNavigation,
           onWebViewCreated: (controller) {

@@ -24,18 +24,18 @@ class WebContentInteractor {
   OAuthApi get _api => locator.get<OAuthApi>();
 
   Future<String> _authUrl(String targetUrl) async {
-    return (await _api.getAuthenticatedUrl(targetUrl))?.sessionUrl ?? targetUrl;
+    return (await _api.getAuthenticatedUrl(targetUrl)).sessionUrl ?? targetUrl;
   }
 
   Future<String> getAuthUrl(String targetUrl) async {
-    if (targetUrl.contains(ApiPrefs.getDomain())) {
+    if (targetUrl.contains(ApiPrefs.getDomain()!)) {
       return _authUrl(targetUrl);
     } else {
       return targetUrl;
     }
   }
 
-  Future<String> authContent(String content, String externalToolButtonText) async {
+  Future<String?> authContent(String? content, String externalToolButtonText) async {
     if (content == null || content.isEmpty) return content;
 
     String authContent = content;

@@ -30,11 +30,11 @@ class ImageAttachmentViewer extends StatelessWidget {
     var minScale = PhotoViewComputedScale.contained;
     var backgroundDecoration = BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor);
 
-    if (attachment.inferContentType().contains('svg') == true) {
+    if (attachment.inferContentType()?.contains('svg') == true) {
       return PhotoView.customChild(
         backgroundDecoration: backgroundDecoration,
         child: SvgPicture.network(
-          attachment.url,
+          attachment.url!,
           placeholderBuilder: (context) => LoadingIndicator(),
         ),
         minScale: minScale,
@@ -43,7 +43,7 @@ class ImageAttachmentViewer extends StatelessWidget {
 
     return PhotoView(
       backgroundDecoration: backgroundDecoration,
-      imageProvider: NetworkImage(attachment.url),
+      imageProvider: NetworkImage(attachment.url!),
       minScale: minScale,
       loadingBuilder: (context, imageChunkEvent) => LoadingIndicator(),
       errorBuilder: (context, error, stackTrace) => EmptyPandaWidget(

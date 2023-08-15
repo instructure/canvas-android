@@ -17,8 +17,8 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 
 class FlutterDownloaderVeneer {
   Future<String> enqueue({
-    @required String url,
-    @required String savedDir,
+    required String url,
+    required String savedDir,
     String fileName,
     Map<String, String> headers,
     bool showNotification = true,
@@ -37,31 +37,31 @@ class FlutterDownloaderVeneer {
 
   Future<List<DownloadTask>> loadTasks() => FlutterDownloader.loadTasks();
 
-  static Future<List<DownloadTask>> loadTasksWithRawQuery({@required String query}) =>
+  static Future<List<DownloadTask>> loadTasksWithRawQuery({required String query}) =>
       FlutterDownloader.loadTasksWithRawQuery(query: query);
 
-  static Future<Null> cancel({@required String taskId}) => FlutterDownloader.cancel(taskId: taskId);
+  static Future<Null> cancel({required String taskId}) => FlutterDownloader.cancel(taskId: taskId);
 
   static Future<Null> cancelAll() => FlutterDownloader.cancelAll();
 
-  static Future<Null> pause({@required String taskId}) => FlutterDownloader.pause(taskId: taskId);
+  static Future<Null> pause({required String taskId}) => FlutterDownloader.pause(taskId: taskId);
 
   static Future<String> resume({
-    @required String taskId,
+    required String taskId,
     bool requiresStorageNotLow = true,
   }) =>
       FlutterDownloader.resume(taskId: taskId, requiresStorageNotLow: requiresStorageNotLow);
 
   static Future<String> retry({
-    @required String taskId,
+    required String taskId,
     bool requiresStorageNotLow = true,
   }) =>
       FlutterDownloader.retry(taskId: taskId, requiresStorageNotLow: requiresStorageNotLow);
 
-  static Future<Null> remove({@required String taskId, bool shouldDeleteContent = false}) =>
+  static Future<Null> remove({required String taskId, bool shouldDeleteContent = false}) =>
       FlutterDownloader.remove(taskId: taskId, shouldDeleteContent: shouldDeleteContent);
 
-  static Future<bool> open({@required String taskId}) => FlutterDownloader.open(taskId: taskId);
+  static Future<bool> open({required String taskId}) => FlutterDownloader.open(taskId: taskId);
 
   static registerCallback(DownloadCallback callback) => FlutterDownloader.registerCallback(callback);
 }

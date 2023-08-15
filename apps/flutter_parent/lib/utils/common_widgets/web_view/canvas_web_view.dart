@@ -67,7 +67,7 @@ class CanvasWebView extends StatefulWidget {
 
 class _CanvasWebViewState extends State<CanvasWebView> {
   late String _content;
-  late Future<String> _contentFuture;
+  late Future<String?> _contentFuture;
 
   WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
@@ -99,7 +99,7 @@ class _CanvasWebViewState extends State<CanvasWebView> {
 }
 
 class _ResizingWebView extends StatefulWidget {
-  final Future<String> contentFuture;
+  final Future<String?> contentFuture;
   final String? emptyDescription;
 
   final double initialHeight;
@@ -181,7 +181,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: widget.contentFuture,
-      builder: (context, AsyncSnapshot<String> snapshot) => FutureBuilder(
+      builder: (context, AsyncSnapshot<String?> snapshot) => FutureBuilder(
         future: widget.futureDelay,
         builder: (context, delay) {
           // We're delaying if we're still waiting for data (besides a pull to refresh, show the previous while waiting for new data)
@@ -216,7 +216,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
       } else {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-          child: Text(widget.emptyDescription!, style: Theme.of(context).textTheme.bodyText2),
+          child: Text(widget.emptyDescription!, style: Theme.of(context).textTheme.bodyMedium),
         );
       }
     }
