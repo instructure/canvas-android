@@ -125,9 +125,6 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       'workflow_state',
       serializers.serialize(object.workflowState,
           specifiedType: const FullType(AlertWorkflowState)),
-      'action_date',
-      serializers.serialize(object.actionDate,
-          specifiedType: const FullType(DateTime)),
       'title',
       serializers.serialize(object.title,
           specifiedType: const FullType(String)),
@@ -144,6 +141,13 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       serializers.serialize(object.lockedForUser,
           specifiedType: const FullType(bool)),
     ];
+    Object? value;
+    value = object.actionDate;
+
+    result
+      ..add('action_date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
 
     return result;
   }
@@ -186,7 +190,7 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
           break;
         case 'action_date':
           result.actionDate = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime))! as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'title':
           result.title = serializers.deserialize(value,
@@ -284,7 +288,7 @@ class _$Alert extends Alert {
   @override
   final AlertWorkflowState workflowState;
   @override
-  final DateTime actionDate;
+  final DateTime? actionDate;
   @override
   final String title;
   @override
@@ -306,7 +310,7 @@ class _$Alert extends Alert {
       required this.contextId,
       required this.alertType,
       required this.workflowState,
-      required this.actionDate,
+      this.actionDate,
       required this.title,
       required this.userId,
       required this.observerId,
@@ -321,7 +325,6 @@ class _$Alert extends Alert {
     BuiltValueNullFieldError.checkNotNull(alertType, r'Alert', 'alertType');
     BuiltValueNullFieldError.checkNotNull(
         workflowState, r'Alert', 'workflowState');
-    BuiltValueNullFieldError.checkNotNull(actionDate, r'Alert', 'actionDate');
     BuiltValueNullFieldError.checkNotNull(title, r'Alert', 'title');
     BuiltValueNullFieldError.checkNotNull(userId, r'Alert', 'userId');
     BuiltValueNullFieldError.checkNotNull(observerId, r'Alert', 'observerId');
@@ -499,17 +502,17 @@ class AlertBuilder implements Builder<Alert, AlertBuilder> {
                 alertType, r'Alert', 'alertType'),
             workflowState: BuiltValueNullFieldError.checkNotNull(
                 workflowState, r'Alert', 'workflowState'),
-            actionDate: BuiltValueNullFieldError.checkNotNull(
-                actionDate, r'Alert', 'actionDate'),
+            actionDate: actionDate,
             title:
                 BuiltValueNullFieldError.checkNotNull(title, r'Alert', 'title'),
             userId: BuiltValueNullFieldError.checkNotNull(
                 userId, r'Alert', 'userId'),
             observerId: BuiltValueNullFieldError.checkNotNull(
                 observerId, r'Alert', 'observerId'),
-            htmlUrl:
-                BuiltValueNullFieldError.checkNotNull(htmlUrl, r'Alert', 'htmlUrl'),
-            lockedForUser: BuiltValueNullFieldError.checkNotNull(lockedForUser, r'Alert', 'lockedForUser'));
+            htmlUrl: BuiltValueNullFieldError.checkNotNull(
+                htmlUrl, r'Alert', 'htmlUrl'),
+            lockedForUser:
+                BuiltValueNullFieldError.checkNotNull(lockedForUser, r'Alert', 'lockedForUser'));
     replace(_$result);
     return _$result;
   }

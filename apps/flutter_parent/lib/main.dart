@@ -49,7 +49,7 @@ void main() async {
       FlutterDownloader.initialize(),
       WidgetsFlutterBinding.ensureInitialized(),
     DbUtil.init()
-    ] as Iterable<Future>);
+    ]);
     PandaRouter.init();
 
     await FlutterDownloader.registerCallback(downloadCallback);

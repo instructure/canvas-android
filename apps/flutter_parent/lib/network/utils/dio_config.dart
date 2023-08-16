@@ -80,10 +80,10 @@ class DioConfig {
     options.queryParameters = extraParams;
 
     // Add cache configuration to base options
-    if (cacheMaxAge != Duration.zero) {
-      var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
-      options.extra.addAll(extras);
-    }
+    // if (cacheMaxAge != Duration.zero) {
+    //   var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
+    //   options.extra.addAll(extras);
+    // }
 
     // Create Dio instance and add interceptors
     final dio = Dio(options);
@@ -135,10 +135,16 @@ class DioConfig {
   }
 
   Interceptor _cacheInterceptor() {
-    Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
+    // Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
+    // return InterceptorsWrapper(
+    //   onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
+    //   onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
+    //   onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
+    // );
+
     return InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
-      onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => handler.next(options),
+      onResponse: (Response response, ResponseInterceptorHandler handler) => handler.next(response),
       onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
     );
   }
@@ -198,15 +204,16 @@ class DioConfig {
 
   /// Clears the cache, deleting only the entries related to path OR clearing everything if path is null
   Future<bool> clearCache({String? path}) {
-    // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
-    // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
-    if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
-
-    if (path == null) {
-      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
-    } else {
-      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path, requestMethod: 'GET');
-    }
+    // // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
+    // // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
+    // if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
+    //
+    // if (path == null) {
+    //   return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
+    // } else {
+    //   return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path, requestMethod: 'GET');
+    // }
+    return Future.value(true);
   }
 }
 

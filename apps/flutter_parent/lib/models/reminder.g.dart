@@ -32,9 +32,6 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
       'courseId',
       serializers.serialize(object.courseId,
           specifiedType: const FullType(String)),
-      'date',
-      serializers.serialize(object.date,
-          specifiedType: const FullType(DateTime)),
     ];
     Object? value;
     value = object.id;
@@ -42,6 +39,12 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
     result
       ..add('id')
       ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.date;
+
+    result
+      ..add('date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
 
     return result;
   }
@@ -83,7 +86,7 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
           break;
         case 'date':
           result.date = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime))! as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -106,7 +109,7 @@ class _$Reminder extends Reminder {
   @override
   final String courseId;
   @override
-  final DateTime date;
+  final DateTime? date;
 
   factory _$Reminder([void Function(ReminderBuilder)? updates]) =>
       (new ReminderBuilder()..update(updates))._build();
@@ -118,7 +121,7 @@ class _$Reminder extends Reminder {
       required this.type,
       required this.itemId,
       required this.courseId,
-      required this.date})
+      this.date})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         userDomain, r'Reminder', 'userDomain');
@@ -126,7 +129,6 @@ class _$Reminder extends Reminder {
     BuiltValueNullFieldError.checkNotNull(type, r'Reminder', 'type');
     BuiltValueNullFieldError.checkNotNull(itemId, r'Reminder', 'itemId');
     BuiltValueNullFieldError.checkNotNull(courseId, r'Reminder', 'courseId');
-    BuiltValueNullFieldError.checkNotNull(date, r'Reminder', 'date');
   }
 
   @override
@@ -255,8 +257,7 @@ class ReminderBuilder implements Builder<Reminder, ReminderBuilder> {
                 itemId, r'Reminder', 'itemId'),
             courseId: BuiltValueNullFieldError.checkNotNull(
                 courseId, r'Reminder', 'courseId'),
-            date: BuiltValueNullFieldError.checkNotNull(
-                date, r'Reminder', 'date'));
+            date: date);
     replace(_$result);
     return _$result;
   }

@@ -22,7 +22,6 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -191,7 +190,7 @@ class _CircleClipTransition extends AnimatedWidget {
     super.key
   })  : super(listenable: scale);
 
-  Animation<double> get animation => listenable;
+  Animation<double> get animation => listenable as Animation<double>;
 
   final Widget? child;
 

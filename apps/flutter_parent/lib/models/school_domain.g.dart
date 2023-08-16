@@ -22,10 +22,14 @@ class _$SchoolDomainSerializer implements StructuredSerializer<SchoolDomain> {
       'domain',
       serializers.serialize(object.domain,
           specifiedType: const FullType(String)),
-      'name',
-      serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
     Object? value;
+    value = object.name;
+
+    result
+      ..add('name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
     value = object.authenticationProvider;
 
     result
@@ -54,7 +58,7 @@ class _$SchoolDomainSerializer implements StructuredSerializer<SchoolDomain> {
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'authentication_provider':
           result.authenticationProvider = serializers.deserialize(value,
@@ -71,7 +75,7 @@ class _$SchoolDomain extends SchoolDomain {
   @override
   final String domain;
   @override
-  final String name;
+  final String? name;
   @override
   final String? authenticationProvider;
 
@@ -79,10 +83,9 @@ class _$SchoolDomain extends SchoolDomain {
       (new SchoolDomainBuilder()..update(updates))._build();
 
   _$SchoolDomain._(
-      {required this.domain, required this.name, this.authenticationProvider})
+      {required this.domain, this.name, this.authenticationProvider})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(domain, r'SchoolDomain', 'domain');
-    BuiltValueNullFieldError.checkNotNull(name, r'SchoolDomain', 'name');
   }
 
   @override
@@ -170,8 +173,7 @@ class SchoolDomainBuilder
         new _$SchoolDomain._(
             domain: BuiltValueNullFieldError.checkNotNull(
                 domain, r'SchoolDomain', 'domain'),
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'SchoolDomain', 'name'),
+            name: name,
             authenticationProvider: authenticationProvider);
     replace(_$result);
     return _$result;

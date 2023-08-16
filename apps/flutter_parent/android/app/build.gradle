@@ -34,7 +34,6 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdkVersion 34
-    buildToolsVersion "30.0.2"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -92,6 +91,15 @@ android {
                 }
         }
     }
+    namespace 'com.instructure.parentapp'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 flutter {
@@ -107,7 +115,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
     implementation 'org.jsoup:jsoup:1.11.3'
-    implementation 'com.google.gms:google-services:4.3.3'
+    implementation 'com.google.gms:google-services:4.3.14'
 }
 
 apply plugin: 'com.google.firebase.crashlytics'
