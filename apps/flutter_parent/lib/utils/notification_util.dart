@@ -26,6 +26,8 @@ import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationUtil {
   static const notificationChannelReminders =
@@ -119,13 +121,17 @@ class NotificationUtil {
           .logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
     }
 
+    var location = tz.getLocation(DateTime.now().timeZoneName);
+    tz.setLocalLocation(location);
+    var date = tz.TZDateTime.from(reminder.date!, tz.local);
     return _plugin!.zonedSchedule(
       reminder.id!,
       title,
       body,
-      reminder.date,
+      date,
       notificationDetails,
       payload: json.encode(serialize(payload)),
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 

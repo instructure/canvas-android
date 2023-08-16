@@ -98,7 +98,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       _verifyFuture = (widget.loginFlow == LoginFlow.skipMobileVerify)
           ? Future.delayed(Duration.zero, () => _SkipVerifyDialog.asDialog(context, widget.domain)).then((result) {
               // Use the result if we have it, otherwise continue on with mobile verify
-              result ?? _interactor.mobileVerify(widget.domain);
+              if (result != null) { return result; }
+              return _interactor.mobileVerify(widget.domain);
           })
           : _interactor.mobileVerify(widget.domain);
     }
