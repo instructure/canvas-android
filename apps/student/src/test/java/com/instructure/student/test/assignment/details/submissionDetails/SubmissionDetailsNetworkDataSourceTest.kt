@@ -28,6 +28,7 @@ import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -39,11 +40,12 @@ class SubmissionDetailsNetworkDataSourceTest {
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val quizApi: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private lateinit var networkDataSource: SubmissionDetailsNetworkDataSource
 
     @Before
     fun setup() {
-        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi)
+        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi)
     }
 
     @Test
@@ -198,5 +200,25 @@ class SubmissionDetailsNetworkDataSourceTest {
         val result = networkDataSource.getCourseFeatures(1, true)
 
         TestCase.assertEquals(DataResult.Fail(), result)
+    }
+
+    @Test
+    fun `Load course settings returns succesful api model`() = runTest {
+        val expected = CourseSettings(restrictQuantitativeData = true)
+
+        coEvery { courseApi.getCourseSettings(any(), any()) } returns DataResult.Success(expected)
+
+        val result = networkDataSource.loadCourseSettings(1, true)
+
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Load course settings failure returns null`() = runTest {
+        coEvery { courseApi.getCourseSettings(any(), any()) } returns DataResult.Fail()
+
+        val result = networkDataSource.loadCourseSettings(1, true)
+
+        Assert.assertNull(result)
     }
 }

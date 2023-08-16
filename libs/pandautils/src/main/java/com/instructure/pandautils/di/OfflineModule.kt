@@ -305,7 +305,8 @@ class OfflineModule {
         courseGradingPeriodDao: CourseGradingPeriodDao,
         sectionDao: SectionDao,
         tabDao: TabDao,
-        enrollmentFacade: EnrollmentFacade
+        enrollmentFacade: EnrollmentFacade,
+        courseSettingsDao: CourseSettingsDao
     ): CourseFacade {
         return CourseFacade(
             termDao,
@@ -314,7 +315,8 @@ class OfflineModule {
             courseGradingPeriodDao,
             sectionDao,
             tabDao,
-            enrollmentFacade
+            enrollmentFacade,
+            courseSettingsDao
         )
     }
 

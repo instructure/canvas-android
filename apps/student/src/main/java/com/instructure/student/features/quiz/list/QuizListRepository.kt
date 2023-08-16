@@ -18,6 +18,7 @@
 
 package com.instructure.student.features.quiz.list
 
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -32,5 +33,9 @@ class QuizListRepository(
 
     suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
         return dataSource().loadQuizzes(contextType, contextId, forceNetwork)
+    }
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return dataSource().loadCourseSettings(courseId, forceNetwork)
     }
 }

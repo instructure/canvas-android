@@ -18,14 +18,16 @@ import com.instructure.canvasapi2.models.CourseSettings
 data class CourseSettingsEntity(
     @PrimaryKey
     val courseId: Long,
-    val courseSummary: Boolean?
+    val courseSummary: Boolean?,
+    val restrictQuantitativeData: Boolean,
 ) {
     constructor(courseSettings: CourseSettings, courseId: Long) : this(
         courseId,
-        courseSettings.courseSummary
+        courseSettings.courseSummary,
+        courseSettings.restrictQuantitativeData
     )
 
     fun toApiModel(): CourseSettings {
-        return CourseSettings(courseSummary)
+        return CourseSettings(courseSummary, restrictQuantitativeData)
     }
 }

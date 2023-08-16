@@ -20,6 +20,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.datas
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
@@ -30,7 +31,8 @@ class SubmissionDetailsLocalDataSource(
     private val submissionFacade: SubmissionFacade,
     private val assignmentFacade: AssignmentFacade,
     private val quizDao: QuizDao,
-    private val courseFeaturesDao: CourseFeaturesDao
+    private val courseFeaturesDao: CourseFeaturesDao,
+    private val courseSettingsDao: CourseSettingsDao
 ) : SubmissionDetailsDataSource {
 
     override suspend fun getObserveeEnrollments(forceNetwork: Boolean): DataResult<List<Enrollment>> {
@@ -68,5 +70,9 @@ class SubmissionDetailsLocalDataSource(
     override suspend fun getCourseFeatures(courseId: Long, forceNetwork: Boolean): DataResult<List<String>> {
         val features = courseFeaturesDao.findByCourseId(courseId)?.features
         return features?.let { DataResult.Success(it) } ?: DataResult.Fail()
+    }
+
+    override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return courseSettingsDao.findByCourseId(courseId)?.toApiModel()
     }
 }

@@ -18,6 +18,7 @@
 package com.instructure.student.features.assignments.list
 
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -59,5 +60,9 @@ class AssignmentListRepository(
         isRefresh: Boolean
     ): List<GradingPeriod> {
         return dataSource().getGradingPeriodsForCourse(courseId, isRefresh)
+    }
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return dataSource().loadCourseSettings(courseId, forceNetwork)
     }
 }

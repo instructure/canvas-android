@@ -20,6 +20,7 @@ package com.instructure.student.features.assignmentlist.datasource
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriodResponse
 import com.instructure.canvasapi2.utils.DataResult
@@ -107,5 +108,25 @@ class AssignmentListNetworkDataSourceTest {
         coEvery { coursesApi.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Fail()
 
         dataSource.getGradingPeriodsForCourse(1, true)
+    }
+
+    @Test
+    fun `Load course settings returns succesful api model`() = runTest {
+        val expected = CourseSettings(restrictQuantitativeData = true)
+
+        coEvery { coursesApi.getCourseSettings(any(), any()) } returns DataResult.Success(expected)
+
+        val result = dataSource.loadCourseSettings(1, true)
+
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Load course settings failure returns null`() = runTest {
+        coEvery { coursesApi.getCourseSettings(any(), any()) } returns DataResult.Fail()
+
+        val result = dataSource.loadCourseSettings(1, true)
+
+        Assert.assertNull(result)
     }
 }

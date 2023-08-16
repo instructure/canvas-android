@@ -653,38 +653,34 @@ class AssignmentDetailsViewModelTest {
         Assert.assertEquals(expected, viewModel.data.value?.attempts?.last()?.data?.submission)
     }
 
-//    @Test TODO MBL-16957
-//    fun `Create viewData with points when quantitative data is not restricted`() {
-//        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-//            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
-//        }
-//
-//        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-//            coEvery { await() } returns DataResult.Success(Assignment(submission = Submission(), pointsPossible = 20.0))
-//        }
-//
-//        every { resources.getQuantityString(any(), any(), any()) } returns "20 pts"
-//
-//        val viewModel = getViewModel()
-//
-//        Assert.assertEquals("20 pts", viewModel.data.value?.points)
-//    }
-//
-//    @Test
-//    fun `Create viewData without points when quantitative data is restricted`() {
-//        val courseSettings = CourseSettings(restrictQuantitativeData = true)
-//        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
-//            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)), settings = courseSettings))
-//        }
-//
-//        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
-//            coEvery { await() } returns DataResult.Success(Assignment(submission = Submission(), pointsPossible = 20.0))
-//        }
-//
-//        every { resources.getQuantityString(any(), any(), any()) } returns "20 pts"
-//
-//        val viewModel = getViewModel()
-//
-//        Assert.assertEquals("", viewModel.data.value?.points)
-//    }
+    @Test
+    fun `Create viewData with points when quantitative data is not restricted`() {
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns Course(
+            enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))
+        )
+
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment(submission = Submission(), pointsPossible = 20.0)
+
+        every { resources.getQuantityString(any(), any(), any()) } returns "20 pts"
+
+        val viewModel = getViewModel()
+
+        Assert.assertEquals("20 pts", viewModel.data.value?.points)
+    }
+
+    @Test
+    fun `Create viewData without points when quantitative data is restricted`() {
+        val courseSettings = CourseSettings(restrictQuantitativeData = true)
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns Course(
+            enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)), settings = courseSettings
+        )
+
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment(submission = Submission(), pointsPossible = 20.0)
+
+        every { resources.getQuantityString(any(), any(), any()) } returns "20 pts"
+
+        val viewModel = getViewModel()
+
+        Assert.assertEquals("", viewModel.data.value?.points)
+    }
 }

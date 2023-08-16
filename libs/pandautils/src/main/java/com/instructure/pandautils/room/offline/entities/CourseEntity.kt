@@ -99,7 +99,8 @@ data class CourseEntity(
         enrollments: MutableList<Enrollment>? = null,
         sections: List<Section> = emptyList(),
         gradingPeriods: List<GradingPeriod>? = null,
-        tabs: List<Tab>? = null
+        tabs: List<Tab>? = null,
+        settings: CourseSettings? = null
     ): Course {
         return Course(
             id = id,
@@ -133,7 +134,8 @@ data class CourseEntity(
             homeroomCourse = homeroomCourse,
             courseColor = courseColor,
             gradingPeriods = gradingPeriods,
-            tabs = tabs
+            tabs = tabs,
+            settings = settings
         )
     }
 }

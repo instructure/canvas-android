@@ -16,8 +16,10 @@
  */
 package com.instructure.student.di.feature
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -35,13 +37,13 @@ import dagger.hilt.android.components.FragmentComponent
 class ModuleListModule {
 
     @Provides
-    fun provideModuleListLocalDataSource(tabDao: TabDao, moduleFacade: ModuleFacade): ModuleListLocalDataSource {
-        return ModuleListLocalDataSource(tabDao, moduleFacade)
+    fun provideModuleListLocalDataSource(tabDao: TabDao, moduleFacade: ModuleFacade, courseSettingsDao: CourseSettingsDao): ModuleListLocalDataSource {
+        return ModuleListLocalDataSource(tabDao, moduleFacade, courseSettingsDao)
     }
 
     @Provides
-    fun provideModuleListNetworkDataSource(moduleApi: ModuleAPI.ModuleInterface, tabApi: TabAPI.TabsInterface): ModuleListNetworkDataSource {
-        return ModuleListNetworkDataSource(moduleApi, tabApi)
+    fun provideModuleListNetworkDataSource(moduleApi: ModuleAPI.ModuleInterface, tabApi: TabAPI.TabsInterface, courseApi: CourseAPI.CoursesInterface): ModuleListNetworkDataSource {
+        return ModuleListNetworkDataSource(moduleApi, tabApi, courseApi)
     }
 
     @Provides

@@ -16,9 +16,11 @@
  */
 package com.instructure.student.features.modules.list.datasource
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
@@ -36,8 +38,9 @@ class ModuleListNetworkDataSourceTest {
 
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
     private val tabApi: TabAPI.TabsInterface = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
 
-    private val dataSource = ModuleListNetworkDataSource(moduleApi, tabApi)
+    private val dataSource = ModuleListNetworkDataSource(moduleApi, tabApi, courseApi)
 
     @Test
     fun `Return failed result when getAllModuleObjects fails`() = runTest {
@@ -161,5 +164,25 @@ class ModuleListNetworkDataSourceTest {
         Assert.assertEquals(2, (result as DataResult.Success).data.size)
         Assert.assertEquals(tabs.first(), result.data[0])
         Assert.assertEquals(tabs[1], result.data[1])
+    }
+
+    @Test
+    fun `Load course settings returns succesful api model`() = runTest {
+        val expected = CourseSettings(restrictQuantitativeData = true)
+
+        coEvery { courseApi.getCourseSettings(any(), any()) } returns DataResult.Success(expected)
+
+        val result = dataSource.loadCourseSettings(1, true)
+
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Load course settings failure returns null`() = runTest {
+        coEvery { courseApi.getCourseSettings(any(), any()) } returns DataResult.Fail()
+
+        val result = dataSource.loadCourseSettings(1, true)
+
+        Assert.assertNull(result)
     }
 }

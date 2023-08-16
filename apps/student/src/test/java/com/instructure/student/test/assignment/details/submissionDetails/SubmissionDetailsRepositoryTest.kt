@@ -32,6 +32,7 @@ import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -306,5 +307,27 @@ class SubmissionDetailsRepositoryTest {
         TestCase.assertEquals(expected, result)
         coVerify(exactly = 0) { networkDataSource.getCourseFeatures(any(), any()) }
         coVerify(exactly = 1) { localDataSource.getCourseFeatures(1, true) }
+    }
+
+    @Test
+    fun `Load curse settings from local storage when device is offline`() = runTest {
+        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
+        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+        coEvery { networkStateProvider.isOnline() } returns false
+
+        val result = repository.loadCourseSettings(1, true)
+
+        Assert.assertTrue(result!!.restrictQuantitativeData)
+    }
+
+    @Test
+    fun `Load curse settings from network when device is online`() = runTest {
+        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
+        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+        coEvery { networkStateProvider.isOnline() } returns true
+
+        val result = repository.loadCourseSettings(1, true)
+
+        Assert.assertFalse(result!!.restrictQuantitativeData)
     }
 }

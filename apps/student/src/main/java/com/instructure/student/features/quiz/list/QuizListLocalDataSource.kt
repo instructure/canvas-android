@@ -18,13 +18,20 @@
 
 package com.instructure.student.features.quiz.list
 
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 
 class QuizListLocalDataSource(
     private val quizDao: QuizDao,
+    private val courseSettingsDao: CourseSettingsDao
 ) : QuizListDataSource {
     override suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
         return quizDao.findByCourseId(contextId).map { it.toApiModel() }
+    }
+
+    override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return courseSettingsDao.findByCourseId(courseId)?.toApiModel()
     }
 }

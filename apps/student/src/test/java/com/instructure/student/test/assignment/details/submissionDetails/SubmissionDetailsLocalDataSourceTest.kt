@@ -18,13 +18,16 @@
 package com.instructure.student.test.assignment.details.submissionDetails
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
+import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
@@ -36,6 +39,7 @@ import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -47,11 +51,12 @@ class SubmissionDetailsLocalDataSourceTest {
     private val assignmentFacade: AssignmentFacade = mockk(relaxed = true)
     private val quizDao: QuizDao = mockk(relaxed = true)
     private val courseFeaturesDao: CourseFeaturesDao = mockk(relaxed = true)
+    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
     private lateinit var localDataSource: SubmissionDetailsLocalDataSource
 
     @Before
     fun setup() {
-        localDataSource = SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao)
+        localDataSource = SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao, courseSettingsDao)
     }
 
     @Test
@@ -198,5 +203,16 @@ class SubmissionDetailsLocalDataSourceTest {
         coVerify(exactly = 1) {
             courseFeaturesDao.findByCourseId(1)
         }
+    }
+
+    @Test
+    fun `Load course settings successfully returns api model`() = runTest {
+        val expected = CourseSettings(restrictQuantitativeData = true)
+
+        coEvery { courseSettingsDao.findByCourseId(any()) } returns CourseSettingsEntity(expected, 1L)
+
+        val result = localDataSource.loadCourseSettings(1, true)
+
+        assertEquals(expected, result)
     }
 }

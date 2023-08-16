@@ -17,6 +17,7 @@
 package com.instructure.student.features.modules.list
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
@@ -56,6 +57,10 @@ class ModuleListRepository(
     suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
         val tabs = dataSource().getTabs(canvasContext, forceNetwork).dataOrNull ?: emptyList()
         return tabs.filter { !(it.isExternal && it.isHidden) }
+    }
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return dataSource().loadCourseSettings(courseId, forceNetwork)
     }
 
     suspend fun getFirstPageModuleItems(
