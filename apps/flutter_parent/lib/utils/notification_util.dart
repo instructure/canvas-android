@@ -51,7 +51,7 @@ class NotificationUtil {
 
     await _plugin!.initialize(
       initializationSettings,
-      onDidReceiveBackgroundNotificationResponse: (rawPayload) async {
+      onDidReceiveNotificationResponse: (rawPayload) async {
         await handlePayload(rawPayload.payload ?? '', appCompleter);
       },
     );

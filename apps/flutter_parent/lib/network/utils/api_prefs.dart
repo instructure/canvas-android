@@ -185,10 +185,12 @@ class ApiPrefs {
     if (!_prefs!.containsKey(KEY_LAST_ACCOUNT)) return null;
 
     final accountJson = _prefs!.getString(KEY_LAST_ACCOUNT);
-    if (accountJson.isEmpty) return null;
+    if (accountJson == null || accountJson.isEmpty == true) return null;
 
     final lastAccount = deserialize<SchoolDomain>(json.decode(accountJson));
-    final loginFlow = _prefs!.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[_prefs!.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW)] : LoginFlow.normal;
+    int? lastLogin = _prefs!.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW);
+    if (lastLogin == null) return null;
+    final loginFlow = _prefs!.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[lastLogin] : LoginFlow.normal;
 
     return Tuple2(lastAccount!, loginFlow);
   }
@@ -288,11 +290,11 @@ class ApiPrefs {
 
   static String? getClientSecret() => getCurrentLogin()?.clientSecret;
 
-  static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED);
+  static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED) ?? false;
 
   static Future<void> setHasMigrated(bool hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
 
-  static bool getHasCheckedOldReminders() => _getPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS);
+  static bool getHasCheckedOldReminders() => _getPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS) ?? false;
 
   static Future<void> setHasCheckedOldReminders(bool checked) => _setPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS, checked);
 
@@ -309,7 +311,7 @@ class ApiPrefs {
   static Future<void> setRatingNextShowDate(DateTime nextShowDate) =>
       _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate.toIso8601String());
 
-  static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN);
+  static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN) ?? false;
 
   static Future<void> setRatingDontShowAgain(bool dontShowAgain) =>
       _setPrefBool(KEY_RATING_DONT_SHOW_AGAIN, dontShowAgain);
@@ -321,9 +323,9 @@ class ApiPrefs {
     return _prefs!.setBool(key, value);
   }
 
-  static bool _getPrefBool(String key) {
+  static bool? _getPrefBool(String key) {
     _checkInit();
-    return _prefs!.getBool(key);
+    return _prefs?.getBool(key);
   }
 
   static Future<bool> _setPrefString(String key, String value) async {

@@ -21,6 +21,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
@@ -41,16 +42,17 @@ void main() async {
 
   setupLocator();
   runZonedGuarded<Future<void>>(() async {
-    await Future.wait([
-      ApiPrefs.init(),
-      ThemePrefs.init(),
-      RemoteConfigUtils.initialize(),
-      CrashUtils.init(),
-      FlutterDownloader.initialize(),
-      WidgetsFlutterBinding.ensureInitialized(),
-    DbUtil.init()
-    ]);
+
+    await ApiPrefs.init();
+    await ThemePrefs.init();
+    await RemoteConfigUtils.initialize();
+    await CrashUtils.init();
+    await FlutterDownloader.initialize();
+    await WidgetsFlutterBinding.ensureInitialized();
+    await DbUtil.init();
+
     PandaRouter.init();
+
 
     await FlutterDownloader.registerCallback(downloadCallback);
 
@@ -64,7 +66,7 @@ void main() async {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       if (androidInfo.version.sdkInt >= 29) {
-        WebView.platform = SurfaceAndroidWebView();
+        // WebView.platform = SurfaceAndroidWebView();
       }
     }
 

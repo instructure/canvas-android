@@ -48,7 +48,7 @@ class EncryptedSharedPreferences {
   ///
   /// It is NOT guaranteed that this cache and the device prefs will remain
   /// in sync since the setter method might fail for any reason.
-  final Map<String, Object> _preferenceCache;
+  final Map<String, dynamic> _preferenceCache;
 
   /// Returns all keys in the persistent storage.
   Set<String> getKeys() => Set<String>.from(_preferenceCache.keys);
@@ -58,19 +58,19 @@ class EncryptedSharedPreferences {
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// bool.
-  bool getBool(String key) => _preferenceCache[key] as bool;
+  bool? getBool(String key) => _preferenceCache[key] as bool?;
 
   /// Reads a value from persistent storage, throwing an exception if it's not
   /// an int.
-  int getInt(String key) => _preferenceCache[key] as int;
+  int? getInt(String key) => _preferenceCache[key] as int?;
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// double.
-  double getDouble(String key) => _preferenceCache[key] as double;
+  double? getDouble(String key) => _preferenceCache[key] as double?;
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// String.
-  String getString(String key) => _preferenceCache[key] as String;
+  String? getString(String key) => _preferenceCache[key] as String?;
 
   /// Returns true if persistent storage the contains the given [key].
   bool containsKey(String key) => _preferenceCache.containsKey(key);
@@ -78,13 +78,15 @@ class EncryptedSharedPreferences {
   /// Reads a set of string values from persistent storage, throwing an
   /// exception if it's not a string set.
   List<String> getStringList(String key) {
-    List<Object>? list = _preferenceCache[key] as List<Object>?;
-    if (list != null && list is! List<String>) {
-      list = list.cast<String>().toList();
+    Object? list = _preferenceCache[key];
+    if (list != null && list is List<String>) {
       _preferenceCache[key] = list;
     }
+    else  {
+      list = null;
+    }
     // Make a copy of the list so that later mutations won't propagate
-    return list?.toList() as List<String>? ?? <String>[];
+    return list == null ? [] : list as List<String>;
   }
 
   /// Saves a boolean [value] to persistent storage in the background.

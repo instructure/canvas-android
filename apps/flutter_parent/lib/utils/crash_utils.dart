@@ -24,11 +24,11 @@ class CrashUtils {
     // Set up error handling
     FirebaseCrashlytics firebase = locator<FirebaseCrashlytics>();
 
-    FlutterError.onError = (error) async {
-      // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
-      await firebase.setUserIdentifier('');
-      firebase.recordFlutterError(error);
-    };
+    // FlutterError.onError = (error) async {
+    //   // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
+    //   await firebase.setUserIdentifier('');
+    //   firebase.recordFlutterError(error);
+    // };
 
     if (kReleaseMode) {
       await firebase.setCrashlyticsCollectionEnabled(true);
