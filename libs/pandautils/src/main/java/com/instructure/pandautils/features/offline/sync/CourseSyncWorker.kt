@@ -331,7 +331,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
         cleanupSyncedFiles(courseId, allFileIds)
 
-        val fileWorkers = fileFolderDao.findFilesNeedSync(courseId, syncSettings.fullFileSync)
+        val fileWorkers = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
             .map { FileSyncWorker.createOneTimeWorkRequest(courseId, it.id, it.displayName.orEmpty(), it.url.orEmpty()) }.chunked(6)
 
         if (fileWorkers.isEmpty()) return

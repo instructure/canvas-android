@@ -63,7 +63,19 @@ abstract class FileFolderDao {
     }
 
     @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)" +
+            " AND (updatedDate > IFNULL((SELECT createdDate FROM LocalFileEntity WHERE id = FileFolderEntity.id), 0) OR createdDate > IFNULL((SELECT createdDate FROM LocalFileEntity WHERE id = FileFolderEntity.id), 0))")
+    abstract suspend fun findFilesToSyncFull(courseId: Long): List<FileFolderEntity>
+
+    @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)" +
             " AND (updatedDate > IFNULL((SELECT createdDate FROM LocalFileEntity WHERE id = FileFolderEntity.id), 0) OR createdDate > IFNULL((SELECT createdDate FROM LocalFileEntity WHERE id = FileFolderEntity.id), 0))" +
-            " AND IIF(:fullFileSync, 1, id in (SELECT id FROM FileSyncSettingsEntity WHERE courseId = :courseId))")
-    abstract suspend fun findFilesNeedSync(courseId: Long, fullFileSync: Boolean): List<FileFolderEntity>
+            " AND id in (SELECT id FROM FileSyncSettingsEntity WHERE courseId = :courseId)")
+    abstract suspend fun findFilesToSyncSelected(courseId: Long): List<FileFolderEntity>
+
+    suspend fun findFilesToSync(courseId: Long, fullSync: Boolean): List<FileFolderEntity> {
+        return if (fullSync) {
+            findFilesToSyncFull(courseId)
+        } else {
+            findFilesToSyncSelected(courseId)
+        }
+    }
 }
