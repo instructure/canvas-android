@@ -379,7 +379,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             val options = getFileMenuOptions(item, canvasContext)
             // Only show alternate-open option for PDF files
             findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
-            findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
+            findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD) && fileListRepository.isOnline()
             findItem(R.id.rename).isVisible = options.contains(FileMenuType.RENAME)
             findItem(R.id.delete).isVisible = options.contains(FileMenuType.DELETE)
         }
@@ -388,7 +388,11 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             when (menuItem.itemId) {
                 R.id.openAlternate -> {
                     recordFilePreviewEvent(item)
-                    openMedia(item.contentType, item.url, item.displayName, true, canvasContext)
+                    if (fileListRepository.isOnline()) {
+                        openMedia(item.contentType, item.url, item.displayName, true, canvasContext)
+                    } else {
+                        openLocalMedia(item)
+                    }
                 }
                 R.id.download -> downloadItem(item)
                 R.id.rename -> renameItem(item)

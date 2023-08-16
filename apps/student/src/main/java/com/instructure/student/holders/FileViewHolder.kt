@@ -44,10 +44,8 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         root.onLongClick { overflowButton.performClick() }
 
         val fileUnavailable = item.isFile && item.url == null
-        root.isEnabled = fileUnavailable.not()
-        root.alpha = if (fileUnavailable) 0.5f else 1f
 
-        if (hasOptions.isNotEmpty()) {
+        if (hasOptions.isNotEmpty() && !fileUnavailable) {
             // User has options
             overflowButton.setVisible()
             overflowButton.onClick { callback.onOpenItemMenu(item, overflowButton) }
@@ -87,6 +85,10 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fileSize.text = context.resources.getQuantityString(R.plurals.item_count, itemCount, itemCount);
             fileIcon.setColoredResource(R.drawable.ic_folder_solid, tint)
         }
+
+        fileFolderLayout.isEnabled = fileUnavailable.not()
+        fileIcon.alpha = if (fileUnavailable) 0.5f else 1f
+        textContainer.alpha = if (fileUnavailable) 0.5f else 1f
     }
 
     companion object {

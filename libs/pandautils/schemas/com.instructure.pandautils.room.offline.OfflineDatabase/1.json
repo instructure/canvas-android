@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "01e8bd80bab57b108979082d33b1ea1d",
+    "identityHash": "13951892100d6946ae8de3675744f23e",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -921,7 +921,7 @@
       },
       {
         "tableName": "CourseSettingsEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `courseSummary` INTEGER, PRIMARY KEY(`courseId`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `courseSummary` INTEGER, `restrictQuantitativeData` INTEGER NOT NULL, PRIMARY KEY(`courseId`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "courseId",
@@ -934,6 +934,12 @@
             "columnName": "courseSummary",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "restrictQuantitativeData",
+            "columnName": "restrictQuantitativeData",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -5046,7 +5052,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '01e8bd80bab57b108979082d33b1ea1d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '13951892100d6946ae8de3675744f23e')"
     ]
   }
 }
