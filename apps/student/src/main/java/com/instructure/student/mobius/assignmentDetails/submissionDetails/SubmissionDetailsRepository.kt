@@ -60,4 +60,8 @@ class SubmissionDetailsRepository(
     suspend fun getCourseFeatures(courseId: Long, forceNetwork: Boolean): DataResult<List<String>> {
         return dataSource().getCourseFeatures(courseId, forceNetwork)
     }
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return dataSource().loadCourseSettings(courseId, forceNetwork)
+    }
 }

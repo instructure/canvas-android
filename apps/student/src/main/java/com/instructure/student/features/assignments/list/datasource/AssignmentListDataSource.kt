@@ -18,6 +18,7 @@
 package com.instructure.student.features.assignments.list.datasource
 
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.GradingPeriod
 
 interface AssignmentListDataSource {
@@ -38,4 +39,6 @@ interface AssignmentListDataSource {
         courseId: Long,
         forceNetwork: Boolean
     ): List<GradingPeriod>
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings?
 }

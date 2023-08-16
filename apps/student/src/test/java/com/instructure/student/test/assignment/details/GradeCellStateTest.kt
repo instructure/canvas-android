@@ -140,6 +140,8 @@ class GradeCellStateTest : Assert() {
             graphPercent = 1.0f,
             showCompleteIcon = true,
             grade = "Excused",
+            outOf = "Out of 100 pts",
+            outOfContentDescription = "Out of 100 points",
             gradeCellContentDescription = ""
         )
         val actual = GradeCellViewState.fromSubmission(context, baseAssignment, submission)
@@ -243,6 +245,8 @@ class GradeCellStateTest : Assert() {
             showPointsLabel = true,
             grade = "B+",
             gradeContentDescription = "B+",
+            outOf = "Out of 100 pts",
+            outOfContentDescription = "Out of 100 points",
             gradeCellContentDescription = "85 Out of 100 points, B+"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
@@ -388,4 +392,52 @@ class GradeCellStateTest : Assert() {
         assertEquals(expected, actual.stats)
     }
 
+    @Test
+    fun `Returns empty state when assignment is quantitative and quantitative data is restricted`() {
+        val assignment = baseAssignment.copy(
+            gradingType = Assignment.POINTS_TYPE
+        )
+        val expected = GradeCellViewState.Empty
+        val actual = GradeCellViewState.fromSubmission(context, assignment, Submission(), true)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Create excused grade cell without points when assignment is quantitative and quantitative data is restricted`() {
+        val submission = baseSubmission.copy(
+            excused = true
+        )
+        val expected = baseGradedState.copy(
+            graphPercent = 1.0f,
+            showCompleteIcon = true,
+            grade = "Excused",
+            outOf = "",
+            outOfContentDescription = "",
+            gradeCellContentDescription = ""
+        )
+        val actual = GradeCellViewState.fromSubmission(context, baseAssignment, submission, true)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Create letter grade cell without points when quantitative data is restricted`() {
+        val assignment = baseAssignment.copy(
+            gradingType = Assignment.LETTER_GRADE_TYPE
+        )
+        val submission = baseSubmission.copy(
+            grade = "B+"
+        )
+        val expected = baseGradedState.copy(
+            graphPercent = 1.0f,
+            score = "",
+            showCompleteIcon = true,
+            grade = "B+",
+            gradeContentDescription = "B+",
+            outOf = "",
+            outOfContentDescription = "",
+            gradeCellContentDescription = "Grade: B+"
+        )
+        val actual = GradeCellViewState.fromSubmission(context, assignment, submission, true)
+        assertEquals(expected, actual)
+    }
 }

@@ -18,9 +18,12 @@
 
 package com.instructure.student.features.quiz.list
 
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
 
 interface QuizListDataSource {
 
     suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz>
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings?
 }

@@ -24,8 +24,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.util.ArrayList
-import java.util.Locale
+import java.util.*
 
 @Parcelize
 data class StreamItem(
@@ -93,7 +92,8 @@ data class StreamItem(
         val assignment: Assignment? = null,
         @SerializedName("user_id")
         val userId: Long = -1,
-        val user: User = User()
+        val user: User = User(),
+        val excused: Boolean = false
 ) : CanvasModel<StreamItem>() {
     // We want opposite of natural sorting order of date since we want the newest one to come first
     override val comparisonDate get() = updatedDate
@@ -178,9 +178,9 @@ data class StreamItem(
         return title
     }
 
-    fun getMessage(context: Context): String? {
+    fun getMessage(context: Context, restrictQuantitativeData: Boolean = false): String? {
         if (message == null) {
-            message = createMessage(context)
+            message = createMessage(context, restrictQuantitativeData)
         }
         return message
     }
@@ -214,7 +214,7 @@ data class StreamItem(
         }
     }
 
-    private fun createMessage(context: Context): String? {
+    private fun createMessage(context: Context, restrictQuantitativeData: Boolean = false): String? {
         when (getStreamItemType()) {
             StreamItem.Type.CONVERSATION -> {
                 if (conversation == null) {
@@ -226,18 +226,20 @@ data class StreamItem(
             }
             StreamItem.Type.SUBMISSION -> {
                 // Get comments from assignment
-                var comment: String? = null
+                var comment: String = ""
                 if (submissionComments.isNotEmpty()) {
-                    comment = submissionComments[submissionComments.size - 1].comment
+                    val lastComment = submissionComments.last().comment
+                    if (lastComment != null && lastComment != "null") comment = lastComment
                 }
-                // Set it to the last comment if it's not null
-                if (comment != null && comment != "null" && score != -1.0) {
-                    return ":$score $comment"
-                } else if ((comment == null || comment == "null") && score != -1.0) {
-                    return ":$score"
-                } else if (comment != null && comment != "null" && score == -1.0) {
-                    return comment
+
+                val displayedGrade = when {
+                    excused -> context.getString(R.string.gradeExcused)
+                    restrictQuantitativeData -> getGradeWhenQuantitativeDataRestricted(context)
+                    score != -1.0 -> score.toString().orEmpty()
+                    else -> ""
                 }
+
+                return "$displayedGrade $comment"
             }
             StreamItem.Type.DISCUSSION_TOPIC ->
                 // If it's a discussionTopic, get the last entry for the message.
@@ -251,6 +253,14 @@ data class StreamItem(
         return if (message == null) {
             ""
         } else message
+    }
+
+    private fun getGradeWhenQuantitativeDataRestricted(context: Context): String {
+        return if (assignment?.isGradingTypeQuantitative == true) {
+            context.getString(R.string.gradeUpdated)
+        } else {
+            grade.orEmpty()
+        }
     }
 
     private fun parseAssignmentId(): Long {

@@ -216,11 +216,6 @@ class CourseSyncWorker @AssistedInject constructor(
 
         courseFacade.insertCourse(course)
 
-        val courseSettings = courseApi.getCourseSettings(courseId, params).dataOrNull
-        courseSettings?.let {
-            courseSettingsDao.insert(CourseSettingsEntity(it, courseId))
-        }
-
         val courseFeatures = featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull
         courseFeatures?.let {
             courseFeaturesDao.insert(CourseFeaturesEntity(courseId, it))

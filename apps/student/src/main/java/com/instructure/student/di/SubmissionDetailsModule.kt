@@ -19,6 +19,7 @@ package com.instructure.student.di
 
 import com.instructure.canvasapi2.apis.*
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
@@ -43,9 +44,10 @@ class SubmissionDetailsModule {
         submissionApi: SubmissionAPI.SubmissionInterface,
         assignmentApi: AssignmentAPI.AssignmentInterface,
         quizApi: QuizAPI.QuizInterface,
-        featuresApi: FeaturesAPI.FeaturesInterface
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        courseApi: CourseAPI.CoursesInterface
     ): SubmissionDetailsNetworkDataSource {
-        return SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi)
+        return SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi)
     }
 
     @Provides
@@ -54,9 +56,10 @@ class SubmissionDetailsModule {
         submissionFacade: SubmissionFacade,
         assignmentFacade: AssignmentFacade,
         quizDao: QuizDao,
-        courseFeaturesDao: CourseFeaturesDao
+        courseFeaturesDao: CourseFeaturesDao,
+        courseSettingsDao: CourseSettingsDao
     ): SubmissionDetailsLocalDataSource {
-        return SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao)
+        return SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao, courseSettingsDao)
     }
 
     @Provides

@@ -54,7 +54,7 @@ class SyllabusLocalDataSourceTest {
     @Test
     fun `Return course settings api model`() = runTest {
         val expected = CourseSettings(courseSummary = true)
-        coEvery { courseSettingsDao.findByCourseId(any()) } returns CourseSettingsEntity(1L, true)
+        coEvery { courseSettingsDao.findByCourseId(any()) } returns CourseSettingsEntity(1L, true, false)
 
         val result = syllabusLocalDataSource.getCourseSettings(1L, false)
 

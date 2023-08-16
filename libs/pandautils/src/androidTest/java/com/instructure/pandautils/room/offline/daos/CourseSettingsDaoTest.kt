@@ -61,7 +61,7 @@ class CourseSettingsDaoTest {
     @Test
     fun testInsertReplace() = runTest {
         courseDao.insert(CourseEntity(Course(1L)))
-        val courseSettingsEntity = CourseSettingsEntity(1L, false)
+        val courseSettingsEntity = CourseSettingsEntity(1L, false, false)
         val updated = courseSettingsEntity.copy(courseSummary = true)
 
         courseSettingsDao.insert(courseSettingsEntity)
@@ -76,8 +76,8 @@ class CourseSettingsDaoTest {
     fun testFindByCourseId() = runTest {
         courseDao.insert(CourseEntity(Course(1L)))
         courseDao.insert(CourseEntity(Course(2L)))
-        val courseSettingsEntity = CourseSettingsEntity(1L, false)
-        val courseSettingsEntity2 = CourseSettingsEntity(2L, false)
+        val courseSettingsEntity = CourseSettingsEntity(1L, false, false)
+        val courseSettingsEntity2 = CourseSettingsEntity(2L, false, false)
 
         courseSettingsDao.insert(courseSettingsEntity)
         courseSettingsDao.insert(courseSettingsEntity2)
@@ -89,7 +89,7 @@ class CourseSettingsDaoTest {
 
     @Test(expected = SQLiteConstraintException::class)
     fun testCourseForeignKey() = runTest {
-        val courseSettingsEntity = CourseSettingsEntity(1L, false)
+        val courseSettingsEntity = CourseSettingsEntity(1L, false, false)
 
         courseSettingsDao.insert(courseSettingsEntity)
     }
@@ -99,7 +99,7 @@ class CourseSettingsDaoTest {
         val courseEntity = CourseEntity(Course(1L))
         courseDao.insert(courseEntity)
 
-        val courseSettingsEntity = CourseSettingsEntity(1L, false)
+        val courseSettingsEntity = CourseSettingsEntity(1L, false, false)
         courseSettingsDao.insert(courseSettingsEntity)
 
         courseDao.delete(courseEntity)

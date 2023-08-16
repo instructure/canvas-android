@@ -18,13 +18,16 @@
 package com.instructure.student.features.assignments.list.datasource
 
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 
 class AssignmentListLocalDataSource(
     private val assignmentFacade: AssignmentFacade,
-    private val courseFacade: CourseFacade
+    private val courseFacade: CourseFacade,
+    private val courseSettingsDao: CourseSettingsDao
 ) : AssignmentListDataSource {
 
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -42,5 +45,9 @@ class AssignmentListLocalDataSource(
 
     override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
         return courseFacade.getGradingPeriodsByCourseId(courseId)
+    }
+
+    override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        return courseSettingsDao.findByCourseId(courseId)?.toApiModel()
     }
 }

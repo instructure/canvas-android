@@ -36,8 +36,9 @@ class CourseFacadeTest {
     private val sectionDao: SectionDao = mockk(relaxed = true)
     private val tabDao: TabDao = mockk(relaxed = true)
     private val enrollmentFacade: EnrollmentFacade = mockk(relaxed = true)
+    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
 
-    private val facade = CourseFacade(termDao, courseDao, gradingPeriodDao, courseGradingPeriodDao, sectionDao, tabDao, enrollmentFacade)
+    private val facade = CourseFacade(termDao, courseDao, gradingPeriodDao, courseGradingPeriodDao, sectionDao, tabDao, enrollmentFacade, courseSettingsDao)
 
     @Test
     fun `Calling insertCourse should insert course and related entities`() = runTest {
@@ -46,7 +47,8 @@ class CourseFacadeTest {
         val gradingPeriods = listOf(GradingPeriod())
         val sections = listOf(Section())
         val tabs = listOf(Tab())
-        val course = Course(term = term, enrollments = enrollments, gradingPeriods = gradingPeriods, sections = sections, tabs = tabs)
+        val settings = CourseSettings(restrictQuantitativeData = true)
+        val course = Course(term = term, enrollments = enrollments, gradingPeriods = gradingPeriods, sections = sections, tabs = tabs, settings = settings)
 
         coEvery { termDao.insert(any()) } just Runs
         coEvery { courseDao.insert(any()) } just Runs
@@ -55,6 +57,7 @@ class CourseFacadeTest {
         coEvery { courseGradingPeriodDao.insert(any()) } just Runs
         coEvery { sectionDao.insert(any()) } just Runs
         coEvery { tabDao.insert(any()) } just Runs
+        coEvery { courseSettingsDao.insert(any()) } just Runs
 
         facade.insertCourse(course)
 
@@ -73,6 +76,7 @@ class CourseFacadeTest {
         tabs.forEach { tab ->
             coVerify { tabDao.insert(TabEntity(tab, course.id)) }
         }
+        coVerify { courseSettingsDao.insert(CourseSettingsEntity(settings, course.id)) }
     }
 
     @Test
@@ -90,6 +94,7 @@ class CourseFacadeTest {
         val courseGradingPeriodEntities = listOf(CourseGradingPeriodEntity(courseId, gradingPeriod.id))
         val tab = Tab(tabId = "tabId", label = "Label")
         val tabEntities = listOf(TabEntity(tab, courseId))
+        val courseSettings = CourseSettings(restrictQuantitativeData = true)
 
         coEvery { courseDao.findById(courseId) } returns courseEntity
         coEvery { termDao.findById(any()) } returns termEntity
@@ -98,6 +103,7 @@ class CourseFacadeTest {
         coEvery { courseGradingPeriodDao.findByCourseId(courseId) } returns courseGradingPeriodEntities
         coEvery { gradingPeriodDao.findById(any()) } returns gradingPeriodEntity
         coEvery { tabDao.findByCourseId(courseId) } returns tabEntities
+        coEvery { courseSettingsDao.findByCourseId(courseId) } returns CourseSettingsEntity(courseSettings, courseId)
 
         val result = facade.getCourseById(courseId)!!
 
@@ -107,6 +113,7 @@ class CourseFacadeTest {
         Assert.assertEquals(section, result.sections.first())
         Assert.assertEquals(gradingPeriod, result.gradingPeriods?.first())
         Assert.assertEquals(tab, result.tabs?.first())
+        Assert.assertEquals(courseSettings, result.settings)
     }
 
     @Test
@@ -124,6 +131,7 @@ class CourseFacadeTest {
         val courseGradingPeriodEntities = listOf(CourseGradingPeriodEntity(courseId, gradingPeriod.id))
         val tab = Tab(tabId = "tabId", label = "Label")
         val tabEntities = listOf(TabEntity(tab, courseId))
+        val courseSettings = CourseSettings(restrictQuantitativeData = true)
 
         coEvery { courseDao.findAll() } returns listOf(courseEntity)
         coEvery { termDao.findById(any()) } returns termEntity
@@ -132,6 +140,7 @@ class CourseFacadeTest {
         coEvery { courseGradingPeriodDao.findByCourseId(courseId) } returns courseGradingPeriodEntities
         coEvery { gradingPeriodDao.findById(any()) } returns gradingPeriodEntity
         coEvery { tabDao.findByCourseId(courseId) } returns tabEntities
+        coEvery { courseSettingsDao.findByCourseId(courseId) } returns CourseSettingsEntity(courseSettings, courseId)
 
         val result = facade.getAllCourses()
 
@@ -142,6 +151,7 @@ class CourseFacadeTest {
         Assert.assertEquals(section, result.first().sections.first())
         Assert.assertEquals(gradingPeriod, result.first().gradingPeriods?.first())
         Assert.assertEquals(tab, result.first().tabs?.first())
+        Assert.assertEquals(courseSettings, result.first().settings)
     }
 
     @Test

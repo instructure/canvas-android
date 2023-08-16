@@ -28,7 +28,8 @@ class SubmissionDetailsNetworkDataSource(
     private val submissionApi: SubmissionAPI.SubmissionInterface,
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val quizApi: QuizAPI.QuizInterface,
-    private val featuresApi: FeaturesAPI.FeaturesInterface
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
+    private val courseApi: CourseAPI.CoursesInterface
 ) : SubmissionDetailsDataSource {
 
     override suspend fun getObserveeEnrollments(forceNetwork: Boolean): DataResult<List<Enrollment>> {
@@ -71,5 +72,10 @@ class SubmissionDetailsNetworkDataSource(
     override suspend fun getCourseFeatures(courseId: Long, forceNetwork: Boolean): DataResult<List<String>> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return featuresApi.getEnabledFeaturesForCourse(courseId, params)
+    }
+
+    override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        return courseApi.getCourseSettings(courseId, restParams).dataOrNull
     }
 }

@@ -29,7 +29,8 @@ class CourseFacade(
     private val courseGradingPeriodDao: CourseGradingPeriodDao,
     private val sectionDao: SectionDao,
     private val tabDao: TabDao,
-    private val enrollmentFacade: EnrollmentFacade
+    private val enrollmentFacade: EnrollmentFacade,
+    private val courseSettingsDao: CourseSettingsDao
 ) {
 
     suspend fun insertCourse(course: Course) {
@@ -38,6 +39,10 @@ class CourseFacade(
         }
 
         courseDao.insert(CourseEntity(course))
+
+        course.settings?.let {
+            courseSettingsDao.insert(CourseSettingsEntity(it, course.id))
+        }
 
         course.enrollments?.forEach { enrollment ->
             enrollmentFacade.insertEnrollment(enrollment, course.id)
@@ -77,13 +82,15 @@ class CourseFacade(
             gradingPeriodDao.findById(it.gradingPeriodId).toApiModel()
         }
         val tabEntities = tabDao.findByCourseId(courseEntity.id)
+        val settingsEntity = courseSettingsDao.findByCourseId(courseEntity.id)
 
         return courseEntity.toApiModel(
             term = termEntity?.toApiModel(),
             enrollments = enrollments.toMutableList(),
             sections = sectionEntities.map { it.toApiModel() },
             gradingPeriods = gradingPeriods,
-            tabs = tabEntities.map { it.toApiModel() }
+            tabs = tabEntities.map { it.toApiModel() },
+            settings = settingsEntity?.toApiModel()
         )
     }
 

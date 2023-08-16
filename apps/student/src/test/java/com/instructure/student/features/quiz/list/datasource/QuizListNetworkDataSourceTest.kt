@@ -16,7 +16,9 @@
  */
 package com.instructure.student.features.quiz.list.datasource
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.features.quiz.list.QuizListNetworkDataSource
@@ -25,13 +27,15 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class QuizListNetworkDataSourceTest {
     private val quizApi: QuizAPI.QuizInterface = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
 
-    private val dataSource = QuizListNetworkDataSource(quizApi)
+    private val dataSource = QuizListNetworkDataSource(quizApi, courseApi)
 
     @Test
     fun `Quizzes are returned`() = runTest {
@@ -49,5 +53,25 @@ class QuizListNetworkDataSourceTest {
         coEvery { quizApi.getFirstPageQuizzesList(any(), any(), any()) } returns DataResult.Fail()
 
         dataSource.loadQuizzes("contextType", 1L, false)
+    }
+
+    @Test
+    fun `Load course settings returns succesful api model`() = runTest {
+        val expected = CourseSettings(restrictQuantitativeData = true)
+
+        coEvery { courseApi.getCourseSettings(any(), any()) } returns DataResult.Success(expected)
+
+        val result = dataSource.loadCourseSettings(1, true)
+
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Load course settings failure returns null`() = runTest {
+        coEvery { courseApi.getCourseSettings(any(), any()) } returns DataResult.Fail()
+
+        val result = dataSource.loadCourseSettings(1, true)
+
+        Assert.assertNull(result)
     }
 }

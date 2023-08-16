@@ -18,17 +18,24 @@
 
 package com.instructure.student.features.quiz.list
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.depaginate
 
-class QuizListNetworkDataSource(private val quizApi: QuizAPI.QuizInterface) : QuizListDataSource {
+class QuizListNetworkDataSource(private val quizApi: QuizAPI.QuizInterface, private val courseApi: CourseAPI.CoursesInterface) : QuizListDataSource {
 
     override suspend fun loadQuizzes(contextType: String, contextId: Long, forceNetwork: Boolean): List<Quiz> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return quizApi.getFirstPageQuizzesList(contextType, contextId, restParams).depaginate {
             quizApi.getNextPageQuizzesList(it, restParams)
         }.dataOrThrow
+    }
+
+    override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
+        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        return courseApi.getCourseSettings(courseId, restParams).dataOrNull
     }
 }

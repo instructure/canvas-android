@@ -17,6 +17,7 @@
 package com.instructure.student.features.modules.list.datasource
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
@@ -31,4 +32,6 @@ interface ModuleListDataSource {
     suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<Tab>>
 
     suspend fun getFirstPageModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): DataResult<List<ModuleItem>>
+
+    suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings?
 }
