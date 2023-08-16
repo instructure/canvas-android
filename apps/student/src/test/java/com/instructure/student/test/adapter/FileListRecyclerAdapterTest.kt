@@ -24,6 +24,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.student.features.files.list.FileFolderCallback
 import com.instructure.student.features.files.list.FileListRecyclerAdapter
+import com.instructure.student.features.files.list.FileListRepository
+import io.mockk.mockk
+import io.mockk.mockkClass
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
@@ -42,7 +45,7 @@ class FileListRecyclerAdapterTest : TestCase() {
         override fun onItemClicked(item: FileFolder) {}
         override fun onOpenItemMenu(item: FileFolder, anchorView: View) {}
         override fun onRefreshFinished() {}
-    }, true)
+    }, fileListRepository = mockk(relaxed = true))
 
     @Before
     fun setup() {
