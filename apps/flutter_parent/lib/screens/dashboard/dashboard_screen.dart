@@ -250,7 +250,7 @@ class DashboardState extends State<DashboardScreen> {
 
                 flexibleSpace: Semantics(
                   label: 'Tap to open the student selector',
-                  child: _appBarStudents(_students, model.value!),
+                  child: _appBarStudents(_students, model.value),
                 ),
                 centerTitle: true,
                 bottom: ParentTheme.of(context)?.appBarDivider(),
@@ -319,7 +319,7 @@ class DashboardState extends State<DashboardScreen> {
     );
   }
 
-  Widget _appBarStudents(List<User> students, User selectedStudent) {
+  Widget _appBarStudents(List<User> students, User? selectedStudent) {
     if (students.isEmpty) {
       // No students yet, we are either still loading, or there was an error
       if (_studentsLoading) {
@@ -344,17 +344,16 @@ class DashboardState extends State<DashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              if (selectedStudent.avatarUrl != null)
-                Avatar(selectedStudent.avatarUrl!,
-                    name: selectedStudent.shortName,
-                    radius: 24,
-                    key: Key("student_expansion_touch_target")),
+              Avatar(selectedStudent?.avatarUrl,
+                  name: selectedStudent?.shortName ?? '',
+                  radius: 24,
+                  key: Key("student_expansion_touch_target")),
               SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.titleMedium),
+                  UserName.fromUserShortName(selectedStudent!, style: Theme.of(context).primaryTextTheme.titleMedium),
                   SizedBox(width: 6),
                   DropdownArrow(rotate: expand),
                 ],

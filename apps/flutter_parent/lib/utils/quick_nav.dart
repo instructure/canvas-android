@@ -28,9 +28,9 @@ class QuickNav {
   }
 
   /// Default method for pushing screens, uses material transition
-  Future<T?> pushRoute<T extends Object>(BuildContext context, String route,
+  Future<dynamic> pushRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return PandaRouter.router.navigateTo(context, route, transition: transitionType) as Future<T>;
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType);
   }
 
   Future<T> replaceRoute<T extends Object>(BuildContext context, String route,
@@ -43,14 +43,14 @@ class QuickNav {
     return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true) as Future<T>;
   }
 
-  Future<T> pushRouteWithCustomTransition<T extends Object>(BuildContext context, String route, bool clearStack,
+  Future<dynamic> pushRouteWithCustomTransition<T extends Object>(BuildContext context, String route, bool clearStack,
       Duration transitionDuration, RouteTransitionsBuilder transitionsBuilder,
       {TransitionType transitionType = TransitionType.custom}) {
     return PandaRouter.router.navigateTo(context, route,
         clearStack: clearStack,
         transitionDuration: transitionDuration,
         transition: transitionType,
-        transitionBuilder: transitionsBuilder) as Future<T>;
+        transitionBuilder: transitionsBuilder);
   }
 
   Future<void> routeInternally(BuildContext context, String url) {

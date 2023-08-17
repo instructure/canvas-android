@@ -47,7 +47,7 @@ class Avatar extends StatelessWidget {
     Color? backgroundColor,
     double radius = 20,
     Widget? overlay,
-  }) : this(user.avatarUrl!, name: user.shortName, backgroundColor: backgroundColor, radius: radius, overlay: overlay);
+  }) : this(user.avatarUrl, name: user.shortName, backgroundColor: backgroundColor, radius: radius, overlay: overlay);
 
   @override
   Widget build(BuildContext context) {

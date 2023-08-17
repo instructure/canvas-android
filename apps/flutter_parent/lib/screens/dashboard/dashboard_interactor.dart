@@ -38,7 +38,7 @@ class DashboardInteractor {
       });
 
   List<User> filterStudents(List<Enrollment> enrollments) =>
-      enrollments.map((enrollment) => enrollment.observedUser).where((student) => student != null).toSet().toList() as List<User>;
+      enrollments.map((enrollment) => enrollment.observedUser).nonNulls.toList();
 
   void sortUsers(List<User> users) => users.sort((user1, user2) => user1.sortableName!.compareTo(user2.sortableName!));
 

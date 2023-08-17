@@ -267,7 +267,7 @@ abstract class WebViewPlatformController {
   ///
   /// The Future completes with an error if a JavaScript error occurred, or if the type of the
   /// evaluated expression is not supported(e.g on iOS not all non primitive type can be evaluated).
-  Future<String> evaluateJavascript(String javascriptString) {
+  Future<String?> evaluateJavascript(String javascriptString) {
     throw UnimplementedError(
         "WebView evaluateJavascript is not implemented on the current platform");
   }

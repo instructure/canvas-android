@@ -82,7 +82,7 @@ class CourseDetailsModel extends BaseModel {
     }
 
     final groupFuture = _interactor()
-        .loadAssignmentGroups(courseId, student.id, _nextGradingPeriod!.id!, forceRefresh: forceRefresh).then((groups) async {
+        .loadAssignmentGroups(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((groups) async {
       // Remove unpublished assignments to match web
       return groups.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build()).toList();
     });
@@ -94,7 +94,7 @@ class CourseDetailsModel extends BaseModel {
 
     // Get the grades for the term
     final enrollmentsFuture = _interactor()
-        .loadEnrollmentsForGradingPeriod(courseId, student.id, _nextGradingPeriod!.id!, forceRefresh: forceRefresh).then((enrollments) {
+        .loadEnrollmentsForGradingPeriod(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((enrollments) {
       return enrollments.length > 0 ? enrollments.first : null;
     }).catchError((_) => null); // Some 'legacy' parents can't read grades for students, so catch and return null
 

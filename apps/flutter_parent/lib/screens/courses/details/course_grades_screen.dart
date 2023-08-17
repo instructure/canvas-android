@@ -311,7 +311,7 @@ class _AssignmentRow extends StatelessWidget {
                       children: <Widget>[
                         Text(assignment.name!, style: textTheme.titleMedium, key: Key("assignment_${assignment.id}_name")),
                         SizedBox(height: 2),
-                        Text(_formatDate(context, assignment.dueAt!),
+                        Text(_formatDate(context, assignment.dueAt),
                             style: textTheme.bodySmall, key: Key("assignment_${assignment.id}_dueAt")),
                         if (assignmentStatus != null) SizedBox(height: 4),
                         if (assignmentStatus != null) assignmentStatus,
@@ -387,7 +387,7 @@ class _AssignmentRow extends StatelessWidget {
         key: Key("assignment_${assignment.id}_grade"));
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
+  String _formatDate(BuildContext context, DateTime? date) {
     final l10n = L10n(context);
     return date.l10nFormat(l10n.dueDateAtTime) ?? l10n.noDueDate;
   }

@@ -135,8 +135,8 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   }
 
   @override
-  Future<String> evaluateJavascript(String javascriptString) {
-    return _channel.invokeMethod<String>('evaluateJavascript', javascriptString) as Future<String>;
+  Future<String?> evaluateJavascript(String javascriptString) {
+    return _channel.invokeMethod<String>('evaluateJavascript', javascriptString);
   }
 
   @override

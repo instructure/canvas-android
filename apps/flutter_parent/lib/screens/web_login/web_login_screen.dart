@@ -150,7 +150,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     _controller = controller;
 
     // WebView's created, time to load
-    _buildAuthUrl(verifyResult);
+    await _buildAuthUrl(verifyResult);
     _loadAuthUrl();
 
     if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
@@ -178,7 +178,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             (function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();
           """);
       if (htmlError != null && htmlError.contains("redirect_uri does not match client settings")) {
-        _buildAuthUrl(verifyResult, forceAuthRedirect: true);
+        await _buildAuthUrl(verifyResult, forceAuthRedirect: true);
         controller.loadUrl("about:blank");
         _loadAuthUrl();
       }
@@ -246,7 +246,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   /// Sets an authenticated login url as well as the base url of the institution
-  void _buildAuthUrl(
+  Future<void> _buildAuthUrl(
     MobileVerifyResult? verifyResult, {
     bool forceAuthRedirect = false,
   }) async {

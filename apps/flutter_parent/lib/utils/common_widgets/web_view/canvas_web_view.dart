@@ -67,7 +67,7 @@ class CanvasWebView extends StatefulWidget {
 
 class _CanvasWebViewState extends State<CanvasWebView> {
   late String _content;
-  late Future<String?> _contentFuture;
+  Future<String?>? _contentFuture;
 
   WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
@@ -81,7 +81,7 @@ class _CanvasWebViewState extends State<CanvasWebView> {
   Widget build(BuildContext context) {
     if (!widget.authContentIfNecessary) {
       _contentFuture = Future.value(widget.content);
-    } else if (_content != widget.content) {
+    } else  {
       // If we don't have a future or if the content has changed (i.e., PTR changed the data), update the content future
       _content = widget.content;
       _contentFuture = _interactor.authContent(_content, L10n(context).launchExternalTool);
@@ -99,7 +99,7 @@ class _CanvasWebViewState extends State<CanvasWebView> {
 }
 
 class _ResizingWebView extends StatefulWidget {
-  final Future<String?> contentFuture;
+  final Future<String?>? contentFuture;
   final String? emptyDescription;
 
   final double initialHeight;
@@ -109,7 +109,7 @@ class _ResizingWebView extends StatefulWidget {
   final Future? futureDelay;
 
   const _ResizingWebView({
-    required this.contentFuture,
+    this.contentFuture,
     required this.emptyDescription,
     required this.initialHeight,
     required this.horizontalPadding,
@@ -123,7 +123,7 @@ class _ResizingWebView extends StatefulWidget {
 }
 
 class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingObserver {
-  late String _content;
+  String? _content;
   WebViewController? _controller;
   late double _height;
   late bool _loading;
@@ -230,7 +230,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
     if (_content != widgetContent) {
       _height = widget.initialHeight;
       _content = widgetContent!;
-      _controller?.loadHtml(_content, horizontalPadding: widget.horizontalPadding);
+      if (_content != null) _controller?.loadHtml(_content!, horizontalPadding: widget.horizontalPadding);
     }
 
     Widget child = WebView(
@@ -260,7 +260,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   }
 
   void _handleWebViewCreated(WebViewController webViewController) async {
-    webViewController.loadHtml(_content, baseUrl: ApiPrefs.getDomain()!, horizontalPadding: widget.horizontalPadding);
+    if (_content != null) webViewController.loadHtml(_content!, baseUrl: ApiPrefs.getDomain()!, horizontalPadding: widget.horizontalPadding);
     _controller = webViewController;
   }
 

@@ -467,7 +467,7 @@ WebSettings _webSettingsFromWidget(WebView widget) {
     darkMode: widget.darkMode,
     debuggingEnabled: widget.debuggingEnabled,
     gestureNavigationEnabled: widget.gestureNavigationEnabled,
-    userAgent: WebSetting<String>.of(widget.userAgent!),
+    userAgent: WebSetting<String>.of(widget.userAgent ?? ''),
   );
 }
 

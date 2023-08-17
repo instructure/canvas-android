@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           });
     } else {
       if (_dataFuture == null) {
-        _dataFuture = locator<SplashScreenInteractor>().getData(qrLoginUrl: widget.qrLoginUrl!);
+        _dataFuture = locator<SplashScreenInteractor>().getData(qrLoginUrl: widget.qrLoginUrl);
       }
 
       return Scaffold(
