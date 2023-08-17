@@ -19,12 +19,28 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Network
+import androidx.lifecycle.LiveData
 
-class NetworkStateProvider(private val context: Context) {
+class NetworkStateProvider(context: Context) : LiveData<Boolean>() {
+
+    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    init {
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                postValue(true)
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                postValue(false)
+            }
+        })
+    }
 
     fun isOnline(): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo?.isConnected == true
+        return value.orDefault()
     }
 }

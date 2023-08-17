@@ -46,6 +46,11 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+        <include
+            android:id="@+id/offlineIndicator"
+            layout="@layout/view_offline_indicator"
+            android:visibility="gone" />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"

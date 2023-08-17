@@ -48,7 +48,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -302,8 +301,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         requestNotificationsPermission()
 
-        if (!networkStateProvider.isOnline()) {
-            Snackbar.make(binding.fullScreenCoordinatorLayout, R.string.offlineModeSnackbar, Snackbar.LENGTH_LONG).show()
+        networkStateProvider.observe(this) { isOnline ->
+            setOfflineIndicator(!isOnline)
         }
     }
 
@@ -490,11 +489,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions {
         //Navigation items
         navigationDrawerBinding.navigationDrawerItemFiles.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemGauge.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStudio.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemBookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemHelp.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -589,6 +588,16 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
         navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(checkListener)
         ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerColorOverlaySwitch, ThemePrefs.brandColor)
+    }
+
+    private fun setOfflineIndicator(isOffline: Boolean) {
+        binding.offlineIndicator.root.setVisible(isOffline)
+        with(navigationDrawerBinding) {
+            navigationDrawerOfflineIndicator.setVisible(isOffline)
+            navigationDrawerItemStudio.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemGauge.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemHelp.alpha = if (isOffline) 0.5f else 1f
+        }
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {
