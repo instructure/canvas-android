@@ -42,6 +42,7 @@
             tools:text="An assignment description with some length so we can ensure it looks amazing on every device!" />
 
         <LinearLayout
+            android:id="@+id/dateAndPointsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

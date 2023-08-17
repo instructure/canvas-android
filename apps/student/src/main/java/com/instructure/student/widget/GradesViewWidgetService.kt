@@ -29,8 +29,8 @@ import com.instructure.student.R
 import com.instructure.student.activity.InterwebsToApplication
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.*
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 
 import java.io.Serializable
@@ -98,7 +98,8 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
                     if (courseGrade.noCurrentGrade) {
                         row.setTextViewText(R.id.courseGrade, applicationContext.getString(R.string.noGradeText))
                     } else {
-                        row.setTextViewText(R.id.courseGrade, NumberHelper.doubleToPercentage(courseGrade.currentScore, 2))
+                        val grade = formatGrade(streamItem, courseGrade)
+                        row.setTextViewText(R.id.courseGrade, grade)
                     }
                 }
             }
@@ -106,7 +107,20 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
 
             row.setInt(R.id.courseIndicator, "setColorFilter", getCanvasContextTextColor(appWidgetId, streamItem))
         }
-        
+
+        private fun formatGrade(course: Course, courseGrade: CourseGrade): String {
+            return if (course.settings?.restrictQuantitativeData == true) {
+                if (courseGrade.currentGrade.isNullOrEmpty()) {
+                    applicationContext.getString(R.string.noGradeText)
+                } else {
+                    courseGrade.currentGrade.orEmpty()
+                }
+            } else {
+                val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
+                "${if (courseGrade.hasCurrentGradeString()) courseGrade.currentGrade else ""} $scoreString"
+            }
+        }
+
         override fun clearViewData(row: RemoteViews) {
             row.setTextViewText(R.id.courseGrade, "")
             row.setTextViewText(R.id.courseTerm, "")

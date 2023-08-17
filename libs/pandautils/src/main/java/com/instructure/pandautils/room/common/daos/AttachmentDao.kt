@@ -6,10 +6,10 @@ import com.instructure.pandautils.room.common.entities.AttachmentEntity
 @Dao
 interface AttachmentDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(attachment: AttachmentEntity)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(attachments: List<AttachmentEntity>)
 
     @Delete
@@ -23,4 +23,7 @@ interface AttachmentDao {
 
     @Query("SELECT * FROM AttachmentEntity WHERE workerId=:parentId")
     suspend fun findByParentId(parentId: String): List<AttachmentEntity>?
+
+    @Query("SELECT * FROM AttachmentEntity WHERE submissionId=:submissionId")
+    suspend fun findBySubmissionId(submissionId: Long): List<AttachmentEntity>
 }

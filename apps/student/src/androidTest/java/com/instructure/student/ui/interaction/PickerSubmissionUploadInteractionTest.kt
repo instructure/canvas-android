@@ -22,6 +22,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -51,6 +52,9 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
     fun setUp() {
         // Read this at set-up, because it may become nulled out soon thereafter
         activity = activityRule.activity
+
+        //Clear file upload cache dir.
+        File(getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
         // Copy our sample file from the assets area to the external cache dir
         copyAssetFileToExternalCache(activity, mockedFileName)

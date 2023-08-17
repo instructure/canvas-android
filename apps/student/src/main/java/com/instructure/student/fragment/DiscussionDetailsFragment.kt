@@ -31,6 +31,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.DiscussionManager.deleteDiscussionEntry
 import com.instructure.canvasapi2.managers.GroupManager
@@ -96,6 +97,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private var discussionEntryId: Long by LongArg(default = 0L, key = DISCUSSION_ENTRY_ID)
     private var isNestedDetail: Boolean by BooleanArg(default = false, key = IS_NESTED_DETAIL)
     private val groupDiscussion: Boolean by BooleanArg(default = false, key = GROUP_DISCUSSION)
+
+    private var courseSettings: CourseSettings? = null
 
     private var scrollPosition: Int = 0
     private var authenticatedSessionURL: String? = null
@@ -550,6 +553,16 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
             // Do we have a discussion topic header? if not fetch it, or if forceRefresh is true force a fetch
 
+            val courseId = when (canvasContext) {
+                is Course -> canvasContext.id
+                is Group -> (canvasContext as Group).courseId
+                else -> null
+            }
+
+            if (courseId != null) {
+                courseSettings = CourseManager.getCourseSettingsAsync(courseId, forceRefresh).await().dataOrNull
+            }
+
             if (forceRefresh) {
                 val discussionTopicHeaderId = if (discussionTopicHeaderId == 0L && discussionTopicHeader.id != 0L) discussionTopicHeader.id else discussionTopicHeaderId
                 if (!updateToGroupIfNecessary()) {
@@ -602,9 +615,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 delay(300)
                 discussionsScrollView.post {
                     if (topLevelReplyPosted) {
-                        discussionsScrollView?.fullScroll(ScrollView.FOCUS_DOWN)
+                        discussionsScrollView.fullScroll(ScrollView.FOCUS_DOWN)
                     } else {
-                        discussionsScrollView?.scrollTo(0, scrollPosition)
+                        discussionsScrollView.scrollTo(0, scrollPosition)
                     }
                 }
             }
@@ -729,7 +742,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun setupAssignmentDetails(assignment: Assignment) =
         with(binding) {
             with(assignment) {
-                pointsTextView.setVisible()
+                pointsTextView.setVisible(!courseSettings?.restrictQuantitativeData.orDefault())
                 // Points possible
                 pointsTextView.text = resources.getQuantityString(
                     R.plurals.quantityPointsAbbreviated,

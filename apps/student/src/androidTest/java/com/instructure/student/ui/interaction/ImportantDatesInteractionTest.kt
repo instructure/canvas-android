@@ -17,7 +17,11 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.StubTablet
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addAssignmentCalendarEvent
+import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -49,7 +53,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(event.title!!)
-        importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(1)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(event.startDate))
     }
 
@@ -65,7 +69,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(assignment.name!!)
-        importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(1)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(assignmentScheduleItem.startDate))
     }
 
@@ -91,13 +95,13 @@ class ImportantDatesInteractionTest : StudentTest() {
         goToImportantDatesTab(data)
         val eventToCheck = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event 2", "Important event 2 description", true)
 
-        importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(1)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(existedEventBeforeRefresh.startDate))
 
         //Refresh the page and verify if the previously not displayed event will be displayed after the refresh.
         importantDatesPage.pullToRefresh()
         importantDatesPage.assertItemDisplayed(eventToCheck.title!!)
-        importantDatesPage.assertRecyclerViewItemCount(3) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(2)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(eventToCheck.startDate))
     }
 
@@ -112,7 +116,7 @@ class ImportantDatesInteractionTest : StudentTest() {
         goToImportantDatesTab(data)
 
         importantDatesPage.assertItemDisplayed(event.title!!)
-        importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(1)
 
         //Opening the calendar event
         importantDatesPage.clickImportantDatesItem(event.title!!)
@@ -133,7 +137,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(assignment.name!!)
-        importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(1) // We count both day texts and calendar events here, since both types are part of the recyclerView.
 
         //Opening the calendar assignment event
         importantDatesPage.clickImportantDatesItem(assignment.name!!)
@@ -161,7 +165,7 @@ class ImportantDatesInteractionTest : StudentTest() {
                 importantDatesPage.assertItemDisplayed(it.title!!)
             }
         }
-        importantDatesPage.assertRecyclerViewItemCount(3) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(2)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(calendarEvent.startDate))
     }
 
@@ -194,7 +198,7 @@ class ImportantDatesInteractionTest : StudentTest() {
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(twoDaysFromNowEvent.startDate))
         importantDatesPage.swipeUp() // Need to do this because on landscape mode the last item cannot be seen on the view by default.
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(threeDaysFromNowEvent.startDate))
-        importantDatesPage.assertRecyclerViewItemCount(6) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertRecyclerViewItemCount(3)
     }
 
     private fun goToImportantDatesTab(data: MockCanvas) {

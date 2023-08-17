@@ -23,8 +23,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.DataResult
@@ -32,10 +32,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradeRowItemViewModel
 import com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradingPeriodSelectorItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.pandautils.utils.textAndIconColor
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -142,7 +140,7 @@ class GradesViewModelTest {
         val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ThemedColor(0), "www.1.com", 90.0, "A")
         val expectedGradeRow2 = GradeRowViewData(2, "Course with Score", ThemedColor(0), "www.1.com", 75.6, "76%")
         val expectedGradeRow3 = GradeRowViewData(3, "Course without scores", ThemedColor(0), "www.1.com", null, "--")
-        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", ThemedColor(0), "www.1.com", 0.0, "--")
+        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", ThemedColor(0), "www.1.com", 0.0, "--", hideProgress = true)
 
         assertEquals(expectedGradeRow1, gradeRows[0].data)
         assertEquals(expectedGradeRow2, gradeRows[1].data)
@@ -346,6 +344,57 @@ class GradesViewModelTest {
         )
         assertEquals(GradesAction.OpenGradingPeriodsDialog(expectedGradingPeriods, 0), viewModel.events.value!!.getContentIfNotHandled())
     }
+
+    @Test
+    fun `Hide progress when quantitative data is restricted`() {
+        // Given
+        val course = createCourseWithGrades(1, "Course with Grade", "", "www.1.com", 90.0, "A")
+            .copy(settings = CourseSettings(restrictQuantitativeData = true))
+
+        every { courseManager.getCoursesWithGradesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, {})
+
+        // Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(1, viewModel.data.value!!.items.size)
+
+        val gradeRows = viewModel.data.value!!.items.map { it as GradeRowItemViewModel }
+
+        val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ThemedColor(0), "www.1.com", 90.0, "A", hideProgress = true)
+
+        assertEquals(expectedGradeRow1, gradeRows[0].data)
+    }
+
+    @Test
+    fun `Do not show score when quantitative data is restricted and there is no grade`() {
+        // Given
+        val course = createCourseWithGrades(1, "Course with Grade", "", "www.1.com", 90.0, null)
+            .copy(settings = CourseSettings(restrictQuantitativeData = true))
+
+        every { courseManager.getCoursesWithGradesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, {})
+
+        // Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(1, viewModel.data.value!!.items.size)
+
+        val gradeRows = viewModel.data.value!!.items.map { it as GradeRowItemViewModel }
+
+        val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ThemedColor(0), "www.1.com", 90.0, "--", hideProgress = true)
+
+        assertEquals(expectedGradeRow1, gradeRows[0].data)
+    }
+
 
     private fun createViewModel() = GradesViewModel(courseManager, resources, enrollmentManager, colorKeeper)
 

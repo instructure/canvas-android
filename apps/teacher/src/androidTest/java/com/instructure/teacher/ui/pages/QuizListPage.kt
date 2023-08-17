@@ -16,10 +16,10 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.action.ViewActions
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -39,7 +39,7 @@ import com.instructure.teacher.R
  * Additionally, it provides methods for asserting the display of the "No Quizzes" view, checking the presence of a quiz, clicking on a quiz, opening the search bar, entering a search query,
  * asserting the quiz count, and refreshing the page.
  */
-class QuizListPage : BasePage() {
+class QuizListPage(val searchable: Searchable) : BasePage() {
 
     /**
      * The quiz list toolbar view on the page.
@@ -98,22 +98,6 @@ class QuizListPage : BasePage() {
      */
     fun clickQuiz(quizTitle: String) {
         waitForViewWithText(quizTitle).click()
-    }
-
-    /**
-     * Opens the search bar.
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters a search query in the search input.
-     *
-     * @param query The search query to be entered.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
     }
 
     /**

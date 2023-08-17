@@ -16,6 +16,7 @@ library course;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:flutter_parent/models/course_settings.dart';
 import 'package:flutter_parent/models/section.dart';
 import 'package:flutter_parent/models/term.dart';
 
@@ -122,6 +123,9 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   @nullable
   BuiltList<Section> get sections;
+
+  @nullable
+  CourseSettings get settings;
 
   static void _initializeBuilder(CourseBuilder b) => b
     ..id = ''
