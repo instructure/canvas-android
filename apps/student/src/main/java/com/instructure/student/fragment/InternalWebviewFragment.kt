@@ -27,10 +27,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.URLUtil
 import android.webkit.WebView
 import android.widget.ProgressBar
-import androidx.core.content.FileProvider
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -54,7 +52,6 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.io.File
 
 open class InternalWebviewFragment : ParentFragment() {
 
