@@ -301,7 +301,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         requestNotificationsPermission()
 
-        networkStateProvider.observe(this) { isOnline ->
+        networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
             setOfflineIndicator(!isOnline)
         }
     }

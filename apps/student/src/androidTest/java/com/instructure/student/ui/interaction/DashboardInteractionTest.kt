@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAccountNotification
@@ -27,15 +28,33 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.di.NetworkStateProviderModule
+import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.espresso.fakes.FakeNetworkStateProvider
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import junit.framework.TestCase.assertNotNull
+import org.junit.Before
 import org.junit.Test
 
+@UninstallModules(NetworkStateProviderModule::class)
 @HiltAndroidTest
 class DashboardInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
+
+    private val isOnlineLiveData = MutableLiveData<Boolean>()
+
+    @BindValue
+    @JvmField
+    val networkStateProvider: NetworkStateProvider = FakeNetworkStateProvider(isOnlineLiveData)
+
+    @Before
+    fun setUp() {
+        isOnlineLiveData.postValue(true)
+    }
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
@@ -281,7 +300,27 @@ class DashboardInteractionTest : StudentTest() {
         leftSideNavigationDrawerPage.setShowGrades(true)
         dashboardPage.assertGradeText("A")
     }
-    
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineIndicatorDisplayedIfOffline() {
+        goToDashboard(setUpData())
+
+        isOnlineLiveData.postValue(false)
+
+        dashboardPage.assertOfflineIndicatorDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineIndicatorNotDisplayedIfOnline() {
+        goToDashboard(setUpData())
+
+        isOnlineLiveData.postValue(true)
+
+        dashboardPage.assertOfflineIndicatorNotDisplayed()
+    }
+
     private fun setUpData(
         courseCount: Int = 1,
         invitedCourseCount: Int = 0,
@@ -295,16 +334,17 @@ class DashboardInteractionTest : StudentTest() {
             invitedCourseCount = invitedCourseCount,
             pastCourseCount = pastCourseCount,
             favoriteCourseCount = favoriteCourseCount,
-            accountNotificationCount = announcementCount)
+            accountNotificationCount = announcementCount
+        )
     }
-    
+
     private fun goToDashboard(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
         dashboardPage.waitForRender()
     }
-    
+
     private fun setUpCustomGrade(grade: String, score: Double, data: MockCanvas, restrictQuantitativeData: Boolean) {
         val student = data.students[0]
         val course = data.courses.values.first()
@@ -312,9 +352,10 @@ class DashboardInteractionTest : StudentTest() {
         val enrollment = course.enrollments!!.first { it.userId == student.id }
             .copy(grades = Grades(currentGrade = grade, currentScore = score))
 
-        val newCourse = course
-            .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
-                enrollments = mutableListOf(enrollment))
+        val newCourse = course.copy(
+            settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
+            enrollments = mutableListOf(enrollment)
+        )
         data.courses[course.id] = newCourse
     }
 }

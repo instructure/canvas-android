@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.di
 
-import android.content.Context
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.common.daos.AttachmentDao
@@ -28,11 +27,9 @@ import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.facade.*
-import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 
@@ -45,11 +42,6 @@ class OfflineModule {
     @Provides
     fun provideOfflineDatabase(offlineDatabaseProvider: DatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
         return offlineDatabaseProvider.getDatabase(apiPrefs.user?.id)
-    }
-
-    @Provides
-    fun provideNetworkStateProvider(@ApplicationContext context: Context): NetworkStateProvider {
-        return NetworkStateProvider(context)
     }
 
     @Provides

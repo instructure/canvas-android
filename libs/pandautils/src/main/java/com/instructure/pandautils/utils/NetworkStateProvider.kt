@@ -21,26 +21,37 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
-class NetworkStateProvider(context: Context) : LiveData<Boolean>() {
+interface NetworkStateProvider {
+    val isOnlineLiveData: LiveData<Boolean>
+    fun isOnline(): Boolean
+}
+
+class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
 
     private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    private val _isOnlineLiveData = MutableLiveData<Boolean>()
+
+    override val isOnlineLiveData: LiveData<Boolean>
+        get() = _isOnlineLiveData
 
     init {
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                postValue(true)
+                _isOnlineLiveData.value = true
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                postValue(false)
+                _isOnlineLiveData.value = false
             }
         })
     }
 
-    fun isOnline(): Boolean {
-        return value.orDefault()
+    override fun isOnline(): Boolean {
+        return _isOnlineLiveData.value.orDefault()
     }
 }
