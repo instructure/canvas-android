@@ -127,7 +127,7 @@ class DiscussionsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the '$newDiscussionTitle' discussion is displayed and it is the only one.")
         discussionsListPage.assertDiscussionCount(2) // header + single search result
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
-        Espresso.pressBack() // need to press back to exit from the search input field
+        discussionsListPage.searchable.clickOnClearSearchButton()
 
         Log.d(STEP_TAG,"Collapse the discussion list and assert that the '$newDiscussionTitle' discussion can NOT be seen.")
         discussionsListPage.toggleCollapseExpandIcon()

@@ -99,7 +99,7 @@ class AnnouncementsListPage : BasePage() {
      * @param announcementName: The announcement name string parameter.
      */
     fun assertHasAnnouncement(announcementName: String) {
-        onView(withText(announcementName)).assertDisplayed()
+        onView(withId(R.id.discussionTitle) + withText(announcementName)).assertDisplayed()
     }
 
     /**
