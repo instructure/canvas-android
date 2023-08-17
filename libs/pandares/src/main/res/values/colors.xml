@@ -25,7 +25,7 @@
     <color name="backgroundDarkest">#2D3B45</color>
     <color name="backgroundGrouped">#F5F5F5</color>
     <color name="backgroundGroupedCell">#FFFFFF</color>
-    <color name="backgroundInfo">#008EE2</color>
+    <color name="backgroundInfo">#0374B5</color>
     <color name="backgroundLight">#F5F5F5</color>
     <color name="backgroundLightest">#FFFFFF</color>
     <color name="backgroundLightestElevated">#FFFFFF</color>
@@ -37,14 +37,14 @@
     <color name="borderDanger">#E0061F</color>
     <color name="borderDark">#556572</color>
     <color name="borderDarkest">#2D3B45</color>
-    <color name="borderInfo">#008EE2</color>
+    <color name="borderInfo">#0374B5</color>
     <color name="borderLight">#F5F5F5</color>
     <color name="borderLightest">#FFFFFF</color>
     <color name="borderMedium">#C7CDD1</color>
     <color name="borderSuccess">#0B874B</color>
     <color name="borderWarning">#FC5E13</color>
     <color name="crimson">#E0061F</color>
-    <color name="electric">#008EE2</color>
+    <color name="electric">#0374B5</color>
     <color name="fire">#FC5E13</color>
     <color name="licorice">#2D3B45</color>
     <color name="oxford">#394B58</color> <!-- Only shade of gray that does not have pair in dark mode -->
@@ -54,7 +54,7 @@
     <color name="textDanger">#E0061F</color>
     <color name="textDark">#556572</color>
     <color name="textDarkest">#2D3B45</color>
-    <color name="textInfo">#008EE2</color>
+    <color name="textInfo">#0374B5</color>
     <color name="textLight">#F5F5F5</color>
     <color name="textLightest">#FFFFFF</color>
     <color name="textSuccess">#0B874B</color>
