@@ -175,7 +175,7 @@ class FilesE2ETest: TeacherTest() {
         fileListPage.assertItemNotDisplayed("unfiled")
 
         Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that all the root level directories and files are displayed (1).")
-        fileListPage.searchable.clickOnClearSearchButton()
+        fileListPage.searchable.pressSearchBackButton()
         fileListPage.assertFileListCount(1)
 
         Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
