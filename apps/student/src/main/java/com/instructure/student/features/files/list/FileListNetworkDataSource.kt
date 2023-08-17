@@ -44,6 +44,6 @@ class FileListNetworkDataSource(private val fileFolderApi: FileFolderAPI.FilesFo
 
     override suspend fun getRootFolderForContext(canvasContext: CanvasContext, forceNetwork: Boolean): FileFolder? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-        return fileFolderApi.getRootFolderForContext(canvasContext.id, CanvasContext.Type.COURSE.apiString, restParams).dataOrNull
+        return fileFolderApi.getRootFolderForContext(canvasContext.id, canvasContext.type.apiString, restParams).dataOrNull
     }
 }

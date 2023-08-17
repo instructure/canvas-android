@@ -379,13 +379,6 @@ open class InternalWebviewFragment : ParentFragment() {
             return
         }
 
-        if (!URLUtil.isNetworkUrl(targetUrl)) {
-            val file = File(targetUrl)
-            val uri = FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
-            binding.canvasWebViewWrapper.webView.loadUrl(uri.toString())
-            return
-        }
-
         if (isLTITool) {
             externalLTIUrl = targetUrl
         }

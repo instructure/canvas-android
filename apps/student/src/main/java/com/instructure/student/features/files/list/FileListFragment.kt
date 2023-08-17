@@ -20,6 +20,7 @@ package com.instructure.student.features.files.list
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -292,17 +293,21 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     }
 
     private fun openHtmlFile(fileFolder: FileFolder) {
-        RouteMatcher.route(
-            requireContext(), InternalWebviewFragment.makeRoute(
-                canvasContext = canvasContext,
-                url = fileFolder.url.orEmpty(),
-                authenticate = false,
-                isUnsupportedFeature = false,
-                allowUnsupportedRouting = false,
-                shouldRouteInternally = true,
-                allowRoutingTheSameUrlInternally = false
+        fileFolder.url?.let {
+            val file = File(it)
+            val uri = FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+            RouteMatcher.route(
+                requireContext(), InternalWebviewFragment.makeRoute(
+                    canvasContext = canvasContext,
+                    url = uri.toString(),
+                    authenticate = false,
+                    isUnsupportedFeature = false,
+                    allowUnsupportedRouting = false,
+                    shouldRouteInternally = true,
+                    allowRoutingTheSameUrlInternally = false
+                )
             )
-        )
+        }
     }
 
     private fun openLocalMedia(fileFolder: FileFolder) {

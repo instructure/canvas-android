@@ -113,7 +113,6 @@ class FileSyncWorker @AssistedInject constructor(
 
             return OneTimeWorkRequest.Builder(FileSyncWorker::class.java)
                 .setInputData(inputData)
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
         }
     }
