@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.mockCanvas.addFolderToCourse
 import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
@@ -76,8 +77,32 @@ class GroupLinksInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
     fun testGroupLink_dashboard_favoriteLogics() {
-        setUpGroupAndSignIn(isFavorite = false)
-        dashboardPage.assertGroupNotDisplayed(group)
+        val data = setUpGroupAndSignIn()
+        val user = data.users.values.first()
+        val nonFavoriteGroup = data.addGroupToCourse(
+            course = course,
+            members = listOf(user),
+            isFavorite = false
+        )
+        refresh() //Need to refresh because when we navigated to Dashboard page the nonFavoriteGroup was not existed yet. (However it won't be displayed because it's not favorite)
+        dashboardPage.assertGroupNotDisplayed(nonFavoriteGroup)
+        dashboardPage.assertDisplaysGroup(group, course)
+    }
+
+    // Test that if no groups has selected as favorite then we display all groups
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
+    fun testGroupLink_dashboard_not_selected_displays_all() {
+        val data = setUpGroupAndSignIn(isFavorite = false)
+        val user = data.users.values.first()
+        val group2 = data.addGroupToCourse(
+            course = course,
+            members = listOf(user),
+            isFavorite = false
+        )
+        refresh() //Need to refresh because when we navigated to Dashboard page the group2 was not existed yet.
+        dashboardPage.assertDisplaysGroup(group, course)
+        dashboardPage.assertDisplaysGroup(group2, course)
     }
 
     // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
