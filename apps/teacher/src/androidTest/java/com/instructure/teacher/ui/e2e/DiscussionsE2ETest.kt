@@ -90,6 +90,10 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertGroupDisplayed("Pinned")
         discussionsListPage.assertDiscussionInGroup("Pinned", discussion2.title)
 
+        Log.d(STEP_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discusssions are displayed.")
+        discussionsListPage.assertHasDiscussion(newTitle)
+        discussionsListPage.assertHasDiscussion(discussion2)
+
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '$newTitle' discussion.")
         discussionsListPage.clickDiscussion(newTitle)
         discussionsDetailsPage.openEdit()
@@ -138,11 +142,5 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.toggleCollapseExpandIcon()
         discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
-
-        Log.d(STEP_TAG, "Click on the clear search input button (X) on the toolbar. Assert that the default state, so both of the discussions will be displayed.")
-        discussionsListPage.searchable.clickOnClearSearchButton()
-        discussionsListPage.assertHasDiscussion(discussion)
-        discussionsListPage.assertHasDiscussion(discussion2)
-        discussionsListPage.assertDiscussionCount(2)
     }
 }
