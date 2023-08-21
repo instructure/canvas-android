@@ -212,28 +212,27 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         adapterCallback = object : FileFolderCallback {
 
             override fun onItemClicked(item: FileFolder) {
-                if (item.fullName != null) {
-                    RouteMatcher.route(requireContext(), makeRoute(canvasContext, item))
-                    return
-                }
-
-                recordFilePreviewEvent(item)
-
-                if (item.isHtmlFile) {
-                    if (item.isLocalFile) {
+                when {
+                    item.fullName != null -> {
+                        RouteMatcher.route(requireContext(), makeRoute(canvasContext, item))
+                    }
+                    item.isHtmlFile && item.isLocalFile -> {
+                        recordFilePreviewEvent(item)
                         openHtmlFile(item)
-                    } else {
+                    }
+                    item.isHtmlFile && !item.isLocalFile -> {
+                        recordFilePreviewEvent(item)
                         openHtmlUrl(item)
                     }
-                    return
+                    item.isLocalFile -> {
+                        recordFilePreviewEvent(item)
+                        openLocalMedia(item)
+                    }
+                    else -> {
+                        recordFilePreviewEvent(item)
+                        openMedia(item.contentType, item.url, item.displayName, canvasContext)
+                    }
                 }
-
-                if (item.isLocalFile) {
-                    openLocalMedia(item)
-                    return
-                }
-
-                openMedia(item.contentType, item.url, item.displayName, canvasContext)
             }
 
             override fun onOpenItemMenu(item: FileFolder, anchorView: View) {

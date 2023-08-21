@@ -86,7 +86,6 @@ class CourseSyncWorker @AssistedInject constructor(
     private val assignmentFacade: AssignmentFacade,
     private val quizDao: QuizDao,
     private val quizApi: QuizAPI.QuizInterface,
-    private val courseSettingsDao: CourseSettingsDao,
     private val scheduleItemFacade: ScheduleItemFacade,
     private val conferencesApi: ConferencesApi.ConferencesInterface,
     private val conferenceFacade: ConferenceFacade,
@@ -377,9 +376,3 @@ class CourseSyncWorker @AssistedInject constructor(
         }
     }
 }
-
-data class FileDownloadObject(
-    val id: Long,
-    val url: String,
-    val name: String
-)
