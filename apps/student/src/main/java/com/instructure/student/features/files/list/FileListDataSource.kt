@@ -20,14 +20,17 @@ package com.instructure.student.features.files.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.DataResult
 
 interface FileListDataSource {
 
-    suspend fun getFolders(folderId: Long, forceNetwork: Boolean): List<FileFolder>
+    suspend fun getFolders(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>>
 
-    suspend fun getFiles(folderId: Long, forceNetwork: Boolean): List<FileFolder>
+    suspend fun getFiles(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>>
 
     suspend fun getFolder(folderId: Long, forceNetwork: Boolean): FileFolder?
 
     suspend fun getRootFolderForContext(canvasContext: CanvasContext, forceNetwork: Boolean): FileFolder?
+
+    suspend fun getNextPage(url: String, forceNetwork: Boolean): DataResult<List<FileFolder>>
 }

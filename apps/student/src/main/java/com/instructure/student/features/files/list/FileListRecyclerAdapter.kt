@@ -19,11 +19,10 @@ package com.instructure.student.features.files.list
 
 import android.content.Context
 import android.view.View
-import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitPaginated
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.utils.textAndIconColor
@@ -44,6 +43,8 @@ open class FileListRecyclerAdapter(
     private val contextColor by lazy { canvasContext.textAndIconColor }
 
     private var apiCall: WeaveJob? = null
+
+    private var fetchingFolders = true
 
     /* This overloaded constructor is for testing purposes ONLY, and should not be used to create instances of this adapter. */
     protected constructor(
@@ -89,18 +90,25 @@ open class FileListRecyclerAdapter(
             val forceNetwork = isRefresh || isStale
 
             // Get folders
-            addAll(fileListRepository.getFolders(folder.id, forceNetwork))
-
-            // Get files
-            addAll(fileListRepository.getFiles(folder.id, forceNetwork).apply {
-                this.forEach { it.forSubmissions = folder.forSubmissions }
-            })
+            val folderResult = fileListRepository.getFirstPageFolders(folder.id, forceNetwork)
+            addAll(folderResult.dataOrThrow)
+            if (folderResult is DataResult.Success) {
+                val nextUrl = folderResult.linkHeaders.nextUrl
+                if (nextUrl != null) {
+                    setNextUrl(nextUrl)
+                } else {
+                    fetchingFolders = false
+                    val filesResult = fileListRepository.getFirstPageFiles(folder.id, forceNetwork)
+                    addAll(filesResult.dataOrThrow)
+                    if (filesResult is DataResult.Success) {
+                        setNextUrl(filesResult.linkHeaders.nextUrl)
+                    }
+                }
+            }
 
             // Mark folder as no longer stale
             if (isStale) StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds - folder.id
 
-            isAllPagesLoaded = true
-            setNextUrl(null)
             fileFolderCallback.onRefreshFinished()
             onCallbackFinished()
         } catch {
@@ -110,7 +118,26 @@ open class FileListRecyclerAdapter(
     }
 
     override fun loadNextPage(nextURL: String) {
-        apiCall?.next()
+        apiCall = tryWeave {
+            val nextResult = fileListRepository.getNextPage(nextURL, isRefresh)
+            addAll(nextResult.dataOrThrow)
+            if (nextResult is DataResult.Success) {
+                val nextUrl = nextResult.linkHeaders.nextUrl
+                if (nextUrl == null && fetchingFolders) {
+                    fetchingFolders = false
+                    val filesResult = fileListRepository.getFirstPageFiles(folder.id, isRefresh)
+                    addAll(filesResult.dataOrThrow)
+                    if (filesResult is DataResult.Success) {
+                        setNextUrl(filesResult.linkHeaders.nextUrl)
+                    }
+                } else {
+                    setNextUrl(nextResult.linkHeaders.nextUrl)
+                }
+            }
+        } catch {
+            fileFolderCallback.onRefreshFinished()
+            onCallbackFinished()
+        }
     }
 
     private fun compareFileFolders(oldItem: FileFolder, newItem: FileFolder): Boolean {

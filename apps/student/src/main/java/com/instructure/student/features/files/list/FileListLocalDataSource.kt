@@ -20,6 +20,7 @@ package com.instructure.student.features.files.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 
@@ -27,18 +28,18 @@ class FileListLocalDataSource(
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao
 ) : FileListDataSource {
-    override suspend fun getFolders(folderId: Long, forceNetwork: Boolean): List<FileFolder> {
-        return fileFolderDao.findFoldersByParentId(folderId).map { it.toApiModel() }
+    override suspend fun getFolders(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+        return DataResult.Success(fileFolderDao.findFoldersByParentId(folderId).map { it.toApiModel() })
     }
 
-    override suspend fun getFiles(folderId: Long, forceNetwork: Boolean): List<FileFolder> {
+    override suspend fun getFiles(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         val files = fileFolderDao.findFilesByFolderId(folderId).map { it.toApiModel() }
         val fileIds = files.map { it.id }
         val localFileMap = localFileDao.findByIds(fileIds).associate { it.id to it.path }
 
-        return files.map {
+        return DataResult.Success(files.map {
             it.copy(url = localFileMap[it.id], thumbnailUrl = null)
-        }
+        })
     }
 
     override suspend fun getFolder(folderId: Long, forceNetwork: Boolean): FileFolder? {
@@ -48,4 +49,6 @@ class FileListLocalDataSource(
     override suspend fun getRootFolderForContext(canvasContext: CanvasContext, forceNetwork: Boolean): FileFolder? {
         return fileFolderDao.findRootFolderForContext(canvasContext.id)?.toApiModel()
     }
+
+    override suspend fun getNextPage(url: String, forceNetwork: Boolean): DataResult<List<FileFolder>> = DataResult.Success(emptyList())
 }

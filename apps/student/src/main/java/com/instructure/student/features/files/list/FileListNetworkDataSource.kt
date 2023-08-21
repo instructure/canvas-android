@@ -22,19 +22,18 @@ import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 
 class FileListNetworkDataSource(private val fileFolderApi: FileFolderAPI.FilesFoldersInterface) : FileListDataSource {
-    override suspend fun getFolders(folderId: Long, forceNetwork: Boolean): List<FileFolder> {
+    override suspend fun getFolders(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return fileFolderApi.getFirstPageFolders(folderId, restParams)
-            .depaginate { fileFolderApi.getNextPageFileFoldersList(it, restParams) }.dataOrNull ?: emptyList()
     }
 
-    override suspend fun getFiles(folderId: Long, forceNetwork: Boolean): List<FileFolder> {
+    override suspend fun getFiles(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return fileFolderApi.getFirstPageFiles(folderId, restParams)
-            .depaginate { fileFolderApi.getNextPageFileFoldersList(it, restParams) }.dataOrNull ?: emptyList()
     }
 
     override suspend fun getFolder(folderId: Long, forceNetwork: Boolean): FileFolder? {
@@ -45,5 +44,10 @@ class FileListNetworkDataSource(private val fileFolderApi: FileFolderAPI.FilesFo
     override suspend fun getRootFolderForContext(canvasContext: CanvasContext, forceNetwork: Boolean): FileFolder? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
         return fileFolderApi.getRootFolderForContext(canvasContext.id, canvasContext.type.apiString, restParams).dataOrNull
+    }
+
+    override suspend fun getNextPage(url: String, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        return fileFolderApi.getNextPageFileFoldersList(url, restParams)
     }
 }

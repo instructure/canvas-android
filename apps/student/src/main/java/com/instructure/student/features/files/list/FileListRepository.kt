@@ -20,6 +20,7 @@ package com.instructure.student.features.files.list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -35,11 +36,16 @@ class FileListRepository(
     networkStateProvider,
     featureFlagProvider
 ) {
-    suspend fun getFolders(folderId: Long, forceNetwork: Boolean): List<FileFolder> {
+
+    suspend fun getFirstPageFolders(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         return dataSource().getFolders(folderId, forceNetwork)
     }
 
-    suspend fun getFiles(folderId: Long, forceNetwork: Boolean): List<FileFolder> {
+    suspend fun getNextPage(url: String, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+        return dataSource().getNextPage(url, forceNetwork)
+    }
+
+    suspend fun getFirstPageFiles(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         return dataSource().getFiles(folderId, forceNetwork)
     }
 
