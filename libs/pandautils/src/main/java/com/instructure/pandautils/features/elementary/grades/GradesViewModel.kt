@@ -132,6 +132,8 @@ class GradesViewModel @Inject constructor(
             .map {
                 val enrollment = it.enrollments?.first()
                 val grades = it.getCourseGrade(false)
+                val restrictQuantitativeData = it.settings?.restrictQuantitativeData ?: false
+                val notGraded = (enrollment?.currentGradingPeriodId ?: 0L) != 0L
                 GradeRowItemViewModel(resources,
                     GradeRowViewData(
                         it.id,
@@ -139,7 +141,14 @@ class GradesViewModel @Inject constructor(
                         colorKeeper.getOrGenerateColor(it),
                         it.imageUrl ?: "",
                         if (it.hideFinalGrades) 0.0 else grades?.currentScore,
-                        createGradeText(grades?.currentScore, grades?.currentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
+                        createGradeText(
+                            grades?.currentScore,
+                            grades?.currentGrade,
+                            it.hideFinalGrades,
+                            notGraded = notGraded,
+                            restrictQuantitativeData = restrictQuantitativeData
+                        ),
+                        hideProgress = restrictQuantitativeData || notGraded || it.hideFinalGrades)
                 ) { gradeRowClicked(it) }
             }
     }
@@ -155,14 +164,14 @@ class GradesViewModel @Inject constructor(
         return GradesViewData(items)
     }
 
-    private fun createGradeText(score: Double?, grade: String?, hideFinalGrades: Boolean, notGraded: Boolean = true): String {
+    private fun createGradeText(score: Double?, grade: String?, hideFinalGrades: Boolean, notGraded: Boolean = true, restrictQuantitativeData: Boolean = true): String {
         return when {
             hideFinalGrades -> "--"
             !grade.isNullOrEmpty() -> grade
             else -> {
                 val currentScoreRounded = score?.roundToInt()
                 when {
-                    currentScoreRounded != null -> "$currentScoreRounded%"
+                    currentScoreRounded != null && !restrictQuantitativeData -> "$currentScoreRounded%"
                     notGraded -> resources.getString(R.string.notGraded)
                     else -> "--"
                 }
@@ -236,13 +245,15 @@ class GradesViewModel @Inject constructor(
     }
 
     private fun createGradeRowFromEnrollment(course: Course, enrollment: Enrollment?): GradeRowItemViewModel {
+        val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
         val gradeRowViewData = GradeRowViewData(
             course.id,
             course.name,
             colorKeeper.getOrGenerateColor(course),
             course.imageUrl ?: "",
             enrollment?.grades?.currentScore,
-            createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade, course.hideFinalGrades))
+            createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade, course.hideFinalGrades, restrictQuantitativeData),
+            restrictQuantitativeData || course.hideFinalGrades)
 
         return GradeRowItemViewModel(resources, gradeRowViewData) { gradeRowClicked(course) }
     }

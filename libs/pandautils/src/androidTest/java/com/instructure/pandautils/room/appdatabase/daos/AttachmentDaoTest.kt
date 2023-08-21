@@ -53,7 +53,8 @@ class AttachmentDaoTest {
 
     @Test
     fun insertAndFindingByParentId() = runTest {
-        val attachmentEntity = AttachmentEntity(id = 1, contentType = "image/jpg", filename = "image.jpg", displayName = "File",
+        val attachmentEntity = AttachmentEntity(
+            id = 1, contentType = "image/jpg", filename = "image.jpg", displayName = "File",
             url = "file.com", createdAt = Date(), size = 10000, workerId = "123", submissionCommentId = 123
         )
 
@@ -67,7 +68,8 @@ class AttachmentDaoTest {
 
     @Test
     fun dontReturnAnyItemIfEntitiesAreDeleted() = runTest {
-        val attachmentEntity = AttachmentEntity(id = 1, contentType = "image/jpg", filename = "image.jpg", displayName = "File",
+        val attachmentEntity = AttachmentEntity(
+            id = 1, contentType = "image/jpg", filename = "image.jpg", displayName = "File",
             url = "file.com", createdAt = Date(), size = 10000, workerId = "123", submissionCommentId = 123
         )
 
@@ -80,4 +82,17 @@ class AttachmentDaoTest {
         Assert.assertEquals(0, result!!.size)
     }
 
+    @Test
+    fun testFindBySubmissionId() = runTest {
+        val attachmentEntity = AttachmentEntity(
+            id = 1, contentType = "image/jpg", filename = "image.jpg", displayName = "File", url = "file.com",
+            createdAt = Date(), size = 10000, workerId = "123", submissionCommentId = 123, submissionId = 1
+        )
+        val attachmentEntity2 = attachmentEntity.copy(id = 2, workerId = "124", filename = "image2.jpg", submissionId = 2)
+        attachmentDao.insertAll(listOf(attachmentEntity, attachmentEntity2))
+
+        val result = attachmentDao.findBySubmissionId(1)
+
+        Assert.assertEquals(listOf(attachmentEntity), result)
+    }
 }

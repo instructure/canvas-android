@@ -47,6 +47,16 @@ import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
 
+/**
+ * Represents a page for the dashboard.
+ *
+ * This class extends the `BasePage` class and provides methods for interacting with the dashboard,
+ * such as asserting the display of courses, empty view, and course title; opening and switching courses;
+ * clicking on the edit dashboard button and course overflow menu; changing the course nickname;
+ * asserting the display of notifications; and opening the inbox and todo tabs.
+ *
+ * @constructor Creates an instance of the `DashboardPage` class.
+ */
 class DashboardPage : BasePage() {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
@@ -60,11 +70,19 @@ class DashboardPage : BasePage() {
     private val coursesTab by WaitForViewWithId(R.id.tab_courses)
     private val todoTab by WaitForViewWithId(R.id.tab_todo)
     private val inboxTab by WaitForViewWithId(R.id.tab_inbox)
-    private val previousLoginTitleText by OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
+    private val previousLoginTitleText by OnViewWithId(
+        R.id.previousLoginTitleText,
+        autoAssert = false
+    )
 
     private val hamburgerButtonMatcher =
         allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
 
+    /**
+     * Asserts that the course specified by [course] is displayed in the dashboard.
+     *
+     * @param course The course to be displayed.
+     */
     fun assertDisplaysCourse(course: CourseApiModel) {
         val matcher = allOf(
             withText(course.name),
@@ -74,6 +92,11 @@ class DashboardPage : BasePage() {
         scrollAndAssertDisplayed(matcher)
     }
 
+    /**
+     * Asserts that the course with the specified [courseName] is displayed in the dashboard.
+     *
+     * @param courseName The name of the course to be displayed.
+     */
     fun assertDisplaysCourse(courseName: String) {
         val matcher = allOf(
             withText(courseName),
@@ -83,10 +106,24 @@ class DashboardPage : BasePage() {
         scrollAndAssertDisplayed(matcher)
     }
 
+    /**
+     * Asserts that all the courses in the specified [mCourses] list are displayed in the dashboard.
+     *
+     * @param mCourses The list of courses to be displayed.
+     */
     fun assertHasCourses(mCourses: List<Course>) {
-        for (course in mCourses) onView(withId(R.id.titleTextView) + withText(course.name) + withAncestor(R.id.swipeRefreshLayout)).assertDisplayed()
+        for (course in mCourses) onView(
+            withId(R.id.titleTextView) + withText(course.name) + withAncestor(
+                R.id.swipeRefreshLayout
+            )
+        ).assertDisplayed()
     }
 
+    /**
+     * Asserts that the course specified by [course] is not displayed in the dashboard.
+     *
+     * @param course The course to be checked.
+     */
     fun assertCourseNotDisplayed(course: CourseApiModel) {
         val matcher = allOf(
             withText(course.name),
@@ -96,14 +133,30 @@ class DashboardPage : BasePage() {
         onView(matcher).check(doesNotExist())
     }
 
+    /**
+     * Asserts that the empty view is displayed in the dashboard.
+     */
     fun assertEmptyView() {
         emptyView.assertDisplayed()
     }
 
+    /**
+     * Asserts that the course title specified by [courseTitle] is displayed in the dashboard.
+     *
+     */
+
+    /**
+     * Asserts that the course title specified by [courseTitle] is displayed in the dashboard.
+     *
+     * @param courseTitle The title of the course to be displayed.
+     */
     fun assertCourseTitle(courseTitle: String) {
         onView(withId(R.id.titleTextView) + withText(courseTitle) + withAncestor(R.id.swipeRefreshLayout)).assertDisplayed()
     }
 
+    /**
+     * Asserts that the dashboard displays the courses, including the toolbar, courses view, and edit dashboard button.
+     */
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
@@ -111,24 +164,47 @@ class DashboardPage : BasePage() {
         editDashboardButton.assertDisplayed()
     }
 
+    /**
+     * Asserts that the specified course is displayed and opens it.
+     *
+     * @param course The course to be displayed and opened.
+     */
     fun assertOpensCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         openCourse(courseName = course.name)
         onView(withId(R.id.courseBrowserTitle)).assertContainsText(course.name)
     }
 
+    /**
+     * Clicks on the edit dashboard button.
+     */
     fun clickEditDashboard() {
         onView(withId(R.id.editDashboardTextView)).click()
     }
 
+    /**
+     * Opens the course with the specified [courseName].
+     *
+     * @param courseName The name of the course to be opened.
+     */
     fun openCourse(courseName: String) {
         onView(withText(courseName)).click()
     }
 
+    /**
+     * Opens the specified [course].
+     *
+     * @param course The course to be opened.
+     */
     fun openCourse(course: CourseApiModel) {
         onView(withText(course.name)).click()
     }
 
+    /**
+     * Opens the specified [course].
+     *
+     * @param course The course to be opened.
+     */
     fun openCourse(course: Course) {
         onView(withText(course.name)).click()
     }
@@ -137,48 +213,98 @@ class DashboardPage : BasePage() {
         onView(matcher).assertDisplayed()
     }
 
+    /**
+     * Waits for the dashboard to finish rendering.
+     */
     fun waitForRender() {
         onView(hamburgerButtonMatcher).waitForCheck(matches(isDisplayed()))
     }
 
+    /**
+     * Opens the inbox tab.
+     */
     fun openInbox() {
         inboxTab.click()
     }
 
+    /**
+     * Opens the todo tab.
+     */
     fun openTodo() {
         todoTab.click()
     }
 
+    /**
+     * Asserts that the course label text color matches the specified [expectedTextColor].
+     *
+     * @param expectedTextColor The expected text color for the course label.
+     */
     fun assertCourseLabelTextColor(expectedTextColor: String) {
         onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
     }
 
+    /**
+     * Selects the specified [course] in the dashboard.
+     *
+     * @param course The course to be selected.
+     */
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
     }
 
+    /**
+     * Switches the course view in the dashboard.
+     */
     fun switchCourseView() {
         onView(withId(R.id.menu_dashboard_cards)).click()
     }
 
+    /**
+     * Clicks on the overflow menu of the specified [courseTitle] and selects the menu item with the specified [menuTitle].
+     *
+     * @param courseTitle The title of the course.
+     * @param menuTitle The title of the menu item.
+     */
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
-        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
+        val courseOverflowMatcher = withId(R.id.overflow)+withAncestor(withId(R.id.cardView)+withDescendant(withId(R.id.titleTextView)+withText(courseTitle)))
         onView(courseOverflowMatcher).click()
         waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
 
+    /**
+     * Changes the course nickname to the specified [changeTo].
+     *
+     * @param changeTo The new nickname for the course.
+     */
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
         onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 
+    /**
+     * Asserts that the specified [accountNotification] is displayed in the dashboard.
+     *
+     * @param accountNotification The account notification to be displayed.
+     */
     fun assertNotificationDisplayed(accountNotification: AccountNotification) {
-        onView(withId(R.id.announcementTitle) + withAncestor(R.id.announcementContainer) + withText(accountNotification.subject)).assertDisplayed()
+        onView(
+            withId(R.id.announcementTitle) + withAncestor(R.id.announcementContainer) + withText(
+                accountNotification.subject
+            )
+        ).assertDisplayed()
     }
 
+    /**
+     * Clicks on the specified [accountNotification] in the dashboard.
+     *
+     * @param accountNotification The account notification to be clicked.
+     */
     fun clickOnNotification(accountNotification: AccountNotification) {
-        onView(withId(R.id.announcementTitle) + withAncestor(R.id.announcementContainer) + withText(accountNotification.subject)).click()
+        onView(
+            withId(R.id.announcementTitle) + withAncestor(R.id.announcementContainer) + withText(
+                accountNotification.subject
+            )
+        ).click()
     }
-
 }

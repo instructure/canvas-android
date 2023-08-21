@@ -93,8 +93,8 @@ class ImportantDatesE2ETest : StudentTest() {
         importantDatesPage.assertItemDisplayed(testAssignment3.name)
         importantDatesPage.assertItemNotDisplayed(testNotImportantAssignment.name)
 
-        Log.d(STEP_TAG, "Assert that the count of the items (5) and the day strings are correct on the Important Dates page.")
-        importantDatesPage.assertRecyclerViewItemCount(5) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        Log.d(STEP_TAG, "Assert that the count of the items (3) and the day strings are correct on the Important Dates page.")
+        importantDatesPage.assertRecyclerViewItemCount(3)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment1.dueAt.toDate()))
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment2.dueAt.toDate()))
 
@@ -114,8 +114,8 @@ class ImportantDatesE2ETest : StudentTest() {
         importantDatesPage.assertItemDisplayed(testAssignment3.name)
         importantDatesPage.assertItemNotDisplayed(testNotImportantAssignment.name)
 
-        Log.d(STEP_TAG, "Assert that the count of the items (5) and the day strings are correct on the Important Dates page after the refresh.")
-        importantDatesPage.assertRecyclerViewItemCount(5) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        Log.d(STEP_TAG, "Assert that the count of the items (3) and the day strings are correct on the Important Dates page after the refresh.")
+        importantDatesPage.assertRecyclerViewItemCount(3)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment1.dueAt.toDate()))
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment2.dueAt.toDate()))
 

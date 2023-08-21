@@ -16,32 +16,42 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withParent
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
-import org.hamcrest.Matchers.allOf
 
+/**
+ * Represents the Legal Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the legal
+ * page. It contains various view elements such as privacy policy label, terms of use label,
+ * and open source label.
+ */
 class LegalPage : BasePage(R.id.legalPage) {
+
     private val privacyPolicyLabel by OnViewWithId(R.id.privacyPolicyLabel)
     private val termsOfUseLabel by OnViewWithId(R.id.termsOfUseLabel)
     private val openSourceLabel by OnViewWithId(R.id.openSourceLabel)
 
+    /**
+     * Opens the privacy policy.
+     */
     fun openPrivacyPolicy() {
         privacyPolicyLabel.click()
     }
 
+    /**
+     * Opens the terms of use.
+     */
     fun openTermsOfUse() {
         termsOfUseLabel.click()
     }
 
+    /**
+     * Opens the Canvas on GitHub.
+     */
     fun openCanvasOnGithub() {
         openSourceLabel.click()
     }
-
 }

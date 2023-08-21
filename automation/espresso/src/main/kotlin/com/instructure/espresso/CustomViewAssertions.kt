@@ -23,9 +23,11 @@ import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import junit.framework.AssertionFailedError
 import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
 
@@ -72,5 +74,23 @@ class NotificationBadgeAssertion(@IdRes private val menuItemId: Int, private val
             ?: throw ClassCastException("View of type ${view.javaClass.simpleName} must be a BottomNavigationView")
         val badgeCount = bottomNavigationView.getBadge(menuItemId)?.number ?: -1
         assertEquals(badgeCount, expectedCount)
+    }
+}
+
+class DoesNotExistAssertion(private val timeout: Long, private val pollInterval: Long = 500L) : ViewAssertion {
+    override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
+        var elapsedTime = 0L
+
+        while (elapsedTime < timeout) {
+            try {
+                doesNotExist()
+                return
+            } catch (e: AssertionFailedError) {
+                Thread.sleep(pollInterval)
+                elapsedTime += pollInterval
+            }
+        }
+
+        throw AssertionError("View still exists after $timeout milliseconds.")
     }
 }

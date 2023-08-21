@@ -455,4 +455,25 @@ class SubmissionRubricPresenterTest : Assert() {
         val actualState = SubmissionRubricPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
+
+    @Test
+    fun `Returns correct state when quantitative data is restricted`() {
+        val model = modelTemplate.copy(
+            restrictQuantitativeData = true
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                RubricListData.Grade(GradeCellViewState.fromSubmission(context, assignmentTemplate, submissionTemplate, true)),
+                criterionTemplate.copy(
+                    ratings = listOf(
+                        RatingData("_id1", "Rating 1 Title", isSelected = false, isAssessed = false, useSmallText = true),
+                        RatingData("_id2", "Rating 2 Title", isSelected = true, isAssessed = true, useSmallText = true),
+                        RatingData("_id3", "Rating 3 Title", isSelected = false, isAssessed = false, useSmallText = true)
+                    )
+                )
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
 }

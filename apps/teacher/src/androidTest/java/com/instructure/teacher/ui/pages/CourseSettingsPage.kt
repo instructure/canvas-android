@@ -30,6 +30,15 @@ import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
 import org.hamcrest.Matchers.`is`
 
+/**
+ * Represents a page for the course settings.
+ *
+ * This class extends the `BasePage` class and provides methods for interacting with the course settings,
+ * such as clicking on the course name, editing the course name, clicking on the set home page option,
+ * selecting a new home page, and asserting the changes in the home page and course name.
+ *
+ * @constructor Creates an instance of the `CourseSettingsPage` class.
+ */
 class CourseSettingsPage : BasePage() {
 
     private val courseImage by OnViewWithId(R.id.courseImage)
@@ -40,10 +49,19 @@ class CourseSettingsPage : BasePage() {
     private val courseNameText by OnViewWithId(R.id.courseName)
     private val toolbar by OnViewWithId(R.id.toolbar)
 
+    /**
+     * Clicks on the course name.
+     */
     fun clickCourseName() {
         editCourseNameRootView.click()
     }
 
+    /**
+     * Edits the course name with a new name.
+     *
+     * @param newName The new name for the course.
+     * @return The new name for the course.
+     */
     fun editCourseName(newName: String): String {
         val dialogNameEntry = onViewWithId(R.id.newCourseName)
         val dialogOkButton = onViewWithText(android.R.string.ok)
@@ -52,14 +70,22 @@ class CourseSettingsPage : BasePage() {
         return newName
     }
 
+    /**
+     * Clicks on the set home page option.
+     */
     fun clickSetHomePage() {
         editHomeRootView.click()
     }
 
+    /**
+     * Selects a new home page and returns its string representation.
+     *
+     * @return The string representation of the new home page.
+     */
     fun selectNewHomePage(): String {
         var newHomePageString = ""
         val unselectedRadioButton =
-                onView(checked(false) { newHomePageString = it })
+            onView(checked(false) { newHomePageString = it })
         val dialogOkButton = onViewWithText(android.R.string.ok)
         unselectedRadioButton.click()
         dialogOkButton.click()
@@ -67,16 +93,35 @@ class CourseSettingsPage : BasePage() {
         return newHomePageString
     }
 
+    /**
+     * Asserts that the home page has been changed to the specified value.
+     *
+     * @param newHomePage The expected new home page value.
+     * @throws AssertionError if the home page does not match the expected value.
+     */
     fun assertHomePageChanged(newHomePage: String) {
         courseHomePageText.assertHasText(newHomePage)
     }
 
+    /**
+     * Asserts that the course name has been changed to the specified value.
+     *
+     * @param newCourseName The expected new course name.
+     * @throws AssertionError if the course name does not match the expected value.
+     */
     fun assertCourseNameChanged(newCourseName: String) {
         courseNameText.assertHasText(newCourseName)
         assertToolbarSubtitleHasText(newCourseName)
     }
 
-    fun assertToolbarSubtitleHasText(newCourseName: String) {
+    /**
+     * Asserts that the toolbar subtitle has the specified text.
+     *
+     * @param newCourseName The expected text for the toolbar subtitle.
+     * @throws AssertionError if the toolbar subtitle text does not match the expected value.
+     */
+    private fun assertToolbarSubtitleHasText(newCourseName: String) {
         toolbar.check(matches(matchToolbarText(`is`(newCourseName), false)))
     }
 }
+

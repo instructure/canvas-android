@@ -59,16 +59,16 @@ class PeopleE2ETest : StudentTest() {
         peopleListPage.assertPersonListed(teacher)
         peopleListPage.assertPersonListed(student1)
         peopleListPage.assertPersonListed(student2)
-        peopleListPage.assertPeopleCount(5) //2 for Teachers and Students sections, 1 for teacher user and 2 for student users.
+        peopleListPage.assertPeopleCount(3)
 
         Log.d(STEP_TAG,"Collapse student list and assert that the students are not displayed, but the teacher user is displayed.")
         peopleListPage.clickOnStudentsExpandCollapseButton()
         peopleListPage.assertPersonListed(teacher)
-        peopleListPage.assertPeopleCount(3) //2 for Teachers and Students sections, and 3rd for the teacher user.
+        peopleListPage.assertPeopleCount(1)
         peopleListPage.clickOnStudentsExpandCollapseButton()
         peopleListPage.assertPersonListed(student1)
         peopleListPage.assertPersonListed(student2)
-        peopleListPage.assertPeopleCount(5) //2 for Teachers and Students sections, 1 for teacher user and 2 for student users.
+        peopleListPage.assertPeopleCount(3)
 
         Log.d(STEP_TAG,"Select ${student2.name} student and assert if we are landing on the Person Details Page.")
         peopleListPage.selectPerson(student2)

@@ -1388,4 +1388,5 @@
     <string name="aboutLoginTitle">Takiuru ID</string>
     <string name="aboutEmailTitle">Īmēra</string>
     <string name="aboutVersionTitle">Putanga</string>
+    <string name="assignmentRefreshError">He raru ki te uta ano i tenei taumahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
 </resources>

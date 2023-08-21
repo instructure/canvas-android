@@ -80,7 +80,8 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         tabData += SubmissionDetailsTabData.RubricData(
             name = context.getString(R.string.rubric),
             assignment = assignment,
-            submission = rootSubmission
+            submission = rootSubmission,
+            restrictQuantitativeData = model.restrictQuantitativeData
         )
 
         return SubmissionDetailsViewState.Loaded(

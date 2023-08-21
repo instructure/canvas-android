@@ -1390,4 +1390,5 @@
     <string name="aboutLoginTitle">Identificación de inicio de sesión</string>
     <string name="aboutEmailTitle">Correo electrónico</string>
     <string name="aboutVersionTitle">Versión</string>
+    <string name="assignmentRefreshError">Se ha producido un problema al volver a cargar esta actividad. Comprueba tu conexión y vuelve a intentarlo.</string>
 </resources>

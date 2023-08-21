@@ -20,6 +20,7 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
@@ -34,7 +35,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class GradesInteractionTest : StudentTest() {
+class ElementaryGradesInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -132,6 +133,49 @@ class GradesInteractionTest : StudentTest() {
         gradesPage.assertCourseShownWithGrades(scoreGradedCourse.name, "50%")
         gradesPage.assertCourseShownWithGrades(bothGradedCourse.name, "C+")
         gradesPage.assertCourseShownWithGrades(notGradedCourse.name, "0%")
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testDontShowProgressWhenQuantitativeDataIsRestricted() {
+        val data = createMockData(courseCount = 1)
+        goToGradesTab(data)
+
+        gradesPage.assertPageObjects()
+
+        var course = data.addCourseWithEnrollment(
+            data.students[0],
+            Enrollment.EnrollmentType.Student,
+            50.0,
+            "C+",
+            restrictQuantitativeData = true
+        )
+
+        gradesPage.refresh()
+
+        gradesPage.assertCourseShownWithGrades(course.name, "C+")
+        gradesPage.assertProgressNotDisplayed(course.name)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testDontShowGradeWhenQuantitativeDataIsRestrictedAndThereIsOnlyScore() {
+        val data = createMockData(courseCount = 1)
+        goToGradesTab(data)
+
+        gradesPage.assertPageObjects()
+
+        var course = data.addCourseWithEnrollment(
+            data.students[0],
+            Enrollment.EnrollmentType.Student,
+            50.0,
+            "",
+            restrictQuantitativeData = true
+        )
+
+        gradesPage.refresh()
+
+        gradesPage.assertCourseShownWithGrades(course.name, "--")
     }
 
     private fun createMockData(

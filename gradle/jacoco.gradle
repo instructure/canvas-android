@@ -177,11 +177,11 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
 
     final source = files(projects.jacocoReport.sourceDirectories)
 
-    additionalSourceDirs.setFrom source
-    sourceDirectories.setFrom source
+    additionalSourceDirs.setFrom(source)
+    sourceDirectories.setFrom (source)
 
-    classDirectories.setFrom files(projects.jacocoReport.classDirectories)
-    executionData.setFrom files(projects.jacocoReport.executionData)
+    classDirectories.setFrom(files(projects.jacocoReport.classDirectories))
+    executionData.setFrom(files(projects.jacocoReport.executionData))
 
     reports {
         html {
@@ -192,10 +192,6 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
             enabled true
             destination file('build/reports/jacoco/jacocoFullReport.csv')
         }
-    }
-
-    doFirst {
-        executionData.setFrom files(executionData.findAll { it.exists() })
     }
 }
 
@@ -228,9 +224,5 @@ task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
             enabled true
             destination file('build/reports/jacoco/jacocoFullCombinedReport.csv')
         }
-    }
-
-    doFirst {
-        executionData.setFrom files(executionData.findAll { it.exists() })
     }
 }
