@@ -109,7 +109,6 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Elimine Ansyen Itilizatè</string>
     <string name="accountDomainFooter">Ou paka jwenn lekòl ou a? Eseye tape tout URL lekòl la</string>
-    <string name="accountDomainFooterLink">Tape la pou èd.</string>
 
     <string name="login_noInternetConnectionTitle">Pa gen Koneksyon Internet</string>
     <string name="login_noInternetConnectionMessage">Pou aksyon sa a ou bezwen konekte sou entènèt.</string>
