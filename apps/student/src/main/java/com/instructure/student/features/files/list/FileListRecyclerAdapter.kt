@@ -44,8 +44,6 @@ open class FileListRecyclerAdapter(
 
     private var apiCall: WeaveJob? = null
 
-    private var fetchingFolders = true
-
     /* This overloaded constructor is for testing purposes ONLY, and should not be used to create instances of this adapter. */
     protected constructor(
         context: Context,
@@ -97,7 +95,6 @@ open class FileListRecyclerAdapter(
                 if (nextUrl != null) {
                     setNextUrl(nextUrl)
                 } else {
-                    fetchingFolders = false
                     val filesResult = fileListRepository.getFirstPageFiles(folder.id, forceNetwork)
                     addAll(filesResult.dataOrThrow)
                     if (filesResult is DataResult.Success) {
@@ -123,8 +120,7 @@ open class FileListRecyclerAdapter(
             addAll(nextResult.dataOrThrow)
             if (nextResult is DataResult.Success) {
                 val nextUrl = nextResult.linkHeaders.nextUrl
-                if (nextUrl == null && fetchingFolders) {
-                    fetchingFolders = false
+                if (nextUrl == null && !nextURL.contains("files")) {
                     val filesResult = fileListRepository.getFirstPageFiles(folder.id, isRefresh)
                     addAll(filesResult.dataOrThrow)
                     if (filesResult is DataResult.Success) {
