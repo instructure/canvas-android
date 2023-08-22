@@ -18,9 +18,7 @@
 package com.instructure.student.features.files.list
 
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -226,7 +224,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     }
                     item.isLocalFile -> {
                         recordFilePreviewEvent(item)
-                        openLocalMedia(item)
+                        openLocalMedia(item.contentType, item.url, item.displayName, canvasContext)
                     }
                     else -> {
                         recordFilePreviewEvent(item)
@@ -309,18 +307,6 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         }
     }
 
-    private fun openLocalMedia(fileFolder: FileFolder) {
-        val file = File(fileFolder.url)
-        val uri = FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
-        val mimeType = requireContext().contentResolver.getType(uri)
-
-        val intent = Intent()
-        intent.action = Intent.ACTION_VIEW
-        intent.setDataAndType(uri, mimeType)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        startActivity(intent)
-    }
-
     private fun themeToolbar() = with(binding) {
         // We style the toolbar white for user files
         if (canvasContext.type == CanvasContext.Type.USER) {
@@ -395,7 +381,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     if (fileListRepository.isOnline()) {
                         openMedia(item.contentType, item.url, item.displayName, true, canvasContext)
                     } else {
-                        openLocalMedia(item)
+                        openLocalMedia(item.contentType, item.url, item.displayName, canvasContext, true)
                     }
                 }
                 R.id.download -> downloadItem(item)
