@@ -336,7 +336,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val isUserFiles = canvasContext.type == CanvasContext.Type.USER
 
         if (recyclerAdapter == null) {
-            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder!!, canvasContext), folder!!, adapterCallback, fileListRepository)
+            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder!!, canvasContext, fileListRepository.isOnline()), folder!!, adapterCallback, fileListRepository)
         }
 
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
@@ -380,10 +380,10 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val popup = PopupMenu(requireContext(), anchorView)
         popup.inflate(R.menu.file_folder_options)
         with(popup.menu) {
-            val options = getFileMenuOptions(item, canvasContext)
+            val options = getFileMenuOptions(item, canvasContext, fileListRepository.isOnline())
             // Only show alternate-open option for PDF files
             findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
-            findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD) && fileListRepository.isOnline()
+            findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
             findItem(R.id.rename).isVisible = options.contains(FileMenuType.RENAME)
             findItem(R.id.delete).isVisible = options.contains(FileMenuType.DELETE)
         }
@@ -626,7 +626,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         /**
          * @return A list of possible actions the user is able to perform on the file/folder
          */
-        fun getFileMenuOptions(fileFolder: FileFolder, canvasContext: CanvasContext): List<FileMenuType> {
+        fun getFileMenuOptions(fileFolder: FileFolder, canvasContext: CanvasContext, isOnline: Boolean): List<FileMenuType> {
             val options: MutableList<FileMenuType> = mutableListOf()
 
             if (canvasContext.type == CanvasContext.Type.USER) {
@@ -660,7 +660,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     // User is a student; Students can only download course files
                     if (!fileFolder.isLockedForUser && fileFolder.isFile) {
                         // File isn't locked, let them download it
-                        options.add(FileMenuType.DOWNLOAD)
+                        if (isOnline) {
+                            options.add(FileMenuType.DOWNLOAD)
+                        }
 
                         if ("pdf" in fileFolder.contentType.orEmpty()) {
                             options.add(FileMenuType.OPEN_IN_ALTERNATE)
@@ -675,7 +677,10 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     }
 
                     if (fileFolder.isFile) {
-                        options.add(FileMenuType.DOWNLOAD)
+                        if (isOnline) {
+                            options.add(FileMenuType.DOWNLOAD)
+                        }
+
                         if ("pdf" in fileFolder.contentType.orEmpty()) {
                             options.add(FileMenuType.OPEN_IN_ALTERNATE)
                         }

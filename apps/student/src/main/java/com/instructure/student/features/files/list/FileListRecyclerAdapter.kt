@@ -68,7 +68,7 @@ open class FileListRecyclerAdapter(
     }
 
     override fun bindHolder(item: FileFolder, holder: FileViewHolder, position: Int) {
-        holder.bind(item, contextColor, context, FileListFragment.getFileMenuOptions(item, canvasContext ), fileFolderCallback)
+        holder.bind(item, contextColor, context, FileListFragment.getFileMenuOptions(item, canvasContext, fileListRepository.isOnline()), fileFolderCallback)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = FileViewHolder(v)
