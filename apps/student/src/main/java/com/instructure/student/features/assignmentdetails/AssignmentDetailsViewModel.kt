@@ -268,11 +268,11 @@ class AssignmentDetailsViewModel @Inject constructor(
         )
 
         val submissionStatusTint = if (assignment.isSubmitted) {
-            R.color.backgroundSuccess
+            R.color.textSuccess
         } else if (isMissing) {
-            R.color.backgroundDanger
+            R.color.textDanger
         } else {
-            R.color.backgroundDark
+            R.color.textDark
         }
 
         val submittedStatusIcon = if (assignment.isSubmitted) R.drawable.ic_complete_solid else R.drawable.ic_no

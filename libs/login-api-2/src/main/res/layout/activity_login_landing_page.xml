@@ -55,8 +55,8 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="2dp"
                 android:adjustViewBounds="true"
-                android:importantForAccessibility="no"
-                android:tint="@color/tiara"
+                android:contentDescription="@string/canvas"
+                android:tint="@color/textDarkest"
                 app:srcCompat="@drawable/ic_canvas_wordmark" />
 
             <TextView

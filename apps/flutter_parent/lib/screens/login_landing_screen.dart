@@ -18,19 +18,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/school_domain.dart';
-import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_util.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
-import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
-import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
-import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/two_finger_double_tap_gesture_detector.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
-import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -93,13 +88,14 @@ class LoginLandingScreen extends StatelessWidget {
 
   Widget _body(BuildContext context) {
     final lastLoginAccount = ApiPrefs.getLastAccount();
+    final assetString = ParentTheme.of(context).isDarkMode ? 'assets/svg/canvas-parent-login-logo-dark.svg' : 'assets/svg/canvas-parent-login-logo.svg';
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Spacer(),
           SvgPicture.asset(
-            'assets/svg/canvas-parent-login-logo.svg',
+            assetString,
             semanticsLabel: L10n(context).canvasLogoLabel,
           ),
           Spacer(),
