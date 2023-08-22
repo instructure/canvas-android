@@ -280,7 +280,7 @@ void _initPlatformWebView() {
 
 /// Mocks the platform channel used by the package_info plugin
 void _initPackageInfo() {
-  const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
+  const MethodChannel('dev.fluttercommunity.plus/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
     if (methodCall.method == 'getAll') {
       return <String, dynamic>{
         'appName': 'Canvas',
@@ -295,7 +295,7 @@ void _initPackageInfo() {
 
 /// Mocks the platform channel used by the device_info plugin
 void _initPlatformDeviceInfo() {
-  const MethodChannel('plugins.flutter.io/device_info').setMockMethodCallHandler((MethodCall methodCall) async {
+  const MethodChannel('dev.fluttercommunity.plus/device_info').setMockMethodCallHandler((MethodCall methodCall) async {
     if (methodCall.method == 'getAndroidDeviceInfo') {
       return <String, dynamic>{
         'version': <String, dynamic>{
