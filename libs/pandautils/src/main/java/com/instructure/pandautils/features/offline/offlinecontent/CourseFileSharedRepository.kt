@@ -33,7 +33,7 @@ class CourseFileSharedRepository(private val fileFolderApi: FileFolderAPI.FilesF
 
         if (rootFolderResult.isFail) return emptyList()
 
-        val result = mutableListOf(rootFolderResult.dataOrThrow)
+        val result = mutableListOf<FileFolder>()
 
         result.addAll(getAllFoldersAndFiles(rootFolderResult.dataOrThrow))
 

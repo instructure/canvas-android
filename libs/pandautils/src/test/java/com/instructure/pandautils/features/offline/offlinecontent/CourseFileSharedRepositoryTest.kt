@@ -36,6 +36,26 @@ class CourseFileSharedRepositoryTest {
     private val repository = CourseFileSharedRepository(fileFolderApi)
 
     @Test
+    fun `Return all course files and folders`() = runTest {
+        val root = FileFolder(id = 1)
+        val files = listOf(FileFolder(id = 2), FileFolder(id = 3))
+        val folders = listOf(FileFolder(id = 4), FileFolder(id = 5))
+        val subfolderFiles = listOf(FileFolder(id = 6), FileFolder(id = 7))
+
+        coEvery { fileFolderApi.getRootFolderForContext(any(), any(), any()) } returns DataResult.Success(root)
+        coEvery { fileFolderApi.getFirstPageFiles(1, any()) } returns DataResult.Success(files)
+        coEvery { fileFolderApi.getFirstPageFolders(1, any()) } returns DataResult.Success(folders)
+        coEvery { fileFolderApi.getFirstPageFiles(4, any()) } returns DataResult.Success(subfolderFiles)
+        coEvery { fileFolderApi.getFirstPageFolders(4, any()) } returns DataResult.Success(emptyList())
+        coEvery { fileFolderApi.getFirstPageFiles(5, any()) } returns DataResult.Success(emptyList())
+        coEvery { fileFolderApi.getFirstPageFolders(5, any()) } returns DataResult.Success(emptyList())
+
+        val result = repository.getCourseFoldersAndFiles(1)
+
+        Assert.assertEquals((listOf(root) + files + folders + subfolderFiles).sortedBy { it.id }, result.sortedBy { it.id })
+    }
+
+    @Test
     fun `Returns course files`() = runTest {
         val root = FileFolder(id = 1)
         val files = listOf(FileFolder(id = 2), FileFolder(id = 3))

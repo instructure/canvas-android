@@ -87,20 +87,10 @@ open class FileListRecyclerAdapter(
             // Force network for pull-to-refresh and stale folders
             val forceNetwork = isRefresh || isStale
 
-            // Get folders
-            val folderResult = fileListRepository.getFirstPageFolders(folder.id, forceNetwork)
-            addAll(folderResult.dataOrThrow)
-            if (folderResult is DataResult.Success) {
-                val nextUrl = folderResult.linkHeaders.nextUrl
-                if (nextUrl != null) {
-                    setNextUrl(nextUrl)
-                } else {
-                    val filesResult = fileListRepository.getFirstPageFiles(folder.id, forceNetwork)
-                    addAll(filesResult.dataOrThrow)
-                    if (filesResult is DataResult.Success) {
-                        setNextUrl(filesResult.linkHeaders.nextUrl)
-                    }
-                }
+            val items = fileListRepository.getFirstPageItems(folder.id, forceNetwork)
+            addAll(items.dataOrThrow)
+            if (items is DataResult.Success) {
+                setNextUrl(items.linkHeaders.nextUrl)
             }
 
             // Mark folder as no longer stale
@@ -116,19 +106,10 @@ open class FileListRecyclerAdapter(
 
     override fun loadNextPage(nextURL: String) {
         apiCall = tryWeave {
-            val nextResult = fileListRepository.getNextPage(nextURL, isRefresh)
+            val nextResult = fileListRepository.getNextPage(nextURL, folder.id, isRefresh)
             addAll(nextResult.dataOrThrow)
             if (nextResult is DataResult.Success) {
-                val nextUrl = nextResult.linkHeaders.nextUrl
-                if (nextUrl == null && !nextURL.contains("files")) {
-                    val filesResult = fileListRepository.getFirstPageFiles(folder.id, isRefresh)
-                    addAll(filesResult.dataOrThrow)
-                    if (filesResult is DataResult.Success) {
-                        setNextUrl(filesResult.linkHeaders.nextUrl)
-                    }
-                } else {
-                    setNextUrl(nextResult.linkHeaders.nextUrl)
-                }
+                setNextUrl(nextResult.linkHeaders.nextUrl)
             }
         } catch {
             fileFolderCallback.onRefreshFinished()

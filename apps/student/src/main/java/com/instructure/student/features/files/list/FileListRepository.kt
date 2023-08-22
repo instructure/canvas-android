@@ -37,15 +37,46 @@ class FileListRepository(
     featureFlagProvider
 ) {
 
-    suspend fun getFirstPageFolders(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+    suspend fun getFirstPageItems(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+        val foldersResult = getFirstPageFolders(folderId, forceNetwork)
+        return when {
+            foldersResult.isSuccess && (foldersResult as DataResult.Success).linkHeaders.nextUrl == null -> {
+                val filesResult = getFirstPageFiles(folderId, forceNetwork)
+                if (filesResult is DataResult.Success) {
+                    DataResult.Success(foldersResult.data + filesResult.data, filesResult.linkHeaders)
+                } else {
+                    filesResult
+                }
+            }
+
+            else -> foldersResult
+        }
+    }
+
+    private suspend fun getFirstPageFolders(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         return dataSource().getFolders(folderId, forceNetwork)
     }
 
-    suspend fun getNextPage(url: String, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+    suspend fun getNextPage(nextUrl: String, folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+        val nextResult = getNextPage(nextUrl, forceNetwork)
+        return when {
+            nextResult.isSuccess && (nextResult as DataResult.Success).linkHeaders.nextUrl == null && !nextUrl.contains("files") -> {
+                val filesResult = getFirstPageFiles(folderId, forceNetwork)
+                if (filesResult is DataResult.Success) {
+                    DataResult.Success(nextResult.data + filesResult.data, filesResult.linkHeaders)
+                } else {
+                    filesResult
+                }
+            }
+            else -> nextResult
+        }
+    }
+
+    private suspend fun getNextPage(url: String, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         return dataSource().getNextPage(url, forceNetwork)
     }
 
-    suspend fun getFirstPageFiles(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
+    private suspend fun getFirstPageFiles(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
         return dataSource().getFiles(folderId, forceNetwork)
     }
 
