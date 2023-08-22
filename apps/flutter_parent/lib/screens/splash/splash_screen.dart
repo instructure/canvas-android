@@ -129,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     locator<SplashScreenInteractor>()
         .isTermsAcceptanceRequired()
         .then((aupRequired) => {
-      if (aupRequired) {
+      if (aupRequired == true) {
         _navigate(PandaRouter.aup())
       }
       else {

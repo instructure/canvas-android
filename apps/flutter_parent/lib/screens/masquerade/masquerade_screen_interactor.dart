@@ -26,7 +26,7 @@ class MasqueradeScreenInteractor {
       var user = await locator<UserApi>().getUserForDomain(masqueradingDomain, masqueradingUserId);
       ApiPrefs.updateCurrentLogin((b) => b
         ..masqueradeDomain = masqueradingDomain
-        ..masqueradeUser = user.toBuilder());
+        ..masqueradeUser = user?.toBuilder());
       return true;
     } catch (e) {
       return false;

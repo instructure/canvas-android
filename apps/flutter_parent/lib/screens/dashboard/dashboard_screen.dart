@@ -162,7 +162,7 @@ class DashboardState extends State<DashboardScreen> {
     });
 
     _interactor.getStudents().then((users) {
-      _students = users;
+      _students = users!;
 
       if (_selectedStudent == null && _students.isNotEmpty) {
         setState(() {
@@ -196,7 +196,7 @@ class DashboardState extends State<DashboardScreen> {
     _interactor.getStudents(forceRefresh: true).then((users) {
       setState(() {
         print('users: $users');
-        _students = users;
+        _students = users!;
         _studentsLoading = false;
       });
     }).catchError((error) {

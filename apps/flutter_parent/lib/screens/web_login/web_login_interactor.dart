@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class WebLoginInteractor {
-  Future<MobileVerifyResult> mobileVerify(String domain) {
+  Future<MobileVerifyResult?> mobileVerify(String domain) {
     return locator<AuthApi>().mobileVerify(domain);
   }
 
@@ -27,12 +27,12 @@ class WebLoginInteractor {
     final tokens = await locator<AuthApi>().getTokens(result, oAuthRequest);
 
     Login login = Login((b) => b
-      ..accessToken = tokens.accessToken
-      ..refreshToken = tokens.refreshToken
+      ..accessToken = tokens?.accessToken
+      ..refreshToken = tokens?.refreshToken
       ..domain = result.baseUrl
       ..clientId = result.clientId
       ..clientSecret = result.clientSecret
-      ..user = tokens.user?.toBuilder());
+      ..user = tokens?.user?.toBuilder());
 
     ApiPrefs.addLogin(login);
     ApiPrefs.switchLogins(login);

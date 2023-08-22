@@ -48,7 +48,7 @@ void main() async {
   // Seed a conversation
   await Future.delayed(const Duration(seconds: 5));
   var newConversation = await InboxApi().createConversation(course.id, [teacher.id], "sUp?", "Let's talk", null);
-  newConversation = newConversation.rebuild((b) => b..contextName = course.name); // Do this manually
+  newConversation = newConversation?.rebuild((b) => b..contextName = course.name); // Do this manually
 
   // Let the test driver know that seeding has completed
   AppSeedUtils.markSeedingComplete(MapBuilder({

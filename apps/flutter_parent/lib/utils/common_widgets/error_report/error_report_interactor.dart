@@ -26,7 +26,7 @@ class ErrorReportInteractor {
     final userEmail = (email?.isNotEmpty == true) ? email : user?.primaryEmail ?? '';
 
     final enrollments = user == null ? [] : await locator<EnrollmentsApi>().getSelfEnrollments(forceRefresh: true);
-    final userRoles = Set.from(enrollments.map((enrollment) => enrollment.type)).toList().join(',');
+    final userRoles = enrollments == null ? '' : Set.from(enrollments.map((enrollment) => enrollment.type)).toList().join(',');
 
     return locator<ErrorReportApi>().submitErrorReport(
       subject: subject,

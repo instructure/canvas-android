@@ -25,8 +25,8 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ConversationDetailsInteractor {
-  Future<Conversation> getConversation(String id) async {
-    Conversation conversation = await locator<InboxApi>().getConversation(id, refresh: true);
+  Future<Conversation?> getConversation(String id) async {
+    Conversation? conversation = await locator<InboxApi>().getConversation(id, refresh: true);
 
     // Fetching a conversation automatically marks it as read, so we'll want to update the inbox count badge
     locator<InboxCountNotifier>().update();

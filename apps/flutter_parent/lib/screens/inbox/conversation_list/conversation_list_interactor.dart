@@ -29,10 +29,10 @@ class ConversationListInteractor {
     var api = locator<InboxApi>();
     try {
       // Get messages from both 'normal' scope 'sent' scopes
-      var results = await Future.wait([
+      var results = (await Future.wait([
         api.getConversations(forceRefresh: forceRefresh),
         api.getConversations(scope: 'sent', forceRefresh: forceRefresh)
-      ]);
+      ])).nonNulls.toList();
 
       // Remove messages in the 'sent' scope that also exist in the normal scope
       results[1].retainWhere((sent) => !results[0].any((it) => it.id == sent.id));
@@ -52,11 +52,11 @@ class ConversationListInteractor {
     }
   }
 
-  Future<List<Course>> getCoursesForCompose() async {
+  Future<List<Course>?> getCoursesForCompose() async {
     return locator<CourseApi>().getObserveeCourses();
   }
 
-  Future<List<Enrollment>> getStudentEnrollments() async {
+  Future<List<Enrollment>?> getStudentEnrollments() async {
     return locator<EnrollmentsApi>().getObserveeEnrollments();
   }
 
@@ -71,8 +71,8 @@ class ConversationListInteractor {
           if (course == null) return null;
           return Tuple2(e.observedUser!, course);
         })
-        .where((e) => e != null)
-        .toList() as List<Tuple2<User, Course>>;
+        .nonNulls
+        .toList();
 
     // Sort users in alphabetical order and sort their courses alphabetically
     thing.sortBySelector(

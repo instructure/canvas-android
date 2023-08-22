@@ -17,7 +17,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CalendarSeedApi {
-  static Future<ScheduleItem> createCalendarEvent(String courseId, String title, DateTime startAt,
+  static Future<ScheduleItem?> createCalendarEvent(String courseId, String title, DateTime startAt,
       {String description = "",
       DateTime? endAt = null,
       bool allDay = false,

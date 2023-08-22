@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class EnrollmentsApi {
-  Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {
+  Future<List<Enrollment>?> getObserveeEnrollments({bool forceRefresh = false}) async {
     var dio = canvasDio(pageSize: PageSize.canvasMax, forceRefresh: forceRefresh);
     var params = {
       'include[]': ['observed_users', 'avatar_url'],
@@ -28,7 +28,7 @@ class EnrollmentsApi {
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<List<Enrollment>> getSelfEnrollments({bool forceRefresh = false}) async {
+  Future<List<Enrollment>?> getSelfEnrollments({bool forceRefresh = false}) async {
     var dio = canvasDio(pageSize: PageSize.canvasMax, forceRefresh: forceRefresh);
     var params = {
       'state[]': ['creation_pending', 'invited', 'active', 'completed']
@@ -36,7 +36,7 @@ class EnrollmentsApi {
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<List<Enrollment>> getEnrollmentsByGradingPeriod(String courseId, String studentId, String? gradingPeriodId,
+  Future<List<Enrollment>?> getEnrollmentsByGradingPeriod(String courseId, String studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) {
     final dio = canvasDio(forceRefresh: forceRefresh);
     final params = {

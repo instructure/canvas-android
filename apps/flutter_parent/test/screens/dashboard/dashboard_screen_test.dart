@@ -12,6 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:math';
+
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -132,15 +134,15 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      late User first;
+      late User? first;
       interactor.getStudents().then((students) {
-        first = students.first;
+        first = students?.first;
       });
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('${first.shortName} (${first.pronouns})'), findsOneWidget);
+      expect(find.text('${first?.shortName} (${first?.pronouns})'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Displays name without pronouns when pronouns are null', (tester) async {
@@ -148,16 +150,16 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      late User first;
+      late User? first;
       interactor.getStudents().then((students) {
-        first = students.first;
+        first = students?.first;
       });
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
       // Will find two, one in the navbar header and one in the student switcher
-      expect(find.text('${first.shortName}'), findsNWidgets(2));
+      expect(find.text('${first?.shortName}'), findsNWidgets(2));
     });
 
     testWidgetsWithAccessibilityChecks(
@@ -688,9 +690,9 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      late User first;
+      late User? first;
       interactor.getStudents().then((students) {
-        first = students.first;
+        first = students?.first;
       });
 
       // Load the screen
@@ -704,17 +706,18 @@ void main() {
       expect(find.byType(StudentExpansionWidget), findsOneWidget);
       expect(slideAnimation.value, retracted);
 
+      expect(first, isNotNull);
       // Tap the user header, expanding it
       // There will be two instances, one in the header and one in the student switcher
       // we want to tap the first one (the one in the header)
-      await tester.tap(find.text(first.shortName!).at(0));
+      await tester.tap(find.text(first!.shortName!).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide out
       expect(slideAnimation.value, expanded);
 
       // Tap the user header, retracting it
       // There will be two instances, one in the header and one in the student switcher
       // we want to tap the first one (the one in the header)
-      await tester.tap(find.text(first.shortName!).at(0));
+      await tester.tap(find.text(first!.shortName!).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide back
       expect(slideAnimation.value, retracted);
     });
@@ -728,11 +731,11 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      late User first;
-      late User second;
+      late User? first;
+      late User? second;
       interactor.getStudents().then((students) {
-        first = students.first;
-        second = students[1];
+        first = students?.first;
+        second = students?[1];
       });
 
       // Load the screen
@@ -746,15 +749,18 @@ void main() {
       expect(find.byType(StudentExpansionWidget), findsOneWidget);
       expect(slideAnimation.value, retracted);
 
+      expect(first, isNotNull);
+      expect(second, isNotNull);
+
       // Tap the user header, expanding it
       // There will be two instances, one in the header and one in the student switcher
       // we want to tap the first one (the one in the header)
-      await tester.tap(find.text(first.shortName!).at(0));
+      await tester.tap(find.text(first!.shortName!).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide out
       expect(slideAnimation.value, expanded);
 
       // Tap on a user
-      await tester.tap(find.text(second.shortName!));
+      await tester.tap(find.text(second!.shortName!));
       await tester.pumpAndSettle(); // Wait for user switcher to slide back
 
       expect(slideAnimation.value, retracted);

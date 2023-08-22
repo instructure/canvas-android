@@ -17,7 +17,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CalendarEventsApi {
-  Future<List<ScheduleItem>> getAllCalendarEvents({
+  Future<List<ScheduleItem>?> getAllCalendarEvents({
     bool allEvents = false,
     String type = ScheduleItem.apiTypeCalendar,
     String? startDate = null,
@@ -39,7 +39,7 @@ class CalendarEventsApi {
   Future<ScheduleItem?> getEvent(String? eventId, bool forceRefresh) =>
       fetch(canvasDio(forceRefresh: forceRefresh).get('calendar_events/$eventId'));
 
-  Future<List<ScheduleItem>> getUserCalendarItems(
+  Future<List<ScheduleItem>?> getUserCalendarItems(
     String userId,
     DateTime startDay,
     DateTime endDay,

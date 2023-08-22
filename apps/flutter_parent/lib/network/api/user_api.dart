@@ -22,26 +22,26 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class UserApi {
-  Future<User> getSelf() => fetch(canvasDio(forceDeviceLanguage: true, forceRefresh: true).get('users/self/profile'));
+  Future<User?> getSelf() => fetch(canvasDio(forceDeviceLanguage: true, forceRefresh: true).get('users/self/profile'));
 
-  Future<User> getUserForDomain(String domain, String userId) async {
+  Future<User?> getUserForDomain(String domain, String userId) async {
     var dio = DioConfig.canvas().copyWith(baseUrl: '$domain/api/v1/').dio;
     return fetch(dio.get('users/$userId/profile'));
   }
 
   Future<UserPermission?> getSelfPermissions() =>
-      fetch<User>(canvasDio(forceRefresh: true).get('users/self')).then((user) => user.permissions!);
+      fetch<User>(canvasDio(forceRefresh: true).get('users/self')).then((user) => user?.permissions);
 
-  Future<UserColors> getUserColors({bool refresh = false}) async {
+  Future<UserColors?> getUserColors({bool refresh = false}) async {
     return fetch(canvasDio(forceRefresh: refresh).get('users/self/colors'));
   }
 
-  Future<User> acceptUserTermsOfUse() async {
+  Future<User?> acceptUserTermsOfUse() async {
     final queryParams = {'user[terms_of_use]': 1};
     return fetch(canvasDio().put('users/self', queryParameters: queryParams));
   }
 
-  Future<ColorChangeResponse> setUserColor(String contextId, Color color) async {
+  Future<ColorChangeResponse?> setUserColor(String contextId, Color color) async {
     var hexCode = '#' + color.value.toRadixString(16).substring(2);
     var queryParams = {'hexcode': hexCode};
     return fetch(canvasDio().put(

@@ -39,7 +39,7 @@ class PlannerFetcher extends ChangeNotifier {
 
   final String userId;
 
-  Future<List<Course>>? courseListFuture;
+  Future<List<Course>?>? courseListFuture;
   bool firstFilterUpdateFlag = false;
 
   String _observeeId;
@@ -156,7 +156,7 @@ class PlannerFetcher extends ChangeNotifier {
   @visibleForTesting
   Future<List<PlannerItem>> fetchPlannerItems(
       DateTime startDate, DateTime endDate, Set<String> contexts, bool refresh) async {
-    List<List<ScheduleItem>> tempItems = await Future.wait([
+    List<List<ScheduleItem>?> tempItems = await Future.wait([
       locator<CalendarEventsApi>().getUserCalendarItems(
         _observeeId,
         startDate,
@@ -174,8 +174,13 @@ class PlannerFetcher extends ChangeNotifier {
         forceRefresh: refresh,
       ),
     ]);
-
-    List<ScheduleItem> scheduleItems = tempItems[0] + tempItems[1];
+    List<ScheduleItem>? scheduleItems;
+    if (tempItems[0] == null ||  tempItems[1] == null) {
+      scheduleItems = [];
+    }
+    else {
+      scheduleItems = tempItems[0]! + tempItems[1]!;
+    }
     scheduleItems.retainWhere((it) => it.isHidden != true); // Exclude hidden items
     return scheduleItems.map((item) => item.toPlannerItem(courseNameMap[_observeeId]![item.getContextId()])).toList();
   }

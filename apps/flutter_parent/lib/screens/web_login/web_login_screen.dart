@@ -70,7 +70,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
 
   WebLoginInteractor get _interactor => locator<WebLoginInteractor>();
 
-  Future<MobileVerifyResult>? _verifyFuture;
+  Future<MobileVerifyResult?>? _verifyFuture;
   WebViewController? _controller;
   late String _authUrl;
   late String _domain;
@@ -106,7 +106,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
 
     return FutureBuilder(
       future: _verifyFuture,
-      builder: (context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+      builder: (context, AsyncSnapshot<MobileVerifyResult?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         } else {
@@ -124,7 +124,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     );
   }
 
-  Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+  Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult?> snapshot) {
     final verifyResult = snapshot.data!;
 
     return Stack(
@@ -292,7 +292,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   /// Shows a simple alert dialog with an error message that correlates to the result code
-  _showErrorDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) => showDialog(
+  _showErrorDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult?> snapshot) => showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -307,7 +307,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         );
       });
 
-  String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+  String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult?> snapshot) {
     final localizations = L10n(context);
 
     // No data means the request failed for some other reason that we don't know

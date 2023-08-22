@@ -104,11 +104,11 @@ void main() {
     verify(announcementApi.getCourseAnnouncement(course.id, announcement.id, true)).called(1);
     verify(courseApi.getCourse(course.id)).called(1);
 
-    expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
-    expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);
-    expect(actualViewState.announcementTitle, expectedViewState.announcementTitle);
-    expect(actualViewState.postedAt, expectedViewState.postedAt);
-    expect(actualViewState.attachment, attachment);
+    expect(actualViewState?.toolbarTitle, expectedViewState.toolbarTitle);
+    expect(actualViewState?.announcementMessage, expectedViewState.announcementMessage);
+    expect(actualViewState?.announcementTitle, expectedViewState.announcementTitle);
+    expect(actualViewState?.postedAt, expectedViewState.postedAt);
+    expect(actualViewState?.attachment, attachment);
   });
 
   test('get course announcement returns a proper view state with no attachments', () async {
@@ -126,11 +126,11 @@ void main() {
     verify(announcementApi.getCourseAnnouncement(course.id, announcement.id, true)).called(1);
     verify(courseApi.getCourse(course.id)).called(1);
 
-    expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
-    expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);
-    expect(actualViewState.announcementTitle, expectedViewState.announcementTitle);
-    expect(actualViewState.postedAt, expectedViewState.postedAt);
-    expect(actualViewState.attachment, expectedViewState.attachment);
+    expect(actualViewState?.toolbarTitle, expectedViewState.toolbarTitle);
+    expect(actualViewState?.announcementMessage, expectedViewState.announcementMessage);
+    expect(actualViewState?.announcementTitle, expectedViewState.announcementTitle);
+    expect(actualViewState?.postedAt, expectedViewState.postedAt);
+    expect(actualViewState?.attachment, expectedViewState.attachment);
   });
 
   test('get institution announcement returns a proper view state', () async {
@@ -147,9 +147,9 @@ void main() {
 
     verify(announcementApi.getAccountNotification(accountNotification.id, true)).called(1);
 
-    expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
-    expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);
-    expect(actualViewState.announcementTitle, expectedViewState.announcementTitle);
-    expect(actualViewState.postedAt, expectedViewState.postedAt);
+    expect(actualViewState?.toolbarTitle, expectedViewState.toolbarTitle);
+    expect(actualViewState?.announcementMessage, expectedViewState.announcementMessage);
+    expect(actualViewState?.announcementTitle, expectedViewState.announcementTitle);
+    expect(actualViewState?.postedAt, expectedViewState.postedAt);
   });
 }

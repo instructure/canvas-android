@@ -31,16 +31,16 @@ class CourseFrontPageScreen extends StatefulWidget {
 }
 
 class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with AutomaticKeepAliveClientMixin {
-  Future<CanvasPage>? _pageFuture;
+  Future<CanvasPage?>? _pageFuture;
 
   @override
   bool get wantKeepAlive => true;
 
-  Future<CanvasPage>? _refreshPage() {
+  Future<CanvasPage?>? _refreshPage() {
     setState(() {
       _pageFuture = _interactor.loadFrontPage(widget.courseId, forceRefresh: true);
     });
-    return _pageFuture?.catchError((_) {});
+    return _pageFuture?.catchError((_) { return Future.value(null); });
   }
 
   CourseDetailsInteractor get _interactor => locator<CourseDetailsInteractor>();
@@ -56,7 +56,7 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
     super.build(context); // Required super call for AutomaticKeepAliveClientMixin
     return FutureBuilder(
       future: _pageFuture,
-      builder: (context, AsyncSnapshot<CanvasPage> snapshot) {
+      builder: (context, AsyncSnapshot<CanvasPage?> snapshot) {
         if (snapshot.hasError) {
           return ErrorPandaWidget(L10n(context).unexpectedError, () => _refreshPage());
         } else if (!snapshot.hasData) {

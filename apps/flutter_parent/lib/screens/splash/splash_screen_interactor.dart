@@ -58,7 +58,7 @@ class SplashScreenInteractor {
 
     // Use same call as the dashboard so results will be cached
     var students = await locator<DashboardInteractor>().getStudents(forceRefresh: true);
-    var isObserver = students.isNotEmpty;
+    var isObserver = students?.isNotEmpty ?? false;
 
     // Check for masquerade permissions if we haven't already
     if (ApiPrefs.getCurrentLogin()?.canMasquerade == null) {
@@ -67,7 +67,7 @@ class SplashScreenInteractor {
       } else {
         try {
           var permissions = await locator<AccountsApi>().getAccountPermissions();
-          ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = permissions.becomeUser);
+          ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = permissions?.becomeUser);
         } catch (e) {
           ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = false);
         }
@@ -85,6 +85,7 @@ class SplashScreenInteractor {
 
   Future<void> updateUserColors() async {
     var colors = await locator<UserApi>().getUserColors(refresh: true);
+    if (colors == null) return;
     await locator<UserColorsDb>().insertOrUpdateAll(ApiPrefs.getDomain(), ApiPrefs.getUser()?.id, colors);
   }
 
@@ -104,11 +105,11 @@ class SplashScreenInteractor {
 
     final mobileVerifyResult = await locator<AuthApi>().mobileVerify(domain);
 
-    if (mobileVerifyResult.result != VerifyResultEnum.success) {
+    if (mobileVerifyResult?.result != VerifyResultEnum.success) {
       return Future.value(false);
     }
 
-    CanvasToken tokenResponse;
+    CanvasToken? tokenResponse;
     try {
       tokenResponse = await locator<AuthApi>().getTokens(mobileVerifyResult, oAuthCode);
     } catch (e) {
@@ -116,18 +117,18 @@ class SplashScreenInteractor {
     }
 
     // Key here is that realUser represents a masquerading attempt
-    var isMasquerading = tokenResponse.realUser != null;
+    var isMasquerading = tokenResponse?.realUser != null;
     Login login = Login((b) => b
-      ..accessToken = tokenResponse.accessToken
-      ..refreshToken = tokenResponse.refreshToken
-      ..domain = mobileVerifyResult.baseUrl
-      ..clientId = mobileVerifyResult.clientId
-      ..clientSecret = mobileVerifyResult.clientSecret
-      ..masqueradeUser = isMasquerading ? tokenResponse.user?.toBuilder() : null
-      ..masqueradeDomain = isMasquerading ? mobileVerifyResult.baseUrl : null
+      ..accessToken = tokenResponse?.accessToken
+      ..refreshToken = tokenResponse?.refreshToken
+      ..domain = mobileVerifyResult?.baseUrl
+      ..clientId = mobileVerifyResult?.clientId
+      ..clientSecret = mobileVerifyResult?.clientSecret
+      ..masqueradeUser = isMasquerading ? tokenResponse?.user?.toBuilder() : null
+      ..masqueradeDomain = isMasquerading ? mobileVerifyResult?.baseUrl : null
       ..isMasqueradingFromQRCode = isMasquerading ? true : null
       ..canMasquerade = isMasquerading ? true : null
-      ..user = tokenResponse.user?.toBuilder());
+      ..user = tokenResponse?.user?.toBuilder());
 
     ApiPrefs.addLogin(login);
     ApiPrefs.switchLogins(login);
@@ -136,11 +137,11 @@ class SplashScreenInteractor {
     return Future.value(true);
   }
 
-  Future<bool> _requiresTermsAcceptance(String targetUrl) async {
-    return (await locator.get<OAuthApi>().getAuthenticatedUrl(targetUrl)).requiresTermsAcceptance;
+  Future<bool?> _requiresTermsAcceptance(String targetUrl) async {
+    return (await locator.get<OAuthApi>().getAuthenticatedUrl(targetUrl))?.requiresTermsAcceptance;
   }
 
-  Future<bool> isTermsAcceptanceRequired() async {
+  Future<bool?> isTermsAcceptanceRequired() async {
     final targetUrl = '${ApiPrefs.getCurrentLogin()?.domain}/users/self';
     String? domain = ApiPrefs.getDomain();
     if (domain == null) {

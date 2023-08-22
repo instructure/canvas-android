@@ -46,8 +46,8 @@ void main() {
         _getUser(id: '0'),
         _getUser(id: '1'),
       ];
-      final PagedList<User> response = await fetchFirstPage(_request(_rawUserList()));
-      expect(response.data, expected);
+      final PagedList<User>? response = await fetchFirstPage(_request(_rawUserList()));
+      expect(response?.data, expected);
     });
 
     test('catches errors and returns a Future.error', () async {
@@ -80,7 +80,7 @@ void main() {
         _getUser(id: '0'),
         _getUser(id: '1'),
       ];
-      final List<User> response = await fetchList(_request(_rawUserList()));
+      final List<User>? response = await fetchList(_request(_rawUserList()));
       expect(response, expected);
     });
 
@@ -104,7 +104,7 @@ void main() {
       when(dio.options).thenReturn(BaseOptions());
       when(dio.get(pageUrl)).thenAnswer((_) => _request(_rawUserList(startIndex: 2)));
 
-      final List<User> response = await fetchList(request, depaginateWith: dio);
+      final List<User>? response = await fetchList(request, depaginateWith: dio);
       expect(response, expected);
     });
 

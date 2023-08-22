@@ -127,7 +127,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
     _interactor.getTermsOfService().then((termsOfService) => locator<QuickNav>()
         .push(
             context,
-            HtmlDescriptionScreen(termsOfService.content!,
+            HtmlDescriptionScreen(termsOfService?.content,
                 L10n(context).acceptableUsePolicyTitle)));
   }
 

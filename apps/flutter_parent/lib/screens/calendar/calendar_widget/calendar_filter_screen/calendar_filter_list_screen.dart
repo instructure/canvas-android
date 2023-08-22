@@ -32,7 +32,7 @@ class CalendarFilterListScreen extends StatefulWidget {
 }
 
 class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
-  late Future<List<Course>> _coursesFuture;
+  late Future<List<Course>?> _coursesFuture;
   Set<String> selectedContextIds = {}; // Public, to allow for testing
   final GlobalKey<RefreshIndicatorState> _refreshCoursesKey = new GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();

@@ -48,15 +48,15 @@ class ConversationReplyInteractor {
       final userId = ApiPrefs.getUser()?.id;
       final enrollments = await locator<EnrollmentsApi>().getObserveeEnrollments();
       final observeeIds = enrollments
-          .map((enrollment) => enrollment.observedUser)
+          ?.map((enrollment) => enrollment.observedUser)
           .where((student) => student != null)
           .toSet()
           .map<String>((student) => student!.id);
       final permissions = await locator<CourseApi>().getCoursePermissions(courseId!);
       final recipients = await locator<InboxApi>().getRecipients(courseId);
-      recipients.retainWhere((recipient) {
+      recipients?.retainWhere((recipient) {
         // Allow self and any observed students as recipients if the sendMessages permission is granted
-        if (permissions.sendMessages == true && (observeeIds.contains(recipient.id) || recipient.id == userId))
+        if (permissions?.sendMessages == true && (observeeIds?.contains(recipient.id) == true || recipient.id == userId))
           return true;
 
         // Always allow instructors (teachers and TAs) as recipients
@@ -65,11 +65,11 @@ class ConversationReplyInteractor {
         return enrollments.contains('TeacherEnrollment') || enrollments.contains('TaEnrollment');
       });
 
-      final filteredRecipientIds = recipients.map<String>((recipient) => recipient.id);
+      final filteredRecipientIds = recipients?.map<String>((recipient) => recipient.id);
 
       recipientIds = replyMessage.participatingUserIds!
           .toList()
-          .where((participantId) => filteredRecipientIds.contains(participantId))
+          .where((participantId) => filteredRecipientIds?.contains(participantId) == true)
           .toList();
     }
 

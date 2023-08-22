@@ -17,7 +17,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class AnnouncementSeedApi {
-  static Future<Announcement> createAnnouncement(String courseId, String title, String message) async {
+  static Future<Announcement?> createAnnouncement(String courseId, String title, String message) async {
     var queryParams = {
       'title': title,
       'message': message,

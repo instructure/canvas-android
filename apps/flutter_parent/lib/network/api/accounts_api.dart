@@ -27,12 +27,12 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class AccountsApi {
-  Future<List<SchoolDomain>> searchDomains(String query) async {
+  Future<List<SchoolDomain>?> searchDomains(String query) async {
     var dio = DioConfig.core(cacheMaxAge: Duration(minutes: 5)).dio;
     return fetchList(dio.get('accounts/search', queryParameters: {'search_term': query}));
   }
 
-  Future<TermsOfService> getTermsOfService() {
+  Future<TermsOfService?> getTermsOfService() {
     return fetch(canvasDio().get('accounts/self/terms_of_service'));
   }
 
@@ -41,7 +41,7 @@ class AccountsApi {
     return fetch(dio.get('accounts/$accountId/terms_of_service'));
   }
 
-  Future<AccountPermissions> getAccountPermissions() {
+  Future<AccountPermissions?> getAccountPermissions() {
     return fetch(canvasDio().get('accounts/self/permissions'));
   }
 

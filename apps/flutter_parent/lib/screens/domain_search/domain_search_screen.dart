@@ -85,7 +85,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         setState(() {
           _loading = false;
           _error = false;
-          _schoolDomains = domains;
+          if (domains != null) _schoolDomains = domains;
         });
       }).catchError((error) {
         if (_currentQuery != query) return;

@@ -35,7 +35,7 @@ class CourseDetailsModel extends BaseModel {
   String courseId; // Could be routed to without a full course, only the id may be known
   Course? course;
   CourseSettings? courseSettings;
-  List<CourseTab> tabs = [];
+  List<CourseTab>? tabs = [];
   bool forceRefresh = true;
   GradingPeriod? _currentGradingPeriod;
   GradingPeriod? _nextGradingPeriod;
@@ -84,18 +84,18 @@ class CourseDetailsModel extends BaseModel {
     final groupFuture = _interactor()
         .loadAssignmentGroups(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((groups) async {
       // Remove unpublished assignments to match web
-      return groups.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build()).toList();
+      return groups?.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build()).toList();
     });
 
     final gradingPeriodsFuture =
         _interactor().loadGradingPeriods(courseId, forceRefresh: forceRefresh).then((periods) {
-      return periods.gradingPeriods.toList();
+      return periods?.gradingPeriods.toList();
     });
 
     // Get the grades for the term
     final enrollmentsFuture = _interactor()
         .loadEnrollmentsForGradingPeriod(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((enrollments) {
-      return enrollments.length > 0 ? enrollments.first : null;
+      return enrollments != null && enrollments.length > 0 ? enrollments.first : null;
     }).catchError((_) => null); // Some 'legacy' parents can't read grades for students, so catch and return null
 
     final gradeDetails = GradeDetails(
@@ -110,9 +110,9 @@ class CourseDetailsModel extends BaseModel {
     return gradeDetails;
   }
 
-  Future<List<ScheduleItem>> loadSummary({bool refresh = false}) async {
+  Future<List<ScheduleItem>?> loadSummary({bool refresh = false}) async {
     // Get all assignment and calendar events
-    List<List<ScheduleItem>> results = await Future.wait([
+    List<List<ScheduleItem>?> results = await Future.wait([
       _interactor().loadScheduleItems(courseId, ScheduleItem.apiTypeCalendar, refresh),
       _interactor().loadScheduleItems(courseId, ScheduleItem.apiTypeAssignment, refresh),
     ]);
@@ -131,8 +131,8 @@ class CourseDetailsModel extends BaseModel {
   }
 
   @visibleForTesting
-  static List<ScheduleItem> processSummaryItems(Tuple2<List<List<ScheduleItem>>, String> input) {
-    var results = input.item1;
+  static List<ScheduleItem> processSummaryItems(Tuple2<List<List<ScheduleItem>?>, String> input) {
+    var results = input.item1.nonNulls;
     var studentId = input.item2;
 
     // Flat map to a single list
@@ -173,7 +173,7 @@ class CourseDetailsModel extends BaseModel {
   bool get hasHomePageAsSyllabus =>
       course?.syllabusBody?.isNotEmpty == true &&
       (course?.homePage == HomePage.syllabus ||
-          (course?.homePage != HomePage.wiki && tabs.any((tab) => tab.id == HomePage.syllabus.name)));
+          (course?.homePage != HomePage.wiki && tabs?.any((tab) => tab.id == HomePage.syllabus.name) == true));
 
   bool get showSummary => hasHomePageAsSyllabus && (courseSettings?.courseSummary == true);
 

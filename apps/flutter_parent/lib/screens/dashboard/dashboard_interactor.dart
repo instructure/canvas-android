@@ -23,24 +23,24 @@ import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class DashboardInteractor {
-  Future<List<User>> getStudents({bool forceRefresh = false}) async =>
+  Future<List<User>?> getStudents({bool forceRefresh = false}) async =>
       locator<EnrollmentsApi>().getObserveeEnrollments(forceRefresh: forceRefresh).then<List<User>>((enrollments) {
-        List<User> users = filterStudents(enrollments);
+        List<User>? users = filterStudents(enrollments);
         sortUsers(users);
-        return users;
+        return Future.value(users);
       });
 
   Future<User?> getSelf({app}) async => locator<UserApi>().getSelf().then((user) async {
         UserPermission? permissions = (await locator<UserApi>().getSelfPermissions().catchError((_) => null));
-        user = user.rebuild((b) => b..permissions = permissions?.toBuilder());
-        ApiPrefs.setUser(user, app: app);
+        user = user?.rebuild((b) => b..permissions = permissions?.toBuilder());
+        if (user != null) ApiPrefs.setUser(user, app: app);
         return user;
       });
 
-  List<User> filterStudents(List<Enrollment> enrollments) =>
-      enrollments.map((enrollment) => enrollment.observedUser).nonNulls.toList();
+  List<User>? filterStudents(List<Enrollment>? enrollments) =>
+      enrollments?.map((enrollment) => enrollment.observedUser).nonNulls.toList();
 
-  void sortUsers(List<User> users) => users.sort((user1, user2) => user1.sortableName!.compareTo(user2.sortableName!));
+  void sortUsers(List<User>? users) => users?.sort((user1, user2) => user1.sortableName!.compareTo(user2.sortableName!));
 
   InboxCountNotifier getInboxCountNotifier() => locator<InboxCountNotifier>();
 

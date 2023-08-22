@@ -28,7 +28,7 @@ class FileApi {
   /// 'total' value of -1 is considered to represent indeterminate progress, and means either the file size is unknown
   /// or the upload is at a stage where progress cannot be determined. In either case, user-facing progress indicators
   /// should be aware of this and show 'indeterminate' progress as needed.
-  Future<Attachment> uploadConversationFile(File file, ProgressCallback progressCallback) async {
+  Future<Attachment?> uploadConversationFile(File file, ProgressCallback progressCallback) async {
     progressCallback(0, -1); // Indeterminate
     final name = basename(file.path);
     final size = await file.length();

@@ -82,7 +82,7 @@ class AppSeedUtils {
 
     // Enroll all students and teachers in all courses.
     for (int i = 0; i < nCourses; i++) {
-      var newCourse = await CourseSeedApi.createCourse();
+      var newCourse = (await CourseSeedApi.createCourse())!;
       result.courses.add(newCourse);
 
       await EnrollmentSeedApi.createEnrollment(result.teachers.first!.id, newCourse.id, "TeacherEnrollment", "");
@@ -108,7 +108,7 @@ class AppSeedUtils {
   /// seed() above.
   static Future<Course> seedCourseAndEnrollments(
       {SeededUser? parent = null, SeededUser? student = null, SeededUser? teacher = null}) async {
-    var newCourse = await CourseSeedApi.createCourse();
+    var newCourse = (await CourseSeedApi.createCourse())!;
 
     if (parent != null && student != null) {
       await EnrollmentSeedApi.createEnrollment(parent.id, newCourse.id, "ObserverEnrollment", student.id);
@@ -128,7 +128,7 @@ class AppSeedUtils {
   /// Pair a parent and a student.  Will only work if student is enrolled as a student.
   static Future<bool> seedPairing(SeededUser parent, SeededUser student) async {
     var pairingCodeStructure = await UserSeedApi.createObserverPairingCode(student.id);
-    var pairingCode = pairingCodeStructure.code;
+    var pairingCode = pairingCodeStructure?.code;
     var pairingResult = await UserSeedApi.addObservee(parent, student, pairingCode);
     return pairingResult;
   }

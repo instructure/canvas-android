@@ -69,7 +69,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
   List<Recipient> _allRecipients = [];
   List<Recipient> _selectedRecipients = [];
   List<AttachmentHandler> _attachments = [];
-  late Course? course;
+  Course? course;
 
   bool _loading = false;
   bool _error = false;
@@ -121,7 +121,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
     });
     _interactor.loadData(widget.courseId, widget.studentId).then((data) {
       course = data.course;
-      _allRecipients = data.recipients;
+      _allRecipients = data.recipients ?? [];
       String courseId = widget.courseId;
       _selectedRecipients =
           _allRecipients.where((it) => it.commonCourses?[courseId]?.contains('TeacherEnrollment') == true).toList();

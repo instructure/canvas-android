@@ -43,8 +43,8 @@ class ManageStudentsScreen extends StatefulWidget {
 }
 
 class _ManageStudentsState extends State<ManageStudentsScreen> {
-  Future<List<User>>? _studentsFuture;
-  Future<List<User>> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
+  Future<List<User>?>? _studentsFuture;
+  Future<List<User>?> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
 
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
@@ -68,7 +68,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           body: FutureBuilder(
             initialData: widget._students,
             future: _studentsFuture,
-            builder: (context, AsyncSnapshot<List<User>> snapshot) {
+            builder: (context, AsyncSnapshot<List<User>?> snapshot) {
               // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
 
               // Get the view based on the state of the snapshot

@@ -40,7 +40,7 @@ void main() async {
 
   // Get a pairing code for student2
   var pairingCodeStructure = await UserSeedApi.createObserverPairingCode(student2.id);
-  var pairingCode = pairingCodeStructure.code;
+  var pairingCode = pairingCodeStructure?.code;
   print("PAIRING CODE: $pairingCode");
 
   // Sign in the parent

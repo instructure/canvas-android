@@ -39,9 +39,9 @@ class AnnouncementDetailScreen extends StatefulWidget {
 }
 
 class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
-  Future<AnnouncementViewState>? _announcementFuture;
+  Future<AnnouncementViewState?>? _announcementFuture;
 
-  Future<AnnouncementViewState> _loadAnnouncement(BuildContext context, {bool forceRefresh = false}) =>
+  Future<AnnouncementViewState?> _loadAnnouncement(BuildContext context, {bool forceRefresh = false}) =>
       _interactor.getAnnouncement(
         widget.announcementId,
         widget.announcementType,
@@ -59,7 +59,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
     }
     return FutureBuilder(
       future: _announcementFuture,
-      builder: (context, AsyncSnapshot<AnnouncementViewState> snapshot) {
+      builder: (context, AsyncSnapshot<AnnouncementViewState?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
         }

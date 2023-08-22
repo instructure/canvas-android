@@ -83,12 +83,12 @@ class UserSeedApi {
   }
 
   // Get the token for the SeededUser, given MobileVerifyResult and authCode
-  static Future<String?> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
+  static Future<String?> _getToken(SeededUser user, MobileVerifyResult? verifyResult, String authCode) async {
     var dio = seedingDio(baseUrl: "https://${user.domain}/");
 
     var response = await dio.post('login/oauth2/token', queryParameters: {
-      "client_id": verifyResult.clientId,
-      "client_secret": verifyResult.clientSecret,
+      "client_id": verifyResult?.clientId,
+      "client_secret": verifyResult?.clientSecret,
       "code": authCode,
       "redirect_uri": _REDIRECT_URI
     });
@@ -106,11 +106,11 @@ class UserSeedApi {
 
   // Get the authCode for the SeededUser, using the clientId from verifyResult.
   // This one is a little tricky as we have to call into native Android jsoup logic.
-  static Future<String?> _getAuthCode(SeededUser user, MobileVerifyResult verifyResult) async {
+  static Future<String?> _getAuthCode(SeededUser user, MobileVerifyResult? verifyResult) async {
     try {
       var result = await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
         'domain': user.domain,
-        'clientId': verifyResult.clientId,
+        'clientId': verifyResult?.clientId,
         'redirectUrl': _REDIRECT_URI,
         'login': user.loginId,
         'password': user.password
@@ -129,13 +129,13 @@ class UserSeedApi {
   /// Obtain a pairing code for the indicated observee.
   /// Will only work if the observee has been enrolled in a course as a student.
   /// Returns a PairingCode structure, which contains a "code" field.
-  static Future<PairingCode> createObserverPairingCode(String observeeId) async {
+  static Future<PairingCode?> createObserverPairingCode(String observeeId) async {
     var dio = seedingDio();
     return fetch(dio.post('users/$observeeId/observer_pairing_codes'));
   }
 
   /// Add [observer] as an observer for [observee], using the indicated pairingCode.
-  static Future<bool> addObservee(SeededUser observer, SeededUser observee, String pairingCode) async {
+  static Future<bool> addObservee(SeededUser observer, SeededUser observee, String? pairingCode) async {
     try {
       var pairingResponse = await seedingDio().post('users/${observer.id}/observees',
           queryParameters: {'pairing_code': pairingCode, 'access_token': observee.token});

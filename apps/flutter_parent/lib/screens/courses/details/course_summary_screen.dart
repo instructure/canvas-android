@@ -46,7 +46,7 @@ class _CourseSummary extends StatefulWidget {
 
 class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAliveClientMixin {
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey();
-  late Future<List<ScheduleItem>> _future;
+  late Future<List<ScheduleItem>?> _future;
 
   @override
   bool get wantKeepAlive => true; // Retain this screen's state when switching tabs
@@ -61,7 +61,7 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
     setState(() {
       _future = widget.model.loadSummary(refresh: true);
     });
-    _future.catchError((_) {});
+    _future.catchError((_) { return Future.value(null); });
   }
 
   @override
@@ -72,7 +72,7 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       onRefresh: _refresh,
       child: FutureBuilder(
         future: _future,
-        builder: (BuildContext context, AsyncSnapshot<List<ScheduleItem>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<ScheduleItem>?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
             return LoadingIndicator();
           } else if (snapshot.hasError || !snapshot.hasData) {

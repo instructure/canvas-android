@@ -22,7 +22,7 @@ import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shel
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseRoutingShellInteractor {
-  Future<CourseShellData> loadCourseShell(CourseShellType type, String courseId, {bool forceRefresh = false}) async {
+  Future<CourseShellData?> loadCourseShell(CourseShellType type, String courseId, {bool forceRefresh = false}) async {
     var course = await _loadCourse(courseId, forceRefresh: forceRefresh);
     CanvasPage? frontPage = null;
 
@@ -33,14 +33,14 @@ class CourseRoutingShellInteractor {
       }
     }
 
-    if (type == CourseShellType.syllabus && course.syllabusBody == null) {
+    if (type == CourseShellType.syllabus && course?.syllabusBody == null) {
       return Future.error('');
     }
 
     return CourseShellData(course, frontPage: frontPage);
   }
 
-  Future<Course> _loadCourse(String courseId, {bool forceRefresh = false}) {
+  Future<Course?> _loadCourse(String courseId, {bool forceRefresh = false}) {
     return locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
   }
 
@@ -50,7 +50,7 @@ class CourseRoutingShellInteractor {
 }
 
 class CourseShellData {
-  final Course course;
+  final Course? course;
   final CanvasPage? frontPage;
 
   CourseShellData(this.course, {this.frontPage});

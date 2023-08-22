@@ -59,8 +59,8 @@ void main() {
 
     final result = await interactor.loadCourseShell(CourseShellType.syllabus, course.id);
 
-    expect(result.frontPage, isNull);
-    expect(result.course, isNotNull);
+    expect(result?.frontPage, isNull);
+    expect(result?.course, isNotNull);
   });
 
   test('returns error when course syllabus is null for syllabus type', () async {
@@ -85,8 +85,8 @@ void main() {
 
     final result = await interactor.loadCourseShell(CourseShellType.frontPage, course.id);
 
-    expect(result.frontPage, isNotNull);
-    expect(result.course, isNotNull);
+    expect(result?.frontPage, isNotNull);
+    expect(result?.course, isNotNull);
   });
 
   test('returns error when course front page hass null body for frontPage type', () async {

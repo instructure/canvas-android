@@ -23,7 +23,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class AssignmentSeedApi {
-  static Future<Assignment> createAssignment(String courseId,
+  static Future<Assignment?> createAssignment(String courseId,
       {double pointsPossible = 20, DateTime? dueAt = null, bool published = true}) async {
     if (dueAt == null) dueAt = DateTime.now().add(Duration(days: 1)).toUtc();
     final dish = faker.food.dish();

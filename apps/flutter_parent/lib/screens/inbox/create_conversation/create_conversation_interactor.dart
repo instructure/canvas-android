@@ -34,9 +34,9 @@ class CreateConversationInteractor {
     final recipients = await recipientFuture;
     final userId = ApiPrefs.getUser()?.id;
 
-    recipients.retainWhere((recipient) {
+    recipients?.retainWhere((recipient) {
       // Allow self and specified student as recipients if the sendMessages permission is granted
-      if (permissions.sendMessages == true && (recipient.id == studentId || recipient.id == userId)) return true;
+      if (permissions?.sendMessages == true && (recipient.id == studentId || recipient.id == userId)) return true;
 
       // Always allow instructors (teachers and TAs) as recipients
       var enrollments = recipient.commonCourses?[courseId];
@@ -47,7 +47,7 @@ class CreateConversationInteractor {
     return CreateConversationData(await courseFuture, recipients);
   }
 
-  Future<Conversation> createConversation(
+  Future<Conversation?> createConversation(
     String courseId,
     List<String> recipientIds,
     String subject,
@@ -63,8 +63,8 @@ class CreateConversationInteractor {
 }
 
 class CreateConversationData {
-  final Course course;
-  final List<Recipient> recipients;
+  final Course? course;
+  final List<Recipient>? recipients;
 
   CreateConversationData(this.course, this.recipients);
 }

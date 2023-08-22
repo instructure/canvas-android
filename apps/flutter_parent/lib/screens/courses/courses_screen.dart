@@ -37,7 +37,7 @@ class CoursesScreen extends StatefulWidget {
 class _CoursesScreenState extends State<CoursesScreen> {
   User? _student;
 
-  Future<List<Course>>? _coursesFuture;
+  Future<List<Course>?>? _coursesFuture;
 
   CoursesInteractor _interactor = locator<CoursesInteractor>();
 
@@ -55,7 +55,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     }
   }
 
-  Future<List<Course>> _loadCourses({bool forceRefresh = false}) =>
+  Future<List<Course>?> _loadCourses({bool forceRefresh = false}) =>
       _interactor.getCourses(isRefresh: forceRefresh, studentId: _student?.id.isEmpty == true ? null : _student!.id);
 
   @override
@@ -64,7 +64,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget _content(BuildContext context) {
     return FutureBuilder(
       future: _coursesFuture,
-      builder: (context, AsyncSnapshot<List<Course>> snapshot) {
+      builder: (context, AsyncSnapshot<List<Course>?> snapshot) {
         Widget _body;
         if (snapshot.hasError) {
           _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshKey.currentState?.show());

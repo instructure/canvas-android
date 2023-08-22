@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class InboxApi {
-  Future<List<Conversation>> getConversations({String? scope = null, bool forceRefresh = false}) async {
+  Future<List<Conversation>?> getConversations({String? scope = null, bool forceRefresh = false}) async {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'scope': scope,
@@ -28,11 +28,11 @@ class InboxApi {
     return fetchList(dio.get('conversations', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Conversation> getConversation(String id, {bool refresh = false}) {
+  Future<Conversation?> getConversation(String id, {bool refresh = false}) {
     return fetch(canvasDio(forceRefresh: refresh).get('conversations/$id'));
   }
 
-  Future<UnreadCount> getUnreadCount() => fetch(canvasDio(forceRefresh: true).get('conversations/unread_count'));
+  Future<UnreadCount?> getUnreadCount() => fetch(canvasDio(forceRefresh: true).get('conversations/unread_count'));
 
   Future<Conversation> addMessage(
     String? conversationId,
@@ -58,7 +58,7 @@ class InboxApi {
     return conversation;
   }
 
-  Future<List<Recipient>> getRecipients(String courseId, {bool forceRefresh = false}) {
+  Future<List<Recipient>?> getRecipients(String courseId, {bool forceRefresh = false}) {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var params = {
       'permissions[]': ['send_messages_all'],
@@ -68,7 +68,7 @@ class InboxApi {
     return fetchList(dio.get('search/recipients', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Conversation> createConversation(
+  Future<Conversation?> createConversation(
     String courseId,
     List<String> recipientIds,
     String subject,
@@ -84,8 +84,8 @@ class InboxApi {
       'body': body,
       'attachment_ids[]': attachmentIds,
     };
-    List<Conversation> result = await fetchList(dio.post('conversations', queryParameters: params));
+    List<Conversation>? result = await fetchList(dio.post('conversations', queryParameters: params));
     DioConfig.canvas().clearCache(path: 'conversations');
-    return result[0];
+    return result?[0];
   }
 }

@@ -46,7 +46,7 @@ class ConversationDetailsScreen extends StatefulWidget {
 
 class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
   ConversationDetailsInteractor _interactor = locator<ConversationDetailsInteractor>();
-  late Future<Conversation> _conversationFuture;
+  late Future<Conversation?> _conversationFuture;
 
   bool _hasBeenUpdated = false;
 
@@ -67,7 +67,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
       child: DefaultParentTheme(
         builder: (context) => FutureBuilder(
           future: _conversationFuture,
-          builder: (BuildContext context, AsyncSnapshot<Conversation> snapshot) => Scaffold(
+          builder: (BuildContext context, AsyncSnapshot<Conversation?> snapshot) => Scaffold(
             appBar: _appBar(context) as PreferredSizeWidget?,
             body: _body(context, snapshot),
             floatingActionButton: _fab(context, snapshot),
@@ -96,7 +96,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
     );
   }
 
-  Widget _fab(BuildContext context, AsyncSnapshot<Conversation> snapshot) {
+  Widget _fab(BuildContext context, AsyncSnapshot<Conversation?> snapshot) {
     if (!snapshot.hasData) return Container();
     Conversation conversation = snapshot.data!;
     return FloatingActionButton(
@@ -132,7 +132,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
     );
   }
 
-  Widget _body(BuildContext context, AsyncSnapshot<Conversation> snapshot) {
+  Widget _body(BuildContext context, AsyncSnapshot<Conversation?> snapshot) {
     if (snapshot.hasError) return _errorState(context);
     if (snapshot.hasData) return _successState(context, snapshot.data!);
     return LoadingIndicator();

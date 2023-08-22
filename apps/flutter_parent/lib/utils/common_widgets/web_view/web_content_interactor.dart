@@ -24,7 +24,7 @@ class WebContentInteractor {
   OAuthApi get _api => locator.get<OAuthApi>();
 
   Future<String> _authUrl(String targetUrl) async {
-    return (await _api.getAuthenticatedUrl(targetUrl)).sessionUrl ?? targetUrl;
+    return (await _api.getAuthenticatedUrl(targetUrl))?.sessionUrl ?? targetUrl;
   }
 
   Future<String> getAuthUrl(String targetUrl) async {

@@ -18,7 +18,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 
 class HtmlDescriptionScreen extends StatelessWidget {
   /// Html passed to a full screen web view
-  final String html;
+  final String? html;
   final String appBarTitle;
 
   const HtmlDescriptionScreen(this.html, this.appBarTitle, {super.key});
