@@ -41,12 +41,12 @@ class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                _isOnlineLiveData.value = true
+                _isOnlineLiveData.postValue(true)
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                _isOnlineLiveData.value = false
+                _isOnlineLiveData.postValue(false)
             }
         })
     }
