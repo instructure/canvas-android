@@ -25,6 +25,8 @@ void main() {
   setUpAll(() async => await setupPlatformChannels());
 
   test('returns a dio object', () async {
+    final domain = 'https://test_domain.com';
+    await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
     expect(canvasDio(), isA<Dio>());
   });
 
@@ -38,7 +40,7 @@ void main() {
 
   group('canvas options', () {
     test('initializes with a base url', () async {
-      final domain = 'test_domain';
+      final domain = 'https://test_domain.com';
       await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
 
       final options = canvasDio().options;
@@ -80,7 +82,7 @@ void main() {
     test('sets as_user_id param when masquerading', () async {
       String userId = "masquerade_user_id";
       final login = Login((b) => b
-        ..masqueradeDomain = 'masqueradeDomain'
+        ..masqueradeDomain = 'https://masqueradeDomain.com'
         ..masqueradeUser = CanvasModelTestUtils.mockUser(id: userId).toBuilder());
       await ApiPrefs.switchLogins(login);
 
@@ -90,7 +92,8 @@ void main() {
     });
 
     test('Does not set as_user_id param when not masquerading', () async {
-      await ApiPrefs.switchLogins(Login());
+      final domain = 'https://test_domain.com';
+      await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
       final options = canvasDio().options;
 
       expect(options.queryParameters.containsKey('as_user_id'), isFalse);

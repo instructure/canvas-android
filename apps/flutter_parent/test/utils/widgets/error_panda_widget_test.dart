@@ -22,9 +22,9 @@ import '../test_app.dart';
 
 void main() {
   var errorString = AppLocalizations().errorLoadingMessages;
-  var callback = null;
+  Function? callback = null;
 
-  testWidgetsWithAccessibilityChecks('Shows warning icon', (tester) async {
+  testWidgetsWithAccessibilityChecks('Shows warning icon', (WidgetTester tester) async {
     await tester.pumpWidget(TestApp(
       ErrorPandaWidget(errorString, callback),
     ));

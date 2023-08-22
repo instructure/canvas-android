@@ -77,7 +77,7 @@ class NotificationUtil {
   @visibleForTesting
   static Future<void> handleReminder(
       NotificationPayload payload, Completer<void>? appCompleter) async {
-    Reminder reminder = Reminder.fromNotification(payload);
+    Reminder? reminder = Reminder.fromNotification(payload);
 
     // Delete reminder from db
     await locator<ReminderDb>().deleteById(reminder.id!);
@@ -121,9 +121,9 @@ class NotificationUtil {
           .logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
     }
 
-    var location = tz.getLocation(DateTime.now().timeZoneName);
-    tz.setLocalLocation(location);
-    var date = tz.TZDateTime.from(reminder.date!, tz.local);
+    var offsetTime = DateTime.now().timeZoneOffset;
+    var d = reminder.date!;
+    var date = tz.TZDateTime.local(d.year, d.month, d.day, d.month, d.hour, d.minute, d.second).subtract(offsetTime);;
     return _plugin!.zonedSchedule(
       reminder.id!,
       title,

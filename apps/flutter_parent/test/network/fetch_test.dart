@@ -26,7 +26,7 @@ import '../utils/test_helpers/mock_helpers.mocks.dart';
 void main() {
   group('fetch', () {
     test('deserializes a response', () async {
-      final User response = await fetch(_request(_rawUser()));
+      final User? response = await fetch(_request(_rawUser()));
       expect(response, _getUser());
     });
 

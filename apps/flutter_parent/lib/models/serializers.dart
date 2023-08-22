@@ -190,9 +190,17 @@ Serializers jsonSerializers = (_serializers.toBuilder()
       ..addBuilderFactory(FullType(BuiltMap, [FullType(String), FullType(String)]), () => MapBuilder<String, String>()))
     .build();
 
-T? deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(jsonSerializers.serializerForType(T) as Serializer<T>, value);
+T? deserialize<T>(dynamic value) {
+  var serializer = jsonSerializers.serializerForType(T);
+  if (serializer == null || !(serializer is Serializer<T>)) return null;
+  return jsonSerializers.deserializeWith<T>(serializer, value);
+}
 
-dynamic serialize<T>(T value) => jsonSerializers.serializeWith(jsonSerializers.serializerForType(T)!, value);
+dynamic serialize<T>(T value) {
+  var serializer = jsonSerializers.serializerForType(T);
+  if (serializer == null) return null;
+  return jsonSerializers.serializeWith(serializer, value);
+}
 
 List<T> deserializeList<T>(dynamic value) => List.from(value?.map((value) => deserialize<T>(value))?.toList() ?? []);
 

@@ -234,7 +234,7 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 
   Future<void>? remoteConfigInitFuture;
   if (config.initRemoteConfig != null || config.mockPrefs != null) {
-    SharedPreferences.setMockInitialValues(config.mockPrefs! ?? {});
+    SharedPreferences.setMockInitialValues(config.mockPrefs ?? {});
     if (config.initRemoteConfig != null) {
       RemoteConfigUtils.clean();
       remoteConfigInitFuture = RemoteConfigUtils.initializeExplicit(config.initRemoteConfig!);

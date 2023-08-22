@@ -27,7 +27,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'test_app.dart';
-import 'test_helpers/mock_helpers.dart';
 import 'test_helpers/mock_helpers.mocks.dart';
 
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -47,6 +46,7 @@ void main() {
     reset(plugin);
     reset(database);
     NotificationUtil.initForTest(plugin);
+    tz.initializeTimeZones();
   });
 
   test('initializes plugin with expected parameters', () async {
@@ -54,14 +54,14 @@ void main() {
 
     final verification = verify(plugin.initialize(
       captureAny,
-      onDidReceiveNotificationResponse: captureAnyNamed('onSelectNotification'),
+      onDidReceiveNotificationResponse: captureAnyNamed('onDidReceiveNotificationResponse'),
     ));
 
     InitializationSettings initSettings = verification.captured[0];
     expect(initSettings.android?.defaultIcon, 'ic_notification_canvas_logo');
     expect(initSettings.iOS, null);
 
-    VerificationResult? callback = verification.captured[1];
+    var callback = verification.captured[1];
     expect(callback, isNotNull);
   });
 
@@ -137,9 +137,9 @@ void main() {
 
     await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);
 
-    var location = tz.getLocation(DateTime.now().timeZoneName);
-    tz.setLocalLocation(location);
-    var date = tz.TZDateTime.from(reminder.date!, tz.local);
+    var offsetTime = DateTime.now().timeZoneOffset;
+    var d = reminder.date!;
+    var date = tz.TZDateTime.local(d.year, d.month, d.day, d.month, d.hour, d.minute, d.second).subtract(offsetTime);
 
     final NotificationDetails details = verify(plugin.zonedSchedule(
       reminder.id,
@@ -173,9 +173,9 @@ void main() {
 
     await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);
 
-    var location = tz.getLocation(DateTime.now().timeZoneName);
-    tz.setLocalLocation(location);
-    var date = tz.TZDateTime.from(reminder.date!, tz.local);
+    var offsetTime = DateTime.now().timeZoneOffset;
+    var d = reminder.date!;
+    var date = tz.TZDateTime.local(d.year, d.month, d.day, d.month, d.hour, d.minute, d.second).subtract(offsetTime);
 
     final NotificationDetails details = verify(plugin.zonedSchedule(
       reminder.id,

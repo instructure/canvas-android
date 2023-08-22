@@ -37,7 +37,7 @@ void main() {
   final dio = MockDio();
   final authApi = MockAuthApi();
   final analytics = MockAnalytics();
-  final errorHandler = _MockErrorHandler();
+  final errorHandler = MockErrorInterceptorHandler();
 
   final interceptor = AuthenticationInterceptor(dio);
 
@@ -128,7 +128,7 @@ void main() {
 
   test('returns error if the refresh api call failed', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
-    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401, requestOptions: RequestOptions()));
+    final error = DioException(requestOptions: RequestOptions(), response: Response(statusCode: 401, requestOptions: RequestOptions()));
 
     when(authApi.refreshToken()).thenAnswer((_) => Future.error('Failed to refresh'));
 
@@ -169,5 +169,3 @@ void main() {
     verifyNever(analytics.logEvent(any, extras: anyNamed('extras')));
   });
 }
-
-class _MockErrorHandler extends Mock implements ErrorInterceptorHandler {}

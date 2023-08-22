@@ -144,7 +144,7 @@ void main() {
 
     test('count returns correct count based on predicate', () {
       List<_TestClass> list = List<_TestClass>.generate(100, (index) => _TestClass(number: index));
-      expect(list.count((it) => it?.number != null ? false : it!.number! < 50), 50);
+      expect(list.count((it) => it?.number == null ? false : it!.number! < 50), 50);
     });
 
     test('count returns list size if predicate is always true', () {

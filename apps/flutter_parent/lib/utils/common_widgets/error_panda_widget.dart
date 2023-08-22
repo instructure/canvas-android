@@ -24,7 +24,7 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 /// Use the [callback] to set what happens when the retry button is pressed
 /// Use the [errorString] to specify what was supposed to be loaded
 class ErrorPandaWidget extends StatelessWidget {
-  final Function callback;
+  final Function? callback;
   final String errorString;
   final Widget? header;
 
@@ -45,7 +45,7 @@ class ErrorPandaWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            callback();
+            if (callback != null) callback!();
           },
           child: Text(L10n(context).retry, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16)),
           style: TextButton.styleFrom(

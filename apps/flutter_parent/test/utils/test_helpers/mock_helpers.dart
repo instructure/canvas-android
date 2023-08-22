@@ -43,6 +43,7 @@ import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
@@ -175,6 +176,8 @@ import 'package:video_player/video_player.dart';
   MockSpec<PermissionHandler>(),
   MockSpec<FlutterDownloaderVeneer>(),
   MockSpec<ViewAttachmentInteractor>(),
+  MockSpec<AuthenticationInterceptor>(),
+  MockSpec<ErrorInterceptorHandler>(),
 ])
 import 'mock_helpers.mocks.dart';
 

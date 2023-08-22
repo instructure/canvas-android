@@ -93,19 +93,19 @@ void testWidgetsWithAccessibilityChecks(
     await callback(tester);
 
     // Run our accessibility test suite at the end of the test.
-    await runAccessibilityTests(tester, a11yExclusions);
+    await runAccessibilityTests(tester);
 
     handle.dispose();
   }, skip: skip, timeout: timeout, semanticsEnabled: semanticsEnabled);
 }
 
 // Break this out into its own method, so that it can be used mid-test.
-Future<void> runAccessibilityTests(WidgetTester tester, Set<A11yExclusion> exclusions) async {
-  await expectLater(tester, meetsGuidelineWithExclusions(textContrastGuideline, exclusions));
-  await expectLater(tester, meetsGuidelineWithExclusions(labeledTapTargetGuideline, exclusions));
-  await expectLater(tester, meetsGuidelineWithExclusions(androidTapTargetGuideline, exclusions));
+Future<void> runAccessibilityTests(WidgetTester tester) async {
+  await expectLater(tester, meetsGuideline(textContrastGuideline));
+  await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+  await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
   // Needs to be last, because it fiddles with UI
-  await expectLater(tester, meetsGuidelineWithExclusions(TextFieldNavigationGuideline(), exclusions));
+  await expectLater(tester, meetsGuideline(TextFieldNavigationGuideline()));
 }
 
 // Here's an example of a custom guideline.  We can conceivably write
@@ -259,33 +259,5 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
     }
 
     return result;
-  }
-}
-
-_MatchesAccessibilityGuidelineWithExclusions meetsGuidelineWithExclusions(AccessibilityGuideline guideline, Set<A11yExclusion> exclusions) {
-  return _MatchesAccessibilityGuidelineWithExclusions(guideline, exclusions);
-}
-
-class _MatchesAccessibilityGuidelineWithExclusions {
-  _MatchesAccessibilityGuidelineWithExclusions(this.guideline, this.exclusions);
-
-  final AccessibilityGuideline guideline;
-  final Set<A11yExclusion> exclusions;
-
-  Description describe(Description description) {
-    return description.add(guideline.description);
-  }
-
-  Future<String?> matchAsync(covariant WidgetTester tester) async {
-    final Evaluation result = await guideline.evaluate(tester);
-    if (result.passed) return null;
-    for (var exclusion in exclusions) {
-      if (result.reason?.contains(exclusion.errorMessageContents) == true) {
-        print('A11y check failure ignored because $exclusion was applied:');
-        print('    - ${result.reason}');
-        return null;
-      }
-    }
-    return result.reason;
   }
 }

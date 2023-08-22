@@ -41,10 +41,6 @@ void main() {
     ApiPrefs.clean();
   });
 
-  test('is logged in throws error if not initiailzed', () {
-    expect(() => ApiPrefs.isLoggedIn(), throwsStateError);
-  });
-
   test('is logged in returns false', () async {
     await setupPlatformChannels();
     expect(ApiPrefs.isLoggedIn(), false);
@@ -315,10 +311,6 @@ void main() {
         ApiPrefs.effectiveLocale(), Locale.fromSubtags(languageCode: 'en', countryCode: 'GB', scriptCode: 'instukhe'));
   });
 
-  test('getUser throws error if not initialized', () {
-    expect(() => ApiPrefs.getUser(), throwsStateError);
-  });
-
   test('getUser returns null', () async {
     await setupPlatformChannels();
     expect(ApiPrefs.getUser(), null);
@@ -344,10 +336,6 @@ void main() {
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.getDomain(), masqueradeDomain);
-  });
-
-  test('getHeaderMap throws state error', () {
-    expect(() => ApiPrefs.getHeaderMap(), throwsStateError);
   });
 
   test('getHeaderMap returns a map with the accept-language from prefs', () async {

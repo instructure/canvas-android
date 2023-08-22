@@ -70,6 +70,7 @@ class DioConfig {
     baseHeaders[HttpHeaders.acceptHeader] = 'application/json+canvas-string-ids';
 
     // Configure base options
+    debugPrint("BASE_URL: $baseUrl");
     var options = BaseOptions(baseUrl: baseUrl, headers: baseHeaders);
 
     // Add per_page query param if requested
