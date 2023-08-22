@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
@@ -43,6 +44,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseApi: CourseAPI.CoursesInterface,
     private val dashboardCardDao: DashboardCardDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val syncSettingsFacade: SyncSettingsFacade
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -58,7 +60,7 @@ class OfflineSyncWorker @AssistedInject constructor(
         } ?: courseSyncSettingsDao.findAll()
 
         val courseWorkers =  courses.filter { it.anySyncEnabled }
-            .map { CourseSyncWorker.createOnTimeWork(it.courseId) }
+            .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
 
         workManager.beginWith(courseWorkers)
             .enqueue()

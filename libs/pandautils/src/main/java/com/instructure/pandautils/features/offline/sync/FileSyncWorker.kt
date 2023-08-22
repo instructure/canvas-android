@@ -20,7 +20,9 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
@@ -103,7 +105,7 @@ class FileSyncWorker @AssistedInject constructor(
         const val INPUT_FILE_URL = "INPUT_FILE_URL"
         const val INPUT_COURSE_ID = "INPUT_COURSE_ID"
 
-        fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String): OneTimeWorkRequest {
+        fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String, wifiOnly: Boolean): OneTimeWorkRequest {
             val inputData = androidx.work.Data.Builder()
                 .putString(INPUT_FILE_NAME, fileName)
                 .putString(INPUT_FILE_URL, fileUrl)
@@ -113,6 +115,12 @@ class FileSyncWorker @AssistedInject constructor(
 
             return OneTimeWorkRequest.Builder(FileSyncWorker::class.java)
                 .setInputData(inputData)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
+                        .setRequiresBatteryNotLow(true)
+                        .build()
+                )
                 .build()
         }
     }

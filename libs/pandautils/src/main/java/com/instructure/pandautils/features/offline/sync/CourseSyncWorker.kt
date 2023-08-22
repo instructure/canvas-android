@@ -20,7 +20,9 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -65,6 +67,7 @@ import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacad
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.room.offline.facade.UserFacade
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -100,11 +103,13 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileFolderDao: FileFolderDao,
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val localFileDao: LocalFileDao,
-    private val workManager: WorkManager
-    ) : CoroutineWorker(context, workerParameters) {
+    private val workManager: WorkManager,
+    private val syncSettingsFacade: SyncSettingsFacade
+) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
 
-        val courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
+        val courseSettingsWithFiles =
+            courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
 
         fetchCourseDetails(courseSettings.courseId)
@@ -326,7 +331,15 @@ class CourseSyncWorker @AssistedInject constructor(
         cleanupSyncedFiles(courseId, allFileIds)
 
         val fileWorkers = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
-            .map { FileSyncWorker.createOneTimeWorkRequest(courseId, it.id, it.displayName.orEmpty(), it.url.orEmpty()) }.chunked(6)
+            .map {
+                FileSyncWorker.createOneTimeWorkRequest(
+                    courseId,
+                    it.id,
+                    it.displayName.orEmpty(),
+                    it.url.orEmpty(),
+                    syncSettingsFacade.getSyncSettings().wifiOnly
+                )
+            }.chunked(6)
 
         if (fileWorkers.isEmpty()) return
 
@@ -368,10 +381,16 @@ class CourseSyncWorker @AssistedInject constructor(
     companion object {
         const val COURSE_ID = "course_id"
 
-        fun createOnTimeWork(courseId: Long): OneTimeWorkRequest {
+        fun createOnTimeWork(courseId: Long, wifiOnly: Boolean): OneTimeWorkRequest {
             val data = workDataOf(COURSE_ID to courseId)
             return OneTimeWorkRequestBuilder<CourseSyncWorker>()
                 .setInputData(data)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
+                        .setRequiresBatteryNotLow(true)
+                        .build()
+                )
                 .build()
         }
     }
