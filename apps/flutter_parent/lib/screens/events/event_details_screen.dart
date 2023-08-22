@@ -31,7 +31,7 @@ import 'package:intl/intl.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final ScheduleItem? event;
-  final String eventId;
+  final String? eventId;
 
   // Course ID is used for messaging. The message FAB will not be shown if it or current student is null.
   final String? courseId;
@@ -55,9 +55,9 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  late Future<ScheduleItem> _eventFuture;
+  late Future<ScheduleItem?> _eventFuture;
 
-  Future<ScheduleItem> _loadEvent({bool forceRefresh = false}) => _interactor.loadEvent(widget.eventId, forceRefresh);
+  Future<ScheduleItem?> _loadEvent({bool forceRefresh = false}) => _interactor.loadEvent(widget.eventId, forceRefresh);
 
   EventDetailsInteractor get _interactor => locator<EventDetailsInteractor>();
 
@@ -75,7 +75,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _eventFuture,
-      builder: (context, AsyncSnapshot<ScheduleItem> snapshot) {
+      builder: (context, AsyncSnapshot<ScheduleItem?> snapshot) {
         return Scaffold(
           appBar: AppBar(title: Text(L10n(context).eventDetailsTitle)),
           floatingActionButton: _fab(snapshot),
@@ -94,7 +94,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     );
   }
 
-  Widget _body(BuildContext context, AsyncSnapshot<ScheduleItem> snapshot) {
+  Widget _body(BuildContext context, AsyncSnapshot<ScheduleItem?> snapshot) {
     if (snapshot.hasError) {
       return ErrorPandaWidget(
         L10n(context).unexpectedError,
@@ -107,7 +107,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
-  Widget? _fab(AsyncSnapshot<ScheduleItem> snapshot) {
+  Widget? _fab(AsyncSnapshot<ScheduleItem?> snapshot) {
     User? student = ApiPrefs.getCurrentStudent();
     if (!snapshot.hasData || widget.courseId == null || student?.id == null || student?.name == null) {
       // The data hasn't loaded, or course/student info is missing (e.g. if we deep linked to this page)

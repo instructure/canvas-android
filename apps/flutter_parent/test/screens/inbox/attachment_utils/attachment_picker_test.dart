@@ -127,7 +127,7 @@ void main() {
     final interactor = _MockInteractor();
     _setupLocator(interactor);
 
-    final completer = Completer<File>();
+    final completer = Completer<File?>();
     when(interactor.getImageFromCamera()).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -157,7 +157,7 @@ void main() {
     final interactor = _MockInteractor();
     _setupLocator(interactor);
 
-    final completer = Completer<File>();
+    final completer = Completer<File?>();
     when(interactor.getImageFromGallery()).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -187,7 +187,7 @@ void main() {
     final interactor = _MockInteractor();
     _setupLocator(interactor);
 
-    final completer = Completer<File>();
+    final completer = Completer<File?>();
     when(interactor.getFileFromDevice()).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -220,11 +220,12 @@ void main() {
     final file = File('/fake/path');
     when(interactor.getFileFromDevice()).thenAnswer((_) => Future.value(file));
 
-    AttachmentHandler result = null;
+    AttachmentHandler? result = null;
 
     await tester.pumpWidget(TestApp(Builder(
       builder: (context) => Container(
-        child: RaisedButton(
+        child: ElevatedButton(
+          child: Container(),
           onPressed: () async {
             result = await CreateConversationInteractor().addAttachment(context);
           },
@@ -233,14 +234,14 @@ void main() {
     )));
     await tester.pump();
 
-    await tester.tap(find.byType(RaisedButton));
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     // Tap file option
     await tester.tap(find.text(l10n.uploadFile));
     await tester.pumpAndSettle();
 
-    expect(find.byType(RaisedButton), findsOneWidget);
+    expect(find.byType(ElevatedButton), findsOneWidget);
 
     expect(result, isNotNull);
   });

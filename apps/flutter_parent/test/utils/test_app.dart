@@ -36,6 +36,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'platform_config.dart';
 import 'test_helpers/mock_helpers.dart';
+import 'test_helpers/mock_helpers.mocks.dart';
 
 class TestApp extends StatefulWidget {
   TestApp(
@@ -54,7 +55,7 @@ class TestApp extends StatefulWidget {
   final List<NavigatorObserver> navigatorObservers;
   final bool darkMode;
   final bool highContrast;
-  final Locale locale;
+  final Locale? locale;
 
   @override
   _TestAppState createState() => _TestAppState();
@@ -83,14 +84,14 @@ class TestApp extends StatefulWidget {
   static showWidgetFromTap(
     WidgetTester tester,
     Future tapCallback(BuildContext context), {
-    Locale locale,
+    Locale? locale,
     PlatformConfig config = const PlatformConfig(),
-    Future configBlock(),
+    Future configBlock()?,
   }) async {
     await tester.pumpWidget(TestApp(
       Builder(builder: (context) {
-        return RaisedButton(
-          color: Colors.black,
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
           child: Text('tap me', style: TextStyle(color: Colors.white)),
           onPressed: () => tapCallback(context),
         );
@@ -104,13 +105,13 @@ class TestApp extends StatefulWidget {
     if (configBlock != null) await configBlock();
 
     // Tap the button to trigger the onPressed
-    await tester.tap(find.byType(RaisedButton));
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
   }
 }
 
 class _TestAppState extends State<TestApp> {
-  Locale _locale;
+  Locale? _locale;
 
   rebuild(locale) {
     setState(() => _locale = locale);
@@ -132,7 +133,7 @@ class _TestAppState extends State<TestApp> {
         builder: (context, themeData) => MaterialApp(
           title: 'Canvas Parent',
           locale: _locale,
-          builder: (context, child) => MasqueradeUI(navKey: TestApp.navigatorKey, child: child),
+          builder: (context, child) => MasqueradeUI(navKey: TestApp.navigatorKey, child: child ?? Container()),
           navigatorKey: TestApp.navigatorKey,
           navigatorObservers: widget.navigatorObservers,
           localizationsDelegates: const [
@@ -154,7 +155,7 @@ class _TestAppState extends State<TestApp> {
   // Get notified when there's a new system locale so we can rebuild the app with the new language
   LocaleResolutionCallback _localeCallback() => (locale, supportedLocales) {
         const fallback = Locale('en', '');
-        Locale resolvedLocale =
+        Locale? resolvedLocale =
             AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(locale, supportedLocales);
 
         // Update the state if the locale changed
@@ -168,7 +169,7 @@ class _TestAppState extends State<TestApp> {
       };
 }
 
-void setupTestLocator(config(GetIt locator)) async {
+Future<void> setupTestLocator(config(GetIt locator)) async {
   final locator = GetIt.instance;
   await locator.reset();
   locator.allowReassignment = true; // Allows reassignment by the config block
@@ -223,20 +224,20 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 
   if (config.initDeviceInfo) _initPlatformDeviceInfo();
 
-  Future<void> apiPrefsInitFuture;
+  Future<void>? apiPrefsInitFuture;
   if (config.mockApiPrefs != null) {
     ApiPrefs.clean();
     EncryptedSharedPreferences.setMockInitialValues(
-        config.mockApiPrefs..putIfAbsent(ApiPrefs.KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, () => true));
+        config.mockApiPrefs!..putIfAbsent(ApiPrefs.KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, () => true));
     apiPrefsInitFuture = ApiPrefs.init();
   }
 
-  Future<void> remoteConfigInitFuture;
+  Future<void>? remoteConfigInitFuture;
   if (config.initRemoteConfig != null || config.mockPrefs != null) {
-    SharedPreferences.setMockInitialValues(config.mockPrefs ?? {});
+    SharedPreferences.setMockInitialValues(config.mockPrefs! ?? {});
     if (config.initRemoteConfig != null) {
       RemoteConfigUtils.clean();
-      remoteConfigInitFuture = RemoteConfigUtils.initializeExplicit(config.initRemoteConfig);
+      remoteConfigInitFuture = RemoteConfigUtils.initializeExplicit(config.initRemoteConfig!);
     }
   }
 
@@ -248,8 +249,8 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   ]);
 
   if (config.initLoggedInUser != null) {
-    ApiPrefs.addLogin(config.initLoggedInUser);
-    ApiPrefs.switchLogins(config.initLoggedInUser);
+    ApiPrefs.addLogin(config.initLoggedInUser!);
+    ApiPrefs.switchLogins(config.initLoggedInUser!);
   }
 }
 
@@ -261,7 +262,7 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 /// https://github.com/flutter/plugins/blob/3b71d6e9a4456505f0b079074fcbc9ba9f8e0e15/packages/webview_flutter/test/webview_flutter_test.dart
 void _initPlatformWebView() {
   const MethodChannel('plugins.flutter.io/cookie_manager', const StandardMethodCodec())
-      .setMockMethodCallHandler((_) => Future<bool>.sync(() => null));
+      .setMockMethodCallHandler((_) => Future<bool?>.sync(() => null));
 
   // Intercept when a web view is getting created so we can set up the platform channel
   SystemChannels.platform_views.setMockMethodCallHandler((call) {

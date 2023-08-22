@@ -85,7 +85,7 @@ class ApiPrefs {
     await oldPrefs.remove(KEY_CURRENT_STUDENT);
   }
 
-  static void clean() {
+  static Future<void> clean() async {
     _prefs?.clear();
     _prefs = null;
     _packageInfo = null;
@@ -292,7 +292,7 @@ class ApiPrefs {
 
   static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED) ?? false;
 
-  static Future<void> setHasMigrated(bool hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
+  static Future<void> setHasMigrated(bool? hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
 
   static bool getHasCheckedOldReminders() => _getPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS) ?? false;
 
@@ -300,7 +300,7 @@ class ApiPrefs {
 
   static int? getCameraCount() => _getPrefInt(KEY_CAMERA_COUNT);
 
-  static Future<void> setCameraCount(int count) => _setPrefInt(KEY_CAMERA_COUNT, count);
+  static Future<void> setCameraCount(int? count) => _setPrefInt(KEY_CAMERA_COUNT, count);
 
   static DateTime? getRatingNextShowDate() {
     final nextShow = _getPrefString(KEY_RATING_NEXT_SHOW_DATE);
@@ -308,18 +308,19 @@ class ApiPrefs {
     return DateTime.parse(nextShow);
   }
 
-  static Future<void> setRatingNextShowDate(DateTime nextShowDate) =>
-      _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate.toIso8601String());
+  static Future<void> setRatingNextShowDate(DateTime? nextShowDate) =>
+      _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate?.toIso8601String());
 
   static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN) ?? false;
 
-  static Future<void> setRatingDontShowAgain(bool dontShowAgain) =>
+  static Future<void> setRatingDontShowAgain(bool? dontShowAgain) =>
       _setPrefBool(KEY_RATING_DONT_SHOW_AGAIN, dontShowAgain);
 
   /// Pref helpers
 
-  static Future<bool> _setPrefBool(String key, bool value) async {
+  static Future<bool> _setPrefBool(String key, bool? value) async {
     _checkInit();
+    if (value == null) return _prefs!.remove(key);
     return _prefs!.setBool(key, value);
   }
 
@@ -328,8 +329,10 @@ class ApiPrefs {
     return _prefs?.getBool(key);
   }
 
-  static Future<bool> _setPrefString(String key, String value) async {
+  static Future<bool> _setPrefString(String key, String? value) async {
     _checkInit();
+    if (value == null) return _prefs!.remove(key);
+
     return _prefs!.setString(key, value);
   }
 
@@ -343,9 +346,15 @@ class ApiPrefs {
     return _prefs?.getInt(key);
   }
 
-  static Future<bool> _setPrefInt(String key, int value) async {
+  static Future<bool> _setPrefInt(String key, int? value) async {
     _checkInit();
+    if (value == null) return _prefs!.remove(key);
     return _prefs!.setInt(key, value);
+  }
+
+  static Future<bool> _removeKey(String key) async {
+    _checkInit();
+    return _prefs!.remove(key);
   }
 
   /// Utility functions

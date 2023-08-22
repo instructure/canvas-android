@@ -143,7 +143,7 @@ class DashboardState extends State<DashboardScreen> {
     });
 
     _interactor.getSelf(app: ParentApp.of(context)).then((user) {
-      _self = user;
+      _self = user!;
       setState(() {
         _selfLoading = false;
       });

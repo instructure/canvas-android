@@ -39,7 +39,7 @@ void main() {
       final course = _course.rebuild((b) => b..enrollments = ListBuilder([_enrollment]));
 
       final grade = course.getCourseGrade(_studentId);
-      expect(grade, CourseGrade(course, course.enrollments.first, forceAllPeriods: false));
+      expect(grade, CourseGrade(course, course.enrollments!.first, forceAllPeriods: false));
     });
 
     test('returns a course grade with the course and student gradinig period enrollment', () {

@@ -47,6 +47,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 const _studentId = '123';
 const _courseId = '321';
@@ -133,7 +134,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows empty', (tester) async {
     final model = CourseDetailsModel(_student, _courseId);
-    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => List<AssignmentGroup>());
+    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => <AssignmentGroup>[]);
 
     await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
@@ -158,7 +159,7 @@ void main() {
     model.course = _mockCourse().rebuild((b) => b..hasGradingPeriods = true);
 
     // Mock stuff
-    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => List<AssignmentGroup>());
+    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => <AssignmentGroup>[]);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
@@ -188,7 +189,7 @@ void main() {
     model.course = _mockCourse().rebuild((b) => b..hasGradingPeriods = true);
 
     // Mock stuff
-    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => List<AssignmentGroup>());
+    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => <AssignmentGroup>[]);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList<GradingPeriod>.of([]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
@@ -218,7 +219,7 @@ void main() {
     final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
-        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse();
 
@@ -229,11 +230,11 @@ void main() {
     expect(find.text(AppLocalizations().noGrade), findsOneWidget);
 
     expect(find.text(group.name), findsOneWidget);
-    expect(find.text(group.assignments.first.name), findsOneWidget);
+    expect(find.text(group.assignments.first.name!), findsOneWidget);
     expect(find.text('Due Jan 1 at 12:00 AM'), findsOneWidget);
     expect(find.text('- / 0'), findsOneWidget);
 
-    expect(find.text(group.assignments.last.name), findsOneWidget);
+    expect(find.text(group.assignments.last.name!), findsOneWidget);
     expect(find.text('No Due Date'), findsOneWidget);
     expect(find.text('$grade / 2.2'), findsOneWidget);
   });
@@ -251,7 +252,7 @@ void main() {
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
-        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
     await tester.pumpWidget(_testableWidget(model));
@@ -261,7 +262,7 @@ void main() {
     expect(find.text(groups.first.name), findsNothing);
 
     expect(find.text(groups.last.name), findsOneWidget);
-    expect(find.text(groups.last.assignments.first.name), findsOneWidget);
+    expect(find.text(groups.last.assignments.first.name!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Does not show assignments when group is collapsed', (tester) async {
@@ -274,7 +275,7 @@ void main() {
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
-        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
     await tester.pumpWidget(_testableWidget(model));
@@ -283,12 +284,12 @@ void main() {
 
     final groupHeader = find.text(groups.first.name);
     expect(groupHeader, findsOneWidget);
-    expect(find.text(groups.first.assignments.first.name), findsOneWidget);
+    expect(find.text(groups.first.assignments.first.name!), findsOneWidget);
 
     await tester.tap(groupHeader);
     await tester.pumpAndSettle();
 
-    expect(find.text(groups.first.assignments.first.name), findsNothing);
+    expect(find.text(groups.first.assignments.first.name!), findsNothing);
   });
 
   testWidgetsWithAccessibilityChecks('Shows assignment statuses', (tester) async {
@@ -305,7 +306,7 @@ void main() {
     final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
-        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse();
 
@@ -332,7 +333,7 @@ void main() {
       model.course = _mockCourse();
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
-          GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+          GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
           .thenAnswer((_) async => [enrollment]);
 
@@ -355,7 +356,7 @@ void main() {
       model.course = _mockCourse();
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
-          GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+          GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
           .thenAnswer((_) async => [enrollment]);
 
@@ -377,7 +378,7 @@ void main() {
       model.course = _mockCourse().rebuild((b) => b..hasGradingPeriods = true);
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
-          GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+          GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
           .thenAnswer((_) async => [enrollment]);
 
@@ -447,7 +448,7 @@ void main() {
       when(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
           (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
-      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => Future.value(null));
 
       await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
@@ -486,7 +487,7 @@ void main() {
       when(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
           (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
-      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => Future.value(null));
 
       await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
@@ -527,7 +528,7 @@ void main() {
       when(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
           (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
-      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => Future.value(null));
 
       await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
@@ -547,7 +548,7 @@ void main() {
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
-        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
     await tester.pumpWidget(_testableWidget(model));
@@ -563,7 +564,7 @@ void main() {
   testWidgetsWithAccessibilityChecks(
       'grading period is shown for multiple grading periods when all grading periods is selected and no assignments exist',
       (tester) async {
-    final groups = List<AssignmentGroup>();
+    final groups = <AssignmentGroup>[];
     final gradingPeriod = GradingPeriod((b) => b
       ..id = '123'
       ..title = 'Other');
@@ -635,7 +636,7 @@ void main() {
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
-        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
     await tester.pumpWidget(_testableWidget(model,
@@ -644,7 +645,7 @@ void main() {
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
-    await tester.tap(find.text(groups.first.assignments.first.name));
+    await tester.tap(find.text(groups.first.assignments.first.name!));
     await tester.pump(); // Process the tap
     await tester.pump(); // Show the widget
 
@@ -664,7 +665,7 @@ Course _mockCourse() {
     ]).toBuilder());
 }
 
-GradeBuilder _mockGrade({double currentScore, double finalScore, String currentGrade, String finalGrade}) {
+GradeBuilder _mockGrade({double? currentScore, double? finalScore, String? currentGrade, String? finalGrade}) {
   return GradeBuilder()
     ..htmlUrl = ''
     ..currentScore = currentScore ?? 0
@@ -688,8 +689,8 @@ AssignmentGroup _mockAssignmentGroup({
 Assignment _mockAssignment({
   String id = '0',
   String groupId = _assignmentGroupId,
-  Submission submission,
-  DateTime dueAt,
+  Submission? submission,
+  DateTime? dueAt,
   double pointsPossible = 0,
 }) {
   return Assignment((b) => b
@@ -706,7 +707,7 @@ Assignment _mockAssignment({
     ..published = true);
 }
 
-Submission _mockSubmission({String assignmentId = '', String grade, bool isLate, DateTime submittedAt}) {
+Submission _mockSubmission({String assignmentId = '', String? grade, bool? isLate, DateTime? submittedAt}) {
   return Submission((b) => b
     ..userId = _studentId
     ..assignmentId = assignmentId

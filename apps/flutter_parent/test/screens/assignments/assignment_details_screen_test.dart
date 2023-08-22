@@ -47,6 +47,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final courseId = '123';
@@ -224,12 +225,12 @@ void main() {
     await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(assignmentName), findsOneWidget);
-    expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
     expect(find.text('1.5 pts'), findsOneWidget);
     expect(find.byIcon(Icons.do_not_disturb), findsOneWidget);
     expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.ash);
     expect(find.text(AppLocalizations().assignmentNotSubmittedLabel), findsOneWidget);
-    expect((tester.widget(find.text(AppLocalizations().assignmentNotSubmittedLabel)) as Text).style.color,
+    expect((tester.widget(find.text(AppLocalizations().assignmentNotSubmittedLabel)) as Text).style!.color,
         ParentColors.ash);
     expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
@@ -278,7 +279,7 @@ void main() {
     expect((iconContainer.decoration as BoxDecoration).color, StudentColorSet.shamrock.light);
 
     expect(find.text(AppLocalizations().assignmentSubmittedLabel), findsOneWidget);
-    expect((tester.widget(find.text(AppLocalizations().assignmentSubmittedLabel)) as Text).style.color,
+    expect((tester.widget(find.text(AppLocalizations().assignmentSubmittedLabel)) as Text).style!.color,
         StudentColorSet.shamrock.light);
   });
 
@@ -499,7 +500,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder without due date', (tester) async {
@@ -539,7 +540,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder with due date', (tester) async {
@@ -581,7 +582,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('deletes reminder', (tester) async {

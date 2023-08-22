@@ -29,10 +29,10 @@ class BaseModel extends ChangeNotifier {
   }
 
   // A helper method to set the state to busy when starting a load, and setting the state back to idle when done
-  Future<void> work(Future Function() loadBlock) async {
+  Future<void> work(Future Function()? loadBlock) async {
     try {
       setState(viewState: ViewState.Busy);
-      await loadBlock();
+      if (loadBlock != null) await loadBlock();
       setState(viewState: ViewState.Idle);
     } catch (e) {
       print('error while doing work: $e');

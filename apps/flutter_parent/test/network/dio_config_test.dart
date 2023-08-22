@@ -28,24 +28,6 @@ void main() {
     expect(canvasDio(), isA<Dio>());
   });
 
-  group('base constructor asserts', () {
-    test('throws an error if baseUrl is null', () async {
-      expect(() => DioConfig(baseUrl: null), throwsAssertionError);
-    });
-
-    test('throws an error if cacheMaxAge is null', () async {
-      expect(() => DioConfig(cacheMaxAge: null), throwsAssertionError);
-    });
-
-    test('throws an error if forceRefresh is null', () async {
-      expect(() => DioConfig(forceRefresh: null), throwsAssertionError);
-    });
-
-    test('throws an error if pageSize is null', () async {
-      expect(() => DioConfig(pageSize: null), throwsAssertionError);
-    });
-  });
-
   test('DioConfig.canvas returns a config object', () async {
     expect(DioConfig.canvas(), isA<DioConfig>());
   });

@@ -44,11 +44,12 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() async {
-  final analytics = _MockAnalytics();
-  final interactor = _MockInteractor();
-  final authApi = _MockAuthApi();
+  final analytics = MockAnalytics();
+  final interactor = MockDashboardInteractor();
+  final authApi = MockAuthApi();
   final pairingInteractor = MockPairingInteractor();
 
   final login = Login((b) => b
@@ -65,7 +66,7 @@ void main() async {
     locator.registerLazySingleton<PairingInteractor>(() => pairingInteractor);
     locator.registerFactory<DashboardInteractor>(() => interactor);
     locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
-    locator.registerFactory<DomainSearchInteractor>(() => _MockDomainSearchInteractor());
+    locator.registerFactory<DomainSearchInteractor>(() => MockDomainSearchInteractor());
   });
 
   setUp(() async {
@@ -175,10 +176,10 @@ void main() async {
     expect(find.byKey(Key('previous-logins')), findsOneWidget);
 
     expect(find.text(login.user.name), findsNothing);
-    expect(find.text(login.masqueradeUser.name), findsOneWidget);
+    expect(find.text(login.masqueradeUser!.name), findsOneWidget);
 
     expect(find.text(login.domain), findsNothing);
-    expect(find.text(login.masqueradeDomain), findsOneWidget);
+    expect(find.text(login.masqueradeDomain!), findsOneWidget);
 
     expect(find.byType(Avatar), findsOneWidget);
     expect(find.bySemanticsLabel(AppLocalizations().delete), findsOneWidget);
@@ -335,11 +336,3 @@ void main() async {
     expect(find.text(AppLocalizations().qrCode), findsNothing);
   });
 }
-
-class _MockAnalytics extends Mock implements Analytics {}
-
-class _MockInteractor extends Mock implements DashboardInteractor {}
-
-class _MockAuthApi extends Mock implements AuthApi {}
-
-class _MockDomainSearchInteractor extends Mock implements DomainSearchInteractor {}

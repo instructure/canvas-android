@@ -28,9 +28,13 @@ import 'package:test/test.dart';
 
 import 'test_app.dart';
 import 'test_helpers/mock_helpers.dart';
+import 'test_helpers/mock_helpers.mocks.dart';
+
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 void main() {
-  final plugin = MockPlugin();
+  final plugin = MockFlutterLocalNotificationsPlugin();
   final database = MockReminderDb();
   final analytics = MockAnalytics();
 
@@ -50,14 +54,14 @@ void main() {
 
     final verification = verify(plugin.initialize(
       captureAny,
-      onSelectNotification: captureAnyNamed('onSelectNotification'),
+      onDidReceiveNotificationResponse: captureAnyNamed('onSelectNotification'),
     ));
 
     InitializationSettings initSettings = verification.captured[0];
-    expect(initSettings.android.defaultIcon, 'ic_notification_canvas_logo');
+    expect(initSettings.android?.defaultIcon, 'ic_notification_canvas_logo');
     expect(initSettings.iOS, null);
 
-    SelectNotificationCallback callback = verification.captured[1];
+    VerificationResult? callback = verification.captured[1];
     expect(callback, isNotNull);
   });
 
@@ -133,19 +137,24 @@ void main() {
 
     await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);
 
-    final NotificationDetails details = verify(plugin.schedule(
+    var location = tz.getLocation(DateTime.now().timeZoneName);
+    tz.setLocalLocation(location);
+    var date = tz.TZDateTime.from(reminder.date!, tz.local);
+
+    final NotificationDetails details = verify(plugin.zonedSchedule(
       reminder.id,
       'title',
       'body',
-      reminder.date,
+      date,
       captureAny,
       payload: json.encode(serialize(expectedPayload)),
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     )).captured.first;
 
     expect(details.iOS, isNull);
-    expect(details.android.channelId, NotificationUtil.notificationChannelReminders);
-    expect(details.android.channelName, AppLocalizations().remindersNotificationChannelName);
-    expect(details.android.channelDescription, AppLocalizations().remindersNotificationChannelDescription);
+    expect(details.android?.channelId, NotificationUtil.notificationChannelReminders);
+    expect(details.android?.channelName, AppLocalizations().remindersNotificationChannelName);
+    expect(details.android?.channelDescription, AppLocalizations().remindersNotificationChannelDescription);
 
     verify(analytics.logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE));
   });
@@ -164,19 +173,24 @@ void main() {
 
     await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);
 
-    final NotificationDetails details = verify(plugin.schedule(
+    var location = tz.getLocation(DateTime.now().timeZoneName);
+    tz.setLocalLocation(location);
+    var date = tz.TZDateTime.from(reminder.date!, tz.local);
+
+    final NotificationDetails details = verify(plugin.zonedSchedule(
       reminder.id,
       'title',
       'body',
-      reminder.date,
+      date,
       captureAny,
       payload: json.encode(serialize(expectedPayload)),
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     )).captured.first;
 
     expect(details.iOS, isNull);
-    expect(details.android.channelId, NotificationUtil.notificationChannelReminders);
-    expect(details.android.channelName, AppLocalizations().remindersNotificationChannelName);
-    expect(details.android.channelDescription, AppLocalizations().remindersNotificationChannelDescription);
+    expect(details.android?.channelId, NotificationUtil.notificationChannelReminders);
+    expect(details.android?.channelName, AppLocalizations().remindersNotificationChannelName);
+    expect(details.android?.channelDescription, AppLocalizations().remindersNotificationChannelDescription);
 
     verify(analytics.logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE));
   });

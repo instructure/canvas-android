@@ -16,13 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class AlertCountNotifier extends ValueNotifier<int> {
+class AlertCountNotifier extends ValueNotifier<int?> {
   AlertCountNotifier() : super(0);
 
   update(String studentId) async {
     try {
       final unreadCount = await locator<AlertsApi>().getUnreadCount(studentId);
-      value = unreadCount.count.asNum.toInt();
+      value = unreadCount?.count.asNum.toInt();
     } catch (e) {
       print(e);
     }

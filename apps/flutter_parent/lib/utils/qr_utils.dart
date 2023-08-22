@@ -32,7 +32,8 @@ class QRUtils {
   static const String QR_PAIR_PARAM_CODE = 'code';
   static const String QR_PAIR_PARAM_ACCOUNT_ID = 'account_id';
 
-  static Uri? verifySSOLogin(String url) {
+  static Uri? verifySSOLogin(String? url) {
+    if (url == null) return null;
     try {
       var uri = Uri.parse(url);
       var hostList = [QR_HOST, QR_HOST_BETA, QR_HOST_TEST];

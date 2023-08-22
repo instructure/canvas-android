@@ -35,7 +35,7 @@ class WebContentInteractor {
     }
   }
 
-  Future<String?> authContent(String? content, String externalToolButtonText) async {
+  Future<String?> authContent(String? content, String? externalToolButtonText) async {
     if (content == null || content.isEmpty) return content;
 
     String authContent = content;

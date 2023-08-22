@@ -30,9 +30,9 @@ class DomainSearchScreen extends StatefulWidget {
   @visibleForTesting
   static final GlobalKey helpDialogBodyKey = GlobalKey();
 
-  const DomainSearchScreen({required this.loginFlow, super.key});
+  const DomainSearchScreen({this.loginFlow, super.key});
 
-  final LoginFlow loginFlow;
+  final LoginFlow? loginFlow;
 
   @override
   _DomainSearchScreenState createState() => _DomainSearchScreenState();
@@ -284,6 +284,9 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
     if (regExp.hasMatch(domain)) domain = regExp.stringMatch(domain)!;
     if (domain.startsWith('www.')) domain = domain.substring(4); // Strip off www. if they typed it
     if (!domain.contains('.') || domain.endsWith('.beta')) domain += '.instructure.com';
-    locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, accountName: domain, loginFlow: widget.loginFlow));
+    if (widget.loginFlow != null)
+      locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, accountName: domain, loginFlow: widget.loginFlow!));
+    else
+      locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, accountName: domain));
   }
 }

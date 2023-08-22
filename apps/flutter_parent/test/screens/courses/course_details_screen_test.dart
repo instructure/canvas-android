@@ -39,6 +39,7 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final studentId = '123';
@@ -48,8 +49,8 @@ void main() {
     ..id = studentId
     ..name = studentName);
 
-  final courseInteractor = _MockCourseDetailsInteractor();
-  final convoInteractor = _MockCreateConversationInteractor();
+  final courseInteractor = MockCourseDetailsInteractor();
+  final convoInteractor = MockCreateConversationInteractor();
 
   setupTestLocator((_locator) {
     _locator.registerFactory<CourseDetailsInteractor>(() => courseInteractor);
@@ -463,7 +464,3 @@ void main() {
     verify(courseInteractor.loadCourse(courseId, forceRefresh: true)).called(1); // Refresh load
   });
 }
-
-class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}
-
-class _MockCreateConversationInteractor extends Mock implements CreateConversationInteractor {}

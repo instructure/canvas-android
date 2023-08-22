@@ -35,7 +35,7 @@ class TermsOfUseScreen extends StatefulWidget {
 }
 
 class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
-  late Future<TermsOfService> _tosFuture;
+  late Future<TermsOfService?> _tosFuture;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
     super.initState();
   }
 
-  Future<TermsOfService> getTosFuture() {
+  Future<TermsOfService?> getTosFuture() {
     return (widget.accountId != null && widget.domain != null)
         ? locator<AccountsApi>().getTermsOfServiceForAccount(widget.accountId!, widget.domain!)
         : locator<AccountsApi>().getTermsOfService();
@@ -59,7 +59,7 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
         ),
         body: FutureBuilder(
           future: _tosFuture,
-          builder: (BuildContext context, AsyncSnapshot<TermsOfService> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<TermsOfService?> snapshot) {
             // Loading
             if (snapshot.connectionState != ConnectionState.done) return LoadingIndicator();
 

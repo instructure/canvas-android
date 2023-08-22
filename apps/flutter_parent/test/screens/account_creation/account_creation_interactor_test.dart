@@ -15,11 +15,17 @@
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
+
+// @GenerateNiceMocks([MockSpec<AccountsApi>()])
+// import 'account_creation_interactor_test.mocks.dart';
+
 
 void main() {
   final launcher = MockUrlLauncher();

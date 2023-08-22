@@ -31,7 +31,7 @@ class CanvasWebView extends StatefulWidget {
   final bool authContentIfNecessary;
 
   /// The html content to load into the webview
-  final String content;
+  final String? content;
 
   /// The empty description to show when the provided content is blank
   final String? emptyDescription;
@@ -52,7 +52,7 @@ class CanvasWebView extends StatefulWidget {
 
   const CanvasWebView({
     this.authContentIfNecessary = true,
-    required this.content,
+    this.content,
     this.emptyDescription,
     this.fullScreen = true,
     this.futureDelay = null,
@@ -66,7 +66,7 @@ class CanvasWebView extends StatefulWidget {
 }
 
 class _CanvasWebViewState extends State<CanvasWebView> {
-  late String _content;
+  String? _content;
   Future<String?>? _contentFuture;
 
   WebContentInteractor get _interactor => locator<WebContentInteractor>();

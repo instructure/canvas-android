@@ -41,10 +41,10 @@ class AlertsScreen extends StatefulWidget {
 }
 
 class _AlertsScreenState extends State<AlertsScreen> {
-  Future<AlertsList>? _alertsFuture;
+  Future<AlertsList?>? _alertsFuture;
   late User _student;
 
-  Future<AlertsList> _loadAlerts({bool forceRefresh = false}) =>
+  Future<AlertsList?> _loadAlerts({bool forceRefresh = false}) =>
       widget._interactor.getAlertsForStudent(_student.id, forceRefresh);
 
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -71,7 +71,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
     return FutureBuilder(
       key: _refreshKey,
       future: _alertsFuture,
-      builder: (context, AsyncSnapshot<AlertsList> snapshot) {
+      builder: (context, AsyncSnapshot<AlertsList?> snapshot) {
         // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
@@ -273,7 +273,7 @@ class __AlertsListState extends State<_AlertsList> {
 
       final readAlert = await widget._interactor.markAlertRead(
           widget._student.id, alert.id);
-      setState(() => _data!.alerts!.setRange(index, index + 1, [readAlert]));
+      setState(() => _data!.alerts!.setRange(index, index + 1, [readAlert!]));
       locator<AlertCountNotifier>().update(widget._student.id);
     }
   }

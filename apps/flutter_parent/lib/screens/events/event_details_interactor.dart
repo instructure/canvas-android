@@ -21,7 +21,7 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class EventDetailsInteractor {
-  Future<ScheduleItem> loadEvent(String eventId, bool forceRefresh) {
+  Future<ScheduleItem?> loadEvent(String? eventId, bool forceRefresh) {
     return locator<CalendarEventsApi>().getEvent(eventId, forceRefresh);
   }
 

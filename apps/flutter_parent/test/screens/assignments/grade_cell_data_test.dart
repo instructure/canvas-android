@@ -23,13 +23,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
 void main() {
-  Assignment baseAssignment;
-  Submission baseSubmission;
-  GradeCellData baseGradedState;
+  late Assignment baseAssignment;
+  late Submission baseSubmission;
+  late GradeCellData baseGradedState;
 
-  Color accentColor = Colors.pinkAccent;
+  Color secondaryColor = Colors.pinkAccent;
 
-  ThemeData theme = ThemeData(accentColor: accentColor);
+  ThemeData theme = ThemeData().copyWith(colorScheme: ThemeData().colorScheme.copyWith(secondary: secondaryColor));
   AppLocalizations l10n = AppLocalizations();
 
   setUp(() {
@@ -53,7 +53,7 @@ void main() {
 
     baseGradedState = GradeCellData((b) => b
       ..state = GradeCellState.graded
-      ..accentColor = accentColor
+      ..accentColor = secondaryColor
       ..outOf = 'Out of 100 points');
   });
 

@@ -28,7 +28,7 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class PlannerFetcher extends ChangeNotifier {
-  final Map<String, AsyncSnapshot<List<PlannerItem>>> daySnapshots = {};
+  final Map<String, AsyncSnapshot<List<PlannerItem>>?> daySnapshots = {};
 
   final Map<String, bool> failedMonths = {};
 

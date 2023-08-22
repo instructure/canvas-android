@@ -45,12 +45,13 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  CalendarEventsApi calendarApi = MockCalendarApi();
-  CalendarFilterDb filterDb = MockCalendarFilterDb();
-  CalendarFilterListInteractor filterInteractor = MockCalendarFilterListInteractor();
-  CoursesInteractor coursesInteractor = MockCoursesInteractor();
+  MockCalendarEventsApi calendarApi = MockCalendarEventsApi();
+  MockCalendarFilterDb filterDb = MockCalendarFilterDb();
+  MockCalendarFilterListInteractor filterInteractor = MockCalendarFilterListInteractor();
+  MockCoursesInteractor coursesInteractor = MockCoursesInteractor();
 
   when(filterDb.getByObserveeId(any, any, any))
       .thenAnswer((_) => Future.value(CalendarFilter((b) => b.filters = SetBuilder({'course_123'}))));
@@ -308,7 +309,7 @@ void main() {
    */
 }
 
-Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null, NavigatorObserver observer}) {
+Widget _testableMaterialWidget({Widget? widget, SelectedStudentNotifier? notifier = null, NavigatorObserver? observer}) {
   var login = Login((b) => b
     ..uuid = 'uuid'
     ..domain = 'domain'

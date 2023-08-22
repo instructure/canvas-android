@@ -16,7 +16,6 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/serializers.dart';
@@ -28,13 +27,14 @@ import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   tearDown(() {
@@ -192,7 +192,7 @@ void main() {
     await ApiPrefs.performLogout(switchingLogins: false);
 
     verify(reminderDb.getAllForUser(login.domain, login.user.id));
-    verify(notificationUtil.deleteNotifications([reminder.id]));
+    verify(notificationUtil.deleteNotifications([reminder.id!]));
     verify(reminderDb.deleteAllForUser(login.domain, login.user.id));
     verify(calendarFilterDb.deleteAllForUser(login.domain, login.user.id));
     verify(authApi.deleteToken(login.domain, login.accessToken));
@@ -237,7 +237,7 @@ void main() {
     final user = CanvasModelTestUtils.mockUser();
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.getCurrentLogin().masqueradeUser, user);
+    expect(ApiPrefs.getCurrentLogin()?.masqueradeUser, user);
   });
 
   test('setting user updates with new locale rebuilds the app', () async {
@@ -272,7 +272,7 @@ void main() {
     final user = CanvasModelTestUtils.mockUser();
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.effectiveLocale(), Locale(user.effectiveLocale));
+    expect(ApiPrefs.effectiveLocale(), Locale(user.effectiveLocale!));
   });
 
   test('effectiveLocale returns the users locale if effective locale is null', () async {
@@ -286,7 +286,7 @@ void main() {
 
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.effectiveLocale(), Locale(user.locale));
+    expect(ApiPrefs.effectiveLocale(), Locale(user.locale!));
   });
 
   test('effectiveLocale returns the users effective locale without inst if script is longer than 5', () async {
@@ -463,7 +463,7 @@ void main() {
       ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize<User>(currentStudent)),
     });
 
-    SharedPreferences.setMockInitialValues(config.mockPrefs);
+    SharedPreferences.setMockInitialValues(config.mockPrefs!);
     EncryptedSharedPreferences.setMockInitialValues({});
 
     final oldPrefs = await SharedPreferences.getInstance();
@@ -471,11 +471,11 @@ void main() {
 
     // Old prefs should not be null
     expect(
-        oldPrefs.getStringList(ApiPrefs.KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList(), logins);
+        oldPrefs.getStringList(ApiPrefs.KEY_LOGINS)!.map((it) => deserialize<Login>(json.decode(it))).toList(), logins);
     expect(oldPrefs.getBool(ApiPrefs.KEY_HAS_MIGRATED), hasMigrated);
     expect(oldPrefs.getBool(ApiPrefs.KEY_HAS_CHECKED_OLD_REMINDERS), hasCheckedOldReminders);
     expect(oldPrefs.getString(ApiPrefs.KEY_CURRENT_LOGIN_UUID), currentLoginId);
-    expect(deserialize<User>(json.decode(oldPrefs.get(ApiPrefs.KEY_CURRENT_STUDENT))), currentStudent);
+    expect(deserialize<User>(json.decode(oldPrefs.get(ApiPrefs.KEY_CURRENT_STUDENT) as String)), currentStudent);
 
     // Actually do the test, init api prefs so we get the migration
     await ApiPrefs.init();
@@ -498,7 +498,7 @@ void main() {
 }
 
 abstract class _Rebuildable {
-  void rebuild(Locale locale);
+  void rebuild(Locale? locale);
 }
 
 class _MockApp extends Mock implements _Rebuildable {}

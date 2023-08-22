@@ -40,7 +40,7 @@ class NotificationUtil {
     _plugin = plugin;
   }
 
-  static Future<void> init(Completer<void> appCompleter) async {
+  static Future<void> init(Completer<void>? appCompleter) async {
     var initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings('ic_notification_canvas_logo')
     );
@@ -59,7 +59,7 @@ class NotificationUtil {
 
   @visibleForTesting
   static Future<void> handlePayload(
-      String rawPayload, Completer<void> appCompleter) async {
+      String rawPayload, Completer<void>? appCompleter) async {
     try {
       NotificationPayload payload = deserialize(json.decode(rawPayload));
       switch (payload.type) {
@@ -76,7 +76,7 @@ class NotificationUtil {
 
   @visibleForTesting
   static Future<void> handleReminder(
-      NotificationPayload payload, Completer<void> appCompleter) async {
+      NotificationPayload payload, Completer<void>? appCompleter) async {
     Reminder reminder = Reminder.fromNotification(payload);
 
     // Delete reminder from db
@@ -95,7 +95,7 @@ class NotificationUtil {
     }
 
     // Push route, but only after the app has finished building
-    appCompleter.future
+    appCompleter?.future
         .then((_) => WidgetsBinding.instance.handlePushRoute(route!));
   }
 

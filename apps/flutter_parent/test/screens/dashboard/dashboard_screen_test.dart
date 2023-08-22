@@ -67,6 +67,7 @@ import '../../utils/network_image_response.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../../utils/test_utils.dart';
 import '../courses/course_summary_screen_test.dart';
 
@@ -75,9 +76,9 @@ import '../courses/course_summary_screen_test.dart';
  */
 void main() {
   mockNetworkImageResponse();
-  final analyticsMock = _MockAnalytics();
+  final analyticsMock = MockAnalytics();
 
-  _setupLocator({MockInteractor interactor, AlertsApi alertsApi, InboxApi inboxApi}) async {
+  _setupLocator({MockInteractor? interactor, AlertsApi? alertsApi, InboxApi? inboxApi}) async {
     await setupTestLocator((locator) {
       locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
       locator.registerFactory<CoursesInteractor>(() => MockCoursesInteractor());
@@ -86,7 +87,7 @@ void main() {
       locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
       locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
       locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
-      locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
+      locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? MockAlertsApi());
       locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
       locator.registerLazySingleton<Analytics>(() => analyticsMock);
       locator.registerLazySingleton<CalendarTodayClickNotifier>(() => CalendarTodayClickNotifier());
@@ -111,9 +112,9 @@ void main() {
   });
 
   Widget _testableMaterialWidget({
-    Login initLogin,
-    Map<String, Object> deepLinkParams,
-    DashboardContentScreens startingPage,
+    Login? initLogin,
+    Map<String, Object>? deepLinkParams,
+    DashboardContentScreens? startingPage,
   }) =>
       TestApp(
         Scaffold(
@@ -131,7 +132,7 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      User first;
+      late User first;
       interactor.getStudents().then((students) {
         first = students.first;
       });
@@ -147,7 +148,7 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      User first;
+      late User first;
       interactor.getStudents().then((students) {
         first = students.first;
       });
@@ -190,7 +191,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.actAsUser), findsNothing);
@@ -210,7 +211,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.actAsUser), findsOneWidget);
@@ -232,7 +233,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.actAsUser), findsNothing);
@@ -245,16 +246,16 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      User observer;
+      late User observer;
       interactor.getSelf().then((self) {
-        observer = self;
+        observer = self ?? User();
       });
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
       // Open the drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('${observer.name} (${observer.pronouns})'), findsOneWidget);
@@ -267,16 +268,16 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      User observer;
+      late User observer;
       interactor.getSelf().then((self) {
-        observer = self;
+        observer = self ?? User();
       });
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
       // Open the drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('${observer.name}'), findsOneWidget);
@@ -307,7 +308,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Assert there's no text in the inbox-count
@@ -325,7 +326,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('12321'), findsOneWidget);
@@ -461,7 +462,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Inbox
@@ -476,7 +477,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Manage Students
@@ -494,7 +495,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Settings
@@ -521,7 +522,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Help
@@ -539,7 +540,7 @@ void main() {
       'tapping Sign Out from nav drawer displays confirmation dialog',
       (tester) async {
         final reminderDb = MockReminderDb();
-        final notificationUtil = _MockNotificationUtil();
+        final notificationUtil = MockNotificationUtil();
 
         await _setupLocator();
         final _locator = GetIt.instance;
@@ -559,7 +560,7 @@ void main() {
         expect(ApiPrefs.isLoggedIn(), true);
 
         // Open the nav drawer
-        dashboardState(tester).scaffoldKey.currentState.openDrawer();
+        dashboardState(tester).scaffoldKey.currentState?.openDrawer();
         await tester.pumpAndSettle();
 
         // Click on Sign Out
@@ -590,9 +591,9 @@ void main() {
     testWidgets('tapping Sign Out from nav drawer signs user out and returns to the Login Landing screen',
         (tester) async {
       final reminderDb = MockReminderDb();
-      final calendarFilterDb = _MockCalendarFilterDb();
-      final notificationUtil = _MockNotificationUtil();
-      final authApi = _MockAuthApi();
+      final calendarFilterDb = MockCalendarFilterDb();
+      final notificationUtil = MockNotificationUtil();
+      final authApi = MockAuthApi();
 
       await _setupLocator();
       final _locator = GetIt.instance;
@@ -614,7 +615,7 @@ void main() {
       expect(ApiPrefs.isLoggedIn(), true);
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Sign Out
@@ -640,8 +641,8 @@ void main() {
     testWidgets('tapping Switch Users from nav drawer signs user out and returns to the Login Landing screen',
         (tester) async {
       final reminderDb = MockReminderDb();
-      final calendarFilterDb = _MockCalendarFilterDb();
-      final notificationUtil = _MockNotificationUtil();
+      final calendarFilterDb = MockCalendarFilterDb();
+      final notificationUtil = MockNotificationUtil();
 
       await _setupLocator();
       final _locator = GetIt.instance;
@@ -662,7 +663,7 @@ void main() {
       expect(ApiPrefs.isLoggedIn(), true);
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Sign Out
@@ -687,7 +688,7 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      User first;
+      late User first;
       interactor.getStudents().then((students) {
         first = students.first;
       });
@@ -706,14 +707,14 @@ void main() {
       // Tap the user header, expanding it
       // There will be two instances, one in the header and one in the student switcher
       // we want to tap the first one (the one in the header)
-      await tester.tap(find.text(first.shortName).at(0));
+      await tester.tap(find.text(first.shortName!).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide out
       expect(slideAnimation.value, expanded);
 
       // Tap the user header, retracting it
       // There will be two instances, one in the header and one in the student switcher
       // we want to tap the first one (the one in the header)
-      await tester.tap(find.text(first.shortName).at(0));
+      await tester.tap(find.text(first.shortName!).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide back
       expect(slideAnimation.value, retracted);
     });
@@ -727,8 +728,8 @@ void main() {
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
-      User first;
-      User second;
+      late User first;
+      late User second;
       interactor.getStudents().then((students) {
         first = students.first;
         second = students[1];
@@ -748,12 +749,12 @@ void main() {
       // Tap the user header, expanding it
       // There will be two instances, one in the header and one in the student switcher
       // we want to tap the first one (the one in the header)
-      await tester.tap(find.text(first.shortName).at(0));
+      await tester.tap(find.text(first.shortName!).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide out
       expect(slideAnimation.value, expanded);
 
       // Tap on a user
-      await tester.tap(find.text(second.shortName));
+      await tester.tap(find.text(second.shortName!));
       await tester.pumpAndSettle(); // Wait for user switcher to slide back
 
       expect(slideAnimation.value, retracted);
@@ -790,7 +791,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Tap the 'Act As User' button
@@ -816,7 +817,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Tap the 'Stop Acting As User' button
@@ -887,7 +888,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       verify(inboxApi.getUnreadCount()).called(1);
@@ -904,7 +905,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       when(inboxApi.getUnreadCount())
@@ -927,7 +928,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       verify(alertsApi.getUnreadCount(any)).called(1);
@@ -943,7 +944,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       // Assert there's no text in the alerts-count
@@ -961,7 +962,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('88'), findsOneWidget);
@@ -978,7 +979,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState?.openDrawer();
       await tester.pumpAndSettle();
 
       when(alertsApi.getUnreadCount(any))
@@ -1202,10 +1203,6 @@ class MockHelpScreenInteractor extends HelpScreenInteractor {
   Future<List<HelpLink>> getObserverCustomHelpLinks({bool forceRefresh = false}) => Future.value(<HelpLink>[]);
 }
 
-class MockAlertsInteractor extends AlertsInteractor {}
-
-class AlertsApiMock extends Mock implements AlertsApi {}
-
 class MockInteractor extends DashboardInteractor {
   bool includePronouns;
   bool generateStudents;
@@ -1227,7 +1224,7 @@ class MockInteractor extends DashboardInteractor {
       : [];
 
   @override
-  Future<User> getSelf({app}) async => generateSelf
+  Future<User?> getSelf({app}) async => generateSelf
       ? CanvasModelTestUtils.mockUser(
           name: 'Marlene Name',
           shortName: 'Marlene',
@@ -1241,8 +1238,8 @@ class MockInteractor extends DashboardInteractor {
 
 class MockCoursesInteractor extends CoursesInteractor {
   @override
-  Future<List<Course>> getCourses({bool isRefresh = false, String studentId = null}) async {
-    var courses = List<Course>();
+  Future<List<Course>> getCourses({bool isRefresh = false, String? studentId = null}) async {
+    var courses = <Course>[];
     return courses;
   }
 }
@@ -1251,13 +1248,3 @@ class MockManageStudentsInteractor extends ManageStudentsInteractor {
   @override
   Future<List<User>> getStudents({bool forceRefresh = false}) => Future.value([]);
 }
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
-
-class _MockNotificationUtil extends Mock implements NotificationUtil {}
-
-class MockPlannerApi extends Mock implements PlannerApi {}
-
-class _MockAnalytics extends Mock implements Analytics {}
-
-class _MockAuthApi extends Mock implements AuthApi {}

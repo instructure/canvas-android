@@ -132,11 +132,11 @@ void main() {
   });
 }
 
-HelpLinks createHelpLinks({List<HelpLink> customLinks, List<HelpLink> defaultLinks}) => HelpLinks((b) => b
+HelpLinks createHelpLinks({List<HelpLink>? customLinks, List<HelpLink>? defaultLinks}) => HelpLinks((b) => b
   ..customHelpLinks = ListBuilder(customLinks != null ? customLinks : [createHelpLink()])
   ..defaultHelpLinks = ListBuilder(defaultLinks != null ? defaultLinks : [createHelpLink()]));
 
-HelpLink createHelpLink({String id, String text, String url, List<AvailableTo> availableTo}) => HelpLink((b) => b
+HelpLink createHelpLink({String? id, String? text, String? url, List<AvailableTo>? availableTo}) => HelpLink((b) => b
   ..id = id ?? ''
   ..type = ''
   ..availableTo = ListBuilder(availableTo != null ? availableTo : <AvailableTo>[])

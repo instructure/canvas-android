@@ -33,6 +33,7 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final login = Login((b) => b
@@ -50,8 +51,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays loadingIndicator', (tester) async {
-    var interactor = _MockInteractor();
-    var nav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var nav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => nav);
@@ -70,7 +71,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Routes to not-a-parent screen if not an observer and cannot masquerade',
       (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockSplashScreenInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -92,8 +93,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Routes to Acceptable Use Policy screen if needed', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
@@ -116,8 +117,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Routes to dashboard if not an observer but can masquerade', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
@@ -140,8 +141,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Routes to dashboard if an observer but cannot masquerade', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
@@ -164,7 +165,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Routes to login screen when the user is not logged in', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockSplashScreenInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -180,7 +181,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks(
       'Routes to login screen when the user is not logged in and camera count throws error', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockSplashScreenInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -224,8 +225,8 @@ void main() {
    */
 
   testWidgetsWithAccessibilityChecks('Routes to dashboard without students on error', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
@@ -257,8 +258,8 @@ void main() {
       ..masqueradeUser = masqueradeUser.toBuilder());
     var masqueradeInfo = AppLocalizations().actingAsUser(masqueradeUser.name);
 
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
@@ -288,7 +289,3 @@ void main() {
     ApiPrefs.clean();
   });
 }
-
-class _MockInteractor extends Mock implements SplashScreenInteractor {}
-
-class _MockNav extends Mock implements QuickNav {}

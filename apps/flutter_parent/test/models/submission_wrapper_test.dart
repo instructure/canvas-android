@@ -57,10 +57,10 @@ void main() {
     test('Single submission', () {
       final encodedJson = jsonDecode(submissionString2);
 
-      SubmissionWrapper submissionWrapper = jsonSerializers.deserializeWith(SubmissionWrapper.serializer, encodedJson);
+      SubmissionWrapper? submissionWrapper = jsonSerializers.deserializeWith(SubmissionWrapper.serializer, encodedJson);
 
-      expect(submissionWrapper.submission, equals(submission2));
-      expect(submissionWrapper.submissionList, isNull);
+      expect(submissionWrapper?.submission, equals(submission2));
+      expect(submissionWrapper?.submissionList, isNull);
     });
 
     test('List of submissions', () {
@@ -68,10 +68,10 @@ void main() {
       final encodedJson = jsonDecode(jsonArray);
       print(encodedJson.toString());
 
-      SubmissionWrapper submissionWrapper = jsonSerializers.deserializeWith(SubmissionWrapper.serializer, encodedJson);
+      SubmissionWrapper? submissionWrapper = jsonSerializers.deserializeWith(SubmissionWrapper.serializer, encodedJson);
 
-      expect(submissionWrapper.submission, isNull);
-      expect(submissionWrapper.submissionList, equals([submission1, submission2]));
+      expect(submissionWrapper?.submission, isNull);
+      expect(submissionWrapper?.submissionList, equals([submission1, submission2]));
     });
   });
 

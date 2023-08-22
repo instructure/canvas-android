@@ -24,7 +24,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 
 class SubmissionSeedApi {
   static Future<Submission> createSubmission(String courseId, Assignment assignment, String asUserId) {
-    SubmissionTypes submissionType = assignment.submissionTypes.first;
+    SubmissionTypes? submissionType = assignment.submissionTypes?.first;
     String submissionTypeString = "";
     switch (submissionType) {
       case SubmissionTypes.onlineTextEntry:
@@ -37,8 +37,8 @@ class SubmissionSeedApi {
         "unknown";
         break;
     }
-    String url = (submissionType == SubmissionTypes.onlineUrl) ? faker.internet.httpsUrl() : null;
-    String textBody = (submissionType == SubmissionTypes.onlineTextEntry) ? faker.lorem.sentence() : null;
+    String? url = (submissionType == SubmissionTypes.onlineUrl) ? faker.internet.httpsUrl() : null;
+    String? textBody = (submissionType == SubmissionTypes.onlineTextEntry) ? faker.lorem.sentence() : null;
     final submissionWrapper = CreateSubmissionWrapper((b) => b
       ..submission.body = textBody
       ..submission.url = url

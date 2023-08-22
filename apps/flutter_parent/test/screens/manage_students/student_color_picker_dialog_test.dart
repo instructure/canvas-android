@@ -25,11 +25,12 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../pairing/pairing_util_test.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
-  _MockStudentColorPickerInteractor interactor = _MockStudentColorPickerInteractor();
+  MockStudentColorPickerInteractor interactor = MockStudentColorPickerInteractor();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<StudentColorPickerInteractor>(() => interactor);
@@ -62,7 +63,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // 'Plum' color should be selected
-    var predicate = (Widget w) => w is Semantics && w.properties.label == l10n.colorPlum && w.properties.selected;
+    var predicate = (Widget w) => w is Semantics && w.properties.label == l10n.colorPlum && w.properties.selected!;
     expect(find.byWidgetPredicate(predicate), findsOneWidget);
   });
 
@@ -173,5 +174,3 @@ void main() {
     expect(find.text(l10n.errorSavingColor), findsOneWidget);
   });
 }
-
-class _MockStudentColorPickerInteractor extends Mock implements StudentColorPickerInteractor {}

@@ -49,9 +49,9 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   TextStyle _defaultSpanStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
   TextStyle _linkSpanStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
 
-  Future<TermsOfService>? _tosFuture;
+  Future<TermsOfService?>? _tosFuture;
 
-  Future<TermsOfService> _getToS() {
+  Future<TermsOfService?> _getToS() {
     return locator<AccountCreationInteractor>()
         .getToSForAccount(widget.pairingInfo.accountId, widget.pairingInfo.domain);
   }
@@ -275,7 +275,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   Widget _createAccountTOS() {
     return FutureBuilder(
         future: _tosFuture,
-        builder: (context, AsyncSnapshot<TermsOfService> snapshot) {
+        builder: (context, AsyncSnapshot<TermsOfService?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
           }

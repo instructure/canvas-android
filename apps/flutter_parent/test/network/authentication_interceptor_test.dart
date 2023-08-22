@@ -25,6 +25,7 @@ import 'package:test/test.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final login = Login((b) => b
@@ -54,7 +55,7 @@ void main() {
 
   test('returns error if response code is not 401', () async {
     await setupPlatformChannels();
-    final error = DioError(requestOptions: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 403));
+    final error = DioException(requestOptions: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 403, requestOptions: RequestOptions()));
 
     // Test the error response
     await interceptor.onError(error, errorHandler);
@@ -63,7 +64,7 @@ void main() {
 
   test('returns error if path is accounts/self', () async {
     await setupPlatformChannels();
-    final error = DioError(requestOptions: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 401));
+    final error = DioException(requestOptions: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 401, requestOptions: RequestOptions()));
 
     // Test the error response
     await interceptor.onError(error, errorHandler);
@@ -72,9 +73,9 @@ void main() {
 
   test('returns error if headers have the retry header', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
-    final error = DioError(
+    final error = DioException(
       requestOptions: RequestOptions(headers: {'mobile_refresh': 'mobile_refresh'}),
-      response: Response(statusCode: 401),
+      response: Response(statusCode: 401, requestOptions: RequestOptions()),
     );
 
     // Test the error response
@@ -88,7 +89,7 @@ void main() {
 
   test('returns error if login is null', () async {
     await setupPlatformChannels();
-    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401, requestOptions: RequestOptions()));
 
     // Test the error response
     await interceptor.onError(error, errorHandler);
@@ -101,7 +102,7 @@ void main() {
 
   test('returns error if login client id is null', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login.rebuild((b) => b..clientId = null)));
-    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioException(requestOptions: RequestOptions(), response: Response(statusCode: 401, requestOptions: RequestOptions()));
 
     // Test the error response
     await interceptor.onError(error, errorHandler);
@@ -114,7 +115,7 @@ void main() {
 
   test('returns error if login client secret is null', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login.rebuild((b) => b..clientSecret = null)));
-    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401, requestOptions: RequestOptions()));
 
     // Test the error response
     await interceptor.onError(error, errorHandler);
@@ -127,7 +128,7 @@ void main() {
 
   test('returns error if the refresh api call failed', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
-    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401, requestOptions: RequestOptions()));
 
     when(authApi.refreshToken()).thenAnswer((_) => Future.error('Failed to refresh'));
 
@@ -147,7 +148,7 @@ void main() {
 
     final tokens = CanvasToken((b) => b..accessToken = 'token');
     final path = 'test/path/stuff';
-    final error = DioError(requestOptions: RequestOptions(path: path), response: Response(statusCode: 401));
+    final error = DioException(requestOptions: RequestOptions(path: path), response: Response(statusCode: 401, requestOptions: RequestOptions()));
     final expectedOptions = RequestOptions(path: path, headers: {
       'Authorization': 'Bearer ${tokens.accessToken}',
       'mobile_refresh': 'mobile_refresh',
@@ -164,7 +165,7 @@ void main() {
     verify(authApi.refreshToken()).called(1);
     final actualOptions = verify(dio.fetch(captureAny)).captured[0] as RequestOptions;
     expect(actualOptions.headers, expectedOptions.headers);
-    expect(ApiPrefs.getCurrentLogin().accessToken, tokens.accessToken);
+    expect(ApiPrefs.getCurrentLogin()?.accessToken, tokens.accessToken);
     verifyNever(analytics.logEvent(any, extras: anyNamed('extras')));
   });
 }

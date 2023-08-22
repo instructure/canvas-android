@@ -27,10 +27,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:test/test.dart';
 
 import '../../test_app.dart';
+import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   test('openExternally calls AndroidIntent with correct parameters', () async {
-    var intentVeneer = _MockAndroidIntentVeneer();
+    var intentVeneer = MockAndroidIntentVeneer();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<AndroidIntentVeneer>(() => intentVeneer);
     });
@@ -48,7 +49,7 @@ void main() {
   });
 
   test('checkStoragePermission returns true when permission is already granted', () async {
-    var permissionHandler = _MockPermissionHandler();
+    var permissionHandler = MockPermissionHandler();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
     });
@@ -65,7 +66,7 @@ void main() {
   });
 
   test('checkStoragePermission returns false when permission is rejected', () async {
-    var permissionHandler = _MockPermissionHandler();
+    var permissionHandler = MockPermissionHandler();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
     });
@@ -86,7 +87,7 @@ void main() {
   });
 
   test('checkStoragePermission returns true when permission is request and granted', () async {
-    var permissionHandler = _MockPermissionHandler();
+    var permissionHandler = MockPermissionHandler();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
     });
@@ -107,9 +108,9 @@ void main() {
   });
 
   test('downloadFile does nothing when permission is not granted', () async {
-    var permissionHandler = _MockPermissionHandler();
-    var pathProvider = _MockPathProvider();
-    var downloader = _MockDownloader();
+    var permissionHandler = MockPermissionHandler();
+    var pathProvider = MockPathProviderVeneer();
+    var downloader = MockFlutterDownloaderVeneer();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
       locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
@@ -135,9 +136,9 @@ void main() {
   });
 
   test('downloadFile calls PathProvider and FlutterDownloader with correct parameters', () async {
-    var permissionHandler = _MockPermissionHandler();
-    var pathProvider = _MockPathProvider();
-    var downloader = _MockDownloader();
+    var permissionHandler = MockPermissionHandler();
+    var pathProvider = MockPathProviderVeneer();
+    var downloader = MockFlutterDownloaderVeneer();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
       locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
@@ -166,11 +167,3 @@ void main() {
     );
   });
 }
-
-class _MockPathProvider extends Mock implements PathProviderVeneer {}
-
-class _MockPermissionHandler extends Mock implements PermissionHandler {}
-
-class _MockDownloader extends Mock implements FlutterDownloaderVeneer {}
-
-class _MockAndroidIntentVeneer extends Mock implements AndroidIntentVeneer {}

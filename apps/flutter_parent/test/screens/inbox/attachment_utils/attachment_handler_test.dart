@@ -25,6 +25,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   setUpAll(() async {
@@ -47,7 +48,7 @@ void main() {
   test('Calls onStageChange when stage changes', () {
     var handler = AttachmentHandler(File(''));
 
-    AttachmentUploadStage lastStage = null;
+    AttachmentUploadStage? lastStage = null;
     handler.onStageChange = (stage) => lastStage = stage;
 
     handler.stage = AttachmentUploadStage.CREATED;
@@ -64,8 +65,8 @@ void main() {
   });
 
   test('Notifies listeners during upload', () async {
-    final api = _MockFileUploadApi();
-    final pathProvider = _MockPathProvider();
+    final api = MockFileApi();
+    final pathProvider = MockPathProviderVeneer();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<FileApi>(() => api);
@@ -119,7 +120,7 @@ void main() {
   });
 
   test('Sets failed state when API fails', () async {
-    final api = _MockFileUploadApi();
+    final api = MockFileApi();
     await setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
 
     when(api.uploadConversationFile(any, any)).thenAnswer((_) => Future.error('Error!'));
@@ -130,7 +131,7 @@ void main() {
   });
 
   test('performUpload does nothing if stage is uploading or finished', () async {
-    final api = _MockFileUploadApi();
+    final api = MockFileApi();
     await setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
 
     var handler = AttachmentHandler(File(''))
@@ -182,7 +183,7 @@ void main() {
   });
 
   test('cleans up file if local', () async {
-    final pathProvider = _MockPathProvider();
+    final pathProvider = MockPathProviderVeneer();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
@@ -205,7 +206,7 @@ void main() {
   });
 
   test('does not clean up file if not local', () async {
-    final pathProvider = _MockPathProvider();
+    final pathProvider = MockPathProviderVeneer();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
@@ -228,7 +229,7 @@ void main() {
   });
 
   test('cleanUpFile prints error on failure', interceptPrint((log) async {
-    final pathProvider = _MockPathProvider();
+    final pathProvider = MockPathProviderVeneer();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
@@ -244,7 +245,7 @@ void main() {
   }));
 
   test('deleteAttachment calls API if attachment exists', () async {
-    final api = _MockFileUploadApi();
+    final api = MockFileApi();
     await setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
     when(api.deleteFile(any)).thenAnswer((_) async {});
 
@@ -255,7 +256,7 @@ void main() {
   });
 
   test('deleteAttachment does not call API if attachment is null', () async {
-    final api = _MockFileUploadApi();
+    final api = MockFileApi();
     await setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
 
     var handler = AttachmentHandler(null);
@@ -265,7 +266,7 @@ void main() {
   });
 
   test('deleteAttachment prints error on failure', interceptPrint((log) async {
-    final api = _MockFileUploadApi();
+    final api = MockFileApi();
     await setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
     when(api.deleteFile(any)).thenAnswer((_) => Future.error(Error()));
 
@@ -282,7 +283,3 @@ interceptPrint(testBody(List<String> log)) => () {
       final spec = ZoneSpecification(print: (self, parent, zone, String msg) => log.add(msg));
       return Zone.current.fork(specification: spec).run(() => testBody(log));
     };
-
-class _MockFileUploadApi extends Mock implements FileApi {}
-
-class _MockPathProvider extends Mock implements PathProviderVeneer {}

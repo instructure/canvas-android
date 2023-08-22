@@ -92,29 +92,29 @@ class EncryptedSharedPreferences {
   /// Saves a boolean [value] to persistent storage in the background.
   ///
   /// If [value] is null, this is equivalent to calling [remove()] on the [key].
-  Future<bool> setBool(String key, bool value) => _setValue('Bool', key, value);
+  Future<bool> setBool(String key, bool? value) => _setValue('Bool', key, value);
 
   /// Saves an integer [value] to persistent storage in the background.
   ///
   /// If [value] is null, this is equivalent to calling [remove()] on the [key].
-  Future<bool> setInt(String key, int value) => _setValue('Int', key, value);
+  Future<bool> setInt(String key, int? value) => _setValue('Int', key, value);
 
   /// Saves a double [value] to persistent storage in the background.
   ///
   /// Android doesn't support storing doubles, so it will be stored as a float.
   ///
   /// If [value] is null, this is equivalent to calling [remove()] on the [key].
-  Future<bool> setDouble(String key, double value) => _setValue('Double', key, value);
+  Future<bool> setDouble(String key, double? value) => _setValue('Double', key, value);
 
   /// Saves a string [value] to persistent storage in the background.
   ///
   /// If [value] is null, this is equivalent to calling [remove()] on the [key].
-  Future<bool> setString(String key, String value) => _setValue('String', key, value);
+  Future<bool> setString(String key, String? value) => _setValue('String', key, value);
 
   /// Saves a list of strings [value] to persistent storage in the background.
   ///
   /// If [value] is null, this is equivalent to calling [remove()] on the [key].
-  Future<bool> setStringList(String key, List<String> value) => _setValue('StringList', key, value);
+  Future<bool> setStringList(String key, List<String>? value) => _setValue('StringList', key, value);
 
   /// Removes an entry from persistent storage.
   Future<bool> remove(String key) => _setValue(null, key, null);
@@ -141,7 +141,7 @@ class EncryptedSharedPreferences {
   Future<bool> commit() async => true;
 
   /// Completes with true once the user preferences for the app has been cleared.
-  Future<bool> clear() {
+  Future<bool> clear() async {
     _preferenceCache.clear();
     return _store.clear();
   }
@@ -171,15 +171,15 @@ class EncryptedSharedPreferences {
   ///
   /// If the singleton instance has been initialized already, it is nullified.
   @visibleForTesting
-  static void setMockInitialValues(Map<String, dynamic> values) {
-    final Map<String, dynamic> newValues = values.map<String, dynamic>((String key, dynamic value) {
+  static void setMockInitialValues(Map<String, Object> values) {
+    final Map<String, Object> newValues = values.map<String, Object>((String key, Object value) {
       String newKey = key;
       if (!key.startsWith(_prefix)) {
         newKey = '$_prefix$key';
       }
-      return MapEntry<String, dynamic>(newKey, value);
+      return MapEntry<String, Object>(newKey, value);
     });
-    EncryptedSharedPreferencesStorePlatform.instance = InMemoryEncryptedSharedPreferencesStore.withData(newValues as Map<String, String>);
+    EncryptedSharedPreferencesStorePlatform.instance = InMemoryEncryptedSharedPreferencesStore.withData(newValues);
     _completer = null;
   }
 }

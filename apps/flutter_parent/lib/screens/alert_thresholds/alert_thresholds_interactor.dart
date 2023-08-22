@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertThresholdsInteractor {
-  Future<List<AlertThreshold>> getAlertThresholdsForStudent(String studentId, {bool forceRefresh = true}) async {
+  Future<List<AlertThreshold>?> getAlertThresholdsForStudent(String studentId, {bool forceRefresh = true}) async {
     return locator<AlertsApi>().getAlertThresholds(studentId, forceRefresh);
   }
 

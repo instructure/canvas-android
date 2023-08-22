@@ -27,7 +27,7 @@ import 'pages/calendar_page.dart';
 import 'pages/dashboard_page.dart';
 
 void main() {
-  FlutterDriver driver;
+  FlutterDriver? driver;
 
   // Connect to the Flutter driver before running any tests.
   setUpAll(() async {
@@ -37,7 +37,7 @@ void main() {
   // Close the connection to the driver after the tests have completed.
   tearDownAll(() async {
     if (driver != null) {
-      driver.close();
+      driver!.close();
     }
   });
 
@@ -52,7 +52,7 @@ void main() {
   // as we usually run the test M-F.
   test('Calendar E2E', () async {
     // Wait for seeding to complete
-    var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
+    var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
     var parent = seedContext.getNamedObject<SeededUser>("parent");
@@ -73,7 +73,7 @@ void main() {
     // Let's try opening an assignment
     await CalendarPage.openAssignment(driver, assignment1);
     await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignment1);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
 
     // Let's filter out the first course and try again
     await CalendarPage.toggleFilter(driver, courses[0]);

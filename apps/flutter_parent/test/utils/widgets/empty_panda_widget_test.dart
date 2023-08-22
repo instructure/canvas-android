@@ -56,7 +56,7 @@ void main() {
     await tester.pumpWidget(_testableWidget(EmptyPandaWidget(buttonText: buttonText)));
     await tester.pumpAndSettle();
 
-    expect(find.widgetWithText(FlatButton, buttonText), findsOneWidget);
+    expect(find.widgetWithText(TextButton, buttonText), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('tapping button invokes callback', (tester) async {
@@ -66,7 +66,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.widgetWithText(FlatButton, buttonText), findsOneWidget);
+    expect(find.widgetWithText(TextButton, buttonText), findsOneWidget);
     await tester.tap(find.text(buttonText));
     expect(called, isTrue);
   });
@@ -130,7 +130,7 @@ void main() {
     expect(find.byType(Text), findsNWidgets(3));
     expect(find.text(title), findsOneWidget);
     expect(find.text(subtitle), findsOneWidget);
-    expect(find.widgetWithText(FlatButton, buttonText), findsOneWidget);
+    expect(find.widgetWithText(TextButton, buttonText), findsOneWidget);
   }, skip: true);
 
   testWidgetsWithAccessibilityChecks('shows a header', (tester) async {

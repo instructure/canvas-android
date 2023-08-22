@@ -21,7 +21,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 
 class AccountCreationInteractor {
-  Future<TermsOfService> getToSForAccount(String accountId, String domain) {
+  Future<TermsOfService?> getToSForAccount(String accountId, String domain) {
     return locator<AccountsApi>().getTermsOfServiceForAccount(accountId, domain);
   }
 

@@ -23,7 +23,7 @@ import 'driver_seed_utils.dart';
 import 'pages/dashboard_page.dart';
 
 void main() {
-  FlutterDriver driver;
+  FlutterDriver? driver;
 
   // Connect to the Flutter driver before running any tests.
   setUpAll(() async {
@@ -33,13 +33,13 @@ void main() {
   // Close the connection to the driver after the tests have completed.
   tearDownAll(() async {
     if (driver != null) {
-      driver.close();
+      driver?.close();
     }
   });
 
   test('Dashboard E2E', () async {
     // Wait for seeding to complete
-    var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
+    var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
     var students = [
@@ -67,6 +67,6 @@ void main() {
     await DashboardPage.openNavDrawer(driver);
 
     // And the name of our parent is displayed
-    await driver.waitFor(find.text(parent.name));
+    await driver?.waitFor(find.text(parent.name));
   }, timeout: Timeout(Duration(minutes: 1))); // Change timeout from 30 sec default to 1 min
 }

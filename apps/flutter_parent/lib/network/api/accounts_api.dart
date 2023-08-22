@@ -36,7 +36,7 @@ class AccountsApi {
     return fetch(canvasDio().get('accounts/self/terms_of_service'));
   }
 
-  Future<TermsOfService> getTermsOfServiceForAccount(String accountId, String domain) {
+  Future<TermsOfService?> getTermsOfServiceForAccount(String accountId, String domain) {
     var dio = DioConfig(baseUrl: 'https://$domain/api/v1/', forceRefresh: true).dio;
     return fetch(dio.get('accounts/$accountId/terms_of_service'));
   }

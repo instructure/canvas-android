@@ -42,6 +42,7 @@ import '../../../utils/accessibility_utils.dart';
 import '../../../utils/finders.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../create_conversation/create_conversation_screen_test.dart';
 
 void main() {
@@ -82,12 +83,12 @@ void main() {
     await _setupInteractor();
 
     final conversation = _makeConversation();
-    final message = conversation.messages[1];
+    final message = conversation.messages![1];
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, false)));
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(MessageWidget), matching: find.richText(message.body)), findsOneWidget);
+    expect(find.descendant(of: find.byType(MessageWidget), matching: find.richText(message.body!)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('tapping attachment on message being replied to shows viewer', (tester) async {
@@ -131,9 +132,9 @@ void main() {
     await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, null, false)));
     await tester.pumpAndSettle();
 
-    final expectedMessage = conversation.messages[0];
+    final expectedMessage = conversation.messages![0];
     expect(
-        find.descendant(of: find.byType(MessageWidget), matching: find.richText(expectedMessage.body)), findsOneWidget);
+        find.descendant(of: find.byType(MessageWidget), matching: find.richText(expectedMessage.body!)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('sending disabled when no message is present', (tester) async {
@@ -179,7 +180,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('sending calls interactor with correct parameters', (tester) async {
     final interactor = await _setupInteractor();
     final conversation = _makeConversation();
-    final message = conversation.messages[0];
+    final message = conversation.messages![0];
     final replyAll = true;
     final text = 'some text here';
 
@@ -633,11 +634,11 @@ void main() {
 }
 
 /// Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
-Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavigatorObserver observer}) async {
+Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavigatorObserver? observer}) async {
   if (observer == null) observer = MockNavigatorObserver();
   final app = TestApp(
     Builder(
-      builder: (context) => FlatButton(
+      builder: (context) => TextButton(
         child: Semantics(label: 'test', child: const SizedBox()),
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget)),
       ),
@@ -647,15 +648,13 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
 
   await tester.pumpWidget(app);
   await tester.pumpAndSettle();
-  await tester.tap(find.byType(FlatButton));
+  await tester.tap(find.byType(TextButton));
   await tester.pumpAndSettle();
-  if (observer != null) {
-    verify(observer.didPush(any, any)).called(2); // Twice, first for the initial page, then for the navigator route
-  }
+  verify(observer.didPush(any, any)).called(2); // Twice, first for the initial page, then for the navigator route
 }
 
-Future<_MockInteractor> _setupInteractor() async {
-  final interactor = _MockInteractor();
+Future<MockConversationReplyInteractor> _setupInteractor() async {
+  final interactor = MockConversationReplyInteractor();
   await setupTestLocator((locator) {
     locator.registerFactory<ConversationReplyInteractor>(() => interactor);
   });
@@ -693,8 +692,6 @@ Conversation _makeConversation() {
         ..participatingUserIds = ListBuilder(['self', 'author1', 'author2'])),
     ]));
 }
-
-class _MockInteractor extends Mock implements ConversationReplyInteractor {}
 
 class _MockAttachmentHandler extends AttachmentHandler {
   _MockAttachmentHandler() : super(null);

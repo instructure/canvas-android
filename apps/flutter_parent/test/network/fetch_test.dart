@@ -21,6 +21,7 @@ import 'package:test/test.dart';
 
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   group('fetch', () {
@@ -33,6 +34,7 @@ void main() {
       bool fail = false;
       await fetch(_requestFail()).catchError((_) {
         fail = true; // Don't return, just update the flag
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
@@ -51,7 +53,8 @@ void main() {
     test('catches errors and returns a Future.error', () async {
       bool fail = false;
       await fetchFirstPage(_requestFail()).catchError((_) {
-        fail = true; // Don't return, just update the flag
+        fail = true;
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
@@ -64,7 +67,8 @@ void main() {
       await setupPlatformChannels();
       bool fail = false;
       await fetchNextPage(null).catchError((_) {
-        fail = true; // Don't return, just update the flag
+        fail = true;
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
@@ -108,13 +112,14 @@ void main() {
       bool fail = false;
       await fetchList(_requestFail()).catchError((_) {
         fail = true; // Don't return, just update the flag
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
   });
 }
 
-Future<Response<dynamic>> _request(data, {Headers headers}) async => Response(data: data, headers: headers);
+Future<Response<dynamic>> _request(data, {Headers? headers}) async => Response(data: data, headers: headers, requestOptions: RequestOptions());
 
 Future<Response<dynamic>> _requestFail() async => throw 'ErRoR';
 

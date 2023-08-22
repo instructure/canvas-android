@@ -34,7 +34,7 @@ import 'manage_students_interactor.dart';
 ///
 /// Pull to refresh and updating when a pairing code is used are handled, however.
 class ManageStudentsScreen extends StatefulWidget {
-  final List<User> _students;
+  final List<User>? _students;
 
   ManageStudentsScreen(this._students, {super.key});
 

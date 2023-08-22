@@ -31,6 +31,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   group('Render', () {
@@ -50,9 +51,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for the names of the students and the add student button
-      expect(find.text(student1.shortName), findsOneWidget);
-      expect(find.text(student2.shortName), findsOneWidget);
-      expect(find.text(student3.shortName), findsOneWidget);
+      expect(find.text(student1.shortName!), findsOneWidget);
+      expect(find.text(student2.shortName!), findsOneWidget);
+      expect(find.text(student3.shortName!), findsOneWidget);
       expect(find.text(AppLocalizations().addStudent), findsOneWidget);
     });
   });
@@ -87,14 +88,14 @@ void main() {
       expect(notifier.value, null);
 
       // Check the initial value of the theme, should be default student color (electric)
-      var state = ParentTheme.of(TestApp.navigatorKey.currentContext);
-      expect(state.studentColor, StudentColorSet.electric.light);
+      var state = ParentTheme.of(TestApp.navigatorKey.currentContext!);
+      expect(state?.studentColor, StudentColorSet.electric.light);
 
       // Check for the second student
-      expect(find.text(student2.shortName), findsOneWidget);
+      expect(find.text(student2.shortName!), findsOneWidget);
 
       // Tap on the student
-      await tester.tap(find.text(student2.shortName));
+      await tester.tap(find.text(student2.shortName!));
       await tester.pumpAndSettle(); // Wait for animations to settle
       await tester.pump();
 
@@ -102,7 +103,7 @@ void main() {
       expect(student2, notifier.value);
 
       // Check the theme, should be correct color for student
-      var expectedColor = (await state.getColorsForStudent(student2.id)).light;
+      var expectedColor = (await state!.getColorsForStudent(student2.id)).light;
       expect(state.studentColor, expectedColor);
 
       // Check to make sure we called the onTap function passed in
@@ -113,8 +114,8 @@ void main() {
     testWidgetsWithAccessibilityChecks('add student tap calls PairingUtil', (tester) async {
       var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
 
-      PairingUtil pairingUtil = MockPairingUtil();
-      AccountsApi accountsApi = MockAccountsApi();
+      MockPairingUtil pairingUtil = MockPairingUtil();
+      MockAccountsApi accountsApi = MockAccountsApi();
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -130,7 +131,7 @@ void main() {
       expect(find.text(AppLocalizations().addStudent), findsOneWidget);
 
       // Tap the 'Add Student' button and wait for any transition animations to finish
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
       // Check that PairingUtil was called
@@ -142,8 +143,8 @@ void main() {
     var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
     var callbackCalled = false;
 
-    PairingUtil pairingUtil = MockPairingUtil();
-    AccountsApi accountsApi = MockAccountsApi();
+    MockPairingUtil pairingUtil = MockPairingUtil();
+    MockAccountsApi accountsApi = MockAccountsApi();
     final analytics = _MockAnalytics();
 
     when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
@@ -167,7 +168,7 @@ void main() {
     expect(find.text(AppLocalizations().addStudent), findsOneWidget);
 
     // Tap the 'Add Student' button and wait for any transition animations to finish
-    await tester.tap(find.byType(RaisedButton));
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     // Verify

@@ -20,6 +20,7 @@ import 'package:test/test.dart';
 
 import '../test_app.dart';
 import '../test_helpers/mock_helpers.dart';
+import '../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final database = MockDatabase();

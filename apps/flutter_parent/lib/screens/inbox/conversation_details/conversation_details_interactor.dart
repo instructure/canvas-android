@@ -40,7 +40,7 @@ class ConversationDetailsInteractor {
 
   String? getCurrentUserId() => ApiPrefs.getUser()?.id;
 
-  void viewAttachment(BuildContext context, Attachment attachment) {
+  Future<void> viewAttachment(BuildContext context, Attachment attachment) async {
     locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
   }
 }

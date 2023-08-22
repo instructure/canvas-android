@@ -34,7 +34,7 @@ class CalendarScreen extends StatefulWidget {
   static final startDateKey = 'startDate';
   static final startViewKey = 'startView';
 
-  CalendarScreen({required this.startDate, this.startView = CalendarView.Week, super.key});
+  CalendarScreen({this.startDate, this.startView = CalendarView.Week, super.key});
 
   @override
   State<StatefulWidget> createState() => CalendarScreenState();

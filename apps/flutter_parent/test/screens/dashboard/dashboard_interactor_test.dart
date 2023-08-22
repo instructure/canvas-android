@@ -29,6 +29,7 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   test('getStudents calls getObserveeEnrollments from EnrollmentsApi', () async {
@@ -154,7 +155,7 @@ User _mockStudent(String name) => User((b) => b
   ..sortableName = name
   ..build());
 
-Enrollment _mockEnrollment(UserBuilder observedUser) => Enrollment((b) => b
+Enrollment _mockEnrollment(UserBuilder? observedUser) => Enrollment((b) => b
   ..enrollmentState = ''
   ..observedUser = observedUser
   ..build());

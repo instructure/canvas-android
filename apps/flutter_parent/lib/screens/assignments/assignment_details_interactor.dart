@@ -82,7 +82,7 @@ class AssignmentDetailsInteractor {
     DateTime date,
     String assignmentId,
     String courseId,
-    String title,
+    String? title,
     String body,
   ) async {
     var reminder = Reminder((b) => b

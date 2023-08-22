@@ -19,9 +19,9 @@ import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsInteractor {
-  Future<AlertsList> getAlertsForStudent(String studentId, bool forceRefresh) async {
+  Future<AlertsList?> getAlertsForStudent(String studentId, bool forceRefresh) async {
     final alertsFuture = _alertsApi().getAlertsDepaginated(studentId, forceRefresh).then((list) => list
-      ..sort((a, b) {
+      ?..sort((a, b) {
         if (a.actionDate == null && b.actionDate == null) return 0;
         if (a.actionDate == null && b.actionDate != null) return -1;
         if (a.actionDate != null && b.actionDate == null) return 1;
@@ -35,7 +35,7 @@ class AlertsInteractor {
     return AlertsList(await alertsFuture, await thresholdsFuture);
   }
 
-  Future<Alert> markAlertRead(String studentId, String alertId) {
+  Future<Alert?> markAlertRead(String studentId, String alertId) {
     return _alertsApi().updateAlertWorkflow(studentId, alertId, AlertWorkflowState.read.name);
   }
 

@@ -20,7 +20,7 @@ class AnnouncementViewState {
   final String _toolbarTitle;
   final String _announcementTitle;
   final String _announcementMessage;
-  final DateTime _postedAt;
+  final DateTime? _postedAt;
   final Attachment? _attachment;
 
   AnnouncementViewState(
@@ -37,7 +37,7 @@ class AnnouncementViewState {
 
   String get announcementMessage => _announcementMessage;
 
-  DateTime get postedAt => _postedAt;
+  DateTime? get postedAt => _postedAt;
 
   Attachment? get attachment => _attachment;
 }

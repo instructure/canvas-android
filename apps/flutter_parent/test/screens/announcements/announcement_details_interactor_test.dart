@@ -29,6 +29,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   //region data config
@@ -75,8 +76,8 @@ void main() {
 
   //endregion
 
-  final announcementApi = _MockAnnouncementApi();
-  final courseApi = _MockCourseApi();
+  final announcementApi = MockAnnouncementApi();
+  final courseApi = MockCourseApi();
 
   setupTestLocator((locator) {
     locator.registerFactory<AnnouncementApi>(() => announcementApi);
@@ -152,7 +153,3 @@ void main() {
     expect(actualViewState.postedAt, expectedViewState.postedAt);
   });
 }
-
-class _MockAnnouncementApi extends Mock implements AnnouncementApi {}
-
-class _MockCourseApi extends Mock implements CourseApi {}

@@ -30,9 +30,9 @@ void main() async {
   await ApiPrefs.init();
 
   // Create parent and two students, one of which is paired to the parent.
-  var parent = await UserSeedApi.createUser();
-  var student1 = await UserSeedApi.createUser();
-  var student2 = await UserSeedApi.createUser();
+  var parent = (await UserSeedApi.createUser())!;
+  var student1 = (await UserSeedApi.createUser())!;
+  var student2 = (await UserSeedApi.createUser())!;
   var teacher = await UserSeedApi.createUser();
   var course1 = await AppSeedUtils.seedCourseAndEnrollments(student: student1, teacher: teacher);
   var course2 = await AppSeedUtils.seedCourseAndEnrollments(student: student2, teacher: teacher);

@@ -37,7 +37,7 @@ const _createUserEndpoint = "accounts/self/users";
 class UserSeedApi {
   static const authCodeChannel = const MethodChannel("GET_AUTH_CODE");
 
-  static Future<SeededUser> createUser() async {
+  static Future<SeededUser?> createUser() async {
     var url = baseSeedingUrl + _createUserEndpoint;
 
     var lastName = faker.person.lastName();
@@ -63,14 +63,14 @@ class UserSeedApi {
     if (response.statusCode == 200) {
       //print("Create User response: ${response.data}");
       var result = deserialize<SeededUser>(response.data);
-      result = result.rebuild((b) => b
+      result = result!.rebuild((b) => b
         ..loginId = userData.pseudonym.uniqueId
         ..password = userData.pseudonym.password
         ..domain = response.requestOptions.uri.host);
 
-      var verifyResult = await AuthApi().mobileVerify(result.domain, forceBetaDomain: true);
+      var verifyResult = await AuthApi().mobileVerify(result.domain!, forceBetaDomain: true);
       var authCode = await _getAuthCode(result, verifyResult);
-      var token = await _getToken(result, verifyResult, authCode);
+      var token = await _getToken(result, verifyResult, authCode!);
 
       result = result.rebuild((b) => b..token = token);
       return result;
@@ -83,7 +83,7 @@ class UserSeedApi {
   }
 
   // Get the token for the SeededUser, given MobileVerifyResult and authCode
-  static Future<String> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
+  static Future<String?> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
     var dio = seedingDio(baseUrl: "https://${user.domain}/");
 
     var response = await dio.post('login/oauth2/token', queryParameters: {
@@ -95,7 +95,7 @@ class UserSeedApi {
 
     if (response.statusCode == 200) {
       var parsedResponse = deserialize<OAuthToken>(response.data);
-      var token = parsedResponse.accessToken;
+      var token = parsedResponse?.accessToken;
 
       return token;
     } else {
@@ -106,7 +106,7 @@ class UserSeedApi {
 
   // Get the authCode for the SeededUser, using the clientId from verifyResult.
   // This one is a little tricky as we have to call into native Android jsoup logic.
-  static Future<String> _getAuthCode(SeededUser user, MobileVerifyResult verifyResult) async {
+  static Future<String?> _getAuthCode(SeededUser user, MobileVerifyResult verifyResult) async {
     try {
       var result = await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
         'domain': user.domain,

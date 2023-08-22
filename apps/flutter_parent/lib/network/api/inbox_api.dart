@@ -73,7 +73,7 @@ class InboxApi {
     List<String> recipientIds,
     String subject,
     String body,
-    List<String> attachmentIds,
+    List<String>? attachmentIds,
   ) async {
     var dio = canvasDio();
     var params = {

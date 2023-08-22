@@ -41,10 +41,10 @@ class AlertThresholdsScreen extends StatefulWidget {
 }
 
 class AlertThresholdsState extends State<AlertThresholdsScreen> {
-  late Future<List<AlertThreshold>> _thresholdsFuture;
+  late Future<List<AlertThreshold>?> _thresholdsFuture;
   late Future<bool> _canDeleteStudentFuture;
 
-  Future<List<AlertThreshold>> _loadThresholds() =>
+  Future<List<AlertThreshold>?> _loadThresholds() =>
       locator<AlertThresholdsInteractor>().getAlertThresholdsForStudent(widget._student.id);
   List<AlertThreshold?>? _thresholds = [];
 
@@ -67,7 +67,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
         ),
         body: FutureBuilder(
           future: _thresholdsFuture,
-          builder: (context, AsyncSnapshot<List<AlertThreshold>> snapshot) {
+          builder: (context, AsyncSnapshot<List<AlertThreshold>?> snapshot) {
             Widget view;
             if (snapshot.hasError) {
               view = _error(context);

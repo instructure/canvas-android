@@ -36,7 +36,7 @@ class CalendarEventsApi {
     return fetchList(dio.get('calendar_events', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<ScheduleItem> getEvent(String eventId, bool forceRefresh) =>
+  Future<ScheduleItem?> getEvent(String? eventId, bool forceRefresh) =>
       fetch(canvasDio(forceRefresh: forceRefresh).get('calendar_events/$eventId'));
 
   Future<List<ScheduleItem>> getUserCalendarItems(

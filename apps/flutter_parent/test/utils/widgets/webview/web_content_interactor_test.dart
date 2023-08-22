@@ -24,6 +24,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../platform_config.dart';
 import '../../test_app.dart';
 import '../../test_helpers/mock_helpers.dart';
+import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final oauthApi = MockOAuthApi();
@@ -155,7 +156,7 @@ void main() {
   });
 }
 
-String _makeIframe({String id, String src, String target, String ltiButtonText}) {
+String _makeIframe({String? id, String? src, String? target, String? ltiButtonText}) {
   String ltiButton = ltiButtonText != null
       ? '</br><p><div class="lti_button" onClick="onLtiToolButtonPressed(\'$target\')">$ltiButtonText</div></p>'
       : '';

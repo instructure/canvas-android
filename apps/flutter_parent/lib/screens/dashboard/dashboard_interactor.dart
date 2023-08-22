@@ -30,7 +30,7 @@ class DashboardInteractor {
         return users;
       });
 
-  Future<User> getSelf({app}) async => locator<UserApi>().getSelf().then((user) async {
+  Future<User?> getSelf({app}) async => locator<UserApi>().getSelf().then((user) async {
         UserPermission? permissions = (await locator<UserApi>().getSelfPermissions().catchError((_) => null));
         user = user.rebuild((b) => b..permissions = permissions?.toBuilder());
         ApiPrefs.setUser(user, app: app);

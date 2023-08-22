@@ -36,6 +36,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final studentId = '1337';
@@ -121,8 +122,8 @@ void main() {
       expect(find.byWidgetPredicate((widget) {
         if (widget is Text) {
           final Text textWidget = widget;
-          if (textWidget.data != null) return textWidget.data.contains('pts');
-          return textWidget.textSpan.toPlainText().contains('pts');
+          if (textWidget.data != null) return textWidget.data!.contains('pts');
+          return textWidget.textSpan!.toPlainText().contains('pts');
         }
         return false;
       }), findsNothing);
@@ -391,7 +392,7 @@ void main() {
   });
 }
 
-Plannable _createPlannable({String title, DateTime dueAt, double pointsPossible, String assignmentId}) =>
+Plannable _createPlannable({String? title, DateTime? dueAt, double? pointsPossible, String? assignmentId}) =>
     Plannable((b) => b
       ..id = ''
       ..title = title ?? ''
@@ -400,11 +401,11 @@ Plannable _createPlannable({String title, DateTime dueAt, double pointsPossible,
       ..assignmentId = assignmentId);
 
 PlannerItem _createPlannerItem(
-        {String contextName,
-        Plannable plannable,
-        String plannableType,
-        PlannerSubmission submission,
-        String htmlUrl}) =>
+        {String? contextName,
+        Plannable? plannable,
+        String? plannableType,
+        PlannerSubmission? submission,
+        String? htmlUrl}) =>
     PlannerItem((b) => b
       ..courseId = ''
       ..plannable = plannable != null ? plannable.toBuilder() : _createPlannable().toBuilder()
