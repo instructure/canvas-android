@@ -96,6 +96,7 @@ class SettingsInteractor {
                       SvgPicture.asset(
                         'assets/svg/ic_instructure_logo.svg',
                         alignment: Alignment.bottomCenter,
+                        semanticsLabel: L10n(context).aboutLogoSemanticsLabel,
                       )
                     ],
                   ),
