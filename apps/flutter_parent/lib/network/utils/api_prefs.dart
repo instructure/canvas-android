@@ -311,7 +311,7 @@ class ApiPrefs {
   static Future<void> setRatingNextShowDate(DateTime? nextShowDate) =>
       _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate?.toIso8601String());
 
-  static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN) ?? false;
+  static bool? getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN);
 
   static Future<void> setRatingDontShowAgain(bool? dontShowAgain) =>
       _setPrefBool(KEY_RATING_DONT_SHOW_AGAIN, dontShowAgain);

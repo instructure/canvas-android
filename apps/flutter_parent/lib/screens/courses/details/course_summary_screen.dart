@@ -112,9 +112,9 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
     }
 
     // Compute itemId for use with key values, which are used for testing
-    var itemId = item.id;
+    String? itemId = item.id;
     if (item.type == ScheduleItem.apiTypeAssignment && item.assignment != null) {
-      itemId = item.assignment!.isQuiz ? item.assignment!.quizId! : item.assignment!.id;
+      itemId = item.assignment!.isQuiz ? item.assignment!.quizId : item.assignment!.id;
     }
 
     return ListTile(

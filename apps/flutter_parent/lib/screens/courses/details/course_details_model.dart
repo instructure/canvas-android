@@ -31,7 +31,7 @@ import 'package:tuple/tuple.dart';
 import 'package:collection/collection.dart';
 
 class CourseDetailsModel extends BaseModel {
-  User student;
+  User? student;
   String courseId; // Could be routed to without a full course, only the id may be known
   Course? course;
   CourseSettings? courseSettings;
@@ -66,7 +66,7 @@ class CourseDetailsModel extends BaseModel {
 
       // Set the _nextGradingPeriod to the current enrollment period (if active and if not already set)
       final enrollment =
-          course?.enrollments?.firstWhereOrNull((enrollment) => enrollment.userId == student.id);
+          course?.enrollments?.firstWhereOrNull((enrollment) => enrollment.userId == student?.id);
       if (_nextGradingPeriod == null && enrollment?.hasActiveGradingPeriod() == true) {
         _nextGradingPeriod = GradingPeriod((b) => b
           ..id = enrollment?.currentGradingPeriodId
@@ -82,7 +82,7 @@ class CourseDetailsModel extends BaseModel {
     }
 
     final groupFuture = _interactor()
-        .loadAssignmentGroups(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((groups) async {
+        .loadAssignmentGroups(courseId, student?.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((groups) async {
       // Remove unpublished assignments to match web
       return groups?.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build()).toList();
     });
@@ -94,7 +94,7 @@ class CourseDetailsModel extends BaseModel {
 
     // Get the grades for the term
     final enrollmentsFuture = _interactor()
-        .loadEnrollmentsForGradingPeriod(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((enrollments) {
+        .loadEnrollmentsForGradingPeriod(courseId, student?.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((enrollments) {
       return enrollments != null && enrollments.length > 0 ? enrollments.first : null;
     }).catchError((_) => null); // Some 'legacy' parents can't read grades for students, so catch and return null
 
@@ -122,16 +122,16 @@ class CourseDetailsModel extends BaseModel {
     // directly in debug builds.
     if (kDebugMode) {
       return Future(() {
-        return processSummaryItems(Tuple2(results, student.id));
+        return processSummaryItems(Tuple2(results, student?.id));
       });
     } else {
       // Potentially heavy list operations going on here, so we'll use a background isolate
-      return compute(processSummaryItems, Tuple2(results, student.id));
+      return compute(processSummaryItems, Tuple2(results, student?.id));
     }
   }
 
   @visibleForTesting
-  static List<ScheduleItem> processSummaryItems(Tuple2<List<List<ScheduleItem>?>, String> input) {
+  static List<ScheduleItem> processSummaryItems(Tuple2<List<List<ScheduleItem>?>, String?> input) {
     var results = input.item1.nonNulls;
     var studentId = input.item2;
 

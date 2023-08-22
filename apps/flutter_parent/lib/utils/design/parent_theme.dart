@@ -97,10 +97,10 @@ class _ParentThemeState extends State<ParentTheme> {
       colorSet = StudentColorSet.all[index];
     } else {
       // Check if there is a matching color set and prefer that for a better dark/HC mode experience
-      Color color = userColor!.color;
+      Color? color = userColor?.color;
       colorSet = StudentColorSet.all.firstWhere(
         (colorSet) => colorSet.light == color,
-        orElse: () => StudentColorSet(color, color, color, color),
+        orElse: () => color != null ? StudentColorSet(color, color, color, color) : StudentColorSet.all.first,
       );
     }
     return colorSet;

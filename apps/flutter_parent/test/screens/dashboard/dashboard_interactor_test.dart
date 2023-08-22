@@ -140,7 +140,7 @@ void main() {
   });
 
   test('shouldShowOldReminderMessage calls OldAppMigration.hasOldReminders', () async {
-    var migration = _MockMigration();
+    var migration = MockOldAppMigration();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<OldAppMigration>(() => migration);
     });
@@ -159,7 +159,3 @@ Enrollment _mockEnrollment(UserBuilder? observedUser) => Enrollment((b) => b
   ..enrollmentState = ''
   ..observedUser = observedUser
   ..build());
-
-class _MockMigration extends Mock implements OldAppMigration {}
-
-class MockUserApi extends Mock implements UserApi {}

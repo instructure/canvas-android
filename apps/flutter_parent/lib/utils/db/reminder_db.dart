@@ -89,7 +89,7 @@ class ReminderDb {
     return null;
   }
 
-  Future<Reminder?> getByItem(String? userDomain, String? userId, String? type, String itemId) async {
+  Future<Reminder?> getByItem(String? userDomain, String? userId, String? type, String? itemId) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,

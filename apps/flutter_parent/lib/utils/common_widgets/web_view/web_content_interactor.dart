@@ -48,8 +48,7 @@ class WebContentInteractor {
         if (RegExp('id=\"cnvs_content\"').hasMatch(iframe)) {
           authContent = await _handleCanvasContent(iframe, authContent);
         } else if (RegExp('external_tool').hasMatch(iframe)) {
-          authContent =
-              await _handleLti(iframe, authContent, externalToolButtonText);
+          authContent = await _handleLti(iframe, authContent, externalToolButtonText);
         }
       }
     }

@@ -60,18 +60,18 @@ extension GetThresholdFromType on List<AlertThreshold?>? {
 }
 
 extension GetThresholdMinMax on AlertType {
-  List<String> getMinMax(List<AlertThreshold?>? thresholds) {
-    String max = '';
-    String min = '';
+  List<String?> getMinMax(List<AlertThreshold?>? thresholds) {
+    String? max;
+    String? min;
 
     if (this == AlertType.courseGradeLow) {
-      max = thresholds.getThreshold(AlertType.courseGradeHigh)?.threshold ?? '';
+      max = thresholds.getThreshold(AlertType.courseGradeHigh)?.threshold;
     } else if (this == AlertType.courseGradeHigh) {
-      min = thresholds.getThreshold(AlertType.courseGradeLow)?.threshold ?? '';
+      min = thresholds.getThreshold(AlertType.courseGradeLow)?.threshold;
     } else if (this == AlertType.assignmentGradeLow) {
-      max = thresholds.getThreshold(AlertType.assignmentGradeHigh)?.threshold ?? '';
+      max = thresholds.getThreshold(AlertType.assignmentGradeHigh)?.threshold;
     } else if (this == AlertType.assignmentGradeHigh) {
-      min = thresholds.getThreshold(AlertType.assignmentGradeLow)?.threshold ?? '';
+      min = thresholds.getThreshold(AlertType.assignmentGradeLow)?.threshold;
     }
 
     return [min, max];

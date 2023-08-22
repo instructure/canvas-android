@@ -167,7 +167,7 @@ void main() {
     var data = await SplashScreenInteractor().getData();
 
     // isObserver should be false
-    expect(data.isObserver, isFalse);
+    expect(data?.isObserver, isFalse);
   });
 
   test('getData returns true for isObserver if user is observing students', () async {
@@ -179,7 +179,7 @@ void main() {
     var data = await SplashScreenInteractor().getData();
 
     // isObserver should be true
-    expect(data.isObserver, isTrue);
+    expect(data?.isObserver, isTrue);
   });
 
   test('getData should return existing value for canMasquerade', () async {
@@ -187,13 +187,14 @@ void main() {
     var data = await SplashScreenInteractor().getData();
 
     // canMasquerade should be true
-    expect(data.canMasquerade, isTrue);
+    expect(data?.canMasquerade, isTrue);
   });
 
   test('getData returns QRLoginError for invalid qrLoginUrl', () async {
     bool fail = false;
     await SplashScreenInteractor().getData(qrLoginUrl: 'https://hodor.com').catchError((_) {
       fail = true; // Don't return, just update the flag
+      return Future.value(null);
     });
     expect(fail, isTrue);
   });
@@ -206,8 +207,8 @@ void main() {
     ApiPrefs.switchLogins(login);
     final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
     var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
-    expect(data.isObserver, isTrue);
-    expect(data.canMasquerade, isFalse);
+    expect(data?.isObserver, isTrue);
+    expect(data?.canMasquerade, isFalse);
   });
 
   test('getData returns valid data for valid qrLoginUrl, canMasquerade true for real user', () async {
@@ -224,8 +225,8 @@ void main() {
     ApiPrefs.switchLogins(login);
     final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
     var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
-    expect(data.isObserver, isTrue);
-    expect(data.canMasquerade, isTrue);
+    expect(data?.isObserver, isTrue);
+    expect(data?.canMasquerade, isTrue);
   });
 
   test('getData returns QRLoginError for invalid auth code', () async {
@@ -234,6 +235,7 @@ void main() {
     bool fail = false;
     await SplashScreenInteractor().getData(qrLoginUrl: url).catchError((_) {
       fail = true; // Don't return, just update the flag
+      return Future.value(null);
     });
     expect(fail, isTrue);
   });
@@ -244,6 +246,7 @@ void main() {
     bool fail = false;
     await SplashScreenInteractor().getData(qrLoginUrl: url).catchError((_) {
       fail = true; // Don't return, just update the flag
+      return Future.value(null);
     });
     expect(fail, isTrue);
   });

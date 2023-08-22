@@ -105,7 +105,7 @@ class Avatar extends StatelessWidget {
       child: CircleAvatar(
         child: showInitials
             ? Text(
-                getUserInitials(name!),
+                getUserInitials(name),
                 style: TextStyle(fontSize: radius * 0.8, fontWeight: FontWeight.bold, color: ParentColors.ash),
               )
             : Container(),
@@ -116,8 +116,8 @@ class Avatar extends StatelessWidget {
   }
 
   // This method is static to make it easier to test!
-  static String getUserInitials(String shortName) {
-    if (shortName.isEmpty) return '?';
+  static String getUserInitials(String? shortName) {
+    if (shortName == null || shortName.isEmpty) return '?';
 
     var name = shortName;
 

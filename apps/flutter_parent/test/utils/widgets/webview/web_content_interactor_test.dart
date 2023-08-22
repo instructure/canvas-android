@@ -45,7 +45,7 @@ void main() {
     test('failure returns target_url', () async {
       final target = '$domain/target_url';
       when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => Future<AuthenticatedUrl>.error('Failed to authenticate url').catchError((_) {}));
+          .thenAnswer((_) async => Future<AuthenticatedUrl?>.error('Failed to authenticate url').catchError((_) { return Future.value(null);}));
       final actual = await WebContentInteractor().getAuthUrl(target);
 
       expect(actual, target);

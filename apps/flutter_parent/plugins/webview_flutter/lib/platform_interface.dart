@@ -211,19 +211,19 @@ abstract class WebViewPlatformController {
   /// Accessor to the current URL that the WebView is displaying.
   ///
   /// If no URL was ever loaded, returns `null`.
-  Future<String> currentUrl() {
+  Future<String?> currentUrl() {
     throw UnimplementedError(
         "WebView currentUrl is not implemented on the current platform");
   }
 
   /// Checks whether there's a back history item.
-  Future<bool> canGoBack() {
+  Future<bool?> canGoBack() {
     throw UnimplementedError(
         "WebView canGoBack is not implemented on the current platform");
   }
 
   /// Checks whether there's a forward history item.
-  Future<bool> canGoForward() {
+  Future<bool?> canGoForward() {
     throw UnimplementedError(
         "WebView canGoForward is not implemented on the current platform");
   }
@@ -298,7 +298,7 @@ abstract class WebViewPlatformController {
   }
 
   /// Returns the title of the currently loaded page.
-  Future<String> getTitle() {
+  Future<String?> getTitle() {
     throw UnimplementedError(
         "WebView getTitle is not implemented on the current platform");
   }
@@ -322,7 +322,7 @@ abstract class WebViewPlatformController {
   /// Return the horizontal scroll position of this view.
   ///
   /// Scroll position is measured from left.
-  Future<int> getScrollX() {
+  Future<int?> getScrollX() {
     throw UnimplementedError(
         "WebView getScrollX is not implemented on the current platform");
   }
@@ -330,7 +330,7 @@ abstract class WebViewPlatformController {
   /// Return the vertical scroll position of this view.
   ///
   /// Scroll position is measured from top.
-  Future<int> getScrollY() {
+  Future<int?> getScrollY() {
     throw UnimplementedError(
         "WebView getScrollY is not implemented on the current platform");
   }

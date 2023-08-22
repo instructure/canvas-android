@@ -25,7 +25,7 @@ class EventDetailsInteractor {
     return locator<CalendarEventsApi>().getEvent(eventId, forceRefresh);
   }
 
-  Future<Reminder?> loadReminder(String eventId) async {
+  Future<Reminder?> loadReminder(String? eventId) async {
     final reminder = await locator<ReminderDb>().getByItem(
       ApiPrefs.getDomain(),
       ApiPrefs.getUser()?.id,
@@ -47,7 +47,7 @@ class EventDetailsInteractor {
   Future<void> createReminder(
     AppLocalizations l10n,
     DateTime date,
-    String eventId,
+    String? eventId,
     String courseId,
     String? title,
     String body,

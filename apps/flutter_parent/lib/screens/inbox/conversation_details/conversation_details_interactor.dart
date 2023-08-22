@@ -35,7 +35,8 @@ class ConversationDetailsInteractor {
   }
 
   Future<Conversation?> addReply(BuildContext context, Conversation? conversation, Message? message, bool replyAll) async {
-    return locator<QuickNav>().push(context, ConversationReplyScreen(conversation, message, replyAll));
+    Conversation? r = await locator<QuickNav>().push(context, ConversationReplyScreen(conversation, message, replyAll));
+    return r;
   }
 
   String? getCurrentUserId() => ApiPrefs.getUser()?.id;

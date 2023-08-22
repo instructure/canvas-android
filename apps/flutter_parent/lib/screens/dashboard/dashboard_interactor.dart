@@ -46,5 +46,5 @@ class DashboardInteractor {
 
   AlertCountNotifier getAlertCountNotifier() => locator<AlertCountNotifier>();
 
-  Future<bool> shouldShowOldReminderMessage() => locator<OldAppMigration>().hasOldReminders();
+  Future<bool?> shouldShowOldReminderMessage() => locator<OldAppMigration>().hasOldReminders();
 }

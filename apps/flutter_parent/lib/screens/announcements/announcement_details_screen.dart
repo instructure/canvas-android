@@ -32,7 +32,7 @@ class AnnouncementDetailScreen extends StatefulWidget {
   final String courseId;
   final AnnouncementType announcementType;
 
-  AnnouncementDetailScreen(this.announcementId, this.announcementType, this.courseId, BuildContext context, {super. key});
+  AnnouncementDetailScreen(this.announcementId, this.announcementType, this.courseId, BuildContext? context, {super.key});
 
   @override
   State createState() => _AnnouncementDetailScreenState();

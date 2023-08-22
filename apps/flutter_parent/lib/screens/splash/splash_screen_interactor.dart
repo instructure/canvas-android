@@ -31,7 +31,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 
 class SplashScreenInteractor {
-  Future<SplashScreenData> getData({String? qrLoginUrl}) async {
+  Future<SplashScreenData?> getData({String? qrLoginUrl}) async {
     if (qrLoginUrl != null) {
       // Double check the loginUrl
       final qrLoginUri = QRUtils.verifySSOLogin(qrLoginUrl);

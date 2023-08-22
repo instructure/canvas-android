@@ -640,7 +640,7 @@ class WebViewController {
   /// current URL changes again by the time this function returns (in other
   /// words, by the time this future completes, the WebView may be displaying a
   /// different URL).
-  Future<String> currentUrl() {
+  Future<String?> currentUrl() {
     return _webViewPlatformController.currentUrl();
   }
 
@@ -648,7 +648,7 @@ class WebViewController {
   ///
   /// Note that this operation is asynchronous, and it is possible that the "canGoBack" state has
   /// changed by the time the future completed.
-  Future<bool> canGoBack() {
+  Future<bool?> canGoBack() {
     return _webViewPlatformController.canGoBack();
   }
 
@@ -656,7 +656,7 @@ class WebViewController {
   ///
   /// Note that this operation is asynchronous, and it is possible that the "canGoForward" state has
   /// changed by the time the future completed.
-  Future<bool> canGoForward() {
+  Future<bool?> canGoForward() {
     return _webViewPlatformController.canGoForward();
   }
 
@@ -758,7 +758,7 @@ class WebViewController {
   }
 
   /// Returns the title of the currently loaded page.
-  Future<String> getTitle() {
+  Future<String?> getTitle() {
     return _webViewPlatformController.getTitle();
   }
 
@@ -779,14 +779,14 @@ class WebViewController {
   /// Return the horizontal scroll position, in WebView pixels, of this view.
   ///
   /// Scroll position is measured from left.
-  Future<int> getScrollX() {
+  Future<int?> getScrollX() {
     return _webViewPlatformController.getScrollX();
   }
 
   /// Return the vertical scroll position, in WebView pixels, of this view.
   ///
   /// Scroll position is measured from top.
-  Future<int> getScrollY() {
+  Future<int?> getScrollY() {
     return _webViewPlatformController.getScrollY();
   }
 }

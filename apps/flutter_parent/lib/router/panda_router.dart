@@ -259,7 +259,7 @@ class PandaRouter {
   static Handler _courseAnnouncementDetailsHandler =
       Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return AnnouncementDetailScreen(
-        params[_RouterKeys.announcementId]![0], AnnouncementType.COURSE, params[_RouterKeys.courseId]![0], context!);
+        params[_RouterKeys.announcementId]![0], AnnouncementType.COURSE, params[_RouterKeys.courseId]![0], context);
   });
 
   static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -306,7 +306,7 @@ class PandaRouter {
   static Handler _institutionAnnouncementDetailsHandler =
       Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return AnnouncementDetailScreen(
-        params[_RouterKeys.accountNotificationId]![0], AnnouncementType.INSTITUTION, '', context!);
+        params[_RouterKeys.accountNotificationId]![0], AnnouncementType.INSTITUTION, '', context);
   });
 
   static Handler _legalHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {

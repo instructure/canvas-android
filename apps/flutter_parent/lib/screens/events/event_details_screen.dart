@@ -46,7 +46,9 @@ class EventDetailsScreen extends StatefulWidget {
     required this.eventId,
     this.courseId,
     super.key
-  }) : event = null;
+  }) :
+      assert(eventId != null),
+      event = null;
 
   @override
   _EventDetailsScreenState createState() => _EventDetailsScreenState();
@@ -103,7 +105,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     } else if (!snapshot.hasData) {
       return LoadingIndicator();
     } else {
-      return _EventDetails(snapshot.data!, widget.courseId);
+      return _EventDetails(snapshot.data, widget.courseId);
     }
   }
 
@@ -120,7 +122,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       onPressed: () {
         final event = snapshot.data!;
         String subject = L10n(context).eventSubjectMessage(student!.name, event.title!);
-        String postscript = L10n(context).messageLinkPostscript(student.name, event.htmlUrl!);
+        String postscript = L10n(context).messageLinkPostscript(student.name, event.htmlUrl ?? '');
         Widget screen = CreateConversationScreen(
           widget.courseId!,
           student.id,
@@ -134,7 +136,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 }
 
 class _EventDetails extends StatelessWidget {
-  final ScheduleItem event;
+  final ScheduleItem? event;
   final String? courseId;
 
   const _EventDetails(this.event, this.courseId, {super.key});
@@ -145,13 +147,13 @@ class _EventDetails extends StatelessWidget {
 
     // Get the date strings
     String? dateLine1, dateLine2;
-    final date = event.startAt ?? event.endAt;
-    if (event.isAllDay) {
+    final date = event?.startAt ?? event?.endAt;
+    if (event?.isAllDay == true) {
       dateLine1 = _dateFormat(date);
       dateLine2 = '';
-    } else if (event.startAt != null && event.endAt != null && event.startAt != event.endAt) {
+    } else if (event?.startAt != null && event?.endAt != null && event?.startAt != event?.endAt) {
       dateLine1 = _dateFormat(date);
-      dateLine2 = l10n.eventTime(_timeFormat(event.startAt!)!, _timeFormat(event.endAt!)!);
+      dateLine2 = l10n.eventTime(_timeFormat(event?.startAt!)!, _timeFormat(event?.endAt!)!);
     } else {
       dateLine1 = _dateFormat(date);
       dateLine2 = _timeFormat(date);
@@ -159,14 +161,14 @@ class _EventDetails extends StatelessWidget {
 
     // Get the location strings
     String? locationLine1, locationLine2;
-    if ((event.locationAddress == null || event.locationAddress!.isEmpty) &&
-        (event.locationName == null || event.locationName!.isEmpty)) {
+    if ((event?.locationAddress == null || event?.locationAddress?.isEmpty == true) &&
+        (event?.locationName == null || event?.locationName?.isEmpty == true)) {
       locationLine1 = l10n.eventNoLocation;
-    } else if (event.locationName == null || event.locationName!.isEmpty) {
-      locationLine1 = event.locationAddress ?? '';
+    } else if (event?.locationName == null || event?.locationName?.isEmpty == true) {
+      locationLine1 = event?.locationAddress ?? '';
     } else {
-      locationLine1 = event.locationName ?? '';
-      locationLine2 = event.locationAddress ?? '';
+      locationLine1 = event?.locationName ?? '';
+      locationLine2 = event?.locationAddress ?? '';
     }
 
     final textTheme = Theme.of(context).textTheme;
@@ -175,7 +177,7 @@ class _EventDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       children: [
         SizedBox(height: 16),
-        Text(event.title ?? '', style: textTheme.headlineMedium, key: ValueKey('event_details_title')),
+        Text(event?.title ?? '', style: textTheme.headlineMedium, key: ValueKey('event_details_title')),
         SizedBox(height: 16),
         Divider(),
         _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2, keyPrefix: 'event_details_date'),
@@ -189,9 +191,9 @@ class _EventDetails extends StatelessWidget {
         _SimpleHeader(label: l10n.assignmentRemindMeLabel),
         _RemindMe(event, courseId!, <String?>[dateLine1, dateLine2].where((it) => it != null).join('\n')),
         Divider(),
-        HtmlDescriptionTile(html: event.description),
+        HtmlDescriptionTile(html: event?.description),
         // Don't show the bottom divider if there's no content (no empty message shown either)
-        if (event.description != null && event.description?.isNotEmpty == true)
+        if (event?.description != null && event?.description?.isNotEmpty == true)
           Divider(),
       ],
     );
@@ -207,7 +209,7 @@ class _EventDetails extends StatelessWidget {
 }
 
 class _RemindMe extends StatefulWidget {
-  final ScheduleItem event;
+  final ScheduleItem? event;
   final String courseId;
   final String formattedDate;
 
@@ -222,7 +224,7 @@ class _RemindMeState extends State<_RemindMe> {
 
   EventDetailsInteractor _interactor = locator<EventDetailsInteractor>();
 
-  Future<Reminder?> _loadReminder() => _interactor.loadReminder(widget.event.id);
+  Future<Reminder?> _loadReminder() => _interactor.loadReminder(widget.event?.id);
 
   @override
   void initState() {
@@ -261,7 +263,7 @@ class _RemindMeState extends State<_RemindMe> {
 
   _handleAlarmSwitch(
     BuildContext context,
-    ScheduleItem event,
+    ScheduleItem? event,
     bool checked,
     Reminder? reminder,
     String formattedDate,
@@ -269,7 +271,7 @@ class _RemindMeState extends State<_RemindMe> {
     if (reminder != null) _interactor.deleteReminder(reminder);
     if (checked) {
       var now = DateTime.now();
-      var eventDate = event.isAllDay ? event.allDayDate?.toLocal() : event.startAt?.toLocal();
+      var eventDate = event?.isAllDay == true ? event?.allDayDate?.toLocal() : event?.startAt?.toLocal();
       var initialDate = eventDate?.isAfter(now) == true ? eventDate! : now;
 
       DateTime? date;
@@ -290,9 +292,9 @@ class _RemindMeState extends State<_RemindMe> {
         await _interactor.createReminder(
           L10n(context),
           reminderDate,
-          event.id,
+          event?.id,
           widget.courseId,
-          event.title,
+          event?.title,
           formattedDate,
         );
       }

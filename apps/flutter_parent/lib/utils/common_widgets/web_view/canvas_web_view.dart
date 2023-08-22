@@ -216,7 +216,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
       } else {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-          child: Text(widget.emptyDescription!, style: Theme.of(context).textTheme.bodyMedium),
+          child: Text(widget.emptyDescription ?? '', style: Theme.of(context).textTheme.bodyMedium),
         );
       }
     }
@@ -260,7 +260,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   }
 
   void _handleWebViewCreated(WebViewController webViewController) async {
-    if (_content != null) webViewController.loadHtml(_content!, baseUrl: ApiPrefs.getDomain()!, horizontalPadding: widget.horizontalPadding);
+    if (_content != null) webViewController.loadHtml(_content!, baseUrl: ApiPrefs.getDomain(), horizontalPadding: widget.horizontalPadding);
     _controller = webViewController;
   }
 

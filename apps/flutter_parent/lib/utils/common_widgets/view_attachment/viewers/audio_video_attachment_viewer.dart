@@ -39,8 +39,8 @@ class AudioVideoAttachmentViewer extends StatefulWidget {
 class _AudioVideoAttachmentViewerState extends State<AudioVideoAttachmentViewer> {
   static const defaultAspectRatio = 16 / 9;
 
-  late VideoPlayerController? _videoController;
-  late ChewieController? _chewieController;
+  VideoPlayerController? _videoController;
+  ChewieController? _chewieController;
 
   final _interactor = locator<AudioVideoAttachmentViewerInteractor>();
 

@@ -68,7 +68,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   /// This is used specifically for the observer -> assignment list case (all observee submissions are returned)
   /// If you are using the assignment/submission model for any other case use submissionWrapper.submission above.
-  Submission? submission(String studentId) =>
+  Submission? submission(String? studentId) =>
       submissionWrapper?.submissionList?.firstWhereOrNull((submission) => submission.userId == studentId);
 
   @BuiltValueField(wireName: 'assignment_group_id')
@@ -143,7 +143,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   bool isSubmittable() =>
       submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) != true;
 
-  SubmissionStatus getStatus({required String studentId}) {
+  SubmissionStatus getStatus({required String? studentId}) {
     final submission = this.submission(studentId);
     if (!isSubmittable()) {
       return SubmissionStatus.NONE;
@@ -159,7 +159,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   }
 
   // Returns true if the submission is marked as missing, or if it's pass due and either no submission or 'fake' submission
-  bool _isMissingSubmission(String studentId) {
+  bool _isMissingSubmission(String? studentId) {
     final submission = this.submission(studentId);
     if (submission?.missing == true) return true;
 

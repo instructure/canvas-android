@@ -233,16 +233,16 @@ class __AlertsListState extends State<_AlertsList> {
         title = l10n.assignmentMissing;
         break;
       case AlertType.courseGradeHigh:
-        title = l10n.courseGradeAboveThreshold(threshold!);
+        title = l10n.courseGradeAboveThreshold(threshold);
         break;
       case AlertType.courseGradeLow:
-        title = l10n.courseGradeBelowThreshold(threshold!);
+        title = l10n.courseGradeBelowThreshold(threshold);
         break;
       case AlertType.assignmentGradeHigh:
-        title = l10n.assignmentGradeAboveThreshold(threshold!);
+        title = l10n.assignmentGradeAboveThreshold(threshold);
         break;
       case AlertType.assignmentGradeLow:
-        title = l10n.assignmentGradeBelowThreshold(threshold!);
+        title = l10n.assignmentGradeBelowThreshold(threshold);
         break;
     }
 

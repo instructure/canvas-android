@@ -31,7 +31,7 @@ class AssignmentApi {
   }
 
   Future<List<AssignmentGroup>?> getAssignmentGroupsWithSubmissionsDepaginated(
-      String courseId, String studentId, String? gradingPeriodId,
+      String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) async {
     var dio = canvasDio(forceRefresh: forceRefresh);
     var params = {

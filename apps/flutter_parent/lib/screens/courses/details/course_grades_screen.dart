@@ -236,7 +236,7 @@ class _CourseGradeHeader extends StatelessWidget {
   /// The total grade in the course/grading period
   Widget? _gradeTotal(BuildContext context, CourseDetailsModel model) {
     final grade = model.course?.getCourseGrade(
-      model.student.id,
+      model.student?.id,
       enrollment: termEnrollment,
       gradingPeriodId: model.currentGradingPeriod()?.id,
       forceAllPeriods: termEnrollment == null && model.currentGradingPeriod()?.id == null,
@@ -280,7 +280,7 @@ class _AssignmentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<CourseDetailsModel>(context, listen: false);
-    final studentId = model.student.id;
+    final studentId = model.student?.id;
 
     final textTheme = Theme.of(context).textTheme;
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
@@ -329,7 +329,7 @@ class _AssignmentRow extends StatelessWidget {
     );
   }
 
-  Widget? _assignmentStatus(BuildContext context, Assignment assignment, String studentId) {
+  Widget? _assignmentStatus(BuildContext context, Assignment assignment, String? studentId) {
     final localizations = L10n(context);
     final textTheme = Theme.of(context).textTheme;
     final status = assignment.getStatus(studentId: studentId);
@@ -356,7 +356,7 @@ class _AssignmentRow extends StatelessWidget {
     }
   }
 
-  Widget _assignmentGrade(BuildContext context, Assignment assignment, String studentId) {
+  Widget _assignmentGrade(BuildContext context, Assignment assignment, String? studentId) {
     dynamic points = assignment.pointsPossible;
 
     // Store the points as an int if possible

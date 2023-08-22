@@ -105,13 +105,13 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   }
 
   @override
-  Future<String> currentUrl() => _channel.invokeMethod<String>('currentUrl') as Future<String>;
+  Future<String?> currentUrl() => _channel.invokeMethod<String>('currentUrl');
 
   @override
-  Future<bool> canGoBack() => _channel.invokeMethod<bool>("canGoBack") as Future<bool>;
+  Future<bool?> canGoBack() => _channel.invokeMethod<bool>("canGoBack");
 
   @override
-  Future<bool> canGoForward() => _channel.invokeMethod<bool>("canGoForward") as Future<bool>;
+  Future<bool?> canGoForward() => _channel.invokeMethod<bool>("canGoForward");
 
   @override
   Future<void> goBack() => _channel.invokeMethod<void>("goBack");
@@ -152,7 +152,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   }
 
   @override
-  Future<String> getTitle() => _channel.invokeMethod<String>("getTitle") as Future<String>;
+  Future<String?> getTitle() => _channel.invokeMethod<String>("getTitle");
 
   @override
   Future<void> scrollTo(int x, int y) {
@@ -171,10 +171,10 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   }
 
   @override
-  Future<int> getScrollX() => _channel.invokeMethod<int>("getScrollX") as Future<int>;
+  Future<int?> getScrollX() => _channel.invokeMethod<int>("getScrollX");
 
   @override
-  Future<int> getScrollY() => _channel.invokeMethod<int>("getScrollY") as Future<int>;
+  Future<int?> getScrollY() => _channel.invokeMethod<int>("getScrollY");
 
   /// Method channel implementation for [WebViewPlatform.clearCookies].
   static Future<bool> clearCookies() {

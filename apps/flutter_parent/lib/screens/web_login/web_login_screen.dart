@@ -125,7 +125,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult?> snapshot) {
-    final verifyResult = snapshot.data!;
+    final verifyResult = snapshot.data;
 
     return Stack(
       children: [
@@ -145,7 +145,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     );
   }
 
-  void _webViewCreated(WebViewController controller, MobileVerifyResult verifyResult) async {
+  void _webViewCreated(WebViewController controller, MobileVerifyResult? verifyResult) async {
     controller.clearCache();
     _controller = controller;
 
@@ -156,7 +156,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
   }
 
-  void _pageFinished(String url, MobileVerifyResult verifyResult) {
+  void _pageFinished(String url, MobileVerifyResult? verifyResult) {
     if (!_isMobileVerifyError) {
       setState(() => _showLoading = false);
     }
@@ -191,7 +191,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     }
   }
 
-  NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult result) {
+  NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult? result) {
     if (request.url.contains(SUCCESS_URL)) {
       // Success! Try to get tokens now
       var url = request.url;
@@ -199,7 +199,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_SUCCESS,
-          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result?.baseUrl},
         );
         final lastAccount = new SchoolDomain((builder) =>
         builder
@@ -211,7 +211,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       }).catchError((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_FAILURE,
-          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result?.baseUrl},
         );
         // Load the original auth url so the user can try again
         _loadAuthUrl();

@@ -23,15 +23,15 @@ class WebLoginInteractor {
     return locator<AuthApi>().mobileVerify(domain);
   }
 
-  Future performLogin(MobileVerifyResult result, String oAuthRequest) async {
+  Future performLogin(MobileVerifyResult? result, String oAuthRequest) async {
     final tokens = await locator<AuthApi>().getTokens(result, oAuthRequest);
 
     Login login = Login((b) => b
       ..accessToken = tokens?.accessToken
       ..refreshToken = tokens?.refreshToken
-      ..domain = result.baseUrl
-      ..clientId = result.clientId
-      ..clientSecret = result.clientSecret
+      ..domain = result?.baseUrl
+      ..clientId = result?.clientId
+      ..clientSecret = result?.clientSecret
       ..user = tokens?.user?.toBuilder());
 
     ApiPrefs.addLogin(login);

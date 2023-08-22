@@ -22,9 +22,9 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class QuickNav {
   @Deprecated('Deprecated in favor of using PushRoute etc, end goal is for all routes to go through PandaRouter')
-  Future<T> push<T extends Object>(BuildContext context, Widget widget) {
+  Future<dynamic> push<T extends Object>(BuildContext context, Widget widget) {
     _logShow(widget);
-    return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget)) as Future<T>;
+    return Navigator.of(context).push<T>(MaterialPageRoute(builder: (context) => widget));
   }
 
   /// Default method for pushing screens, uses material transition
@@ -33,14 +33,14 @@ class QuickNav {
     return PandaRouter.router.navigateTo(context, route, transition: transitionType);
   }
 
-  Future<T> replaceRoute<T extends Object>(BuildContext context, String route,
+  Future<dynamic> replaceRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return PandaRouter.router.navigateTo(context, route, transition: transitionType, replace: true) as Future<T>;
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType, replace: true);
   }
 
-  Future<T> pushRouteAndClearStack<T extends Object>(BuildContext context, String route,
+  Future<dynamic> pushRouteAndClearStack<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true) as Future<T>;
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true);
   }
 
   Future<dynamic> pushRouteWithCustomTransition<T extends Object>(BuildContext context, String route, bool clearStack,

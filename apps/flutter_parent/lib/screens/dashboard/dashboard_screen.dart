@@ -70,7 +70,7 @@ class DashboardState extends State<DashboardScreen> {
 
   // Dashboard State
   List<User> _students = [];
-  late User _self;
+  late User? _self;
 
   bool _studentsLoading = false;
   bool _selfLoading = false;
@@ -138,7 +138,7 @@ class DashboardState extends State<DashboardScreen> {
 
   void _loadSelf() {
     setState(() {
-      _self = ApiPrefs.getUser()!;
+      _self = ApiPrefs.getUser();
       _selfLoading = true;
     });
 
@@ -426,7 +426,7 @@ class DashboardState extends State<DashboardScreen> {
     );
   }
 
-  Widget _navDrawer(User user) {
+  Widget _navDrawer(User? user) {
     if (_selfLoading) {
       // Still loading...
       return LoadingIndicator();
@@ -506,7 +506,7 @@ class DashboardState extends State<DashboardScreen> {
   }
 
   _showOldReminderMessage() async {
-    if (await _interactor.shouldShowOldReminderMessage()) {
+    if ((await _interactor.shouldShowOldReminderMessage()) == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,

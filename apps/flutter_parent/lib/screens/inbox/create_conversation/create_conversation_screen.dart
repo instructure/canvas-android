@@ -42,7 +42,7 @@ class CreateConversationScreen extends StatefulWidget {
   );
 
   final String courseId;
-  final String studentId;
+  final String? studentId;
   final String subjectTemplate;
   final String? postscript;
 

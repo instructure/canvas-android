@@ -35,7 +35,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  Future<SplashScreenData>? _dataFuture;
+  Future<SplashScreenData?>? _dataFuture;
   Future<int>? _cameraFuture;
 
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         backgroundColor: Theme.of(context).primaryColor,
         body: FutureBuilder(
           future: _dataFuture,
-          builder: (BuildContext context, AsyncSnapshot<SplashScreenData> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<SplashScreenData?> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isObserver || snapshot.data!.canMasquerade) {
                 _navigateToDashboardOrAup();

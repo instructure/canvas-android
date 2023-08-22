@@ -25,7 +25,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import '../attachment_utils/attachment_picker.dart';
 
 class CreateConversationInteractor {
-  Future<CreateConversationData> loadData(String courseId, String studentId) async {
+  Future<CreateConversationData> loadData(String courseId, String? studentId) async {
     final courseFuture = locator<CourseApi>().getCourse(courseId);
     final recipientFuture = locator<InboxApi>().getRecipients(courseId);
     final permissionsFuture = locator<CourseApi>().getCoursePermissions(courseId);

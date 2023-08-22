@@ -36,7 +36,7 @@ class CourseDetailsScreen extends StatefulWidget {
   final CourseDetailsModel _model;
 
   CourseDetailsScreen(String courseId, {super.key})
-      : this._model = CourseDetailsModel(ApiPrefs.getCurrentStudent()!, courseId);
+      : this._model = CourseDetailsModel(ApiPrefs.getCurrentStudent(), courseId);
 
   // A convenience constructor when we already have the course data, so we don't load something we already have
   CourseDetailsScreen.withCourse(Course course, {super.key})
@@ -157,21 +157,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
     String urlLink = '${ApiPrefs.getDomain()}/courses/${widget._model.courseId}';
     if (_tabController?.index == 0) {
       // Grades
-      subject = L10n(context).gradesSubjectMessage(widget._model.student.name);
+      subject = L10n(context).gradesSubjectMessage(widget._model.student?.name ?? '');
       urlLink += '/grades';
     } else if (hasSyllabus) {
       // Syllabus
-      subject = L10n(context).syllabusSubjectMessage(widget._model.student.name);
+      subject = L10n(context).syllabusSubjectMessage(widget._model.student?.name ?? '');
       urlLink += '/assignments/syllabus';
     } else {
       // Front Page
-      subject = L10n(context).frontPageSubjectMessage(widget._model.student.name);
+      subject = L10n(context).frontPageSubjectMessage(widget._model.student?.name ?? '');
     }
 
-    String postscript = L10n(context).messageLinkPostscript(widget._model.student.name, urlLink);
+    String postscript = L10n(context).messageLinkPostscript(widget._model.student?.name ?? '', urlLink);
     Widget screen = CreateConversationScreen(
       widget._model.courseId,
-      widget._model.student.id,
+      widget._model.student?.id,
       subject,
       postscript,
     );

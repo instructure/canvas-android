@@ -36,7 +36,7 @@ class EnrollmentsApi {
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<List<Enrollment>?> getEnrollmentsByGradingPeriod(String courseId, String studentId, String? gradingPeriodId,
+  Future<List<Enrollment>?> getEnrollmentsByGradingPeriod(String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) {
     final dio = canvasDio(forceRefresh: forceRefresh);
     final params = {

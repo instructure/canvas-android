@@ -38,7 +38,7 @@ class SettingsInteractor {
     locator<QuickNav>().push(context, RemoteConfigScreen());
   }
 
-  void toggleDarkMode(context, anchorKey) {
+  void toggleDarkMode(BuildContext context, GlobalKey<State<StatefulWidget>>? anchorKey) {
     if (ParentTheme.of(context)?.isDarkMode == true) {
       locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_MODE_OFF);
     } else {

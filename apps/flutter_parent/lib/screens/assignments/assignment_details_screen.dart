@@ -207,7 +207,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                             style: textTheme.titleMedium?.copyWith(color: ParentTheme.of(context)?.studentColor),
                           ),
                         ),
-                  onChanged: (checked) => _handleAlarmSwitch(context, assignment, checked, reminder!),
+                  onChanged: (checked) => _handleAlarmSwitch(context, assignment, checked, reminder),
                 );
               },
             ),

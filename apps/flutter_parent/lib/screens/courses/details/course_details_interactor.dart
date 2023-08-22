@@ -38,7 +38,7 @@ class CourseDetailsInteractor {
   Future<CourseSettings?> loadCourseSettings(String courseId, {bool forceRefresh = false}) =>
       locator<CourseApi>().getCourseSettings(courseId, forceRefresh: forceRefresh);
 
-  Future<List<AssignmentGroup>?> loadAssignmentGroups(String courseId, String studentId, String? gradingPeriodId,
+  Future<List<AssignmentGroup>?> loadAssignmentGroups(String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) {
     return locator<AssignmentApi>().getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId, gradingPeriodId,
         forceRefresh: forceRefresh);
@@ -48,7 +48,7 @@ class CourseDetailsInteractor {
     return locator<CourseApi>().getGradingPeriods(courseId, forceRefresh: forceRefresh);
   }
 
-  Future<List<Enrollment>?> loadEnrollmentsForGradingPeriod(String courseId, String studentId, String? gradingPeriodId,
+  Future<List<Enrollment>?> loadEnrollmentsForGradingPeriod(String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) {
     return locator<EnrollmentsApi>()
         .getEnrollmentsByGradingPeriod(courseId, studentId, gradingPeriodId, forceRefresh: forceRefresh);

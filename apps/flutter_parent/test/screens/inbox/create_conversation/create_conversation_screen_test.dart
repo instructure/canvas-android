@@ -364,7 +364,7 @@ void main() {
     final course = _mockCourse('0');
 
     // Set up attachment handler in 'uploading' stage
-    var handler = _MockedAttachmentHandler();
+    var handler = MockAttachmentHandler();
     when(handler.stage).thenReturn(AttachmentUploadStage.FINISHED);
     when(handler.attachment).thenReturn(Attachment((b) => b
       ..displayName = 'File'
@@ -536,7 +536,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('deleting an attachment calls AttachmentHandler.deleteAttachment', (tester) async {
     // Set up attachment handler in 'uploading' stage
-    var handler = _MockedAttachmentHandler();
+    var handler = MockAttachmentHandler();
     when(handler.stage).thenReturn(AttachmentUploadStage.FINISHED);
     when(handler.attachment).thenReturn(Attachment((b) => b
       ..displayName = 'File'
@@ -958,7 +958,7 @@ class _MockInteractor extends CreateConversationInteractor {
       [this._pronouns = false]);
 
   @override
-  Future<CreateConversationData> loadData(String courseId, String studentId) async {
+  Future<CreateConversationData> loadData(String courseId, String? studentId) async {
     if (_fetchFailCount > 0) {
       _fetchFailCount--;
       return Future.error('Error!');
@@ -1001,8 +1001,6 @@ class _MockInteractor extends CreateConversationInteractor {
     return Future.delayed(Duration(milliseconds: 200), () => Conversation((b) => b));
   }
 }
-
-class _MockedAttachmentHandler extends Mock implements AttachmentHandler {}
 
 class _MockAttachmentHandler extends AttachmentHandler {
   _MockAttachmentHandler() : super(null);

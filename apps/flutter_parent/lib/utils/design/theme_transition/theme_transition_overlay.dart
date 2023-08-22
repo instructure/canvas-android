@@ -35,9 +35,9 @@ class ThemeTransitionOverlay extends StatefulWidget {
     super.key,
   });
 
-  static display(BuildContext context, GlobalKey anchorKey, Function() onReady) async {
+  static display(BuildContext context, GlobalKey? anchorKey, Function() onReady) async {
     // Get center of anchor, which will be the origin point of the transition animation
-    RenderBox box = anchorKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox box = anchorKey?.currentContext!.findRenderObject() as RenderBox;
     var anchorCenter = box.localToGlobal(box.size.center(Offset(0, 0)));
 
     // Get the target widget over which the animation will be displayed
