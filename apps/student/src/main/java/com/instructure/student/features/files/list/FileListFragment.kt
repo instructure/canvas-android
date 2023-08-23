@@ -322,7 +322,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val isUserFiles = canvasContext.type == CanvasContext.Type.USER
 
         if (recyclerAdapter == null) {
-            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder!!, canvasContext, fileListRepository.isOnline()), folder!!, adapterCallback, fileListRepository)
+            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder, canvasContext, fileListRepository.isOnline()), folder, adapterCallback, fileListRepository)
         }
 
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
@@ -330,7 +330,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         setupToolbarMenu(toolbar)
 
         // Update toolbar title with folder name if it's not a root folder
-        if (!folder!!.isRoot) toolbar.title = folder?.name
+        if (folder?.isRoot == false) toolbar.title = folder?.name
 
         themeToolbar()
 
@@ -425,7 +425,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     awaitApi { FileFolderManager.updateFolder(item.id, body, it) }
                 }
                 recyclerAdapter?.add(updateItem)
-                StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+                if (folder != null) {
+                    StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+                }
             } catch {
                 toast(R.string.errorOccurred)
             }
@@ -468,7 +470,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             if (recyclerAdapter?.size() == 0) {
                 setEmptyView(binding.emptyView, R.drawable.ic_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
             }
-            StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+            if (folder != null) {
+                StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+            }
             updateFileList()
         } catch {
             toast(R.string.errorOccurred)
@@ -514,6 +518,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     private fun createFolder() {
         EditTextDialog.show(requireFragmentManager(), getString(R.string.createFolder), "") { name ->
             tryWeave {
+                if (folder == null) throw IllegalArgumentException("Folder is null")
                 val newFolder = awaitApi<FileFolder> {
                     FileFolderManager.createFolder(folder!!.id, CreateFolder(name), it)
                 }
@@ -612,7 +617,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         /**
          * @return A list of possible actions the user is able to perform on the file/folder
          */
-        fun getFileMenuOptions(fileFolder: FileFolder, canvasContext: CanvasContext, isOnline: Boolean): List<FileMenuType> {
+        fun getFileMenuOptions(fileFolder: FileFolder?, canvasContext: CanvasContext, isOnline: Boolean): List<FileMenuType> {
+            if (fileFolder == null) return emptyList()
             val options: MutableList<FileMenuType> = mutableListOf()
 
             if (canvasContext.type == CanvasContext.Type.USER) {

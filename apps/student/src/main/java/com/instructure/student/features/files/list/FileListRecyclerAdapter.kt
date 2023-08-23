@@ -34,7 +34,7 @@ open class FileListRecyclerAdapter(
     context: Context,
     val canvasContext: CanvasContext,
     private val possibleMenuOptions: List<FileListFragment.FileMenuType>, // Used for testing, see protected constructor below
-    private val folder: FileFolder,
+    private val folder: FileFolder?,
     private val fileFolderCallback: FileFolderCallback,
     private val fileListRepository: FileListRepository
 ) : BaseListRecyclerAdapter<FileFolder, FileViewHolder>(context, FileFolder::class.java) {
@@ -80,7 +80,10 @@ open class FileListRecyclerAdapter(
     override fun loadFirstPage() {
         apiCall?.cancel()
         apiCall = tryWeave {
-
+            if (folder == null) {
+                setNextUrl(null)
+                throw IllegalArgumentException("Folder is null")
+            }
             // Check if the folder is marked as stale (i.e. items were added/changed/removed)
             val isStale = StudentPrefs.staleFolderIds.contains(folder.id)
 
@@ -106,6 +109,10 @@ open class FileListRecyclerAdapter(
 
     override fun loadNextPage(nextURL: String) {
         apiCall = tryWeave {
+            if (folder == null) {
+                setNextUrl(null)
+                throw IllegalArgumentException("Folder is null")
+            }
             val nextResult = fileListRepository.getNextPage(nextURL, folder.id, isRefresh)
             addAll(nextResult.dataOrThrow)
             if (nextResult is DataResult.Success) {
