@@ -22,15 +22,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.Date
-
-@Entity(
-    foreignKeys = [ForeignKey(
-        entity = CourseEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["courseId"],
-        onDelete = ForeignKey.CASCADE
-    )]
-)
+@Entity
 data class LocalFileEntity(
     @PrimaryKey
     val id: Long,

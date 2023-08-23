@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import com.google.firebase.messaging.FirebaseMessaging
 import com.heapanalytics.android.Heap
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.room.offline.DatabaseProvider
@@ -29,6 +30,7 @@ import com.instructure.student.activity.LoginActivity
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
+import java.io.File
 
 class StudentLogoutTask(
     type: Type,
@@ -65,6 +67,8 @@ class StudentLogoutTask(
 
     override fun removeOfflineData(userId: Long?) {
         userId?.let {
+            val dir = File(ContextKeeper.appContext.filesDir, it.toString())
+            dir.deleteRecursively()
             databaseProvider?.clearDatabase(it)
         }
     }

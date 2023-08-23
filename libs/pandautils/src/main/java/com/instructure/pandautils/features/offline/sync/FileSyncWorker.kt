@@ -29,6 +29,7 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import dagger.assisted.Assisted
@@ -84,16 +85,21 @@ class FileSyncWorker @AssistedInject constructor(
     }
 
     private fun getDownloadFile(fileName: String): File {
-        var downloadFile = File(context.filesDir, fileName)
+        val dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+        if (!dir.exists()) {
+            dir.mkdir()
+        }
+        var downloadFile = File(dir, fileName)
         if (downloadFile.exists()) {
-            downloadFile = File(context.filesDir, "temp_${fileName}")
+            downloadFile = File(dir, "temp_${fileName}")
             fileExists = true
         }
         return downloadFile
     }
 
     private fun rewriteOriginalFile(newFile: File, fileName: String): File {
-        val originalFile = File(context.filesDir, fileName)
+        val dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+        val originalFile = File(dir, fileName)
         originalFile.delete()
         newFile.renameTo(originalFile)
         return originalFile
