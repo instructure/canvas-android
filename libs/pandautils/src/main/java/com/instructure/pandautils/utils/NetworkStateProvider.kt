@@ -19,12 +19,44 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
-class NetworkStateProvider(private val context: Context) {
+interface NetworkStateProvider {
+    val isOnlineLiveData: LiveData<Boolean>
+    fun isOnline(): Boolean
+}
 
-    fun isOnline(): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo?.isConnected == true
+class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
+
+    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    private val _isOnlineLiveData = MutableLiveData<Boolean>()
+
+    override val isOnlineLiveData: LiveData<Boolean>
+        get() = _isOnlineLiveData
+
+    init {
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).orDefault()
+        _isOnlineLiveData.postValue(hasActiveNetwork)
+
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                _isOnlineLiveData.postValue(true)
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                _isOnlineLiveData.postValue(false)
+            }
+        })
+    }
+
+    override fun isOnline(): Boolean {
+        return _isOnlineLiveData.value.orDefault()
     }
 }

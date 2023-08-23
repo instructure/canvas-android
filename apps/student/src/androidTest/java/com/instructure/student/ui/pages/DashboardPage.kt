@@ -68,7 +68,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(courseName: String) {
-        val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
+        val matcher = allOf(withText(courseName), withId(R.id.titleTextView), withAncestor(R.id.dashboardPage))
         waitForView(matcher).scrollTo().assertDisplayed()
     }
 
@@ -78,8 +78,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
             // This is the RIGHT way to do it, but it inexplicably fails most of the time.
             scrollRecyclerView(R.id.listView, matcher)
             onView(matcher).assertDisplayed()
-        }
-        catch(pe: PerformException) {
+        } catch (pe: PerformException) {
             // Revert to this weaker operation if the one above fails.
             scrollAndAssertDisplayed(matcher)
         }
@@ -287,7 +286,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
-        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
+        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(
+            withId(R.id.cardView)
+                    + withDescendant(withId(R.id.titleTextView) + withText(courseTitle))
+        )
         onView(courseOverflowMatcher).scrollTo().click()
         waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
@@ -314,6 +316,14 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun clickOnDashboardNotification(subTitle: String) {
         onView(withId(R.id.uploadSubtitle) + withText(subTitle)).click()
     }
+
+    fun assertOfflineIndicatorDisplayed() {
+        waitForView(withId(R.id.offlineIndicator)).assertDisplayed()
+    }
+
+    fun assertOfflineIndicatorNotDisplayed() {
+        onView(withId(R.id.offlineIndicator)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    }
 }
 
 /**
@@ -322,7 +332,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
  */
 class SetSwitchCompat(val position: Boolean) : ViewAction {
     override fun getDescription(): String {
-        val desiredPosition =  if(position) "On" else "Off"
+        val desiredPosition = if (position) "On" else "Off"
         return "Set SwitchCompat to $desiredPosition"
     }
 
@@ -332,7 +342,7 @@ class SetSwitchCompat(val position: Boolean) : ViewAction {
 
     override fun perform(uiController: UiController?, view: View?) {
         val switch = view as SwitchCompat
-        if(switch != null) {
+        if (switch != null) {
             switch.isChecked = position
         }
     }
