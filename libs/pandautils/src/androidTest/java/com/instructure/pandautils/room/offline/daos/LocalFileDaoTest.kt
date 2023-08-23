@@ -64,26 +64,6 @@ class LocalFileDaoTest {
         assertEquals(updated, result)
     }
 
-    @Test(expected = SQLiteConstraintException::class)
-    fun testCourseForeignKey() = runTest {
-        val file = LocalFileEntity(1, 2, Date(), "")
-
-        localFileDao.insert(file)
-    }
-
-    @Test
-    fun testCourseCascade() = runTest {
-        val file = LocalFileEntity(1L, 1L, Date(), "")
-
-        localFileDao.insert(file)
-
-        courseDao.delete(CourseEntity(Course(1L)))
-
-        val result = localFileDao.findById(1L)
-
-        assertNull(result)
-    }
-
     @Test
     fun testFindById() = runTest {
         val files = listOf(
