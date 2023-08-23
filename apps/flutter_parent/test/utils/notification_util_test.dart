@@ -137,9 +137,9 @@ void main() {
 
     await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);
 
-    var offsetTime = DateTime.now().timeZoneOffset;
-    var d = reminder.date!;
-    var date = tz.TZDateTime.local(d.year, d.month, d.day, d.month, d.hour, d.minute, d.second).subtract(offsetTime);
+    tz.initializeTimeZones();
+    var d = reminder.date!.toUtc();
+    var date = tz.TZDateTime.utc(d.year, d.month, d.day, d.hour, d.minute, d.second);
 
     final NotificationDetails details = verify(plugin.zonedSchedule(
       reminder.id,
@@ -173,9 +173,9 @@ void main() {
 
     await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);
 
-    var offsetTime = DateTime.now().timeZoneOffset;
-    var d = reminder.date!;
-    var date = tz.TZDateTime.local(d.year, d.month, d.day, d.month, d.hour, d.minute, d.second).subtract(offsetTime);
+    tz.initializeTimeZones();
+    var d = reminder.date!.toUtc();
+    var date = tz.TZDateTime.utc(d.year, d.month, d.day, d.hour, d.minute, d.second);
 
     final NotificationDetails details = verify(plugin.zonedSchedule(
       reminder.id,

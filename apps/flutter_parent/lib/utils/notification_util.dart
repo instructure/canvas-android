@@ -121,9 +121,10 @@ class NotificationUtil {
           .logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
     }
 
-    var offsetTime = DateTime.now().timeZoneOffset;
-    var d = reminder.date!;
-    var date = tz.TZDateTime.local(d.year, d.month, d.day, d.month, d.hour, d.minute, d.second).subtract(offsetTime);;
+    tz.initializeTimeZones();
+    var d = reminder.date!.toUtc();
+    var date = tz.TZDateTime.utc(d.year, d.month, d.day, d.hour, d.minute, d.second);
+
     return _plugin!.zonedSchedule(
       reminder.id!,
       title,
