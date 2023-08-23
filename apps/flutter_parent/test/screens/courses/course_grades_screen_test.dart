@@ -180,7 +180,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows empty without period header', (tester) async {
     final model = CourseDetailsModel(_student, _courseId);
 
-    final gradingPeriod = null;
+    GradingPeriod? gradingPeriod = null;
     final enrollment = Enrollment((b) => b
       ..enrollmentState = 'active'
       ..grades = _mockGrade(currentScore: 12)

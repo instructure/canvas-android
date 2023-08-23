@@ -65,15 +65,16 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
               child: ListView(
                 children: [
                   DrawerHeader(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: ListView(
                       children: <Widget>[
-                        Container(
-                          key: ThemeViewerScreen.studentColorKey,
-                          width: 48,
-                          height: 48,
-                          color: Theme.of(context).colorScheme.secondary,
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            key: ThemeViewerScreen.studentColorKey,
+                            width: 48,
+                            height: 48,
+                            color: Theme.of(context).colorScheme.secondary,
+                          )
                         ),
                         Text('Theme configuration', style: Theme.of(context).textTheme.titleLarge),
                         Text('Play around with some values', style: Theme.of(context).textTheme.bodySmall),

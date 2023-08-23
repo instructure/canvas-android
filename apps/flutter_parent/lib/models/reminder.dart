@@ -47,7 +47,7 @@ abstract class Reminder implements Built<Reminder, ReminderBuilder> {
   Reminder._();
   factory Reminder([void Function(ReminderBuilder) updates]) = _$Reminder;
 
-  static Reminder fromNotification(NotificationPayload? payload) => deserialize(json.decode(payload?.data ?? ''));
+  static Reminder? fromNotification(NotificationPayload? payload) => deserialize(json.decode(payload?.data ?? ''));
 
   static void _initializeBuilder(ReminderBuilder b) => b
     ..userDomain = ''

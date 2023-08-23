@@ -40,7 +40,8 @@ class EventDetailsScreen extends StatefulWidget {
     required this.event,
     this.courseId,
     super.key
-  }) : eventId = event!.id;
+  }) : assert(event != null),
+      eventId = event!.id;
 
   EventDetailsScreen.withId({
     required this.eventId,
@@ -189,7 +190,7 @@ class _EventDetails extends StatelessWidget {
             keyPrefix: 'event_details_location'),
         Divider(),
         _SimpleHeader(label: l10n.assignmentRemindMeLabel),
-        _RemindMe(event, courseId!, <String?>[dateLine1, dateLine2].where((it) => it != null).join('\n')),
+        _RemindMe(event, courseId, <String?>[dateLine1, dateLine2].where((it) => it != null).join('\n')),
         Divider(),
         HtmlDescriptionTile(html: event?.description),
         // Don't show the bottom divider if there's no content (no empty message shown either)
@@ -210,7 +211,7 @@ class _EventDetails extends StatelessWidget {
 
 class _RemindMe extends StatefulWidget {
   final ScheduleItem? event;
-  final String courseId;
+  final String? courseId;
   final String formattedDate;
 
   const _RemindMe(this.event, this.courseId, this.formattedDate, {super.key});

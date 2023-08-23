@@ -92,7 +92,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
-    when(interactor.loadEvent(eventId, any)).thenAnswer((_) => Future<ScheduleItem>.error('Failed to load event'));
+    when(interactor.loadEvent(eventId, any)).thenAnswer((_) => Future<ScheduleItem?>.error('Failed to load event'));
 
     await tester.pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId)));
     await tester.pumpAndSettle(); // Let the future finish

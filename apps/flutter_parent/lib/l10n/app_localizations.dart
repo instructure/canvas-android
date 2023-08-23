@@ -908,7 +908,7 @@ class AppLocalizations {
   String assignmentGradeAboveThreshold(String? threshold) => Intl.message(
         'Assignment Grade Above $threshold',
         name: 'assignmentGradeAboveThreshold',
-        args: [threshold as Object],
+        args: threshold != null ? [threshold] : null,
         desc: 'Title for alerts when an assignment grade is above the threshold value',
       );
 
@@ -922,14 +922,14 @@ class AppLocalizations {
   String courseGradeAboveThreshold(String? threshold) => Intl.message(
         'Course Grade Above $threshold',
         name: 'courseGradeAboveThreshold',
-        args: [threshold as Object],
+        args: threshold != null ? [threshold] : null,
         desc: 'Title for alerts when a course grade is above the threshold value',
       );
 
   String courseGradeBelowThreshold(String? threshold) => Intl.message(
         'Course Grade Below $threshold',
         name: 'courseGradeBelowThreshold',
-        args: [threshold as Object],
+        args: threshold != null ? [threshold] : null,
         desc: 'Title for alerts when a course grade is below the threshold value',
       );
 

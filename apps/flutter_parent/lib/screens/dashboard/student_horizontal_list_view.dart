@@ -93,8 +93,8 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
   Widget _addWidget() {
     return Center(
       child: Container(
-        width: 120,
-        height: 92,
+        //width: 120,
+        //height: 92,
         child: Column(
           children: <Widget>[
             SizedBox(height: 12),

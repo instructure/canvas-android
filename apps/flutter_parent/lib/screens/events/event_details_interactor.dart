@@ -48,7 +48,7 @@ class EventDetailsInteractor {
     AppLocalizations l10n,
     DateTime date,
     String? eventId,
-    String courseId,
+    String? courseId,
     String? title,
     String body,
   ) async {

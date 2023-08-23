@@ -80,23 +80,22 @@ class NotificationUtil {
     Reminder? reminder = Reminder.fromNotification(payload);
 
     // Delete reminder from db
-    await locator<ReminderDb>().deleteById(reminder.id!);
+    await locator<ReminderDb>().deleteById(reminder?.id);
 
     // Create route
     String? route;
-    switch (reminder.type) {
+    switch (reminder?.type) {
       case Reminder.TYPE_ASSIGNMENT:
         route =
-            PandaRouter.assignmentDetails(reminder.courseId, reminder.itemId);
+            PandaRouter.assignmentDetails(reminder!.courseId, reminder.itemId);
         break;
       case Reminder.TYPE_EVENT:
-        route = PandaRouter.eventDetails(reminder.courseId, reminder.itemId);
+        route = PandaRouter.eventDetails(reminder!.courseId, reminder.itemId);
         break;
     }
 
     // Push route, but only after the app has finished building
-    appCompleter?.future
-        .then((_) => WidgetsBinding.instance.handlePushRoute(route!));
+    if (route != null) appCompleter?.future.then((_) => WidgetsBinding.instance.handlePushRoute(route!));
   }
 
   Future<void> scheduleReminder(

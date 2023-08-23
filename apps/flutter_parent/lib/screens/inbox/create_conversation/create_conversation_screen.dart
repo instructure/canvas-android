@@ -640,22 +640,24 @@ class AttachmentWidget extends StatelessWidget {
           child: Text(L10n(context).delete),
         ),
       ],
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 6),
-          Icon(
-            CanvasIcons.warning,
-            size: 27,
-            color: Colors.red,
-          ),
-          SizedBox(height: 15),
-          Text(
-            L10n(context).attachmentFailed,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12),
-          ),
-        ],
+      child: Align(
+        alignment: Alignment.center,
+        child: ListView(
+          children: <Widget>[
+            SizedBox(height: 6),
+            Icon(
+              CanvasIcons.warning,
+              size: 27,
+              color: Colors.red,
+            ),
+            SizedBox(height: 15),
+            Text(
+              L10n(context).attachmentFailed,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }

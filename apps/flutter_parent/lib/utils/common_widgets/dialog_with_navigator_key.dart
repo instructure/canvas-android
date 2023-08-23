@@ -79,7 +79,7 @@ Future<T?> showDialogWithNavigatorKey<T>({
   required WidgetBuilder builder,
   bool barrierDismissible = true,
 }) {
-  BuildContext context = navKey.currentContext!;
+  BuildContext? context = navKey.currentContext!;
   assert(debugCheckHasMaterialLocalizations(context));
 
   var route = _DialogRoute<T>(

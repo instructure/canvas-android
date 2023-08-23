@@ -29,7 +29,7 @@ class AttachmentPicker extends StatefulWidget {
   _AttachmentPickerState createState() => _AttachmentPickerState();
 
   static Future<AttachmentHandler?> asBottomSheet(BuildContext context) {
-    return showModalBottomSheet(context: context, builder: (context) => AttachmentPicker()) as Future<AttachmentHandler?>;
+    return showModalBottomSheet(context: context, builder: (context) => AttachmentPicker());
   }
 }
 

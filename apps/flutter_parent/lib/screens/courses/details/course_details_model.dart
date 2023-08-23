@@ -182,7 +182,7 @@ class CourseDetailsModel extends BaseModel {
   /// This sets the next grading period to use when loadAssignments is called. [currentGradingPeriod] won't be updated
   /// until the load call is finished, this way the grading period isn't updated in the ui until the rest of the data
   /// updates to reflect the new grading period.
-  updateGradingPeriod(GradingPeriod period) {
+  updateGradingPeriod(GradingPeriod? period) {
     _nextGradingPeriod = period;
   }
 }

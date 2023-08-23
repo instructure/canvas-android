@@ -35,8 +35,8 @@ class WebContentInteractor {
     }
   }
 
-  Future<String?> authContent(String? content, String? externalToolButtonText) async {
-    if (content == null || content.isEmpty) return content;
+  Future<String?>? authContent(String? content, String? externalToolButtonText) async {
+    if (content == null || content.isEmpty) return Future.value(content);
 
     String authContent = content;
     final iframeMatcher = RegExp('<iframe(.|\\n)*?iframe>');

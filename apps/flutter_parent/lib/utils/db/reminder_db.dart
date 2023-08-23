@@ -110,7 +110,7 @@ class ReminderDb {
     return maps.map((it) => fromMap(it as Map<String, dynamic>)).toList();
   }
 
-  Future<int> deleteById(int id) {
+  Future<int> deleteById(int? id) {
     return db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
   }
 
