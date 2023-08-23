@@ -29,6 +29,7 @@
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="android:datePickerStyle">@style/DatePickerStyle</item>
     </style>
 
     <style name="PSPDFKitTheme" parent="AppTheme.NoActionBar">
@@ -282,6 +283,11 @@
         <item name="android:textColor">@color/textDarkest</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">4dp</item>
+    </style>
+
+    <style name="DatePickerStyle" parent="@android:style/Widget.DeviceDefault.DatePicker">
+        <item name="android:headerMonthTextAppearance">@style/DatePickerTextAppearance</item>
+        <item name="android:headerBackground">@color/ash</item>
     </style>
 
 </resources>

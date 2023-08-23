@@ -255,4 +255,9 @@
         <item name="android:tint">@color/textDark</item>
     </style>
 
+    <style name="DatePickerStyle" parent="@android:style/Widget.DeviceDefault.DatePicker">
+        <item name="android:headerMonthTextAppearance">@style/DatePickerTextAppearance</item>
+        <item name="android:headerBackground">@color/licorice</item>
+    </style>
+
 </resources>
