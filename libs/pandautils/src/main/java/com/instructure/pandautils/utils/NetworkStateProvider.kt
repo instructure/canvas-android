@@ -20,6 +20,7 @@ package com.instructure.pandautils.utils
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
@@ -38,6 +39,10 @@ class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
         get() = _isOnlineLiveData
 
     init {
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).orDefault()
+        _isOnlineLiveData.postValue(hasActiveNetwork)
+
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
