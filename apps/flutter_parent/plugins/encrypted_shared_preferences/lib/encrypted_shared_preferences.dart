@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 import 'shared_preferences_platform_interface.dart';
@@ -78,15 +79,15 @@ class EncryptedSharedPreferences {
   /// Reads a set of string values from persistent storage, throwing an
   /// exception if it's not a string set.
   List<String> getStringList(String key) {
-    Object? list = _preferenceCache[key];
-    if (list != null && list is List<String>) {
-      _preferenceCache[key] = list;
-    }
-    else  {
-      list = null;
+    dynamic list = _preferenceCache[key];
+    List<String>? castedList;
+    try {
+      castedList = (list as List<Object?>).map((e) => e as String).toList();
+    } catch (e) {
+      castedList = [];
     }
     // Make a copy of the list so that later mutations won't propagate
-    return list == null ? [] : list as List<String>;
+    return castedList;
   }
 
   /// Saves a boolean [value] to persistent storage in the background.
@@ -127,7 +128,7 @@ class EncryptedSharedPreferences {
     } else {
       if (value is List<String>) {
         // Make a copy of the list so that later mutations won't propagate
-        _preferenceCache[key] = value.toList();
+        _preferenceCache[key] = [...value.toList()];
       } else {
         _preferenceCache[key] = value;
       }

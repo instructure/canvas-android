@@ -93,7 +93,7 @@ class ApiPrefs {
   }
 
   static void _checkInit() {
-    if (_prefs == null || _packageInfo == null) init();
+    if (_prefs == null || _packageInfo == null) throw StateError('ApiPrefs has not been initialized');;
   }
 
   // Login
@@ -170,7 +170,8 @@ class ApiPrefs {
 
   static List<Login> getLogins() {
     _checkInit();
-    return _prefs!.getStringList(KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList().nonNulls.toList();
+    var list = _prefs!.getStringList(KEY_LOGINS);
+    return list.map((it) => deserialize<Login>(json.decode(it))).toList().nonNulls.toList();
   }
 
   static setLastAccount(SchoolDomain lastAccount, LoginFlow loginFlow) {
@@ -272,7 +273,7 @@ class ApiPrefs {
 
   /// Prefs
 
-  static String?getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
+  static String? getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
 
   static User? getUser() => getCurrentLogin()?.currentUser;
 
