@@ -141,6 +141,7 @@ class _TestAppState extends State<TestApp> {
             // Material components use these delegate to provide default localization
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.delegate.supportedLocales,
           localeResolutionCallback: _localeCallback(),

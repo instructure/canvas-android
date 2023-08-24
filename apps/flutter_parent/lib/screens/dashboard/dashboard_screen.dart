@@ -258,7 +258,7 @@ class DashboardState extends State<DashboardScreen> {
                   icon: WidgetBadge(
                     Icon(
                       Icons.menu,
-                      color: Theme.of(context).primaryIconTheme.color,
+                      // color: Theme.of(context).primaryIconTheme.color,
                       key: Key("drawer_menu"),
                     ),
                     countListenable: _interactor.getInboxCountNotifier(),
@@ -353,9 +353,9 @@ class DashboardState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent!, style: Theme.of(context).primaryTextTheme.titleMedium),
+                  UserName.fromUserShortName(selectedStudent!, style: Theme.of(context).primaryTextTheme.titleMedium?.copyWith(color: Colors.black)),
                   SizedBox(width: 6),
-                  DropdownArrow(rotate: expand),
+                  DropdownArrow(rotate: expand, color: ParentTheme.of(context)?.onSurfaceColor ?? Colors.white),
                 ],
               )
             ],
@@ -572,11 +572,10 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerHeader(User? user) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      if (user?.avatarUrl != null)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 0, 8),
-          child: Avatar(user!.avatarUrl!, name: user.shortName, radius: 40),
-        ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(24, 16, 0, 8),
+        child: Avatar(user?.avatarUrl, name: user?.shortName, radius: 40),
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: UserName.fromUser(user!, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),

@@ -245,20 +245,21 @@ class _ParentThemeState extends State<ParentTheme> {
 
     var swatch = ParentColors.makeSwatch(themeColor);
 
-    final ThemeData theme = ThemeData();
     return ThemeData(
-      colorScheme: theme.colorScheme.copyWith(
-          brightness: isDarkMode ? Brightness.dark : Brightness.light,
-          secondary: swatch[500],
-      ),
+      brightness: isDarkMode ? Brightness.dark : Brightness.light,
       primarySwatch: swatch,
-      scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
+      primaryColor: isDarkMode ? Colors.black : null,
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500]),
+      toggleableActiveColor: swatch[500],
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: swatch[300],
       ),
+      scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
       canvasColor: isDarkMode ? Colors.black : Colors.white,
       textTheme: textTheme,
-      iconTheme: IconThemeData(color: onSurfaceColor),
+      primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+      //iconTheme: IconThemeData(color: onSurfaceColor),
+      primaryIconTheme: IconThemeData(color: isDarkMode ? ParentColors.tiara : Colors.white),
       dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
       fontFamily: 'Lato'
