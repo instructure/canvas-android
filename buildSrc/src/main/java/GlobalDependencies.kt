@@ -2,9 +2,9 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 31
+    const val COMPILE_SDK = 33
     const val MIN_SDK = 26
-    const val TARGET_SDK = 31
+    const val TARGET_SDK = 33
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "3.5.1"
