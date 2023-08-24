@@ -24,8 +24,8 @@ class CalendarEventsApi {
     String? endDate = null,
     List<String> contexts = const [],
     bool forceRefresh = false,
-  }) {
-    var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
+  }) async {
+    var dio = await canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var params = {
       'all_events': allEvents,
       'type': type,
@@ -36,8 +36,10 @@ class CalendarEventsApi {
     return fetchList(dio.get('calendar_events', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<ScheduleItem?> getEvent(String? eventId, bool forceRefresh) =>
-      fetch(canvasDio(forceRefresh: forceRefresh).get('calendar_events/$eventId'));
+  Future<ScheduleItem?> getEvent(String? eventId, bool forceRefresh) async {
+    var dio = await canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('calendar_events/$eventId'));
+  }
 
   Future<List<ScheduleItem>?> getUserCalendarItems(
     String userId,
@@ -47,7 +49,7 @@ class CalendarEventsApi {
     Set<String> contexts = const {},
     bool forceRefresh = false,
   }) async {
-    var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
+    var dio = await canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
 
     return fetchList(
         dio.get('users/$userId/calendar_events',

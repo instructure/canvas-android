@@ -22,7 +22,7 @@ import 'package:flutter_parent/utils/remote_config_utils.dart';
 
 class AuthApi {
   Future<CanvasToken?> refreshToken() async {
-    var dio = DioConfig.canvas(includeApiPath: false).dio;
+    var dio = await DioConfig.canvas(includeApiPath: false).dio;
     var params = {
       'client_id': ApiPrefs.getClientId(),
       'client_secret': ApiPrefs.getClientSecret(),
@@ -34,7 +34,7 @@ class AuthApi {
   }
 
   Future<CanvasToken?> getTokens(MobileVerifyResult? verifyResult, String requestCode) async {
-    var dio = DioConfig().dio;
+    var dio = await DioConfig().dio;
     var params = {
       'client_id': verifyResult?.clientId,
       'client_secret': verifyResult?.clientSecret,
@@ -53,7 +53,7 @@ class AuthApi {
             RemoteConfigUtils.getStringValue(RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED)?.toLowerCase() == 'true') &&
         domain.contains('.beta.');
 
-    Dio dio = DioConfig.core(useBetaDomain: mobileVerifyBetaEnabled).dio;
+    Dio dio = await DioConfig.core(useBetaDomain: mobileVerifyBetaEnabled).dio;
 
     String userAgent = ApiPrefs.getUserAgent();
     return fetch(
@@ -69,7 +69,7 @@ class AuthApi {
   }
 
   Future<void> deleteToken(String domain, String token) async {
-    Dio dio = DioConfig().dio;
+    Dio dio = await DioConfig().dio;
     var params = {'access_token': token};
     await dio.delete('$domain/login/oauth2/token', data: params);
   }

@@ -43,12 +43,14 @@ void main() {
       final domain = 'https://test_domain.com';
       await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
 
-      final options = canvasDio().options;
+      var dio = await canvasDio();
+      final options = dio.options;
       expect(options.baseUrl, '$domain/api/v1/');
     });
 
     test('sets up headers', () async {
-      final options = canvasDio().options;
+      var dio = await canvasDio();
+      final options = dio.options;
       final expectedHeaders = ApiPrefs.getHeaderMap()
         ..putIfAbsent('accept', () => 'application/json+canvas-string-ids')
         ..putIfAbsent('content-type', () => 'application/json; charset=utf-8');
@@ -59,11 +61,9 @@ void main() {
       final overrideToken = 'overrideToken';
       final extras = {'other': 'value'};
 
-      final options = canvasDio(
-              forceDeviceLanguage: true,
-              overrideToken: overrideToken,
-              extraHeaders: extras)
-          .options;
+      var dio = await canvasDio(forceDeviceLanguage: true, overrideToken: overrideToken, extraHeaders: extras);
+
+      final options = dio.options;
       final expected = ApiPrefs.getHeaderMap(
           forceDeviceLanguage: true, token: overrideToken, extraHeaders: extras)
         ..putIfAbsent('accept', () => 'application/json+canvas-string-ids')
@@ -74,7 +74,8 @@ void main() {
 
     test('sets per page param', () async {
       final perPageSize = 1;
-      final options = canvasDio(pageSize: PageSize(perPageSize)).options;
+      var dio = await canvasDio(pageSize: PageSize(perPageSize));
+      final options = dio.options;
 
       expect(options.queryParameters, {'per_page': perPageSize});
     });
@@ -86,7 +87,9 @@ void main() {
         ..masqueradeUser = CanvasModelTestUtils.mockUser(id: userId).toBuilder());
       await ApiPrefs.switchLogins(login);
 
-      final options = canvasDio().options;
+      var dio = await canvasDio();
+
+      final options = dio.options;
 
       expect(options.queryParameters['as_user_id'], userId);
     });
@@ -94,33 +97,39 @@ void main() {
     test('Does not set as_user_id param when not masquerading', () async {
       final domain = 'https://test_domain.com';
       await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
-      final options = canvasDio().options;
+      var dio = await canvasDio();
+      final options = dio.options;
 
       expect(options.queryParameters.containsKey('as_user_id'), isFalse);
     });
 
     test('sets cache extras', () async {
-      expect(canvasDio(forceRefresh: true).options.extra, isNotEmpty);
+      var dio = await canvasDio(forceRefresh: true);
+      expect(dio.options.extra, isNotEmpty);
     });
 
     test('sets cache extras with force refrersh', () async {
-      expect(canvasDio(forceRefresh: true).options.extra['dio_cache_force_refresh'], isTrue);
+      var dio = await canvasDio(forceRefresh: true);
+      expect(dio.options.extra['dio_cache_force_refresh'], isTrue);
     });
   });
 
   group('core options', () {
     test('initializes with a base url', () async {
-      final options = DioConfig.core().dio.options;
+      var dio = await DioConfig.core().dio;
+      final options = dio.options;
       expect(options.baseUrl, 'https://canvas.instructure.com/api/v1/');
     });
 
     test('initializes with a base url without api path', () async {
-      final options = DioConfig.core(includeApiPath: false).dio.options;
+      var dio = await DioConfig.core(includeApiPath: false).dio;
+      final options = dio.options;
       expect(options.baseUrl, 'https://canvas.instructure.com/');
     });
 
     test('initializes with a beta base url', () async {
-      final options = DioConfig.core(useBetaDomain: true).dio.options;
+      var dio = await DioConfig.core(useBetaDomain: true).dio;
+      final options = dio.options;
       expect(options.baseUrl, 'https://canvas.beta.instructure.com/api/v1/');
     });
 
@@ -129,42 +138,49 @@ void main() {
         '123': '123',
         'content-type': 'application/json; charset=utf-8'
       };
-      final options = DioConfig.core(headers: headers).dio.options;
+      var dio = await DioConfig.core(headers: headers).dio;
+      final options = dio.options;
       expect(options.headers, headers);
     });
 
     test('sets per page param', () async {
       final perPageSize = 13;
-      final options = DioConfig.core(pageSize: PageSize(perPageSize)).dio.options;
+      var dio = await DioConfig.core(pageSize: PageSize(perPageSize)).dio;
+      final options = dio.options;
       expect(options.queryParameters, {'per_page': perPageSize});
     });
 
     test('sets up cache maxAge', () async {
       final age = Duration(minutes: 123);
-      final options = DioConfig.core(cacheMaxAge: age).dio.options;
+      var dio = await DioConfig.core(cacheMaxAge: age).dio;
+      final options = dio.options;
       expect(options.extra['dio_cache_max_age'], age);
     });
 
     test('Does not set cache extras if max age is zero', () async {
-      final options = DioConfig.core(cacheMaxAge: Duration.zero).dio.options;
+      var dio = await DioConfig.core(cacheMaxAge: Duration.zero).dio;
+      final options = dio.options;
       expect(options.extra['dio_cache_max_age'], isNull);
       expect(options.extra['dio_cache_force_refresh'], isNull);
     });
 
     test('sets cache extras with force refrersh', () async {
-      final options = DioConfig.core(cacheMaxAge: Duration(minutes: 1), forceRefresh: true).dio.options;
+      var dio = await DioConfig.core(cacheMaxAge: Duration(minutes: 1), forceRefresh: true).dio;
+      final options = dio.options;
       expect(options.extra['dio_cache_force_refresh'], isTrue);
     });
   });
 
   group('interceptors', () {
     test('adds cache manager', () async {
+      var dio = await canvasDio();
       // The cache manager is an object that hooks in via an interceptor wrapper, so we can't check for the explicit type
-      expect(canvasDio().interceptors, contains(isA<InterceptorsWrapper>()));
+      expect(dio.interceptors, contains(isA<InterceptorsWrapper>()));
     });
 
     test('adds log interceptor', () async {
-      expect(canvasDio().interceptors, contains(isA<LogInterceptor>()));
+      var dio = await canvasDio();
+      expect(dio.interceptors, contains(isA<LogInterceptor>()));
     });
   });
 

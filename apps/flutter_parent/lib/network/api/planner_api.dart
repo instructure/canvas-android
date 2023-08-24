@@ -24,7 +24,7 @@ class PlannerApi {
     Set<String> contexts = const {},
     bool forceRefresh = false,
   }) async {
-    var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
+    var dio = await canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var queryParams = {
       'start_date': startDay.toUtc().toIso8601String(),
       'end_date': endDay.toUtc().toIso8601String(),

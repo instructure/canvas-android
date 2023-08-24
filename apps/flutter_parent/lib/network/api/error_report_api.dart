@@ -27,10 +27,12 @@ class ErrorReportApi {
     String? name,
     String? becomeUser,
     String? userRoles,
-  }) {
+  }) async {
     var config = domain == DEFAULT_DOMAIN ? DioConfig.core() : DioConfig.canvas();
 
-    return config.dio.post(
+    var dio = await config.dio;
+
+    await dio.post(
       '/error_reports.json',
       queryParameters: {
         'error[subject]': subject,

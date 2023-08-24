@@ -56,7 +56,7 @@ class UserSeedApi {
 
     await ApiPrefs.init();
 
-    var dio = seedingDio();
+    var dio = await seedingDio();
 
     var response = await dio.post(_createUserEndpoint, data: postBody);
 
@@ -84,7 +84,7 @@ class UserSeedApi {
 
   // Get the token for the SeededUser, given MobileVerifyResult and authCode
   static Future<String?> _getToken(SeededUser user, MobileVerifyResult? verifyResult, String authCode) async {
-    var dio = seedingDio(baseUrl: "https://${user.domain}/");
+    var dio = await seedingDio(baseUrl: "https://${user.domain}/");
 
     var response = await dio.post('login/oauth2/token', queryParameters: {
       "client_id": verifyResult?.clientId,
@@ -130,14 +130,15 @@ class UserSeedApi {
   /// Will only work if the observee has been enrolled in a course as a student.
   /// Returns a PairingCode structure, which contains a "code" field.
   static Future<PairingCode?> createObserverPairingCode(String observeeId) async {
-    var dio = seedingDio();
+    var dio = await seedingDio();
     return fetch(dio.post('users/$observeeId/observer_pairing_codes'));
   }
 
   /// Add [observer] as an observer for [observee], using the indicated pairingCode.
   static Future<bool> addObservee(SeededUser observer, SeededUser observee, String? pairingCode) async {
     try {
-      var pairingResponse = await seedingDio().post('users/${observer.id}/observees',
+      var dio = await seedingDio();
+      var pairingResponse = await dio.post('users/${observer.id}/observees',
           queryParameters: {'pairing_code': pairingCode, 'access_token': observee.token});
       return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
     } on DioError {

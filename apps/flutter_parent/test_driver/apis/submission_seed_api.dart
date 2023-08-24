@@ -23,7 +23,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class SubmissionSeedApi {
-  static Future<Submission?> createSubmission(String courseId, Assignment? assignment, String asUserId) {
+  static Future<Submission?> createSubmission(String courseId, Assignment? assignment, String asUserId) async {
     SubmissionTypes? submissionType = assignment?.submissionTypes?.first;
     String submissionTypeString = "";
     switch (submissionType) {
@@ -46,17 +46,17 @@ class SubmissionSeedApi {
       ..submission.userId = int.parse(asUserId));
 
     var postBody = json.encode(serialize(submissionWrapper));
-    final dio = seedingDio();
+    final dio = await seedingDio();
 
     print("submission postBody =  $postBody");
     return fetch(dio.post("courses/$courseId/assignments/${assignment?.id}/submissions", data: postBody));
   }
 
-  static Future<Submission?> gradeSubmission(String courseId, Assignment? assignment, String studentId, String grade) {
+  static Future<Submission?> gradeSubmission(String courseId, Assignment? assignment, String studentId, String grade) async {
     final gradeWrapper = GradeSubmissionWrapper((b) => b..submission.postedGrade = grade);
 
     final postBody = json.encode(serialize(gradeWrapper));
-    final dio = seedingDio();
+    final dio = await seedingDio();
 
     print("Grade submission postBody: $postBody");
     return fetch(dio.put("courses/$courseId/assignments/${assignment?.id}/submissions/$studentId", data: postBody));

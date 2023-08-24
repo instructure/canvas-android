@@ -246,10 +246,9 @@ class _ParentThemeState extends State<ParentTheme> {
     var swatch = ParentColors.makeSwatch(themeColor);
 
     return ThemeData(
-      brightness: isDarkMode ? Brightness.dark : Brightness.light,
       primarySwatch: swatch,
       primaryColor: isDarkMode ? Colors.black : null,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500]),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500], brightness: isDarkMode ? Brightness.dark : Brightness.light),
       toggleableActiveColor: swatch[500],
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: swatch[300],

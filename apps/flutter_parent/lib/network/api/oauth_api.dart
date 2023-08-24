@@ -17,8 +17,8 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class OAuthApi {
-  Future<AuthenticatedUrl?> getAuthenticatedUrl(String targetUrl) {
-    final dio = canvasDio(forceRefresh: true, includeApiPath: false);
+  Future<AuthenticatedUrl?> getAuthenticatedUrl(String targetUrl) async {
+    final dio = await canvasDio(forceRefresh: true, includeApiPath: false);
     final params = {'return_to': targetUrl};
     return fetch(dio.get('login/session_token', queryParameters: params));
   }

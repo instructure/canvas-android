@@ -16,11 +16,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'private_consts.dart';
 
@@ -33,6 +36,7 @@ class DioConfig {
   final PageSize pageSize;
   final Map<String, dynamic>? extraQueryParams;
   final int retries;
+  CacheOptions? cacheOptions;
 
   DioConfig({
     this.baseUrl = '',
@@ -65,12 +69,11 @@ class DioConfig {
   }
 
   /// Creates a [Dio] instance using this configuration
-  Dio get dio {
+  Future<Dio> get dio async {
     // Add canvas-string-ids header to ensure Canvas IDs are returned as Strings
     baseHeaders[HttpHeaders.acceptHeader] = 'application/json+canvas-string-ids';
 
     // Configure base options
-    debugPrint("BASE_URL: $baseUrl");
     var options = BaseOptions(baseUrl: baseUrl, headers: baseHeaders);
 
     // Add per_page query param if requested
@@ -80,11 +83,12 @@ class DioConfig {
     // Set extra query params
     options.queryParameters = extraParams;
 
+    await initCacheOptionsIfNull();
+
     // Add cache configuration to base options
-    // if (cacheMaxAge != Duration.zero) {
-    //   var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
-    //   options.extra.addAll(extras);
-    // }
+    if (cacheMaxAge != Duration.zero) {
+      options.extra.addAll(cacheOptions!.toExtra());
+    }
 
     // Create Dio instance and add interceptors
     final dio = Dio(options);
@@ -101,7 +105,7 @@ class DioConfig {
 
     // Cache manager
     if (cacheMaxAge != Duration.zero) {
-      dio.interceptors.add(_cacheInterceptor());
+      dio.interceptors.add(await _cacheInterceptor());
     }
 
     bool debug = DebugFlags.isDebugApi;
@@ -135,13 +139,22 @@ class DioConfig {
     };
   }
 
-  Interceptor _cacheInterceptor() {
+  Future<Interceptor> _cacheInterceptor() async {
     // Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
     // return InterceptorsWrapper(
     //   onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
     //   onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
     //   onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
     // );
+
+    await initCacheOptionsIfNull();
+
+    Interceptor interceptor = DioCacheInterceptor(options: cacheOptions!);
+    return InterceptorsWrapper(
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
+      onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
+      onError: (DioException e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
+    );
 
     return InterceptorsWrapper(
       onRequest: (RequestOptions options, RequestInterceptorHandler handler) => handler.next(options),
@@ -204,17 +217,26 @@ class DioConfig {
   }
 
   /// Clears the cache, deleting only the entries related to path OR clearing everything if path is null
-  Future<bool> clearCache({String? path}) {
+  Future<void> clearCache({String? path}) async {
     // // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
     // // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
     // if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
-    //
-    // if (path == null) {
-    //   return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
-    // } else {
-    //   return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path, requestMethod: 'GET');
-    // }
-    return Future.value(true);
+
+    await initCacheOptionsIfNull();
+
+    if (path == null) {
+      return cacheOptions?.store?.clean() ?? Future.value(null);
+    } else {
+      return cacheOptions?.store?.delete(path) ?? Future.value(null);
+    }
+  }
+
+  Future<void> initCacheOptionsIfNull() async {
+    if (cacheOptions == null) {
+      final dir = await getApplicationCacheDirectory();
+      final hiveStore = HiveCacheStore(dir.path);
+      cacheOptions = CacheOptions(store: hiveStore, policy: CachePolicy.forceCache);
+    }
   }
 }
 
@@ -235,7 +257,7 @@ class PageSize {
 }
 
 /// Convenience method that returns a [Dio] instance configured by calling through to [DioConfig.canvas]
-Dio canvasDio({
+Future<Dio> canvasDio({
   bool includeApiPath = true,
   bool forceRefresh = false,
   bool forceDeviceLanguage = false,
@@ -256,7 +278,7 @@ Dio canvasDio({
 const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
 
 // Convenience method that returns a [Dio] instance for data-seeding
-Dio seedingDio({String baseUrl = baseSeedingUrl}) {
+Future<Dio> seedingDio({String baseUrl = baseSeedingUrl}) {
   return DioConfig(
       baseUrl: baseUrl,
       retries: 3, // Allow for retries in our seeding calls, because they can return 500s
