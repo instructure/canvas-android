@@ -20,6 +20,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -62,6 +63,7 @@ import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.binding.setTint
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import java.util.*
@@ -220,7 +222,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         ColorUtils.colorIt(color, canvasLogo)
 
         // App Name/Type. Will not be present in all layout versions
-        appDescriptionType.setTextColor(color)
+        canvasWordmark.imageTintList = ColorStateList.valueOf(color)
         appDescriptionType.setText(appTypeName())
 
         ViewStyler.themeStatusBar(this@BaseLoginLandingPageActivity)
