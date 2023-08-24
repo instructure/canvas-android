@@ -50,6 +50,9 @@ object FileFolderAPI {
         @GET("folders/{folderId}")
         fun getFolder(@Path("folderId") folderId: Long): Call<FileFolder>
 
+        @GET("folders/{folderId}")
+        suspend fun getFolder(@Path("folderId") folderId: Long, @Tag restParams: RestParams): DataResult<FileFolder>
+
         @GET("courses/{courseId}/files/{folderId}")
         fun getCourseFile(@Path("courseId") contextId: Long, @Path("folderId") folderId: Long): Call<FileFolder>
 

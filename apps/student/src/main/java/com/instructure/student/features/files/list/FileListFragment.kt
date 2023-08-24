@@ -1,20 +1,21 @@
 /*
- * Copyright (C) 2016 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
  *
  */
-package com.instructure.student.fragment
+package com.instructure.student.features.files.list
 
 import android.content.DialogInterface
 import android.content.res.Configuration
@@ -28,6 +29,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
@@ -53,19 +55,21 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.FileFolderCallback
-import com.instructure.student.adapter.FileListRecyclerAdapter
 import com.instructure.student.databinding.FragmentFileListBinding
 import com.instructure.student.dialog.EditTextDialog
 import com.instructure.student.features.files.search.FileSearchFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.io.File
 import java.util.*
 import javax.inject.Inject
+
 
 @ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
@@ -74,6 +78,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     @Inject
     lateinit var workManager: WorkManager
+
+    @Inject
+    lateinit var fileListRepository: FileListRepository
 
     private val binding by viewBinding(FragmentFileListBinding::bind)
 
@@ -155,10 +162,10 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             tryWeave {
                 folder = if (folderId != 0L) {
                     // If folderId is valid, get folder by ID
-                    awaitApi<FileFolder> { FileFolderManager.getFolder(folderId, true, it) }
+                    fileListRepository.getFolder(folderId, true)
                 } else {
                     // Otherwise get root folder of the CanvasContext
-                    awaitApi<FileFolder> { FileFolderManager.getRootFolderForContext(canvasContext, true, it) }
+                    fileListRepository.getRootFolderForContext(canvasContext, true)
                 }
                 configureViews()
             } catch {
@@ -203,23 +210,24 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         adapterCallback = object : FileFolderCallback {
 
             override fun onItemClicked(item: FileFolder) {
-                if (item.fullName != null) {
-                    RouteMatcher.route(requireContext(), FileListFragment.makeRoute(canvasContext, item))
-                } else {
-                    recordFilePreviewEvent(item)
-                    if (item.isHtmlFile) {
-                        /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
-                        accessed as an authenticated preview to work correctly */
-                        RouteMatcher.route(requireContext(), InternalWebviewFragment.makeRoute(
-                            canvasContext = canvasContext,
-                            url = item.getFilePreviewUrl(ApiPrefs.fullDomain, canvasContext),
-                            authenticate = true,
-                            isUnsupportedFeature = false,
-                            allowUnsupportedRouting = false,
-                            shouldRouteInternally = true,
-                            allowRoutingTheSameUrlInternally = false
-                        ))
-                    } else {
+                when {
+                    item.fullName != null -> {
+                        RouteMatcher.route(requireContext(), makeRoute(canvasContext, item))
+                    }
+                    item.isHtmlFile && item.isLocalFile -> {
+                        recordFilePreviewEvent(item)
+                        openHtmlFile(item)
+                    }
+                    item.isHtmlFile && !item.isLocalFile -> {
+                        recordFilePreviewEvent(item)
+                        openHtmlUrl(item)
+                    }
+                    item.isLocalFile -> {
+                        recordFilePreviewEvent(item)
+                        openLocalMedia(item.contentType, item.url, item.displayName, canvasContext)
+                    }
+                    else -> {
+                        recordFilePreviewEvent(item)
                         openMedia(item.contentType, item.url, item.displayName, canvasContext)
                     }
                 }
@@ -265,6 +273,40 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         }
     }
 
+    private fun openHtmlUrl(fileFolder: FileFolder) {
+        /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
+                    accessed as an authenticated preview to work correctly */
+        RouteMatcher.route(
+            requireContext(), InternalWebviewFragment.makeRoute(
+                canvasContext = canvasContext,
+                url = fileFolder.getFilePreviewUrl(ApiPrefs.fullDomain, canvasContext),
+                authenticate = true,
+                isUnsupportedFeature = false,
+                allowUnsupportedRouting = false,
+                shouldRouteInternally = true,
+                allowRoutingTheSameUrlInternally = false
+            )
+        )
+    }
+
+    private fun openHtmlFile(fileFolder: FileFolder) {
+        fileFolder.url?.let {
+            val file = File(it)
+            val uri = FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+            RouteMatcher.route(
+                requireContext(), InternalWebviewFragment.makeRoute(
+                    canvasContext = canvasContext,
+                    url = uri.toString(),
+                    authenticate = false,
+                    isUnsupportedFeature = false,
+                    allowUnsupportedRouting = false,
+                    shouldRouteInternally = true,
+                    allowRoutingTheSameUrlInternally = false
+                )
+            )
+        }
+    }
+
     private fun themeToolbar() = with(binding) {
         // We style the toolbar white for user files
         if (canvasContext.type == CanvasContext.Type.USER) {
@@ -280,7 +322,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val isUserFiles = canvasContext.type == CanvasContext.Type.USER
 
         if (recyclerAdapter == null) {
-            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder!!, canvasContext), folder!!, adapterCallback)
+            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder, canvasContext, fileListRepository.isOnline()), folder, adapterCallback, fileListRepository)
         }
 
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
@@ -288,7 +330,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         setupToolbarMenu(toolbar)
 
         // Update toolbar title with folder name if it's not a root folder
-        if (!folder!!.isRoot) toolbar.title = folder?.name
+        if (folder?.isRoot == false) toolbar.title = folder?.name
 
         themeToolbar()
 
@@ -324,7 +366,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val popup = PopupMenu(requireContext(), anchorView)
         popup.inflate(R.menu.file_folder_options)
         with(popup.menu) {
-            val options = getFileMenuOptions(item, canvasContext)
+            val options = getFileMenuOptions(item, canvasContext, fileListRepository.isOnline())
             // Only show alternate-open option for PDF files
             findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
             findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
@@ -336,7 +378,11 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             when (menuItem.itemId) {
                 R.id.openAlternate -> {
                     recordFilePreviewEvent(item)
-                    openMedia(item.contentType, item.url, item.displayName, true, canvasContext)
+                    if (fileListRepository.isOnline()) {
+                        openMedia(item.contentType, item.url, item.displayName, true, canvasContext)
+                    } else {
+                        openLocalMedia(item.contentType, item.url, item.displayName, canvasContext, true)
+                    }
                 }
                 R.id.download -> downloadItem(item)
                 R.id.rename -> renameItem(item)
@@ -379,7 +425,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     awaitApi { FileFolderManager.updateFolder(item.id, body, it) }
                 }
                 recyclerAdapter?.add(updateItem)
-                StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+                if (folder != null) {
+                    StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+                }
             } catch {
                 toast(R.string.errorOccurred)
             }
@@ -422,7 +470,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             if (recyclerAdapter?.size() == 0) {
                 setEmptyView(binding.emptyView, R.drawable.ic_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
             }
-            StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+            if (folder != null) {
+                StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
+            }
             updateFileList()
         } catch {
             toast(R.string.errorOccurred)
@@ -468,6 +518,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     private fun createFolder() {
         EditTextDialog.show(requireFragmentManager(), getString(R.string.createFolder), "") { name ->
             tryWeave {
+                if (folder == null) throw IllegalArgumentException("Folder is null")
                 val newFolder = awaitApi<FileFolder> {
                     FileFolderManager.createFolder(folder!!.id, CreateFolder(name), it)
                 }
@@ -566,7 +617,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         /**
          * @return A list of possible actions the user is able to perform on the file/folder
          */
-        fun getFileMenuOptions(fileFolder: FileFolder, canvasContext: CanvasContext): List<FileMenuType> {
+        fun getFileMenuOptions(fileFolder: FileFolder?, canvasContext: CanvasContext, isOnline: Boolean): List<FileMenuType> {
+            if (fileFolder == null) return emptyList()
             val options: MutableList<FileMenuType> = mutableListOf()
 
             if (canvasContext.type == CanvasContext.Type.USER) {
@@ -600,7 +652,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     // User is a student; Students can only download course files
                     if (!fileFolder.isLockedForUser && fileFolder.isFile) {
                         // File isn't locked, let them download it
-                        options.add(FileMenuType.DOWNLOAD)
+                        if (isOnline) {
+                            options.add(FileMenuType.DOWNLOAD)
+                        }
 
                         if ("pdf" in fileFolder.contentType.orEmpty()) {
                             options.add(FileMenuType.OPEN_IN_ALTERNATE)
@@ -615,7 +669,10 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     }
 
                     if (fileFolder.isFile) {
-                        options.add(FileMenuType.DOWNLOAD)
+                        if (isOnline) {
+                            options.add(FileMenuType.DOWNLOAD)
+                        }
+
                         if ("pdf" in fileFolder.contentType.orEmpty()) {
                             options.add(FileMenuType.OPEN_IN_ALTERNATE)
                         }

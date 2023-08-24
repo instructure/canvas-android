@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,23 +12,21 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
+ *
+ *
  */
-package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.Stub
-import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.slowLogInAsStudent
-import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Test
+package com.instructure.pandautils.room.offline.entities
 
-@HiltAndroidTest
-class NotATeacherPageTest : TeacherTest() {
-
-    // Runs live; no MockCanvas
-    @Test
-    @Stub
-    override fun displaysPageObjects() {
-        slowLogInAsStudent()
-        notATeacherPage.assertPageObjects()
-    }
-}
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import java.util.Date
+@Entity
+data class LocalFileEntity(
+    @PrimaryKey
+    val id: Long,
+    val courseId: Long,
+    val createdDate: Date,
+    val path: String
+)

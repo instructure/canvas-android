@@ -63,7 +63,7 @@ class FileSyncSettingsDaoTest {
 
     @Test
     fun testInsertReplaces() = runTest {
-        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, 1L, null)
+        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, "", 1L, null)
 
         fileSyncSettingsDao.insert(fileSyncSettingsEntity)
 
@@ -78,8 +78,8 @@ class FileSyncSettingsDaoTest {
 
     @Test
     fun testFindById() = runTest {
-        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, 1L, null)
-        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, 1L, null)
+        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, "", 1L, null)
+        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, "", 1L, null)
 
         fileSyncSettingsDao.insert(fileSyncSettingsEntity)
         fileSyncSettingsDao.insert(fileSyncSettingsEntity2)
@@ -91,8 +91,8 @@ class FileSyncSettingsDaoTest {
 
     @Test
     fun testFindAll() = runTest {
-        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, 1L, null)
-        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, 1L, null)
+        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, "", 1L, null)
+        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, "", 1L, null)
 
         fileSyncSettingsDao.insert(fileSyncSettingsEntity)
         fileSyncSettingsDao.insert(fileSyncSettingsEntity2)
@@ -104,8 +104,8 @@ class FileSyncSettingsDaoTest {
 
     @Test
     fun testDeleteById() = runTest {
-        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, 1L, null)
-        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, 1L, null)
+        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, "", 1L, null)
+        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, "", 1L, null)
 
         fileSyncSettingsDao.insert(fileSyncSettingsEntity)
         fileSyncSettingsDao.insert(fileSyncSettingsEntity2)
@@ -121,9 +121,9 @@ class FileSyncSettingsDaoTest {
 
     @Test
     fun testDeleteByIds() = runTest {
-        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, 1L, null)
-        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, 1L, null)
-        val fileSyncSettingsEntity3 = FileSyncSettingsEntity(3L, 1L, null)
+        val fileSyncSettingsEntity = FileSyncSettingsEntity(1L, "", 1L, null)
+        val fileSyncSettingsEntity2 = FileSyncSettingsEntity(2L, "", 1L, null)
+        val fileSyncSettingsEntity3 = FileSyncSettingsEntity(3L, "", 1L, null)
 
         fileSyncSettingsDao.insert(fileSyncSettingsEntity)
         fileSyncSettingsDao.insert(fileSyncSettingsEntity2)

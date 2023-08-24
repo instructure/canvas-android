@@ -18,9 +18,7 @@
 package com.instructure.pandautils.features.offline.offlinecontent
 
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.depaginate
@@ -34,9 +32,9 @@ import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 
 class OfflineContentRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val fileSyncSettingsDao: FileSyncSettingsDao
+    private val fileSyncSettingsDao: FileSyncSettingsDao,
+    private val courseFileSharedRepository: CourseFileSharedRepository
 ) {
     suspend fun getCourse(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -52,51 +50,9 @@ class OfflineContentRepository(
         return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
     }
 
+
     suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
-        val params = RestParams(isForceReadFromNetwork = true)
-        val rootFolderResult =
-            fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
-
-        if (rootFolderResult.isFail) return emptyList()
-
-        return getAllFiles(rootFolderResult.dataOrThrow)
-    }
-
-    private suspend fun getAllFiles(folder: FileFolder): List<FileFolder> {
-        val result = mutableListOf<FileFolder>()
-        val subFolders = getFolders(folder)
-
-        val currentFolderFiles = getFiles(folder)
-        result.addAll(currentFolderFiles)
-
-        for (subFolder in subFolders) {
-            val subFolderFiles = getAllFiles(subFolder)
-            result.addAll(subFolderFiles)
-        }
-
-        return result
-    }
-
-    private suspend fun getFolders(folder: FileFolder): List<FileFolder> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val foldersResult = fileFolderApi.getFirstPageFolders(folder.id, params).depaginate { nextUrl ->
-            fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
-        }
-
-        return foldersResult.dataOrNull.orEmpty().filterValidFileFolders()
-    }
-
-    private suspend fun getFiles(folder: FileFolder): List<FileFolder> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val filesResult = fileFolderApi.getFirstPageFiles(folder.id, params).depaginate { nextUrl ->
-            fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
-        }
-
-        return filesResult.dataOrNull.orEmpty().filterValidFileFolders()
-    }
-
-    private fun List<FileFolder>.filterValidFileFolders() = this.filter {
-        !it.isHidden && !it.isLocked && !it.isHiddenForUser && !it.isLockedForUser
+        return courseFileSharedRepository.getCourseFiles(courseId)
     }
 
     suspend fun findCourseSyncSettings(courseId: Long): CourseSyncSettingsWithFiles {

@@ -55,11 +55,13 @@ import com.instructure.pandautils.room.offline.entities.*
         DiscussionTopicRemoteFileEntity::class,
         DiscussionTopicSectionEntity::class,
         EnrollmentEntity::class,
+        FileFolderEntity::class,
         ExternalToolAttributesEntity::class,
         GradesEntity::class,
         GradingPeriodEntity::class,
         GroupEntity::class,
         GroupUserEntity::class,
+        LocalFileEntity::class,
         MasteryPathAssignmentEntity::class,
         MasteryPathEntity::class,
         ModuleContentDetailsEntity::class,
@@ -200,4 +202,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun rubricCriterionRatingDao(): RubricCriterionRatingDao
 
     abstract fun assignmentRubricCriterionDao(): AssignmentRubricCriterionDao
+
+    abstract fun fileFolderDao(): FileFolderDao
+
+    abstract fun localFileDao(): LocalFileDao
 }

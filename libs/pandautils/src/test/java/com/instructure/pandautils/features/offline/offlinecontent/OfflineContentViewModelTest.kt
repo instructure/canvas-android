@@ -155,7 +155,9 @@ class OfflineContentViewModelTest {
         Assert.assertEquals(2, viewModel.data.value?.courseItems?.size)
         Assert.assertEquals(arrayListOf(1L, 2L), viewModel.data.value?.courseItems?.map { it.courseId })
         val firstCourseTabs = viewModel.data.value?.courseItems?.first()?.data?.tabs
-        Assert.assertEquals(arrayListOf("Pages", "Syllabus", "Assignments", "Grades", "Files"), firstCourseTabs?.map { it.data.title })
+        Assert.assertEquals(
+            arrayListOf("Pages", "Syllabus", "Assignments", "Grades", "Files"),
+            firstCourseTabs?.map { it.data.title })
         Assert.assertTrue(firstCourseTabs?.first()?.data?.files.isNullOrEmpty())
         Assert.assertEquals(
             arrayListOf("File 1", "File 2"),
@@ -306,7 +308,8 @@ class OfflineContentViewModelTest {
 
         val tabs = CourseSyncSettingsEntity.TABS.associateWith { true }
         val expected = CourseSyncSettingsEntity(1L, true, tabs, true)
-        val expectedFiles = listOf(FileSyncSettingsEntity(1L, 1L, null), FileSyncSettingsEntity(2L, 1L, null))
+        val expectedFiles =
+            listOf(FileSyncSettingsEntity(1L, "File 1", 1L, null), FileSyncSettingsEntity(2L, "File 2",1L, null))
 
         viewModel.data.value?.courseItems?.first()?.apply {
             onCheckedChanged.invoke(true, this)

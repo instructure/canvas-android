@@ -455,4 +455,14 @@ class OfflineModule {
     fun providePageFacade(pageDao: PageDao, lockInfoFacade: LockInfoFacade): PageFacade {
         return PageFacade(pageDao, lockInfoFacade)
     }
+
+    @Provides
+    fun provideFileFolderDao(appDatabase: OfflineDatabase): FileFolderDao {
+        return appDatabase.fileFolderDao()
+    }
+
+    @Provides
+    fun provideLocalFileDao(appDatabase: OfflineDatabase): LocalFileDao {
+        return appDatabase.localFileDao()
+    }
 }
