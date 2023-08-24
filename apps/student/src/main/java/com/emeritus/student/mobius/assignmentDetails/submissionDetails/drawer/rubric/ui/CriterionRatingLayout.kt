@@ -29,7 +29,7 @@ import java.util.*
 import kotlin.random.Random
 
 class CriterionRatingLayout @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
     /** A map of cached rating button view positions, generated during measure and used during layout */
@@ -45,18 +45,31 @@ class CriterionRatingLayout @JvmOverloads constructor(
     }
 
     /** Sets (replaces) the data to be used for rating. This MUST be called for proper functionality */
-    fun setRatingData(ratings: List<RatingData>, tint: Int, onRatingClicked: (ratingId: String) -> Unit) {
+    fun setRatingData(
+        ratings: List<RatingData>,
+        tint: Int,
+        onRatingClicked: (ratingId: String) -> Unit
+    ) {
         removeAllViews()
         ratings.forEach { rating ->
             val button = CriterionRatingButton(context, rating, tint)
             button.accessibilityDelegate = object : AccessibilityDelegate() {
-                override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View, info: AccessibilityNodeInfo
+                ) {
                     super.onInitializeAccessibilityNodeInfo(host, info)
-                    val description = resources.getString(R.string.a11y_criterion_button_click_description)
-                    info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, description))
+                    val description =
+                        resources.getString(R.string.a11y_criterion_button_click_description)
+                    info?.addAction(
+                        AccessibilityNodeInfo.AccessibilityAction(
+                            AccessibilityNodeInfo.ACTION_CLICK,
+                            description
+                        )
+                    )
                 }
             }
-            button.contentDescription = resources.getString(R.string.a11y_criterion_content_description, rating.text)
+            button.contentDescription =
+                resources.getString(R.string.a11y_criterion_content_description, rating.text)
             button.onClick {
                 onRatingClicked(rating.id)
             }
@@ -115,7 +128,12 @@ class CriterionRatingLayout @JvmOverloads constructor(
         for (child in children) {
             val (x, y) = positionMap[child] ?: 0 to 0
             if (isRTL()) {
-                child.layout(measuredWidth - x - child.measuredWidth, y, measuredWidth - x, y + child.measuredHeight)
+                child.layout(
+                    measuredWidth - x - child.measuredWidth,
+                    y,
+                    measuredWidth - x,
+                    y + child.measuredHeight
+                )
             } else {
                 child.layout(x, y, x + child.measuredWidth, y + child.measuredHeight)
             }
@@ -127,9 +145,11 @@ class CriterionRatingLayout @JvmOverloads constructor(
         if (child is CriterionRatingButton) {
             super.addView(child, index, params)
         } else {
-            throw IllegalArgumentException("Cannot add child view of type " +
-                    "${child?.javaClass?.simpleName}. RubricRatingLayout only supports children " +
-                    "of type RubricRatingView")
+            throw IllegalArgumentException(
+                "Cannot add child view of type " +
+                        "${child?.javaClass?.simpleName}. RubricRatingLayout only supports children " +
+                        "of type RubricRatingView"
+            )
         }
     }
 
