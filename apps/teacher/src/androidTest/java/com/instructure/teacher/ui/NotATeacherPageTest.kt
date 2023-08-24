@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.slowLogInAsStudent
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -25,6 +26,7 @@ class NotATeacherPageTest : TeacherTest() {
 
     // Runs live; no MockCanvas
     @Test
+    @Stub
     override fun displaysPageObjects() {
         slowLogInAsStudent()
         notATeacherPage.assertPageObjects()
