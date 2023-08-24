@@ -23,8 +23,10 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.*
@@ -36,7 +38,7 @@ object BinderUtils {
     @Suppress("DEPRECATION")
     fun getHtmlAsText(html: String?) = html?.validOrNull()?.let { StringUtilities.simplifyHTML(Html.fromHtml(it)) }
 
-    fun getGrade(assignment: Assignment, submission: Submission?, context: Context, restrictQuantitativeData: Boolean = false): DisplayGrade {
+    fun getGrade(assignment: Assignment, submission: Submission?, context: Context, restrictQuantitativeData: Boolean, gradingScheme: List<GradingSchemeRow>): DisplayGrade {
         val possiblePoints = assignment.pointsPossible
         val pointsPossibleText = NumberHelper.formatDecimal(possiblePoints, 2, true)
 
@@ -108,6 +110,11 @@ object BinderUtils {
             }
         }
 
+        if (restrictQuantitativeData && assignment.isGradingTypeQuantitative) {
+            val letterGrade = convertScoreToLetterGrade(submission.score, assignment.pointsPossible, gradingScheme)
+            return DisplayGrade(letterGrade, getContentDescriptionForMinusGradeString(letterGrade, context).validOrNull() ?: letterGrade)
+        }
+
         // Numeric grade
         submission.grade?.toDoubleOrNull()?.let { parsedGrade ->
             if (restrictQuantitativeData) return DisplayGrade()
@@ -141,11 +148,12 @@ object BinderUtils {
         assignment: Assignment,
         submission: Submission,
         color: Int,
-        restrictQuantitativeData: Boolean
+        restrictQuantitativeData: Boolean,
+        gradingScheme: List<GradingSchemeRow>
     ) {
-        val hasGrade = submission.grade.isValid()
-        val (grade, contentDescription) = getGrade(assignment, submission, context, restrictQuantitativeData)
-        if (hasGrade) {
+        val hasGrade = submission.grade.isValid() // TODO check if we still need this
+        val (grade, contentDescription) = getGrade(assignment, submission, context, restrictQuantitativeData, gradingScheme)
+        if (!submission.excused && grade.isValid()) {
             textView.text = grade
             textView.contentDescription = contentDescription
             textView.setTextAppearance(R.style.TextStyle_Grade)

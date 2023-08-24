@@ -54,7 +54,7 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             points.visibility = View.GONE
         } else {
             points.visibility = View.VISIBLE
-            BinderUtils.setupGradeText(context, points, assignment, submission, courseColor, restrictQuantitativeData)
+            BinderUtils.setupGradeText(context, points, assignment, submission, courseColor, restrictQuantitativeData, emptyList())
         }
 
         val drawable = BinderUtils.getAssignmentIcon(assignment)

@@ -175,3 +175,13 @@ fun Assignment.toScheduleItem() : ScheduleItem {
             lockedModuleName = lockInfo?.lockedModuleName
     ).apply { courseId = id }
 }
+
+fun convertScoreToLetterGrade(score: Double, maxScore: Double, gradingScheme: List<GradingSchemeRow>): String {
+    val percent = score / maxScore
+    return convertPercentScoreToLetterGrade(percent, gradingScheme)
+}
+
+fun convertPercentScoreToLetterGrade(percentScore: Double, gradingScheme: List<GradingSchemeRow>): String {
+    val grade = gradingScheme.firstOrNull { percentScore >= it.value } ?: gradingScheme.last()
+    return grade.name
+}
