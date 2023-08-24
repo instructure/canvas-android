@@ -171,7 +171,7 @@ class ApiPrefs {
   static List<Login> getLogins() {
     _checkInit();
     var list = _prefs!.getStringList(KEY_LOGINS);
-    return list.map((it) => deserialize<Login>(json.decode(it))).toList().nonNulls.toList();
+    return list.map((it) => deserialize<Login>(json.decode(it))).nonNulls.toList();
   }
 
   static setLastAccount(SchoolDomain lastAccount, LoginFlow loginFlow) {

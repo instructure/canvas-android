@@ -27,7 +27,8 @@ void main() {
   test('returns a dio object', () async {
     final domain = 'https://test_domain.com';
     await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
-    expect(canvasDio(), isA<Dio>());
+    var dio = await canvasDio();
+    expect(dio, isA<Dio>());
   });
 
   test('DioConfig.canvas returns a config object', () async {
@@ -40,6 +41,7 @@ void main() {
 
   group('canvas options', () {
     test('initializes with a base url', () async {
+
       final domain = 'https://test_domain.com';
       await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
 

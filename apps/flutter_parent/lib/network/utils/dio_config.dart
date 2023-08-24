@@ -235,7 +235,7 @@ class DioConfig {
     if (cacheOptions == null) {
       final dir = await getApplicationCacheDirectory();
       final hiveStore = HiveCacheStore(dir.path);
-      cacheOptions = CacheOptions(store: hiveStore, policy: CachePolicy.forceCache);
+      cacheOptions = CacheOptions(store: hiveStore, policy: CachePolicy.refreshForceCache, maxStale: cacheMaxAge);
     }
   }
 }

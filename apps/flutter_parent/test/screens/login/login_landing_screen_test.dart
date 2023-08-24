@@ -144,8 +144,9 @@ void main() async {
         ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
     ];
 
-    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await ApiPrefs.init();
     await ApiPrefs.saveLogins(logins);
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text(AppLocalizations().previousLogins), findsOneWidget);

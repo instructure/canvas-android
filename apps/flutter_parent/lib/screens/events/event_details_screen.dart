@@ -11,6 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/reminder.dart';
@@ -190,7 +191,7 @@ class _EventDetails extends StatelessWidget {
             keyPrefix: 'event_details_location'),
         Divider(),
         _SimpleHeader(label: l10n.assignmentRemindMeLabel),
-        _RemindMe(event, courseId, <String?>[dateLine1, dateLine2].where((it) => it != null).join('\n')),
+        _RemindMe(event, courseId, <String?>[dateLine1, dateLine2].nonNulls.where((d) => d.isNotEmpty).join('\n')),
         Divider(),
         HtmlDescriptionTile(html: event?.description),
         // Don't show the bottom divider if there's no content (no empty message shown either)
