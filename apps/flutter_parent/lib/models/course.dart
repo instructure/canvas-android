@@ -15,8 +15,10 @@ library course;
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter_parent/models/course_settings.dart';
+import 'package:flutter_parent/models/grading_scheme_item.dart';
 import 'package:flutter_parent/models/section.dart';
 import 'package:flutter_parent/models/term.dart';
 
@@ -127,6 +129,15 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @nullable
   CourseSettings get settings;
 
+  @nullable
+  @BuiltValueField(wireName: 'grading_scheme')
+  BuiltList<JsonObject> get gradingScheme;
+
+  List<GradingSchemeItem> get gradingSchemeItems {
+    if (gradingScheme == null) return [];
+    return gradingScheme.map((item) => GradingSchemeItem.fromJson(item)).toList()..sort((a, b) => b.value.compareTo(a.value));
+  }
+
   static void _initializeBuilder(CourseBuilder b) => b
     ..id = ''
     ..enrollments = ListBuilder<Enrollment>()
@@ -175,6 +186,12 @@ abstract class Course implements Built<Course, CourseBuilder> {
   /// Filters enrollments by those associated with the currently selected user
   bool isValidForCurrentStudent(String currentStudentId) {
     return enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
+  }
+
+  String convertScoreToLetterGrade(double score, double maxScore) {
+    if (maxScore == 0.0 || gradingSchemeItems.isEmpty) return "";
+    double percent = score / maxScore;
+    return gradingSchemeItems.firstWhere((element) => percent >= element.value, orElse: () => gradingSchemeItems.last).grade;
   }
 }
 

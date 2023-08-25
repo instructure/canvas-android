@@ -766,7 +766,7 @@ Submission _mockSubmission({String assignmentId = '', String grade, bool isLate,
 Widget _testableWidget(CourseDetailsModel model, {PlatformConfig platformConfig = const PlatformConfig()}) {
   return TestApp(
     Scaffold(
-      body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseGradesScreen(false)),
+      body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseGradesScreen()),
     ),
     platformConfig: platformConfig,
   );
