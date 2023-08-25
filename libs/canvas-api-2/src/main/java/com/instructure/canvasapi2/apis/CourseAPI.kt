@@ -172,6 +172,10 @@ object CourseAPI {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCourses).enqueue(callback)
     }
 
+    fun getFirstPageCoursesWithGradingScheme(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithGradingScheme).enqueue(callback)
+    }
+
     fun getFirstPageCoursesWithConcluded(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithConcluded).enqueue(callback)
     }

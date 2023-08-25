@@ -69,6 +69,25 @@ object CourseManager {
         CourseAPI.getFirstPageCourses(adapter, depaginatedCallback, params)
     }
 
+    fun getCoursesWithGradingScheme(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        if (ApiPrefs.isStudentView) {
+            getCoursesTeacher(forceNetwork, callback)
+            return
+        }
+
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithGradingScheme(adapter, depaginatedCallback, params)
+    }
+
     fun getCoursesWithConcluded(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         if (ApiPrefs.isStudentView) {
             getCoursesTeacher(forceNetwork, callback)
