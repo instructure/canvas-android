@@ -40,6 +40,7 @@ void main() {
 
     Completer<File> completer = Completer();
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => completer.future);
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(Material(child: AttachmentFetcher(attachment: Attachment(), builder: (_, __) => Container()))),
@@ -57,6 +58,7 @@ void main() {
 
     var expectedFile = File('fakefile.exe');
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.value(expectedFile));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     late File actualFile;
     await tester.pumpWidget(
@@ -82,6 +84,7 @@ void main() {
 
     var expectedFile = File('fakefile.exe');
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.value(expectedFile));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(Material(
@@ -102,6 +105,7 @@ void main() {
     });
 
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.error(''));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(
@@ -121,6 +125,7 @@ void main() {
     });
 
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.error(''));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(

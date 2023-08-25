@@ -48,7 +48,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   // State variables
-  late Future<AssignmentDetails> _assignmentFuture;
+  late Future<AssignmentDetails?> _assignmentFuture;
   late Future<Reminder?> _reminderFuture;
   Future<void>? _animationFuture;
   User? _currentStudent;
@@ -63,7 +63,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
   AssignmentDetailsInteractor get _interactor => locator<AssignmentDetailsInteractor>();
 
-  Future<AssignmentDetails> _loadAssignment({bool forceRefresh = false}) => _interactor.loadAssignmentDetails(
+  Future<AssignmentDetails?> _loadAssignment({bool forceRefresh = false}) => _interactor.loadAssignmentDetails(
         forceRefresh,
         widget.courseId,
         widget.assignmentId,
@@ -76,7 +76,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _assignmentFuture,
-      builder: (context, AsyncSnapshot<AssignmentDetails> snapshot) => Scaffold(
+      builder: (context, AsyncSnapshot<AssignmentDetails?> snapshot) => Scaffold(
         appBar: _appBar(snapshot) as PreferredSizeWidget?,
         floatingActionButton: snapshot.hasData && snapshot.data?.assignment != null ? _fab(snapshot) : null,
         body: RefreshIndicator(
@@ -94,7 +94,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     );
   }
 
-  Widget _appBar(AsyncSnapshot<AssignmentDetails> snapshot) => AppBar(
+  Widget _appBar(AsyncSnapshot<AssignmentDetails?> snapshot) => AppBar(
         bottom: ParentTheme.of(context)?.appBarDivider(),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         ),
       );
 
-  Widget _fab(AsyncSnapshot<AssignmentDetails> snapshot) {
+  Widget _fab(AsyncSnapshot<AssignmentDetails?> snapshot) {
     return FloatingActionButton(
       onPressed: () => _sendMessage(snapshot.data!),
       tooltip: L10n(context).assignmentMessageHint,
@@ -115,7 +115,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     );
   }
 
-  Widget _body(AsyncSnapshot<AssignmentDetails> snapshot) {
+  Widget _body(AsyncSnapshot<AssignmentDetails?> snapshot) {
     if (snapshot.hasError) {
       return ErrorPandaWidget(
         L10n(context).unexpectedError,

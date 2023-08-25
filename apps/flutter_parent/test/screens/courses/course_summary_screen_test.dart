@@ -274,7 +274,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping assignment item loads assignment details', (tester) async {
-    final event = ScheduleItem((s) => s
+    await tester.runAsync(() async {
+        final event = ScheduleItem((s)
+      =>
+      s
       ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Normal Assignment'
       ..startAt = DateTime.now()
@@ -283,34 +286,42 @@ void main() {
         ..courseId = ''
         ..assignmentGroupId = ''
         ..position = 0
-        ..submissionTypes = ListBuilder([])));
+        ..submissionTypes = ListBuilder([]))
+      );
 
-    final model = MockCourseDetailsModel();
-    when(model.courseId).thenReturn('course_123');
-    when(model.student).thenReturn(student);
-    when(model.course).thenReturn(Course((c) => c..courseCode = 'CRS 123'));
-    when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
+      final model = MockCourseDetailsModel();
+      when(model.courseId).thenReturn('course_123');
+      when(model.student).thenReturn(student);
+      when(model.course).thenReturn(Course((c) => c..courseCode = 'CRS 123'));
+      when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
 
-    var interactor = MockAssignmentDetailsInteractor();
-    setupTestLocator((locator) {
+      var interactor = MockAssignmentDetailsInteractor();
+      setupTestLocator((locator) {
       locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
-    });
-    var observer = MockNavigatorObserver();
-    await tester.pumpWidget(_testableWidget(
+      });
+      when(interactor.loadAssignmentDetails(any, 'course_123', 'assignment_123', studentId))
+          .thenAnswer((_) async => Future<AssignmentDetails>.value(AssignmentDetails(course: model.course, assignment: event.assignment)));
+
+      var observer = MockNavigatorObserver();
+      await tester.pumpWidget(_testableWidget(
       model,
       observers: [observer],
       platformConfig: PlatformConfig(
-          mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
-    ));
-    await tester.pumpAndSettle();
+      mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
+      ));
+      await tester.pump(Duration(seconds: 2));
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.text(event.title!));
+      await tester.tap(find.text(event.title!));
 
-    await tester.pump();
-    await tester.pump();
+      await tester.pump(Duration(seconds: 2));
+      await tester.pump();
+      await tester.pump();
+      await tester.pumpAndSettle();
 
-    expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
+      expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
+    });
   });
 
   testWidgetsWithAccessibilityChecks('Tapping calendar event item loads event details', (tester) async {

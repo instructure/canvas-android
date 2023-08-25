@@ -101,7 +101,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Error on pull to refresh', (tester) async {
       var interactor = MockManageStudentsInteractor();
-      Completer<List<User>> completer = Completer<List<User>>();
+      Completer<List<User>?> completer = Completer<List<User>?>();
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
       _setupLocator(interactor);
 
@@ -129,7 +129,7 @@ void main() {
 
       // Mock interactor to return an error when retrieving student list
       var interactor = MockManageStudentsInteractor();
-      Completer<List<User>> completer = Completer<List<User>>();
+      Completer<List<User>?> completer = Completer<List<User>?>();
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
       _setupLocator(interactor);
 

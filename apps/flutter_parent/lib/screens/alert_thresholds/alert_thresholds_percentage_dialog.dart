@@ -99,10 +99,10 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
                 errorMsg = null;
               } else {
                 var inputParsed = int.tryParse(input);
-                var maxParsed = maxValue != null ? int.tryParse(maxValue!) : 100;
-                var minParsed = minValue != null ? int.tryParse(minValue!) : null;
+                var maxParsed = maxValue != null ? int.tryParse(maxValue!) ?? 100 : 100;
+                var minParsed = minValue != null ? int.tryParse(minValue!) ?? 0 : 0;
 
-                if (inputParsed != null && minParsed != null && maxParsed != null) {
+                if (inputParsed != null) {
                   if (maxParsed == 100 && inputParsed > 100) {
                     errorMsg = L10n(context).mustBeBelow100;
                   } else if (maxParsed != 100 && inputParsed >= maxParsed) {

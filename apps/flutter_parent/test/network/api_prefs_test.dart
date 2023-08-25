@@ -469,8 +469,7 @@ void main() {
     await ApiPrefs.init();
 
     // encryptedPrefs should be not null
-    expect(encryptedPrefs.getStringList(ApiPrefs.KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList(),
-        logins);
+    expect(encryptedPrefs.getStringList(ApiPrefs.KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList(), logins);
     expect(encryptedPrefs.getBool(ApiPrefs.KEY_HAS_MIGRATED), hasMigrated);
     expect(encryptedPrefs.getBool(ApiPrefs.KEY_HAS_CHECKED_OLD_REMINDERS), hasCheckedOldReminders);
     expect(encryptedPrefs.getString(ApiPrefs.KEY_CURRENT_LOGIN_UUID), currentLoginId);

@@ -211,7 +211,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   Widget _contentBody(String? widgetContent, bool emptyContent) {
     // Check for empty content
     if (emptyContent) {
-      if (widget.emptyDescription?.isEmpty ?? false) {
+      if (widget.emptyDescription?.isEmpty ?? true) {
         return Container(); // No empty text, so just be empty
       } else {
         return Padding(
@@ -230,7 +230,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
     if (_content != widgetContent) {
       _height = widget.initialHeight;
       _content = widgetContent!;
-      if (_content != null) _controller?.loadHtml(_content!, horizontalPadding: widget.horizontalPadding);
+      _controller?.loadHtml(_content, horizontalPadding: widget.horizontalPadding);
     }
 
     Widget child = WebView(
@@ -260,7 +260,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   }
 
   void _handleWebViewCreated(WebViewController webViewController) async {
-    if (_content != null) webViewController.loadHtml(_content!, baseUrl: ApiPrefs.getDomain(), horizontalPadding: widget.horizontalPadding);
+    webViewController.loadHtml(_content, baseUrl: ApiPrefs.getDomain(), horizontalPadding: widget.horizontalPadding);
     _controller = webViewController;
   }
 

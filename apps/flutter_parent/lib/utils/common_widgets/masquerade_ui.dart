@@ -42,11 +42,12 @@ class MasqueradeUI extends StatefulWidget {
     return context.findAncestorStateOfType<MasqueradeUIState>();
   }
 
-  static void showMasqueradeCancelDialog(GlobalKey<NavigatorState> navKey) {
+  static void showMasqueradeCancelDialog(GlobalKey<NavigatorState> navKey, BuildContext context) {
     bool logout = ApiPrefs.getCurrentLogin()?.isMasqueradingFromQRCode == true;
     User user = ApiPrefs.getUser()!;
     showDialogWithNavigatorKey(
       navKey: navKey,
+      buildContext: context,
       builder: (context) {
         AppLocalizations l10n = L10n(context);
         var nameText = UserName.fromUser(user).text;
@@ -144,7 +145,7 @@ class MasqueradeUIState extends State<MasqueradeUI> {
                         color: Colors.white,
                         semanticLabel: L10n(context).stopActAsUser,
                       ),
-                      onPressed: () => MasqueradeUI.showMasqueradeCancelDialog(widget.navKey),
+                      onPressed: () => MasqueradeUI.showMasqueradeCancelDialog(widget.navKey, context),
                     ),
                   ],
                 ),

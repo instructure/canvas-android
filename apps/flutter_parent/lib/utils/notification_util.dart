@@ -61,10 +61,10 @@ class NotificationUtil {
   static Future<void> handlePayload(
       String rawPayload, Completer<void>? appCompleter) async {
     try {
-      NotificationPayload payload = deserialize(json.decode(rawPayload));
-      switch (payload.type) {
+      NotificationPayload? payload = deserialize(json.decode(rawPayload));
+      switch (payload?.type) {
         case NotificationPayloadType.reminder:
-          await handleReminder(payload, appCompleter);
+          await handleReminder(payload!, appCompleter);
           break;
         case NotificationPayloadType.other:
           break;

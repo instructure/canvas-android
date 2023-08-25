@@ -141,12 +141,12 @@ abstract class Course implements Built<Course, CourseBuilder> {
       CourseGrade(
         this,
         enrollment ??
-            enrollments?.firstWhere(
+            enrollments?.firstWhereOrNull(
               (enrollment) =>
                   enrollment.userId == studentId &&
                   (gradingPeriodId == null ||
                       gradingPeriodId.isEmpty ||
-                      gradingPeriodId == enrollment.currentGradingPeriodId)
+                      gradingPeriodId == enrollment.currentGradingPeriodId),
             ),
         forceAllPeriods: forceAllPeriods,
       );

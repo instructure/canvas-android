@@ -77,9 +77,10 @@ class _DialogRoute<T> extends PopupRoute<T> {
 Future<T?> showDialogWithNavigatorKey<T>({
   required GlobalKey<NavigatorState> navKey,
   required WidgetBuilder builder,
+  required BuildContext buildContext,
   bool barrierDismissible = true,
 }) {
-  BuildContext? context = navKey.currentContext!;
+  BuildContext context = navKey.currentContext ?? buildContext;
   assert(debugCheckHasMaterialLocalizations(context));
 
   var route = _DialogRoute<T>(
@@ -96,5 +97,5 @@ Future<T?> showDialogWithNavigatorKey<T>({
     transitionDuration: const Duration(milliseconds: 150),
   );
 
-  return navKey.currentState!.push<T>(route);
+  return (navKey.currentState!).push<T>(route);
 }

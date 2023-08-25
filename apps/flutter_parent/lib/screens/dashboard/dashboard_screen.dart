@@ -708,7 +708,7 @@ class DashboardState extends State<DashboardScreen> {
         title: Text(L10n(context).stopActAsUser),
         onTap: () {
           Navigator.of(context).pop();
-          MasqueradeUI.showMasqueradeCancelDialog(GlobalKey());
+          MasqueradeUI.showMasqueradeCancelDialog(GlobalKey(), context);
         },
       );
 

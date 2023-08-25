@@ -47,6 +47,7 @@ class CourseDetailsModel extends BaseModel {
 
   /// Used only be the skeleton to load the course data for creating tabs and the app bar
   Future<void> loadData({bool refreshCourse = false}) {
+    debugPrint("CourseDetailsModel.loadData");
     return work(() async {
       // Declare the futures so we can let both run asynchronously
       final courseFuture = (refreshCourse || course == null)

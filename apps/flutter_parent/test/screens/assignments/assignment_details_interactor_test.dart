@@ -67,7 +67,7 @@ void main() {
       final details =
           await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
 
-      expect(details.course, course);
+      expect(details?.course, course);
     });
 
     test('loadReminder calls ReminderDb', () async {
@@ -165,7 +165,7 @@ void main() {
       final details =
           await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
 
-      expect(details.assignment, assignment);
+      expect(details?.assignment, assignment);
     });
   });
 }

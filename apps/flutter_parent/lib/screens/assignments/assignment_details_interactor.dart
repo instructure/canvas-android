@@ -23,7 +23,7 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AssignmentDetailsInteractor {
-  Future<AssignmentDetails> loadAssignmentDetails(
+  Future<AssignmentDetails?> loadAssignmentDetails(
     bool forceRefresh,
     String courseId,
     String assignmentId,

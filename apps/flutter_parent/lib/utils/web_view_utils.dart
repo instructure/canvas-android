@@ -27,7 +27,7 @@ extension WebViewUtils on WebViewController {
    * See html_wrapper.html for more details
    */
   Future<void> loadHtml(
-    String html, {
+    String? html, {
     String? baseUrl,
     Map<String, String>? headers,
     double horizontalPadding = 0})
@@ -60,8 +60,8 @@ String _checkForMathTags(String html) {
   }
 }
 
-String _applyWorkAroundForDoubleSlashesAsUrlSource(String html) {
-  if (html.isEmpty) return '';
+String _applyWorkAroundForDoubleSlashesAsUrlSource(String? html) {
+  if (html == null || html.isEmpty) return '';
   // Fix for embedded videos that have // instead of http://
   html = html.replaceAll('href="//', 'href="https://');
   html = html.replaceAll('href=\'//', 'href=\'https://');

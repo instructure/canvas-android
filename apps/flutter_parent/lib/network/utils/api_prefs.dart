@@ -56,10 +56,10 @@ class ApiPrefs {
   static Future<void> init() async {
     if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
-    _migrateToEncryptedPrefs();
+    await _migrateToEncryptedPrefs();
   }
 
-  static void _migrateToEncryptedPrefs() async {
+  static Future<void> _migrateToEncryptedPrefs() async {
     if (_prefs?.getBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
       return;
     }
@@ -69,19 +69,19 @@ class ApiPrefs {
 
     final oldPrefs = await SharedPreferences.getInstance();
 
-    await _prefs?.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS)!);
+    await _prefs?.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
     await oldPrefs.remove(KEY_LOGINS);
 
-    await _prefs?.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED)!);
+    await _prefs?.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
     await oldPrefs.remove(KEY_HAS_MIGRATED);
 
-    await _prefs?.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS)!);
+    await _prefs?.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
     await oldPrefs.remove(KEY_HAS_CHECKED_OLD_REMINDERS);
 
-    await _prefs?.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID)!);
+    await _prefs?.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
     await oldPrefs.remove(KEY_CURRENT_LOGIN_UUID);
 
-    await _prefs?.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT)!);
+    await _prefs?.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
     await oldPrefs.remove(KEY_CURRENT_STUDENT);
   }
 
