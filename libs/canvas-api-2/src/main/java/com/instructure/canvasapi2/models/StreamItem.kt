@@ -21,6 +21,7 @@ import android.content.Context
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -178,9 +179,9 @@ data class StreamItem(
         return title
     }
 
-    fun getMessage(context: Context, restrictQuantitativeData: Boolean = false): String? {
+    fun getMessage(context: Context, restrictQuantitativeData: Boolean = false, gradingScheme: List<GradingSchemeRow> = emptyList()): String? {
         if (message == null) {
-            message = createMessage(context, restrictQuantitativeData)
+            message = createMessage(context, restrictQuantitativeData, gradingScheme)
         }
         return message
     }
@@ -214,7 +215,7 @@ data class StreamItem(
         }
     }
 
-    private fun createMessage(context: Context, restrictQuantitativeData: Boolean = false): String? {
+    private fun createMessage(context: Context, restrictQuantitativeData: Boolean = false, gradingScheme: List<GradingSchemeRow> = emptyList()): String? {
         when (getStreamItemType()) {
             StreamItem.Type.CONVERSATION -> {
                 if (conversation == null) {
@@ -234,7 +235,7 @@ data class StreamItem(
 
                 val displayedGrade = when {
                     excused -> context.getString(R.string.gradeExcused)
-                    restrictQuantitativeData -> getGradeWhenQuantitativeDataRestricted(context)
+                    restrictQuantitativeData -> getGradeWhenQuantitativeDataRestricted(context, gradingScheme, score, assignment?.pointsPossible)
                     score != -1.0 -> score.toString().orEmpty()
                     else -> ""
                 }
@@ -255,9 +256,13 @@ data class StreamItem(
         } else message
     }
 
-    private fun getGradeWhenQuantitativeDataRestricted(context: Context): String {
+    private fun getGradeWhenQuantitativeDataRestricted(context: Context, gradingScheme: List<GradingSchemeRow>, score: Double, maxScore: Double?): String {
         return if (assignment?.isGradingTypeQuantitative == true) {
-            context.getString(R.string.gradeUpdated)
+            if (gradingScheme.isEmpty() || maxScore == null) {
+                context.getString(R.string.gradeUpdated)
+            } else {
+                convertScoreToLetterGrade(score, maxScore, gradingScheme)
+            }
         } else {
             grade.orEmpty()
         }

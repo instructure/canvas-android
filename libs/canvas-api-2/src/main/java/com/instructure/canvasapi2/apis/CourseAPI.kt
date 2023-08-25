@@ -42,6 +42,9 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&include[]=settings&state[]=completed&state[]=available")
         val firstPageCourses: Call<List<Course>>
 
+        @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&include[]=settings&state[]=completed&state[]=available&include[]=grading_scheme")
+        val firstPageCoursesWithGradingScheme: Call<List<Course>>
+
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available")
         suspend fun getFirstPageCourses(@Tag params: RestParams): DataResult<List<Course>>
 
@@ -126,8 +129,8 @@ object CourseAPI {
     }
 
     @Throws(IOException::class)
-    fun getCoursesSynchronously(adapter: RestBuilder, params: RestParams): List<Course>? {
-        val firstPageResponse = adapter.build(CoursesInterface::class.java, params).firstPageCourses.execute()
+    fun getCoursesSynchronouslyWithGradingScheme(adapter: RestBuilder, params: RestParams): List<Course>? {
+        val firstPageResponse = adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithGradingScheme.execute()
         return getCoursesRecursive(adapter, params, firstPageResponse, firstPageResponse.body())
     }
 

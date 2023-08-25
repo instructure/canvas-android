@@ -341,11 +341,11 @@ object CourseManager {
     }
 
     @Throws(IOException::class)
-    fun getCoursesSynchronous(forceNetwork: Boolean): List<Course> {
+    fun getCoursesSynchronousWithGradingScheme(forceNetwork: Boolean): List<Course> {
         val adapter = RestBuilder()
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
-        val data = CourseAPI.getCoursesSynchronously(adapter, params)
+        val data = CourseAPI.getCoursesSynchronouslyWithGradingScheme(adapter, params)
         return data ?: ArrayList()
     }
 
