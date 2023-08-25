@@ -166,7 +166,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             try {
                 val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), forceNetwork).await().dataOrThrow
                 restrictQuantitativeData = courseResult.settings?.restrictQuantitativeData ?: false
-                gradingScheme = courseResult.gradingScheme.orEmpty()
+                gradingScheme = courseResult.gradingScheme
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 

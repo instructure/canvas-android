@@ -131,10 +131,15 @@ data class Course(
             return false
         }
 
-    val gradingScheme: List<GradingSchemeRow>? // TODO Make this crash proof if data is not valid
+    val gradingScheme: List<GradingSchemeRow>
         get() {
-            return gradingSchemeRaw?.map { row -> GradingSchemeRow(row[0] as String, row[1] as Double) }
-                ?.sortedByDescending { it.value }
+            return gradingSchemeRaw?.map { row ->
+                if (row.size < 2 || row[0] !is String || row[1] !is Double) {
+                    null
+                } else {
+                    GradingSchemeRow(row[0] as String, row[1] as Double)
+                }
+            }?.filterNotNull()?.sortedByDescending { it.value } ?: emptyList()
         }
 
     /**

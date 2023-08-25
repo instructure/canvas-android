@@ -177,11 +177,13 @@ fun Assignment.toScheduleItem() : ScheduleItem {
 }
 
 fun convertScoreToLetterGrade(score: Double, maxScore: Double, gradingScheme: List<GradingSchemeRow>): String {
-    val percent = score / maxScore
+    if (maxScore == 0.0) return ""
+    val percent = (score / maxScore)
     return convertPercentScoreToLetterGrade(percent, gradingScheme)
 }
 
 fun convertPercentScoreToLetterGrade(percentScore: Double, gradingScheme: List<GradingSchemeRow>): String {
+    if (gradingScheme.isEmpty()) return ""
     val grade = gradingScheme.firstOrNull { percentScore >= it.value } ?: gradingScheme.last()
     return grade.name
 }

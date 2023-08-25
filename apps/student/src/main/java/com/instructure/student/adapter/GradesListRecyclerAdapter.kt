@@ -207,8 +207,7 @@ open class GradesListRecyclerAdapter(
                             course.enrollments = mutableListOf(it)
                             courseGrade = course.getCourseGradeFromEnrollment(it, false)
                             val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
-                            val gradingScheme = course.gradingScheme ?: emptyList()
-                            adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, gradingScheme)
+                            adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, course.gradingScheme)
                         }
                     }
             } catch (e: CancellationException) {
@@ -276,8 +275,7 @@ open class GradesListRecyclerAdapter(
                 val course = canvasContext as Course?
                 courseGrade = course!!.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment = enrollment)
                 val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
-                val gradingScheme = course.gradingScheme ?: emptyList()
-                adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, gradingScheme)
+                adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, course.gradingScheme)
                 // We need to update the course that the fragment is using
                 course.addEnrollment(enrollment)
             }
