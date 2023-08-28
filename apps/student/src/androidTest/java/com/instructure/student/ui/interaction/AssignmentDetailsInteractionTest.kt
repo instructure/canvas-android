@@ -301,11 +301,11 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
     fun testPointsAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
-        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "65", 65.0, 100)
         goToAssignmentList()
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertGradeNotDisplayed()
+        assignmentDetailsPage.assertGradeDisplayed("D")
         assignmentDetailsPage.assertOutOfTextNotDisplayed()
         assignmentDetailsPage.assertScoreNotDisplayed()
     }
@@ -327,11 +327,11 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
     fun testPercentageAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
-        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "90%", 90.0, 100)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "70%", 70.0, 100)
         goToAssignmentList()
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertGradeNotDisplayed()
+        assignmentDetailsPage.assertGradeDisplayed("C")
         assignmentDetailsPage.assertOutOfTextNotDisplayed()
         assignmentDetailsPage.assertScoreNotDisplayed()
     }
@@ -358,8 +358,17 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         val course = data.courses.values.first()
 
+        val gradingScheme = listOf(
+            listOf("A", 0.9),
+            listOf("B", 0.8),
+            listOf("C", 0.7),
+            listOf("D", 0.6),
+            listOf("F", 0.0)
+        )
+
         val newCourse = course
-            .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData))
+            .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
+                gradingSchemeRaw = gradingScheme)
         data.courses[course.id] = newCourse
 
         data.addAssignmentsToGroups(newCourse)
