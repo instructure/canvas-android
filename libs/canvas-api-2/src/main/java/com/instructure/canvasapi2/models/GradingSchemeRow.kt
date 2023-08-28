@@ -16,6 +16,4 @@
  */
 package com.instructure.canvasapi2.models
 
-import kotlinx.parcelize.Parcelize
-
 data class GradingSchemeRow(val name: String, val value: Double)
