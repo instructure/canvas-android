@@ -826,7 +826,7 @@ Submission _mockSubmission({String assignmentId = '', String grade, bool isLate,
     ..grade = grade
     ..submittedAt = submittedAt
     ..isLate = isLate ?? false
-    ..score = score);
+    ..score = score ?? 0);
 }
 
 Widget _testableWidget(CourseDetailsModel model, {PlatformConfig platformConfig = const PlatformConfig()}) {
