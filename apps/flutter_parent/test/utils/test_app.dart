@@ -225,9 +225,11 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 
   if (config.initDeviceInfo) _initPlatformDeviceInfo();
 
+  if (config.initPathProvider) _initPathProvider();
+
   Future<void>? apiPrefsInitFuture;
   if (config.mockApiPrefs != null) {
-    ApiPrefs.clean();
+    // ApiPrefs.clean();
     EncryptedSharedPreferences.setMockInitialValues(
         config.mockApiPrefs!..putIfAbsent(ApiPrefs.KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, () => true));
     apiPrefsInitFuture = ApiPrefs.init();
@@ -263,7 +265,7 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 /// https://github.com/flutter/plugins/blob/3b71d6e9a4456505f0b079074fcbc9ba9f8e0e15/packages/webview_flutter/test/webview_flutter_test.dart
 void _initPlatformWebView() {
   const MethodChannel('plugins.flutter.io/cookie_manager', const StandardMethodCodec())
-      .setMockMethodCallHandler((_) => Future<bool?>.sync(() => null));
+      .setMockMethodCallHandler((_) => Future<bool?>.sync(() => false));
 
   // Intercept when a web view is getting created so we can set up the platform channel
   SystemChannels.platform_views.setMockMethodCallHandler((call) {
@@ -327,7 +329,63 @@ void _initPlatformDeviceInfo() {
         'type': 'take-types',
         'isPhysicalDevice': false,
         'androidId': 'fake-androidId',
+        'displayMetrics': <String, dynamic> {
+          'widthPx': 100.0,
+          'heightPx': 100.0,
+          'xDpi': 100.0,
+          'yDpi': 100.0,
+        },
+        'serialNumber': 'fake-serialNumber',
       };
+    }
+    if (methodCall.method == 'getDeviceInfo') {
+      return <String, dynamic>{
+        'version': <String, dynamic>{
+          'baseOS': 'fake-baseOD',
+          'codename': 'fake-codename',
+          'incremental': 'fake-incremental',
+          'previewSdkInt': 9001,
+          'release': 'FakeOS 9000',
+          'sdkInt': 9000,
+          'securityPatch': 'fake-securityPatch',
+        },
+        'board': 'fake-board',
+        'bootloader': 'fake-bootloader',
+        'brand': 'Canvas',
+        'device': 'fake-device',
+        'display': 'fake-display',
+        'fingerprint': 'fake-fingerprint',
+        'hardware': 'fake-hardware',
+        'host': 'fake-host',
+        'id': 'fake-id',
+        'manufacturer': 'Instructure',
+        'model': 'Canvas Phone',
+        'product': 'fake-product',
+        'supported32BitAbis': [],
+        'supported64BitAbis': [],
+        'supportedAbis': [],
+        'tags': 'fake-tags',
+        'type': 'take-types',
+        'isPhysicalDevice': false,
+        'androidId': 'fake-androidId',
+        'displayMetrics': <String, dynamic> {
+          'widthPx': 100.0,
+          'heightPx': 100.0,
+          'xDpi': 100.0,
+          'yDpi': 100.0,
+        },
+        'serialNumber': 'fake-serialNumber',
+      };
+    }
+    return null;
+  });
+}
+
+/// Mocks the platform channel used by the path_provider plugin
+void _initPathProvider() {
+  const MethodChannel('plugins.flutter.io/path_provider').setMockMethodCallHandler((MethodCall methodCall) async {
+    if (methodCall.method == 'getApplicationCacheDirectory') {
+      return "fake-path";
     }
     return null;
   });

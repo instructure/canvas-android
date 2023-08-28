@@ -75,8 +75,8 @@ class RouterErrorScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(48, 0, 48, 0),
               child: TextButton(
-                onPressed: () {
-                  _switchUsers(context);
+                onPressed: () async {
+                  await _switchUsers(context);
                 },
                 child:
                     Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16)),
@@ -92,10 +92,10 @@ class RouterErrorScreen extends StatelessWidget {
     );
   }
 
-  _switchUsers(BuildContext context) async {
+  Future<void> _switchUsers(BuildContext context) async {
     await ParentTheme.of(context)?.setSelectedStudent(null); // TODO - Test this, do we need it here?
     await ApiPrefs.performLogout(switchingLogins: true, app: ParentApp.of(context));
     await FeaturesUtils.performLogout();
-    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+    await locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 }

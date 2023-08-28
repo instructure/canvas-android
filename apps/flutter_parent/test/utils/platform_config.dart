@@ -21,6 +21,7 @@ class PlatformConfig {
   final bool initDeviceInfo;
   final Login? initLoggedInUser;
   final bool initPackageInfo;
+  final bool initPathProvider;
   final FirebaseRemoteConfig? initRemoteConfig;
   final bool initWebview;
 
@@ -43,8 +44,10 @@ class PlatformConfig {
     this.initDeviceInfo = true,
     this.initLoggedInUser = null,
     this.initPackageInfo = true,
+    this.initPathProvider = true,
     this.initRemoteConfig = null,
     this.initWebview = false,
+
     Map<String, dynamic>? mockApiPrefs = const {},
     Map<String, dynamic>? mockPrefs = null,
   })  : this._mockApiPrefs = mockApiPrefs,

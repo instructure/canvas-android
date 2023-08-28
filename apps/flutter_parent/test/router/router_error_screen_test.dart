@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
@@ -36,6 +37,7 @@ void main() {
   setUp(() async {
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
     await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
+    ApiPrefs.init();
   });
 
   tearDown(() {
@@ -73,18 +75,26 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('router error screen switch users', (tester) async {
-    setupTestLocator((locator) {
-      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+    await tester.runAsync(() async {
+
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<QuickNav>(() => MockQuickNav());
+      });
+
+      await tester.pumpWidget(TestApp(
+        RouterErrorScreen(_domain),
+      ));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppLocalizations().switchUsers));
+      await tester.pumpAndSettle();
+
+      await Future.delayed(Duration(seconds: 1));
+
+      debugPrint("ALL_ELEMENTS: ${tester.allWidgets.map((e) => e.toString()).join("\n")}");
+
+      expect(find.byType(LoginLandingScreen), findsOneWidget);
+      expect(ApiPrefs.isLoggedIn(), false);
+
     });
-
-    await tester.pumpWidget(TestApp(
-      RouterErrorScreen(_domain),
-    ));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(AppLocalizations().switchUsers));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(LoginLandingScreen), findsOneWidget);
-    expect(ApiPrefs.isLoggedIn(), false);
   });
 }

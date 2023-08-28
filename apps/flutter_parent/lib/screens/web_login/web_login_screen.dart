@@ -138,7 +138,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             onPageFinished: (url) => _pageFinished(url, verifyResult),
             onPageStarted: (url) => _showLoadingState(),
             onWebViewCreated: (controller) =>
-                _webViewCreated(controller, verifyResult)
+                _webViewCreated(controller, verifyResult),
         ),
         if (_showLoading) LoadingIndicator(),
       ],

@@ -76,6 +76,7 @@ void main() async {
     final mockRemoteConfig = setupMockRemoteConfig(
         valueSettings: {'qr_login_enabled_parent': 'true', 'qr_account_creation_enabled': 'true'});
     await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
+    await ApiPrefs.init();
   });
 
   tearDown(() {
@@ -135,6 +136,7 @@ void main() async {
   });
 
   testWidgetsWithAccessibilityChecks('Displays login list if there are previous logins', (tester) async {
+
     List<Login> logins = [
       Login((b) => b
         ..domain = 'domain1'
@@ -144,10 +146,10 @@ void main() async {
         ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
     ];
 
-    await ApiPrefs.init();
     await ApiPrefs.saveLogins(logins);
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
+
 
     expect(find.text(AppLocalizations().previousLogins), findsOneWidget);
     expect(find.byKey(Key('previous-logins')), findsOneWidget);
@@ -159,67 +161,75 @@ void main() async {
     expect(find.text(logins[1].domain), findsOneWidget);
 
     expect(find.byType(Avatar), findsNWidgets(2));
-    expect(find.bySemanticsLabel(AppLocalizations().delete), findsNWidgets(2));
+    expect(find.byIcon(Icons.clear), findsNWidgets(2));
+
   });
 
   testWidgetsWithAccessibilityChecks('Displays Previous Login correctly for masquerade', (tester) async {
-    Login login = Login((b) => b
-      ..domain = 'domain1'
-      ..masqueradeDomain = 'masqueradeDomain'
-      ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()
-      ..masqueradeUser = CanvasModelTestUtils.mockUser(name: 'masqueradeUser').toBuilder());
+    await tester.runAsync(() async {
 
-    await tester.pumpWidget(TestApp(LoginLandingScreen()));
-    await ApiPrefs.saveLogins([login]);
-    await tester.pumpAndSettle();
+      Login login = Login((b) => b
+        ..domain = 'domain1'
+        ..masqueradeDomain = 'masqueradeDomain'
+        ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()
+        ..masqueradeUser = CanvasModelTestUtils.mockUser(name: 'masqueradeUser').toBuilder());
 
-    expect(find.text(AppLocalizations().previousLogins), findsOneWidget);
-    expect(find.byKey(Key('previous-logins')), findsOneWidget);
+      await tester.pumpWidget(TestApp(LoginLandingScreen()));
+      await ApiPrefs.saveLogins([login]);
+      await tester.pumpAndSettle();
 
-    expect(find.text(login.user.name), findsNothing);
-    expect(find.text(login.masqueradeUser!.name), findsOneWidget);
+      expect(find.text(AppLocalizations().previousLogins), findsOneWidget);
+      expect(find.byKey(Key('previous-logins')), findsOneWidget);
 
-    expect(find.text(login.domain), findsNothing);
-    expect(find.text(login.masqueradeDomain!), findsOneWidget);
+      expect(find.text(login.user.name), findsNothing);
+      expect(find.text(login.masqueradeUser!.name), findsOneWidget);
 
-    expect(find.byType(Avatar), findsOneWidget);
-    expect(find.bySemanticsLabel(AppLocalizations().delete), findsOneWidget);
-    expect(find.byIcon(CanvasIconsSolid.masquerade), findsOneWidget);
+      expect(find.text(login.domain), findsNothing);
+      expect(find.text(login.masqueradeDomain!), findsOneWidget);
+
+      expect(find.byType(Avatar), findsOneWidget);
+      expect(find.bySemanticsLabel(AppLocalizations().delete), findsOneWidget);
+      expect(find.byIcon(CanvasIconsSolid.masquerade), findsOneWidget);
+    });
   });
 
   testWidgetsWithAccessibilityChecks('Clearing previous login removes it from the list', (tester) async {
-    List<Login> logins = [
-      Login((b) => b
-        ..domain = 'domain1'
-        ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()),
-      Login((b) => b
-        ..domain = 'domain2'
-        ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
-    ];
+    await tester.runAsync(() async {
 
-    await tester.pumpWidget(TestApp(LoginLandingScreen()));
-    await ApiPrefs.saveLogins(logins);
-    await tester.pumpAndSettle();
+      List<Login> logins = [
+        Login((b) => b
+          ..domain = 'domain1'
+          ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()),
+        Login((b) => b
+          ..domain = 'domain2'
+          ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
+      ];
 
-    expect(find.byKey(Key('previous-logins')), findsOneWidget);
-    expect(find.text(logins[0].user.name), findsOneWidget);
-    expect(find.text(logins[1].user.name), findsOneWidget);
+      await tester.pumpWidget(TestApp(LoginLandingScreen()));
+      await ApiPrefs.saveLogins(logins);
+      await tester.pumpAndSettle();
 
-    // Remove second login
-    await tester.tap(find.bySemanticsLabel(AppLocalizations().delete).last);
-    await tester.pumpAndSettle();
+      expect(find.byKey(Key('previous-logins')), findsOneWidget);
+      expect(find.text(logins[0].user.name), findsOneWidget);
+      expect(find.text(logins[1].user.name), findsOneWidget);
 
-    expect(find.byKey(Key('previous-logins')), findsOneWidget);
-    expect(find.text(logins[0].user.name), findsOneWidget);
-    expect(find.text(logins[1].user.name), findsNothing);
+      // Remove second login
+      await tester.tap(find.bySemanticsLabel(AppLocalizations().delete).last);
+      await tester.pumpAndSettle();
 
-    // Remove first login
-    await tester.tap(find.bySemanticsLabel(AppLocalizations().delete));
-    await tester.pumpAndSettle();
+      expect(find.byKey(Key('previous-logins')), findsOneWidget);
+      expect(find.text(logins[0].user.name), findsOneWidget);
+      expect(find.text(logins[1].user.name), findsNothing);
 
-    expect(find.byKey(Key('previous-logins')), findsNothing);
-    expect(find.text(logins[0].user.name), findsNothing);
-    expect(find.text(logins[1].user.name), findsNothing);
+      // Remove first login
+      await tester.tap(find.bySemanticsLabel(AppLocalizations().delete));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(Key('previous-logins')), findsNothing);
+      expect(find.text(logins[0].user.name), findsNothing);
+      expect(find.text(logins[1].user.name), findsNothing);
+
+    });
   });
 
   testWidgetsWithAccessibilityChecks('Tapping a login sets the current login and loads splash screen', (tester) async {
