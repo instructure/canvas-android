@@ -86,7 +86,8 @@ class ShareExtensionInteractionTest : StudentTest() {
     }
 
     @Test
-    @StubTablet
+    @StubTablet("Stubbed in Tablet because on Firebase it's breaking the workflow while actually no tests cases has failed." +
+            "Once the reason will be figured out, we will put back this test to tablet as well.")
     fun addAndRemoveFileFromFileUploadDialog() {
         val data = createMockData()
         val student = data.students[0]
