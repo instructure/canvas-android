@@ -17,12 +17,10 @@
 package com.instructure.student.ui.pages
 
 import androidx.appcompat.widget.AppCompatButton
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
@@ -65,6 +63,7 @@ class BookmarkPage : BasePage() {
         onView(withId(R.id.bookmarkEditText)).typeText(newName)
 
         // Save
+        if(CanvasTest.isLandscapeDevice()) Espresso.pressBack() //need to remove soft-keyboard on landscape devices
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DONE"))).click()
     }
 
