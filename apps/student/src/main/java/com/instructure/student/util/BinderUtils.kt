@@ -151,7 +151,6 @@ object BinderUtils {
         restrictQuantitativeData: Boolean,
         gradingScheme: List<GradingSchemeRow>
     ) {
-        val hasGrade = submission.grade.isValid() // TODO check if we still need this
         val (grade, contentDescription) = getGrade(assignment, submission, context, restrictQuantitativeData, gradingScheme)
         if (!submission.excused && grade.isValid()) {
             textView.text = grade
