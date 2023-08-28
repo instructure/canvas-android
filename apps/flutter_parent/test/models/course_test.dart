@@ -16,6 +16,7 @@ import 'package:built_value/json_object.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/grading_scheme_item.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -133,6 +134,21 @@ void main() {
     test('returns empty if grading scheme is null or empty', () {
       final course = _course.rebuild((b) => b..gradingScheme = null);
       expect(course.convertScoreToLetterGrade(10, 0), '');
+    });
+
+    test('grading scheme mapping filters out incorrect items', () {
+      gradingSchemeBuilder.add(JsonObject(""));
+      gradingSchemeBuilder.add(JsonObject([1, 0.9]));
+      gradingSchemeBuilder.add(JsonObject(["C", "3"]));
+      final course = _course.rebuild((b) => b..gradingScheme = gradingSchemeBuilder);
+      expect(course.gradingSchemeItems, [
+        GradingSchemeItem((b) => b
+          ..grade = "A"
+          ..value = 0.9),
+        GradingSchemeItem((b) => b
+          ..grade = "F"
+          ..value = 0.0),
+      ]);
     });
   });
 }
