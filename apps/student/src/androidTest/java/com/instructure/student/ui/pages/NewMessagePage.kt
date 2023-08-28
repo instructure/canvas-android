@@ -130,7 +130,8 @@ class NewMessagePage : BasePage() {
 
     fun setMessage(messageText: String) {
         Espresso.closeSoftKeyboard()
-        onView(allOf(withId(R.id.message), hasSibling(withId(R.id.sendIndividualDivider))))
+        onView(withId(R.id.messageContainer)).click()
+        onView(allOf(withId(R.id.message), withAncestor(R.id.messageContainer)))
                 .scrollTo()
                 .typeText(messageText)
     }

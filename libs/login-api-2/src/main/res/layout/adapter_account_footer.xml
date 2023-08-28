@@ -44,6 +44,6 @@
         android:textColor="@color/textInfo"
         android:fontFamily="@font/lato_font_family"
         android:textSize="16sp"
-        android:text="@string/accountDomainFooterLink"/>
+        android:text="@string/accountDomainFooterLoginHelp"/>
 
 </LinearLayout>
