@@ -915,7 +915,7 @@ class AppLocalizations {
   String assignmentGradeBelowThreshold(String? threshold) => Intl.message(
         'Assignment Grade Below $threshold',
         name: 'assignmentGradeBelowThreshold',
-        args: [threshold as Object],
+        args: threshold != null ? [threshold] : null,
         desc: 'Title for alerts when an assignment grade is below the threshold value',
       );
 

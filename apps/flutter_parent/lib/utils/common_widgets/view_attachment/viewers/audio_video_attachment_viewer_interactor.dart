@@ -16,6 +16,6 @@ import 'package:video_player/video_player.dart';
 
 class AudioVideoAttachmentViewerInteractor {
   VideoPlayerController? makeController(String url) {
-    return VideoPlayerController.network(url);
+    return VideoPlayerController.networkUrl(Uri.parse(url));
   }
 }

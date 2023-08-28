@@ -188,7 +188,7 @@ void main() async {
       expect(find.text(login.masqueradeDomain!), findsOneWidget);
 
       expect(find.byType(Avatar), findsOneWidget);
-      expect(find.bySemanticsLabel(AppLocalizations().delete), findsOneWidget);
+      expect(find.byIcon(Icons.clear), findsOneWidget);
       expect(find.byIcon(CanvasIconsSolid.masquerade), findsOneWidget);
     });
   });
@@ -214,7 +214,7 @@ void main() async {
       expect(find.text(logins[1].user.name), findsOneWidget);
 
       // Remove second login
-      await tester.tap(find.bySemanticsLabel(AppLocalizations().delete).last);
+      await tester.tap(find.byIcon(Icons.clear).last);
       await tester.pumpAndSettle();
 
       expect(find.byKey(Key('previous-logins')), findsOneWidget);
@@ -222,7 +222,7 @@ void main() async {
       expect(find.text(logins[1].user.name), findsNothing);
 
       // Remove first login
-      await tester.tap(find.bySemanticsLabel(AppLocalizations().delete));
+      await tester.tap(find.byIcon(Icons.clear));
       await tester.pumpAndSettle();
 
       expect(find.byKey(Key('previous-logins')), findsNothing);

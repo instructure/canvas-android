@@ -97,5 +97,5 @@ Future<T?> showDialogWithNavigatorKey<T>({
     transitionDuration: const Duration(milliseconds: 150),
   );
 
-  return (navKey.currentState!).push<T>(route);
+  return (navKey.currentState)?.push<T>(route) ?? Future<T>.value(null);
 }

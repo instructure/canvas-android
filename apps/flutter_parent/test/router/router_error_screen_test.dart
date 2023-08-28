@@ -88,10 +88,6 @@ void main() {
       await tester.tap(find.text(AppLocalizations().switchUsers));
       await tester.pumpAndSettle();
 
-      await Future.delayed(Duration(seconds: 1));
-
-      debugPrint("ALL_ELEMENTS: ${tester.allWidgets.map((e) => e.toString()).join("\n")}");
-
       expect(find.byType(LoginLandingScreen), findsOneWidget);
       expect(ApiPrefs.isLoggedIn(), false);
 

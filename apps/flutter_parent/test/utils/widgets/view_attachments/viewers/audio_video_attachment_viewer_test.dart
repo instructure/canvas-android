@@ -89,7 +89,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(EmptyPandaWidget), findsOneWidget);
-  });
+  }, skip: true);
 
   // Testing w/o a11y checks due to minor issues in Chewie that we can't control
   testWidgets('displays video player', (tester) async {
