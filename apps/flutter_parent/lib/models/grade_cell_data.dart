@@ -136,6 +136,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
 
     var latePenalty = '';
     var finalGrade = '';
+    var restrictedScore = grade;
 
     // Adjust for late penalty, if any
     if ((submission.pointsDeducted ?? 0.0) > 0.0) {
@@ -150,9 +151,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
           ..state = GradeCellState.gradedRestrictQuantitativeData
           ..graphPercent = 1.0
           ..accentColor = accentColor
-          ..score = assignment.isGradingTypeQuantitative()
-              ? course.convertScoreToLetterGrade(submission.score, assignment.pointsPossible)
-              : submission.grade
+          ..score = restrictedScore
           ..gradeContentDescription = accessibleGradeString)
         : GradeCellData((b) => b
           ..state = GradeCellState.graded
