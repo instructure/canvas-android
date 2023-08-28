@@ -134,7 +134,7 @@ class NumberBadge extends StatelessWidget {
             semanticsLabel: semantics != null ? semantics!(context, count) : L10n(context).unreadCount(count),
             style: TextStyle(
               fontSize: 10,
-              color: options.onPrimarySurface ? accentColor : Theme.of(context).colorScheme.secondary,
+              color: options.onPrimarySurface ? accentColor : Theme.of(context).scaffoldBackgroundColor,
               fontWeight: FontWeight.bold,
             ),
           ),

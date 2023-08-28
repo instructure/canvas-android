@@ -40,14 +40,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: DefaultParentTheme(
         builder: (context) => Scaffold(
           appBar: AppBar(
-            title: Text(L10n(context).settings),
+            title: Text(L10n(context).settings, style: Theme.of(context).textTheme.titleLarge),
             bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
           ),
           body: ListView(
             children: [
               Container(
                 child: ListTile(
-                  title: Text(L10n(context).theme),
+                  title: Text(L10n(context).theme, style: Theme.of(context).textTheme.bodyMedium),
                 ),
               ),
               _themeButtons(context),
@@ -150,7 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _webViewDarkModeSwitch(BuildContext context) {
     return MergeSemantics(
       child: ListTile(
-        title: Text(L10n(context).webViewDarkModeLabel),
+        title: Text(L10n(context).webViewDarkModeLabel, style: Theme.of(context).textTheme.bodyMedium),
         trailing: Switch(
           value: ParentTheme.of(context)?.isWebViewDarkMode == true,
           onChanged: (_) => _toggleWebViewDarkMode(context),
@@ -173,12 +173,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _highContrastModeSwitch(BuildContext context) {
     return MergeSemantics(
       child: ListTile(
-        title: Text(L10n(context).highContrastLabel),
+        title: Text(L10n(context).highContrastLabel, style: Theme.of(context).textTheme.bodyMedium),
         trailing: Switch(
           key: _highContrastModeKey,
           value: ParentTheme.of(context)?.isHC == true,
           onChanged: (_) => _onHighContrastModeChanged(context),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         onTap: () => _onHighContrastModeChanged(context),
       ),
@@ -192,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _about(BuildContext context) => ListTile(
       key: Key('about'),
       title: Row(
-        children: [Text(L10n(context).about)],
+        children: [Text(L10n(context).about, style: Theme.of(context).textTheme.bodyMedium)],
       ),
       onTap: () => _interactor.showAboutDialog(context));
 
@@ -202,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: <Widget>[
             _debugLabel(context),
             SizedBox(width: 16),
-            Text('Theme Viewer'), // Not shown in release mode, not translated
+            Text('Theme Viewer', style: Theme.of(context).textTheme.bodyMedium), // Not shown in release mode, not translated
           ],
         ),
         onTap: () => _interactor.routeToThemeViewer(context),
@@ -214,7 +214,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             _debugLabel(context),
             SizedBox(width: 16),
-            Text('Remote Config Params')
+            Text('Remote Config Params', style: Theme.of(context).textTheme.bodyMedium)
           ],
         ),
         onTap: () => _interactor.routeToRemoteConfig(context),

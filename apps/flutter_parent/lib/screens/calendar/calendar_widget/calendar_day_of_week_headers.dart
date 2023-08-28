@@ -18,7 +18,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:intl/intl.dart';
 
 class DayOfWeekHeaders extends StatelessWidget {
-  static const double headerHeight = 14;
+  static const double headerHeight = 16;
 
   @override
   Widget build(BuildContext context) {

@@ -258,7 +258,7 @@ class DashboardState extends State<DashboardScreen> {
                   icon: WidgetBadge(
                     Icon(
                       Icons.menu,
-                      // color: Theme.of(context).primaryIconTheme.color,
+                      color: Theme.of(context).primaryIconTheme.color,
                       key: Key("drawer_menu"),
                     ),
                     countListenable: _interactor.getInboxCountNotifier(),
@@ -353,9 +353,9 @@ class DashboardState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent!, style: Theme.of(context).primaryTextTheme.titleMedium?.copyWith(color: Colors.black)),
+                  UserName.fromUserShortName(selectedStudent!, style: Theme.of(context).primaryTextTheme.titleMedium),
                   SizedBox(width: 6),
-                  DropdownArrow(rotate: expand, color: ParentTheme.of(context)?.onSurfaceColor ?? Colors.white),
+                  DropdownArrow(rotate: expand),
                 ],
               )
             ],
@@ -432,24 +432,27 @@ class DashboardState extends State<DashboardScreen> {
       return LoadingIndicator();
     }
 
-    return ListTileTheme(
-      style: ListTileStyle.list,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // Header
-        _navDrawerHeader(user),
-        Divider(),
-        // Tiles (Inbox, Manage Students, Sign Out, etc)
-        Expanded(
-          child: _navDrawerItemsList(),
-        ),
+    return Container(
+      color: Theme.of(context).canvasColor,
+      child: ListTileTheme(
+        style: ListTileStyle.list,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          // Header
+          _navDrawerHeader(user),
+          Divider(),
+          // Tiles (Inbox, Manage Students, Sign Out, etc)
+          Expanded(
+            child: _navDrawerItemsList(),
+          ),
 
-        // App version
-        if (ApiPrefs.getCurrentLogin()?.canMasquerade == true && !ApiPrefs.isMasquerading())
-          _navDrawerActAsUser(),
-        if (ApiPrefs.isMasquerading())
-          _navDrawerStopActingAsUser(),
-        _navDrawerAppVersion(),
-      ]),
+          // App version
+          if (ApiPrefs.getCurrentLogin()?.canMasquerade == true && !ApiPrefs.isMasquerading())
+            _navDrawerActAsUser(),
+          if (ApiPrefs.isMasquerading())
+            _navDrawerStopActingAsUser(),
+          _navDrawerAppVersion(),
+        ]),
+      ),
     );
   }
 
@@ -609,7 +612,7 @@ class DashboardState extends State<DashboardScreen> {
 
   // Create the inbox tile with an infinite badge count, since there's lots of space we don't need to limit the count to 99+
   _navDrawerInbox() => ListTile(
-        title: Text(L10n(context).inbox),
+        title: Text(L10n(context).inbox, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToInbox(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -623,7 +626,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerManageStudents() => ListTile(
-        title: Text(L10n(context).manageStudents),
+        title: Text(L10n(context).manageStudents, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToManageStudents(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -632,7 +635,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerSettings() => ListTile(
-        title: Text(L10n(context).settings),
+        title: Text(L10n(context).settings, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToSettings(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -641,7 +644,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerHelp() => ListTile(
-        title: Text(L10n(context).help),
+        title: Text(L10n(context).help, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToHelp(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -650,7 +653,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerLogOut() => ListTile(
-        title: Text(L10n(context).logOut),
+        title: Text(L10n(context).logOut, style: Theme.of(context).textTheme.titleMedium),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: SvgPicture.asset('assets/svg/ic_logout.svg', height: 24, width: 24,),
@@ -680,7 +683,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerSwitchUsers() => ListTile(
-        title: Text(L10n(context).switchUsers),
+        title: Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.titleMedium),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: SvgPicture.asset('assets/svg/ic_change_user.svg', height: 24, width: 24),

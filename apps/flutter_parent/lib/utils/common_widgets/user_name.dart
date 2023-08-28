@@ -62,6 +62,7 @@ class UserName extends StatelessWidget {
     return Text.rich(
       span,
       overflow: overflow,
+      style: Theme.of(context).textTheme.titleMedium
     );
   }
 }

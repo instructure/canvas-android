@@ -93,9 +93,9 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
   Widget _addWidget() {
     return Center(
       child: Container(
-        //width: 120,
-        //height: 92,
-        child: Column(
+        width: 120,
+        height: 92,
+        child: ListView(
           children: <Widget>[
             SizedBox(height: 12),
             Container(
@@ -125,9 +125,12 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
               ),
             ),
             SizedBox(height: 8),
-            Text(
-              L10n(context).addStudent,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: ParentTheme.of(context)?.onSurfaceColor),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                L10n(context).addStudent,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(color: ParentTheme.of(context)?.onSurfaceColor),
+              ),
             ),
           ],
         ),

@@ -265,7 +265,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       width: 18,
       height: 18,
       decoration: BoxDecoration(shape: BoxShape.circle, color: submittedColor),
-      child: Icon(CanvasIconsSolid.check, color: Theme.of(context).colorScheme.secondary, size: 8),
+      child: Icon(CanvasIconsSolid.check, color: Theme.of(context).colorScheme.onPrimary, size: 8),
     );
   }
 

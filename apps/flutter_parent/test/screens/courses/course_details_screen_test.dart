@@ -453,7 +453,7 @@ void main() {
     when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => CanvasPage((b) => b
       ..id = '1'
       ..body = 'hodor'));
-
+    
     await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved

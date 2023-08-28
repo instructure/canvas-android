@@ -27,6 +27,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class PairingUtil {
   pairNewStudent(BuildContext context, Function() onSuccess) {
     showModalBottomSheet(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: context,
       isScrollControlled: true,
       builder: (context) {
@@ -46,10 +47,10 @@ class PairingUtil {
 
   Widget _qrCode(BuildContext context, Function() onSuccess) {
     return ListTile(
-      title: Text(L10n(context).qrCode),
+      title: Text(L10n(context).qrCode, style: Theme.of(context).textTheme.titleMedium),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 4),
-        child: Text(L10n(context).qrCodeDescription),
+        child: Text(L10n(context).qrCodeDescription, style: Theme.of(context).textTheme.labelSmall),
       ),
       leading: SvgPicture.asset('assets/svg/qr-code.svg', color: ParentColors.ash, width: 25, height: 25),
       contentPadding: EdgeInsets.symmetric(vertical: 10),
@@ -64,10 +65,10 @@ class PairingUtil {
 
   Widget _pairingCode(BuildContext context, Function() onSuccess) {
     return ListTile(
-      title: Text(L10n(context).pairingCode),
+      title: Text(L10n(context).pairingCode, style: Theme.of(context).textTheme.titleMedium),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 4),
-        child: Text(L10n(context).pairingCodeDescription),
+        child: Text(L10n(context).pairingCodeDescription, style: Theme.of(context).textTheme.labelSmall),
       ),
       leading: Icon(CanvasIcons.keyboard_shortcuts, color: ParentColors.ash),
       contentPadding: EdgeInsets.symmetric(vertical: 10),

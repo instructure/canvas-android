@@ -202,7 +202,7 @@ class LoginLandingScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               title,
-              style: TextStyle(fontSize: 16),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -336,8 +336,9 @@ class LoginLandingScreen extends StatelessWidget {
                         ],
                       ),
                       title: UserName.fromUser(login.currentUser),
-                      subtitle: Text(login.currentDomain, overflow: TextOverflow.ellipsis),
+                      subtitle: Text(login.currentDomain, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.labelSmall),
                       trailing: IconButton(
+                        color: Theme.of(context).textTheme.labelSmall?.color,
                         tooltip: L10n(context).delete,
                         onPressed: () async {
                           await ApiPrefs.removeLogin(login);

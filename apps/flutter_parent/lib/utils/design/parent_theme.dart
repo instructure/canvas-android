@@ -246,10 +246,15 @@ class _ParentThemeState extends State<ParentTheme> {
     var swatch = ParentColors.makeSwatch(themeColor);
 
     return ThemeData(
+      brightness: isDarkMode ? Brightness.dark : Brightness.light,
       primarySwatch: swatch,
       primaryColor: isDarkMode ? Colors.black : null,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500], brightness: isDarkMode ? Brightness.dark : Brightness.light),
-      toggleableActiveColor: swatch[500],
+      switchTheme: SwitchThemeData(
+          thumbColor: MaterialStateProperty.all(swatch[500]),
+          trackColor: MaterialStateProperty.resolveWith((states) =>
+          states.contains(MaterialState.selected) ? swatch[200] : nearSurfaceColor)
+      ),
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: swatch[300],
       ),
@@ -257,11 +262,26 @@ class _ParentThemeState extends State<ParentTheme> {
       canvasColor: isDarkMode ? Colors.black : Colors.white,
       textTheme: textTheme,
       primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
-      //iconTheme: IconThemeData(color: onSurfaceColor),
+      iconTheme: IconThemeData(color: onSurfaceColor),
       primaryIconTheme: IconThemeData(color: isDarkMode ? ParentColors.tiara : Colors.white),
-      dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara,
+      dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.tiara : ParentColors.oxford,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
-      fontFamily: 'Lato'
+      fontFamily: 'Lato',
+      dialogBackgroundColor: isDarkMode ? Colors.black : Colors.white,
+      tabBarTheme: TabBarTheme(
+        labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
+        labelColor: Theme.of(context).primaryTextTheme.bodyMedium?.color,
+        unselectedLabelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
+        unselectedLabelColor: Theme.of(context).primaryTextTheme.bodyMedium?.color,
+        // indicator: UnderlineTabIndicator(
+        //   borderSide: BorderSide(color: themeColor, width: 2.0),
+        // ),
+      ),
+      appBarTheme: AppBarTheme(
+        color: isDarkMode ? ParentColors.oxford : themeColor,
+        titleTextStyle: Theme.of(context).primaryTextTheme.titleLarge,
+        iconTheme: Theme.of(context).primaryIconTheme,
+      ),
     );
   }
 

@@ -51,7 +51,7 @@ class CalendarDay extends StatelessWidget {
     BoxDecoration? decoration = null;
 
     if (isToday) {
-      textStyle = Theme.of(context).textTheme.headlineSmall!;
+      textStyle = Theme.of(context).textTheme.headlineSmall!.copyWith(color: theme.colorScheme.onPrimary);
       decoration = BoxDecoration(color: theme.colorScheme.secondary, shape: BoxShape.circle);
     } else if (isSelected) {
       textStyle = textStyle.copyWith(color: Theme.of(context).colorScheme.secondary);
