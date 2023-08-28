@@ -67,8 +67,8 @@ class _HelpScreenState extends State<HelpScreen> {
   List<Widget> _generateLinks(List<HelpLink>? links) {
     List<Widget> helpLinks = List.from(links?.map(
       (l) => ListTile(
-        title: Text(l.text),
-        subtitle: Text(l.subtext),
+        title: Text(l.text, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(l.subtext, style: Theme.of(context).textTheme.bodySmall),
         onTap: () => _linkClick(l),
       ),
     ) ?? []);
@@ -76,13 +76,13 @@ class _HelpScreenState extends State<HelpScreen> {
     // Add in the legal and share the love tiles
     helpLinks.addAll([
       ListTile(
-        title: Text(l10n.helpShareLoveLabel),
-        subtitle: Text(l10n.helpShareLoveDescription),
+        title: Text(l10n.helpShareLoveLabel, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(l10n.helpShareLoveDescription, style: Theme.of(context).textTheme.bodySmall),
         onTap: _showShareLove,
       ),
       ListTile(
-        title: Text(l10n.helpLegalLabel),
-        subtitle: Text(l10n.helpLegalDescription),
+        title: Text(l10n.helpLegalLabel, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(l10n.helpLegalDescription, style: Theme.of(context).textTheme.bodySmall),
         onTap: () => _showLegal(),
       )
     ]);

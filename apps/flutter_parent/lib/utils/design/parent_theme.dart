@@ -264,7 +264,10 @@ class _ParentThemeState extends State<ParentTheme> {
       primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
       iconTheme: IconThemeData(color: onSurfaceColor),
       primaryIconTheme: IconThemeData(color: isDarkMode ? ParentColors.tiara : Colors.white),
-      dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.tiara : ParentColors.oxford,
+      dividerTheme: DividerThemeData(
+        color: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara
+      ),
+      dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
       fontFamily: 'Lato',
       dialogBackgroundColor: isDarkMode ? Colors.black : Colors.white,

@@ -335,7 +335,7 @@ class _TalkbackSwitchTileState extends State<_TalkbackSwitchTile> {
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
-      title: Text(widget.title),
+      title: Text(widget.title, style: Theme.of(context).textTheme.titleMedium),
       value: _value,
       contentPadding: const EdgeInsets.fromLTRB(16, 0, 7, 0),
       onChanged: (bool state) {

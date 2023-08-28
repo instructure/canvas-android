@@ -270,6 +270,7 @@ class DashboardState extends State<DashboardScreen> {
               ),
             ),
             drawer: Drawer(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               child: SafeArea(child: _navDrawer(_self)),
             ),
             body: Column(children: [
@@ -433,7 +434,7 @@ class DashboardState extends State<DashboardScreen> {
     }
 
     return Container(
-      color: Theme.of(context).canvasColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: ListTileTheme(
         style: ListTileStyle.list,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
