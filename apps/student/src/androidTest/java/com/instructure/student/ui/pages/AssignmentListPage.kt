@@ -27,14 +27,34 @@ import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.WaitForViewWithText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 
-class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
+class AssignmentListPage(val searchable: Searchable) : BasePage(pageResId = R.id.assignmentListPage) {
 
     private val assignmentListToolbar by OnViewWithId(R.id.toolbar)
     private val gradingPeriodHeader by WaitForViewWithId(R.id.termSpinnerLayout)
@@ -76,20 +96,6 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
         onView(withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)).assertDisplayed()
         val pointsMatcher = withId(R.id.title) + withText(assignmentName)
         onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertHasText(gradeString)
-    }
-
-    fun assertAssignmentDisplayedWithoutGrade(assignmentName: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)).assertDisplayed()
-        val pointsMatcher = withId(R.id.title) + withText(assignmentName)
-        onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertNotDisplayed()
-    }
-
-    fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    fun typeToSearchBar(textToType: String) {
-        waitForViewWithId(R.id.search_src_text).replaceText(textToType)
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {

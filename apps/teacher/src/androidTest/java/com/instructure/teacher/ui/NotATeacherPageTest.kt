@@ -26,7 +26,7 @@ class NotATeacherPageTest : TeacherTest() {
 
     // Runs live; no MockCanvas
     @Test
-    @Stub
+    @Stub("Stubbed because of the 'too many login attempts' change on backend. Will be de-stubbed when we find a solution for that.")
     override fun displaysPageObjects() {
         slowLogInAsStudent()
         notATeacherPage.assertPageObjects()

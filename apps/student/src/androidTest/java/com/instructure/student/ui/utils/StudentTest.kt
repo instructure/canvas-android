@@ -34,6 +34,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
@@ -144,7 +145,7 @@ abstract class StudentTest : CanvasTest() {
     val annotationCommentListPage = AnnotationCommentListPage()
     val announcementListPage = AnnouncementListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
-    val assignmentListPage = AssignmentListPage()
+    val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()
     val calendarEventPage = CalendarEventPage()
     val canvasWebViewPage = CanvasWebViewPage()
@@ -157,9 +158,9 @@ abstract class StudentTest : CanvasTest() {
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val discussionDetailsPage = DiscussionDetailsPage()
-    val discussionListPage = DiscussionListPage()
+    val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val editDashboardPage = EditDashboardPage()
-    val fileListPage = FileListPage()
+    val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val fileUploadPage = FileUploadPage()
     val helpPage = HelpPage()
     val inboxConversationPage = InboxConversationPage()
@@ -173,7 +174,7 @@ abstract class StudentTest : CanvasTest() {
     val modulesPage = ModulesPage()
     val newMessagePage = NewMessagePage()
     val notificationPage = NotificationPage()
-    val pageListPage = PageListPage()
+    val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val pairObserverPage = PairObserverPage()
     val pandaAvatarPage = PandaAvatarPage()
     val peopleListPage = PeopleListPage()

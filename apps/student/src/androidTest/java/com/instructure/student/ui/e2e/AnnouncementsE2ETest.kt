@@ -92,8 +92,8 @@ class AnnouncementsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Click on Search button and type ${announcement.title} to the search input field.")
         Espresso.pressBack()
-        discussionListPage.clickOnSearchButton()
-        discussionListPage.typeToSearchBar(announcement.title)
+        discussionListPage.searchable.clickOnSearchButton()
+        discussionListPage.searchable.typeToSearchBar(announcement.title)
 
         Log.d(STEP_TAG,"Assert that only the matching announcement is displayed on the Discussion List Page.")
         discussionListPage.pullToUpdate()
@@ -101,12 +101,12 @@ class AnnouncementsE2ETest : StudentTest() {
         discussionListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
         Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Discussion List Page.")
-        discussionListPage.clickOnClearSearchButton()
+        discussionListPage.searchable.clickOnClearSearchButton()
         discussionListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
         discussionListPage.assertTopicDisplayed(announcement.title)
 
         Log.d(STEP_TAG,"Type a search value to the search input field which does not much with any of the existing announcements.")
-        discussionListPage.typeToSearchBar("Non existing announcement title")
+        discussionListPage.searchable.typeToSearchBar("Non existing announcement title")
         sleep(3000) //We need this wait here to let make sure the search process has finished.
 
         Log.d(STEP_TAG,"Assert that the empty view is displayed and none of the announcements are appearing on the page.")
@@ -115,7 +115,7 @@ class AnnouncementsE2ETest : StudentTest() {
         discussionListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
         Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Discussion List Page.")
-        discussionListPage.clickOnClearSearchButton()
+        discussionListPage.searchable.clickOnClearSearchButton()
         discussionListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
         discussionListPage.assertTopicDisplayed(announcement.title)
 

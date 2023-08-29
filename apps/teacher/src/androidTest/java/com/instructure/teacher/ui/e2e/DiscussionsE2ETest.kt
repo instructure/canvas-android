@@ -90,6 +90,10 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertGroupDisplayed("Pinned")
         discussionsListPage.assertDiscussionInGroup("Pinned", discussion2.title)
 
+        Log.d(STEP_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discusssions are displayed.")
+        discussionsListPage.assertHasDiscussion(newTitle)
+        discussionsListPage.assertHasDiscussion(discussion2)
+
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '$newTitle' discussion.")
         discussionsListPage.clickDiscussion(newTitle)
         discussionsDetailsPage.openEdit()
@@ -121,23 +125,22 @@ class DiscussionsE2ETest : TeacherTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
-        discussionsListPage.openSearch()
-        discussionsListPage.enterSearchQuery("Test Discussion")
+        discussionsListPage.searchable.clickOnSearchButton()
+        discussionsListPage.searchable.typeToSearchBar("Test Discussion")
 
         Log.d(STEP_TAG,"Assert that the '$newDiscussionTitle' discussion is displayed and it is the only one.")
-        discussionsListPage.assertDiscussionCount(2) // header + single search result
+        discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
-        Espresso.pressBack() // need to press back to exit from the search input field
+        discussionsListPage.searchable.clickOnClearSearchButton()
 
         Log.d(STEP_TAG,"Collapse the discussion list and assert that the '$newDiscussionTitle' discussion can NOT be seen.")
         discussionsListPage.toggleCollapseExpandIcon()
-        discussionsListPage.assertDiscussionCount(1) // header only
+        discussionsListPage.assertDiscussionCount(0) // header only
         discussionsListPage.assertDiscussionDoesNotExist(newDiscussionTitle)
 
         Log.d(STEP_TAG,"Expand the discussion list and assert that the '$newDiscussionTitle' discussion can be seen.")
         discussionsListPage.toggleCollapseExpandIcon()
-        discussionsListPage.assertDiscussionCount(2) // header only + single search result
+        discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
-
     }
 }

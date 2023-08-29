@@ -55,10 +55,11 @@ abstract class AssignmentListRecyclerAdapter(
 
     private var assignmentGroupsJob: WeaveJob? = null
     private var gradingPeriodJob: WeaveJob? = null
-    private var settingsJob: WeaveJob? = null
+    private var courseJob: WeaveJob? = null
 
     protected var assignmentGroups: List<AssignmentGroup> = emptyList()
     private var restrictQuantitativeData = false
+    private var gradingSchemes = listOf<GradingSchemeRow>()
 
     var filter: AssignmentListFilter = AssignmentListFilter.ALL
     set(value) {
@@ -108,17 +109,14 @@ abstract class AssignmentListRecyclerAdapter(
             if changes are made here, check if they are needed in the other recycler adapters.*/
         val course = canvasContext as Course
 
-        if (course.settings != null && !isRefresh) {
-            restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
+        courseJob = tryWeave {
+            // TODO MBL-17009
+            val detailedCourse = CourseManager.getCourseWithGradeAsync(canvasContext.id, isRefresh).await().dataOrNull
+            restrictQuantitativeData = detailedCourse?.settings?.restrictQuantitativeData ?: false
+            gradingSchemes = detailedCourse?.gradingScheme ?: emptyList()
             loadAssignmentsData(course)
-        } else {
-            settingsJob = tryWeave {
-                val settings = repository.loadCourseSettings(canvasContext.id, isRefresh)
-                restrictQuantitativeData = settings?.restrictQuantitativeData ?: false
-                loadAssignmentsData(course)
-            } catch {
-                loadAssignmentsData(course)
-            }
+        } catch {
+            loadAssignmentsData(course)
         }
     }
 
@@ -177,7 +175,7 @@ abstract class AssignmentListRecyclerAdapter(
             assignmentGroup: AssignmentGroup,
             assignment: Assignment
     ) {
-        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.backgroundColor, adapterToAssignmentsCallback, restrictQuantitativeData)
+        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.backgroundColor, adapterToAssignmentsCallback, restrictQuantitativeData, gradingSchemes)
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup) {
@@ -258,7 +256,7 @@ abstract class AssignmentListRecyclerAdapter(
         super.cancel()
         assignmentGroupsJob?.cancel()
         gradingPeriodJob?.cancel()
-        settingsJob?.cancel()
+        courseJob?.cancel()
     }
 }
 

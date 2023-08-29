@@ -17,14 +17,13 @@ package com.instructure.teacher.ui.pages
 
 import android.view.View
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.models.Page
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -44,11 +43,7 @@ import org.hamcrest.Matchers.containsString
  * This page extends the BasePage class and provides functionality for interacting with the elements on the "Page List" page.
  * It contains methods for clicking on the create new page button, opening a page, performing a search, and asserting various page-related conditions.
  */
-class PageListPage : BasePage() {
-
-    private val searchButton by OnViewWithId(R.id.search)
-
-    private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
+class PageListPage(val searchable: Searchable) : BasePage() {
 
     private val pageRecyclerView by OnViewWithId(R.id.pageRecyclerView)
 
@@ -79,22 +74,6 @@ class PageListPage : BasePage() {
         val matcher = getPageMatcherByTitle(pageTitle = pageTitle)
         scrollRecyclerView(R.id.pageRecyclerView, matcher)
         onView(matcher).click()
-    }
-
-    /**
-     * Opens the search bar.
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters the search query in the search bar.
-     *
-     * @param query The search query to be entered.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
     }
 
     /**

@@ -26,7 +26,7 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.student.R
 
-class AnnouncementListPage : BasePage(R.id.discussionListPage) {
+class AnnouncementListPage() : BasePage(R.id.discussionListPage) {
 
     fun assertToolbarTitle() {
         WaitForViewMatcher.waitForView(withParent(R.id.discussionListToolbar) + withText(R.string.announcements)).assertDisplayed()

@@ -26,7 +26,7 @@ class AlertsHelper {
         filteredList.add(element);
       } else {
         Course course = await locator<CourseApi>().getCourse(courseId, forceRefresh: false);
-        if (!course.settings.restrictQuantitativeData) {
+        if (!(course.settings?.restrictQuantitativeData ?? false)) {
           filteredList.add(element);
         }
       }

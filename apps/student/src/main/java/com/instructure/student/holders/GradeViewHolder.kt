@@ -68,15 +68,17 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             points.setGone()
         } else {
             val submission = assignment.submission
-            val restrictQuantitativeData = (canvasContext as? Course)?.settings?.restrictQuantitativeData ?: false
+            val course = canvasContext as? Course
+            val restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?: false
+            val gradingScheme = course?.gradingScheme ?: emptyList()
             if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
                 points.setGone()
                 icon.setNestedIcon(R.drawable.ic_complete_solid, canvasContext.backgroundColor)
-            } else if (restrictQuantitativeData && assignment.isGradingTypeQuantitative && submission?.excused != true) {
+            } else if (restrictQuantitativeData && assignment.isGradingTypeQuantitative && submission?.excused != true && gradingScheme.isEmpty()) {
                 points.setGone()
             } else {
                 points.setVisible()
-                val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context, restrictQuantitativeData)
+                val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context, restrictQuantitativeData, gradingScheme)
                 points.text = grade
                 points.contentDescription = contentDescription
             }

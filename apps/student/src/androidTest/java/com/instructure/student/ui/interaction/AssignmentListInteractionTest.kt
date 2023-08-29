@@ -165,7 +165,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithoutGrade(assignment.name!!)
+        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "A")
     }
 
     @Test
@@ -182,10 +182,10 @@ class AssignmentListInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
     fun testPercentageAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
-        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "90%", 90.0, 100)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "80%", 80.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithoutGrade(assignment.name!!)
+        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "B")
     }
 
     @Test
@@ -208,8 +208,17 @@ class AssignmentListInteractionTest : StudentTest() {
 
         val course = data.courses.values.first()
 
+        val gradingScheme = listOf(
+            listOf("A", 0.9),
+            listOf("B", 0.8),
+            listOf("C", 0.7),
+            listOf("D", 0.6),
+            listOf("F", 0.0)
+        )
+
         val newCourse = course
-            .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData))
+            .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
+                gradingSchemeRaw = gradingScheme)
         data.courses[course.id] = newCourse
 
         val assignmentList = mutableListOf<Assignment>()

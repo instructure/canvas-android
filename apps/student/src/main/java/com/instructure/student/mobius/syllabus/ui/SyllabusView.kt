@@ -53,11 +53,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            if (tab?.position == 0) {
-                binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
-            } else {
-                binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
-            }
+            setupSwipeableChildren(tab?.position)
         }
     }
 
@@ -96,15 +92,31 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
             is SyllabusViewState.Loaded -> {
                 binding.swipeRefreshLayout.isRefreshing = false
 
+                val pager = binding.syllabusPager
+
                 val hasBoth = state.eventsState != null && state.syllabus != null
                 binding.syllabusTabLayout.setVisible(hasBoth)
-                binding.syllabusPager.canSwipe = hasBoth
+                pager.canSwipe = hasBoth
 
-                binding.syllabusPager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
+                pager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
 
-                if (state.syllabus != null) webviewBinding?.syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+                if (state.syllabus != null) webviewBinding?.syllabusWebViewWrapper?.loadHtml(
+                    state.syllabus,
+                    context.getString(com.instructure.pandares.R.string.syllabus)
+                )
+
                 if (state.eventsState != null) renderEvents(state.eventsState)
+
+                setupSwipeableChildren(pager.currentItem)
             }
+        }
+    }
+
+    private fun setupSwipeableChildren(position: Int?) {
+        if (position == 0) {
+            binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
+        } else {
+            binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
         }
     }
 
@@ -113,12 +125,6 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
             eventsBinding?.syllabusEmptyView?.setVisible(visibility.empty)
             eventsBinding?.syllabusEventsError?.setVisible(visibility.error)
             eventsBinding?.syllabusEventsRecycler?.setVisible(visibility.list)
-        }
-
-        if (binding.syllabusPager.currentItem == 0) {
-            binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
-        } else {
-            binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
         }
 
         when (eventsState) {
