@@ -98,12 +98,6 @@ class AssignmentListPage(val searchable: Searchable) : BasePage(pageResId = R.id
         onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertHasText(gradeString)
     }
 
-    fun assertAssignmentDisplayedWithoutGrade(assignmentName: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)).assertDisplayed()
-        val pointsMatcher = withId(R.id.title) + withText(assignmentName)
-        onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertNotDisplayed()
-    }
-
     fun assertAssignmentNotDisplayed(assignmentName: String) {
         onView(withText(assignmentName) + withId(R.id.title) + hasSibling(withId(R.id.description))).check(doesNotExist())
     }

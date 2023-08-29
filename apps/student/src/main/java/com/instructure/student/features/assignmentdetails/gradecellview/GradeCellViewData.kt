@@ -3,8 +3,10 @@ package com.instructure.student.features.assignmentdetails.gradecellview
 import android.content.res.Resources
 import androidx.core.graphics.ColorUtils
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.pandautils.utils.orDefault
@@ -45,9 +47,10 @@ data class GradeCellViewData(
             submission: Submission?,
             restrictQuantitativeData: Boolean = false,
             uploading: Boolean = false,
-            failed: Boolean = false
+            failed: Boolean = false,
+            gradingScheme: List<GradingSchemeRow> = emptyList()
         ): GradeCellViewData {
-            val hideGrades = restrictQuantitativeData && assignment?.isGradingTypeQuantitative == true && submission?.excused != true
+            val hideGrades = restrictQuantitativeData && assignment?.isGradingTypeQuantitative == true && submission?.excused != true && gradingScheme.isEmpty()
             val emptyGradeCell = assignment == null
                 || submission == null
                 || (submission.submittedAt == null && !submission.isGraded)
@@ -74,7 +77,7 @@ data class GradeCellViewData(
                         resources.getString(R.string.submissionStatusSuccessSubtitle)
                     )
                 )
-                else -> createGradedViewData(resources, courseColor, assignment!!, submission, restrictQuantitativeData)
+                else -> createGradedViewData(resources, courseColor, assignment!!, submission, restrictQuantitativeData, gradingScheme)
             }
         }
 
@@ -83,7 +86,8 @@ data class GradeCellViewData(
             courseColor: ThemedColor,
             assignment: Assignment,
             submission: Submission,
-            restrictQuantitativeData: Boolean
+            restrictQuantitativeData: Boolean,
+            gradingScheme: List<GradingSchemeRow>
         ): GradeCellViewData {
             val pointsPossibleText = NumberHelper.formatDecimal(assignment.pointsPossible, 2, true)
             val outOfText = if (restrictQuantitativeData) "" else resources.getString(R.string.outOfPointsAbbreviatedFormatted, pointsPossibleText)
@@ -121,8 +125,11 @@ data class GradeCellViewData(
                     )
                 )
             } else if (restrictQuantitativeData) {
-                // We can only reach this branch when the grading type is GPA or letter grade, so don't need to handle any other case
-                val grade = submission.grade ?: ""
+                val grade = if (assignment.isGradingTypeQuantitative) {
+                    convertScoreToLetterGrade(submission.score, assignment.pointsPossible, gradingScheme)
+                } else {
+                    submission.grade ?: ""
+                }
                 val accessibleGradeString = getContentDescriptionForMinusGradeString(grade, resources)
                 val contentDescription = resources.getString(
                     R.string.a11y_gradeCellContentDescriptionLetterGradeOnly,
