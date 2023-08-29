@@ -465,4 +465,9 @@ class OfflineModule {
     fun provideLocalFileDao(appDatabase: OfflineDatabase): LocalFileDao {
         return appDatabase.localFileDao()
     }
+
+    @Provides
+    fun provideSyncProgressDao(appDatabase: OfflineDatabase): SyncProgressDao {
+        return appDatabase.syncProgressDao()
+    }
 }

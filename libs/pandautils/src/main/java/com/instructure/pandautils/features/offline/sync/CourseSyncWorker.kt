@@ -57,11 +57,14 @@ import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
+import com.instructure.pandautils.room.offline.entities.SyncProgressType
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -106,7 +109,8 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
-    private val syncSettingsFacade: SyncSettingsFacade
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val syncProgressDao: SyncProgressDao
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
 
@@ -115,6 +119,13 @@ class CourseSyncWorker @AssistedInject constructor(
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
 
         fetchCourseDetails(courseSettings.courseId)
+
+        if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
+            fetchFiles(courseSettings.courseId)
+        }
+
+        syncFiles(courseSettings)
+
         if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
             fetchPages(courseSettings.courseId)
         }
@@ -142,11 +153,6 @@ class CourseSyncWorker @AssistedInject constructor(
         if (courseSettings.isTabSelected(Tab.QUIZZES_ID)) {
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseSettings.courseId)
         }
-        if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
-            fetchFiles(courseSettings.courseId)
-        }
-
-        syncFiles(courseSettings)
 
         return Result.success()
     }
@@ -344,6 +350,16 @@ class CourseSyncWorker @AssistedInject constructor(
             }.chunked(6)
 
         if (fileWorkers.isEmpty()) return
+
+        val syncProgress = fileWorkers.flatten().map {
+            SyncProgressEntity(
+                it.id.toString(),
+                courseId,
+                it.workSpec.input.getString(FileSyncWorker.INPUT_FILE_NAME).orEmpty(),
+                SyncProgressType.COURSE_FILE.type
+            )
+        }
+        syncProgressDao.insertAll(syncProgress)
 
         var continuation = workManager
             .beginWith(fileWorkers.first())
