@@ -16,6 +16,7 @@ import 'package:built_value/built_value.dart';
 import 'package:flutter/material.dart' hide Builder;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -61,16 +62,17 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..finalGrade = '';
 
   static GradeCellData forSubmission(
-    bool restrictQuantitativeData,
+    Course course,
     Assignment assignment,
     Submission submission,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    var excused = submission?.excused ?? false;
+    final excused = submission?.excused ?? false;
+    final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
 
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' or restricted grading type
-    final restricted = restrictQuantitativeData && assignment.isGradingTypeQuantitative() && !excused;
+    final restricted = restrictQuantitativeData && assignment.isGradingTypeQuantitative() && course.gradingSchemeItems.isEmpty && !excused;
     if (assignment == null ||
         submission == null ||
         (submission?.submittedAt == null && !excused && submission?.grade == null) ||
@@ -125,11 +127,16 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     // If grading type is Points, don't show the grade since we're already showing it as the score
     var grade = assignment.gradingType != GradingType.points ? submission.grade ?? '' : '';
 
+    if (restrictQuantitativeData && assignment.isGradingTypeQuantitative()) {
+      grade = course.convertScoreToLetterGrade(submission.score, assignment.pointsPossible);
+    }
+
     // Screen reader fails on letter grades with a minus (e.g. 'A-'), so we replace the dash with the word 'minus'
     var accessibleGradeString = grade.replaceAll('-', '. ${l10n.accessibilityMinus}');
 
     var latePenalty = '';
     var finalGrade = '';
+    var restrictedScore = grade;
 
     // Adjust for late penalty, if any
     if ((submission.pointsDeducted ?? 0.0) > 0.0) {
@@ -144,7 +151,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
           ..state = GradeCellState.gradedRestrictQuantitativeData
           ..graphPercent = 1.0
           ..accentColor = accentColor
-          ..score = submission.grade
+          ..score = restrictedScore
           ..gradeContentDescription = accessibleGradeString)
         : GradeCellData((b) => b
           ..state = GradeCellState.graded

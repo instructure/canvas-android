@@ -92,6 +92,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private var dbSubmission: DatabaseSubmission? = null
     private var isUploading = false
     private var restrictQuantitativeData = false
+    private var gradingScheme = emptyList<GradingSchemeRow>()
 
     var assignment: Assignment? = null
         private set
@@ -165,6 +166,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             try {
                 val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), forceNetwork).await().dataOrThrow
                 restrictQuantitativeData = courseResult.settings?.restrictQuantitativeData ?: false
+                gradingScheme = courseResult.gradingScheme
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
@@ -441,7 +443,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 colorKeeper.getOrGenerateColor(course),
                 assignment,
                 assignment.submission,
-                restrictQuantitativeData
+                restrictQuantitativeData,
+                gradingScheme = gradingScheme
             ),
             dueDate = due,
             submissionTypes = submissionTypes,
@@ -475,7 +478,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             selectedSubmission,
             restrictQuantitativeData,
             attempt?.isUploading.orDefault(),
-            attempt?.isFailed.orDefault()
+            attempt?.isFailed.orDefault(),
+            gradingScheme
         )
         _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
     }

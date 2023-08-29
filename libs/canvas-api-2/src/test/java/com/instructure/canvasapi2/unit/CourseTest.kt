@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.unit
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.Logger
@@ -561,5 +562,23 @@ class CourseTest {
                 startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
 
         assertTrue(course.isBetweenValidDateRange())
+    }
+
+    @Test
+    fun `Grading schemes are sorted and filtered correctly`() {
+        val course = baseCourse.copy(gradingSchemeRaw = listOf(
+            listOf("A", 0.95),
+            listOf("C", 0.7),
+            listOf(0.8),
+            listOf("B", 0.9),
+            listOf("A", "B")
+        ))
+
+        val gradingSchemes = course.gradingScheme
+
+        assertEquals(3, gradingSchemes.size)
+        assertEquals(GradingSchemeRow("A", 0.95), gradingSchemes[0])
+        assertEquals(GradingSchemeRow("B", 0.9), gradingSchemes[1])
+        assertEquals(GradingSchemeRow("C", 0.7), gradingSchemes[2])
     }
 }

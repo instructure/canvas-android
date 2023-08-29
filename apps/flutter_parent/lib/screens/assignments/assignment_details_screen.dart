@@ -185,7 +185,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                   style: textTheme.subtitle1, key: Key("assignment_details_due_date")),
             ),
           ],
-          GradeCell.forSubmission(context, course?.settings?.restrictQuantitativeData ?? false, assignment, submission),
+          GradeCell.forSubmission(context, course, assignment, submission),
           ..._lockedRow(assignment),
           Divider(),
           ..._rowTile(
