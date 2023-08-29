@@ -330,7 +330,7 @@ void main() {
     final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId))
-        .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse();
 
@@ -349,7 +349,7 @@ void main() {
     final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId))
-        .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse().rebuild((b) => b..settings.restrictQuantitativeData = true);
 
@@ -369,7 +369,7 @@ void main() {
     final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId))
-        .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+        .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse().rebuild((b) => b..settings.restrictQuantitativeData = true);
 
@@ -462,7 +462,7 @@ void main() {
       model.courseSettings = CourseSettings((b) => b..restrictQuantitativeData = true);
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId))
-          .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+          .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
       await tester.pumpWidget(_testableWidget(model));
@@ -486,7 +486,7 @@ void main() {
       model.courseSettings = CourseSettings((b) => b..restrictQuantitativeData = true);
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId))
-          .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
+          .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
       await tester.pumpWidget(_testableWidget(model));
@@ -804,7 +804,7 @@ Assignment _mockAssignment({
   Submission? submission,
   DateTime? dueAt,
   double pointsPossible = 0,
-  GradingType gradingType
+  GradingType? gradingType
 }) {
   return Assignment((b) => b
     ..id = id

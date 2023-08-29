@@ -72,10 +72,10 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
 
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' or restricted grading type
-    final restricted = restrictQuantitativeData && assignment.isGradingTypeQuantitative() && course.gradingSchemeItems.isEmpty && !excused;
+    final restricted = restrictQuantitativeData && assignment?.isGradingTypeQuantitative() == true && course?.gradingSchemeItems.isNotEmpty == true && !excused;
     if (assignment == null ||
         submission == null ||
-        (submission?.submittedAt == null && !excused && submission?.grade == null) ||
+        (submission.submittedAt == null && !excused && submission.grade == null) ||
         assignment.gradingType == GradingType.notGraded ||
         restricted) {
       return GradeCellData();
@@ -128,7 +128,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     var grade = assignment.gradingType != GradingType.points ? submission.grade ?? '' : '';
 
     if (restrictQuantitativeData && assignment.isGradingTypeQuantitative()) {
-      grade = course.convertScoreToLetterGrade(submission.score, assignment.pointsPossible);
+      grade = course?.convertScoreToLetterGrade(submission.score, assignment.pointsPossible) ?? '';
     }
 
     // Screen reader fails on letter grades with a minus (e.g. 'A-'), so we replace the dash with the word 'minus'

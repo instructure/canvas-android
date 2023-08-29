@@ -88,7 +88,7 @@ class LoginLandingScreen extends StatelessWidget {
 
   Widget _body(BuildContext context) {
     final lastLoginAccount = ApiPrefs.getLastAccount();
-    final assetString = ParentTheme.of(context).isDarkMode ? 'assets/svg/canvas-parent-login-logo-dark.svg' : 'assets/svg/canvas-parent-login-logo.svg';
+    final assetString = ParentTheme.of(context)?.isDarkMode == true ? 'assets/svg/canvas-parent-login-logo-dark.svg' : 'assets/svg/canvas-parent-login-logo.svg';
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

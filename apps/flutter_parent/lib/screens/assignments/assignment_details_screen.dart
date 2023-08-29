@@ -130,10 +130,10 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     final l10n = L10n(context);
-    final course = snapshot.data!.course!;
+    final course = snapshot.data?.course;
     final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
     final assignment = snapshot.data!.assignment!;
-    final submission = assignment.submission(_currentStudent.id);
+    final submission = assignment.submission(_currentStudent?.id);
     final fullyLocked = assignment.isFullyLocked;
     final showStatus = assignment.isSubmittable() || submission?.isGraded() == true;
     final submitted = submission?.submittedAt != null;

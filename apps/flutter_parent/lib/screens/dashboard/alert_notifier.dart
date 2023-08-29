@@ -23,8 +23,8 @@ class AlertCountNotifier extends ValueNotifier<int?> {
 
   update(String studentId) async {
     try {
-      final unreadAlerts = await locator<AlertsApi>().getAlertsDepaginated(studentId, true)?.then((List<Alert> list) async {
-        return await locator<AlertsHelper>().filterAlerts(list.where((element) => element.workflowState == AlertWorkflowState.unread).toList());
+      final unreadAlerts = await locator<AlertsApi>().getAlertsDepaginated(studentId, true).then((List<Alert>? list) async {
+        return await locator<AlertsHelper>().filterAlerts(list?.where((element) => element.workflowState == AlertWorkflowState.unread).toList());
       });
       value = unreadAlerts.length;
     } catch (e) {

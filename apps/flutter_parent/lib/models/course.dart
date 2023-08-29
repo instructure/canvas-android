@@ -119,7 +119,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   List<GradingSchemeItem> get gradingSchemeItems {
     if (gradingScheme == null) return [];
-    return gradingScheme!.map((item) => GradingSchemeItem.fromJson(item)).where((element) => element != null).toList()
+    return gradingScheme!.map((item) => GradingSchemeItem.fromJson(item)).nonNulls.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
   }
 

@@ -123,8 +123,8 @@ class _CoursesScreenState extends State<CoursesScreen> {
     var format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
-    if (grade.isCourseGradeLocked(forAllGradingPeriods: course?.enrollments?.any((enrollment) => enrollment.hasActiveGradingPeriod()) != true) ||
-        (course?.settings?.restrictQuantitativeData == true && grade.currentGrade() == null)) {
+    if (grade.isCourseGradeLocked(forAllGradingPeriods: course.enrollments?.any((enrollment) => enrollment.hasActiveGradingPeriod()) != true) ||
+        (course.settings?.restrictQuantitativeData == true && grade.currentGrade() == null)) {
       return null;
     }
     // If there is no current grade, return 'No grade'
@@ -133,7 +133,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     var text = grade.noCurrentGrade()
         ? L10n(context).noGrade
         : grade.currentGrade()?.isNotEmpty == true
-            ? grade.currentGrade()
+            ? grade.currentGrade()!
             : format.format(grade.currentScore()! / 100);
 
     return Text(

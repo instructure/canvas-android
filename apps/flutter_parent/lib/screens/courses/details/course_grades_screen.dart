@@ -98,6 +98,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
         },
       );
     } else if (!snapshot.hasData ||
+        model.course == null ||
         snapshot.data?.assignmentGroups == null ||
         snapshot.data?.assignmentGroups?.isEmpty == true ||
         snapshot.data?.assignmentGroups?.every((group) => group.assignments.isEmpty) == true) {
@@ -113,7 +114,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
     return ListView(
       children: [
         header,
-        ..._assignmentListChildren(context, snapshot.data!.assignmentGroups!, model.course),
+        ..._assignmentListChildren(context, snapshot.data!.assignmentGroups!, model.course!),
       ],
     );
   }
@@ -246,7 +247,7 @@ class _CourseGradeHeader extends StatelessWidget {
     // Don't show the total if the grade is locked
     if (grade == null || grade.isCourseGradeLocked(forAllGradingPeriods: model.currentGradingPeriod()?.id == null)) return null;
 
-    if ((model.courseSettings?.restrictQuantitativeData ?? false) && (grade.currentGrade() == null || grade.currentGrade().isEmpty)) return null;
+    if ((model.courseSettings?.restrictQuantitativeData ?? false) && (grade.currentGrade() == null || grade.currentGrade()?.isEmpty == true)) return null;
 
     final textTheme = Theme.of(context).textTheme;
     return Padding(

@@ -1920,6 +1920,12 @@ class MockCourseDetailsModel extends _i1.Mock
         returnValueForMissingStub: false,
       ) as bool);
   @override
+  bool get restrictQuantitativeData => (super.noSuchMethod(
+        Invocation.getter(#restrictQuantitativeData),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
   _i63.ViewState get state => (super.noSuchMethod(
         Invocation.getter(#state),
         returnValue: _i63.ViewState.Idle,

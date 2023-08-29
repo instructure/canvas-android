@@ -28,8 +28,8 @@ class GradeCell extends StatelessWidget {
 
   GradeCell.forSubmission(
     BuildContext context,
-    Course course,
-    Assignment assignment,
+    Course? course,
+    Assignment? assignment,
     Submission? submission, {
     super.key,
   })  : data = GradeCellData.forSubmission(

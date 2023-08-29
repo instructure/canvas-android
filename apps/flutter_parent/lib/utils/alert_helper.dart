@@ -18,15 +18,15 @@ import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsHelper {
-  Future<List<Alert>> filterAlerts(List<Alert> list) async {
+  Future<List<Alert>> filterAlerts(List<Alert>? list) async {
     List<Alert> filteredList = [];
-    for (var element in list) {
+    for (var element in list ?? []) {
       var courseId = element.getCourseIdForGradeAlerts();
       if (courseId == null) {
         filteredList.add(element);
       } else {
-        Course course = await locator<CourseApi>().getCourse(courseId, forceRefresh: false);
-        if (!(course.settings?.restrictQuantitativeData ?? false)) {
+        Course? course = await locator<CourseApi>().getCourse(courseId, forceRefresh: false);
+        if (!(course?.settings?.restrictQuantitativeData ?? false)) {
           filteredList.add(element);
         }
       }
