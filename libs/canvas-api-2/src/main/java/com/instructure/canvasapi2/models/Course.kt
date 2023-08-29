@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.isCreationPending
 import com.instructure.canvasapi2.utils.isNullOrEmpty
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import java.util.*
 
 @Parcelize
@@ -82,7 +83,9 @@ data class Course(
         @SerializedName("tabs")
         val tabs: List<Tab>? = null,
         @SerializedName("settings")
-        val settings: CourseSettings? = null
+        val settings: CourseSettings? = null,
+        @SerializedName("grading_scheme")
+        val gradingSchemeRaw: List<List<@RawValue Any>>? = null,
 ) : CanvasContext(), Comparable<CanvasContext> {
     override val type: Type get() = Type.COURSE
 
@@ -128,6 +131,17 @@ data class Course(
             }
 
             return false
+        }
+
+    val gradingScheme: List<GradingSchemeRow>
+        get() {
+            return gradingSchemeRaw?.map { row ->
+                if (row.size < 2 || row[0] !is String || row[1] !is Double) {
+                    null
+                } else {
+                    GradingSchemeRow(row[0] as String, row[1] as Double)
+                }
+            }?.filterNotNull()?.sortedByDescending { it.value } ?: emptyList()
         }
 
     /**

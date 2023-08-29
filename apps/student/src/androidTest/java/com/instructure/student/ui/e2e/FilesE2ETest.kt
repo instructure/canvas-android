@@ -20,7 +20,6 @@ import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
@@ -186,14 +185,14 @@ class FilesE2ETest: StudentTest() {
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${discussionAttachmentFile.name}', the file's name to the search input field.")
-        fileListPage.clickSearchButton()
-        fileListPage.typeSearchInput(discussionAttachmentFile.name)
+        fileListPage.searchable.clickOnSearchButton()
+        fileListPage.searchable.typeToSearchBar(discussionAttachmentFile.name)
 
         Log.d(STEP_TAG, "Assert that only 1 file matches for the search text, and it is '${discussionAttachmentFile.name}', and no directories has been shown in the result. Press search back button the quit from search result view.")
         fileListPage.assertSearchResultCount(1)
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
         fileListPage.assertItemNotDisplayed("unfiled")
-        fileListPage.pressSearchBackButton()
+        fileListPage.searchable.pressSearchBackButton()
 
         Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
@@ -214,7 +213,6 @@ class FilesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to global File List Page. Assert that the 'unfiled' folder has 0 items because we deleted the only item in it recently.")
         Espresso.pressBack()
-        refresh() //TODO after this bugfix: https://instructure.atlassian.net/browse/MBL-16937?atlOrigin=eyJpIjoiNWJjODY1MTI4NDE0NGQxM2E3ZjBiYTQzZDdlM2IwOWIiLCJwIjoiaiJ9
         fileListPage.assertFolderSize("unfiled", 0)
 
         val testFolderName = "Krissinho's Test Folder"

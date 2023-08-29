@@ -71,6 +71,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     private var isWhatIfGrading = false
     private var restrictQuantitativeData = false
+    private var gradingScheme = emptyList<GradingSchemeRow>()
 
     private lateinit var allTermsGradingPeriod: GradingPeriod
     private lateinit var recyclerAdapter: GradesListRecyclerAdapter
@@ -169,8 +170,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             } else {
                 val gradeString = getGradeString(
                     recyclerAdapter.courseGrade,
-                    !isChecked,
-                    restrictQuantitativeData
+                    !isChecked
                 )
                 txtOverallGrade.text = gradeString
                 txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
@@ -222,11 +222,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             }
         }
 
-        override fun notifyGradeChanged(courseGrade: CourseGrade?, restrictQuantitativeData: Boolean) {
+        override fun notifyGradeChanged(courseGrade: CourseGrade?, restrictQuantitativeData: Boolean, gradingScheme: List<GradingSchemeRow>) {
             Logger.d("Logging for Grades E2E, current total grade is: ${binding.txtOverallGrade.text}")
             if (!isAdded) return
-            val gradeString = getGradeString(courseGrade, !binding.showTotalCheckBox.isChecked, restrictQuantitativeData)
             this@GradesListFragment.restrictQuantitativeData = restrictQuantitativeData
+            this@GradesListFragment.gradingScheme = gradingScheme
+            val gradeString = getGradeString(courseGrade, !binding.showTotalCheckBox.isChecked)
             Logger.d("Logging for Grades E2E, new total grade is: $gradeString")
             binding.txtOverallGrade.text = gradeString
             binding.txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
@@ -307,23 +308,26 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     private fun getGradeString(
         courseGrade: CourseGrade?,
-        isFinal: Boolean,
-        restrictQuantitativeData: Boolean
+        isFinal: Boolean
     ): String {
         if (courseGrade == null) return getString(R.string.noGradeText)
         return if (isFinal) {
-            formatGrade(courseGrade.noFinalGrade, courseGrade.hasFinalGradeString(), courseGrade.finalGrade, courseGrade.finalScore, restrictQuantitativeData)
+            formatGrade(courseGrade.noFinalGrade, courseGrade.hasFinalGradeString(), courseGrade.finalGrade, courseGrade.finalScore)
         } else {
-            formatGrade(courseGrade.noCurrentGrade, courseGrade.hasCurrentGradeString(), courseGrade.currentGrade, courseGrade.currentScore, restrictQuantitativeData)
+            formatGrade(courseGrade.noCurrentGrade, courseGrade.hasCurrentGradeString(), courseGrade.currentGrade, courseGrade.currentScore)
         }
     }
 
-    private fun formatGrade(noGrade: Boolean, hasGradeString: Boolean, grade: String?, score: Double?, restrictQuantitativeData: Boolean): String {
+    private fun formatGrade(noGrade: Boolean, hasGradeString: Boolean, grade: String?, score: Double?): String {
         return if (noGrade) {
             getString(R.string.noGradeText)
         } else {
             if (restrictQuantitativeData) {
-                if (hasGradeString) grade.orEmpty() else getString(R.string.noGradeText)
+                when {
+                    hasGradeString -> grade.orEmpty()
+                    gradingScheme.isNotEmpty() && score != null -> convertPercentScoreToLetterGrade(score / 100, gradingScheme)
+                    else -> getString(R.string.noGradeText)
+                }
             } else {
                 NumberHelper.doubleToPercentage(score) + if (hasGradeString) String.format(" (%s)", grade) else ""
             }

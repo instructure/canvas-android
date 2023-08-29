@@ -41,8 +41,8 @@ class PageListPageTest : TeacherTest() {
         val pages = getToPageListPage(pageCount = 3)
         val searchPage = pages[2]
         pageListPage.assertPageCount(pages.size)
-        pageListPage.openSearch()
-        pageListPage.enterSearchQuery(searchPage.title!!.take(searchPage.title!!.length / 2))
+        pageListPage.searchable.clickOnSearchButton()
+        pageListPage.searchable.typeToSearchBar(searchPage.title!!.take(searchPage.title!!.length / 2))
         pageListPage.assertPageCount(1)
         pageListPage.assertHasPage(searchPage)
     }

@@ -25,6 +25,8 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withParent
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 
@@ -56,7 +58,7 @@ class CalendarEventPage : BasePage(R.id.fragmentCalendarEvent) {
      * @throws AssertionError if the description does not match the expected description.
      */
     fun verifyDescription(description: String) {
-        Web.onWebView(ViewMatchers.withId(R.id.contentWebView))
+        Web.onWebView(ViewMatchers.withId(R.id.contentWebView) + withParent(R.id.calendarEventWebViewWrapper))
             .withElement(DriverAtoms.findElement(Locator.ID, "content"))
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(description)))
     }

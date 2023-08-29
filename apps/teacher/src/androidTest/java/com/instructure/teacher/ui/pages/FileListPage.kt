@@ -28,6 +28,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
@@ -37,7 +38,6 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
@@ -54,7 +54,7 @@ import org.hamcrest.Matchers.allOf
  *
  * @constructor Creates an instance of the FileListPage class.
  */
-class FileListPage : BasePage(R.id.fileListPage) {
+class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
 
     private val addButton by OnViewWithId(R.id.addFab)
     private val uploadFileButton by OnViewWithId(R.id.addFileFab, autoAssert = false)
@@ -170,30 +170,6 @@ class FileListPage : BasePage(R.id.fileListPage) {
     }
 
     /**
-     * Clicks the search button.
-     */
-    fun clickSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    /**
-     * Types the specified search text into the search input field.
-     *
-     * @param searchText The text to be typed in the search input field.
-     */
-    fun typeSearchInput(searchText: String) {
-        onView(withId(R.id.queryInput)).replaceText(searchText)
-    }
-
-    /**
-     * Clicks the reset search text button.
-     */
-    fun clickResetSearchText() {
-        waitForView(withId(R.id.clearButton)).click()
-        onView(withId(R.id.backButton)).click()
-    }
-
-    /**
      * Asserts the count of search results matches the expected count.
      *
      * @param expectedCount The expected count of search results.
@@ -215,12 +191,5 @@ class FileListPage : BasePage(R.id.fileListPage) {
         onView(withId(R.id.fileListRecyclerView) + withAncestor(R.id.container)).check(
             ViewAssertions.matches(hasChildCount(expectedCount))
         )
-    }
-
-    /**
-     * Presses the back button in the search view.
-     */
-    fun pressSearchBackButton() {
-        onView(withId(R.id.backButton)).click()
     }
 }

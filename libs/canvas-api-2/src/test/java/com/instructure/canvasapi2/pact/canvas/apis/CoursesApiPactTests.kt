@@ -210,7 +210,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //region Test grabbing a single course with a grade
     //
 
-    val courseWithGradeQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image&include[]=settings"
+    val courseWithGradeQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image&include[]=settings&include[]=grading_scheme"
     val courseWithGradePath = "/api/v1/courses/3"
     val courseWithGradeFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 3, isFavorite = true, query = courseWithGradeQuery)
     val courseWithGradeResponseBody = LambdaDsl.newJsonBody { obj ->

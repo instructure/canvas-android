@@ -48,7 +48,7 @@
                 android:layout_height="64dp"
                 android:importantForAccessibility="no"
                 android:scaleType="fitCenter"
-                android:tint="@color/textLight"
+                app:tint="@color/textDark"
                 app:srcCompat="@drawable/ic_canvas_logo_red"/>
 
             <TextView

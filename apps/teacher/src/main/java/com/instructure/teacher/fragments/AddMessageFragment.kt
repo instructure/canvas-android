@@ -344,7 +344,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     fun handleExit() {
         // Check to see if the user has made any changes
-        if (selectedCourse != null || binding.editSubject.text.isNotEmpty() || binding.message.text.isNotEmpty() || presenter.attachments.isNotEmpty()) {
+        if (selectedCourse != null || binding.editSubject.text?.isNotEmpty() == true || binding.message.text?.isNotEmpty() == true || presenter.attachments.isNotEmpty()) {
             shouldAllowExit = false
             UnsavedChangesExitDialog.show(requireActivity().supportFragmentManager) {
                 shouldAllowExit = true

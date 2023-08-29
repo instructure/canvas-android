@@ -35,8 +35,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.`is`
 import org.junit.Test
 
 @HiltAndroidTest
@@ -76,9 +76,9 @@ class AnnouncementsListPageTest : TeacherTest() {
         val searchAnnouncement = announcements[2]
 
         announcementsListPage.assertAnnouncementCount(announcements.size + 1) // +1 to account for header
-        announcementsListPage.openSearch()
-        announcementsListPage.enterSearchQuery(searchAnnouncement.title!!.take(searchAnnouncement.title!!.length / 2))
-        announcementsListPage.assertAnnouncementCount(2) // header + single search result
+        announcementsListPage.searchable.clickOnSearchButton()
+        announcementsListPage.searchable.typeToSearchBar(searchAnnouncement.title!!.take(searchAnnouncement.title!!.length / 2))
+        announcementsListPage.assertSearchResultCount(1)
         announcementsListPage.assertHasAnnouncement(searchAnnouncement)
     }
 

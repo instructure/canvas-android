@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -107,12 +106,12 @@
                     android:id="@+id/contactsImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/select_recipients"
-                    android:minHeight="48dp"
                     android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:padding="16dp"
                     app:srcCompat="@drawable/ic_add" />
 
@@ -120,21 +119,26 @@
 
             <include layout="@layout/view_divider" />
 
-            <EditText
-                android:id="@+id/editSubject"
-                style="@style/TextFont.Regular"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:background="@android:color/transparent"
-                android:ellipsize="end"
-                android:hint="@string/label_subject"
-                android:inputType="textCapSentences"
-                android:lines="1"
-                android:padding="16dp"
-                android:textColorHint="@color/textDark"
-                android:textSize="16sp"
-                android:visibility="gone" />
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editSubject"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
+                    android:hint="@string/label_subject"
+                    android:inputType="textCapSentences"
+                    android:lines="1"
+                    android:padding="16dp"
+                    android:textColorHint="@color/textDark"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/subjectView"
@@ -177,10 +181,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:minHeight="48dp"
-                    android:minWidth="48dp" />
+                    android:layout_marginEnd="16dp"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp" />
 
             </RelativeLayout>
 
@@ -189,24 +193,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/backgroundMedium"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/message"
-                style="@style/TextFont.Regular"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:gravity="top"
-                android:hint="@string/rce_empty_message"
-                android:inputType="textCapSentences|textMultiLine|textImeMultiLine"
-                android:minLines="2"
-                android:padding="16dp"
-                android:scrollHorizontally="false"
-                android:singleLine="false"
-                android:textColor="@color/textDarkest"
-                android:textColorHint="@color/textDark"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/message"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:gravity="top"
+                    android:hint="@string/rce_empty_message"
+                    android:inputType="textCapSentences|textMultiLine|textImeMultiLine"
+                    android:minLines="2"
+                    android:padding="16dp"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
+                    android:textColor="@color/textDarkest"
+                    android:textColorHint="@color/textDark"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.instructure.pandautils.views.AttachmentLayout
                 android:id="@+id/attachments"

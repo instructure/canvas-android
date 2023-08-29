@@ -77,7 +77,7 @@ class CourseDetailsModel extends BaseModel {
 
   Future<GradeDetails> loadAssignments({bool forceRefresh = false}) async {
     if (forceRefresh) {
-      course = await _interactor().loadCourse(courseId);
+      course = await _interactor().loadCourse(courseId, forceRefresh: forceRefresh);
     }
 
     final groupFuture = _interactor()
