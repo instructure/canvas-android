@@ -110,7 +110,7 @@ void main() {
     await tester.tap(matchedWidget);
     await tester.pumpAndSettle();
 
-    verify(interactor.loadCourseShell(any, any)).called(2); // Once for initial load, another for the refresh
+    verify(interactor.loadCourseShell(any, any, forceRefresh: anyNamed('forceRefresh'))).called(2); // Once for initial load, another for the refresh
   });
 
   testWidgetsWithAccessibilityChecks('Refresh displays loading indicator and loads state', (tester) async {

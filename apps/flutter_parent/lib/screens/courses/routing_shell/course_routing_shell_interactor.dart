@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/network/api/course_api.dart';

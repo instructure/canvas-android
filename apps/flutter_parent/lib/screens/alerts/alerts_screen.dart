@@ -79,10 +79,10 @@ class _AlertsScreenState extends State<AlertsScreen> {
 
         // Get the child widget to show in the refresh indicator
         Widget child;
-        if (!snapshot.hasData || snapshot.hasError) {
+        if (snapshot.hasError) {
           child = _error(context);
         } else {
-          child = _AlertsList(_student, snapshot.data!);
+          child = _AlertsList(_student, snapshot.data);
         }
 
         return RefreshIndicator(
@@ -105,7 +105,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
 /// A helper widget to handle updating read status of alerts, and displaying as a list
 class _AlertsList extends StatefulWidget {
   final _interactor = locator<AlertsInteractor>();
-  final AlertsList _data;
+  final AlertsList? _data;
   final User _student;
 
   _AlertsList(this._student, this._data, {super.key});
@@ -220,7 +220,7 @@ class __AlertsListState extends State<_AlertsList> {
 
   String _alertTitle(BuildContext context, Alert alert) {
     final l10n = L10n(context);
-    final threshold = _data?.thresholds?.getThreshold(alert.alertType)?.threshold;
+    final threshold = _data?.thresholds?.getThreshold(alert.alertType)?.threshold ?? '';
     String title = '';
     switch (alert.alertType) {
       case AlertType.institutionAnnouncement:

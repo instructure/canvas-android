@@ -830,6 +830,7 @@ void main() {
       await tester.tap(find.text(l10n.stopActAsUser));
       await tester.pump();
       await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(find.text(l10n.endMasqueradeMessage(login.user.name)), findsOneWidget);

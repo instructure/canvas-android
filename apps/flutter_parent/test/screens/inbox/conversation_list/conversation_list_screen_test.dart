@@ -247,7 +247,7 @@ void main() {
     when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
     when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
 
-    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
+    await tester.tap(find.byTooltip(l10n.newMessageTitle));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -301,7 +301,7 @@ void main() {
     await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
+    await tester.tap(find.byTooltip(l10n.newMessageTitle));
     await tester.pump();
 
     completer.completeError('');
@@ -351,7 +351,7 @@ void main() {
     when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
     when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
 
-    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
+    await tester.tap(find.byTooltip(l10n.newMessageTitle));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);

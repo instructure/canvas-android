@@ -66,7 +66,7 @@ class _ParentThemeState extends State<ParentTheme> {
 
   StudentColorSet? _studentColorSet;
 
-  late String? _selectedStudentId;
+  String? _selectedStudentId;
 
   Future<void> refreshStudentColor() => setSelectedStudent(_selectedStudentId);
 

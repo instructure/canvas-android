@@ -146,8 +146,9 @@ void main() async {
         ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
     ];
 
-    await ApiPrefs.saveLogins(logins);
+
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await ApiPrefs.saveLogins(logins);
     await tester.pumpAndSettle();
 
 

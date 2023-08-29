@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/planner_submission.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
@@ -398,7 +400,7 @@ Plannable _createPlannable({String? title, DateTime? dueAt, double? pointsPossib
       ..title = title ?? ''
       ..pointsPossible = pointsPossible
       ..dueAt = dueAt
-      ..assignmentId = assignmentId);
+      ..assignmentId = assignmentId ?? '');
 
 PlannerItem _createPlannerItem(
         {String? contextName,

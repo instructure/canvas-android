@@ -45,9 +45,8 @@ class MasqueradeUI extends StatefulWidget {
   static void showMasqueradeCancelDialog(GlobalKey<NavigatorState> navKey, BuildContext context) {
     bool logout = ApiPrefs.getCurrentLogin()?.isMasqueradingFromQRCode == true;
     User user = ApiPrefs.getUser()!;
-    showDialogWithNavigatorKey(
-      navKey: navKey,
-      buildContext: context,
+    showDialog(
+      context: navKey.currentContext ?? context,
       builder: (context) {
         AppLocalizations l10n = L10n(context);
         var nameText = UserName.fromUser(user).text;

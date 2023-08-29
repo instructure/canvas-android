@@ -19,6 +19,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user_colors.dart';
 import 'package:flutter_parent/screens/manage_students/student_color_picker_dialog.dart';
 import 'package:flutter_parent/screens/manage_students/student_color_picker_interactor.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -105,7 +106,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap 'Ok' and wait for the result
-    await tester.tap(find.bySemanticsLabel(l10n.ok));
+    await tester.tap(find.text(l10n.ok));
+    await tester.pumpAndSettle();
     var result = await resultFuture;
 
     // Should have returned true

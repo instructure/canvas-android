@@ -511,7 +511,7 @@ void main() {
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
-      final semantics = find.bySemanticsLabel(AppLocalizations().dismissAlertLabel(alert.title));
+      final semantics = find.byTooltip(AppLocalizations().dismissAlertLabel(alert.title));
       final icon = find.byIcon(Icons.clear);
 
       expect(find.descendant(of: semantics, matching: icon), findsOneWidget);

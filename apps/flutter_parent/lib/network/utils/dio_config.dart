@@ -225,7 +225,7 @@ class DioConfig {
     await initCacheOptionsIfNull();
 
     if (path == null) {
-      return cacheOptions?.store?.clean() ?? Future.value(null);
+      return (cacheOptions?.store?.clean() ?? Future.value(null));
     } else {
       return cacheOptions?.store?.delete(path) ?? Future.value(null);
     }
@@ -234,7 +234,7 @@ class DioConfig {
   Future<void> initCacheOptionsIfNull() async {
     if (cacheOptions == null) {
       final dir = await getApplicationCacheDirectory();
-      final hiveStore = HiveCacheStore(dir.path);
+      final hiveStore = MemCacheStore();//HiveCacheStore(dir.path);
       cacheOptions = CacheOptions(store: hiveStore, policy: CachePolicy.refreshForceCache, maxStale: cacheMaxAge);
     }
   }

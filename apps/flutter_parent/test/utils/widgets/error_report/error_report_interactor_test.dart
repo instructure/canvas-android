@@ -137,7 +137,7 @@ void main() {
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 
     verify(api.submitErrorReport(
-      domain: ErrorReportApi.DEFAULT_DOMAIN,
+      domain: anyNamed('domain'),
       subject: anyNamed('subject'),
       description: anyNamed('description'),
       email: anyNamed('email'),

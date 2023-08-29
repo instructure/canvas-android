@@ -63,7 +63,7 @@ void main() {
     ApiPrefs.setCameraCount(0);
 
     BuildContext context = tester.state(find.byType(DummyWidget)).context;
-    PairingUtil().pairNewStudent(context, () => null);
+    PairingUtil().pairNewStudent(context, () => {});
     await tester.pumpAndSettle();
 
     expect(find.text(l10n.pairingCode), findsOneWidget);
@@ -78,15 +78,23 @@ void main() {
     PairingUtil().pairNewStudent(context, () => null);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(l10n.pairingCode));
-    await tester.pumpAndSettle();
-
-    verify(
+    when(
       nav.showDialog(
         context: anyNamed('context'),
         barrierDismissible: anyNamed('barrierDismissible'),
         builder: anyNamed('builder'),
       ),
+    ).thenAnswer((_) async => true);
+
+    await tester.tap(find.text(l10n.pairingCode));
+    await tester.pumpAndSettle();
+
+    verify(
+        nav.showDialog(
+          context: anyNamed('context'),
+          barrierDismissible: anyNamed('barrierDismissible'),
+          builder: anyNamed('builder'),
+        )
     );
   });
 

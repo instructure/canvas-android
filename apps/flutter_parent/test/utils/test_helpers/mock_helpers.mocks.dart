@@ -140,6 +140,8 @@ import 'package:flutter_parent/screens/pairing/pairing_interactor.dart' as _i78;
 import 'package:flutter_parent/screens/pairing/pairing_util.dart' as _i82;
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart'
     as _i21;
+import 'package:flutter_parent/screens/remote_config/remote_config_interactor.dart'
+    as _i140;
 import 'package:flutter_parent/screens/settings/settings_interactor.dart'
     as _i124;
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart'
@@ -165,6 +167,7 @@ import 'package:flutter_parent/utils/old_app_migration.dart' as _i137;
 import 'package:flutter_parent/utils/permission_handler.dart' as _i130;
 import 'package:flutter_parent/utils/qr_utils.dart' as _i14;
 import 'package:flutter_parent/utils/quick_nav.dart' as _i83;
+import 'package:flutter_parent/utils/remote_config_utils.dart' as _i141;
 import 'package:flutter_parent/utils/url_launcher.dart' as _i88;
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart'
     as _i30;
@@ -9093,4 +9096,36 @@ class MockHelpLinksApi extends _i1.Mock implements _i138.HelpLinksApi {
         returnValue: _i8.Future<_i139.HelpLinks?>.value(),
         returnValueForMissingStub: _i8.Future<_i139.HelpLinks?>.value(),
       ) as _i8.Future<_i139.HelpLinks?>);
+}
+
+/// A class which mocks [RemoteConfigInteractor].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockRemoteConfigInteractor extends _i1.Mock
+    implements _i140.RemoteConfigInteractor {
+  @override
+  Map<_i141.RemoteConfigParams, String> getRemoteConfigParams() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getRemoteConfigParams,
+          [],
+        ),
+        returnValue: <_i141.RemoteConfigParams, String>{},
+        returnValueForMissingStub: <_i141.RemoteConfigParams, String>{},
+      ) as Map<_i141.RemoteConfigParams, String>);
+  @override
+  void updateRemoteConfig(
+    _i141.RemoteConfigParams? rcKey,
+    String? value,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #updateRemoteConfig,
+          [
+            rcKey,
+            value,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

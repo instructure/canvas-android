@@ -905,31 +905,31 @@ class AppLocalizations {
         desc: 'Title for alerts when there is an institution announcement',
       );
 
-  String assignmentGradeAboveThreshold(String? threshold) => Intl.message(
+  String assignmentGradeAboveThreshold(String threshold) => Intl.message(
         'Assignment Grade Above $threshold',
         name: 'assignmentGradeAboveThreshold',
-        args: threshold != null ? [threshold] : null,
+        args: [threshold],
         desc: 'Title for alerts when an assignment grade is above the threshold value',
       );
 
-  String assignmentGradeBelowThreshold(String? threshold) => Intl.message(
+  String assignmentGradeBelowThreshold(String threshold) => Intl.message(
         'Assignment Grade Below $threshold',
         name: 'assignmentGradeBelowThreshold',
-        args: threshold != null ? [threshold] : null,
+        args: [threshold],
         desc: 'Title for alerts when an assignment grade is below the threshold value',
       );
 
-  String courseGradeAboveThreshold(String? threshold) => Intl.message(
+  String courseGradeAboveThreshold(String threshold) => Intl.message(
         'Course Grade Above $threshold',
         name: 'courseGradeAboveThreshold',
-        args: threshold != null ? [threshold] : null,
+        args: [threshold],
         desc: 'Title for alerts when a course grade is above the threshold value',
       );
 
-  String courseGradeBelowThreshold(String? threshold) => Intl.message(
+  String courseGradeBelowThreshold(String threshold) => Intl.message(
         'Course Grade Below $threshold',
         name: 'courseGradeBelowThreshold',
-        args: threshold != null ? [threshold] : null,
+        args: [threshold],
         desc: 'Title for alerts when a course grade is below the threshold value',
       );
 

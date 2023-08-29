@@ -132,6 +132,8 @@ void main() {
 
     when(authApi.refreshToken()).thenAnswer((_) => Future.error('Failed to refresh'));
 
+    when(dio.interceptors).thenAnswer((realInvocation) => Interceptors());
+
     // Test the error response
     await interceptor.onError(error, errorHandler);
     verify(errorHandler.next(error));
@@ -157,6 +159,7 @@ void main() {
 
     when(authApi.refreshToken()).thenAnswer((_) async => tokens);
     when(dio.fetch(any)).thenAnswer((_) async => expectedAnswer);
+    when(dio.interceptors).thenAnswer((realInvocation) => Interceptors());
 
     // Do the onError call
     await interceptor.onError(error, errorHandler);

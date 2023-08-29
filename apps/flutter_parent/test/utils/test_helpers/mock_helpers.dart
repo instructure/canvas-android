@@ -45,6 +45,7 @@ import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
@@ -75,6 +76,7 @@ import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.d
 import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
+import 'package:flutter_parent/screens/remote_config/remote_config_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
@@ -186,6 +188,7 @@ import 'package:video_player/video_player.dart';
   MockSpec<AttachmentHandler>(),
   MockSpec<OldAppMigration>(),
   MockSpec<HelpLinksApi>(),
+  MockSpec<RemoteConfigInteractor>(),
 ])
 import 'mock_helpers.mocks.dart';
 

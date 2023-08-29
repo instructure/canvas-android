@@ -75,8 +75,8 @@ class RouterErrorScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(48, 0, 48, 0),
               child: TextButton(
-                onPressed: () async {
-                  await _switchUsers(context);
+                onPressed: () {
+                  _switchUsers(context);
                 },
                 child:
                     Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16)),
