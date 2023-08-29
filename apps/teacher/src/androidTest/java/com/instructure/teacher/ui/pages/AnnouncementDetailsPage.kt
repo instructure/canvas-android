@@ -27,9 +27,9 @@ import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
 /**
- * Represents the Edit Announcement page.
+ * Represents the Announcement Details Page.
  */
-class EditAnnouncementPage : BasePage() {
+class AnnouncementDetailsPage : BasePage() {
 
     /**
      * Opens the edit mode for the announcement.

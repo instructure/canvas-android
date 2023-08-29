@@ -83,9 +83,9 @@ class AnnouncementsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Edit ${announcement.title} announcement's name to 'Haha'. Save the modifications.")
         announcementsListPage.clickDiscussion(announcement)
-        editAnnouncementPage.openEdit()
-        editAnnouncementPage.editAnnouncementName("Haha")
-        editAnnouncementPage.saveEditAnnouncement()
+        announcementDetailsPage.openEdit()
+        announcementDetailsPage.editAnnouncementName("Haha")
+        announcementDetailsPage.saveEditAnnouncement()
 
         Log.d(STEP_TAG,"Navigate back to the Announcements Page. Refresh the page and assert that the announcement name has been changed to 'Haha'.")
         Espresso.pressBack()
@@ -94,13 +94,13 @@ class AnnouncementsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Delete the 'Haha' titled announcement.")
         announcementsListPage.clickDiscussion("Haha")
-        editAnnouncementPage.openEdit()
-        editAnnouncementPage.deleteAnnouncement()
+        announcementDetailsPage.openEdit()
+        announcementDetailsPage.deleteAnnouncement()
 
         Log.d(STEP_TAG, "")
         announcementsListPage.clickDiscussion(announcement2.title)
-        editAnnouncementPage.openEdit()
-        editAnnouncementPage.deleteAnnouncement()
+        announcementDetailsPage.openEdit()
+        announcementDetailsPage.deleteAnnouncement()
 
         Log.d(STEP_TAG,"Refresh the Announcements Page and assert that there is no announcement displayed. Assert that empty view is displayed.")
         announcementsListPage.refresh()
