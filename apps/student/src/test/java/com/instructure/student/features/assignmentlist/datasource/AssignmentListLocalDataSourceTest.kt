@@ -18,10 +18,9 @@
 package com.instructure.student.features.assignmentlist.datasource
 
 import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
-import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
@@ -75,12 +74,12 @@ class AssignmentListLocalDataSourceTest {
     }
 
     @Test
-    fun `Load course settings successfully returns api model`() = runTest {
-        val expected = CourseSettings(restrictQuantitativeData = true)
+    fun `Get course with grade successfully returns api model`() = runTest {
+        val expected = Course(1L)
 
-        coEvery { courseSettingsDao.findByCourseId(any()) } returns CourseSettingsEntity(expected, 1L)
+        coEvery { courseFacade.getCourseById(any()) } returns expected
 
-        val result = dataSource.loadCourseSettings(1, true)
+        val result = dataSource.getCourseWithGrade(1, true)
 
         assertEquals(expected, result)
     }

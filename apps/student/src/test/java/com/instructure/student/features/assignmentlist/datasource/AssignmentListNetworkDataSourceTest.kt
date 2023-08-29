@@ -20,7 +20,7 @@ package com.instructure.student.features.assignmentlist.datasource
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriodResponse
 import com.instructure.canvasapi2.utils.DataResult
@@ -111,21 +111,21 @@ class AssignmentListNetworkDataSourceTest {
     }
 
     @Test
-    fun `Load course settings returns succesful api model`() = runTest {
-        val expected = CourseSettings(restrictQuantitativeData = true)
+    fun `Get course returns succesful api model`() = runTest {
+        val expected = Course(id = 1L, name = "Course 1")
 
-        coEvery { coursesApi.getCourseSettings(any(), any()) } returns DataResult.Success(expected)
+        coEvery { coursesApi.getCourseWithGrade(any(), any()) } returns DataResult.Success(expected)
 
-        val result = dataSource.loadCourseSettings(1, true)
+        val result = dataSource.getCourseWithGrade(1, true)
 
         Assert.assertEquals(expected, result)
     }
 
     @Test
-    fun `Load course settings failure returns null`() = runTest {
-        coEvery { coursesApi.getCourseSettings(any(), any()) } returns DataResult.Fail()
+    fun `Get course failure returns null`() = runTest {
+        coEvery { coursesApi.getCourseWithGrade(any(), any()) } returns DataResult.Fail()
 
-        val result = dataSource.loadCourseSettings(1, true)
+        val result = dataSource.getCourseWithGrade(1, true)
 
         Assert.assertNull(result)
     }

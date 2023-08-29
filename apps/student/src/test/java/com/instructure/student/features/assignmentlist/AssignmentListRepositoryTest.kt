@@ -18,7 +18,7 @@
 package com.instructure.student.features.assignmentlist
 
 import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -131,24 +131,24 @@ class AssignmentListRepositoryTest {
     }
 
     @Test
-    fun `Load curse settings from local storage when device is offline`() = runTest {
-        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
-        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+    fun `Get course from local storage when device is offline`() = runTest {
+        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 1L, name = "Course 1")
+        coEvery { localDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 2L, name = "Course 2")
         coEvery { networkStateProvider.isOnline() } returns false
 
-        val result = repository.loadCourseSettings(1, true)
+        val result = repository.getCourseWithGrade(1, true)
 
-        Assert.assertTrue(result!!.restrictQuantitativeData)
+        Assert.assertEquals(2L, result!!.id)
     }
 
     @Test
-    fun `Load curse settings from network when device is online`() = runTest {
-        coEvery { networkDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = false)
-        coEvery { localDataSource.loadCourseSettings(any(), any()) } returns CourseSettings(restrictQuantitativeData = true)
+    fun `Get course from network when device is online`() = runTest {
+        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 1L, name = "Course 1")
+        coEvery { localDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 2L, name = "Course 2")
         coEvery { networkStateProvider.isOnline() } returns true
 
-        val result = repository.loadCourseSettings(1, true)
+        val result = repository.getCourseWithGrade(1, true)
 
-        Assert.assertFalse(result!!.restrictQuantitativeData)
+        Assert.assertEquals(1L, result!!.id)
     }
 }
