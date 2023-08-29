@@ -154,6 +154,13 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       ..add('settings')
       ..add(serializers.serialize(value,
           specifiedType: const FullType(CourseSettings)));
+    value = object.gradingScheme;
+
+    result
+      ..add('grading_scheme')
+      ..add(serializers.serialize(value,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(JsonObject)])));
 
     return result;
   }
@@ -265,6 +272,12 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
           result.settings.replace(serializers.deserialize(value,
               specifiedType: const FullType(CourseSettings)) as CourseSettings);
           break;
+        case 'grading_scheme':
+          result.gradingScheme.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(JsonObject)]))
+              as BuiltList<Object>);
+          break;
       }
     }
 
@@ -344,6 +357,8 @@ class _$Course extends Course {
   final BuiltList<Section> sections;
   @override
   final CourseSettings settings;
+  @override
+  final BuiltList<JsonObject> gradingScheme;
 
   factory _$Course([void Function(CourseBuilder) updates]) =>
       (new CourseBuilder()..update(updates)).build();
@@ -375,7 +390,8 @@ class _$Course extends Course {
       this.homePage,
       this.term,
       this.sections,
-      this.settings})
+      this.settings,
+      this.gradingScheme})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, 'Course', 'id');
     BuiltValueNullFieldError.checkNotNull(name, 'Course', 'name');
@@ -436,7 +452,8 @@ class _$Course extends Course {
         homePage == other.homePage &&
         term == other.term &&
         sections == other.sections &&
-        settings == other.settings;
+        settings == other.settings &&
+        gradingScheme == other.gradingScheme;
   }
 
   @override
@@ -459,26 +476,26 @@ class _$Course extends Course {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode), name.hashCode), originalName.hashCode), courseCode.hashCode),
-                                                                                startAt.hashCode),
-                                                                            endAt.hashCode),
-                                                                        syllabusBody.hashCode),
-                                                                    hideFinalGrades.hashCode),
-                                                                isPublic.hashCode),
-                                                            enrollments.hashCode),
-                                                        needsGradingCount.hashCode),
-                                                    applyAssignmentGroupWeights.hashCode),
-                                                isFavorite.hashCode),
-                                            accessRestrictedByDate.hashCode),
-                                        imageDownloadUrl.hashCode),
-                                    hasWeightedGradingPeriods.hashCode),
-                                hasGradingPeriods.hashCode),
-                            restrictEnrollmentsToCourseDates.hashCode),
-                        workflowState.hashCode),
-                    homePage.hashCode),
-                term.hashCode),
-            sections.hashCode),
-        settings.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode), name.hashCode), originalName.hashCode), courseCode.hashCode), startAt.hashCode),
+                                                                                endAt.hashCode),
+                                                                            syllabusBody.hashCode),
+                                                                        hideFinalGrades.hashCode),
+                                                                    isPublic.hashCode),
+                                                                enrollments.hashCode),
+                                                            needsGradingCount.hashCode),
+                                                        applyAssignmentGroupWeights.hashCode),
+                                                    isFavorite.hashCode),
+                                                accessRestrictedByDate.hashCode),
+                                            imageDownloadUrl.hashCode),
+                                        hasWeightedGradingPeriods.hashCode),
+                                    hasGradingPeriods.hashCode),
+                                restrictEnrollmentsToCourseDates.hashCode),
+                            workflowState.hashCode),
+                        homePage.hashCode),
+                    term.hashCode),
+                sections.hashCode),
+            settings.hashCode),
+        gradingScheme.hashCode));
   }
 
   @override
@@ -511,7 +528,8 @@ class _$Course extends Course {
           ..add('homePage', homePage)
           ..add('term', term)
           ..add('sections', sections)
-          ..add('settings', settings))
+          ..add('settings', settings)
+          ..add('gradingScheme', gradingScheme))
         .toString();
   }
 }
@@ -642,6 +660,12 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
       _$this._settings ??= new CourseSettingsBuilder();
   set settings(CourseSettingsBuilder settings) => _$this._settings = settings;
 
+  ListBuilder<JsonObject> _gradingScheme;
+  ListBuilder<JsonObject> get gradingScheme =>
+      _$this._gradingScheme ??= new ListBuilder<JsonObject>();
+  set gradingScheme(ListBuilder<JsonObject> gradingScheme) =>
+      _$this._gradingScheme = gradingScheme;
+
   CourseBuilder() {
     Course._initializeBuilder(this);
   }
@@ -676,6 +700,7 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
       _term = $v.term?.toBuilder();
       _sections = $v.sections?.toBuilder();
       _settings = $v.settings?.toBuilder();
+      _gradingScheme = $v.gradingScheme?.toBuilder();
       _$v = null;
     }
     return this;
@@ -733,7 +758,8 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
               homePage: homePage,
               term: _term?.build(),
               sections: _sections?.build(),
-              settings: _settings?.build());
+              settings: _settings?.build(),
+              gradingScheme: _gradingScheme?.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -746,6 +772,8 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
         _sections?.build();
         _$failedField = 'settings';
         _settings?.build();
+        _$failedField = 'gradingScheme';
+        _gradingScheme?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Course', _$failedField, e.toString());
