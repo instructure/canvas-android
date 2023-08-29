@@ -166,6 +166,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.gradeTextView)).assertDisplayed()
     }
 
+    fun assertGradeText(gradeText: String) {
+        onViewWithId(R.id.gradeTextView).assertHasText(gradeText)
+    }
+
     // Assumes one course, which is favorited
     fun assertHidesGrades() {
         onView(withId(R.id.gradeTextView)).assertNotDisplayed()
@@ -184,6 +188,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name) + withId(R.id.titleTextView)).click()
+    }
+
+    fun selectGroup(group: GroupApiModel) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        onView(groupNameMatcher).scrollTo().click()
     }
 
     fun assertAnnouncementShowing(announcement: AccountNotification) {
@@ -270,9 +279,18 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(matcher).check(doesNotExist())
     }
 
+    fun assertGroupNotDisplayed(group: Group) {
+        val matcher = allOf(
+            withText(group.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        onView(withText(android.R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {

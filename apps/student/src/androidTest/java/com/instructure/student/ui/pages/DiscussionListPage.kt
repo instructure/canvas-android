@@ -25,14 +25,31 @@ import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.containsString
 
-class DiscussionListPage : BasePage(R.id.discussionListPage) {
+class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discussionListPage) {
 
     private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
     private val announcementsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
@@ -71,14 +88,20 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
     fun assertReplyCount(topicTitle: String, count: Int) {
         val matcher = allOf(
                 withId(R.id.readUnreadCounts),
-                withText(containsString("$count Repl")), // Could be "Reply" or "Replies"
+                withText(anyOf(containsString("$count Reply"), containsString("$count Replies"))), // Could be "Reply" or "Replies"
                 hasSibling(allOf(
                         withId(R.id.discussionTitle),
                         withText(topicTitle)
                 )))
 
-        scrollRecyclerView(R.id.discussionRecyclerView, matcher)
-        onView(matcher).assertDisplayed() // probably redundant
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertUnreadReplyCount(topicTitle: String, count: Int) {
+        val matcher = allOf(withId(R.id.readUnreadCounts), withText(containsString("$count Unread")),
+            hasSibling(allOf(withId(R.id.discussionTitle), withText(topicTitle))))
+
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertUnreadCount(topicTitle: String, count: Int) {
@@ -126,18 +149,6 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         onView(withContentDescription("Close")).click()
     }
 
-    fun clickOnSearchButton() {
-        onView(withId(R.id.search)).click()
-    }
-
-    fun typeToSearchBar(textToType: String) {
-        waitForViewWithId(R.id.search_src_text).replaceText(textToType)
-    }
-
-    fun clickOnClearSearchButton() {
-        onView(withId(R.id.search_close_btn)).click()
-    }
-
     fun verifyExitWithoutSavingDialog() {
         onView(withText(R.string.exitWithoutSavingMessage)).check(matches(isDisplayed()))
     }
@@ -175,5 +186,10 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
     fun assertAnnouncementLocked(announcementName: String) {
         val ancestorMatcher = allOf(withId(R.id.discussionLayout), withDescendant(withId(R.id.discussionTitle) + withText(announcementName)))
         onView(allOf(withId(R.id.nestedIcon), withContentDescription(R.string.locked), withAncestor(ancestorMatcher))).assertDisplayed()
+    }
+
+    fun assertDueDate(topicTitle: String, expectedDateString: String) {
+        val matcher = allOf(withId(R.id.dueDate), withText(containsString(expectedDateString)), hasSibling(allOf(withId(R.id.discussionTitle), withText(topicTitle))))
+        onView(matcher).scrollTo().assertDisplayed()
     }
 }

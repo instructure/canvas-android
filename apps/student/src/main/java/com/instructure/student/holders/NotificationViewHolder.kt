@@ -24,7 +24,9 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
@@ -98,17 +100,28 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 drawableResId = R.drawable.ic_assignment
                 icon.contentDescription = context.getString(R.string.assignmentIcon)
 
+                val course = item.canvasContext as? Course
+                val restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault()
+                val gradingScheme = course?.gradingScheme.orEmpty()
                 // Need to prepend "Grade" in the message if there is a valid score
                 if (item.score != -1.0) {
                     // If the submission has a grade (like a letter or percentage) display it
-                    if (item.grade != null
-                        && item.grade != ""
-                        && item.grade != "null"
-                    ) {
-                        description.text = context.resources.getString(R.string.grade) + ": " + item.grade
+                    val pointsPossible = item.assignment?.pointsPossible
+                    val grade = if (item.assignment?.isGradingTypeQuantitative == true && restrictQuantitativeData && pointsPossible != null) {
+                        convertScoreToLetterGrade(item.score, pointsPossible, gradingScheme)
+                    } else {
+                        item.grade
+                    }
+                    if (grade != null && grade != "" && grade != "null") {
+                        description.text = context.resources.getString(R.string.grade) + ": " + grade
                     } else {
                         description.text = context.resources.getString(R.string.grade) + description.text
                     }
+                } else if (item.excused) {
+                    description.text = context.resources.getString(R.string.gradeExcused)
+                    description.setVisible()
+                } else {
+                    description.text = context.resources.getString(R.string.gradeUpdated)
                 }
             }
             StreamItem.Type.CONVERSATION -> {

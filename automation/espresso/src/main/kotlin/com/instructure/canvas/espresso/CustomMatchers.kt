@@ -18,13 +18,20 @@ package com.instructure.canvas.espresso
 
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.util.HumanReadables
@@ -221,4 +228,63 @@ fun withOnlyWidthLessThan(dimInDp: Int) : BaseMatcher<AccessibilityViewCheckResu
         }
 
     }
+}
+fun getViewChildCountWithoutId(viewMatcher: Matcher<View>): Int {
+    var count = 0
+    onView(viewMatcher).perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(RecyclerView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Count RecyclerView children without ID"
+        }
+
+        override fun perform(uiController: UiController?, view: View?) {
+            if (view is RecyclerView) {
+                val childCount = view.childCount
+                for (i in 0 until childCount) {
+                    val child = view.getChildAt(i)
+                    if (child.id == View.NO_ID) {
+                        count++
+                    }
+                }
+            }
+        }
+    })
+    return count
+}
+
+
+fun countConstraintLayoutsInRecyclerView(recyclerViewId: ViewInteraction): Int {
+    var count = 0
+    recyclerViewId.perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(RecyclerView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Counting ConstraintLayouts in RecyclerView"
+        }
+
+        override fun perform(uiController: UiController, view: View) {
+            if (view is RecyclerView) {
+                count = countConstraintLayoutsInViewGroup(view)
+            }
+        }
+    })
+    return count
+}
+
+private fun countConstraintLayoutsInViewGroup(viewGroup: ViewGroup): Int {
+    var count = 0
+    for (i in 0 until viewGroup.childCount) {
+        val child = viewGroup.getChildAt(i)
+        if (child is ConstraintLayout) {
+            count++
+        } else if (child is ViewGroup) {
+            count += countConstraintLayoutsInViewGroup(child)
+        }
+    }
+    return count
 }

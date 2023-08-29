@@ -49,6 +49,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(GradeSubmissionWrapper.serializer)
       ..add(GradingPeriod.serializer)
       ..add(GradingPeriodResponse.serializer)
+      ..add(GradingSchemeItem.serializer)
       ..add(GradingType.serializer)
       ..add(HelpLink.serializer)
       ..add(HelpLinks.serializer)
@@ -114,6 +115,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Section)]),
           () => new ListBuilder<Section>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(JsonObject)]),
+          () => new ListBuilder<JsonObject>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GradingPeriod)]),
           () => new ListBuilder<GradingPeriod>())

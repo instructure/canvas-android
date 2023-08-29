@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.mockCanvas.addFolderToCourse
 import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
@@ -61,7 +62,7 @@ class GroupLinksInteractionTest : StudentTest() {
     fun testGroupLink_base() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
-        courseBrowserPage.assertTitleCorrect(group)
+        groupBrowserPage.assertTitleCorrect(group)
     }
 
     // Link to groups opens dashboard - eg: "/groups"
@@ -70,6 +71,38 @@ class GroupLinksInteractionTest : StudentTest() {
     fun testGroupLink_dashboard() {
         setUpGroupAndSignIn()
         dashboardPage.assertDisplaysGroup(group, course)
+    }
+
+    // Test not favorite group on dashboard
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
+    fun testGroupLink_dashboard_favoriteLogics() {
+        val data = setUpGroupAndSignIn()
+        val user = data.users.values.first()
+        val nonFavoriteGroup = data.addGroupToCourse(
+            course = course,
+            members = listOf(user),
+            isFavorite = false
+        )
+        refresh() //Need to refresh because when we navigated to Dashboard page the nonFavoriteGroup was not existed yet. (However it won't be displayed because it's not favorite)
+        dashboardPage.assertGroupNotDisplayed(nonFavoriteGroup)
+        dashboardPage.assertDisplaysGroup(group, course)
+    }
+
+    // Test that if no groups has selected as favorite then we display all groups
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
+    fun testGroupLink_dashboard_not_selected_displays_all() {
+        val data = setUpGroupAndSignIn(isFavorite = false)
+        val user = data.users.values.first()
+        val group2 = data.addGroupToCourse(
+            course = course,
+            members = listOf(user),
+            isFavorite = false
+        )
+        refresh() //Need to refresh because when we navigated to Dashboard page the group2 was not existed yet.
+        dashboardPage.assertDisplaysGroup(group, course)
+        dashboardPage.assertDisplaysGroup(group2, course)
     }
 
     // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
@@ -196,7 +229,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Mock a single student and course, mock a group and a number of items associated with the group,
     // sign in, then navigate to the dashboard.
-    private fun setUpGroupAndSignIn(): MockCanvas {
+    private fun setUpGroupAndSignIn(isFavorite: Boolean = true): MockCanvas {
 
         // Basic info
         val data = MockCanvas.init(
@@ -211,7 +244,7 @@ class GroupLinksInteractionTest : StudentTest() {
         group = data.addGroupToCourse(
                 course = course,
                 members = listOf(user),
-                isFavorite = true
+                isFavorite = isFavorite
         )
 
         // Add a discussion

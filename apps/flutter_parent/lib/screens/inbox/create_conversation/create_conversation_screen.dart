@@ -461,7 +461,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         style: Theme.of(context).textTheme.bodyLarge,
         textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
-          hintText: L10n(context).messageSubjectInputHint,
+          labelText: L10n(context).messageSubjectInputHint,
           contentPadding: EdgeInsets.all(16),
           border: InputBorder.none,
         ),
@@ -482,7 +482,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         maxLines: null,
         style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
-          hintText: L10n(context).messageBodyInputHint,
+          labelText: L10n(context).messageBodyInputHint,
           contentPadding: EdgeInsets.all(16),
           border: InputBorder.none,
         ),

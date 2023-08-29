@@ -36,11 +36,13 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
@@ -49,6 +51,7 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
+import com.instructure.espresso.swipeUp
 import com.instructure.espresso.typeText
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
@@ -94,9 +97,35 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
     }
 
+    fun assertGradeDisplayed(grade: String) {
+        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
+        onView(withId(R.id.grade)).scrollTo().assertContainsText(grade)
+    }
+
+    fun assertGradeNotDisplayed() {
+        onView(withId(R.id.grade)).assertNotDisplayed()
+    }
+
+    fun assertOutOfTextDisplayed(outOfText: String) {
+        onView(withId(R.id.outOf)).scrollTo().assertContainsText(outOfText)
+    }
+
+    fun assertOutOfTextNotDisplayed() {
+        onView(withId(R.id.outOf)).assertNotDisplayed()
+    }
+
+    fun assertScoreDisplayed(score: String) {
+        onView(withId(R.id.score)).scrollTo().assertContainsText(score)
+    }
+
+    fun assertScoreNotDisplayed() {
+        onView(withId(R.id.score)).assertNotDisplayed()
+    }
+
     fun assertAssignmentLocked() {
+        if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.assignmentDetailsPage)).swipeUp()
         onView(withId(R.id.lockedMessageTextView)).assertDisplayed()
-        onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
+        onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked by the module")))
     }
 
     fun refresh() {

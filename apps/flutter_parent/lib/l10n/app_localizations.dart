@@ -1702,4 +1702,7 @@ class AppLocalizations {
 
   String get aboutVersionTitle =>
       Intl.message('Version', desc: 'Title for Version field on about page');
+
+  String get aboutLogoSemanticsLabel =>
+      Intl.message('Instructure logo', desc: 'Semantics label for the Instructure logo on the about page');
 }

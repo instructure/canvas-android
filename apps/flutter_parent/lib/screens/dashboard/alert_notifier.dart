@@ -13,7 +13,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/utils/alert_helper.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertCountNotifier extends ValueNotifier<int?> {
@@ -21,8 +23,10 @@ class AlertCountNotifier extends ValueNotifier<int?> {
 
   update(String studentId) async {
     try {
-      final unreadCount = await locator<AlertsApi>().getUnreadCount(studentId);
-      value = unreadCount?.count.asNum.toInt();
+      final unreadAlerts = await locator<AlertsApi>().getAlertsDepaginated(studentId, true)?.then((List<Alert> list) async {
+        return await locator<AlertsHelper>().filterAlerts(list.where((element) => element.workflowState == AlertWorkflowState.unread).toList());
+      });
+      value = unreadAlerts.length;
     } catch (e) {
       print(e);
     }

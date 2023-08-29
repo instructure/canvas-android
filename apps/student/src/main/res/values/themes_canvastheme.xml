@@ -43,6 +43,7 @@
         <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
         <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="android:datePickerStyle">@style/DatePickerStyle</item>
     </style>
 
     <style name="CanvasMaterialTheme_Default.Translucent">

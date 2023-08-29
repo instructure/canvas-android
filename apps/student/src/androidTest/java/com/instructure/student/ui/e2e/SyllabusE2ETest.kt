@@ -48,7 +48,7 @@ class SyllabusE2ETest: StudentTest() {
     fun testSyllabusE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body")
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -60,9 +60,10 @@ class SyllabusE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Select ${course.name} course.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that Empty View is displayed, because there is no syllabus yet.")
+        Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that the syllabus body string is displayed, and there are no tabs yet.")
         courseBrowserPage.selectSyllabus()
-        syllabusPage.assertEmptyView()
+        syllabusPage.assertNoTabs()
+        syllabusPage.assertSyllabusBody("this is the syllabus body")
 
         Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
         val assignment = createAssignment(course, teacher)
@@ -70,10 +71,9 @@ class SyllabusE2ETest: StudentTest() {
         Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
         val quiz = createQuiz(course, teacher)
 
-        // TODO: Seed a generic calendar event
-
-        Log.d(STEP_TAG,"Refresh the page. Assert that all of the items, so ${assignment.name} assignment and ${quiz.title} quiz are displayed.")
+        Log.d(STEP_TAG,"Refresh the page. Navigate to 'Summary' tab. Assert that all of the items, so ${assignment.name} assignment and ${quiz.title} quiz are displayed.")
         syllabusPage.refresh()
+        syllabusPage.selectSummaryTab()
         syllabusPage.assertItemDisplayed(assignment.name)
         syllabusPage.assertItemDisplayed(quiz.title)
     }

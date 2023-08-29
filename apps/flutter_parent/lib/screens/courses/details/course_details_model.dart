@@ -47,7 +47,6 @@ class CourseDetailsModel extends BaseModel {
 
   /// Used only be the skeleton to load the course data for creating tabs and the app bar
   Future<void> loadData({bool refreshCourse = false}) {
-    debugPrint("CourseDetailsModel.loadData");
     return work(() async {
       // Declare the futures so we can let both run asynchronously
       final courseFuture = (refreshCourse || course == null)
@@ -79,7 +78,7 @@ class CourseDetailsModel extends BaseModel {
 
   Future<GradeDetails> loadAssignments({bool forceRefresh = false}) async {
     if (forceRefresh) {
-      course = await _interactor().loadCourse(courseId);
+      course = await _interactor().loadCourse(courseId, forceRefresh: forceRefresh);
     }
 
     final groupFuture = _interactor()
@@ -177,6 +176,8 @@ class CourseDetailsModel extends BaseModel {
           (course?.homePage != HomePage.wiki && tabs?.any((tab) => tab.id == HomePage.syllabus.name) == true));
 
   bool get showSummary => hasHomePageAsSyllabus && (courseSettings?.courseSummary == true);
+
+  bool get restrictQuantitativeData => courseSettings?.restrictQuantitativeData == true;
 
   GradingPeriod? currentGradingPeriod() => _currentGradingPeriod;
 

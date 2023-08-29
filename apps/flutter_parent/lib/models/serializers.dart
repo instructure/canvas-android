@@ -16,6 +16,7 @@ library serializers;
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/iso_8601_date_time_serializer.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/account_creation_models/create_account_post_body.dart';
@@ -47,6 +48,7 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
+import 'package:flutter_parent/models/grading_scheme_item.dart';
 import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/models/help_links.dart';
 import 'package:flutter_parent/models/lock_info.dart';
@@ -172,6 +174,7 @@ part 'serializers.g.dart';
   User,
   UserColors,
   UserNameData,
+  GradingSchemeItem,
 ])
 final Serializers _serializers = _$_serializers;
 

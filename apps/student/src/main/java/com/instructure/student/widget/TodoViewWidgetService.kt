@@ -35,7 +35,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.*
-import com.instructure.pandautils.utils.ColorKeeper
 import java.io.Serializable
 import java.util.*
 
@@ -161,7 +160,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
         override fun loadData() {
             if(NetworkUtils.isNetworkAvailable && ApiPrefs.user != null) {
                 try {
-                    val courses = CourseManager.getCoursesSynchronous(true)
+                    val courses = CourseManager.getCoursesSynchronousWithGradingScheme(true)
                             .filter { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() }
                     val groups = GroupManager.getFavoriteGroupsSynchronous(true)
                     val todos = ToDoManager.getTodosSynchronous(ApiPrefs.user!!, true)

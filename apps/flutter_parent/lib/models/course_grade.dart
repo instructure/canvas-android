@@ -80,7 +80,7 @@ class CourseGrade {
 
   double? _getCurrentScore() => _enrollment?.grades?.currentScore ?? _enrollment?.computedCurrentScore;
 
-  String? _getCurrentGrade() => _enrollment?.grades?.currentGrade ?? _enrollment?.computedCurrentGrade;
+  String? _getCurrentGrade() => _enrollment?.grades?.currentGrade ?? _enrollment?.computedCurrentGrade ?? _enrollment?.computedCurrentLetterGrade;
 
   double? _getCurrentPeriodComputedCurrentScore() =>
       _enrollment?.grades?.currentScore ?? _enrollment?.currentPeriodComputedCurrentScore;

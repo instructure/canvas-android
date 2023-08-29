@@ -29,7 +29,7 @@ class AssignmentDetailsInteractor {
     String assignmentId,
     String? studentId,
   ) async {
-    final course = locator<CourseApi>().getCourse(courseId);
+    final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
     final assignment = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(
@@ -44,7 +44,7 @@ class AssignmentDetailsInteractor {
     String assignmentId,
     String studentId,
   ) async {
-    final course = locator<CourseApi>().getCourse(courseId);
+    final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
     final quiz = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(

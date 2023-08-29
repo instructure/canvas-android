@@ -42,4 +42,8 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="NavigationTabTextAppeareance" parent="TextAppearance.Design.Tab">
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
