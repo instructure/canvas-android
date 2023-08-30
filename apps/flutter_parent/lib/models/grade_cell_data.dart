@@ -72,7 +72,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
 
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' or restricted grading type
-    final restricted = restrictQuantitativeData && assignment?.isGradingTypeQuantitative() == true && course?.gradingSchemeItems.isNotEmpty == true && !excused;
+    final restricted = restrictQuantitativeData && assignment?.isGradingTypeQuantitative() == true && course?.gradingSchemeItems.isEmpty == true && !excused;
     if (assignment == null ||
         submission == null ||
         (submission.submittedAt == null && !excused && submission.grade == null) ||

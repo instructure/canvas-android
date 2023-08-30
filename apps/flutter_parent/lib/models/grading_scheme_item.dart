@@ -28,9 +28,12 @@ abstract class GradingSchemeItem implements Built<GradingSchemeItem, GradingSche
   factory GradingSchemeItem([void Function(GradingSchemeItemBuilder) updates]) = _$GradingSchemeItem;
 
   factory GradingSchemeItem.fromJson(JsonObject json) {
-    if (!json.isList) return GradingSchemeItem();
+    var emptyGradingSchemeItem = GradingSchemeItem((b) => b
+      ..grade = null
+      ..value = null);
+    if (!json.isList) return emptyGradingSchemeItem;
     List<dynamic> items = json.asList;
-    if (!(items[0] is String) || !(items[1] is num)) return GradingSchemeItem();
+    if (!(items[0] is String) || !(items[1] is num)) return emptyGradingSchemeItem;
     String grade = items[0] as String;
     double value = (items[1] as num).toDouble();
     return GradingSchemeItem((b) => b
@@ -38,7 +41,7 @@ abstract class GradingSchemeItem implements Built<GradingSchemeItem, GradingSche
       ..value = value);
   }
 
-  String get grade;
+  String? get grade;
 
-  double get value;
+  double? get value;
 }

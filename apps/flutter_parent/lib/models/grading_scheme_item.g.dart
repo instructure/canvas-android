@@ -19,15 +19,22 @@ class _$GradingSchemeItemSerializer
   @override
   Iterable<Object?> serialize(Serializers serializers, GradingSchemeItem object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object?>[
-      'grade',
-      serializers.serialize(object.grade,
-          specifiedType: const FullType(String)),
-      'value',
-      serializers.serialize(object.value,
-          specifiedType: const FullType(double)),
-    ];
-
+    final result = <Object?>[];
+    Object? value;
+    value = object.grade;
+    if (value != null) {
+      result
+        ..add('grade')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.value;
+    if (value != null) {
+      result
+        ..add('value')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
+    }
     return result;
   }
 
@@ -45,11 +52,11 @@ class _$GradingSchemeItemSerializer
       switch (key) {
         case 'grade':
           result.grade = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'value':
           result.value = serializers.deserialize(value,
-              specifiedType: const FullType(double))! as double;
+              specifiedType: const FullType(double)) as double?;
           break;
       }
     }
@@ -60,19 +67,15 @@ class _$GradingSchemeItemSerializer
 
 class _$GradingSchemeItem extends GradingSchemeItem {
   @override
-  final String grade;
+  final String? grade;
   @override
-  final double value;
+  final double? value;
 
   factory _$GradingSchemeItem(
           [void Function(GradingSchemeItemBuilder)? updates]) =>
       (new GradingSchemeItemBuilder()..update(updates))._build();
 
-  _$GradingSchemeItem._({required this.grade, required this.value})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(grade, r'GradingSchemeItem', 'grade');
-    BuiltValueNullFieldError.checkNotNull(value, r'GradingSchemeItem', 'value');
-  }
+  _$GradingSchemeItem._({this.grade, this.value}) : super._();
 
   @override
   GradingSchemeItem rebuild(void Function(GradingSchemeItemBuilder) updates) =>
@@ -147,12 +150,8 @@ class GradingSchemeItemBuilder
   GradingSchemeItem build() => _build();
 
   _$GradingSchemeItem _build() {
-    final _$result = _$v ??
-        new _$GradingSchemeItem._(
-            grade: BuiltValueNullFieldError.checkNotNull(
-                grade, r'GradingSchemeItem', 'grade'),
-            value: BuiltValueNullFieldError.checkNotNull(
-                value, r'GradingSchemeItem', 'value'));
+    final _$result =
+        _$v ?? new _$GradingSchemeItem._(grade: grade, value: value);
     replace(_$result);
     return _$result;
   }

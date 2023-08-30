@@ -23,8 +23,8 @@ class AlertsInteractor {
   Future<AlertsList?> getAlertsForStudent(String studentId, bool forceRefresh) async {
     final alertsFuture = _alertsApi().getAlertsDepaginated(studentId, forceRefresh)?.then((List<Alert>? list) async {
       return locator<AlertsHelper>().filterAlerts(list);
-    })?.then((list) => list
-      ..sort((a, b) {
+    }).then((list) => list
+      ?..sort((a, b) {
         if (a.actionDate == null && b.actionDate == null) return 0;
         if (a.actionDate == null && b.actionDate != null) return -1;
         if (a.actionDate != null && b.actionDate == null) return 1;

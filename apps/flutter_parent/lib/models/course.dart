@@ -119,8 +119,8 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   List<GradingSchemeItem> get gradingSchemeItems {
     if (gradingScheme == null) return [];
-    return gradingScheme!.map((item) => GradingSchemeItem.fromJson(item)).nonNulls.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    return gradingScheme!.map((item) => GradingSchemeItem.fromJson(item)).nonNulls.where((element) => element.grade != null && element.value != null).toList()
+      ..sort((a, b) => b.value!.compareTo(a.value!));
   }
 
   static void _initializeBuilder(CourseBuilder b) => b
@@ -175,7 +175,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   String convertScoreToLetterGrade(double score, double maxScore) {
     if (maxScore == 0.0 || gradingSchemeItems.isEmpty) return "";
     double percent = score / maxScore;
-    return gradingSchemeItems.firstWhere((element) => percent >= element.value, orElse: () => gradingSchemeItems.last).grade;
+    return gradingSchemeItems.firstWhere((element) => percent >= element.value!, orElse: () => gradingSchemeItems.last).grade!;
   }
 }
 
