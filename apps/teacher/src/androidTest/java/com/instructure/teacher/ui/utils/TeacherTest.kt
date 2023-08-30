@@ -32,7 +32,6 @@ import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.espresso.TeacherHiltTestApplication_Application
 import com.instructure.teacher.ui.pages.AboutPage
 import com.instructure.teacher.ui.pages.AddMessagePage
-import com.instructure.teacher.ui.pages.AnnouncementDetailsPage
 import com.instructure.teacher.ui.pages.AnnouncementsListPage
 import com.instructure.teacher.ui.pages.AssigneeListPage
 import com.instructure.teacher.ui.pages.AssignmentDetailsPage
@@ -47,6 +46,7 @@ import com.instructure.teacher.ui.pages.CourseSettingsPage
 import com.instructure.teacher.ui.pages.DashboardPage
 import com.instructure.teacher.ui.pages.DiscussionsDetailsPage
 import com.instructure.teacher.ui.pages.DiscussionsListPage
+import com.instructure.teacher.ui.pages.EditAnnouncementDetailsPage
 import com.instructure.teacher.ui.pages.EditAssignmentDetailsPage
 import com.instructure.teacher.ui.pages.EditDashboardPage
 import com.instructure.teacher.ui.pages.EditDiscussionsDetailsPage
@@ -147,7 +147,7 @@ abstract class TeacherTest : CanvasTest() {
     val editProfileSettingsPage = EditProfileSettingsPage()
     val discussionsDetailsPage = DiscussionsDetailsPage()
     val discussionsListPage = DiscussionsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val announcementDetailsPage = AnnouncementDetailsPage()
+    val editAnnouncementDetailsPage = EditAnnouncementDetailsPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()
     val editDiscussionsDetailsPage = EditDiscussionsDetailsPage()
     val editPageDetailsPage = EditPageDetailsPage()
