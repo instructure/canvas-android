@@ -62,7 +62,7 @@ class EnrollmentsApi {
       var pairingResponse = await dio.post(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser()?.id}/observees'),
           queryParameters: {'pairing_code': pairingCode});
       return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
-    } on DioException catch (e) {
+    } on DioError catch (e) {
       // The API returns status code 422 on pairing failure
       if (e.response?.statusCode == 422) return false;
       return null;
@@ -76,7 +76,7 @@ class EnrollmentsApi {
         ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser()?.id}/observees/$studentId'),
       );
       return (response.statusCode == 200 || response.statusCode == 201);
-    } on DioException {
+    } on DioError {
       return false;
     }
   }
@@ -88,7 +88,7 @@ class EnrollmentsApi {
         ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser()?.id}/observees/$studentId'),
       );
       return response.statusCode == 200;
-    } on DioException {
+    } on DioError {
       return false;
     }
   }

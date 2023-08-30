@@ -321,7 +321,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('valid form account creation pushes login route', (tester) async {
       when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
       when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-          .thenAnswer((_) async => Response(statusCode: 200, requestOptions: RequestOptions()));
+          .thenAnswer((_) async => Response(statusCode: 200, requestOptions: RequestOptions(path: '')));
 
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
@@ -348,7 +348,7 @@ void main() {
           '{\"errors\":{\"user\":{},\"pseudonym\":{},\"observee\":{},\"pairing_code\":{\"code\":[{\"attribute\":\"code\",\"type\":\"invalid\",\"message\":\"invalid\"}]},\"recaptcha\":null}}');
       when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
       when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-          .thenThrow(DioError(response: Response(data: jsonData, requestOptions: RequestOptions()), requestOptions: RequestOptions()));
+          .thenThrow(DioError(response: Response(data: jsonData, requestOptions: RequestOptions(path: '')), requestOptions: RequestOptions(path: '')));
 
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
@@ -379,7 +379,7 @@ void main() {
           '{\"errors\":{\"user\":{\"pseudonyms\":[{\"message\":\"invalid\"}]},\"pseudonym\":{},\"observee\":{},\"pairing_code\":{},\"recaptcha\":null}}');
       when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
       when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-          .thenThrow(DioError(response: Response(data: jsonData, requestOptions: RequestOptions()), requestOptions: RequestOptions()));
+          .thenThrow(DioError(response: Response(data: jsonData, requestOptions: RequestOptions(path: '')), requestOptions: RequestOptions(path: '')));
 
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
@@ -409,7 +409,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('account creation with error shows generic error message', (tester) async {
     when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
     when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-        .thenThrow(DioError(response: Response(requestOptions: RequestOptions()), requestOptions: RequestOptions()));
+        .thenThrow(DioError(response: Response(requestOptions: RequestOptions(path: '')), requestOptions: RequestOptions(path: '')));
 
     await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
     await tester.pumpAndSettle();

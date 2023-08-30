@@ -191,25 +191,27 @@ class LoginLandingScreen extends StatelessWidget {
       BuildContext context, String title, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48.0),
-      child: ButtonTheme(
-        minWidth: double.infinity,
-        child: TextButton(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16),
-              overflow: TextOverflow.ellipsis,
+      child: SizedBox(
+        width: double.infinity,
+        child: ButtonTheme(
+          child: TextButton(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          style: TextButton.styleFrom(
-            textStyle: TextStyle(color: Colors.white),
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(4))
+            style: TextButton.styleFrom(
+              textStyle: TextStyle(color: Colors.white),
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4))
+              ),
             ),
+            onPressed: onPressed,
           ),
-          onPressed: onPressed,
         ),
       ),
     );

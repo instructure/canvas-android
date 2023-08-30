@@ -119,7 +119,7 @@ void main() {
   });
 }
 
-Future<Response<dynamic>> _request(data, {Headers? headers}) async => Response(data: data, headers: headers, requestOptions: RequestOptions());
+Future<Response<dynamic>> _request(data, {Headers? headers}) async => Response(data: data, headers: headers, requestOptions: RequestOptions(path: ''));
 
 Future<Response<dynamic>> _requestFail() async => throw 'ErRoR';
 

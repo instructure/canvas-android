@@ -433,7 +433,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
         );
 
-        if (e is DioException) {
+        if (e is DioError) {
           _handleDioException(e);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -444,7 +444,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
   }
 
-  _handleDioException(DioException e) {
+  _handleDioException(DioError e) {
     String emailError = '';
     String pairingError = '';
     try {

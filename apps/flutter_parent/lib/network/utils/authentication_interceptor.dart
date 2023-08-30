@@ -29,7 +29,7 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
   AuthenticationInterceptor(this._dio);
 
   @override
-  Future<void> onError(DioException error, ErrorInterceptorHandler handler) async {
+  Future<void> onError(DioError error, ErrorInterceptorHandler handler) async {
     // Only proceed if it was an authentication error
     if (error.response?.statusCode != 401) return handler.next(error);
 
@@ -48,46 +48,33 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET);
       return handler.next(error);
     }
+    CanvasToken? tokens;
 
-    _dio.interceptors
-      ..clear()
-      ..add(
-        QueuedInterceptorsWrapper(
-          onRequest: (
-              RequestOptions requestOptions,
-              RequestInterceptorHandler handler,
-              ) async {
-                CanvasToken? tokens;
+    tokens = await locator<AuthApi>().refreshToken().catchError((e) => null);
 
-                tokens = await locator<AuthApi>().refreshToken().catchError((e) => null);
+    if (tokens == null) {
+      _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID);
 
-                if (tokens == null) {
-                  _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID);
+      return handler.next(error);
+    } else {
+      Login login = currentLogin.rebuild((b) => b..accessToken = tokens!.accessToken);
+      ApiPrefs.addLogin(login);
+      ApiPrefs.switchLogins(login);
 
-                  return handler.next(error.requestOptions);
-                } else {
-                  Login login = currentLogin.rebuild((b) => b..accessToken = tokens!.accessToken);
-                  ApiPrefs.addLogin(login);
-                  ApiPrefs.switchLogins(login);
+      // Update the header and make the request again
+      RequestOptions requestOptions = error.requestOptions;
 
-                  // Update the header and make the request again
-                  RequestOptions requestOptions = error.requestOptions;
-
-                  requestOptions.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
-                  requestOptions.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
+      requestOptions.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
+      requestOptions.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
 
 
-                  final response = await _dio.fetch(requestOptions);
-                  if (response.statusCode == 200 || response.statusCode == 201) {
-                    return handler.resolve(response);
-                  } else {
-                    return handler.next(error.requestOptions);
-                  }
-                }
-          },
-        ),
-      );
-
+      final response = await _dio.fetch(requestOptions);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return handler.resolve(response);
+      } else {
+        return handler.next(error);
+      }
+    }
     // Refresh the token and update the login
 
   }

@@ -14,10 +14,9 @@
 
 import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+import 'package:dio_http_cache_lts/dio_http_cache_lts.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -36,7 +35,6 @@ class DioConfig {
   final PageSize pageSize;
   final Map<String, dynamic>? extraQueryParams;
   final int retries;
-  CacheOptions? cacheOptions;
 
   DioConfig({
     this.baseUrl = '',
@@ -83,11 +81,10 @@ class DioConfig {
     // Set extra query params
     options.queryParameters = extraParams;
 
-    await initCacheOptionsIfNull();
-
     // Add cache configuration to base options
     if (cacheMaxAge != Duration.zero) {
-      options.extra.addAll(cacheOptions!.toExtra());
+      var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
+      if (extras != null) options.extra.addAll(extras);
     }
 
     // Create Dio instance and add interceptors
@@ -132,33 +129,18 @@ class DioConfig {
     const proxy = String.fromEnvironment('PROXY', defaultValue: "");
     if (proxy == "") return;
 
-    (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
       client.findProxy = (uri) => "PROXY $proxy;";
       client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
       return client;
     };
   }
 
-  Future<Interceptor> _cacheInterceptor() async {
-    // Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
-    // return InterceptorsWrapper(
-    //   onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
-    //   onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
-    //   onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
-    // );
-
-    await initCacheOptionsIfNull();
-
-    Interceptor interceptor = DioCacheInterceptor(options: cacheOptions!);
+  Interceptor _cacheInterceptor() {
+    Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
     return InterceptorsWrapper(
       onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
       onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
-      onError: (DioException e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
-    );
-
-    return InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => handler.next(options),
-      onResponse: (Response response, ResponseInterceptorHandler handler) => handler.next(response),
       onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
     );
   }
@@ -217,25 +199,15 @@ class DioConfig {
   }
 
   /// Clears the cache, deleting only the entries related to path OR clearing everything if path is null
-  Future<void> clearCache({String? path}) async {
-    // // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
-    // // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
-    // if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
-
-    await initCacheOptionsIfNull();
+  Future<bool> clearCache({String? path}) {
+    // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
+    // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
+    if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
 
     if (path == null) {
-      return (cacheOptions?.store?.clean() ?? Future.value(null));
+      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
     } else {
-      return cacheOptions?.store?.delete(path) ?? Future.value(null);
-    }
-  }
-
-  Future<void> initCacheOptionsIfNull() async {
-    if (cacheOptions == null) {
-      final dir = await getApplicationCacheDirectory();
-      final hiveStore = MemCacheStore();//HiveCacheStore(dir.path);
-      cacheOptions = CacheOptions(store: hiveStore, policy: CachePolicy.refreshForceCache, maxStale: cacheMaxAge);
+      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path, requestMethod: 'GET');
     }
   }
 }
