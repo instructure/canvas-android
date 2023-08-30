@@ -18,6 +18,7 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -35,8 +36,8 @@ import dagger.hilt.android.components.FragmentComponent
 class CourseBrowserModule {
 
     @Provides
-    fun provideCourseBrowserLocalDataSource(tabDao: TabDao, pageFacade: PageFacade): CourseBrowserLocalDataSource {
-        return CourseBrowserLocalDataSource(tabDao, pageFacade)
+    fun provideCourseBrowserLocalDataSource(tabDao: TabDao, pageFacade: PageFacade, courseSyncSettingsDao: CourseSyncSettingsDao): CourseBrowserLocalDataSource {
+        return CourseBrowserLocalDataSource(tabDao, pageFacade, courseSyncSettingsDao)
     }
 
     @Provides
