@@ -102,10 +102,10 @@ class PageListPage(val searchable: Searchable) : BasePage(R.id.pageListPage) {
 
     fun assertPageNotDisplayed(page: PageApiModel) {
         // Check for front page
-        onView(allOf(withId(R.id.homeSubLabel), withText(page.title))).check(DoesNotExistAssertion(10000L))
+        onView(allOf(withId(R.id.homeSubLabel), withText(page.title))).check(DoesNotExistAssertion(10))
 
         // Check for regular page
-        onView(allOf(withId(R.id.title), withText(page.title))).check(DoesNotExistAssertion(10000L))
+        onView(allOf(withId(R.id.title), withText(page.title))).check(DoesNotExistAssertion(10))
     }
 
     fun assertPageListItemCount(expectedCount: Int) {
