@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Đã xóa</string>
 
+    <string name="gradeUpdated">Đã cập nhật lớp</string>
     <string name="loadingCanvas">Đang Tải Nội Dung Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Bạn có thể mở chi tiết Bài Nộp từ đây</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Lớp: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Phút</item>
         <item quantity="other">%s Phút</item>

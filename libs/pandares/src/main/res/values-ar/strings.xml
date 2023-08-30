@@ -455,6 +455,7 @@
     <!-- Notifications -->
     <string name="deleted">تم الحذف</string>
 
+    <string name="gradeUpdated">تم تحديث الدرجة</string>
     <string name="loadingCanvas">جارٍ تحميل محتوى Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1170,6 +1171,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">يمكنك فتح تفاصيل الإرسال من هنا</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">الدرجة: %s</string>
     <plurals name="minutes">
         <item quantity="zero">%s من الدقائق</item>
         <item quantity="one">%s دقيقة</item>

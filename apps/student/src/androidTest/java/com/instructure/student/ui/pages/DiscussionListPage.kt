@@ -49,7 +49,7 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.containsString
 
-class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discussionListPage) {
+open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discussionListPage) {
 
     private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
     private val announcementsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)

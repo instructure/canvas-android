@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Borttagen</string>
 
+    <string name="gradeUpdated">Bedömning uppdaterat</string>
     <string name="loadingCanvas">Läser in Canvas-innehåll&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Du kan öppna inlämningsinformationen härifrån</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Bedömning: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minuter</item>

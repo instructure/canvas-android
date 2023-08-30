@@ -132,23 +132,23 @@ class NotificationInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
     fun testNotificationList_showGradeUpdatedIfRestricted_points() {
-        val grade = "10.0"
+        val grade = "15.0"
         val data = goToNotifications(
             restrictQuantitativeData = true,
             gradingType = Assignment.GradingType.POINTS,
-            score = 10.0,
+            score = 15.0,
             grade = grade
         )
 
         val assignment = data.assignments.values.first()
 
-        notificationPage.assertGradeUpdated(assignment.name!!)
+        notificationPage.assertHasGrade(assignment.name!!, "C")
     }
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
-    fun testNotificationList_showGradeUpdatedIfRestricted_percent() {
-        val grade = "10%"
+    fun testNotificationList_convertGradeIfRestricted_percent() {
+        val grade = "50%"
         val data = goToNotifications(
             restrictQuantitativeData = true,
             gradingType = Assignment.GradingType.PERCENT,
@@ -158,7 +158,7 @@ class NotificationInteractionTest : StudentTest() {
 
         val assignment = data.assignments.values.first()
 
-        notificationPage.assertGradeUpdated(assignment.name!!)
+        notificationPage.assertHasGrade(assignment.name!!, "F")
     }
 
     @Test
@@ -236,13 +236,24 @@ class NotificationInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val student = data.students.first()
 
-        data.courses[course.id] = course.copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData))
+        val gradingScheme = listOf(
+            listOf("A", 0.9),
+            listOf("B", 0.8),
+            listOf("C", 0.7),
+            listOf("D", 0.6),
+            listOf("F", 0.0)
+        )
+
+        data.courses[course.id] = course.copy(
+            settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
+            gradingSchemeRaw = gradingScheme)
 
         repeat(numSubmissions) {
             val assignment = data.addAssignment(
                 courseId = course.id,
                 submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                gradingType = Assignment.gradingTypeToAPIString(gradingType).orEmpty()
+                gradingType = Assignment.gradingTypeToAPIString(gradingType).orEmpty(),
+                pointsPossible = 20
             )
 
             val submission = data.addSubmissionForAssignment(

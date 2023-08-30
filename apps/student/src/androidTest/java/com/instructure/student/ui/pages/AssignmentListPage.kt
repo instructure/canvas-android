@@ -93,15 +93,11 @@ class AssignmentListPage(val searchable: Searchable) : BasePage(pageResId = R.id
     }
 
     fun assertAssignmentDisplayedWithGrade(assignmentName: String, gradeString: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)).assertDisplayed()
+        val matcher = withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).assertDisplayed()
         val pointsMatcher = withId(R.id.title) + withText(assignmentName)
         onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertHasText(gradeString)
-    }
-
-    fun assertAssignmentDisplayedWithoutGrade(assignmentName: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName)).assertDisplayed()
-        val pointsMatcher = withId(R.id.title) + withText(assignmentName)
-        onView(withId(R.id.points) + withParent(hasSibling(pointsMatcher))).assertNotDisplayed()
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {
