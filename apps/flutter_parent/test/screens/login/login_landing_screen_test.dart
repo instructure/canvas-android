@@ -87,21 +87,20 @@ void main() async {
     Offset center = tester.getCenter(find.byType(TwoFingerDoubleTapGestureDetector));
 
     // Perform first two-finger tap
-    TestGesture pointer1 = await tester.startGesture(center.translate(-64, 0));
-    TestGesture pointer2 = await tester.startGesture(center.translate(64, 0));
+    TestGesture pointer1 = await tester.startGesture(center.translate(-64, 64));
+    TestGesture pointer2 = await tester.startGesture(center.translate(64, 64));
     await pointer1.up();
     await pointer2.up();
 
     // Perform second two-finger tap
     await tester.pump(Duration(milliseconds: 100));
-    pointer1 = await tester.startGesture(center.translate(-64, 0));
-    pointer2 = await tester.startGesture(center.translate(64, 0));
+    pointer1 = await tester.startGesture(center.translate(-64, 64));
+    pointer2 = await tester.startGesture(center.translate(64, 64));
     await pointer1.up();
     await pointer2.up();
     await tester.pump();
   }
 
-  // TODO Fix test
   testWidgetsWithAccessibilityChecks('Opens domain search screen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
@@ -111,10 +110,7 @@ void main() async {
     await tester.pumpAndSettle();
 
     expect(find.byType(DomainSearchScreen), findsOneWidget);
-
-    // TODO: Remove this back press once DomainSearchScreen is passing accessibility checks
-    await tester.pageBack();
-  }, skip: true);
+  });
 
   testWidgetsWithAccessibilityChecks('Displays Snicker Doodles drawer', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
@@ -276,7 +272,6 @@ void main() async {
     await tester.pumpAndSettle(); // Wait for SnackBar to finish displaying
   });
 
-  // TODO Fix test
   testWidgetsWithAccessibilityChecks('Passes selected LoginFlow to DomainSearchScreen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
@@ -295,9 +290,7 @@ void main() async {
     DomainSearchScreen domainSearch = tester.widget(find.byType(DomainSearchScreen));
     expect(domainSearch.loginFlow, LoginFlow.skipMobileVerify);
 
-    // TODO: Remove this back press once DomainSearchScreen is passing accessibility checks
-    await tester.pageBack();
-  }, skip: true);
+  });
 
   testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login picker', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
