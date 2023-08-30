@@ -44,7 +44,7 @@ class FileApi {
     });
 
     // Get the upload configuration
-    FileUploadConfig uploadConfig;
+    FileUploadConfig? uploadConfig;
     try {
       uploadConfig = await fetch(dio.post('users/self/files', queryParameters: params));
     } catch (e) {
@@ -53,12 +53,12 @@ class FileApi {
     }
 
     // Build the form data for upload
-    FormData formData = FormData.fromMap(uploadConfig.params!.toMap());
+    FormData formData = FormData.fromMap(uploadConfig?.params?.toMap() ?? {});
     formData.files.add(MapEntry('file', await MultipartFile.fromFile(file.path, filename: name)));
 
     // Perform upload with progress
     return fetch(Dio().post(
-      uploadConfig.url!,
+      uploadConfig?.url ?? '',
       data: formData,
       onSendProgress: (count, total) {
         if (total > 0 && count >= total) {

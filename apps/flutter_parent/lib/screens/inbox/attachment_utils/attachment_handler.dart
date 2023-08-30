@@ -26,7 +26,7 @@ enum AttachmentUploadStage { CREATED, UPLOADING, FAILED, FINISHED }
 class AttachmentHandler with ChangeNotifier {
   AttachmentHandler(this._file);
 
-  final File? _file;
+  final File _file;
   Function(AttachmentUploadStage)? onStageChange;
   double? progress = null;
   Attachment? attachment;
@@ -39,7 +39,7 @@ class AttachmentHandler with ChangeNotifier {
     if (onStageChange != null) onStageChange!(_stage);
   }
 
-  String get displayName => attachment?.displayName ?? attachment?.filename ?? basename(_file?.path ?? '');
+  String get displayName => attachment?.displayName ?? attachment?.filename ?? basename(_file.path);
 
   Future<void> performUpload() async {
     // Do nothing if the upload is finished or in progress
@@ -51,7 +51,7 @@ class AttachmentHandler with ChangeNotifier {
 
     try {
       // Upload the file and monitor progress
-      attachment = await locator<FileApi>().uploadConversationFile(_file!, (current, total) {
+      attachment = await locator<FileApi>().uploadConversationFile(_file, (current, total) {
         progress = total == -1 ? null : current.toDouble() / total;
         notifyListeners();
       });
@@ -69,6 +69,7 @@ class AttachmentHandler with ChangeNotifier {
         notifyListeners();
       });
     } catch (e) {
+      debugPrint("ERROR_CATCH: ${e.toString()}");
       stage = AttachmentUploadStage.FAILED;
       notifyListeners();
     }
@@ -86,13 +87,13 @@ class AttachmentHandler with ChangeNotifier {
       ]);
 
       var dirPaths = dirs.map((it) => it?.absolute.path);
-      var filePath = _file?.absolute.path;
+      var filePath = _file.absolute.path;
 
       if (dirPaths.any((it) {
         if (it == null) return false;
-          return (filePath?.startsWith(it) == true);
+          return (filePath.startsWith(it));
       })) {
-        await _file?.delete();
+        await _file.delete();
       }
     } on Error catch (e) {
       print('Unable to clean up attachment source file');
