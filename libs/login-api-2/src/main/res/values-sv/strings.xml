@@ -111,6 +111,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Ta bort tidigare användare</string>
     <string name="accountDomainFooter">Kan du inte hitta din skola? Försök att skriva in skolans fullständiga URL.</string>
+    <string name="accountDomainFooterLink">Tryck här för hjälp.</string>
 
     <string name="login_noInternetConnectionTitle">Ingen internetanslutning</string>
     <string name="login_noInternetConnectionMessage">Den här åtgärden kräver internetanslutning.</string>

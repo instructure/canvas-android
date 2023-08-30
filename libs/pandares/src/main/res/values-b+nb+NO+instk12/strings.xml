@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Slettet</string>
 
+    <string name="gradeUpdated">Vurdering oppdatert</string>
     <string name="loadingCanvas">Laster Canvas-innhold&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Du kan åpne Detaljer om innlevering her</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Vurdering: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minutt</item>
         <item quantity="other">%s minutter</item>
