@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Suprimit</string>
 
+    <string name="gradeUpdated">S’ha actualitzat la nota</string>
     <string name="loadingCanvas">S\'està carregant el contingut de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Podeu obrir Informació de l’entrega des d\'aquí</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nota: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minuts</item>
