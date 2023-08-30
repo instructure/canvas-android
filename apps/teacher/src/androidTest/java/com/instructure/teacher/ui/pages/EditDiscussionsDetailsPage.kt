@@ -42,7 +42,7 @@ class EditDiscussionsDetailsPage : BasePage() {
      *
      * @param newTitle The new title of the discussion.
      */
-    fun editTitle(newTitle: String) {
+    fun editDiscussionTitle(newTitle: String) {
         onView(withId(R.id.editDiscussionName)).replaceText(newTitle)
         Espresso.closeSoftKeyboard()
     }
@@ -65,7 +65,7 @@ class EditDiscussionsDetailsPage : BasePage() {
     /**
      * Clicks the save button. This method is used when editing an existing discussion.
      */
-    fun clickSave() {
+    fun saveDiscussion() {
         onView(withId(R.id.menuSave)).click()
     }
 
@@ -81,7 +81,7 @@ class EditDiscussionsDetailsPage : BasePage() {
      *
      * @param newDescription The new description of the discussion.
      */
-    fun editDescription(newDescription: String) {
+    fun editDiscussionDescription(newDescription: String) {
         contentRceView.perform(TypeInRCETextEditor(newDescription))
     }
 }
