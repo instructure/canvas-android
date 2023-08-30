@@ -191,28 +191,23 @@ class LoginLandingScreen extends StatelessWidget {
       BuildContext context, String title, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48.0),
-      child: SizedBox(
-        width: double.infinity,
-        child: ButtonTheme(
-          child: TextButton(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontSize: 16),
-                overflow: TextOverflow.ellipsis,
-              ),
+      child: FilledButton(
+          child: Padding (
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontSize: 16),
+              overflow: TextOverflow.ellipsis,
             ),
-            style: TextButton.styleFrom(
-              textStyle: TextStyle(color: Colors.white),
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4))
-              ),
-            ),
-            onPressed: onPressed,
           ),
-        ),
+          style: FilledButton.styleFrom(
+            textStyle: TextStyle(color: Colors.white),
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4))
+            ),
+          ),
+          onPressed: onPressed
       ),
     );
   }
@@ -221,25 +216,23 @@ class LoginLandingScreen extends StatelessWidget {
       BuildContext context, String title, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48.0),
-      child: ButtonTheme(
-        child: OutlinedButton(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+      child: OutlinedButton(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
-          style: OutlinedButton.styleFrom(
-            minimumSize: Size(double.infinity, 48),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            side: BorderSide(
-                width: 1, color: ParentTheme.of(context)?.onSurfaceColor ?? Colors.transparent),
-          ),
-          onPressed: onPressed,
         ),
+        style: OutlinedButton.styleFrom(
+          minimumSize: Size(double.infinity, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          side: BorderSide(
+              width: 1, color: ParentTheme.of(context)?.onSurfaceColor ?? Colors.transparent),
+        ),
+        onPressed: onPressed,
       ),
     );
   }
