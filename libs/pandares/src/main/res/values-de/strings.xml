@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Gelöscht</string>
 
+    <string name="gradeUpdated">Note aktualisiert</string>
     <string name="loadingCanvas">Canvas-Content laden&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Sie können die Abgabedetails von hier aus öffnen</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Note: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
         <item quantity="other">%s Minuten</item>

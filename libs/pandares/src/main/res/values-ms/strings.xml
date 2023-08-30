@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Telah Dipadamkan</string>
 
+    <string name="gradeUpdated">Gred dikemas kini</string>
     <string name="loadingCanvas">Memuatkan Kandungan Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Anda boleh membuka butiran Serahan di sini</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Gred: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minit</item>
         <item quantity="other">%s Minit</item>

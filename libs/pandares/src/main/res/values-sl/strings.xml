@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Odstranjeno</string>
 
+    <string name="gradeUpdated">Ocena je posodobljena</string>
     <string name="loadingCanvas">Nalaganje vsebine sistema Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Tukaj lahko odprete podrobnosti o oddaji</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Ocena: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuta</item>
         <item quantity="other">%s minut</item>
