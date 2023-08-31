@@ -171,8 +171,12 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
         val binding = AdapterCourseBrowserBinding.bind(itemView)
         binding.label.text = tab.label
         binding.icon.setImageDrawable(drawable)
+        itemView.isEnabled = tab.enabled
+        itemView.alpha = if (tab.enabled) 1f else 0.5f
         if (tab.type == Tab.TYPE_EXTERNAL) {
-            itemView.onClickWithRequireNetwork({ callback(tab) })
+            itemView.onClickWithRequireNetwork {
+                callback(tab)
+            }
         } else {
             itemView.setOnClickListener {
                 callback(tab)
