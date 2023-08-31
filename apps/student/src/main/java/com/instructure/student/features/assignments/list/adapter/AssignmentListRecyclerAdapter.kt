@@ -19,8 +19,12 @@ package com.instructure.student.features.assignments.list.adapter
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.WeaveJob
@@ -110,8 +114,7 @@ abstract class AssignmentListRecyclerAdapter(
         val course = canvasContext as Course
 
         courseJob = tryWeave {
-            // TODO MBL-17009
-            val detailedCourse = CourseManager.getCourseWithGradeAsync(canvasContext.id, isRefresh).await().dataOrNull
+            val detailedCourse = repository.getCourseWithGrade(canvasContext.id, isRefresh)
             restrictQuantitativeData = detailedCourse?.settings?.restrictQuantitativeData ?: false
             gradingSchemes = detailedCourse?.gradingScheme ?: emptyList()
             loadAssignmentsData(course)

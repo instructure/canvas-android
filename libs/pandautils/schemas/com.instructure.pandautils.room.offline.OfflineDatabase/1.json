@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f0719881c4f2533ac47f2cf149659567",
+    "identityHash": "fc5d8b298d78ec4ac49369f84df3223f",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -638,7 +638,7 @@
       },
       {
         "tableName": "CourseEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `originalName` TEXT, `courseCode` TEXT, `startAt` TEXT, `endAt` TEXT, `syllabusBody` TEXT, `hideFinalGrades` INTEGER NOT NULL, `isPublic` INTEGER NOT NULL, `license` TEXT NOT NULL, `termId` INTEGER, `needsGradingCount` INTEGER NOT NULL, `isApplyAssignmentGroupWeights` INTEGER NOT NULL, `currentScore` REAL, `finalScore` REAL, `currentGrade` TEXT, `finalGrade` TEXT, `isFavorite` INTEGER NOT NULL, `accessRestrictedByDate` INTEGER NOT NULL, `imageUrl` TEXT, `bannerImageUrl` TEXT, `isWeightedGradingPeriods` INTEGER NOT NULL, `hasGradingPeriods` INTEGER NOT NULL, `homePage` TEXT, `restrictEnrollmentsToCourseDate` INTEGER NOT NULL, `workflowState` TEXT, `homeroomCourse` INTEGER NOT NULL, `courseColor` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`termId`) REFERENCES `TermEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `originalName` TEXT, `courseCode` TEXT, `startAt` TEXT, `endAt` TEXT, `syllabusBody` TEXT, `hideFinalGrades` INTEGER NOT NULL, `isPublic` INTEGER NOT NULL, `license` TEXT NOT NULL, `termId` INTEGER, `needsGradingCount` INTEGER NOT NULL, `isApplyAssignmentGroupWeights` INTEGER NOT NULL, `currentScore` REAL, `finalScore` REAL, `currentGrade` TEXT, `finalGrade` TEXT, `isFavorite` INTEGER NOT NULL, `accessRestrictedByDate` INTEGER NOT NULL, `imageUrl` TEXT, `bannerImageUrl` TEXT, `isWeightedGradingPeriods` INTEGER NOT NULL, `hasGradingPeriods` INTEGER NOT NULL, `homePage` TEXT, `restrictEnrollmentsToCourseDate` INTEGER NOT NULL, `workflowState` TEXT, `homeroomCourse` INTEGER NOT NULL, `courseColor` TEXT, `gradingScheme` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`termId`) REFERENCES `TermEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -805,6 +805,12 @@
           {
             "fieldPath": "courseColor",
             "columnName": "courseColor",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gradingScheme",
+            "columnName": "gradingScheme",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -5040,7 +5046,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f0719881c4f2533ac47f2cf149659567')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fc5d8b298d78ec4ac49369f84df3223f')"
     ]
   }
 }
