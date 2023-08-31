@@ -40,14 +40,14 @@ class ErrorPandaWidget extends StatelessWidget {
           child: Text(
             errorString,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16),
           ),
         ),
         TextButton(
           onPressed: () {
             if (callback != null) callback!();
           },
-          child: Text(L10n(context).retry, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16)),
+          child: Text(L10n(context).retry, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16)),
           style: TextButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(4.0),

@@ -101,11 +101,11 @@ void testWidgetsWithAccessibilityChecks(
 
 // Break this out into its own method, so that it can be used mid-test.
 Future<void> runAccessibilityTests(WidgetTester tester) async {
-  // await expectLater(tester, meetsGuideline(textContrastGuideline));
-  // await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
-  // await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
-  // // Needs to be last, because it fiddles with UI
-  // await expectLater(tester, meetsGuideline(TextFieldNavigationGuideline()));
+  await expectLater(tester, meetsGuideline(textContrastGuideline));
+  await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+  await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+  // Needs to be last, because it fiddles with UI
+  await expectLater(tester, meetsGuideline(TextFieldNavigationGuideline()));
 }
 
 // Here's an example of a custom guideline.  We can conceivably write

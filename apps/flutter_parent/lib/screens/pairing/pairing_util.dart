@@ -35,7 +35,7 @@ class PairingUtil {
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           shrinkWrap: true,
           children: <Widget>[
-            Text(L10n(context).addStudentWith, style: Theme.of(context).textTheme.bodySmall),
+            Text(L10n(context).addStudentWith, style: Theme.of(context).textTheme.bodyMedium),
             SizedBox(height: 12),
             _pairingCode(context, onSuccess),
             if (_hasCameras()) _qrCode(context, onSuccess),

@@ -169,7 +169,8 @@ class _RatingDialogState extends State<RatingDialog> {
           child: Text(L10n(context).ratingDialogSendFeedback.toUpperCase()),
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.secondary,
-            textStyle: TextStyle(color: Colors.white),
+            foregroundColor: Colors.white,
+            textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
           ),
           onPressed: _sending ? null : _sendFeedbackPressed,
         ),

@@ -170,6 +170,7 @@ void main() {
               ),
               child: Text(
                 'click me',
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ),
