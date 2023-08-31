@@ -30,7 +30,7 @@ class ErrorReportApi {
   }) async {
     var config = domain == DEFAULT_DOMAIN ? DioConfig.core() : DioConfig.canvas();
 
-    var dio = await config.dio;
+    var dio = config.dio;
 
     await dio.post(
       '/error_reports.json',

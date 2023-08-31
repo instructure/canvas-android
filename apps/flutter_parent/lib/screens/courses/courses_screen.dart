@@ -155,5 +155,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
     setState(() {
       _coursesFuture = _loadCourses(forceRefresh: true);
     });
+    await _coursesFuture;
   }
 }

@@ -137,7 +137,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 
     verify(mockNav.pushRouteWithCustomTransition(any, '/dashboard', any, any, any));
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Routes to dashboard if an observer but cannot masquerade', (tester) async {
@@ -161,7 +161,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 
     verify(mockNav.pushRouteWithCustomTransition(any, '/dashboard', any, any, any));
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Routes to login screen when the user is not logged in', (tester) async {
@@ -248,7 +248,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 350));
 
     verify(mockNav.pushRouteWithCustomTransition(any, '/dashboard', any, any, any));
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Requests MasqueradeUI refresh', (tester) async {
@@ -286,6 +286,6 @@ void main() {
 
     // Should now show masquerade info
     expect(find.text(masqueradeInfo), findsOneWidget);
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 }

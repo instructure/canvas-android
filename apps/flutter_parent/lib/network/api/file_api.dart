@@ -34,7 +34,7 @@ class FileApi {
     final size = await file.length();
     final contentType = lookupMimeType(file.path);
 
-    var dio = await canvasDio();
+    var dio = canvasDio();
     final params = ({
       'name': name,
       'size': size,
@@ -78,7 +78,7 @@ class FileApi {
     CancelToken? cancelToken,
     ProgressCallback? onProgress,
   }) async {
-    var dio = await DioConfig.core(forceRefresh: true).dio;
+    var dio = DioConfig.core(forceRefresh: true).dio;
     await dio.download(
           url,
           savePath,
@@ -89,7 +89,7 @@ class FileApi {
   }
 
   Future<void> deleteFile(String fileId) async {
-    var dio = await canvasDio();
+    var dio = canvasDio();
     await dio.delete('files/$fileId');
   }
 }

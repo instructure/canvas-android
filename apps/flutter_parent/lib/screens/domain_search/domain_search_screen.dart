@@ -194,9 +194,9 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   var item = _schoolDomains[index];
                   return ListTile(
                     title: Text(item.name),
-                    onTap: () {
+                    onTap: () async {
                       final accountName = (item.name == null || item.name.isEmpty) ? item.domain : item.name;
-                      locator<QuickNav>().pushRoute(context,
+                      return locator<QuickNav>().pushRoute(context,
                         PandaRouter.loginWeb(item.domain, accountName: accountName, authenticationProvider: item.authenticationProvider));
                     },
                   );

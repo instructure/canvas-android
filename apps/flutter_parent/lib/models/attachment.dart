@@ -53,7 +53,7 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   int get size;
 
   String? inferContentType() {
-    if (contentType != null && contentType!.isNotEmpty) return contentType!;
+    if (contentType != null && contentType?.isNotEmpty == true) return contentType!;
 
     // First, attempt to infer content type from file name
     String? type = lookupMimeType(filename ?? '');

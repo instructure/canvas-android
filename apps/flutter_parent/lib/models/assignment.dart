@@ -39,7 +39,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   String? get description;
 
   @BuiltValueField(wireName: 'due_at')
-  DateTime?get dueAt;
+  DateTime? get dueAt;
 
   @BuiltValueField(wireName: 'points_possible')
   double get pointsPossible;

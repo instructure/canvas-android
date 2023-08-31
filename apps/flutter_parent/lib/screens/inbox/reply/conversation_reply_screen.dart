@@ -132,7 +132,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
           node: _focusScopeNode,
           child: Scaffold(
             key: _scaffoldKey,
-            appBar: _appBar(context) as PreferredSizeWidget?,
+            appBar: _appBar(context),
             body: _content(context),
           ),
         ),
@@ -140,7 +140,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
     );
   }
 
-  Widget _appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
       bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
       title: Column(

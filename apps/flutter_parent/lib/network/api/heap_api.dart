@@ -41,7 +41,7 @@ class HeapApi {
       data['properties'] = json.encode(extras);
     }
 
-    var dio = await heapDio.dio;
+    var dio = heapDio.dio;
     final response = await dio.post('/track', data: data);
     return response.statusCode == 200;
   }

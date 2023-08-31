@@ -83,7 +83,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
   Widget _body(BuildContext context, CourseDetailsModel model) {
     if (_tabController == null) _tabController = TabController(initialIndex: 0, length: model.tabCount(), vsync: this);
     return Scaffold(
-      appBar: _appBar(context, model) as PreferredSizeWidget?,
+      appBar: _appBar(context, model),
       body: _tabBody(context, model),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _sendMessage(model.hasHomePageAsSyllabus),
@@ -98,7 +98,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
     );
   }
 
-  Widget _appBar(BuildContext context, CourseDetailsModel model) {
+  AppBar _appBar(BuildContext context, CourseDetailsModel model) {
     final tabCount = model.tabCount();
     return AppBar(
       title: Text(model.course?.name ?? ''),

@@ -40,7 +40,7 @@ Future<PagedList<T>?> fetchFirstPage<T>(Future<Response<dynamic>> request) async
 
 Future<PagedList<T>?> fetchNextPage<T>(String? nextUrl) async {
   try {
-    var dio = await DioConfig.canvas().copyWith(baseUrl: nextUrl).dio;
+    var dio = DioConfig.canvas().copyWith(baseUrl: nextUrl).dio;
     var response = await dio.get('');
     return PagedList<T>(response);
   } catch (e) {

@@ -23,10 +23,6 @@ import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
 import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
-// @GenerateNiceMocks([MockSpec<AccountsApi>()])
-// import 'account_creation_interactor_test.mocks.dart';
-
-
 void main() {
   final launcher = MockUrlLauncher();
   final api = MockAccountsApi();

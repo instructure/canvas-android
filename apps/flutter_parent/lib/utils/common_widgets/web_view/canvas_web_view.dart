@@ -81,7 +81,7 @@ class _CanvasWebViewState extends State<CanvasWebView> {
   Widget build(BuildContext context) {
     if (!widget.authContentIfNecessary) {
       _contentFuture = Future.value(widget.content);
-    } else  {
+    } else if (_contentFuture == null || _content != widget.content) {
       // If we don't have a future or if the content has changed (i.e., PTR changed the data), update the content future
       _content = widget.content;
       _contentFuture = _interactor.authContent(_content, L10n(context).launchExternalTool);

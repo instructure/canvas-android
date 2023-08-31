@@ -434,7 +434,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         );
 
         if (e is DioError) {
-          _handleDioException(e);
+          _handleDioError(e);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(L10n(context).unexpectedError)),
@@ -444,7 +444,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
   }
 
-  _handleDioException(DioError e) {
+  _handleDioError(DioError e) {
     String emailError = '';
     String pairingError = '';
     try {

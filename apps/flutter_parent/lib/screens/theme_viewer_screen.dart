@@ -215,7 +215,6 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
     return ListView(
       children: <Widget>[
         AppBar(
-          // titleTextStyle: Theme.of(context).textTheme,
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Column(

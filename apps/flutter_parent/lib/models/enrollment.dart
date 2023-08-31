@@ -123,7 +123,7 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   bool hasActiveGradingPeriod() =>
       multipleGradingPeriodsEnabled &&
       currentGradingPeriodId != null &&
-      currentGradingPeriodId!.isNotEmpty &&
+      currentGradingPeriodId?.isNotEmpty == true &&
       currentGradingPeriodId != '0';
 
   // NOTE: Looks like the API will never return multipleGradingPeriodsEnabled for observer enrollments, still checking just in case

@@ -77,7 +77,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     return FutureBuilder(
       future: _assignmentFuture,
       builder: (context, AsyncSnapshot<AssignmentDetails?> snapshot) => Scaffold(
-        appBar: _appBar(snapshot) as PreferredSizeWidget?,
+        appBar: _appBar(snapshot),
         floatingActionButton: snapshot.hasData && snapshot.data?.assignment != null ? _fab(snapshot) : null,
         body: RefreshIndicator(
           key: _refreshKey,
@@ -94,7 +94,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     );
   }
 
-  Widget _appBar(AsyncSnapshot<AssignmentDetails?> snapshot) => AppBar(
+  AppBar _appBar(AsyncSnapshot<AssignmentDetails?> snapshot) => AppBar(
         bottom: ParentTheme.of(context)?.appBarDivider(),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

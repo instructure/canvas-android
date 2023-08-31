@@ -57,6 +57,7 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
 
       return handler.next(error);
     } else {
+      // Refresh the token and update the login
       Login login = currentLogin.rebuild((b) => b..accessToken = tokens!.accessToken);
       ApiPrefs.addLogin(login);
       ApiPrefs.switchLogins(login);
@@ -75,8 +76,6 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
         return handler.next(error);
       }
     }
-    // Refresh the token and update the login
-
   }
 
   _logAuthAnalytics(String eventString) {

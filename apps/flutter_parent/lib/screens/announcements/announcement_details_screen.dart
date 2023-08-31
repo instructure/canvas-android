@@ -79,11 +79,11 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         title: Text(announcementViewState.toolbarTitle),
       ),
       body: RefreshIndicator(
-          onRefresh: () {
+          onRefresh: () async {
             setState(() {
               _announcementFuture = _loadAnnouncement(context, forceRefresh: true);
             });
-            return _announcementFuture!.catchError((_) {});
+            await  _announcementFuture?.catchError((_) { return Future.value(null); });
           },
           child: _announcementBody(announcementViewState)),
     );

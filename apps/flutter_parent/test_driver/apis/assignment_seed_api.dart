@@ -40,7 +40,7 @@ class AssignmentSeedApi {
       ..assignment.gradingType = GradingType.points);
 
     var postBody = json.encode(serialize(assignmentCreateWrapper));
-    final dio = await seedingDio();
+    final dio = seedingDio();
 
     return fetch(dio.post("courses/$courseId/assignments", data: postBody));
   }

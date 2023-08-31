@@ -306,7 +306,7 @@ void main() {
 
       expect(find.byType(CourseDetailsScreen), findsOneWidget);
 
-      ApiPrefs.clean();
+      await ApiPrefs.clean();
     });
   });
 }

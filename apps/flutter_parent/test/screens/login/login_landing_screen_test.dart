@@ -246,7 +246,7 @@ void main() async {
 
     expect(find.byType(SplashScreen), findsOneWidget);
     expect(ApiPrefs.getCurrentLogin(), logins[0]);
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Uses two-finger double-tap to cycle login flows', (tester) async {

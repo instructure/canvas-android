@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
@@ -192,7 +193,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
           node: _focusScopeNode,
           child: Scaffold(
             key: _scaffoldKey,
-            appBar: _appBar(context) as PreferredSizeWidget?,
+            appBar: _appBar(context),
             body: _content(context),
           ),
         ),
@@ -200,7 +201,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
     );
   }
 
-  Widget _appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
       bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
       title: Column(
@@ -678,10 +679,10 @@ class AttachmentWidget extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Icon(
-              //   handler.attachment?.getIcon(),
-              //   color: Theme.of(context).colorScheme.secondary,
-              // ),
+              Icon(
+                handler.attachment?.getIcon(),
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 11, 12, 0),
                 child: Text(

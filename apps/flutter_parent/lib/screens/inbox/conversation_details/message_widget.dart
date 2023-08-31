@@ -84,16 +84,16 @@ class _MessageWidgetState extends State<MessageWidget> {
       key: Key('message-header'),
       child: InkWell(
         onTap:
-        widget.message?.participatingUserIds != null && widget.message!.participatingUserIds!.length > 1 // Only allow expansion if there are non-author participants
-                ? () => setState(() => _participantsExpanded = !_participantsExpanded)
-                : null,
+          widget.message?.participatingUserIds != null && widget.message!.participatingUserIds!.length > 1 // Only allow expansion if there are non-author participants
+            ? () => setState(() => _participantsExpanded = !_participantsExpanded)
+            : null,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  if (author.avatarUrl != null) Avatar(author.avatarUrl!, name: author.name),
+                  Avatar(author.avatarUrl, name: author.name),
                   SizedBox(width: 12),
                   Expanded(
                     child: Column(

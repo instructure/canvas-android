@@ -75,7 +75,7 @@ class PlannerFetcher extends ChangeNotifier {
       // We have to handle the case where their filter is from before the api migration, so we trim it down.
       courses?.forEach((course) => courseNameMap[_observeeId]![course.id] = course.name);
       var tempCourseList = courses?.map((course) => course.contextFilterId()).toList();
-      Set<String> courseSet = Set.from(tempCourseList as Iterable<dynamic>);
+      Set<String> courseSet = Set.from(tempCourseList ?? []);
 
       if (calendarFilter != null) {
         return calendarFilter.filters.toSet();

@@ -23,7 +23,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CourseSeedApi {
   static Future<Course?> createCourse({bool forceRefresh = false}) async {
-    final dio = await seedingDio();
+    final dio = seedingDio();
     final courseNumber = faker.randomGenerator.integer(500, min: 100).toString();
     final courseName = faker.sport.name() + " " + courseNumber;
     final courseCode = courseName.substring(0, 1) + courseNumber;

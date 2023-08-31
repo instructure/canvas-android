@@ -22,7 +22,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CourseApi {
   Future<List<Course>?> getObserveeCourses({bool forceRefresh = false}) async {
-    final dio = await canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
+    final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'include[]': [
         'term',
@@ -62,28 +62,28 @@ class CourseApi {
         'grading_scheme'
       ]
     };
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetch(dio.get('courses/${courseId}', queryParameters: params));
   }
 
   // TODO: Set up pagination when API is fixed (no header link) and remove per_page query parameter
   Future<GradingPeriodResponse?> getGradingPeriods(String courseId, {bool forceRefresh = false}) async {
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetch(dio.get('courses/$courseId/grading_periods?per_page=100'));
   }
 
   Future<List<CourseTab>?> getCourseTabs(String courseId, {bool forceRefresh = false}) async {
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetchList(dio.get('courses/$courseId/tabs'));
   }
 
   Future<CourseSettings?> getCourseSettings(String courseId, {bool forceRefresh = false}) async {
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetch(dio.get('courses/$courseId/settings'));
   }
 
   Future<CoursePermissions?> getCoursePermissions(String courseId, {bool forceRefresh = false}) async {
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetch(dio.get('courses/$courseId/permissions'));
   }
 }

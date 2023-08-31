@@ -16,11 +16,11 @@ import 'package:flutter/material.dart';
 
 /// _DialogRoute copied (with minor changes) from flutter/lib/src/widget/routes.dart
 class _DialogRoute<T> extends PopupRoute<T> {
-  _DialogRoute(
-    RoutePageBuilder pageBuilder,
-    String barrierLabel,
-    RouteTransitionsBuilder transitionBuilder,
-    {bool barrierDismissible = true,
+  _DialogRoute({
+    required pageBuilder,
+    required String barrierLabel,
+    required RouteTransitionsBuilder transitionBuilder,
+    bool barrierDismissible = true,
     Color barrierColor = const Color(0x80000000),
     Duration transitionDuration = const Duration(milliseconds: 200),
     super.settings,
@@ -84,14 +84,14 @@ Future<T?> showDialogWithNavigatorKey<T>({
   assert(debugCheckHasMaterialLocalizations(context));
 
   var route = _DialogRoute<T>(
-    (_, __, ___) => SafeArea(child: Builder(builder: builder)),
-    MaterialLocalizations.of(context).modalBarrierDismissLabel,
-          (_, animation, __, child) {
-        return FadeTransition(
-          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-          child: child,
-        );
-      },
+    pageBuilder: (_, __, ___) => SafeArea(child: Builder(builder: builder)),
+    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    transitionBuilder: (_, animation, __, child) {
+      return FadeTransition(
+        opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+        child: child,
+      );
+    },
     barrierDismissible: barrierDismissible,
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 150),

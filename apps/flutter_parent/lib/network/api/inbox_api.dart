@@ -20,7 +20,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 
 class InboxApi {
   Future<List<Conversation>?> getConversations({String? scope = null, bool forceRefresh = false}) async {
-    final dio = await canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
+    final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'scope': scope,
       'include[]': ['participant_avatars'],
@@ -29,12 +29,12 @@ class InboxApi {
   }
 
   Future<Conversation?> getConversation(String id, {bool refresh = false}) async {
-    var dio = await canvasDio(forceRefresh: refresh);
+    var dio = canvasDio(forceRefresh: refresh);
     return fetch(dio.get('conversations/$id'));
   }
 
   Future<UnreadCount?> getUnreadCount() async {
-    var dio = await canvasDio(forceRefresh: true);
+    var dio = canvasDio(forceRefresh: true);
     return fetch(dio.get('conversations/unread_count'));
   }
 
@@ -46,7 +46,7 @@ class InboxApi {
         List<String> includeMessageIds,
         ) async {
       var config = DioConfig.canvas();
-      var dio = await config.dio;
+      var dio = config.dio;
       Conversation conversation = await fetch(
         dio.post(
           'conversations/$conversationId/add_message',
@@ -64,7 +64,7 @@ class InboxApi {
     }
 
     Future<List<Recipient>?> getRecipients(String courseId, {bool forceRefresh = false}) async {
-      var dio = await canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
+      var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
       var params = {
         'permissions[]': ['send_messages_all'],
         'messageable_only': true,
@@ -80,7 +80,7 @@ class InboxApi {
         String body,
         List<String>? attachmentIds,
         ) async {
-      var dio = await canvasDio();
+      var dio = canvasDio();
       var params = {
         'group_conversation': 'true',
         'recipients[]': recipientIds,

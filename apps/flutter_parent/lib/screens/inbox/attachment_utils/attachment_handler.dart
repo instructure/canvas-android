@@ -69,7 +69,6 @@ class AttachmentHandler with ChangeNotifier {
         notifyListeners();
       });
     } catch (e) {
-      debugPrint("ERROR_CATCH: ${e.toString()}");
       stage = AttachmentUploadStage.FAILED;
       notifyListeners();
     }

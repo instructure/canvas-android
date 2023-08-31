@@ -25,7 +25,7 @@ class QuizSeedApi {
       'quiz[due_at]': dueAt.toIso8601String(),
     };
 
-    var dio = await seedingDio();
+    var dio = seedingDio();
     return fetch(dio.post('courses/$courseId/quizzes', queryParameters: queryParams));
   }
 }

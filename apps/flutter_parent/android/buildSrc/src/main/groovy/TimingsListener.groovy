@@ -145,9 +145,6 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
 
     }
 
-//    @Override
-//    void buildStarted(Gradle gradle) {}
-
     @Override
     void projectsEvaluated(Gradle gradle) {}
 

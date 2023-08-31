@@ -24,7 +24,7 @@ class AnnouncementSeedApi {
       'is_announcement': true,
     };
 
-    var dio = await seedingDio();
+    var dio = seedingDio();
 
     return fetch(dio.post('courses/$courseId/discussion_topics', queryParameters: queryParams));
   }

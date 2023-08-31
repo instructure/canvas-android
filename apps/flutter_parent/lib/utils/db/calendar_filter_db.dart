@@ -44,7 +44,7 @@ class CalendarFilterDb {
         columnFilters: joinFilters(data.filters.toSet()),
       };
 
-  static CalendarFilter fromMap(Map<String, dynamic> map) => CalendarFilter((b) => b
+  static CalendarFilter fromMap(Map<dynamic, dynamic> map) => CalendarFilter((b) => b
     ..id = map[columnId]
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
@@ -100,7 +100,7 @@ class CalendarFilterDb {
 
   Future<CalendarFilter?> getById(int id) async {
     List<Map> maps = await db.query(tableName, columns: allColumns, where: '$columnId = ?', whereArgs: [id]);
-    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
+    if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 
@@ -111,7 +111,7 @@ class CalendarFilterDb {
       where: '$columnUserDomain = ? AND $columnUserId = ? AND $columnObserveeId = ?',
       whereArgs: [userDomain, userId, observeeId],
     );
-    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
+    if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 

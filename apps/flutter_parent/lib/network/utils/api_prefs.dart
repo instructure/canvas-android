@@ -93,7 +93,7 @@ class ApiPrefs {
   }
 
   static void _checkInit() {
-    if (_prefs == null || _packageInfo == null) throw StateError('ApiPrefs has not been initialized');;
+    if (_prefs == null || _packageInfo == null) throw StateError('ApiPrefs has not been initialized');
   }
 
   // Login

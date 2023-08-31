@@ -20,7 +20,7 @@ const String _helpLinksEndpoint = 'accounts/self/help_links';
 
 class HelpLinksApi {
   Future<HelpLinks?> getHelpLinks({forceRefresh = false}) async {
-    var dio = await canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
+    var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     return fetch(dio.get(_helpLinksEndpoint));
   }
 }

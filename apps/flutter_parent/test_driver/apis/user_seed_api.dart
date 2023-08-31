@@ -56,7 +56,7 @@ class UserSeedApi {
 
     await ApiPrefs.init();
 
-    var dio = await seedingDio();
+    var dio = seedingDio();
 
     var response = await dio.post(_createUserEndpoint, data: postBody);
 

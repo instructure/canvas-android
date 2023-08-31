@@ -46,7 +46,7 @@ class UserColorsDb {
         columnColor: userColor.color.value,
       };
 
-  static UserColor fromMap(Map<String, dynamic> map) => UserColor((b) => b
+  static UserColor fromMap(Map<dynamic, dynamic> map) => UserColor((b) => b
     ..id = map[columnId]
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
@@ -73,7 +73,7 @@ class UserColorsDb {
 
   Future<UserColor?> getById(int id) async {
     List<Map> maps = await db.query(tableName, columns: allColumns, where: '$columnId = ?', whereArgs: [id]);
-    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
+    if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 
@@ -108,7 +108,7 @@ class UserColorsDb {
       where: '$columnUserDomain = ? AND $columnUserId = ? AND $columnCanvasContext = ?',
       whereArgs: [userDomain, userId, canvasContext],
     );
-    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
+    if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 

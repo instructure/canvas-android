@@ -133,7 +133,9 @@ class _TestAppState extends State<TestApp> {
         builder: (context, themeData) => MaterialApp(
           title: 'Canvas Parent',
           locale: _locale,
-          builder: (context, child) => MasqueradeUI(navKey: TestApp.navigatorKey, child: child ?? Container()),
+          builder: (context, child) =>
+              MasqueradeUI(navKey: TestApp.navigatorKey,
+                  child: child ?? Container()),
           navigatorKey: TestApp.navigatorKey,
           navigatorObservers: widget.navigatorObservers,
           localizationsDelegates: const [

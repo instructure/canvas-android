@@ -49,7 +49,7 @@ class ReminderDb {
         columnDate: data.date?.toIso8601String(),
       };
 
-  static Reminder fromMap(Map<String, dynamic> map) => Reminder((b) => b
+  static Reminder fromMap(Map<dynamic, dynamic> map) => Reminder((b) => b
     ..id = map[columnId]
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
@@ -85,7 +85,7 @@ class ReminderDb {
 
   Future<Reminder?> getById(int id) async {
     List<Map> maps = await db.query(tableName, columns: allColumns, where: '$columnId = ?', whereArgs: [id]);
-    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
+    if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 
@@ -96,7 +96,7 @@ class ReminderDb {
       where: '$columnUserDomain = ? AND $columnUserId = ? AND $columnType = ? AND $columnItemId = ?',
       whereArgs: [userDomain, userId, type, itemId],
     );
-    if (maps.isNotEmpty) return fromMap(maps.first as Map<String, dynamic>);
+    if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 
@@ -107,7 +107,7 @@ class ReminderDb {
       where: '$columnUserDomain = ? AND $columnUserId = ?',
       whereArgs: [userDomain, userId],
     );
-    return maps.map((it) => fromMap(it as Map<String, dynamic>)).toList();
+    return maps.map((it) => fromMap(it)).toList();
   }
 
   Future<int> deleteById(int? id) {

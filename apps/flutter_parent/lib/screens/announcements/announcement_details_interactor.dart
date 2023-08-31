@@ -51,7 +51,7 @@ class AnnouncementDetailsInteractor {
         announcement.title,
         announcement.message,
         announcement.postedAt,
-          announcement.attachments.isNotEmpty ? announcement.attachments.first.toAttachment() : null,
+        announcement.attachments.isNotEmpty ? announcement.attachments.first.toAttachment() : null,
       );
     } else {
       AccountNotification? accountNotification =

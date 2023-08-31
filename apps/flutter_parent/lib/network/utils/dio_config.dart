@@ -67,7 +67,7 @@ class DioConfig {
   }
 
   /// Creates a [Dio] instance using this configuration
-  Future<Dio> get dio async {
+  Dio get dio {
     // Add canvas-string-ids header to ensure Canvas IDs are returned as Strings
     baseHeaders[HttpHeaders.acceptHeader] = 'application/json+canvas-string-ids';
 
@@ -102,7 +102,7 @@ class DioConfig {
 
     // Cache manager
     if (cacheMaxAge != Duration.zero) {
-      dio.interceptors.add(await _cacheInterceptor());
+      dio.interceptors.add(_cacheInterceptor());
     }
 
     bool debug = DebugFlags.isDebugApi;
@@ -229,7 +229,7 @@ class PageSize {
 }
 
 /// Convenience method that returns a [Dio] instance configured by calling through to [DioConfig.canvas]
-Future<Dio> canvasDio({
+Dio canvasDio({
   bool includeApiPath = true,
   bool forceRefresh = false,
   bool forceDeviceLanguage = false,
@@ -250,7 +250,7 @@ Future<Dio> canvasDio({
 const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
 
 // Convenience method that returns a [Dio] instance for data-seeding
-Future<Dio> seedingDio({String baseUrl = baseSeedingUrl}) {
+Dio seedingDio({String baseUrl = baseSeedingUrl}) {
   return DioConfig(
       baseUrl: baseUrl,
       retries: 3, // Allow for retries in our seeding calls, because they can return 500s

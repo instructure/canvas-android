@@ -86,10 +86,10 @@ class _AlertsScreenState extends State<AlertsScreen> {
         }
 
         return RefreshIndicator(
-          onRefresh: () {
+          onRefresh: () async {
             _alertsFuture = _loadAlerts(forceRefresh: true);
             setState(() {});
-            return _alertsFuture!;
+            await _alertsFuture;
           },
           child: child,
         );

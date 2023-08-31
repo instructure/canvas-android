@@ -20,7 +20,7 @@ import 'package:flutter_parent/network/utils/paged_list.dart';
 
 class AssignmentApi {
   Future<List<Assignment>?> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
-    var dio = await canvasDio();
+    var dio = canvasDio();
     var params = {
       'include[]': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
       'order_by': 'due_at',
@@ -33,7 +33,7 @@ class AssignmentApi {
   Future<List<AssignmentGroup>?> getAssignmentGroupsWithSubmissionsDepaginated(
       String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) async {
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     var params = {
       'include[]': [
         'assignments',
@@ -56,7 +56,7 @@ class AssignmentApi {
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',
     };
-    var dio = await canvasDio();
+    var dio = canvasDio();
     return fetchFirstPage(dio.get('courses/$courseId/assignments', queryParameters: params));
   }
 
@@ -67,7 +67,7 @@ class AssignmentApi {
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',
     };
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetch(dio.get('courses/$courseId/assignments/$assignmentId', queryParameters: params));
   }
 }

@@ -68,7 +68,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         builder: (context) => FutureBuilder(
           future: _conversationFuture,
           builder: (BuildContext context, AsyncSnapshot<Conversation?> snapshot) => Scaffold(
-            appBar: _appBar(context) as PreferredSizeWidget?,
+            appBar: _appBar(context),
             body: _body(context, snapshot),
             floatingActionButton: _fab(context, snapshot),
           ),
@@ -77,7 +77,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
     );
   }
 
-  Widget _appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

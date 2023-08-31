@@ -46,7 +46,7 @@ class SubmissionSeedApi {
       ..submission.userId = int.parse(asUserId));
 
     var postBody = json.encode(serialize(submissionWrapper));
-    final dio = await seedingDio();
+    final dio = seedingDio();
 
     print("submission postBody =  $postBody");
     return fetch(dio.post("courses/$courseId/assignments/${assignment?.id}/submissions", data: postBody));
@@ -56,7 +56,7 @@ class SubmissionSeedApi {
     final gradeWrapper = GradeSubmissionWrapper((b) => b..submission.postedGrade = grade);
 
     final postBody = json.encode(serialize(gradeWrapper));
-    final dio = await seedingDio();
+    final dio = seedingDio();
 
     print("Grade submission postBody: $postBody");
     return fetch(dio.put("courses/$courseId/assignments/${assignment?.id}/submissions/$studentId", data: postBody));

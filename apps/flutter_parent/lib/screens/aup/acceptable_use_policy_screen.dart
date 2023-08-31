@@ -109,8 +109,8 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
       await ParentTheme.of(context)?.setSelectedStudent(null);
       await ApiPrefs.performLogout(app: ParentApp.of(context));
       MasqueradeUI.of(context)?.refresh();
-      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
       await FeaturesUtils.performLogout();
+      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
     } catch (e) {
       // Just in case we experience any error we still need to go back to the login screen.
       locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());

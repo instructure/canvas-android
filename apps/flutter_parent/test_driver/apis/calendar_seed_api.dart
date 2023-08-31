@@ -35,7 +35,7 @@ class CalendarSeedApi {
       'calendar_event[location_address]': locationAddress,
     };
 
-    var dio = await seedingDio();
+    var dio = seedingDio();
 
     return fetch(dio.post('calendar_events', queryParameters: queryParams));
   }

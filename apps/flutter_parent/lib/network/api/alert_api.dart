@@ -23,7 +23,7 @@ const String _alertThresholdsEndpoint = 'users/self/observer_alert_thresholds';
 class AlertsApi {
   /// Alerts were depaginated in the original parent app, then sorted by date. Depaginating here to follow suite.
   Future<List<Alert>?> getAlertsDepaginated(String studentId, bool forceRefresh) async {
-    var dio = await canvasDio(forceRefresh: forceRefresh);
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetchList(dio.get('users/self/observer_alerts/$studentId'), depaginateWith: dio);
   }
 
@@ -31,28 +31,28 @@ class AlertsApi {
     final config = DioConfig.canvas();
     // Read/dismissed data has changed and makes the cache stale
     config.clearCache(path: 'users/self/observer_alerts/$studentId');
-    var dio = await config.dio;
+    var dio = config.dio;
     return fetch(dio.put('users/self/observer_alerts/$alertId/$workflowState'));
   }
 
   // Always force a refresh when retrieving this data
   Future<UnreadCount?> getUnreadCount(String studentId) async {
-    var dio = await canvasDio(forceRefresh: true);
+    var dio = canvasDio(forceRefresh: true);
     return fetch(dio.get('users/self/observer_alerts/unread_count', queryParameters: {'student_id': studentId}));
   }
 
     Future<List<AlertThreshold>?> getAlertThresholds(String studentId, bool forceRefresh) async {
-      var dio = await canvasDio(forceRefresh: forceRefresh);
+      var dio = canvasDio(forceRefresh: forceRefresh);
       return fetchList(dio.get(_alertThresholdsEndpoint, queryParameters: {'student_id': studentId}));
     }
 
     Future<AlertThreshold?> deleteAlert(AlertThreshold threshold) async {
-      var dio = await canvasDio();
+      var dio = canvasDio();
       return fetch(dio.delete('$_alertThresholdsEndpoint/${threshold.id}'));
     }
 
     Future<AlertThreshold?> createThreshold(AlertType type, String studentId, {String? value}) async {
-      var dio = await canvasDio();
+      var dio = canvasDio();
       return fetch(dio.post(_alertThresholdsEndpoint, data: {
         'observer_alert_threshold': {
           'alert_type': type.toApiString(),
