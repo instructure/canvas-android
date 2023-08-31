@@ -137,7 +137,7 @@ class LeftSideNavigationDrawerPage: BasePage() {
 
         settings.assertDisplayed()
 
-        if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.navigationDrawer)).swipeUp()
+        if(CanvasTest.isLandscapeDevice() || CanvasTest.isLowResDevice()) onView(withId(R.id.navigationDrawer)).swipeUp()
         changeUser.assertDisplayed()
         logoutButton.assertDisplayed()
         
