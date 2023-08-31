@@ -112,14 +112,14 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
                   children: <Widget>[
                     ListTile(
                         leading: Icon(CanvasIconsSolid.reply, size: 20, color: Theme.of(context).iconTheme.color),
-                        title: Text(L10n(context).reply),
+                        title: Text(L10n(context).reply, style: Theme.of(context).textTheme.bodyMedium),
                         onTap: () {
                           Navigator.of(context).pop();
                           _reply(context, conversation, null, false);
                         }),
                     ListTile(
                         leading: Icon(CanvasIconsSolid.reply_all_2, size: 20, color: Theme.of(context).iconTheme.color),
-                        title: Text(L10n(context).replyAll),
+                        title: Text(L10n(context).replyAll, style: Theme.of(context).textTheme.bodyMedium),
                         onTap: () {
                           Navigator.of(context).pop();
                           _reply(context, conversation, null, true);
@@ -184,7 +184,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
               SlidableAction(
                 label: L10n(context).replyAll,
                 backgroundColor: ParentTheme.of(context)?.isDarkMode == true ? ParentColors.tiara : ParentColors.oxford,
-                foregroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
                 icon: CanvasIconsSolid.reply_all_2,
                 onPressed: (context) => _reply(context, conversation, message, true),
               ),

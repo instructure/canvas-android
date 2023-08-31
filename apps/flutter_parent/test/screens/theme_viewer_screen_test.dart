@@ -38,7 +38,7 @@ void main() {
 
     // Light mode, normal contrast. Title should be dark, subtitle should be gray.
     expect(tester.widget<Text>(title()).style!.color, ParentColors.licorice);
-    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.ash);
+    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.oxford);
 
     // Enable dark mode
     await tester.tap(darkToggle());
@@ -46,7 +46,7 @@ void main() {
 
     // Dark mode, normal contrast. Title should be light, subtitle should be gray.
     expect(tester.widget<Text>(title()).style!.color, ParentColors.tiara);
-    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.ash);
+    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.oxford);
 
     // Enable High-Contrast mode
     await tester.tap(hcToggle());

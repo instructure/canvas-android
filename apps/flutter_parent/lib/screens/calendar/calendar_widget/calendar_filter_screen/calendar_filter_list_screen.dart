@@ -169,7 +169,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Text(
           title,
-          style: Theme.of(context).textTheme.labelSmall,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
 }

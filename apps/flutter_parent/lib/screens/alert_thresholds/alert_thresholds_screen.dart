@@ -199,7 +199,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
               ),
               child: Text(
                 L10n(context).alertMeWhen,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ParentColors.ash),
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             )),
         Expanded(

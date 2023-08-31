@@ -97,7 +97,7 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
       builder: (context) => Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text(L10n(context).actAsUser, style: Theme.of(context).textTheme.bodyMedium),
+          title: Text(L10n(context).actAsUser, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
           bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
         ),
         body: SingleChildScrollView(
@@ -155,7 +155,7 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
                       style: ElevatedButton.styleFrom(
                         textStyle: TextStyle(color: Colors.white),
                       ),
-                      child: Text(L10n(context).actAsUser),
+                      child: Text(L10n(context).actAsUser, style: Theme.of(context).textTheme.titleMedium),
                       onPressed: () => _startMasquerading(),
                     ),
                   )

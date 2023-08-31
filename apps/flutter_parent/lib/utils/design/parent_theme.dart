@@ -291,7 +291,7 @@ class _ParentThemeState extends State<ParentTheme> {
     );
   }
 
-  TextTheme _buildTextTheme(Color color, {Color fadeColor = ParentColors.ash}) {
+  TextTheme _buildTextTheme(Color color, {Color fadeColor = ParentColors.oxford}) {
     return TextTheme(
       /// Design-provided styles
 

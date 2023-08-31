@@ -607,6 +607,7 @@ class AttachmentWidget extends StatelessWidget {
   _uploadingWidget(BuildContext context, AttachmentHandler handler) {
     return Tooltip(
       message: handler.displayName,
+      textStyle: Theme.of(context).textTheme.bodyMedium,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -620,7 +621,7 @@ class AttachmentWidget extends StatelessWidget {
           ),
           Text(
             handler.progress == null ? '' : NumberFormat.percentPattern().format(handler.progress),
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: Theme.of(context).textTheme.bodySmall,
           )
         ],
       ),

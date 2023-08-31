@@ -68,7 +68,7 @@ void main() {
     // weekends should use faded text
     weekends.forEach((day) {
       final textColor = tester.widget<Text>(day).style!.color;
-      expect(textColor, ParentColors.ash);
+      expect(textColor, ParentColors.oxford);
     });
   });
 
@@ -119,7 +119,7 @@ void main() {
     // weekends should use faded text
     weekends.forEach((day) {
       final textColor = tester.widget<Text>(day).style!.color;
-      expect(textColor, ParentColors.ash);
+      expect(textColor, ParentColors.oxford);
     });
   });
 
@@ -170,7 +170,7 @@ void main() {
     // weekends should use faded text
     weekends.forEach((day) {
       final textColor = tester.widget<Text>(day).style!.color;
-      expect(textColor, ParentColors.ash);
+      expect(textColor, ParentColors.oxford);
     });
   });
 }

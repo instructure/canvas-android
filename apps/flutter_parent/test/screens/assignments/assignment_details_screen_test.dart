@@ -230,10 +230,10 @@ void main() {
     expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
     expect(find.text('1.5 pts'), findsOneWidget);
     expect(find.byIcon(Icons.do_not_disturb), findsOneWidget);
-    expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.ash);
+    expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.oxford);
     expect(find.text(AppLocalizations().assignmentNotSubmittedLabel), findsOneWidget);
     expect((tester.widget(find.text(AppLocalizations().assignmentNotSubmittedLabel)) as Text).style!.color,
-        ParentColors.ash);
+        ParentColors.oxford);
     expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
     expect(find.text(AppLocalizations().descriptionTitle), findsOneWidget);

@@ -366,7 +366,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
               ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
               : Text(
                   L10n(context).qrCreateAccount,
-                  style: TextStyle(fontSize: 16),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16),
                 ),
         ),
         style: ElevatedButton.styleFrom(
@@ -387,14 +387,17 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
       onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 14, 0, 14),
-        child: Center(
-          child: RichText(
-            text: TextSpan(
-              style: _defaultSpanStyle,
-              children: <TextSpan>[
-                TextSpan(text: L10n(context).qrCreateAccountSignIn1),
-                TextSpan(text: L10n(context).qrCreateAccountSignIn2, style: _linkSpanStyle)
-              ],
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: 48),
+          child: Center(
+            child: RichText(
+              text: TextSpan(
+                style: _defaultSpanStyle,
+                children: <TextSpan>[
+                  TextSpan(text: L10n(context).qrCreateAccountSignIn1),
+                  TextSpan(text: L10n(context).qrCreateAccountSignIn2, style: _linkSpanStyle)
+                ],
+              ),
             ),
           ),
         ),

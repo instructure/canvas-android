@@ -147,7 +147,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(widget.replyAll ? L10n(context).replyAll : L10n(context).reply),
+          Text(widget.replyAll ? L10n(context).replyAll : L10n(context).reply, style: Theme.of(context).textTheme.bodySmall),
           Text(widget.conversation?.subject ?? '', style: Theme.of(context).textTheme.bodySmall),
         ],
       ),

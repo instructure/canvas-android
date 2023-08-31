@@ -697,7 +697,7 @@ class DashboardState extends State<DashboardScreen> {
           padding: const EdgeInsets.only(left: 8.0),
           child: Icon(CanvasIcons.masquerade),
         ),
-        title: Text(L10n(context).actAsUser),
+        title: Text(L10n(context).actAsUser, style: Theme.of(context).textTheme.titleMedium),
         onTap: () {
           Navigator.of(context).pop();
           locator<QuickNav>().push(context, MasqueradeScreen());
@@ -709,7 +709,7 @@ class DashboardState extends State<DashboardScreen> {
           padding: const EdgeInsets.only(left: 8.0),
           child: Icon(CanvasIcons.masquerade),
         ),
-        title: Text(L10n(context).stopActAsUser),
+        title: Text(L10n(context).stopActAsUser, style: Theme.of(context).textTheme.titleMedium),
         onTap: () {
           Navigator.of(context).pop();
           MasqueradeUI.showMasqueradeCancelDialog(GlobalKey(), context);
