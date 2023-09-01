@@ -88,8 +88,8 @@ class DiscussionsE2ETest: StudentTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on the 'Search' button and search for ${announcement2.title}. announcement.")
-        discussionListPage.clickOnSearchButton()
-        discussionListPage.typeToSearchBar(announcement2.title)
+        discussionListPage.searchable.clickOnSearchButton()
+        discussionListPage.searchable.typeToSearchBar(announcement2.title)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the searching method is working well, so ${announcement.title} won't be displayed and ${announcement2.title} is displayed.")
         discussionListPage.pullToUpdate()
@@ -97,7 +97,7 @@ class DiscussionsE2ETest: StudentTest() {
         discussionListPage.assertTopicNotDisplayed(announcement.title)
 
         Log.d(STEP_TAG,"Clear the search input field and assert that both announcements, ${announcement.title} and ${announcement2.title} has been diplayed.")
-        discussionListPage.clickOnClearSearchButton()
+        discussionListPage.searchable.clickOnClearSearchButton()
         discussionListPage.waitForDiscussionTopicToDisplay(announcement.title)
         discussionListPage.assertTopicDisplayed(announcement2.title)
 

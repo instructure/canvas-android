@@ -87,12 +87,6 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         onView(withId(R.id.points) + hasSibling(siblingMatcher)).assertHasText(gradeString)
     }
 
-    fun assertAssignmentDisplayedWithoutGrade(name: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer)).assertHasText(name)
-        val siblingMatcher = withId(R.id.title) + withText(name)
-        onView(withId(R.id.points) + hasSibling(siblingMatcher)).assertNotDisplayed()
-    }
-
     // Hopefully this will be sufficient.  We may need to add some logic to scroll
     // to the top of the list first.  We have to use the custom constraints because the
     // swipeRefreshLayout may extend below the screen, and therefore may not be 90% visible.

@@ -17,8 +17,17 @@ package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -219,14 +228,14 @@ class AnnouncementInteractionTest : StudentTest() {
         discussionListPage.createAnnouncement(testAnnouncementName, "description")
         discussionListPage.assertAnnouncementCreated(testAnnouncementName)
 
-        discussionListPage.clickOnSearchButton()
-        discussionListPage.typeToSearchBar(testAnnouncementName)
+        discussionListPage.searchable.clickOnSearchButton()
+        discussionListPage.searchable.typeToSearchBar(testAnnouncementName)
 
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(testAnnouncementName)
         discussionListPage.assertTopicNotDisplayed(existingAnnouncementName)
 
-        discussionListPage.clickOnClearSearchButton()
+        discussionListPage.searchable.clickOnClearSearchButton()
         discussionListPage.waitForDiscussionTopicToDisplay(existingAnnouncementName!!)
         discussionListPage.assertTopicDisplayed(testAnnouncementName)
     }

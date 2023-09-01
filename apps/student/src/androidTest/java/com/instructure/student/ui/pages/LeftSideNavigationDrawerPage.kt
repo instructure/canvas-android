@@ -8,6 +8,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -21,7 +22,10 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.swipeUp
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
@@ -132,6 +136,8 @@ class LeftSideNavigationDrawerPage: BasePage() {
         userEmail.assertDisplayed()
 
         settings.assertDisplayed()
+
+        if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.navigationDrawer)).swipeUp()
         changeUser.assertDisplayed()
         logoutButton.assertDisplayed()
         
@@ -144,10 +150,12 @@ class LeftSideNavigationDrawerPage: BasePage() {
     }
 
     private fun assertDefaultNavigationBehaviorMenuItems() {
+        if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.navigationDrawer)).swipeDown()
         files.assertDisplayed()
         bookmarks.assertDisplayed()
         settings.assertDisplayed()
 
+        if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.navigationDrawer)).swipeUp()
         showGrades.assertDisplayed()
         colorOverlay.assertDisplayed()
 
@@ -157,13 +165,12 @@ class LeftSideNavigationDrawerPage: BasePage() {
     }
 
     private fun assertElementaryNavigationBehaviorMenuItems() {
-        files.assertDisplayed()
         bookmarks.assertNotDisplayed()
-        settings.assertDisplayed()
-
         showGrades.assertNotDisplayed()
         colorOverlay.assertNotDisplayed()
 
+        files.assertDisplayed()
+        settings.assertDisplayed()
         help.assertDisplayed()
         changeUser.assertDisplayed()
         logoutButton.assertDisplayed()

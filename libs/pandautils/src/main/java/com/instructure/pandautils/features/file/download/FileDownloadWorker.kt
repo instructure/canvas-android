@@ -51,11 +51,13 @@ class FileDownloadWorker @AssistedInject constructor(
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    override suspend fun doWork(): Result {
-        val fileName = inputData.getString(INPUT_FILE_NAME) ?: ""
-        val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
-        val notificationId = Random.nextInt()
+    private val fileName = inputData.getString(INPUT_FILE_NAME) ?: ""
+    private val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
+    private val notificationId = Random.nextInt()
 
+    private var foregroundInfo: ForegroundInfo = createForegroundInfo(notificationId, fileName, 0)
+
+    override suspend fun doWork(): Result {
         registerNotificationChannel(context)
 
         val downloadFileName = createDownloadFileName(fileName)
@@ -63,14 +65,21 @@ class FileDownloadWorker @AssistedInject constructor(
         val downloadedFile =
             File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), downloadFileName)
 
-        setForeground(createForegroundInfo(notificationId, fileName, 0))
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            setForeground(foregroundInfo)
+        }
         var result = Result.retry()
 
         fileDownloadApi.downloadFile(fileUrl).saveFile(downloadedFile)
             .collect { downloadState ->
                 when (downloadState) {
                     is DownloadState.InProgress -> {
-                        setForeground(createForegroundInfo(notificationId, fileName, downloadState.progress))
+                        foregroundInfo = createForegroundInfo(notificationId, fileName, downloadState.progress)
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                            setForeground(foregroundInfo)
+                        } else {
+                            updateForegroundNotification()
+                        }
                     }
 
                     is DownloadState.Failure -> {
@@ -138,8 +147,6 @@ class FileDownloadWorker @AssistedInject constructor(
 
         val notification = NotificationCompat.Builder(applicationContext, FileUploadWorker.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-            .setProgress(100, 100, false)
-            .setOngoing(false)
             .setContentTitle(context.getString(R.string.downloadSuccessful))
             .setContentText(fileName)
             .setContentIntent(pendingIntent)
@@ -150,12 +157,18 @@ class FileDownloadWorker @AssistedInject constructor(
     private fun updateNotificationFailed(notificationId: Int, fileName: String) {
         val notification = NotificationCompat.Builder(applicationContext, FileUploadWorker.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-            .setProgress(100, 100, false)
-            .setOngoing(false)
             .setContentTitle(context.getString(R.string.downloadFailed))
             .setContentText(fileName)
             .build()
         notificationManager.notify(notificationId + 1, notification)
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return foregroundInfo
+    }
+
+    private fun updateForegroundNotification() {
+        notificationManager.notify(notificationId, foregroundInfo.notification)
     }
 
     companion object {

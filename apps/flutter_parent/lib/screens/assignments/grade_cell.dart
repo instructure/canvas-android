@@ -28,12 +28,12 @@ class GradeCell extends StatelessWidget {
 
   GradeCell.forSubmission(
     BuildContext context,
-    bool restrictQuantitativeData,
+    Course course,
     Assignment assignment,
     Submission submission, {
     Key key,
   })  : data = GradeCellData.forSubmission(
-          restrictQuantitativeData,
+          course,
           assignment,
           submission,
           Theme.of(context),
