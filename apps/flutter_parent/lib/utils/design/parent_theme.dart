@@ -253,7 +253,7 @@ class _ParentThemeState extends State<ParentTheme> {
     if (isHC) primaryTextTheme = primaryTextTheme.apply(displayColor: Colors.white, bodyColor: Colors.white);
     else if (isDarkMode) primaryTextTheme = _buildTextTheme(ParentColors.porcelain, fadeColor: ParentColors.tiara);
 
-    var primaryIconTheme = isDarkMode ? IconThemeData(color: ParentColors.porcelain) : IconThemeData(color: ParentColors.porcelain);
+    var primaryIconTheme = isDarkMode ? IconThemeData(color: ParentColors.tiara) : IconThemeData(color: Colors.white);
 
     var brightness = isDarkMode ? Brightness.dark : Brightness.light;
     var backgroundColor = isDarkMode ? Colors.black : Colors.white;
@@ -266,11 +266,11 @@ class _ParentThemeState extends State<ParentTheme> {
       useMaterial3: true,
       primarySwatch: swatch,
       primaryColor: isDarkMode ? Colors.black : null,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500], brightness: brightness),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500]),// brightness: brightness),
       switchTheme: SwitchThemeData(
           thumbColor: MaterialStateProperty.all(swatch[500]),
           trackColor: MaterialStateProperty.resolveWith((states) =>
-          states.contains(MaterialState.selected) ? swatch[200] : nearSurfaceColor)
+          states.contains(MaterialState.selected) ? swatch[200] : nearSurfaceColor),
       ),
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: swatch[300],

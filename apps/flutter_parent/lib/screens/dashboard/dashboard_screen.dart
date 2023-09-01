@@ -258,7 +258,6 @@ class DashboardState extends State<DashboardScreen> {
                   icon: WidgetBadge(
                     Icon(
                       Icons.menu,
-                      color: Theme.of(context).primaryIconTheme.color,
                       key: Key("drawer_menu"),
                     ),
                     countListenable: _interactor.getInboxCountNotifier(),

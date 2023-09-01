@@ -153,9 +153,10 @@ class MasqueradeScreenState extends State<MasqueradeScreen> {
                     height: 64,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
                         textStyle: TextStyle(color: Colors.white),
                       ),
-                      child: Text(L10n(context).actAsUser),
+                      child: Text(L10n(context).actAsUser, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),),
                       onPressed: () => _startMasquerading(),
                     ),
                   )
