@@ -119,7 +119,9 @@ class CourseBrowserWebViewHolder(view: View, val color: Int) : RecyclerView.View
         binding.unsupportedLabel.text = tab.label
         binding.unsupportedIcon.setImageDrawable(drawable)
         binding.unsupportedSubLabel.setText(R.string.opensInWebView)
-        itemView.onClickWithRequireNetwork({ callback(tab) })
+        itemView.isEnabled = tab.enabled
+        itemView.alpha = if (tab.enabled) 1f else 0.5f
+        itemView.onClickWithRequireNetwork { callback(tab) }
     }
 
     companion object {
