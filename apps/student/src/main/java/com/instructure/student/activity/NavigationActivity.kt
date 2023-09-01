@@ -87,6 +87,7 @@ import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.*
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
+import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -142,6 +143,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
+
+    @Inject
+    lateinit var repository: NavigationRepository
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -792,7 +796,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             val contextType = route.getContextType()
                             when (contextType) {
                                 CanvasContext.Type.COURSE -> {
-                                    route.canvasContext = awaitApi<Course> { CourseManager.getCourse(contextId, it, false) }
+                                    route.canvasContext = repository.getCourse(contextId, false)
                                     if(route.canvasContext == null) showMessage(getString(R.string.could_not_route_course))
                                 }
                                 CanvasContext.Type.GROUP -> {
@@ -817,7 +821,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             val contextType = route.getContextType()
                             when (contextType) {
                                 CanvasContext.Type.COURSE -> {
-                                    route.canvasContext = awaitApi<Course> { CourseManager.getCourse(contextId, it, false) }
+                                    route.canvasContext = repository.getCourse(contextId, false)
                                     if(route.canvasContext == null) showMessage(getString(R.string.could_not_route_course))
                                 }
                                 CanvasContext.Type.GROUP -> {
