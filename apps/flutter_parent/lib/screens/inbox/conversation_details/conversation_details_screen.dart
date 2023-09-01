@@ -184,14 +184,14 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
               SlidableAction(
                 label: L10n(context).replyAll,
                 backgroundColor: ParentTheme.of(context)?.isDarkMode == true ? ParentColors.tiara : ParentColors.oxford,
-                foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+                 foregroundColor: ParentTheme.of(context)?.isDarkMode == true ? Colors.black : Colors.white,
                 icon: CanvasIconsSolid.reply_all_2,
                 onPressed: (context) => _reply(context, conversation, message, true),
               ),
               SlidableAction(
                 label: L10n(context).reply,
                 backgroundColor: Theme.of(context).colorScheme.secondary,
-                foregroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: ParentTheme.of(context)?.isDarkMode == true ? Colors.black : Colors.white,
                 icon: CanvasIconsSolid.reply,
                 onPressed: (context) => _reply(context, conversation, message, false),
               ),

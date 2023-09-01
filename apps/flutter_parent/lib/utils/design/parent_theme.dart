@@ -266,7 +266,7 @@ class _ParentThemeState extends State<ParentTheme> {
       useMaterial3: true,
       primarySwatch: swatch,
       primaryColor: isDarkMode ? Colors.black : null,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500]),// brightness: brightness),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500], brightness: brightness),
       switchTheme: SwitchThemeData(
           thumbColor: MaterialStateProperty.all(swatch[500]),
           trackColor: MaterialStateProperty.resolveWith((states) =>
