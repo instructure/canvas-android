@@ -23,54 +23,43 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel" />
+            type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp">
+        android:paddingVertical="14dp">
 
         <TextView
-            android:id="@+id/courseName"
+            android:id="@+id/tabTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@{itemViewModel.data.courseName}"
+            android:layout_marginEnd="18dp"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/courseSize"
-            app:layout_constraintEnd_toStartOf="@id/toggleButton"
+            android:text="@{itemViewModel.data.tabName}"
+            app:layout_constraintEnd_toStartOf="@+id/actionContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Astronomy" />
+            tools:text="Assignments" />
 
         <TextView
-            android:id="@+id/courseSize"
+            android:id="@+id/errorText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/textDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/courseName"
+            android:text="@string/sync_failed"
+            android:textColor="@color/backgroundDanger"
+            android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="@id/tabTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/courseName"
-            tools:text="1.28 GB" />
-
-        <ImageView
-            android:id="@+id/toggleButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
-            android:onClick="@{() -> itemViewModel.toggleItems()}"
-            android:padding="12dp"
-            android:rotation="@{itemViewModel.collapsed ? 0 : 180}"
-            android:src="@drawable/ic_arrow_down"
-            app:tint="@color/textDarkest"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/actionContainer"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tabTitle"
+            tools:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/actionContainer"
@@ -83,25 +72,29 @@
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:visibility="@{itemViewModel.data.state == ProgressState.IN_PROGRESS ? View.VISIBLE : View.GONE}" />
 
             <ImageView
                 android:id="@+id/errorIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_close"
-                app:tint="@color/textDarkest"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:tint="@color/textDarkest"
+                android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="gone" />
 
             <ImageView
                 android:id="@+id/successIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_checkmark"
-                app:tint="@color/textDarkest"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:tint="@color/textDarkest"
+                android:visibility="@{itemViewModel.data.state == ProgressState.COMPLETED ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="gone" />
         </FrameLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentSyncProgressBinding
@@ -35,17 +36,22 @@ class SyncProgressFragment : Fragment() {
 
     private val viewModel: SyncProgressViewModel by viewModels()
 
-    private val binding: FragmentSyncProgressBinding by viewBinding(FragmentSyncProgressBinding::bind)
-
+    private lateinit var binding: FragmentSyncProgressBinding
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        binding = FragmentSyncProgressBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
     companion object {
         fun newInstance() = SyncProgressFragment()
+
+        fun makeRoute() = Route(SyncProgressFragment::class.java, null)
     }
 
 }

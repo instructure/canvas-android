@@ -29,7 +29,6 @@ import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
-import com.instructure.pandautils.room.offline.entities.SyncProgressType
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -74,7 +73,6 @@ class OfflineSyncWorker @AssistedInject constructor(
                 it.id.toString(),
                 courseId,
                 settingsMap[courseId]?.courseName.orEmpty(),
-                SyncProgressType.COURSE.type
             )
         }
 

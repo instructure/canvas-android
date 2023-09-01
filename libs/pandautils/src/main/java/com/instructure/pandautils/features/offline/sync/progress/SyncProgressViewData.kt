@@ -18,11 +18,62 @@
 
 package com.instructure.pandautils.features.offline.sync.progress
 
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.Worker
+import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class SyncProgressViewData(val items: List<ItemViewModel>)
 
-data class CourseProgressViewData(val items: List<ItemViewModel>)
+data class CourseProgressViewData(
+    val courseName: String,
+    val tabs: List<TabProgressItemViewModel>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CourseProgressViewData
+
+        if (courseName != other.courseName) return false
+        if (tabs != other.tabs) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = courseName.hashCode()
+        result = 31 * result + tabs.hashCode()
+        return result
+    }
+}
+
+data class TabProgressViewData(
+    val tabName: String,
+    val state: ProgressState
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TabProgressViewData
+
+        if (tabName != other.tabName) return false
+        if (state != other.state) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = tabName.hashCode()
+        result = 31 * result + state.hashCode()
+        return result
+    }
+}
 
 enum class ViewType(val viewType: Int) {
     COURSE_PROGRESS(0),

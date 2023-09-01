@@ -26,11 +26,5 @@ data class SyncProgressEntity(
     @PrimaryKey
     val uuid: String,
     val courseId: Long,
-    val title: String,
-    val type: String
+    val title: String
 )
-
-enum class SyncProgressType(val type: String) {
-    COURSE("course"),
-    COURSE_FILE("course_file")
-}

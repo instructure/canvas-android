@@ -21,21 +21,27 @@ package com.instructure.pandautils.room.offline.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Query
 import androidx.room.Update
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SyncProgressDao {
 
     @Insert
-    fun insert(entity: SyncProgressEntity)
+    suspend fun insert(entity: SyncProgressEntity)
 
     @Insert
-    fun insertAll(entities: List<SyncProgressEntity>)
+    suspend fun insertAll(entities: List<SyncProgressEntity>)
 
     @Delete
-    fun delete(entity: SyncProgressEntity)
+    suspend fun delete(entity: SyncProgressEntity)
 
     @Update
-    fun update(entity: SyncProgressEntity)
+    suspend fun update(entity: SyncProgressEntity)
+
+    @Query("SELECT * FROM SyncProgressEntity")
+    suspend fun findCourseProgresses(): List<SyncProgressEntity>
+
 }

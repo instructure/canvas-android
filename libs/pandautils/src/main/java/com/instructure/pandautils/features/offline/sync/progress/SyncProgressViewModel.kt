@@ -20,14 +20,77 @@ package com.instructure.pandautils.features.offline.sync.progress
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.features.offline.sync.CourseProgress
+import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
+import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
+import com.instructure.pandautils.room.offline.daos.SyncProgressDao
+import com.instructure.pandautils.utils.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class SyncProgressViewModel @Inject constructor() : ViewModel() {
+class SyncProgressViewModel @Inject constructor(
+    private val workManager: WorkManager,
+    private val syncProgressDao: SyncProgressDao
+) : ViewModel() {
 
     val data: LiveData<SyncProgressViewData>
         get() = _data
     private val _data = MutableLiveData<SyncProgressViewData>()
+
+    private val courseProgresses = mutableMapOf<Long, CourseProgress>()
+
+    private val courseObserver = Observer<WorkInfo> {
+        val progress = it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
+
+        courseProgresses[progress.courseId] = progress
+        createCourseItems()
+    }
+
+    init {
+        viewModelScope.launch {
+            syncProgressDao.findCourseProgresses().map {
+                workManager.getWorkInfoByIdLiveData(UUID.fromString(it.uuid))
+            }.forEach {
+                it.observeForever(courseObserver)
+            }
+        }
+    }
+
+    private fun createCourseItems() {
+        val courses = courseProgresses.values.toList()
+            .map { createCourseItem(it) }
+
+        _data.postValue(SyncProgressViewData(courses))
+    }
+
+    private fun createCourseItem(progress: CourseProgress): CourseProgressItemViewModel {
+        val data = CourseProgressViewData(
+            courseName = progress.courseName,
+            tabs = progress.tabs.map { createTabItem(it) },
+        )
+
+        return CourseProgressItemViewModel(data)
+    }
+
+    private fun createTabItem(tab: Map.Entry<String, ProgressState>): TabProgressItemViewModel {
+        val data = TabProgressViewData(
+            tabName = tab.key,
+            state = tab.value
+        )
+
+        return TabProgressItemViewModel(data)
+    }
+
 }

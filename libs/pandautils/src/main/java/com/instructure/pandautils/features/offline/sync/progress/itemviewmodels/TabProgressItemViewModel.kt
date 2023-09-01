@@ -19,25 +19,38 @@
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import com.instructure.pandautils.R
-import com.instructure.pandautils.binding.GroupItemViewModel
-import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
+import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class CourseProgressItemViewModel(val data: CourseProgressViewData) :
-    GroupItemViewModel(collapsable = true, items = data.tabs, collapsed = false) {
+data class TabProgressItemViewModel(val data: TabProgressViewData) : ItemViewModel {
+    override val layoutId = R.layout.item_tab_progress
 
-    override val layoutId: Int = R.layout.item_course_progress
-
-    override val viewType: Int = ViewType.COURSE_PROGRESS.viewType
+    override val viewType = ViewType.COURSE_TAB_PROGRESS.viewType
 
     override fun areItemsTheSame(other: ItemViewModel): Boolean {
-        return other is CourseProgressItemViewModel && data.courseName == other.data.courseName
+        return other is TabProgressItemViewModel && data.tabName == other.data.tabName
     }
 
     override fun areContentsTheSame(other: ItemViewModel): Boolean {
-        return other is CourseProgressItemViewModel
+        return other is TabProgressItemViewModel
                 && other.data == this.data
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TabProgressItemViewModel
+
+        if (data != other.data) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return data.hashCode()
+    }
+
+
 }
