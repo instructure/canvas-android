@@ -19,7 +19,9 @@ package com.instructure.student.features.offline.coursebrowser
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
@@ -35,16 +37,40 @@ class CourseBrowserLocalDataSourceTest {
 
     private val tabDao: TabDao = mockk(relaxed = true)
     private val pageFacade: PageFacade = mockk(relaxed = true)
+    private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
 
-    private val dataSource = CourseBrowserLocalDataSource(tabDao, pageFacade)
+    private val dataSource = CourseBrowserLocalDataSource(tabDao, pageFacade, courseSyncSettingsDao)
 
     @Test
     fun `Get tabs successfully returns api model`() = runTest {
         coEvery { tabDao.findByCourseId(any()) } returns listOf(TabEntity(Tab(label = "Tab", tabId = "123"), 1))
+        coEvery { courseSyncSettingsDao.findById(any()) } returns CourseSyncSettingsEntity(1, false, tabs = mapOf("123" to true))
 
         val tabs = dataSource.getTabs(CanvasContext.emptyCourseContext(1), false)
 
         Assert.assertEquals(listOf(Tab(label = "Tab", tabId = "123")), tabs)
+    }
+
+    @Test
+    fun `Get tabs with correct enabled state`() = runTest {
+        coEvery { tabDao.findByCourseId(any()) } returns listOf(
+            TabEntity(Tab(label = "Tab 1", tabId = "1"), 1),
+            TabEntity(Tab(label = "Tab 2", tabId = "2"), 1),
+            TabEntity(Tab(label = "Tab 3", tabId = "3"), 1)
+        )
+        coEvery { courseSyncSettingsDao.findById(any()) } returns CourseSyncSettingsEntity(
+            1, false, tabs = mapOf("1" to true, "2" to false)
+        )
+
+        val tabs = dataSource.getTabs(CanvasContext.emptyCourseContext(1), false)
+
+        Assert.assertEquals(
+            listOf(
+                Tab(label = "Tab 1", tabId = "1", enabled = true),
+                Tab(label = "Tab 2", tabId = "2", enabled = false),
+                Tab(label = "Tab 3", tabId = "3", enabled = false)
+            ), tabs
+        )
     }
 
     @Test

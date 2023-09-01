@@ -119,7 +119,9 @@ class CourseBrowserWebViewHolder(view: View, val color: Int) : RecyclerView.View
         binding.unsupportedLabel.text = tab.label
         binding.unsupportedIcon.setImageDrawable(drawable)
         binding.unsupportedSubLabel.setText(R.string.opensInWebView)
-        itemView.onClickWithRequireNetwork({ callback(tab) })
+        itemView.isEnabled = tab.enabled
+        itemView.alpha = if (tab.enabled) 1f else 0.5f
+        itemView.onClickWithRequireNetwork { callback(tab) }
     }
 
     companion object {
@@ -171,8 +173,12 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
         val binding = AdapterCourseBrowserBinding.bind(itemView)
         binding.label.text = tab.label
         binding.icon.setImageDrawable(drawable)
+        itemView.isEnabled = tab.enabled
+        itemView.alpha = if (tab.enabled) 1f else 0.5f
         if (tab.type == Tab.TYPE_EXTERNAL) {
-            itemView.onClickWithRequireNetwork({ callback(tab) })
+            itemView.onClickWithRequireNetwork {
+                callback(tab)
+            }
         } else {
             itemView.setOnClickListener {
                 callback(tab)
