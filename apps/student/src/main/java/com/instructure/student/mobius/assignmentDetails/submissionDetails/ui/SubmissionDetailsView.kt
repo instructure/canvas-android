@@ -43,6 +43,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSubmissionDetailsBinding
+import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
@@ -232,9 +233,9 @@ class SubmissionDetailsView(
         }
     }
 
-    fun showSubmissionContent(type: SubmissionDetailsContentType) {
+    fun showSubmissionContent(type: SubmissionDetailsContentType, isOnline: Boolean) {
         fragmentManager.beginTransaction().apply {
-            replace(R.id.submissionContent, getFragmentForContent(type))
+            replace(R.id.submissionContent, getFragmentForContent(type, isOnline))
             commitAllowingStateLoss()
         }
     }
@@ -281,20 +282,23 @@ class SubmissionDetailsView(
         Toast.makeText(context, R.string.errorSubmittingMediaComment, Toast.LENGTH_SHORT).show()
     }
 
-    private fun getFragmentForContent(type: SubmissionDetailsContentType): Fragment {
+    private fun getFragmentForContent(type: SubmissionDetailsContentType, isOnline: Boolean): Fragment {
         return when (type) {
             is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isStudioEnabled, type.quiz, type.studioLTITool, type.isObserver, type.ltiTool)
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(type.url, type.previewUrl)
-            is SubmissionDetailsContentType.QuizContent -> QuizSubmissionViewFragment.newInstance(type.url)
+            is SubmissionDetailsContentType.QuizContent -> getFragmentWithOnlineCheck(QuizSubmissionViewFragment.newInstance(type.url), isOnline)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
-            is SubmissionDetailsContentType.DiscussionContent -> DiscussionSubmissionViewFragment.newInstance(type.previewUrl ?: "")
+            is SubmissionDetailsContentType.DiscussionContent -> getFragmentWithOnlineCheck(
+                DiscussionSubmissionViewFragment.newInstance(type.previewUrl.orEmpty()),
+                isOnline
+            )
             is SubmissionDetailsContentType.PdfContent -> PdfSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.ExternalToolContent -> LtiSubmissionViewFragment.newInstance(type)
             is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
             is SubmissionDetailsContentType.OtherAttachmentContent -> ViewUnsupportedFileFragment.newInstance(
                 uri = Uri.parse(type.attachment.url),
-                displayName = type.attachment.displayName ?: "",
-                contentType = type.attachment.contentType ?: "",
+                displayName = type.attachment.displayName.orEmpty(),
+                contentType = type.attachment.contentType.orEmpty(),
                 previewUri = type.attachment.previewUrl?.let { Uri.parse(it) },
                 fallbackIcon = R.drawable.ic_attachment
             )
@@ -319,6 +323,14 @@ class SubmissionDetailsView(
                     subtitle = R.string.unsupportedContentMessage
                 )
             }
+        }
+    }
+
+    private fun getFragmentWithOnlineCheck(fragmentIfOnline: Fragment, isOnline: Boolean): Fragment {
+        return if (isOnline) {
+            fragmentIfOnline
+        } else {
+            NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(canvasContext, showToolbar = false))
         }
     }
 
