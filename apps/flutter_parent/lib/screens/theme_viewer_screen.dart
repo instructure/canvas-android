@@ -197,13 +197,13 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         ),
       ),
       SwitchListTile(
-        title: Text('Dark Mode'),
+        title: Text('Dark Mode', style: Theme.of(context).textTheme.bodyMedium),
         subtitle: Text('Subtitle'),
         value: ParentTheme.of(context)?.isDarkMode == true,
         onChanged: (_) => ParentTheme.of(context)?.toggleDarkMode(),
       ),
       SwitchListTile(
-        title: Text('High Contrast Mode'),
+        title: Text('High Contrast Mode', style: Theme.of(context).textTheme.bodyMedium),
         value: ParentTheme.of(context)?.isHC == true,
         onChanged: (_) => ParentTheme.of(context)?.toggleHC(),
       ),

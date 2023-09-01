@@ -242,14 +242,30 @@ class _ParentThemeState extends State<ParentTheme> {
 
     // Use single text color for all styles in high-contrast mode
     if (isHC) textTheme = textTheme.apply(displayColor: onSurfaceColor, bodyColor: onSurfaceColor);
+    else {
+      textTheme = isDarkMode ?
+      _buildTextTheme(onSurfaceColor, fadeColor: Colors.white70) :
+      _buildTextTheme(onSurfaceColor);
+    }
+
+    var primaryTextTheme = _buildTextTheme(Colors.white, fadeColor: ParentColors.tiara);
+    if (isHC) primaryTextTheme = primaryTextTheme.apply(displayColor: Colors.white, bodyColor: Colors.white);
+    else if (isDarkMode) primaryTextTheme = _buildTextTheme(ParentColors.porcelain, fadeColor: ParentColors.tiara);
+
+    var primaryIconTheme = isDarkMode ? IconThemeData(color: ParentColors.porcelain) : IconThemeData(color: ParentColors.porcelain);
+
+    var brightness = isDarkMode ? Brightness.dark : Brightness.light;
+    var backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    var iconTheme = IconThemeData(color: ParentColors.porcelain);
+    var dividerColor = isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara;
 
     var swatch = ParentColors.makeSwatch(themeColor);
 
     return ThemeData(
-      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+      useMaterial3: true,
       primarySwatch: swatch,
       primaryColor: isDarkMode ? Colors.black : null,
-      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500], brightness: isDarkMode ? Brightness.dark : Brightness.light),
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500], brightness: brightness),
       switchTheme: SwitchThemeData(
           thumbColor: MaterialStateProperty.all(swatch[500]),
           trackColor: MaterialStateProperty.resolveWith((states) =>
@@ -258,35 +274,33 @@ class _ParentThemeState extends State<ParentTheme> {
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: swatch[300],
       ),
-      scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
-      canvasColor: isDarkMode ? Colors.black : Colors.white,
+      scaffoldBackgroundColor: backgroundColor,
+      canvasColor: backgroundColor,
       textTheme: textTheme,
-      primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
-      iconTheme: IconThemeData(color: onSurfaceColor),
-      primaryIconTheme: IconThemeData(color: isDarkMode ? ParentColors.tiara : Colors.white),
+      primaryTextTheme: primaryTextTheme,
+      iconTheme: iconTheme,
+      primaryIconTheme: primaryIconTheme,
       dividerTheme: DividerThemeData(
-        color: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara
+        color: dividerColor
       ),
-      dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
       fontFamily: 'Lato',
       dialogTheme: DialogTheme(
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        surfaceTintColor: isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: backgroundColor,
+        surfaceTintColor: backgroundColor,
       ),
       tabBarTheme: TabBarTheme(
-        labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
-        labelColor: Theme.of(context).primaryTextTheme.bodyMedium?.color,
-        unselectedLabelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
-        unselectedLabelColor: Theme.of(context).primaryTextTheme.bodyMedium?.color,
+        labelStyle: primaryTextTheme.titleMedium?.copyWith(fontSize: 14),
+        labelColor: primaryTextTheme.titleMedium?.color,
+        unselectedLabelStyle: primaryTextTheme.bodySmall?.copyWith(fontSize: 14),
+        unselectedLabelColor: primaryTextTheme.bodySmall?.color,
         // indicator: UnderlineTabIndicator(
         //   borderSide: BorderSide(color: themeColor, width: 2.0),
         // ),
       ),
       appBarTheme: AppBarTheme(
-        color: isDarkMode ? ParentColors.oxford : themeColor,
-        titleTextStyle: Theme.of(context).primaryTextTheme.titleLarge,
-        iconTheme: Theme.of(context).primaryIconTheme,
+        color: isDarkMode ? Colors.white10 : themeColor,
+        foregroundColor: primaryIconTheme.color,
       ),
     );
   }
