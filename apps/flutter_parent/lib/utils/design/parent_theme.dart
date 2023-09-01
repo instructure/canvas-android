@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/models/user_color.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/db/user_colors_db.dart';
@@ -256,7 +257,7 @@ class _ParentThemeState extends State<ParentTheme> {
 
     var brightness = isDarkMode ? Brightness.dark : Brightness.light;
     var backgroundColor = isDarkMode ? Colors.black : Colors.white;
-    var iconTheme = IconThemeData(color: ParentColors.porcelain);
+    var iconTheme = isDarkMode ? IconThemeData(color: ParentColors.porcelain) : IconThemeData(color: ParentColors.licorice);
     var dividerColor = isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara;
 
     var swatch = ParentColors.makeSwatch(themeColor);
@@ -299,8 +300,11 @@ class _ParentThemeState extends State<ParentTheme> {
         // ),
       ),
       appBarTheme: AppBarTheme(
-        color: isDarkMode ? Colors.white10 : themeColor,
+        backgroundColor: isDarkMode ? Colors.white10 : themeColor,
         foregroundColor: primaryIconTheme.color,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarIconBrightness: brightness,
+        ),
       ),
     );
   }
