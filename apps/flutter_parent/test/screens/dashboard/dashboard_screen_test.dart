@@ -808,6 +808,7 @@ void main() {
       await tester.tap(find.text(l10n.actAsUser));
       await tester.pump();
       await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.byType(MasqueradeScreen), findsOneWidget);
     });

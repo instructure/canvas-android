@@ -121,6 +121,7 @@ void main() {
       await tester.tap(find.text(AppLocalizations().calendars));
       await tester.pump();
       await tester.pump();
+      await tester.pumpAndSettle();
 
       // Check for the filter screen
       expect(find.byType(CalendarFilterListScreen), findsOneWidget);

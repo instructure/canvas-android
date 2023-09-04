@@ -607,7 +607,6 @@ class AttachmentWidget extends StatelessWidget {
   _uploadingWidget(BuildContext context, AttachmentHandler handler) {
     return Tooltip(
       message: handler.displayName,
-      textStyle: Theme.of(context).textTheme.bodyMedium,
       child: Stack(
         alignment: Alignment.center,
         children: [

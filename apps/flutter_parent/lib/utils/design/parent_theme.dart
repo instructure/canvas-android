@@ -245,7 +245,7 @@ class _ParentThemeState extends State<ParentTheme> {
     if (isHC) textTheme = textTheme.apply(displayColor: onSurfaceColor, bodyColor: onSurfaceColor);
     else {
       textTheme = isDarkMode ?
-      _buildTextTheme(onSurfaceColor, fadeColor: Colors.white70) :
+      _buildTextTheme(onSurfaceColor, fadeColor: ParentColors.ash) :
       _buildTextTheme(onSurfaceColor);
     }
 

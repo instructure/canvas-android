@@ -506,6 +506,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
+    await tester.pumpAndSettle();
 
     // Assert attachment widget is displayed
     var attachmentWidget = find.byType(AttachmentWidget);
@@ -513,6 +514,7 @@ void main() {
 
     await tester.longPress(attachmentWidget);
     await tester.pump(Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     expect(find.text('file.txt'), findsOneWidget);
   });
@@ -529,6 +531,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
+    await tester.pumpAndSettle();
 
     // Assert attachment widget is displayed
     var attachmentWidget = find.byType(AttachmentWidget);
@@ -536,6 +539,7 @@ void main() {
 
     await tester.longPress(attachmentWidget);
     await tester.pump(Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     expect(find.text('file.txt'), findsOneWidget);
   });
@@ -554,6 +558,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
+    await tester.pumpAndSettle();
 
     // Assert attachment widget is displayed
     var attachmentWidget = find.byType(AttachmentWidget);
@@ -561,6 +566,7 @@ void main() {
 
     await tester.longPress(attachmentWidget);
     await tester.pump(Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     expect(find.text('upload.txt'), findsNWidgets(2)); // 2 widgets: one is the tooltip and one is the regular label
   });

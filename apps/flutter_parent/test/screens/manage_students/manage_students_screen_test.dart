@@ -321,6 +321,7 @@ void main() {
       // Pump and settle the page transition animation
       await tester.pump();
       await tester.pump();
+      await tester.pumpAndSettle();
 
       // Find the thresholds screen
       expect(find.byType(AlertThresholdsScreen), findsOneWidget);
