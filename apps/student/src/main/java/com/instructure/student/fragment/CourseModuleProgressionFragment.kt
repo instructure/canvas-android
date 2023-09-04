@@ -723,7 +723,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType)
                 if (moduleItemAsset != ModuleItemAsset.MODULE_ITEM) {
                     val newRoute = route.copy(secondaryClass = moduleItemAsset.routeClass, removePreviousScreen = true)
-                    RouteMatcher.route(requireContext(), newRoute)
+                    RouteMatcher.route(requireActivity(), newRoute)
                     return@tryWeave
                 }
             }

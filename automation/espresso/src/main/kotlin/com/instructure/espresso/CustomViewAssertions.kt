@@ -77,20 +77,20 @@ class NotificationBadgeAssertion(@IdRes private val menuItemId: Int, private val
     }
 }
 
-class DoesNotExistAssertion(private val timeout: Long, private val pollInterval: Long = 500L) : ViewAssertion {
+class DoesNotExistAssertion(private val timeoutInSeconds: Long, private val pollIntervalInSeconds: Long = 1L) : ViewAssertion {
     override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
         var elapsedTime = 0L
 
-        while (elapsedTime < timeout) {
+        while (elapsedTime < timeoutInSeconds * 1000) {
             try {
                 doesNotExist()
                 return
             } catch (e: AssertionFailedError) {
-                Thread.sleep(pollInterval)
-                elapsedTime += pollInterval
+                Thread.sleep(pollIntervalInSeconds * 1000)
+                elapsedTime += (pollIntervalInSeconds * 1000)
             }
         }
 
-        throw AssertionError("View still exists after $timeout milliseconds.")
+        throw AssertionError("View still exists after $timeoutInSeconds seconds.")
     }
 }
