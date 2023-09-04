@@ -140,7 +140,16 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             onWebViewCreated: (controller) =>
                 _webViewCreated(controller, verifyResult),
         ),
-        if (_showLoading) LoadingIndicator(),
+        if (_showLoading || verifyResult == null) Stack(
+          children: [
+            Container(
+              color: Theme.of(context).canvasColor,
+            ),
+            Center(
+              child: LoadingIndicator(),
+            ),
+          ],
+        ),
       ],
     );
   }

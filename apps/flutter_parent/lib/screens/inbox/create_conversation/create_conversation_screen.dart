@@ -479,9 +479,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         controller: _bodyController,
         enabled: !_sending,
         textCapitalization: TextCapitalization.sentences,
-        minLines: 4,
+        // minLines: 4,
         maxLines: null,
-        style: Theme.of(context).textTheme.bodyMedium,
+        // style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
           labelText: L10n(context).messageBodyInputHint,
           contentPadding: EdgeInsets.all(16),

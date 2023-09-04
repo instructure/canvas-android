@@ -92,6 +92,7 @@ class LoginLandingScreen extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Spacer(),
           SvgPicture.asset(
@@ -153,6 +154,7 @@ class LoginLandingScreen extends StatelessWidget {
               width: min(parentWidth * 0.5, 400),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Spacer(),
                   if (lastLoginAccount == null)

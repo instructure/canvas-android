@@ -87,15 +87,15 @@ void main() async {
     Offset center = tester.getCenter(find.byType(TwoFingerDoubleTapGestureDetector));
 
     // Perform first two-finger tap
-    TestGesture pointer1 = await tester.startGesture(center.translate(-64, 0));
-    TestGesture pointer2 = await tester.startGesture(center.translate(64, 0));
+    TestGesture pointer1 = await tester.startGesture(center.translate(-64, 64));
+    TestGesture pointer2 = await tester.startGesture(center.translate(64, 64));
     await pointer1.up();
     await pointer2.up();
 
     // Perform second two-finger tap
     await tester.pump(Duration(milliseconds: 100));
-    pointer1 = await tester.startGesture(center.translate(-64, 0));
-    pointer2 = await tester.startGesture(center.translate(64, 0));
+    pointer1 = await tester.startGesture(center.translate(-64, 64));
+    pointer2 = await tester.startGesture(center.translate(64, 64));
     await pointer1.up();
     await pointer2.up();
     await tester.pump();

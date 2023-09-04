@@ -330,7 +330,6 @@ class DashboardState extends State<DashboardScreen> {
         return Center(
           child: Text(
             L10n(context).noStudents,
-            style: Theme.of(context).primaryTextTheme.titleLarge,
           ),
         );
     }
@@ -353,9 +352,9 @@ class DashboardState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent!, style: Theme.of(context).primaryTextTheme.titleMedium),
+                  UserName.fromUserShortName(selectedStudent!, style: TextStyle(color: Theme.of(context).primaryIconTheme.color ?? Colors.white)),
                   SizedBox(width: 6),
-                  DropdownArrow(rotate: expand),
+                  DropdownArrow(rotate: expand, color: Theme.of(context).primaryIconTheme.color ?? Colors.white),
                 ],
               )
             ],

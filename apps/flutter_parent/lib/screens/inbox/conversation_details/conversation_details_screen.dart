@@ -179,12 +179,12 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         key: Key('message-${message.id}'),
         endActionPane: ActionPane(
             motion: const DrawerMotion(),
-            extentRatio: 0.25,
+            extentRatio: 0.5,
             children: [
               SlidableAction(
                 label: L10n(context).replyAll,
                 backgroundColor: ParentTheme.of(context)?.isDarkMode == true ? ParentColors.tiara : ParentColors.oxford,
-                 foregroundColor: ParentTheme.of(context)?.isDarkMode == true ? Colors.black : Colors.white,
+                foregroundColor: ParentTheme.of(context)?.isDarkMode == true ? Colors.black : Colors.white,
                 icon: CanvasIconsSolid.reply_all_2,
                 onPressed: (context) => _reply(context, conversation, message, true),
               ),

@@ -258,7 +258,7 @@ class _ParentThemeState extends State<ParentTheme> {
     var brightness = isDarkMode ? Brightness.dark : Brightness.light;
     var backgroundColor = isDarkMode ? Colors.black : Colors.white;
     var iconTheme = isDarkMode ? IconThemeData(color: ParentColors.porcelain) : IconThemeData(color: ParentColors.licorice);
-    var dividerColor = isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara;
+    var dividerColor = isHC ? onSurfaceColor : isDarkMode ? ParentColors.licorice : ParentColors.tiara;
 
     var swatch = ParentColors.makeSwatch(themeColor);
 
@@ -281,9 +281,8 @@ class _ParentThemeState extends State<ParentTheme> {
       primaryTextTheme: primaryTextTheme,
       iconTheme: iconTheme,
       primaryIconTheme: primaryIconTheme,
-      dividerTheme: DividerThemeData(
-        color: dividerColor
-      ),
+      dividerColor: dividerColor,
+      dividerTheme: DividerThemeData(color: dividerColor),
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
       fontFamily: 'Lato',
       dialogTheme: DialogTheme(
@@ -300,11 +299,9 @@ class _ParentThemeState extends State<ParentTheme> {
         // ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: isDarkMode ? Colors.white10 : themeColor,
+        backgroundColor: isDarkMode ? Colors.white12 : themeColor,
         foregroundColor: primaryIconTheme.color,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarIconBrightness: brightness,
-        ),
+        systemOverlayStyle: isDarkMode ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
       ),
     );
   }
