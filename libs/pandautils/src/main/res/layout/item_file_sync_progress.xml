@@ -23,7 +23,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel" />
+            type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel" />
 
         <import type="android.view.View" />
 
@@ -43,7 +43,7 @@
             android:layout_marginEnd="18dp"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            android:text="@{itemViewModel.data.tabName}"
+            android:text="@{itemViewModel.data.fileName}"
             app:layout_constraintEnd_toStartOf="@+id/actionContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -73,6 +73,8 @@
                 android:id="@+id/progressBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:max="100"
+                android:progress="@{itemViewModel.data.progress}"
                 android:visibility="@{itemViewModel.data.state == ProgressState.IN_PROGRESS ? View.VISIBLE : View.GONE}" />
 
             <ImageView

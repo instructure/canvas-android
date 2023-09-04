@@ -76,7 +76,7 @@ class OfflineSyncWorker @AssistedInject constructor(
             )
         }
 
-        syncProgressDao.insertAll(syncProgress)
+        syncProgressDao.clearAndInsert(syncProgress)
 
         workManager.beginWith(courseWorkers)
             .enqueue()

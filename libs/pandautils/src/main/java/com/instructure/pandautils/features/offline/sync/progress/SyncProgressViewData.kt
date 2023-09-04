@@ -18,60 +18,63 @@
 
 package com.instructure.pandautils.features.offline.sync.progress
 
-import androidx.lifecycle.LiveData
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.Worker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
 
 data class SyncProgressViewData(val items: List<ItemViewModel>)
 
 data class CourseProgressViewData(
     val courseName: String,
-    val tabs: List<TabProgressItemViewModel>
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    val workerId: String,
+    @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
+    val tabs: List<TabProgressItemViewModel>,
+    val files: List<FileSyncProgressItemViewModel>
+) : BaseObservable() {
 
-        other as CourseProgressViewData
-
-        if (courseName != other.courseName) return false
-        if (tabs != other.tabs) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = courseName.hashCode()
-        result = 31 * result + tabs.hashCode()
-        return result
+    fun updateState(newState: WorkInfo.State) {
+        state = newState
+        notifyPropertyChanged(BR.state)
     }
 }
 
 data class TabProgressViewData(
-    val tabName: String,
-    val state: ProgressState
-) {
+    val tabId: String,
+    @Bindable var tabName: String = "",
+    @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
+    val workerId: String
+): BaseObservable() {
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    fun updateTabName(newTabName: String) {
+        tabName = newTabName
+        notifyPropertyChanged(BR.tabName)
+    }
+    fun updateState(newState: ProgressState) {
+        state = newState
+        notifyPropertyChanged(BR.state)
+    }
+}
 
-        other as TabProgressViewData
+data class FileSyncProgressViewData(
+    val fileName: String,
+    @Bindable var progress: Int,
+    val workerId: String,
+    @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
+) : BaseObservable() {
 
-        if (tabName != other.tabName) return false
-        if (state != other.state) return false
-
-        return true
+    fun updateProgress(newProgress: Int) {
+        progress = newProgress
+        notifyPropertyChanged(BR.progress)
     }
 
-    override fun hashCode(): Int {
-        var result = tabName.hashCode()
-        result = 31 * result + state.hashCode()
-        return result
+    fun updateState(newState: ProgressState) {
+        state = newState
+        notifyPropertyChanged(BR.state)
     }
 }
 

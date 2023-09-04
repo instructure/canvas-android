@@ -24,6 +24,10 @@
         <variable
             name="itemViewModel"
             type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="androidx.work.WorkInfo.State" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,10 +71,10 @@
             android:padding="12dp"
             android:rotation="@{itemViewModel.collapsed ? 0 : 180}"
             android:src="@drawable/ic_arrow_down"
-            app:tint="@color/textDarkest"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/actionContainer"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textDarkest" />
 
         <FrameLayout
             android:id="@+id/actionContainer"
@@ -83,25 +87,26 @@
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:visibility="@{itemViewModel.data.state.isFinished() ? View.GONE : View.VISIBLE}"/>
 
             <ImageView
                 android:id="@+id/errorIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_close"
-                app:tint="@color/textDarkest"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:visibility="@{itemViewModel.data.state == State.FAILED || itemViewModel.data.state == State.CANCELLED ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/textDarkest" />
 
             <ImageView
                 android:id="@+id/successIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_checkmark"
-                app:tint="@color/textDarkest"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:visibility="@{itemViewModel.data.state == State.SUCCEEDED ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/textDarkest" />
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

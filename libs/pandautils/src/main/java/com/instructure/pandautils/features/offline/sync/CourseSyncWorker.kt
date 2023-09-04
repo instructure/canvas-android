@@ -44,6 +44,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
@@ -120,10 +121,10 @@ class CourseSyncWorker @AssistedInject constructor(
             courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
 
-        progress = initProgress(courseSettings)
-        updateProgress()
+        val course = fetchCourseDetails(courseSettings.courseId)
 
-        fetchCourseDetails(courseSettings.courseId)
+        progress = initProgress(courseSettings, course)
+        updateProgress()
 
         if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
             fetchFiles(courseSettings.courseId)
@@ -239,12 +240,14 @@ class CourseSyncWorker @AssistedInject constructor(
 
             assignmentFacade.insertAssignmentGroups(assignmentGroups)
             updateTabSuccess(Tab.ASSIGNMENTS_ID)
+            updateTabSuccess(Tab.GRADES_ID)
         } catch (e: Exception) {
             updateTabError(Tab.ASSIGNMENTS_ID)
+            updateTabError(Tab.GRADES_ID)
         }
     }
 
-    private suspend fun fetchCourseDetails(courseId: Long) {
+    private suspend fun fetchCourseDetails(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
         val course = courseApi.getFullCourseContent(courseId, params).dataOrThrow
 
@@ -254,6 +257,8 @@ class CourseSyncWorker @AssistedInject constructor(
         courseFeatures?.let {
             courseFeaturesDao.insert(CourseFeaturesEntity(courseId, it))
         }
+
+        return course
     }
 
     private suspend fun fetchUsers(courseId: Long) {
@@ -446,12 +451,17 @@ class CourseSyncWorker @AssistedInject constructor(
         setProgress(workDataOf(COURSE_PROGRESS to progress.toJson()))
     }
 
-    private fun initProgress(courseSettings: CourseSyncSettingsEntity): CourseProgress {
+    private fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgress {
         val selectedTabs = courseSettings.tabs.filter { it.value == true }.keys
         return CourseProgress(
             courseId = courseSettings.courseId,
             courseName = courseSettings.courseName,
-            tabs = selectedTabs.associateWith { ProgressState.IN_PROGRESS },
+            tabs = selectedTabs.associateWith { tabId ->
+                TabProgress(
+                    course.tabs?.find { it.tabId == tabId }?.label ?: tabId,
+                    ProgressState.IN_PROGRESS
+                )
+            },
             maxSize = selectedTabs.size * TAB_PROGRESS_SIZE,
             downloadedSize = 0,
             fileWorkerIds = emptyList()
@@ -460,14 +470,20 @@ class CourseSyncWorker @AssistedInject constructor(
 
     private suspend fun updateTabError(tabId: String) {
         progress = progress.copy(
-            tabs = progress.tabs.toMutableMap().apply { put(tabId, ProgressState.ERROR) },
+            tabs = progress.tabs.toMutableMap().apply {
+                val newProgress = get(tabId)?.copy(state = ProgressState.ERROR) ?: return@apply
+                put(tabId, newProgress)
+            },
         )
         updateProgress()
     }
 
     private suspend fun updateTabSuccess(tabId: String) {
         progress = progress.copy(
-            tabs = progress.tabs.toMutableMap().apply { put(tabId, ProgressState.COMPLETED) },
+            tabs = progress.tabs.toMutableMap().apply {
+                val newProgress = get(tabId)?.copy(state = ProgressState.COMPLETED) ?: return@apply
+                put(tabId, newProgress)
+            },
         )
         updateProgress()
     }
@@ -494,10 +510,15 @@ class CourseSyncWorker @AssistedInject constructor(
 data class CourseProgress(
     val courseId: Long,
     val courseName: String,
-    val tabs: Map<String, ProgressState>,
+    val tabs: Map<String, TabProgress>,
     val maxSize: Int,
     val downloadedSize: Int,
     val fileWorkerIds: List<String>
+)
+
+data class TabProgress(
+    val tabName: String,
+    val state: ProgressState
 )
 
 enum class ProgressState {

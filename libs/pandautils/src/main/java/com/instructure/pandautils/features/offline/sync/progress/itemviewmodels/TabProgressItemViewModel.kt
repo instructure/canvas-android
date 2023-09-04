@@ -18,39 +18,37 @@
 
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
+import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.offline.sync.CourseProgress
+import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.utils.fromJson
+import java.util.UUID
 
-data class TabProgressItemViewModel(val data: TabProgressViewData) : ItemViewModel {
+data class TabProgressItemViewModel(val data: TabProgressViewData, val workManager: WorkManager) : ItemViewModel {
     override val layoutId = R.layout.item_tab_progress
 
     override val viewType = ViewType.COURSE_TAB_PROGRESS.viewType
 
-    override fun areItemsTheSame(other: ItemViewModel): Boolean {
-        return other is TabProgressItemViewModel && data.tabName == other.data.tabName
+    private val progressObserver = Observer<WorkInfo> {
+        val progress = it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
+
+        progress.tabs[data.tabId]?.let { tabProgress ->
+            data.updateState(tabProgress.state)
+            data.updateTabName(tabProgress.tabName)
+        }
     }
 
-    override fun areContentsTheSame(other: ItemViewModel): Boolean {
-        return other is TabProgressItemViewModel
-                && other.data == this.data
+    init {
+        workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId)).observeForever(progressObserver)
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as TabProgressItemViewModel
-
-        if (data != other.data) return false
-
-        return true
+    fun clearObserver() {
+        workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId)).removeObserver(progressObserver)
     }
-
-    override fun hashCode(): Int {
-        return data.hashCode()
-    }
-
-
 }

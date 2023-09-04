@@ -30,8 +30,14 @@ import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
+import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
+import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
+import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 import com.instructure.pandautils.utils.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -42,55 +48,62 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncProgressViewModel @Inject constructor(
     private val workManager: WorkManager,
-    private val syncProgressDao: SyncProgressDao
+    private val syncProgressDao: SyncProgressDao,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val tabDao: TabDao,
 ) : ViewModel() {
 
     val data: LiveData<SyncProgressViewData>
         get() = _data
     private val _data = MutableLiveData<SyncProgressViewData>()
 
-    private val courseProgresses = mutableMapOf<Long, CourseProgress>()
-
-    private val courseObserver = Observer<WorkInfo> {
-        val progress = it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
-
-        courseProgresses[progress.courseId] = progress
-        createCourseItems()
-    }
-
     init {
         viewModelScope.launch {
-            syncProgressDao.findCourseProgresses().map {
-                workManager.getWorkInfoByIdLiveData(UUID.fromString(it.uuid))
-            }.forEach {
-                it.observeForever(courseObserver)
+            val courses = syncProgressDao.findCourseProgresses().map {
+                createCourseItem(it)
             }
+            _data.postValue(SyncProgressViewData(courses))
         }
     }
 
-    private fun createCourseItems() {
-        val courses = courseProgresses.values.toList()
-            .map { createCourseItem(it) }
-
-        _data.postValue(SyncProgressViewData(courses))
-    }
-
-    private fun createCourseItem(progress: CourseProgress): CourseProgressItemViewModel {
+    private suspend fun createCourseItem(syncProgress: SyncProgressEntity): CourseProgressItemViewModel {
         val data = CourseProgressViewData(
-            courseName = progress.courseName,
-            tabs = progress.tabs.map { createTabItem(it) },
+            courseName = syncProgress.title,
+            workerId = syncProgress.uuid,
+            tabs = createTabItems(syncProgress.courseId, syncProgress.uuid),
+            files = emptyList()
         )
 
-        return CourseProgressItemViewModel(data)
+        return CourseProgressItemViewModel(data, workManager)
     }
 
-    private fun createTabItem(tab: Map.Entry<String, ProgressState>): TabProgressItemViewModel {
+    private suspend fun createTabItems(courseId: Long, workerId: String): List<TabProgressItemViewModel> {
+        val courseSettings = courseSyncSettingsDao.findById(courseId) ?: return emptyList()
+        val courseTabs = tabDao.findByCourseId(courseId)
+        return courseSettings.tabs.filter { tabEntry ->
+            courseTabs.find { it.id == tabEntry.key } != null && tabEntry.value == true
+        }
+            .map { createTabItem(it.key, workerId) }
+
+    }
+
+    private fun createTabItem(tabId: String, workerId: String): TabProgressItemViewModel {
         val data = TabProgressViewData(
-            tabName = tab.key,
-            state = tab.value
+            tabId = tabId,
+            workerId = workerId
         )
 
-        return TabProgressItemViewModel(data)
+        return TabProgressItemViewModel(data, workManager)
+    }
+
+    private fun createFileItems(workerId: String): FileSyncProgressItemViewModel {
+        val data = FileSyncProgressViewData(
+            fileName = "File Name",
+            progress = 0,
+            workerId = workerId
+        )
+
+        return FileSyncProgressItemViewModel(data, workManager)
     }
 
 }

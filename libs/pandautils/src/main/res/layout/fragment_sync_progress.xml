@@ -21,6 +21,7 @@
     tools:context=".features.offline.sync.progress.SyncProgressFragment">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.offline.sync.progress.SyncProgressViewModel" />
@@ -28,7 +29,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -76,12 +77,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/downloadProgress"
+            android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:recyclerViewItemViewModels="@{viewModel.data.items}"
-            app:useDiffUtil="@{true}"/>
-
+            app:layout_constraintTop_toBottomOf="@id/downloadProgress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:recyclerViewItemViewModels="@{viewModel.data.items}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
