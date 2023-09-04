@@ -284,7 +284,15 @@ class SubmissionDetailsView(
 
     private fun getFragmentForContent(type: SubmissionDetailsContentType, isOnline: Boolean): Fragment {
         return when (type) {
-            is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isStudioEnabled, type.quiz, type.studioLTITool, type.isObserver, type.ltiTool)
+            is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(
+                type.canvasContext as Course,
+                type.assignment,
+                type.isStudioEnabled,
+                type.quiz,
+                type.studioLTITool,
+                type.isObserver,
+                type.ltiTool
+            )
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(type.url, type.previewUrl)
             is SubmissionDetailsContentType.QuizContent -> getFragmentWithOnlineCheck(QuizSubmissionViewFragment.newInstance(type.url), isOnline)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
@@ -292,9 +300,9 @@ class SubmissionDetailsView(
                 DiscussionSubmissionViewFragment.newInstance(type.previewUrl.orEmpty()),
                 isOnline
             )
-            is SubmissionDetailsContentType.PdfContent -> PdfSubmissionViewFragment.newInstance(type.url)
+            is SubmissionDetailsContentType.PdfContent -> getFragmentWithOnlineCheck(PdfSubmissionViewFragment.newInstance(type.url), isOnline)
             is SubmissionDetailsContentType.ExternalToolContent -> LtiSubmissionViewFragment.newInstance(type)
-            is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
+            is SubmissionDetailsContentType.MediaContent -> getFragmentWithOnlineCheck(MediaSubmissionViewFragment.newInstance(type), isOnline)
             is SubmissionDetailsContentType.OtherAttachmentContent -> ViewUnsupportedFileFragment.newInstance(
                 uri = Uri.parse(type.attachment.url),
                 displayName = type.attachment.displayName.orEmpty(),
@@ -302,11 +310,32 @@ class SubmissionDetailsView(
                 previewUri = type.attachment.previewUrl?.let { Uri.parse(it) },
                 fallbackIcon = R.drawable.ic_attachment
             )
-            is SubmissionDetailsContentType.ImageContent -> ViewImageFragment.newInstance(type.title, Uri.parse(type.url), type.contentType, false)
-            SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions,  subtitle = R.string.noneContentMessage)
-            SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
-            SubmissionDetailsContentType.LockedContent -> SubmissionMessageFragment.newInstance(title = R.string.submissionDetailsAssignmentLocked, subtitle = R.string.could_not_route_locked)
-            is SubmissionDetailsContentType.StudentAnnotationContent -> AnnotationSubmissionViewFragment.newInstance(type.subissionId, type.submissionAttempt)
+            is SubmissionDetailsContentType.ImageContent -> getFragmentWithOnlineCheck(
+                ViewImageFragment.newInstance(
+                    type.title,
+                    Uri.parse(type.url),
+                    type.contentType,
+                    false
+                ), isOnline
+            )
+            SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(
+                title = R.string.noOnlineSubmissions,
+                subtitle = R.string.noneContentMessage
+            )
+            SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(
+                title = R.string.noOnlineSubmissions,
+                subtitle = R.string.onPaperContentMessage
+            )
+            SubmissionDetailsContentType.LockedContent -> SubmissionMessageFragment.newInstance(
+                title = R.string.submissionDetailsAssignmentLocked,
+                subtitle = R.string.could_not_route_locked
+            )
+            is SubmissionDetailsContentType.StudentAnnotationContent -> getFragmentWithOnlineCheck(
+                AnnotationSubmissionViewFragment.newInstance(
+                    type.subissionId,
+                    type.submissionAttempt
+                ), isOnline
+            )
             is SubmissionDetailsContentType.UnsupportedContent -> {
                 // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
                 val bundle = Bundle().apply {
