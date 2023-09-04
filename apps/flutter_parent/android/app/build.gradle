@@ -99,7 +99,7 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.30"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.20"
 
     testImplementation 'junit:junit:4.12'
 
