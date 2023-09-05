@@ -160,7 +160,7 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseSettings.courseId)
         }
 
-        return Result.success()
+        return Result.success(workDataOf(OUTPUT to progress.toJson()))
     }
 
     private suspend fun fetchSyllabus(courseIds: List<Long>) {
@@ -491,6 +491,7 @@ class CourseSyncWorker @AssistedInject constructor(
     companion object {
         const val COURSE_ID = "course_id"
         const val COURSE_PROGRESS = "courseProgress"
+        const val OUTPUT = "output"
 
         fun createOnTimeWork(courseId: Long, wifiOnly: Boolean): OneTimeWorkRequest {
             val data = workDataOf(COURSE_ID to courseId)

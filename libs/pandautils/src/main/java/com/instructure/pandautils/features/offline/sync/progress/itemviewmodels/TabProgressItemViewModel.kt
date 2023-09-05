@@ -36,7 +36,11 @@ data class TabProgressItemViewModel(val data: TabProgressViewData, val workManag
     override val viewType = ViewType.COURSE_TAB_PROGRESS.viewType
 
     private val progressObserver = Observer<WorkInfo> {
-        val progress = it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
+        val progress = if (it.state.isFinished) {
+            it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@Observer
+        } else {
+            it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
+        }
 
         progress.tabs[data.tabId]?.let { tabProgress ->
             data.updateState(tabProgress.state)
