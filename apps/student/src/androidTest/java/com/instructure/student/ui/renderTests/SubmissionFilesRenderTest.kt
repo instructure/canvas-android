@@ -84,7 +84,7 @@ class SubmissionFilesRenderTest : StudentRenderTest() {
     @Test
     fun displaysFileWithThumbnail() {
         val data = dataTemplate.copy(
-            thumbnailUrl = "https://fake_url.com"
+            thumbnailUrl = "https://avatars.githubusercontent.com/u/515326"
         )
         loadPageWithViewState(
             SubmissionFilesViewState.FileList(listOf(data))
