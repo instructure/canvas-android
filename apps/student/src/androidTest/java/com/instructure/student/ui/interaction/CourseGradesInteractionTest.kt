@@ -70,11 +70,11 @@ class CourseGradesInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.INTERACTION, false)
-    fun testNAIsDisplayedWithOnlyScoreWhenRestrictedAndThereIsNoGrade() {
+    fun testConvertedGradeIsDisplayedWithOnlyScoreWhenRestrictedAndThereIsNoGrade() {
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
         setUpCustomGrade(score = 100.0, data = data, restrictQuantitativeData = true)
         goToGrades(data)
-        courseGradesPage.assertTotalGrade(ViewMatchers.withText(courseGradesPage.getStringFromResource(R.string.noGradeText)))
+        courseGradesPage.assertTotalGrade(ViewMatchers.withText("A"))
     }
 
     @Test
@@ -182,7 +182,7 @@ class CourseGradesInteractionTest : StudentTest() {
 
         goToGrades(data)
 
-        courseGradesPage.assertAssignmentDisplayedWithoutGrade(assignment.name!!)
+        courseGradesPage.assertAssignmentDisplayed(assignment.name!!, "A")
     }
 
     @Test
@@ -202,11 +202,11 @@ class CourseGradesInteractionTest : StudentTest() {
     fun testPercentageAssignmentWithQuantitativeRestriction() {
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
         setUpCustomGrade(score = 100.0, data = data, restrictQuantitativeData = true)
-        val assignment = addAssignment(data, Assignment.GradingType.PERCENT, "90%", 90.0, 100)
+        val assignment = addAssignment(data, Assignment.GradingType.PERCENT, "80%", 80.0, 100)
 
         goToGrades(data)
 
-        courseGradesPage.assertAssignmentDisplayedWithoutGrade(assignment.name!!)
+        courseGradesPage.assertAssignmentDisplayed(assignment.name!!, "B")
     }
 
     @Test
@@ -281,9 +281,18 @@ class CourseGradesInteractionTest : StudentTest() {
                 computedCurrentScore = score
             )
 
+        val gradingScheme = listOf(
+            listOf("A", 0.9),
+            listOf("B", 0.8),
+            listOf("C", 0.7),
+            listOf("D", 0.6),
+            listOf("F", 0.0)
+        )
+
         val newCourse = course
             .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
-                enrollments = mutableListOf(enrollment))
+                enrollments = mutableListOf(enrollment),
+                gradingSchemeRaw = gradingScheme)
         data.courses[course.id] = newCourse
     }
 }

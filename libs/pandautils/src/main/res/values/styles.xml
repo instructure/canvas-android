@@ -219,4 +219,8 @@
         <item name="android:textColorSecondary">@color/white</item>
     </style>
 
+    <style name="DatePickerTextAppearance" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/calendar_color_selector</item>
+    </style>
+
 </resources>

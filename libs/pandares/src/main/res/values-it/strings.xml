@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Eliminato</string>
 
+    <string name="gradeUpdated">Voto aggiornato</string>
     <string name="loadingCanvas">Caricamento dei contenuti Contenuto&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Puoi aprire i dettagli consegna da qui</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Voto: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
         <item quantity="other">%s minuti</item>

@@ -143,7 +143,7 @@ abstract class StudentTest : CanvasTest() {
      * Required for auto complete of page objects within tests
      */
     val annotationCommentListPage = AnnotationCommentListPage()
-    val announcementListPage = AnnouncementListPage()
+    val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()

@@ -426,6 +426,7 @@
     <!-- Notifications -->
     <string name="deleted">已刪除</string>
 
+    <string name="gradeUpdated">評分已更新</string>
     <string name="loadingCanvas">載入 Canvas 內容&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1106,6 +1107,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">您可以從此處開啟提交項目詳細資料</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">評分：%s</string>
     <plurals name="minutes">
         <item quantity="other">%s 分鐘</item>
     </plurals>
