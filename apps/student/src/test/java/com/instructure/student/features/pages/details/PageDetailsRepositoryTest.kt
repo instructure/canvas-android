@@ -53,7 +53,7 @@ class PageDetailsRepositoryTest {
     @Test
     fun `Get front page from network if online`() = runTest {
         val offlineExpected = DataResult.Success(Page(id = 1L, title = "Offline"))
-        val onlineExpected = DataResult.Success(Page(id = 1L, title = "Online"))
+        val onlineExpected = DataResult.Success(Page(id = 2L, title = "Online"))
         every { networkStateProvider.isOnline() } returns true
         coEvery { localDataSource.getFrontPage(any(), any()) } returns offlineExpected
         coEvery { networkDataSource.getFrontPage(any(), any()) } returns onlineExpected
@@ -77,7 +77,7 @@ class PageDetailsRepositoryTest {
     @Test
     fun `Get front page from db if offline`() = runTest {
         val offlineExpected = DataResult.Success(Page(id = 1L, title = "Offline"))
-        val onlineExpected = DataResult.Success(Page(id = 1L, title = "Online"))
+        val onlineExpected = DataResult.Success(Page(id = 2L, title = "Online"))
         every { networkStateProvider.isOnline() } returns false
         coEvery { localDataSource.getFrontPage(any(), any()) } returns offlineExpected
         coEvery { networkDataSource.getFrontPage(any(), any()) } returns onlineExpected
@@ -90,7 +90,7 @@ class PageDetailsRepositoryTest {
     @Test
     fun `Get page details from network if online`() = runTest {
         val offlineExpected = DataResult.Success(Page(id = 1L, title = "Offline"))
-        val onlineExpected = DataResult.Success(Page(id = 1L, title = "Online"))
+        val onlineExpected = DataResult.Success(Page(id = 2L, title = "Online"))
         every { networkStateProvider.isOnline() } returns true
         coEvery { localDataSource.getPageDetails(any(), any(), any()) } returns offlineExpected
         coEvery { networkDataSource.getPageDetails(any(), any(), any()) } returns onlineExpected
@@ -114,7 +114,7 @@ class PageDetailsRepositoryTest {
     @Test
     fun `Get page details from db if offline`() = runTest {
         val offlineExpected = DataResult.Success(Page(id = 1L, title = "Offline"))
-        val onlineExpected = DataResult.Success(Page(id = 1L, title = "Online"))
+        val onlineExpected = DataResult.Success(Page(id = 2L, title = "Online"))
         every { networkStateProvider.isOnline() } returns false
         coEvery { localDataSource.getPageDetails(any(), any(), any()) } returns offlineExpected
         coEvery { networkDataSource.getPageDetails(any(), any(), any()) } returns onlineExpected

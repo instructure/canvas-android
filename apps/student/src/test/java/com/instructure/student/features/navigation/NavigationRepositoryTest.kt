@@ -51,7 +51,7 @@ class NavigationRepositoryTest {
     @Test
     fun `Get course with grade if device is online`() = runTest {
         val onlineExpected = Course(1)
-        val offlineExpected = Course(1)
+        val offlineExpected = Course(2)
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getCourse(any(), any()) } returns onlineExpected
@@ -66,7 +66,7 @@ class NavigationRepositoryTest {
     @Test
     fun `Get course if device is offline`() = runTest {
         val onlineExpected = Course(1)
-        val offlineExpected = Course(1)
+        val offlineExpected = Course(2)
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getCourse(any(), any()) } returns onlineExpected

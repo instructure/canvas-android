@@ -51,7 +51,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get course with grade if device is online`() = runTest {
         val onlineExpected = Course(1)
-        val offlineExpected = Course(1)
+        val offlineExpected = Course(2)
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns onlineExpected
@@ -66,7 +66,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get course with grade if device is offline`() = runTest {
         val onlineExpected = Course(1)
-        val offlineExpected = Course(1)
+        val offlineExpected = Course(2)
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns onlineExpected
@@ -81,7 +81,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get observee enrollments if device is online`() = runTest {
         val onlineExpected = listOf(Enrollment(1))
-        val offlineExpected = listOf(Enrollment(1))
+        val offlineExpected = listOf(Enrollment(2))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getObserveeEnrollments(any()) } returns onlineExpected
@@ -96,7 +96,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get observee enrollments if device is offline`() = runTest {
         val onlineExpected = listOf(Enrollment(1))
-        val offlineExpected = listOf(Enrollment(1))
+        val offlineExpected = listOf(Enrollment(2))
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getObserveeEnrollments(any()) } returns onlineExpected
@@ -111,7 +111,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get assignment groups with assignments for grading period if device is online`() = runTest {
         val onlineExpected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
-        val offlineExpected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
+        val offlineExpected = listOf(AssignmentGroup(id = 3), AssignmentGroup(id = 4))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns onlineExpected
@@ -126,7 +126,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get assignment groups with assignments for grading period if device is offline`() = runTest {
         val onlineExpected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
-        val offlineExpected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
+        val offlineExpected = listOf(AssignmentGroup(id = 3), AssignmentGroup(id = 4))
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns onlineExpected
@@ -141,7 +141,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get submissions for multiple assignments if device is online`() = runTest {
         val onlineExpected = listOf(Submission(1))
-        val offlineExpected = listOf(Submission(1))
+        val offlineExpected = listOf(Submission(2))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getSubmissionsForMultipleAssignments(any(), any(), any(), any()) } returns onlineExpected
@@ -156,7 +156,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get submissions for multiple assignments if device is offline`() = runTest {
         val onlineExpected = listOf(Submission(1))
-        val offlineExpected = listOf(Submission(1))
+        val offlineExpected = listOf(Submission(2))
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getSubmissionsForMultipleAssignments(any(), any(), any(), any()) } returns onlineExpected
@@ -171,7 +171,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get course with syllabus if device is online`() = runTest {
         val onlineExpected = listOf(Course(1))
-        val offlineExpected = listOf(Course(1))
+        val offlineExpected = listOf(Course(2))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getCoursesWithSyllabus(any()) } returns onlineExpected
@@ -186,7 +186,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get course with syllabus if device is offline`() = runTest {
         val onlineExpected = listOf(Course(1))
-        val offlineExpected = listOf(Course(1))
+        val offlineExpected = listOf(Course(2))
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getCoursesWithSyllabus(any()) } returns onlineExpected
@@ -201,7 +201,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get grading periods for course if device is online`() = runTest {
         val onlineExpected = listOf(GradingPeriod(1))
-        val offlineExpected = listOf(GradingPeriod(1))
+        val offlineExpected = listOf(GradingPeriod(2))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getGradingPeriodsForCourse(any(), any()) } returns onlineExpected
@@ -216,7 +216,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get grading periods for course if device is offline`() = runTest {
         val onlineExpected = listOf(GradingPeriod(1))
-        val offlineExpected = listOf(GradingPeriod(1))
+        val offlineExpected = listOf(GradingPeriod(2))
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getGradingPeriodsForCourse(any(), any()) } returns onlineExpected
@@ -231,7 +231,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get user enrollments for grading period if device is online`() = runTest {
         val onlineExpected = listOf(Enrollment(1))
-        val offlineExpected = listOf(Enrollment(1))
+        val offlineExpected = listOf(Enrollment(2))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getUserEnrollmentsForGradingPeriod(any(), any(), any(), any()) } returns onlineExpected
@@ -246,7 +246,7 @@ class GradesListRepositoryTest {
     @Test
     fun `Get user enrollments for grading period if device is offline`() = runTest {
         val onlineExpected = listOf(Enrollment(1))
-        val offlineExpected = listOf(Enrollment(1))
+        val offlineExpected = listOf(Enrollment(2))
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getUserEnrollmentsForGradingPeriod(any(), any(), any(), any()) } returns onlineExpected
@@ -260,8 +260,8 @@ class GradesListRepositoryTest {
 
     @Test
     fun `Get assignment groups with assignments if device is online`() = runTest {
-        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))))
-        val offlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))))
+        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(2))))
+        val offlineExpected = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(4))))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns onlineExpected
@@ -275,8 +275,8 @@ class GradesListRepositoryTest {
 
     @Test
     fun `Get assignment groups with assignments if device is offline`() = runTest {
-        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))))
-        val offlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))))
+        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(2))))
+        val offlineExpected = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(4))))
 
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns onlineExpected
