@@ -268,9 +268,11 @@ class DashboardState extends State<DashboardScreen> {
                 ),
               ),
             ),
-            drawer: Drawer(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              child: SafeArea(child: _navDrawer(_self)),
+            drawer: SafeArea(
+              child: Drawer(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                child: SafeArea(child: _navDrawer(_self)),
+              ),
             ),
             body: Column(children: [
               StudentExpansionWidget(

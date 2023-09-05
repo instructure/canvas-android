@@ -301,7 +301,7 @@ class _ParentThemeState extends State<ParentTheme> {
       appBarTheme: AppBarTheme(
         backgroundColor: isDarkMode ? Colors.white12 : themeColor,
         foregroundColor: primaryIconTheme.color,
-        systemOverlayStyle: isDarkMode ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
     );
   }
