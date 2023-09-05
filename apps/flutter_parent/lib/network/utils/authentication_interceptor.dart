@@ -48,6 +48,12 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET);
       return handler.next(error);
     }
+
+    // Lock new requests from being processed while refreshing the token
+    _dio.interceptors.requestLock.lock();
+    _dio.interceptors.responseLock.lock();
+
+    // Refresh the token and update the login
     CanvasToken? tokens;
 
     tokens = await locator<AuthApi>().refreshToken().catchError((e) => null);
@@ -55,10 +61,12 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
     if (tokens == null) {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID);
 
+      _dio.interceptors.requestLock.unlock();
+      _dio.interceptors.responseLock.unlock();
+
       return handler.next(error);
     } else {
-      // Refresh the token and update the login
-      Login login = currentLogin.rebuild((b) => b..accessToken = tokens!.accessToken);
+      Login login = currentLogin.rebuild((b) => b..accessToken = tokens?.accessToken);
       ApiPrefs.addLogin(login);
       ApiPrefs.switchLogins(login);
 
@@ -68,6 +76,8 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
       requestOptions.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
       requestOptions.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
 
+      _dio.interceptors.requestLock.unlock();
+      _dio.interceptors.responseLock.unlock();
 
       final response = await _dio.fetch(requestOptions);
       if (response.statusCode == 200 || response.statusCode == 201) {
