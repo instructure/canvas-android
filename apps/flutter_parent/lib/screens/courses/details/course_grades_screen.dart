@@ -203,7 +203,6 @@ class _CourseGradeHeader extends StatelessWidget {
       padding: const EdgeInsetsDirectional.only(start: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.ideographic,
         children: <Widget>[
           Text(gradingPeriod.title!, style: Theme.of(context).textTheme.headlineMedium),

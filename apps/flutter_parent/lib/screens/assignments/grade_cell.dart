@@ -86,7 +86,7 @@ class GradeCell extends StatelessWidget {
           alignment: Alignment.center,
           children: <Widget>[
             CircularPercentIndicator(
-              radius: 128,
+              radius: 64,
               progressColor: data.accentColor,
               backgroundColor: ParentTheme.of(context)!.nearSurfaceColor,
               percent: data.graphPercent,

@@ -78,6 +78,7 @@ class _AttachmentPickerState extends State<AttachmentPicker> {
   Widget _importingWidget(BuildContext context) {
     return Container(
       height: 184, // Match list height: 16 (padding top + bottom) + 56 (item height) * 3 items
+      width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
