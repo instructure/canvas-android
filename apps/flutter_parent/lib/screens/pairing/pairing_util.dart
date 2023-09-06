@@ -50,7 +50,7 @@ class PairingUtil {
       title: Text(L10n(context).qrCode, style: Theme.of(context).textTheme.titleMedium),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 4),
-        child: Text(L10n(context).qrCodeDescription, style: Theme.of(context).textTheme.labelSmall),
+        child: Text(L10n(context).qrCodeDescription, style: Theme.of(context).textTheme.bodyMedium),
       ),
       leading: SvgPicture.asset('assets/svg/qr-code.svg', color: ParentColors.ash, width: 25, height: 25),
       contentPadding: EdgeInsets.symmetric(vertical: 10),
@@ -68,7 +68,7 @@ class PairingUtil {
       title: Text(L10n(context).pairingCode, style: Theme.of(context).textTheme.titleMedium),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 4),
-        child: Text(L10n(context).pairingCodeDescription, style: Theme.of(context).textTheme.labelSmall),
+        child: Text(L10n(context).pairingCodeDescription, style: Theme.of(context).textTheme.bodyMedium),
       ),
       leading: Icon(CanvasIcons.keyboard_shortcuts, color: ParentColors.ash),
       contentPadding: EdgeInsets.symmetric(vertical: 10),

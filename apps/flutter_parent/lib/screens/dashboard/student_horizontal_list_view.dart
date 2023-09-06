@@ -112,6 +112,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  surfaceTintColor: Theme.of(context).canvasColor,
                   shape: CircleBorder(
                     side: BorderSide(
                         color: ParentTheme.of(context)?.isDarkMode == true ? Theme.of(context).colorScheme.secondary : Colors.white,

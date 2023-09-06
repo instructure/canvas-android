@@ -275,19 +275,10 @@ class _ParentThemeState extends State<ParentTheme> {
     var swatch = ParentColors.makeSwatch(themeColor);
 
     return ThemeData(
-      useMaterial3: true,
       primarySwatch: swatch,
       primaryColor: isDarkMode ? Colors.black : null,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(
           secondary: swatch[500], brightness: brightness),
-      switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.all(swatch[500]),
-        trackColor: MaterialStateProperty.resolveWith((states) =>
-        states.contains(MaterialState.selected)
-            ? swatch[200]
-            : nearSurfaceColor),
-        trackOutlineColor: MaterialStateProperty.all(swatch[500]),
-      ),
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: swatch[300],
       ),
