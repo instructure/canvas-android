@@ -334,7 +334,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
               child: Text(
                 L10n(context).calendars,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
               ),
             ),
           ),

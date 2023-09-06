@@ -366,12 +366,12 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
               ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
               : Text(
                   L10n(context).qrCreateAccount,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16, color: Colors.white),
                 ),
         ),
         style: ElevatedButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.secondary,
-          textStyle: TextStyle(color: Colors.white),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),
         onPressed: () {

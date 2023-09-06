@@ -307,8 +307,8 @@ class DashboardState extends State<DashboardScreen> {
                   ? Container()
                   : BottomNavigationBar(
                       unselectedItemColor: ParentTheme.of(context)?.onSurfaceColor,
-                      selectedFontSize: 10,
-                      unselectedFontSize: 10,
+                      selectedFontSize: 12,
+                      unselectedFontSize: 12,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       items: _bottomNavigationBarItems(),
                       currentIndex: this._currentIndex.index,
