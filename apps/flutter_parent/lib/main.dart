@@ -37,7 +37,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   setupLocator();
@@ -48,11 +48,9 @@ void main() async {
     await RemoteConfigUtils.initialize();
     await CrashUtils.init();
     await FlutterDownloader.initialize();
-    await WidgetsFlutterBinding.ensureInitialized();
     await DbUtil.init();
 
     PandaRouter.init();
-
 
     await FlutterDownloader.registerCallback(downloadCallback);
 
@@ -61,14 +59,6 @@ void main() async {
     NotificationUtil.init(_appCompleter);
 
     await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
-
-    if (Platform.isAndroid) {
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      if (androidInfo.version.sdkInt >= 29) {
-        // WebView.platform = SurfaceAndroidWebView();
-      }
-    }
 
     // Set environment properties for analytics. No need to await this.
     locator<Analytics>().setEnvironmentProperties();

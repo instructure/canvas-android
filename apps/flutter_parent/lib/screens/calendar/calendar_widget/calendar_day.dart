@@ -72,6 +72,7 @@ class CalendarDay extends StatelessWidget {
             enableFeedback: true,
             highlightColor: theme.colorScheme.secondary.withOpacity(0.35),
             splashColor: theme.colorScheme.secondary.withOpacity(0.35),
+            radius: 16,
             onTap: () => onDaySelected(date),
             child: Container(
               height: dayHeight,

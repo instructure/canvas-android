@@ -160,10 +160,6 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   void _pageFinished(String url, MobileVerifyResult? verifyResult) {
-    if (!_isMobileVerifyError) {
-      setState(() => _showLoading = false);
-    }
-
     _controllerCompleter.future.then((controller) async {
       if (widget.user != null && widget.pass != null) {
         // SnickerDoodle login
@@ -184,6 +180,9 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         await _buildAuthUrl(verifyResult, forceAuthRedirect: true);
         controller.loadUrl("about:blank");
         _loadAuthUrl();
+      }
+      if (!_isMobileVerifyError) {
+        setState(() => _showLoading = false);
       }
     });
   }

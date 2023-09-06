@@ -178,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           key: _highContrastModeKey,
           value: ParentTheme.of(context)?.isHC == true,
           onChanged: (_) => _onHighContrastModeChanged(context),
-          //materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         onTap: () => _onHighContrastModeChanged(context),
       ),

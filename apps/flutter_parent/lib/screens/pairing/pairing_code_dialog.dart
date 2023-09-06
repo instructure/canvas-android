@@ -117,7 +117,7 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
         actions: <Widget>[
           TextButton(
             child: Text(L10n(context).cancel.toUpperCase()),
-            style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(100)),
+            style: TextButton.styleFrom(disabledForegroundColor: Theme.of(context).primaryColor.withAlpha(100)),
             onPressed: _makingApiCall
                 ? null
                 : () {
@@ -126,7 +126,7 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                   },
           ),
           TextButton(
-            style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(100)),
+            style: TextButton.styleFrom(disabledForegroundColor: Theme.of(context).primaryColor.withAlpha(100)),
             child: Text(L10n(context).ok),
             onPressed: _makingApiCall
                 ? null
