@@ -75,7 +75,7 @@ class PairingUtil {
       onTap: () async {
         Navigator.of(context).pop();
         locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
-        bool studentPaired = await locator<QuickNav>().showDialog<bool>(
+        bool? studentPaired = await locator<QuickNav>().showDialog<bool>(
           context: context,
           barrierDismissible: true,
           builder: (BuildContext context) => PairingCodeDialog(null),

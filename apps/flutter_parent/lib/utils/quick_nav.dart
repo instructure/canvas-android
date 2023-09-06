@@ -64,7 +64,7 @@ class QuickNav {
     locator<Analytics>().setCurrentScreen(widgetName);
   }
 
-  Future<T> showDialog<T>({
+  Future<T?> showDialog<T>({
     required BuildContext context,
     bool barrierDismissible = true,
     required WidgetBuilder builder,
@@ -77,5 +77,5 @@ class QuickNav {
         builder: builder,
         useRootNavigator: useRootNavigator,
         routeSettings: routeSettings,
-      ) as Future<T>;
+      );
 }

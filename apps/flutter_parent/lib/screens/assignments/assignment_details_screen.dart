@@ -102,7 +102,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             Text(L10n(context).assignmentDetailsTitle),
             if (snapshot.hasData)
               Text(snapshot.data?.course?.name ?? '',
-                  style: Theme.of(context).primaryTextTheme.bodySmall, key: Key("assignment_details_coursename")),
+                  style: Theme.of(context).primaryTextTheme.bodySmall?.copyWith(color: Colors.white), key: Key("assignment_details_coursename")),
           ],
         ),
       );
