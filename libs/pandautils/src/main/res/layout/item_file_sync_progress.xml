@@ -37,17 +37,29 @@
         android:paddingVertical="14dp">
 
         <TextView
-            android:id="@+id/tabTitle"
+            android:id="@+id/fileName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
+            android:text="@{itemViewModel.data.fileName}"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            android:text="@{itemViewModel.data.fileName}"
             app:layout_constraintEnd_toStartOf="@+id/actionContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Assignments" />
+            tools:text="example.png" />
+
+        <TextView
+            android:id="@+id/fileSize"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{itemViewModel.data.fileSize}"
+            android:textColor="@color/textDark"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/fileName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fileName"
+            tools:text="45 MB" />
 
         <TextView
             android:id="@+id/errorText"
@@ -56,9 +68,9 @@
             android:text="@string/sync_failed"
             android:textColor="@color/backgroundDanger"
             android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="@id/tabTitle"
+            app:layout_constraintEnd_toEndOf="@id/fileName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tabTitle"
+            app:layout_constraintTop_toBottomOf="@id/fileSize"
             tools:visibility="gone" />
 
         <FrameLayout
@@ -82,9 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_close"
-                app:tint="@color/textDarkest"
                 android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/textDarkest"
                 tools:visibility="gone" />
 
             <ImageView
@@ -92,9 +104,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_checkmark"
-                app:tint="@color/textDarkest"
                 android:visibility="@{itemViewModel.data.state == ProgressState.COMPLETED ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/textDarkest"
                 tools:visibility="gone" />
         </FrameLayout>
 

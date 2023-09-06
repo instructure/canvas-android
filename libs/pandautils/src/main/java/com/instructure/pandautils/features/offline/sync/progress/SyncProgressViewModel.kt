@@ -18,6 +18,8 @@
 
 package com.instructure.pandautils.features.offline.sync.progress
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -42,13 +44,16 @@ import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.utils.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
+@SuppressLint("StaticFieldLeak")
 class SyncProgressViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val workManager: WorkManager,
     private val syncProgressDao: SyncProgressDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
@@ -69,11 +74,19 @@ class SyncProgressViewModel @Inject constructor(
     }
 
     private suspend fun createCourseItem(syncProgress: SyncProgressEntity): CourseProgressItemViewModel {
+        val courseSyncSettings = courseSyncSettingsDao.findWithFilesById(syncProgress.courseId)
         val data = CourseProgressViewData(
             courseName = syncProgress.title,
             workerId = syncProgress.uuid,
             tabs = createTabItems(syncProgress.courseId, syncProgress.uuid),
-            files = listOf(FileTabProgressItemViewModel(FileTabProgressViewData(syncProgress.uuid, emptyList()), workManager))
+            files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true)
+                listOf(
+                    FileTabProgressItemViewModel(
+                        FileTabProgressViewData(courseWorkerId = syncProgress.uuid, items = emptyList()),
+                        workManager,
+                        context
+                    )
+                ) else emptyList()
         )
 
         return CourseProgressItemViewModel(data, workManager)
@@ -97,17 +110,6 @@ class SyncProgressViewModel @Inject constructor(
         )
 
         return TabProgressItemViewModel(data, workManager)
-    }
-
-    private fun createFileItems(workerId: String): FileSyncProgressItemViewModel {
-
-        val data = FileSyncProgressViewData(
-            fileName = "File Name",
-            progress = 0,
-            workerId = workerId
-        )
-
-        return FileSyncProgressItemViewModel(data, workManager)
     }
 
 }

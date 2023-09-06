@@ -22,14 +22,12 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
-import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.Operation
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import androidx.work.await
 import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
@@ -58,7 +56,6 @@ import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
-import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
@@ -72,12 +69,10 @@ import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.room.offline.facade.UserFacade
-import com.instructure.pandautils.utils.newBuilder
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
-import java.util.UUID
 
 const val TAB_PROGRESS_SIZE = 100 * 1000
 
@@ -400,33 +395,39 @@ class CourseSyncWorker @AssistedInject constructor(
 
         cleanupSyncedFiles(courseId, allFileIds)
 
-        val fileWorkers = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
-            .map {
-                FileSyncWorker.createOneTimeWorkRequest(
+        val fileProgresses = mutableListOf<FileProgress>()
+        val fileWorkers = mutableListOf<OneTimeWorkRequest>()
+        fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
+            .forEach {
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
                     courseId,
                     it.id,
                     it.displayName.orEmpty(),
                     it.url.orEmpty(),
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
-            }.chunked(6)
+                fileWorkers.add(worker)
+                fileProgresses.add(FileProgress(worker.id.toString(), it.displayName.orEmpty(), it.size))
+            }
 
-        if (fileWorkers.isEmpty()) {
-            progress = progress.copy(fileWorkerIds = emptyList())
+        val chunkedWorkers = fileWorkers.chunked(6)
+
+        if (chunkedWorkers.isEmpty()) {
+            progress = progress.copy(fileProgresses = emptyList())
             updateProgress()
             return
         }
 
         var continuation = workManager
-            .beginWith(fileWorkers.first())
+            .beginWith(chunkedWorkers.first())
 
-        fileWorkers.drop(1).forEach {
+        chunkedWorkers.drop(1).forEach {
             continuation = continuation.then(it)
         }
 
         fileOperation = continuation.enqueue()
 
-        progress = progress.copy(fileWorkerIds = fileWorkers.map { it.first().id.toString() })
+        progress = progress.copy(fileProgresses = fileProgresses)
         updateProgress()
     }
 
@@ -471,7 +472,7 @@ class CourseSyncWorker @AssistedInject constructor(
             },
             maxSize = selectedTabs.size * TAB_PROGRESS_SIZE,
             downloadedSize = 0,
-            fileWorkerIds = emptyList()
+            fileProgresses = emptyList()
         )
     }
 
@@ -521,12 +522,18 @@ data class CourseProgress(
     val tabs: Map<String, TabProgress>,
     val maxSize: Int,
     val downloadedSize: Int,
-    val fileWorkerIds: List<String>? = null
+    val fileProgresses: List<FileProgress>? = null
 )
 
 data class TabProgress(
     val tabName: String,
     val state: ProgressState
+)
+
+data class FileProgress(
+    val workerId: String,
+    val fileName: String,
+    val fileSize: Long
 )
 
 enum class ProgressState {

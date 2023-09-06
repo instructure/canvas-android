@@ -18,9 +18,11 @@
 
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
+import android.content.Context
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.offline.sync.CourseProgress
@@ -32,10 +34,12 @@ import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.offline.sync.FileProgress
 
 data class FileTabProgressItemViewModel(
     val data: FileTabProgressViewData,
-    private val workManager: WorkManager
+    private val workManager: WorkManager,
+    private val context: Context
 ) : GroupItemViewModel(collapsable = true, items = data.items, collapsed = true) {
     override val layoutId = R.layout.item_file_tab_progress
 
@@ -52,15 +56,15 @@ data class FileTabProgressItemViewModel(
                     value.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return
                 }
 
-                if (progress.fileWorkerIds == null) return
+                if (progress.fileProgresses == null) return
 
-                if (progress.fileWorkerIds.isEmpty()) {
+                if (progress.fileProgresses.isEmpty()) {
                     data.state = ProgressState.COMPLETED
                     data.notifyPropertyChanged(BR.state)
                 } else {
-                    createFileItems(progress.fileWorkerIds)
-                    data.toggelable = true
-                    data.notifyPropertyChanged(BR.toggelable)
+                    createFileItems(progress.fileProgresses)
+                    data.toggleable = true
+                    data.notifyPropertyChanged(BR.toggleable)
                     toggleItems()
                 }
 
@@ -69,18 +73,25 @@ data class FileTabProgressItemViewModel(
         })
     }
 
-    private fun createFileItems(fileWorkerIds: List<String>) {
-        data.items = fileWorkerIds.map {
-            FileSyncProgressItemViewModel(
+    private fun createFileItems(fileProgresses: List<FileProgress>) {
+        val fileItems = mutableListOf<FileSyncProgressItemViewModel>()
+        var totalSize = 0L
+        fileProgresses.forEach {
+            val item = FileSyncProgressItemViewModel(
                 FileSyncProgressViewData(
-                    "File name",
+                    it.fileName,
+                    NumberHelper.readableFileSize(context, it.fileSize),
                     0,
-                    it
+                    it.workerId,
                 ),
                 workManager
             )
+            fileItems.add(item)
+            totalSize += it.fileSize
         }
+        data.items = fileItems
         items = data.items
+        data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
         toggleItems()
     }
 }

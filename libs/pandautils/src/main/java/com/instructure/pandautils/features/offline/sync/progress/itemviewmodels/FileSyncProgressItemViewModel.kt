@@ -48,7 +48,6 @@ data class FileSyncProgressItemViewModel(
     }
 
     private fun notifyChange(fileSyncProgress: FileSyncProgress) {
-        data.updateFileName(fileSyncProgress.fileName)
         data.updateProgress(fileSyncProgress.progress)
         data.updateState(fileSyncProgress.progressState)
     }

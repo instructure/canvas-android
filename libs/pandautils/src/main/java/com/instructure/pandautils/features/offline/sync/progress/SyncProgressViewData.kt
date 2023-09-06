@@ -25,7 +25,6 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
 
 data class SyncProgressViewData(val items: List<ItemViewModel>)
 
@@ -57,7 +56,8 @@ data class TabProgressViewData(
 }
 
 data class FileSyncProgressViewData(
-    @Bindable var fileName: String,
+    val fileName: String,
+    val fileSize: String,
     @Bindable var progress: Int,
     val workerId: String,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
@@ -72,19 +72,21 @@ data class FileSyncProgressViewData(
         state = newState
         notifyPropertyChanged(BR.state)
     }
-
-    fun updateFileName(fileName: String) {
-        this.fileName = fileName
-        notifyPropertyChanged(BR.fileName)
-    }
 }
 
 data class FileTabProgressViewData(
     val courseWorkerId: String,
+    @Bindable var totalSize: String = "",
     var items: List<ItemViewModel>,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
-    @Bindable var toggelable: Boolean = false
-): BaseObservable()
+    @Bindable var toggleable: Boolean = false
+): BaseObservable() {
+
+    fun updateTotalSize(totalSize: String) {
+        this.totalSize = totalSize
+        notifyPropertyChanged(BR.totalSize)
+    }
+}
 
 enum class ViewType(val viewType: Int) {
     COURSE_PROGRESS(0),
