@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
@@ -35,6 +36,8 @@ import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.features.offline.sync.FileProgress
+import com.instructure.pandautils.features.offline.sync.FileSyncProgress
+import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 
 data class FileTabProgressItemViewModel(
     val data: FileTabProgressViewData,
@@ -44,6 +47,25 @@ data class FileTabProgressItemViewModel(
     override val layoutId = R.layout.item_file_tab_progress
 
     override val viewType = ViewType.COURSE_FILE_TAB_PROGRESS.viewType
+
+    private val totalProgressObserver = Observer<List<WorkInfo>> {
+        var totalProgress = 0
+        if (it.all { it.state.isFinished }) {
+            data.state = ProgressState.COMPLETED
+            data.notifyPropertyChanged(BR.state)
+            clearObserver()
+        } else {
+            it.forEach { workInfo ->
+                val progress: FileSyncProgress? = if (workInfo.state.isFinished) {
+                    workInfo.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson()
+                } else {
+                    workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson()
+                }
+                totalProgress += progress?.progress ?: 0
+            }
+            data.updateProgress(totalProgress / it.size)
+        }
+    }
 
     init {
         val progressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.courseWorkerId))
@@ -76,6 +98,7 @@ data class FileTabProgressItemViewModel(
     private fun createFileItems(fileProgresses: List<FileProgress>) {
         val fileItems = mutableListOf<FileSyncProgressItemViewModel>()
         var totalSize = 0L
+        val workerIds = mutableListOf<UUID>()
         fileProgresses.forEach {
             val item = FileSyncProgressItemViewModel(
                 FileSyncProgressViewData(
@@ -86,12 +109,18 @@ data class FileTabProgressItemViewModel(
                 ),
                 workManager
             )
+            workerIds.add(UUID.fromString(it.workerId))
             fileItems.add(item)
             totalSize += it.fileSize
         }
+        workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds)).observeForever(totalProgressObserver)
         data.items = fileItems
         items = data.items
         data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
         toggleItems()
+    }
+
+    private fun clearObserver() {
+
     }
 }

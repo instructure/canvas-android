@@ -18,6 +18,7 @@
 
 package com.instructure.pandautils.features.offline.sync.progress
 
+import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.work.WorkInfo
@@ -78,6 +79,7 @@ data class FileTabProgressViewData(
     val courseWorkerId: String,
     @Bindable var totalSize: String = "",
     var items: List<ItemViewModel>,
+    @Bindable var progress: Int = 0,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
     @Bindable var toggleable: Boolean = false
 ): BaseObservable() {
@@ -85,6 +87,12 @@ data class FileTabProgressViewData(
     fun updateTotalSize(totalSize: String) {
         this.totalSize = totalSize
         notifyPropertyChanged(BR.totalSize)
+    }
+
+    fun updateProgress(progress: Int) {
+        Log.d("PROGRESS UPDATE", "updateProgress: $progress")
+        this.progress = progress
+        notifyPropertyChanged(BR.progress)
     }
 }
 
