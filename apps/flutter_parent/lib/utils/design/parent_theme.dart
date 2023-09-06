@@ -252,63 +252,73 @@ class _ParentThemeState extends State<ParentTheme> {
     }
 
     var primaryTextTheme = _buildTextTheme(Colors.white, fadeColor: ParentColors.tiara);
+
     if (isHC) {
       primaryTextTheme = primaryTextTheme.apply(displayColor: Colors.white, bodyColor: Colors.white);
     } else if (isDarkMode) {
       primaryTextTheme = _buildTextTheme(ParentColors.porcelain, fadeColor: ParentColors.tiara);
     }
 
-      var primaryIconTheme = isDarkMode ? IconThemeData(color: ParentColors.tiara) : IconThemeData(color: Colors.white);
+    var primaryIconTheme = isDarkMode
+        ? IconThemeData(color: ParentColors.tiara)
+        : IconThemeData(color: Colors.white);
 
-      var brightness = isDarkMode ? Brightness.dark : Brightness.light;
-      var backgroundColor = isDarkMode ? Colors.black : Colors.white;
-      var iconTheme = isDarkMode ? IconThemeData(color: ParentColors.porcelain) : IconThemeData(color: ParentColors.licorice);
-      var dividerColor = isHC ? onSurfaceColor : isDarkMode ? ParentColors.licorice : ParentColors.tiara;
-      var dialogBackgroundColor = isDarkMode ? Colors.black : Colors.white;
+    var brightness = isDarkMode ? Brightness.dark : Brightness.light;
+    var backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    var iconTheme = isDarkMode
+        ? IconThemeData(color: ParentColors.porcelain)
+        : IconThemeData(color: ParentColors.licorice);
+    var dividerColor = isHC ? onSurfaceColor : isDarkMode ? ParentColors
+        .licorice : ParentColors.tiara;
+    var dialogBackgroundColor = isDarkMode ? Colors.black : Colors.white;
 
-      var swatch = ParentColors.makeSwatch(themeColor);
+    var swatch = ParentColors.makeSwatch(themeColor);
 
-      return ThemeData(
-        useMaterial3: true,
-        primarySwatch: swatch,
-        primaryColor: isDarkMode ? Colors.black : null,
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(secondary: swatch[500], brightness: brightness),
-        switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all(swatch[500]),
-          trackColor: MaterialStateProperty.resolveWith((states) =>
-          states.contains(MaterialState.selected) ? swatch[200] : nearSurfaceColor),
-          trackOutlineColor: MaterialStateProperty.all(swatch[500]),
-        ),
-        textSelectionTheme: TextSelectionThemeData(
-          selectionHandleColor: swatch[300],
-        ),
-        scaffoldBackgroundColor: backgroundColor,
-        canvasColor: backgroundColor,
-        textTheme: textTheme,
-        primaryTextTheme: primaryTextTheme,
-        iconTheme: iconTheme,
-        primaryIconTheme: primaryIconTheme,
-        dividerColor: dividerColor,
-        dividerTheme: DividerThemeData(color: dividerColor),
-        buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
-        fontFamily: 'Lato',
-        dialogTheme: DialogTheme(
-          backgroundColor: dialogBackgroundColor,
-          surfaceTintColor: Colors.white,
-        ),
-        tabBarTheme: TabBarTheme(
-          labelStyle: primaryTextTheme.titleMedium?.copyWith(fontSize: 14),
-          labelColor: primaryTextTheme.titleMedium?.color,
-          unselectedLabelStyle: primaryTextTheme.bodySmall?.copyWith(fontSize: 14),
-          unselectedLabelColor: primaryTextTheme.bodySmall?.color,
-        ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: isDarkMode ? Colors.white12 : themeColor,
-          foregroundColor: primaryIconTheme.color,
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
-      );
-    }
+    return ThemeData(
+      useMaterial3: true,
+      primarySwatch: swatch,
+      primaryColor: isDarkMode ? Colors.black : null,
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: swatch).copyWith(
+          secondary: swatch[500], brightness: brightness),
+      switchTheme: SwitchThemeData(
+        thumbColor: MaterialStateProperty.all(swatch[500]),
+        trackColor: MaterialStateProperty.resolveWith((states) =>
+        states.contains(MaterialState.selected)
+            ? swatch[200]
+            : nearSurfaceColor),
+        trackOutlineColor: MaterialStateProperty.all(swatch[500]),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        selectionHandleColor: swatch[300],
+      ),
+      scaffoldBackgroundColor: backgroundColor,
+      canvasColor: backgroundColor,
+      textTheme: textTheme,
+      primaryTextTheme: primaryTextTheme,
+      iconTheme: iconTheme,
+      primaryIconTheme: primaryIconTheme,
+      dividerColor: dividerColor,
+      dividerTheme: DividerThemeData(color: dividerColor),
+      buttonTheme: ButtonThemeData(
+          height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
+      fontFamily: 'Lato',
+      dialogTheme: DialogTheme(
+        backgroundColor: dialogBackgroundColor,
+        surfaceTintColor: Colors.white,
+      ),
+      tabBarTheme: TabBarTheme(
+        labelStyle: primaryTextTheme.titleMedium?.copyWith(fontSize: 14),
+        labelColor: primaryTextTheme.titleMedium?.color,
+        unselectedLabelStyle: primaryTextTheme.bodySmall?.copyWith(
+            fontSize: 14),
+        unselectedLabelColor: primaryTextTheme.bodySmall?.color,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: isDarkMode ? Colors.white12 : themeColor,
+        foregroundColor: primaryIconTheme.color,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+      ),
+    );
   }
 
   TextTheme _buildTextTheme(Color color, {Color fadeColor = ParentColors.oxford}) {
