@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
 import com.instructure.pandautils.room.offline.daos.CourseDao
@@ -38,6 +39,7 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
+import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.utils.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -71,7 +73,7 @@ class SyncProgressViewModel @Inject constructor(
             courseName = syncProgress.title,
             workerId = syncProgress.uuid,
             tabs = createTabItems(syncProgress.courseId, syncProgress.uuid),
-            files = emptyList()
+            files = listOf(FileTabProgressItemViewModel(FileTabProgressViewData(syncProgress.uuid, emptyList()), workManager))
         )
 
         return CourseProgressItemViewModel(data, workManager)
@@ -80,16 +82,17 @@ class SyncProgressViewModel @Inject constructor(
     private suspend fun createTabItems(courseId: Long, workerId: String): List<TabProgressItemViewModel> {
         val courseSettings = courseSyncSettingsDao.findById(courseId) ?: return emptyList()
         val courseTabs = tabDao.findByCourseId(courseId)
-        return courseSettings.tabs.filter { tabEntry ->
-            courseTabs.find { it.id == tabEntry.key } != null && tabEntry.value == true
+        return courseTabs.filter { tab ->
+            courseSettings.tabs[tab.id] == true
         }
-            .map { createTabItem(it.key, workerId) }
+            .map { createTabItem(it, workerId) }
 
     }
 
-    private fun createTabItem(tabId: String, workerId: String): TabProgressItemViewModel {
+    private fun createTabItem(tab: TabEntity, workerId: String): TabProgressItemViewModel {
         val data = TabProgressViewData(
-            tabId = tabId,
+            tabId = tab.id,
+            tabName = tab.label.orEmpty(),
             workerId = workerId
         )
 
@@ -97,6 +100,7 @@ class SyncProgressViewModel @Inject constructor(
     }
 
     private fun createFileItems(workerId: String): FileSyncProgressItemViewModel {
+
         val data = FileSyncProgressViewData(
             fileName = "File Name",
             progress = 0,

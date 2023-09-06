@@ -34,7 +34,7 @@ data class CourseProgressViewData(
     val workerId: String,
     @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
     val tabs: List<TabProgressItemViewModel>,
-    val files: List<FileSyncProgressItemViewModel>
+    val files: List<ItemViewModel>
 ) : BaseObservable() {
 
     fun updateState(newState: WorkInfo.State) {
@@ -45,15 +45,11 @@ data class CourseProgressViewData(
 
 data class TabProgressViewData(
     val tabId: String,
-    @Bindable var tabName: String = "",
+    val tabName: String,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
     val workerId: String
 ): BaseObservable() {
 
-    fun updateTabName(newTabName: String) {
-        tabName = newTabName
-        notifyPropertyChanged(BR.tabName)
-    }
     fun updateState(newState: ProgressState) {
         state = newState
         notifyPropertyChanged(BR.state)
@@ -61,7 +57,7 @@ data class TabProgressViewData(
 }
 
 data class FileSyncProgressViewData(
-    val fileName: String,
+    @Bindable var fileName: String,
     @Bindable var progress: Int,
     val workerId: String,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
@@ -76,10 +72,23 @@ data class FileSyncProgressViewData(
         state = newState
         notifyPropertyChanged(BR.state)
     }
+
+    fun updateFileName(fileName: String) {
+        this.fileName = fileName
+        notifyPropertyChanged(BR.fileName)
+    }
 }
+
+data class FileTabProgressViewData(
+    val courseWorkerId: String,
+    var items: List<ItemViewModel>,
+    @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
+    @Bindable var toggelable: Boolean = false
+): BaseObservable()
 
 enum class ViewType(val viewType: Int) {
     COURSE_PROGRESS(0),
     COURSE_TAB_PROGRESS(1),
-    COURSE_FILE_PROGRESS(2)
+    COURSE_FILE_TAB_PROGRESS(2),
+    COURSE_FILE_PROGRESS(3)
 }

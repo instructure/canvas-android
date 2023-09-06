@@ -26,8 +26,10 @@ import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.Operation
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import androidx.work.await
 import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
@@ -115,6 +117,8 @@ class CourseSyncWorker @AssistedInject constructor(
 
     private lateinit var progress: CourseProgress
 
+    private var fileOperation: Operation? = null
+
     override suspend fun doWork(): Result {
 
         val courseSettingsWithFiles =
@@ -124,7 +128,6 @@ class CourseSyncWorker @AssistedInject constructor(
         val course = fetchCourseDetails(courseSettings.courseId)
 
         progress = initProgress(courseSettings, course)
-        updateProgress()
 
         if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
             fetchFiles(courseSettings.courseId)
@@ -408,7 +411,11 @@ class CourseSyncWorker @AssistedInject constructor(
                 )
             }.chunked(6)
 
-        if (fileWorkers.isEmpty()) return
+        if (fileWorkers.isEmpty()) {
+            progress = progress.copy(fileWorkerIds = emptyList())
+            updateProgress()
+            return
+        }
 
         var continuation = workManager
             .beginWith(fileWorkers.first())
@@ -417,7 +424,7 @@ class CourseSyncWorker @AssistedInject constructor(
             continuation = continuation.then(it)
         }
 
-        continuation.enqueue()
+        fileOperation = continuation.enqueue()
 
         progress = progress.copy(fileWorkerIds = fileWorkers.map { it.first().id.toString() })
         updateProgress()
@@ -514,7 +521,7 @@ data class CourseProgress(
     val tabs: Map<String, TabProgress>,
     val maxSize: Int,
     val downloadedSize: Int,
-    val fileWorkerIds: List<String>
+    val fileWorkerIds: List<String>? = null
 )
 
 data class TabProgress(

@@ -44,7 +44,6 @@ data class TabProgressItemViewModel(val data: TabProgressViewData, val workManag
 
         progress.tabs[data.tabId]?.let { tabProgress ->
             data.updateState(tabProgress.state)
-            data.updateTabName(tabProgress.tabName)
         }
     }
 

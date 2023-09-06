@@ -79,15 +79,13 @@ class FileSyncWorker @AssistedInject constructor(
                         }
                         localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
                         progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
-                        setProgress(workDataOf(PROGRESS to progress.toJson()))
-                        result = Result.success()
+                        result = Result.success(workDataOf(OUTPUT to progress.toJson()))
                     }
 
                     is DownloadState.Failure -> {
                         downloadedFile.delete()
                         progress = FileSyncProgress(fileName, 100, ProgressState.ERROR)
-                        setProgress(workDataOf(PROGRESS to progress.toJson()))
-                        result = Result.failure()
+                        result = Result.failure(workDataOf(OUTPUT to progress.toJson()))
                     }
                 }
             }
@@ -123,6 +121,7 @@ class FileSyncWorker @AssistedInject constructor(
         const val INPUT_FILE_URL = "INPUT_FILE_URL"
         const val INPUT_COURSE_ID = "INPUT_COURSE_ID"
         const val PROGRESS = "fileSyncProgress"
+        const val OUTPUT = "fileSyncOutput"
 
         fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String, wifiOnly: Boolean): OneTimeWorkRequest {
             val inputData = androidx.work.Data.Builder()

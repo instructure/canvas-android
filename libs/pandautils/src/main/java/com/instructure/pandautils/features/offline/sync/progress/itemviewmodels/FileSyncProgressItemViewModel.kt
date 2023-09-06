@@ -38,12 +38,17 @@ data class FileSyncProgressItemViewModel(
 
     init {
         workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId)).observeForever {
-            val progress: FileSyncProgress = it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson() ?: return@observeForever
+            val progress: FileSyncProgress = if (it.state.isFinished) {
+                it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson() ?: return@observeForever
+            } else {
+                it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson() ?: return@observeForever
+            }
             notifyChange(progress)
         }
     }
 
     private fun notifyChange(fileSyncProgress: FileSyncProgress) {
+        data.updateFileName(fileSyncProgress.fileName)
         data.updateProgress(fileSyncProgress.progress)
         data.updateState(fileSyncProgress.progressState)
     }
