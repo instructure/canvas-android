@@ -86,8 +86,9 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
         attachmentIds,
         widget.replyAll,
       );
-      var newMessage = result.messages![0];
-      var updatedConversation = widget.conversation?.rebuild((c) => c..messages.insert(0, newMessage));
+      var newMessage = result?.messages?.first;
+      Conversation? updatedConversation = null;
+      if (newMessage != null) updatedConversation = widget.conversation?.rebuild((c) => c..messages.insert(0, newMessage));
       Navigator.of(context).pop(updatedConversation); // Return updated conversation
     } catch (e) {
       setState(() => _sending = false);

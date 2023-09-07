@@ -25,7 +25,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import '../attachment_utils/attachment_picker.dart';
 
 class ConversationReplyInteractor {
-  Future<Conversation> createReply(
+  Future<Conversation?> createReply(
     Conversation? conversation,
     Message? message,
     String body,

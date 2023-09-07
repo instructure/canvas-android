@@ -32,40 +32,37 @@ class CalendarDayListTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     Widget tile = InkWell(
       onTap: () {
-        if (_item.courseId != null && _item.plannable.assignmentId != null) {
-          switch (_item.plannableType) {
-            case 'assignment':
-              locator<QuickNav>().pushRoute(
-                  context,
-                  PandaRouter.assignmentDetails(
-                      _item.courseId!, _item.plannable.assignmentId!));
-              break;
-            case 'calendar_event':
-              // Case where the observed user has a personal calendar event
-              locator<QuickNav>().pushRoute(context,
-                  PandaRouter.eventDetails(_item.courseId!, _item.plannable.id));
-              break;
-            case 'quiz':
-              // This is a quiz assignment, go to the assignment page
-              locator<QuickNav>().pushRoute(
-                  context,
-                  PandaRouter.quizAssignmentDetails(
-                      _item.courseId!, _item.plannable.assignmentId!));
-              break;
-            case 'discussion_topic':
-              // This is a discussion assignment, go to the assignment page
-              locator<QuickNav>().pushRoute(
-                  context,
-                  PandaRouter.discussionDetails(
-                      _item.courseId!, _item.plannable.assignmentId!));
-              break;
+        switch (_item.plannableType) {
+          case 'assignment':
+            if (_item.courseId != null && _item.plannable.assignmentId != null) {
+              locator<QuickNav>().pushRoute(context, PandaRouter.assignmentDetails(_item.courseId!, _item.plannable.assignmentId!));
+            }
+            break;
+          case 'calendar_event':
+            // Case where the observed user has a personal calendar event
+            if (_item.courseId != null) {
+              locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(_item.courseId!, _item.plannable.id));
+            }
+            break;
+          case 'quiz':
+            // This is a quiz assignment, go to the assignment page
+            if (_item.courseId != null && _item.plannable.assignmentId != null) {
+              locator<QuickNav>().pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId!, _item.plannable.assignmentId!));
+            }
+            break;
+          case 'discussion_topic':
+            // This is a discussion assignment, go to the assignment page
+            if (_item.courseId != null && _item.plannable.assignmentId != null) {
+              locator<QuickNav>().pushRoute(context, PandaRouter.discussionDetails(_item.courseId!, _item.plannable.assignmentId!));
+            }
+            break;
 //          case 'quiz': TODO - keep in place for potentially moving back to planner api
 //            if (_item.plannable.assignmentId != null) {
-            // This is a quiz assignment, go to the assignment page
+          // This is a quiz assignment, go to the assignment page
 //              locator<QuickNav>()
 //                  .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
 //            } else {
-            // No routes will match this url currently, so routing internally will throw it in an implicit intent
+          // No routes will match this url currently, so routing internally will throw it in an implicit intent
 //              PandaRouter.routeInternally(context, ApiPrefs.getDomain() + _item.htmlUrl);
 //            }
 //            break;
@@ -78,10 +75,9 @@ class CalendarDayListTile extends StatelessWidget {
 //            locator<QuickNav>()
 //                .pushRoute(context, PandaRouter.courseAnnouncementDetails(_item.courseId, _item.plannable.id));
 //            break;
-            default:
-              // This is a type that we don't handle - do nothing
-              break;
-          }
+          default:
+            // This is a type that we don't handle - do nothing
+            break;
         }
       },
       child: Row(

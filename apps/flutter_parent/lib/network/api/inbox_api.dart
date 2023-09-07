@@ -38,7 +38,7 @@ class InboxApi {
     return fetch(dio.get('conversations/unread_count'));
   }
 
-    Future<Conversation> addMessage(
+    Future<Conversation?> addMessage(
         String? conversationId,
         String body,
         List<String> recipientIds,
@@ -47,7 +47,7 @@ class InboxApi {
         ) async {
       var config = DioConfig.canvas();
       var dio = config.dio;
-      Conversation conversation = await fetch(
+      Conversation? conversation = await fetch(
         dio.post(
           'conversations/$conversationId/add_message',
           queryParameters: {
