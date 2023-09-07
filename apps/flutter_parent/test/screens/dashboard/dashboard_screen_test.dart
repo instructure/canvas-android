@@ -64,6 +64,7 @@ import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
@@ -1267,6 +1268,9 @@ class MockInteractor extends DashboardInteractor {
 
   @override
   Future<bool> shouldShowOldReminderMessage() async => showOldReminderMessage;
+
+  @override
+  Future<PermissionStatus> requestNotificationPermission() async => PermissionStatus.granted;
 }
 
 class MockCoursesInteractor extends CoursesInteractor {

@@ -76,6 +76,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   late String _domain;
   bool _showLoading = false;
   bool _isMobileVerifyError = false;
+  bool loadStarted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +137,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             darkMode: ParentTheme.of(context)?.isWebViewDarkMode,
             userAgent: ApiPrefs.getUserAgent(),
             onPageFinished: (url) => _pageFinished(url, verifyResult),
-            onPageStarted: (url) => _showLoadingState(),
+            onPageStarted: (url) => _pageStarted(url),
             onWebViewCreated: (controller) =>
                 _webViewCreated(controller, verifyResult),
         ),
@@ -163,7 +164,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     _controllerCompleter.future.then((controller) async {
       if (widget.user != null && widget.pass != null) {
         // SnickerDoodle login
-        controller.evaluateJavascript("""javascript: {
+        await controller.evaluateJavascript("""javascript: {
                       document.getElementsByName('pseudonym_session[unique_id]')[0].value = '${widget.user}';
                       document.getElementsByName('pseudonym_session[password]')[0].value = '${widget.pass}';
                       document.getElementsByClassName('Button')[0].click();
@@ -181,15 +182,26 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         controller.loadUrl("about:blank");
         _loadAuthUrl();
       }
-      if (!_isMobileVerifyError) {
-        setState(() => _showLoading = false);
+      if (loadStarted) {
+        _hideLoadingDialog();
       }
     });
+  }
+
+  void _pageStarted(String url) {
+    loadStarted = true;
+    _showLoadingState();
   }
 
   void _showLoadingState() {
     if (!_isMobileVerifyError) {
       setState(() => _showLoading = true);
+    }
+  }
+
+  void _hideLoadingDialog() {
+    if (!_isMobileVerifyError) {
+      setState(() => _showLoading = false);
     }
   }
 

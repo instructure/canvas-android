@@ -38,14 +38,14 @@ import 'package:flutter_parent/models/authenticated_url.dart' as _i77;
 import 'package:flutter_parent/models/calendar_filter.dart' as _i50;
 import 'package:flutter_parent/models/canvas_page.dart' as _i60;
 import 'package:flutter_parent/models/canvas_token.dart' as _i44;
-import 'package:flutter_parent/models/color_change_response.dart' as _i122;
+import 'package:flutter_parent/models/color_change_response.dart' as _i123;
 import 'package:flutter_parent/models/conversation.dart' as _i13;
 import 'package:flutter_parent/models/course.dart' as _i52;
 import 'package:flutter_parent/models/course_permissions.dart' as _i57;
 import 'package:flutter_parent/models/course_settings.dart' as _i56;
 import 'package:flutter_parent/models/course_tab.dart' as _i55;
 import 'package:flutter_parent/models/enrollment.dart' as _i59;
-import 'package:flutter_parent/models/feature_flags.dart' as _i126;
+import 'package:flutter_parent/models/feature_flags.dart' as _i127;
 import 'package:flutter_parent/models/grading_period_response.dart' as _i54;
 import 'package:flutter_parent/models/help_link.dart' as _i107;
 import 'package:flutter_parent/models/help_links.dart' as _i139;
@@ -70,14 +70,14 @@ import 'package:flutter_parent/network/api/calendar_events_api.dart' as _i47;
 import 'package:flutter_parent/network/api/course_api.dart' as _i53;
 import 'package:flutter_parent/network/api/enrollments_api.dart' as _i68;
 import 'package:flutter_parent/network/api/error_report_api.dart' as _i69;
-import 'package:flutter_parent/network/api/features_api.dart' as _i125;
+import 'package:flutter_parent/network/api/features_api.dart' as _i126;
 import 'package:flutter_parent/network/api/file_api.dart' as _i109;
 import 'package:flutter_parent/network/api/help_links_api.dart' as _i138;
 import 'package:flutter_parent/network/api/inbox_api.dart' as _i73;
 import 'package:flutter_parent/network/api/oauth_api.dart' as _i76;
 import 'package:flutter_parent/network/api/page_api.dart' as _i79;
 import 'package:flutter_parent/network/api/planner_api.dart' as _i104;
-import 'package:flutter_parent/network/api/user_api.dart' as _i121;
+import 'package:flutter_parent/network/api/user_api.dart' as _i122;
 import 'package:flutter_parent/network/utils/analytics.dart' as _i29;
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart'
     as _i135;
@@ -131,11 +131,11 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart'
     as _i116;
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart'
-    as _i119;
-import 'package:flutter_parent/screens/manage_students/student_color_picker_interactor.dart'
     as _i120;
+import 'package:flutter_parent/screens/manage_students/student_color_picker_interactor.dart'
+    as _i121;
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart'
-    as _i123;
+    as _i124;
 import 'package:flutter_parent/screens/pairing/pairing_interactor.dart' as _i78;
 import 'package:flutter_parent/screens/pairing/pairing_util.dart' as _i82;
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart'
@@ -143,20 +143,20 @@ import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interac
 import 'package:flutter_parent/screens/remote_config/remote_config_interactor.dart'
     as _i140;
 import 'package:flutter_parent/screens/settings/settings_interactor.dart'
-    as _i124;
+    as _i125;
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart'
-    as _i127;
+    as _i128;
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart'
     as _i92;
 import 'package:flutter_parent/utils/base_model.dart' as _i63;
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart'
     as _i70;
 import 'package:flutter_parent/utils/common_widgets/view_attachment/fetcher/attachment_fetcher_interactor.dart'
-    as _i128;
+    as _i129;
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart'
     as _i134;
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart'
-    as _i129;
+    as _i130;
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart'
     as _i93;
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart' as _i49;
@@ -164,7 +164,7 @@ import 'package:flutter_parent/utils/db/reminder_db.dart' as _i85;
 import 'package:flutter_parent/utils/db/user_colors_db.dart' as _i89;
 import 'package:flutter_parent/utils/notification_util.dart' as _i75;
 import 'package:flutter_parent/utils/old_app_migration.dart' as _i137;
-import 'package:flutter_parent/utils/permission_handler.dart' as _i130;
+import 'package:flutter_parent/utils/permission_handler.dart' as _i131;
 import 'package:flutter_parent/utils/qr_utils.dart' as _i14;
 import 'package:flutter_parent/utils/quick_nav.dart' as _i83;
 import 'package:flutter_parent/utils/remote_config_utils.dart' as _i141;
@@ -181,7 +181,7 @@ import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart'
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i67;
 import 'package:path_provider/path_provider.dart' as _i111;
-import 'package:permission_handler/permission_handler.dart' as _i131;
+import 'package:permission_handler/permission_handler.dart' as _i119;
 import 'package:sqflite/sqflite.dart' as _i5;
 import 'package:timezone/timezone.dart' as _i81;
 import 'package:tuple/tuple.dart' as _i115;
@@ -6406,7 +6406,7 @@ class MockQuickNav extends _i1.Mock implements _i83.QuickNav {
         returnValueForMissingStub: _i8.Future<void>.value(),
       ) as _i8.Future<void>);
   @override
-  _i8.Future<T> showDialog<T>({
+  _i8.Future<T?> showDialog<T>({
     required _i18.BuildContext? context,
     bool? barrierDismissible = true,
     required _i18.WidgetBuilder? builder,
@@ -6425,69 +6425,9 @@ class MockQuickNav extends _i1.Mock implements _i83.QuickNav {
             #routeSettings: routeSettings,
           },
         ),
-        returnValue: _i67.ifNotNull(
-              _i67.dummyValueOrNull<T>(
-                this,
-                Invocation.method(
-                  #showDialog,
-                  [],
-                  {
-                    #context: context,
-                    #barrierDismissible: barrierDismissible,
-                    #builder: builder,
-                    #useRootNavigator: useRootNavigator,
-                    #routeSettings: routeSettings,
-                  },
-                ),
-              ),
-              (T v) => _i8.Future<T>.value(v),
-            ) ??
-            _FakeFuture_6<T>(
-              this,
-              Invocation.method(
-                #showDialog,
-                [],
-                {
-                  #context: context,
-                  #barrierDismissible: barrierDismissible,
-                  #builder: builder,
-                  #useRootNavigator: useRootNavigator,
-                  #routeSettings: routeSettings,
-                },
-              ),
-            ),
-        returnValueForMissingStub: _i67.ifNotNull(
-              _i67.dummyValueOrNull<T>(
-                this,
-                Invocation.method(
-                  #showDialog,
-                  [],
-                  {
-                    #context: context,
-                    #barrierDismissible: barrierDismissible,
-                    #builder: builder,
-                    #useRootNavigator: useRootNavigator,
-                    #routeSettings: routeSettings,
-                  },
-                ),
-              ),
-              (T v) => _i8.Future<T>.value(v),
-            ) ??
-            _FakeFuture_6<T>(
-              this,
-              Invocation.method(
-                #showDialog,
-                [],
-                {
-                  #context: context,
-                  #barrierDismissible: barrierDismissible,
-                  #builder: builder,
-                  #useRootNavigator: useRootNavigator,
-                  #routeSettings: routeSettings,
-                },
-              ),
-            ),
-      ) as _i8.Future<T>);
+        returnValue: _i8.Future<T?>.value(),
+        returnValueForMissingStub: _i8.Future<T?>.value(),
+      ) as _i8.Future<T?>);
 }
 
 /// A class which mocks [ReminderDb].
@@ -8096,6 +8036,18 @@ class MockDashboardInteractor extends _i1.Mock
         returnValue: _i8.Future<bool?>.value(),
         returnValueForMissingStub: _i8.Future<bool?>.value(),
       ) as _i8.Future<bool?>);
+  @override
+  _i8.Future<_i119.PermissionStatus> requestNotificationPermission() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #requestNotificationPermission,
+          [],
+        ),
+        returnValue: _i8.Future<_i119.PermissionStatus>.value(
+            _i119.PermissionStatus.denied),
+        returnValueForMissingStub: _i8.Future<_i119.PermissionStatus>.value(
+            _i119.PermissionStatus.denied),
+      ) as _i8.Future<_i119.PermissionStatus>);
 }
 
 /// A class which mocks [QRLoginTutorialScreenInteractor].
@@ -8132,7 +8084,7 @@ class MockQRLoginTutorialScreenInteractor extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockManageStudentsInteractor extends _i1.Mock
-    implements _i119.ManageStudentsInteractor {
+    implements _i120.ManageStudentsInteractor {
   @override
   _i8.Future<List<_i62.User>?> getStudents({bool? forceRefresh = false}) =>
       (super.noSuchMethod(
@@ -8158,7 +8110,7 @@ class MockManageStudentsInteractor extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockStudentColorPickerInteractor extends _i1.Mock
-    implements _i120.StudentColorPickerInteractor {
+    implements _i121.StudentColorPickerInteractor {
   @override
   _i8.Future<void> save(
     String? studentId,
@@ -8180,7 +8132,7 @@ class MockStudentColorPickerInteractor extends _i1.Mock
 /// A class which mocks [UserApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserApi extends _i1.Mock implements _i121.UserApi {
+class MockUserApi extends _i1.Mock implements _i122.UserApi {
   @override
   _i8.Future<_i62.User?> getSelf() => (super.noSuchMethod(
         Invocation.method(
@@ -8236,7 +8188,7 @@ class MockUserApi extends _i1.Mock implements _i121.UserApi {
         returnValueForMissingStub: _i8.Future<_i62.User?>.value(),
       ) as _i8.Future<_i62.User?>);
   @override
-  _i8.Future<_i122.ColorChangeResponse?> setUserColor(
+  _i8.Future<_i123.ColorChangeResponse?> setUserColor(
     String? contextId,
     _i36.Color? color,
   ) =>
@@ -8248,17 +8200,17 @@ class MockUserApi extends _i1.Mock implements _i121.UserApi {
             color,
           ],
         ),
-        returnValue: _i8.Future<_i122.ColorChangeResponse?>.value(),
+        returnValue: _i8.Future<_i123.ColorChangeResponse?>.value(),
         returnValueForMissingStub:
-            _i8.Future<_i122.ColorChangeResponse?>.value(),
-      ) as _i8.Future<_i122.ColorChangeResponse?>);
+            _i8.Future<_i123.ColorChangeResponse?>.value(),
+      ) as _i8.Future<_i123.ColorChangeResponse?>);
 }
 
 /// A class which mocks [MasqueradeScreenInteractor].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMasqueradeScreenInteractor extends _i1.Mock
-    implements _i123.MasqueradeScreenInteractor {
+    implements _i124.MasqueradeScreenInteractor {
   @override
   _i8.Future<bool> startMasquerading(
     String? masqueradingUserId,
@@ -8290,7 +8242,7 @@ class MockMasqueradeScreenInteractor extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSettingsInteractor extends _i1.Mock
-    implements _i124.SettingsInteractor {
+    implements _i125.SettingsInteractor {
   @override
   bool isDebugMode() => (super.noSuchMethod(
         Invocation.method(
@@ -8352,34 +8304,34 @@ class MockSettingsInteractor extends _i1.Mock
 /// A class which mocks [FeaturesApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFeaturesApi extends _i1.Mock implements _i125.FeaturesApi {
+class MockFeaturesApi extends _i1.Mock implements _i126.FeaturesApi {
   @override
-  _i8.Future<_i126.FeatureFlags?> getFeatureFlags() => (super.noSuchMethod(
+  _i8.Future<_i127.FeatureFlags?> getFeatureFlags() => (super.noSuchMethod(
         Invocation.method(
           #getFeatureFlags,
           [],
         ),
-        returnValue: _i8.Future<_i126.FeatureFlags?>.value(),
-        returnValueForMissingStub: _i8.Future<_i126.FeatureFlags?>.value(),
-      ) as _i8.Future<_i126.FeatureFlags?>);
+        returnValue: _i8.Future<_i127.FeatureFlags?>.value(),
+        returnValueForMissingStub: _i8.Future<_i127.FeatureFlags?>.value(),
+      ) as _i8.Future<_i127.FeatureFlags?>);
 }
 
 /// A class which mocks [SplashScreenInteractor].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSplashScreenInteractor extends _i1.Mock
-    implements _i127.SplashScreenInteractor {
+    implements _i128.SplashScreenInteractor {
   @override
-  _i8.Future<_i127.SplashScreenData?> getData({String? qrLoginUrl}) =>
+  _i8.Future<_i128.SplashScreenData?> getData({String? qrLoginUrl}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getData,
           [],
           {#qrLoginUrl: qrLoginUrl},
         ),
-        returnValue: _i8.Future<_i127.SplashScreenData?>.value(),
-        returnValueForMissingStub: _i8.Future<_i127.SplashScreenData?>.value(),
-      ) as _i8.Future<_i127.SplashScreenData?>);
+        returnValue: _i8.Future<_i128.SplashScreenData?>.value(),
+        returnValueForMissingStub: _i8.Future<_i128.SplashScreenData?>.value(),
+      ) as _i8.Future<_i128.SplashScreenData?>);
   @override
   _i8.Future<void> updateUserColors() => (super.noSuchMethod(
         Invocation.method(
@@ -8413,7 +8365,7 @@ class MockSplashScreenInteractor extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAttachmentFetcherInteractor extends _i1.Mock
-    implements _i128.AttachmentFetcherInteractor {
+    implements _i129.AttachmentFetcherInteractor {
   @override
   _i8.Future<_i10.File> fetchAttachmentFile(
     _i99.Attachment? attachment,
@@ -8526,7 +8478,7 @@ class MockCancelToken extends _i1.Mock implements _i2.CancelToken {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAudioVideoAttachmentViewerInteractor extends _i1.Mock
-    implements _i129.AudioVideoAttachmentViewerInteractor {
+    implements _i130.AudioVideoAttachmentViewerInteractor {
   @override
   _i22.VideoPlayerController? makeController(String? url) =>
       (super.noSuchMethod(
@@ -8720,33 +8672,33 @@ class MockVideoPlayerController extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPermissionHandler extends _i1.Mock
-    implements _i130.PermissionHandler {
+    implements _i131.PermissionHandler {
   @override
-  _i8.Future<_i131.PermissionStatus> checkPermissionStatus(
-          _i131.Permission? permission) =>
+  _i8.Future<_i119.PermissionStatus> checkPermissionStatus(
+          _i119.Permission? permission) =>
       (super.noSuchMethod(
         Invocation.method(
           #checkPermissionStatus,
           [permission],
         ),
-        returnValue: _i8.Future<_i131.PermissionStatus>.value(
-            _i131.PermissionStatus.denied),
-        returnValueForMissingStub: _i8.Future<_i131.PermissionStatus>.value(
-            _i131.PermissionStatus.denied),
-      ) as _i8.Future<_i131.PermissionStatus>);
+        returnValue: _i8.Future<_i119.PermissionStatus>.value(
+            _i119.PermissionStatus.denied),
+        returnValueForMissingStub: _i8.Future<_i119.PermissionStatus>.value(
+            _i119.PermissionStatus.denied),
+      ) as _i8.Future<_i119.PermissionStatus>);
   @override
-  _i8.Future<_i131.PermissionStatus> requestPermission(
-          _i131.Permission? permission) =>
+  _i8.Future<_i119.PermissionStatus> requestPermission(
+          _i119.Permission? permission) =>
       (super.noSuchMethod(
         Invocation.method(
           #requestPermission,
           [permission],
         ),
-        returnValue: _i8.Future<_i131.PermissionStatus>.value(
-            _i131.PermissionStatus.denied),
-        returnValueForMissingStub: _i8.Future<_i131.PermissionStatus>.value(
-            _i131.PermissionStatus.denied),
-      ) as _i8.Future<_i131.PermissionStatus>);
+        returnValue: _i8.Future<_i119.PermissionStatus>.value(
+            _i119.PermissionStatus.denied),
+        returnValueForMissingStub: _i8.Future<_i119.PermissionStatus>.value(
+            _i119.PermissionStatus.denied),
+      ) as _i8.Future<_i119.PermissionStatus>);
 }
 
 /// A class which mocks [FlutterDownloaderVeneer].
@@ -8818,15 +8770,6 @@ class MockViewAttachmentInteractor extends _i1.Mock
         returnValue: _i8.Future<void>.value(),
         returnValueForMissingStub: _i8.Future<void>.value(),
       ) as _i8.Future<void>);
-  @override
-  _i8.Future<bool> checkStoragePermission() => (super.noSuchMethod(
-        Invocation.method(
-          #checkStoragePermission,
-          [],
-        ),
-        returnValue: _i8.Future<bool>.value(false),
-        returnValueForMissingStub: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
 }
 
 /// A class which mocks [AuthenticationInterceptor].

@@ -21,6 +21,7 @@ import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DashboardInteractor {
   Future<List<User>?> getStudents({bool forceRefresh = false}) async =>
@@ -47,4 +48,6 @@ class DashboardInteractor {
   AlertCountNotifier getAlertCountNotifier() => locator<AlertCountNotifier>();
 
   Future<bool?> shouldShowOldReminderMessage() => locator<OldAppMigration>().hasOldReminders();
+
+  Future<PermissionStatus> requestNotificationPermission() => Permission.notification.request();
 }

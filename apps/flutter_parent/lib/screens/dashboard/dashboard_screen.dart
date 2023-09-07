@@ -47,6 +47,7 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboard_interactor.dart';
@@ -122,6 +123,8 @@ class DashboardState extends State<DashboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       RatingDialog.asDialog(context);
     });
+
+    _interactor.requestNotificationPermission();
   }
 
   @override
