@@ -122,6 +122,7 @@ class FileSyncWorker @AssistedInject constructor(
         const val INPUT_COURSE_ID = "INPUT_COURSE_ID"
         const val PROGRESS = "fileSyncProgress"
         const val OUTPUT = "fileSyncOutput"
+        const val TAG = "FileSyncWorker"
 
         fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String, wifiOnly: Boolean): OneTimeWorkRequest {
             val inputData = androidx.work.Data.Builder()
@@ -132,6 +133,7 @@ class FileSyncWorker @AssistedInject constructor(
                 .build()
 
             return OneTimeWorkRequest.Builder(FileSyncWorker::class.java)
+                .addTag(TAG)
                 .setInputData(inputData)
                 .setConstraints(
                     Constraints.Builder()

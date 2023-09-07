@@ -18,16 +18,20 @@
 
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
+import com.instructure.pandautils.features.offline.sync.FileSyncProgress
+import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -36,7 +40,8 @@ import java.util.UUID
 
 data class CourseProgressItemViewModel(
     val data: CourseProgressViewData,
-    val workManager: WorkManager
+    private val workManager: WorkManager,
+    private val context: Context
 ) :
     GroupItemViewModel(collapsable = true, items = (data.tabs + data.files), collapsed = false) {
 
@@ -72,6 +77,8 @@ data class CourseProgressItemViewModel(
         }
 
         if (courseProgress.fileProgresses == null) return@Observer
+
+        data.updateSize(NumberHelper.readableFileSize(context, courseProgress.tabs.size * 100 * 1000 + courseProgress.fileProgresses.sumOf { it.fileSize }))
 
         aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileProgresses.map { UUID.fromString(it.workerId) } + UUID.fromString(
             data.workerId

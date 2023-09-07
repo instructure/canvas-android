@@ -500,10 +500,12 @@ class CourseSyncWorker @AssistedInject constructor(
         const val COURSE_ID = "course_id"
         const val COURSE_PROGRESS = "courseProgress"
         const val OUTPUT = "output"
+        const val TAG = "CourseSyncWorker"
 
         fun createOnTimeWork(courseId: Long, wifiOnly: Boolean): OneTimeWorkRequest {
             val data = workDataOf(COURSE_ID to courseId)
             return OneTimeWorkRequestBuilder<CourseSyncWorker>()
+                .addTag(TAG)
                 .setInputData(data)
                 .setConstraints(
                     Constraints.Builder()

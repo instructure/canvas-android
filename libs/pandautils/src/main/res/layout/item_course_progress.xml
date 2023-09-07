@@ -30,83 +30,99 @@
         <import type="androidx.work.WorkInfo.State" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/courseName"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@{itemViewModel.data.courseName}"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/courseSize"
-            app:layout_constraintEnd_toStartOf="@id/toggleButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Astronomy" />
+            android:background="@color/backgroundLight"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
 
-        <TextView
-            android:id="@+id/courseSize"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/courseName"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/courseName"
-            tools:text="1.28 GB" />
+            <TextView
+                android:id="@+id/courseName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@{itemViewModel.data.courseName}"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/courseSize"
+                app:layout_constraintEnd_toStartOf="@id/toggleButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Astronomy" />
 
-        <ImageView
-            android:id="@+id/toggleButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
-            android:onClick="@{() -> itemViewModel.toggleItems()}"
-            android:padding="12dp"
-            android:rotation="@{itemViewModel.collapsed ? 0 : 180}"
-            android:src="@drawable/ic_arrow_down"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/actionContainer"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/textDarkest" />
-
-        <FrameLayout
-            android:id="@+id/actionContainer"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="@{itemViewModel.data.state.isFinished() ? View.GONE : View.VISIBLE}"/>
+            <TextView
+                android:id="@+id/courseSize"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{itemViewModel.data.size}"
+                android:textColor="@color/textDark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/courseName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseName"
+                tools:text="1.28 GB" />
 
             <ImageView
-                android:id="@+id/errorIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_close"
-                android:visibility="@{itemViewModel.data.state == State.FAILED || itemViewModel.data.state == State.CANCELLED ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/toggleButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:onClick="@{() -> itemViewModel.toggleItems()}"
+                android:padding="12dp"
+                android:rotation="@{itemViewModel.collapsed ? 0 : 180}"
+                android:src="@drawable/ic_arrow_down"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/actionContainer"
+                app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/textDarkest" />
 
-            <ImageView
-                android:id="@+id/successIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_checkmark"
-                android:visibility="@{itemViewModel.data.state == State.SUCCEEDED ? View.VISIBLE : View.GONE}"
+            <FrameLayout
+                android:id="@+id/actionContainer"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:tint="@color/textDarkest" />
-        </FrameLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progressBar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:indeterminate="true"
+                    android:visibility="@{itemViewModel.data.state.isFinished() ? View.GONE : View.VISIBLE}"
+                    app:indicatorSize="16dp"
+                    app:indicatorColor="@color/backgroundInfo"
+                    app:trackThickness="1.5dp" />
+
+                <ImageView
+                    android:id="@+id/errorIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_close"
+                    android:visibility="@{itemViewModel.data.state == State.FAILED || itemViewModel.data.state == State.CANCELLED ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@color/textDarkest" />
+
+                <ImageView
+                    android:id="@+id/successIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_checkmark"
+                    android:visibility="@{itemViewModel.data.state == State.SUCCEEDED ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@color/textDarkest" />
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </layout>

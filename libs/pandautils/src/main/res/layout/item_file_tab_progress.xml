@@ -89,12 +89,13 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:indeterminate="@{itemViewModel.data.progress == 0}"
-                app:indicatorSize="16dp"
-                app:trackThickness="1.5dp"
                 android:max="100"
                 android:min="0"
                 android:progress="@{itemViewModel.data.progress}"
-                android:visibility="@{itemViewModel.data.state == ProgressState.IN_PROGRESS ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{itemViewModel.data.state == ProgressState.IN_PROGRESS ? View.VISIBLE : View.GONE}"
+                app:indicatorSize="16dp"
+                app:indicatorColor="@color/backgroundInfo"
+                app:trackThickness="1.5dp" />
 
             <ImageView
                 android:id="@+id/errorIndicator"

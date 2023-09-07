@@ -101,13 +101,13 @@ data class FileTabProgressItemViewModel(
         val workerIds = mutableListOf<UUID>()
         fileProgresses.forEach {
             val item = FileSyncProgressItemViewModel(
-                FileSyncProgressViewData(
-                    it.fileName,
-                    NumberHelper.readableFileSize(context, it.fileSize),
-                    0,
-                    it.workerId,
+                data = FileSyncProgressViewData(
+                    fileName = it.fileName,
+                    fileSize = NumberHelper.readableFileSize(context, it.fileSize),
+                    progress = 0,
+                    workerId = it.workerId,
                 ),
-                workManager
+                workManager = workManager
             )
             workerIds.add(UUID.fromString(it.workerId))
             fileItems.add(item)

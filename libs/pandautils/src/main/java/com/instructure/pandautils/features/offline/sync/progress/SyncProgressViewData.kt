@@ -32,23 +32,29 @@ data class SyncProgressViewData(val items: List<ItemViewModel>)
 data class CourseProgressViewData(
     val courseName: String,
     val workerId: String,
-    @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
     val tabs: List<TabProgressItemViewModel>,
-    val files: List<ItemViewModel>
+    val files: List<ItemViewModel>,
+    @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
+    @Bindable var size: String = ""
 ) : BaseObservable() {
 
     fun updateState(newState: WorkInfo.State) {
         state = newState
         notifyPropertyChanged(BR.state)
     }
+
+    fun updateSize(size: String) {
+        this.size = size
+        notifyPropertyChanged(BR.size)
+    }
 }
 
 data class TabProgressViewData(
     val tabId: String,
     val tabName: String,
-    @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
-    val workerId: String
-): BaseObservable() {
+    val workerId: String,
+    @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
+) : BaseObservable() {
 
     fun updateState(newState: ProgressState) {
         state = newState
@@ -59,8 +65,8 @@ data class TabProgressViewData(
 data class FileSyncProgressViewData(
     val fileName: String,
     val fileSize: String,
-    @Bindable var progress: Int,
     val workerId: String,
+    @Bindable var progress: Int,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
 ) : BaseObservable() {
 
@@ -77,12 +83,12 @@ data class FileSyncProgressViewData(
 
 data class FileTabProgressViewData(
     val courseWorkerId: String,
-    @Bindable var totalSize: String = "",
     var items: List<ItemViewModel>,
+    @Bindable var totalSize: String = "",
     @Bindable var progress: Int = 0,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
     @Bindable var toggleable: Boolean = false
-): BaseObservable() {
+) : BaseObservable() {
 
     fun updateTotalSize(totalSize: String) {
         this.totalSize = totalSize
@@ -102,3 +108,10 @@ enum class ViewType(val viewType: Int) {
     COURSE_FILE_TAB_PROGRESS(2),
     COURSE_FILE_PROGRESS(3)
 }
+
+data class AggregateProgressViewData(
+    val totalSize: String,
+    val downloadedSize: String,
+    val progress: Int,
+    val queued: Int
+)

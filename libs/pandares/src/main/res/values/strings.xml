@@ -1438,4 +1438,6 @@
     <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
     <string name="offline">Offline</string>
     <string name="sync_failed">Sync Failed</string>
+    <string name="syncProgressDownloading">Downloading %1$s of %2$s</string>
+    <string name="syncQueued">Queued</string>
 </resources>
