@@ -79,9 +79,14 @@
                 android:min="0"
                 android:progress="@{viewModel.progressData.progress}"
                 android:progressTint="@color/backgroundInfo"
-                tools:progress="50"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/downloadProgressText" />
+                app:layout_constraintTop_toBottomOf="@id/downloadProgressText"
+                tools:progress="50" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

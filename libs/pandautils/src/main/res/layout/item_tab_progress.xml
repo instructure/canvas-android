@@ -30,75 +30,85 @@
         <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="14dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tabTitle"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            android:text="@{itemViewModel.data.tabName}"
-            app:layout_constraintEnd_toStartOf="@+id/actionContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Assignments" />
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp">
 
-        <TextView
-            android:id="@+id/errorText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/sync_failed"
-            android:textColor="@color/backgroundDanger"
-            android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="@id/tabTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tabTitle"
-            tools:visibility="gone" />
+            <TextView
+                android:id="@+id/tabTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:text="@{itemViewModel.data.tabName}"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/actionContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Assignments" />
 
-        <FrameLayout
-            android:id="@+id/actionContainer"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:id="@+id/errorText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sync_failed"
+                android:textColor="@color/backgroundDanger"
+                android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="@id/tabTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tabTitle"
+                tools:visibility="gone" />
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progressBar"
+            <FrameLayout
+                android:id="@+id/actionContainer"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:indeterminate="true"
-                android:visibility="@{itemViewModel.data.state == ProgressState.IN_PROGRESS ? View.VISIBLE : View.GONE}"
-                app:indicatorSize="16dp"
-                app:indicatorColor="@color/backgroundInfo"
-                app:trackThickness="1.5dp" />
-
-            <ImageView
-                android:id="@+id/errorIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_close"
-                app:tint="@color/textDarkest"
-                android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:visibility="gone" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/successIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_checkmark"
-                app:tint="@color/textDarkest"
-                android:visibility="@{itemViewModel.data.state == ProgressState.COMPLETED ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:visibility="gone" />
-        </FrameLayout>
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progressBar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:indeterminate="true"
+                    android:visibility="@{itemViewModel.data.state == ProgressState.IN_PROGRESS ? View.VISIBLE : View.GONE}"
+                    app:indicatorColor="@color/backgroundInfo"
+                    app:indicatorSize="16dp"
+                    app:trackThickness="1.5dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/errorIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_close"
+                    android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@color/textDarkest"
+                    tools:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/successIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_checkmark"
+                    android:visibility="@{itemViewModel.data.state == ProgressState.COMPLETED ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@color/textDarkest"
+                    tools:visibility="gone" />
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </layout>
