@@ -16,14 +16,13 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -43,13 +42,11 @@ import com.instructure.teacher.R
 /**
  * Represents the Discussions List page.
  */
-class DiscussionsListPage : BasePage() {
+class DiscussionsListPage(val searchable: Searchable) : BasePage() {
 
     private val discussionListToolbar by OnViewWithId(R.id.discussionListToolbar)
     private val discussionsFAB by OnViewWithId(R.id.createNewDiscussion)
     private val discussionsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
-    private val searchButton by OnViewWithId(R.id.search)
-    private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
 
     /**
      * Clicks on the specified [discussion] in the discussions list.
@@ -113,28 +110,12 @@ class DiscussionsListPage : BasePage() {
     }
 
     /**
-     * Opens the search functionality in the discussions list.
-     */
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    /**
-     * Enters the specified [query] into the search input field.
-     *
-     * @param query The search query to be entered.
-     */
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
-    }
-
-    /**
      * Asserts the number of discussions in the discussions list.
      *
      * @param count The expected number of discussions.
      */
     fun assertDiscussionCount(count: Int) {
-        discussionsRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+        discussionsRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count + 1)) //Because of the header.
     }
 
     /**

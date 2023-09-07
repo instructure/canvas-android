@@ -20,6 +20,7 @@ package com.instructure.student.features.assignmentdetails.gradecellview
 import android.content.res.Resources
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
@@ -72,7 +73,7 @@ class GradeCellViewDataTest {
     }
 
     @Test
-    fun `Create empty grade cell when assignment is quantitative and quantitative data is restricted`() {
+    fun `Create empty grade cell when assignment is quantitative and quantitative data is restricted and there is no grading scheme`() {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
@@ -82,6 +83,25 @@ class GradeCellViewDataTest {
         )
 
         Assert.assertEquals(GradeCellViewData.State.EMPTY, gradeCell.state)
+    }
+
+    @Test
+    fun `Create cell with converted grade when assignment is quantitative and quantitative data is restricted`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            Assignment(gradingType = Assignment.POINTS_TYPE, pointsPossible = 20.0),
+            Submission(submittedAt = Date(), grade = "10", score = 17.0),
+            restrictQuantitativeData = true,
+            gradingScheme = listOf(
+                GradingSchemeRow("A", 0.9),
+                GradingSchemeRow("B", 0.8),
+                GradingSchemeRow("F", 0.0)
+            )
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("B", gradeCell.grade)
     }
 
     @Test

@@ -1400,6 +1400,7 @@
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Version</string>
     <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
+    <string name="instructure_logo">Instructure logo</string>
     <string name="preferences">Preferences</string>
     <string name="offlineContent">Offline Content</string>
     <string name="offlineSyncSettingsTitle">Synchronization</string>

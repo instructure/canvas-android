@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
@@ -36,10 +37,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CourseGradesScreen extends StatefulWidget {
-  final bool _restrictQuantitativeData;
-
-  CourseGradesScreen(this._restrictQuantitativeData);
-
   @override
   _CourseGradesScreenState createState() => _CourseGradesScreenState();
 }
@@ -116,12 +113,12 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
     return ListView(
       children: [
         header,
-        ..._assignmentListChildren(context, snapshot.data.assignmentGroups),
+        ..._assignmentListChildren(context, snapshot.data.assignmentGroups, model.course),
       ],
     );
   }
 
-  List<Widget> _assignmentListChildren(BuildContext context, List<AssignmentGroup> groups) {
+  List<Widget> _assignmentListChildren(BuildContext context, List<AssignmentGroup> groups, Course course) {
     final children = List<Widget>();
 
     for (AssignmentGroup group in groups) {
@@ -153,7 +150,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
             ),
             children: <Widget>[
               ...(group.assignments.toList()..sort((a, b) => a.position.compareTo(b.position)))
-                  .map((assignment) => _AssignmentRow(assignment: assignment, restrictQuantitativeData: widget._restrictQuantitativeData))
+                  .map((assignment) => _AssignmentRow(assignment: assignment, course: course))
             ],
           ),
         ),
@@ -281,9 +278,9 @@ class _CourseGradeHeader extends StatelessWidget {
 
 class _AssignmentRow extends StatelessWidget {
   final Assignment assignment;
-  final bool restrictQuantitativeData;
+  final Course course;
 
-  const _AssignmentRow({Key key, this.assignment, this.restrictQuantitativeData}) : super(key: key);
+  const _AssignmentRow({Key key, this.assignment, this.course}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -378,37 +375,39 @@ class _AssignmentRow extends StatelessWidget {
     final localizations = L10n(context);
 
     final submission = assignment.submission(studentId);
+
+    final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
+
     if (submission?.excused ?? false) {
-      text = restrictQuantitativeData ? localizations.excused : localizations.gradeFormatScoreOutOfPointsPossible(localizations.excused, points);
-      semantics = restrictQuantitativeData ? localizations.excused : localizations.contentDescriptionScoreOutOfPointsPossible(localizations.excused, points);
+      text = restrictQuantitativeData
+          ? localizations.excused
+          : localizations.gradeFormatScoreOutOfPointsPossible(localizations.excused, points);
+      semantics = restrictQuantitativeData
+          ? localizations.excused
+          : localizations.contentDescriptionScoreOutOfPointsPossible(localizations.excused, points);
     } else if (submission?.grade != null) {
-      text = _formatGradeText(restrictQuantitativeData, submission.grade, points, localizations);
-      semantics = _formatGradeSemantics(restrictQuantitativeData, submission.grade, points, localizations);
+      String grade = restrictQuantitativeData && assignment.isGradingTypeQuantitative()
+          ? course.convertScoreToLetterGrade(submission.score, assignment.pointsPossible)
+          : submission.grade;
+      text = restrictQuantitativeData
+          ? grade
+          : localizations.gradeFormatScoreOutOfPointsPossible(grade, points);
+      semantics = restrictQuantitativeData
+          ? grade
+          : localizations.contentDescriptionScoreOutOfPointsPossible(grade, points);
     } else {
-      text = _formatGradeText(restrictQuantitativeData, localizations.assignmentNoScore, points, localizations);
-      semantics = _formatGradeSemantics(restrictQuantitativeData, '', points, localizations); // Read as "out of x points"
+      text = restrictQuantitativeData
+          ? localizations.assignmentNoScore
+          : localizations.gradeFormatScoreOutOfPointsPossible(localizations.assignmentNoScore, points);
+      semantics = restrictQuantitativeData
+          ? ''
+          : localizations.contentDescriptionScoreOutOfPointsPossible('', points);
     }
 
     return Text(text,
         semanticsLabel: semantics,
         style: Theme.of(context).textTheme.subtitle1,
         key: Key("assignment_${assignment.id}_grade"));
-  }
-
-  String _formatGradeText(bool restrictQuantitativeData, String score, String pointsPossible, AppLocalizations localizations) {
-    if (restrictQuantitativeData) {
-      return !assignment.isGradingTypeQuantitative() ? score : '';
-    } else {
-      return localizations.gradeFormatScoreOutOfPointsPossible(score, pointsPossible);
-    }
-  }
-
-  String _formatGradeSemantics(bool restrictQuantitativeData, String score, String pointsPossible, AppLocalizations localizations) {
-    if (restrictQuantitativeData) {
-      return !assignment.isGradingTypeQuantitative() ? score : '';
-    } else {
-      return localizations.contentDescriptionScoreOutOfPointsPossible(score, pointsPossible);
-    }
   }
 
   String _formatDate(BuildContext context, DateTime date) {

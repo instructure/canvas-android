@@ -19,16 +19,20 @@ package com.instructure.student.features.coursebrowser.datasource
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.facade.PageFacade
+import com.instructure.pandautils.utils.orDefault
 
 class CourseBrowserLocalDataSource(
     private val tabDao: TabDao,
-    private val pageFacade: PageFacade
+    private val pageFacade: PageFacade,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao
 ) : CourseBrowserDataSource {
     override suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
+        val syncedTabs = courseSyncSettingsDao.findById(canvasContext.id)?.tabs
         return tabDao.findByCourseId(canvasContext.id).map {
-            it.toApiModel()
+            it.toApiModel().copy(enabled = syncedTabs?.get(it.id).orDefault())
         }
     }
 

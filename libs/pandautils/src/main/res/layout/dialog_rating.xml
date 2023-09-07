@@ -39,8 +39,8 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:contentDescription="@string/star1"
-            android:src="@drawable/ic_star"
-            app:tint="@color/backgroundMedium" />
+            android:src="@drawable/ic_rating_star_outline"
+            app:tint="@color/backgroundDark" />
 
         <ImageView
             android:id="@+id/star2"
@@ -49,8 +49,8 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:contentDescription="@string/star2"
-            android:src="@drawable/ic_star"
-            app:tint="@color/backgroundMedium"/>
+            android:src="@drawable/ic_rating_star_outline"
+            app:tint="@color/backgroundDark"/>
 
         <ImageView
             android:id="@+id/star3"
@@ -59,8 +59,8 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:contentDescription="@string/star3"
-            android:src="@drawable/ic_star"
-            app:tint="@color/backgroundMedium"/>
+            android:src="@drawable/ic_rating_star_outline"
+            app:tint="@color/backgroundDark"/>
 
         <ImageView
             android:id="@+id/star4"
@@ -69,8 +69,8 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:contentDescription="@string/star4"
-            android:src="@drawable/ic_star"
-            app:tint="@color/backgroundMedium"/>
+            android:src="@drawable/ic_rating_star_outline"
+            app:tint="@color/backgroundDark"/>
 
         <ImageView
             android:id="@+id/star5"
@@ -79,8 +79,8 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:contentDescription="@string/star5"
-            android:src="@drawable/ic_star"
-            app:tint="@color/backgroundMedium"/>
+            android:src="@drawable/ic_rating_star_outline"
+            app:tint="@color/backgroundDark"/>
 
     </LinearLayout>
 

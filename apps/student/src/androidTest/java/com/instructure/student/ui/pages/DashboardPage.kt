@@ -280,6 +280,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(matcher).check(doesNotExist())
     }
 
+    fun assertGroupNotDisplayed(group: Group) {
+        val matcher = allOf(
+            withText(group.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
         onView(withText(android.R.string.ok) + withAncestor(R.id.buttonPanel)).click()

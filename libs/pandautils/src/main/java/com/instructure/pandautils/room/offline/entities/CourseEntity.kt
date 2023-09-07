@@ -61,7 +61,8 @@ data class CourseEntity(
     val restrictEnrollmentsToCourseDate: Boolean,
     val workflowState: String?,
     val homeroomCourse: Boolean,
-    val courseColor: String?
+    val courseColor: String?,
+    val gradingScheme: List<GradingSchemeRow>?
 ) {
     constructor(course: Course) : this(
         course.id,
@@ -91,7 +92,8 @@ data class CourseEntity(
         course.restrictEnrollmentsToCourseDate,
         course.workflowState?.name,
         course.homeroomCourse,
-        course.courseColor
+        course.courseColor,
+        course.gradingScheme
     )
 
     fun toApiModel(
@@ -135,7 +137,8 @@ data class CourseEntity(
             courseColor = courseColor,
             gradingPeriods = gradingPeriods,
             tabs = tabs,
-            settings = settings
+            settings = settings,
+            gradingSchemeRaw = gradingScheme?.map { listOf(it.name, it.value) }
         )
     }
 }

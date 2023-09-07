@@ -90,6 +90,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var items: ArrayList<ArrayList<ModuleItem>> by SerializableArg(key = MODULE_ITEMS, default = ArrayList())
     private var assetId: String by StringArg(key = ASSET_ID)
     private var assetType: String by StringArg(key = ASSET_TYPE, default = ModuleItemAsset.MODULE_ITEM.assetType)
+    // This is used in offline cases when the modules are not synced, but we have links with moduleId. This will never be module item asset type.
+    private var secondaryAssetType: String? by NullableStringArg(key = SECONDARY_ASSET_TYPE)
     private var route: Route by ParcelableArg(key = ROUTE)
     private var navigatedFromModules: Boolean by BooleanArg(key = NAVIGATED_FROM_MODULES)
 
@@ -729,9 +731,13 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 items = moduleHelper.strippedModuleItems
             } else {
                 binding.progressBar.setGone()
-                val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType)
-                if (moduleItemAsset != ModuleItemAsset.MODULE_ITEM) {
-                    val newRoute = route.copy(secondaryClass = moduleItemAsset.routeClass, removePreviousScreen = true)
+                val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType) ?: ModuleItemAsset.MODULE_ITEM
+                val secondaryItemAsset = ModuleItemAsset.fromAssetType(secondaryAssetType)
+                val routeOffline = !repository.isOnline() && isOfflineEnabled && secondaryItemAsset != null
+
+                if (moduleItemAsset != ModuleItemAsset.MODULE_ITEM || routeOffline) {
+                    // If the asset type is not a module item it means that the secondaryItemAsset will never be null.
+                    val newRoute = route.copy(secondaryClass = secondaryItemAsset!!.routeClass, removePreviousScreen = true)
                     RouteMatcher.route(requireContext(), newRoute)
                     return@tryLaunch
                 }
@@ -756,6 +762,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         private const val CHILD_POSITION = "child_position"
         private const val ASSET_ID = "asset_id"
         private const val ASSET_TYPE = "asset_type"
+        private const val SECONDARY_ASSET_TYPE = "secondary_asset_type"
         private const val ROUTE = "route"
         private const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
 
@@ -786,6 +793,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 }
                 val asset = getAssetTypeAndId(route)
                 assetType = asset.first.assetType
+                secondaryAssetType = getSecondaryAssetType(route)?.assetType
                 assetId = asset.second
             } else null
 
@@ -811,6 +819,18 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             return Pair(ModuleItemAsset.MODULE_ITEM, "")
         }
 
+        private fun getSecondaryAssetType(route: Route): ModuleItemAsset? {
+            val params = route.paramsHash
+
+            ModuleItemAsset.values().forEach {
+                if (params.containsKey(it.assetIdParamName)) {
+                    return it
+                }
+            }
+
+            return null
+        }
+
         private fun validRoute(route: Route): Boolean = route.canvasContext != null
             && (CourseModulesStore.moduleObjects != null && CourseModulesStore.moduleListItems != null)
             || route.queryParamsHash.keys.any { it == RouterParams.MODULE_ITEM_ID }
@@ -829,6 +849,6 @@ enum class ModuleItemAsset(val assetType: String, val assetIdParamName: String, 
     FILE("File", RouterParams.FILE_ID, FileDetailsFragment::class.java);
 
     companion object {
-        fun fromAssetType(assetType: String): ModuleItemAsset = values().find { it.assetType == assetType } ?: MODULE_ITEM
+        fun fromAssetType(assetType: String?): ModuleItemAsset? = values().find { it.assetType == assetType }
     }
 }

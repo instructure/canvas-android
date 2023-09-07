@@ -19,8 +19,12 @@ package com.instructure.student.features.assignments.list.adapter
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.WeaveJob
@@ -55,10 +59,11 @@ abstract class AssignmentListRecyclerAdapter(
 
     private var assignmentGroupsJob: WeaveJob? = null
     private var gradingPeriodJob: WeaveJob? = null
-    private var settingsJob: WeaveJob? = null
+    private var courseJob: WeaveJob? = null
 
     protected var assignmentGroups: List<AssignmentGroup> = emptyList()
     private var restrictQuantitativeData = false
+    private var gradingSchemes = listOf<GradingSchemeRow>()
 
     var filter: AssignmentListFilter = AssignmentListFilter.ALL
     set(value) {
@@ -108,17 +113,13 @@ abstract class AssignmentListRecyclerAdapter(
             if changes are made here, check if they are needed in the other recycler adapters.*/
         val course = canvasContext as Course
 
-        if (course.settings != null && !isRefresh) {
-            restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
+        courseJob = tryWeave {
+            val detailedCourse = repository.getCourseWithGrade(canvasContext.id, isRefresh)
+            restrictQuantitativeData = detailedCourse?.settings?.restrictQuantitativeData ?: false
+            gradingSchemes = detailedCourse?.gradingScheme ?: emptyList()
             loadAssignmentsData(course)
-        } else {
-            settingsJob = tryWeave {
-                val settings = repository.loadCourseSettings(canvasContext.id, isRefresh)
-                restrictQuantitativeData = settings?.restrictQuantitativeData ?: false
-                loadAssignmentsData(course)
-            } catch {
-                loadAssignmentsData(course)
-            }
+        } catch {
+            loadAssignmentsData(course)
         }
     }
 
@@ -177,7 +178,7 @@ abstract class AssignmentListRecyclerAdapter(
             assignmentGroup: AssignmentGroup,
             assignment: Assignment
     ) {
-        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.backgroundColor, adapterToAssignmentsCallback, restrictQuantitativeData)
+        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.backgroundColor, adapterToAssignmentsCallback, restrictQuantitativeData, gradingSchemes)
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup) {
@@ -258,7 +259,7 @@ abstract class AssignmentListRecyclerAdapter(
         super.cancel()
         assignmentGroupsJob?.cancel()
         gradingPeriodJob?.cancel()
-        settingsJob?.cancel()
+        courseJob?.cancel()
     }
 }
 
