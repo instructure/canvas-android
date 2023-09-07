@@ -30,34 +30,6 @@ import '../../test_app.dart';
 import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  test('downloadFile does nothing when permission is not granted', () async {
-    var permissionHandler = MockPermissionHandler();
-    var pathProvider = MockPathProviderVeneer();
-    var downloader = MockFlutterDownloaderVeneer();
-    await setupTestLocator((locator) {
-      locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
-      locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
-      locator.registerLazySingleton<FlutterDownloaderVeneer>(() => downloader);
-    });
-
-    when(permissionHandler.checkPermissionStatus(Permission.storage))
-        .thenAnswer((_) => Future.value(PermissionStatus.denied));
-    when(permissionHandler.requestPermission(Permission.storage))
-        .thenAnswer((_) => Future.value(PermissionStatus.denied));
-
-    ViewAttachmentInteractor().downloadFile(Attachment());
-
-    verifyNever(pathProvider.getExternalStorageDirectories(type: anyNamed('type')));
-    verifyNever(
-      downloader.enqueue(
-        url: anyNamed('url'),
-        savedDir: anyNamed('savedDir'),
-        showNotification: anyNamed('showNotification'),
-        openFileFromNotification: anyNamed('openFileFromNotification'),
-      ),
-    );
-  }, skip: true);
-
   test('downloadFile calls PathProvider and FlutterDownloader with correct parameters', () async {
     var permissionHandler = MockPermissionHandler();
     var pathProvider = MockPathProviderVeneer();
