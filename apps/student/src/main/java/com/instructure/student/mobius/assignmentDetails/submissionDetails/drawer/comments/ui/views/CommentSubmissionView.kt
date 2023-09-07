@@ -29,10 +29,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.prettyPrint
-import com.instructure.pandautils.utils.DP
-import com.instructure.pandautils.utils.iconRes
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewCommentSubmissionAttachmentBinding
 
@@ -132,7 +129,7 @@ class CommentSubmissionView(
             binding.iconImageView.setImageResource(attachment.iconRes)
             binding.titleTextView.text = attachment.displayName
             binding.subtitleTextView.text = Formatter.formatFileSize(context, attachment.size)
-            binding.root.onClick { onAttachmentClicked(submission, attachment) }
+            binding.root.onClickWithRequireNetwork { onAttachmentClicked(submission, attachment) }
             if (index > 0) {
                 (binding.root.layoutParams as LayoutParams).topMargin = context.DP(4).toInt()
             }
