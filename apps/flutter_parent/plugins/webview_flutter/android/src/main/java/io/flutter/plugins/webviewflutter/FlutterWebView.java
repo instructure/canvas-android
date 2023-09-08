@@ -425,7 +425,9 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   }
 
   private void setDarkMode(boolean darkMode) {
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+      WebSettingsCompat.setAlgorithmicDarkeningAllowed(webView.getSettings(), darkMode);
+    } else if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
       int forceDarkMode = darkMode ? WebSettingsCompat.FORCE_DARK_ON : WebSettingsCompat.FORCE_DARK_OFF;
       WebSettingsCompat.setForceDark(webView.getSettings(), forceDarkMode);
     } else {
