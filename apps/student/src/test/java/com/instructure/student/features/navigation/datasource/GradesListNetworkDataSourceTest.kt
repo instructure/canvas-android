@@ -18,7 +18,9 @@
 package com.instructure.student.features.navigation.datasource
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -32,8 +34,9 @@ import org.junit.Test
 class NavigationNetworkDataSourceTest {
 
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
 
-    private val dataSource = NavigationNetworkDataSource(courseApi)
+    private val dataSource = NavigationNetworkDataSource(courseApi, userApi)
 
     @Test
     fun `Get course successfully returns data`() = runTest {
@@ -45,12 +48,32 @@ class NavigationNetworkDataSourceTest {
 
         assertEquals(expected, result)
     }
-
+    @Test
     fun `Get course failure returns null`() = runTest {
         coEvery { courseApi.getCourse(any(), any()) } returns DataResult.Fail()
 
         val result = dataSource.getCourse(1, true)
 
         assertNull(result)
+    }
+
+    @Test
+    fun `Get self returns success`() = runTest {
+        val expected = User(id = 55)
+
+        coEvery { userApi.getSelf(any()) } returns DataResult.Success(expected)
+
+        val result = dataSource.getSelf()
+
+        assertEquals(expected, result.dataOrThrow)
+    }
+
+    @Test
+    fun `Get self returns failure`() = runTest {
+        coEvery { userApi.getSelf(any()) } returns DataResult.Fail()
+
+        val result = dataSource.getSelf()
+
+        assertEquals(DataResult.Fail(), result)
     }
 }

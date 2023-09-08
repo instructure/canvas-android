@@ -18,6 +18,8 @@
 package com.instructure.student.features.navigation
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -30,6 +32,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -76,5 +80,23 @@ class NavigationRepositoryTest {
 
         coVerify { localDataSource.getCourse(1, true) }
         assertEquals(offlineExpected, result)
+    }
+
+    @Test
+    fun `Is token valid returns true if network call succeeds`() = runTest {
+        coEvery { networkDataSource.getSelf() } returns DataResult.Success(User())
+
+        val result = repository.isTokenValid()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `Is token valid returns false if network call fails`() = runTest {
+        coEvery { networkDataSource.getSelf() } returns DataResult.Fail()
+
+        val result = repository.isTokenValid()
+
+        assertFalse(result)
     }
 }
