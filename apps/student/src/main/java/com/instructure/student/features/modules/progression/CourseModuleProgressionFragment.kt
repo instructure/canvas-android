@@ -56,7 +56,7 @@ import com.instructure.student.features.modules.util.ModuleProgressionUtility
 import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.FileDetailsFragment
+import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const

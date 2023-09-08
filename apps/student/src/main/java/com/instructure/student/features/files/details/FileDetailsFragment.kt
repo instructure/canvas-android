@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.files.details
 
 import android.os.Bundle
 import android.text.Html
@@ -23,11 +23,10 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.instructure.canvasapi2.managers.FileFolderManager
-import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.ModuleObject
@@ -48,9 +47,9 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileDetailsBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.util.StringUtilities
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.ResponseBody
 import java.util.*
 import javax.inject.Inject
 
@@ -62,6 +61,9 @@ class FileDetailsFragment : ParentFragment() {
     @Inject
     lateinit var workManager: WorkManager
 
+    @Inject
+    lateinit var repository: FileDetailsRepository
+
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
@@ -71,9 +73,6 @@ class FileDetailsFragment : ParentFragment() {
 
     private var file: FileFolder? = null
     private var fileUrl: String by StringArg(key = Const.FILE_URL)
-
-    private var fileFolderJob: WeaveJob? = null
-    private var markAsReadJob: WeaveJob? = null
 
     private val fileId: Long
         get() = file!!.id
@@ -101,12 +100,6 @@ class FileDetailsFragment : ParentFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getFileFolder()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        fileFolderJob?.cancel()
-        markAsReadJob?.cancel()
     }
 
     override fun applyTheme() {
@@ -156,21 +149,19 @@ class FileDetailsFragment : ParentFragment() {
 
     private fun markAsRead() {
         // Mark the module as read
-        markAsReadJob = tryWeave {
-            awaitApi<ResponseBody> { ModuleManager.markModuleItemAsRead(canvasContext, moduleObject.id, itemId, it) }
+        lifecycleScope.tryLaunch {
+            val result = repository.markAsRead(canvasContext, moduleObject.id, itemId, true).dataOrThrow
             ModuleUpdatedEvent(moduleObject).post()
-        } catch {
+        }.catch {
             Logger.e("Error marking module item as read. " + it.message)
         }
     }
 
     @Suppress("deprecation")
     private fun getFileFolder() = with(binding) {
-        fileFolderJob = tryWeave {
-            val response = awaitApiResponse<FileFolder> { FileFolderManager.getFileFolderFromURL(fileUrl, true, it) }
+        lifecycleScope.tryLaunch {
+            file = repository.getFileFolderFromURL(fileUrl, true).dataOrThrow
             // Set up everything else now, we should have a file
-            file = response.body()
-
             file?.let {
                 if (it.lockInfo != null) {
                     // File is locked

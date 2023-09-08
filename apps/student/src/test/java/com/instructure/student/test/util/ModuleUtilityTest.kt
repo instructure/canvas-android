@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.modules.util.ModuleUtility
