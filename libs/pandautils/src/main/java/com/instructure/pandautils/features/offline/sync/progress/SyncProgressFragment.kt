@@ -29,6 +29,10 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentSyncProgressBinding
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,6 +50,19 @@ class SyncProgressFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        applyTheme()
+    }
+
+    private fun applyTheme() {
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        binding.toolbar.apply {
+            setBackgroundColor(ThemePrefs.primaryColor)
+            setupAsBackButton(this@SyncProgressFragment)
+        }
     }
 
     companion object {

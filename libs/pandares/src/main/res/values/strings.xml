@@ -1441,4 +1441,6 @@
     <string name="sync_failed">Sync Failed</string>
     <string name="syncProgressDownloading">Downloading %1$s of %2$s</string>
     <string name="syncQueued">Queued</string>
+    <string name="offlineContentSyncCompleted">Offline Content Sync Completed</string>
+    <string name="offlineContentSyncFailed">Offline Content Sync Failed</string>
 </resources>

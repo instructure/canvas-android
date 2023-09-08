@@ -25,6 +25,10 @@
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.offline.sync.progress.SyncProgressViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="com.instructure.pandautils.mvvm.ViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,6 +55,61 @@
             app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <TextView
+                android:id="@+id/successText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/offlineContentSyncCompleted"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                android:visibility="@{viewModel.state instanceof ViewState.Success ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@+id/downloadProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
+
+            <TextView
+                android:id="@+id/errorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/offlineContentSyncFailed"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                android:visibility="@{viewModel.state instanceof ViewState.Error ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@+id/downloadProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
+
+            <TextView
+                android:id="@+id/errorSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="@string/syncErrorSubtitle"
+                android:textColor="@color/textDark"
+                android:visibility="@{viewModel.state instanceof ViewState.Error ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/errorText"
+                tools:visibility="gone" />
+
+            <TextView
                 android:id="@+id/downloadProgressText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,6 +119,7 @@
                 android:layout_marginBottom="4dp"
                 android:text="@{@string/syncProgressDownloading(viewModel.progressData.downloadedSize, viewModel.progressData.totalSize)}"
                 android:textColor="@color/textDark"
+                android:visibility="@{viewModel.state instanceof ViewState.Loading ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintBottom_toTopOf="@+id/downloadProgressBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,6 +139,7 @@
                 android:min="0"
                 android:progress="@{viewModel.progressData.progress}"
                 android:progressTint="@color/backgroundInfo"
+                android:visibility="@{viewModel.state instanceof ViewState.Loading ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/downloadProgressText"
                 tools:progress="50" />
