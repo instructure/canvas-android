@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -90,8 +91,9 @@ class NavigationActivityModule {
 
     @Provides
     fun provideNavigationNetworkDataSource(
-        courseApi: CourseAPI.CoursesInterface
+        courseApi: CourseAPI.CoursesInterface,
+        userApi: UserAPI.UsersInterface
     ): NavigationNetworkDataSource {
-        return NavigationNetworkDataSource(courseApi)
+        return NavigationNetworkDataSource(courseApi, userApi)
     }
 }

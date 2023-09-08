@@ -139,6 +139,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     // Switch that lets the user manually override and turn off the elementary view in the settings
     var elementaryDashboardEnabledOverride by BooleanPref(true)
 
+    var checkTokenAfterOfflineLogin by BooleanPref()
+
     val showElementaryView
         get() = canvasForElementary && elementaryDashboardEnabledOverride
 
