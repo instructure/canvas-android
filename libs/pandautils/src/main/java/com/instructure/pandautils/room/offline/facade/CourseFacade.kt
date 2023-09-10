@@ -18,6 +18,7 @@
 package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 
@@ -28,7 +29,8 @@ class CourseFacade(
     private val courseGradingPeriodDao: CourseGradingPeriodDao,
     private val sectionDao: SectionDao,
     private val tabDao: TabDao,
-    private val enrollmentFacade: EnrollmentFacade
+    private val enrollmentFacade: EnrollmentFacade,
+    private val courseSettingsDao: CourseSettingsDao
 ) {
 
     suspend fun insertCourse(course: Course) {
@@ -37,6 +39,10 @@ class CourseFacade(
         }
 
         courseDao.insert(CourseEntity(course))
+
+        course.settings?.let {
+            courseSettingsDao.insert(CourseSettingsEntity(it, course.id))
+        }
 
         course.enrollments?.forEach { enrollment ->
             enrollmentFacade.insertEnrollment(enrollment, course.id)
@@ -48,11 +54,51 @@ class CourseFacade(
         }
 
         course.sections.forEach { section ->
-            sectionDao.insert(SectionEntity(section))
+            sectionDao.insert(SectionEntity(section, course.id))
         }
 
         course.tabs?.forEach { tab ->
             tabDao.insert(TabEntity(tab, course.id))
         }
+    }
+
+    suspend fun getCourseById(id: Long): Course? {
+        val courseEntity = courseDao.findById(id)
+        return if (courseEntity != null) createFullApiModelFromEntity(courseEntity) else null
+    }
+
+    suspend fun getAllCourses(): List<Course> {
+        return courseDao.findAll().map {
+            createFullApiModelFromEntity(it)
+        }
+    }
+
+    private suspend fun createFullApiModelFromEntity(courseEntity: CourseEntity): Course {
+        val termEntity = courseEntity.termId?.let { termDao.findById(it) }
+        val enrollments = enrollmentFacade.getEnrollmentsByCourseId(courseEntity.id)
+        val sectionEntities = sectionDao.findByCourseId(courseEntity.id)
+        val courseGradingPeriodEntities = courseGradingPeriodDao.findByCourseId(courseEntity.id)
+        val gradingPeriods = courseGradingPeriodEntities.map {
+            gradingPeriodDao.findById(it.gradingPeriodId).toApiModel()
+        }
+        val tabEntities = tabDao.findByCourseId(courseEntity.id)
+        val settingsEntity = courseSettingsDao.findByCourseId(courseEntity.id)
+
+        return courseEntity.toApiModel(
+            term = termEntity?.toApiModel(),
+            enrollments = enrollments.toMutableList(),
+            sections = sectionEntities.map { it.toApiModel() },
+            gradingPeriods = gradingPeriods,
+            tabs = tabEntities.map { it.toApiModel() },
+            settings = settingsEntity?.toApiModel()
+        )
+    }
+
+    suspend fun getGradingPeriodsByCourseId(id: Long): List<GradingPeriod> {
+        val gradingPeriodEntities = courseGradingPeriodDao.findByCourseId(id).map {
+            gradingPeriodDao.findById(it.gradingPeriodId)
+        }
+
+        return gradingPeriodEntities.map { it.toApiModel() }
     }
 }

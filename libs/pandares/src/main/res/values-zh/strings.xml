@@ -1278,11 +1278,16 @@
     <string name="a11y_closeProgress">关闭进度对话框</string>
     <string name="fileUploadProgress">%1$s，共%2$s</string>
     <string name="fileUploadProgressSubtitle">上传到文件</string>
+    <string name="fileUploadFailedSubtitle">一份或多个文件上传失败。请检查网络连接，并再次尝试提交。</string>
     <string name="submissionProgressSubtitle">上传提交项到\"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">正在上传提交作业</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">成功提交文件</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提交成功</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">提交文件失败</string>
-    <string name="dashboardNotificationUploadingFilesTitle">上传文件</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="other">正在上传文件</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">文件上传成功</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">文件上传失败</string>
     <string name="cancelSubmissionDialogTitle">取消提交</string>
     <string name="cancelSubmissionDialogMessage">此操作将取消并删除您的提交项。</string>
     <string name="fileUploadError">文件上传失败</string>
@@ -1360,4 +1365,10 @@
     <string name="a11y_selectionModeDeactivated">选择模式已被禁用。</string>
     <string name="a11y_avatarContentDescription">%s头像</string>
     <string name="inboxUndo">后退</string>
+    <string name="aboutAppTitle">应用程序</string>
+    <string name="aboutDomainTitle">域</string>
+    <string name="aboutLoginTitle">登录 ID</string>
+    <string name="aboutEmailTitle">电子邮件</string>
+    <string name="aboutVersionTitle">版本</string>
+    <string name="assignmentRefreshError">重新加载此作业时出错。请检查连接，然后重试。</string>
 </resources>

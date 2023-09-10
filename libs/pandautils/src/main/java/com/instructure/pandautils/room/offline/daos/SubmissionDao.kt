@@ -31,4 +31,13 @@ interface SubmissionDao {
 
     @Update
     suspend fun update(entity: SubmissionEntity)
+
+    @Query("SELECT * FROM SubmissionEntity WHERE id = :id ORDER BY attempt ASC")
+    suspend fun findById(id: Long): List<SubmissionEntity>
+
+    @Query("SELECT * FROM SubmissionEntity WHERE assignmentId IN (:assignmentIds)")
+    suspend fun findByAssignmentIds(assignmentIds: List<Long>): List<SubmissionEntity>
+
+    @Query("SELECT * FROM SubmissionEntity WHERE assignmentId = :assignmentId")
+    suspend fun findByAssignmentId(assignmentId: Long): SubmissionEntity?
 }

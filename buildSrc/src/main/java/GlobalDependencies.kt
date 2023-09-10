@@ -24,7 +24,7 @@ object Versions {
 
     /* Others */
     const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
-    const val PSPDFKIT = "8.4.1"
+    const val PSPDFKIT = "8.7.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.5.4"
@@ -32,7 +32,7 @@ object Versions {
     const val HILT_ANDROIDX = "1.0.0"
     const val LIFECYCLE = "2.6.0"
     const val FRAGMENT = "1.5.5"
-    const val WORK_MANAGER = "2.7.1"
+    const val WORK_MANAGER = "2.8.1"
     const val GLIDE_VERSION = "4.15.1"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.10.0"

@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Page
 import java.util.*
 
@@ -65,4 +66,22 @@ data class PageEntity(
         page.htmlUrl,
         courseId
     )
+
+    fun toApiModel(lockInfo: LockInfo? = null): Page {
+        return Page(
+            id = id,
+            url = url,
+            title = title,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            hideFromStudents = hideFromStudents,
+            status = status,
+            body = body,
+            frontPage = frontPage,
+            lockInfo = lockInfo,
+            published = published,
+            editingRoles = editingRoles,
+            htmlUrl = htmlUrl
+        )
+    }
 }

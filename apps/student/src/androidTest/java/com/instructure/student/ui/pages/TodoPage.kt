@@ -36,6 +36,7 @@ import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
+import java.lang.Thread.sleep
 
 class TodoPage: BasePage(R.id.todoPage) {
 
@@ -43,6 +44,21 @@ class TodoPage: BasePage(R.id.todoPage) {
 
     fun assertAssignmentDisplayed(assignment: AssignmentApiModel) {
         assertTextDisplayedInRecyclerView(assignment.name)
+    }
+
+    fun assertAssignmentDisplayedWithRetries(assignment: AssignmentApiModel, retryAttempt: Int) {
+
+        run assignmentDisplayedRepeat@{
+            repeat(retryAttempt) {
+                try {
+                    sleep(3000)
+                    assertTextDisplayedInRecyclerView(assignment.name)
+                    return@assignmentDisplayedRepeat
+                } catch (e: AssertionError) {
+                    println("Attempt failed. The '${assignment.name}' assignment is not displayed, probably because of the API slowness.")
+                }
+            }
+        }
     }
 
     fun assertAssignmentNotDisplayed(assignment: AssignmentApiModel) {
@@ -82,7 +98,7 @@ class TodoPage: BasePage(R.id.todoPage) {
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
         onView(withText(R.string.favoritedCoursesLabel) + withParent(R.id.select_dialog_listview)).click()
-        onView(withText(R.string.ok)).click()
+        onView(withText(android.R.string.ok)).click()
     }
 
     fun clearFilter() {

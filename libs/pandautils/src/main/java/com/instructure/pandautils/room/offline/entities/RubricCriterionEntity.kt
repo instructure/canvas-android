@@ -19,6 +19,8 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionRating
 
 @Entity
 data class RubricCriterionEntity(
@@ -29,4 +31,23 @@ data class RubricCriterionEntity(
     val points: Double,
     val criterionUseRange: Boolean,
     val ignoreForScoring: Boolean,
-)
+) {
+    constructor(rubricCriterion: RubricCriterion) : this(
+        rubricCriterion.id.orEmpty(),
+        rubricCriterion.description,
+        rubricCriterion.longDescription,
+        rubricCriterion.points,
+        rubricCriterion.criterionUseRange,
+        rubricCriterion.ignoreForScoring,
+    )
+
+    fun toApiModel(ratings: List<RubricCriterionRating> = listOf()) = RubricCriterion(
+        id = id,
+        description = description,
+        longDescription = longDescription,
+        points = points,
+        ratings = ratings.toMutableList(),
+        criterionUseRange = criterionUseRange,
+        ignoreForScoring = ignoreForScoring
+    )
+}

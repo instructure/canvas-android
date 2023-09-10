@@ -31,8 +31,21 @@ import com.instructure.pandautils.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
+/**
+ * Represents the Remote Config Settings page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with remote configuration parameters.
+ * It includes methods for clicking on a remote config parameter value, clearing the focus of a remote config parameter value,
+ * and verifying the value of a remote config parameter. It also includes a private helper method to get the matcher for locating
+ * the remote config parameter value. The page is identified by the resource ID R.id.remoteConfigSettingsFragment.
+ */
 class RemoteConfigSettingsPage : BasePage(R.id.remoteConfigSettingsFragment) {
 
+    /**
+     * Clicks on the value of the specified remote config parameter.
+     *
+     * @param param The remote config parameter to click on.
+     */
     fun clickRemoteConfigParamValue(param: RemoteConfigParam) {
         val target = getParamValueMatcher(param)
 
@@ -40,6 +53,11 @@ class RemoteConfigSettingsPage : BasePage(R.id.remoteConfigSettingsFragment) {
         onView(target).click()
     }
 
+    /**
+     * Clears the focus of the specified remote config parameter value.
+     *
+     * @param param The remote config parameter to clear the focus of.
+     */
     fun clearRemoteConfigParamValueFocus(param: RemoteConfigParam) {
         val target = getParamValueMatcher(param)
 
@@ -47,6 +65,12 @@ class RemoteConfigSettingsPage : BasePage(R.id.remoteConfigSettingsFragment) {
         onView(target).perform(clearFocus())
     }
 
+    /**
+     * Verifies the value of the specified remote config parameter.
+     *
+     * @param param The remote config parameter to verify the value of.
+     * @param targetValue The expected value of the remote config parameter.
+     */
     fun verifyRemoteConfigParamValue(param: RemoteConfigParam, targetValue: String) {
         val target = getParamValueMatcher(param)
 
@@ -54,10 +78,16 @@ class RemoteConfigSettingsPage : BasePage(R.id.remoteConfigSettingsFragment) {
         onView(target).check(ViewAssertions.matches((ViewMatchers.withText(targetValue))))
     }
 
+    /**
+     * Returns the matcher for locating the value of the specified remote config parameter.
+     *
+     * @param param The remote config parameter to get the matcher for.
+     * @return The matcher for locating the remote config parameter value.
+     */
     private fun getParamValueMatcher(param: RemoteConfigParam): Matcher<View> {
         val matcher = Matchers.allOf(
-                ViewMatchers.isAssignableFrom(EditText::class.java),
-                ViewMatchers.hasSibling(containsTextCaseInsensitive("${param.rc_name}:"))
+            ViewMatchers.isAssignableFrom(EditText::class.java),
+            ViewMatchers.hasSibling(containsTextCaseInsensitive("${param.rc_name}:"))
         )
 
         return matcher

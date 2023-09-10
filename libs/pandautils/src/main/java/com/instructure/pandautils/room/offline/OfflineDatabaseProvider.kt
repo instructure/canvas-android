@@ -20,17 +20,25 @@ package com.instructure.pandautils.room.offline
 import android.content.Context
 import androidx.room.Room
 
-class OfflineDatabaseProvider(private val context: Context) {
+private const val OFFLINE_DB_PREFIX = "offline-db-"
+
+class OfflineDatabaseProvider(private val context: Context) : DatabaseProvider {
 
     private val dbMap = mutableMapOf<Long, OfflineDatabase>()
 
-    fun getDatabase(userId: Long?): OfflineDatabase {
+    override fun getDatabase(userId: Long?): OfflineDatabase {
         if (userId == null) throw IllegalStateException("You can't access the database while logged out")
 
         return dbMap.getOrPut(userId) {
-            Room.databaseBuilder(context, OfflineDatabase::class.java, "offline-db-$userId")
+            Room.databaseBuilder(context, OfflineDatabase::class.java, "$OFFLINE_DB_PREFIX$userId")
                 .addMigrations(*offlineDatabaseMigrations)
                 .build()
         }
+    }
+
+    override fun clearDatabase(userId: Long) {
+        getDatabase(userId).clearAllTables()
+        dbMap.remove(userId)
+        context.deleteDatabase("$OFFLINE_DB_PREFIX$userId")
     }
 }

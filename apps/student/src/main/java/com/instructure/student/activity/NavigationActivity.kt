@@ -45,6 +45,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -71,6 +72,7 @@ import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomShee
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
@@ -83,6 +85,9 @@ import com.instructure.student.databinding.LoadingCanvasViewBinding
 import com.instructure.student.databinding.NavigationDrawerBinding
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.*
+import com.instructure.student.features.files.list.FileListFragment
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
+import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -130,6 +135,18 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     @Inject
     lateinit var updateManager: UpdateManager
 
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
+    @Inject
+    lateinit var databaseProvider: DatabaseProvider
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
+    @Inject
+    lateinit var repository: NavigationRepository
+
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
     private var drawerItemSelectedJob: Job? = null
@@ -176,13 +193,21 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }, route)
                 }
                 R.id.navigationDrawerItem_changeUser -> {
-                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS, typefaceBehavior = typefaceBehavior).execute()
+                    StudentLogoutTask(
+                        if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS,
+                        typefaceBehavior = typefaceBehavior,
+                        databaseProvider = databaseProvider
+                    ).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
                             .setPositiveButton(android.R.string.yes) { _, _ ->
-                                StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
+                                StudentLogoutTask(
+                                    LogoutTask.Type.LOGOUT,
+                                    typefaceBehavior = typefaceBehavior,
+                                    databaseProvider = databaseProvider
+                                ).execute()
                             }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
@@ -240,9 +265,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
-        super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
@@ -266,6 +291,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupNavDrawerItems()
 
+        loadFeatureFlags()
+
         checkAppUpdates()
 
         val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
@@ -278,6 +305,16 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         requestNotificationsPermission()
+
+        networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
+            setOfflineIndicator(!isOnline)
+        }
+    }
+
+    private fun loadFeatureFlags() {
+        lifecycleScope.launch {
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
+        }
     }
 
     private fun requestNotificationsPermission() {
@@ -326,7 +363,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
-            StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
         }
 
         setupBottomNavigation()
@@ -456,12 +493,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions {
         //Navigation items
-        navigationDrawerBinding.navigationDrawerItemFiles.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemGauge.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStudio.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemBookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemHelp.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -556,6 +593,18 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
         navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(checkListener)
         ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerColorOverlaySwitch, ThemePrefs.brandColor)
+    }
+
+    private fun setOfflineIndicator(isOffline: Boolean) {
+        binding.offlineIndicator.root.setVisible(isOffline)
+        with(navigationDrawerBinding) {
+            navigationDrawerOfflineIndicator.setVisible(isOffline)
+            navigationDrawerItemStudio.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemGauge.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemHelp.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemBookmarks.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemFiles.alpha = if (isOffline) 0.5f else 1f
+        }
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {
@@ -747,7 +796,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             val contextType = route.getContextType()
                             when (contextType) {
                                 CanvasContext.Type.COURSE -> {
-                                    route.canvasContext = awaitApi<Course> { CourseManager.getCourse(contextId, it, false) }
+                                    route.canvasContext = repository.getCourse(contextId, false)
                                     if(route.canvasContext == null) showMessage(getString(R.string.could_not_route_course))
                                 }
                                 CanvasContext.Type.GROUP -> {
@@ -772,7 +821,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             val contextType = route.getContextType()
                             when (contextType) {
                                 CanvasContext.Type.COURSE -> {
-                                    route.canvasContext = awaitApi<Course> { CourseManager.getCourse(contextId, it, false) }
+                                    route.canvasContext = repository.getCourse(contextId, false)
                                     if(route.canvasContext == null) showMessage(getString(R.string.could_not_route_course))
                                 }
                                 CanvasContext.Type.GROUP -> {

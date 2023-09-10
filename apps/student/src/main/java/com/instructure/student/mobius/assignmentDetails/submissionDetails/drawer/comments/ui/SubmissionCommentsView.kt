@@ -159,7 +159,7 @@ class SubmissionCommentsView(
     }
 
     fun openMedia(canvasContext: CanvasContext, contentType: String, url: String, fileName: String) {
-        (context as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName)
+        (activity as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName)
     }
 
     fun showPermissionDeniedToast() {

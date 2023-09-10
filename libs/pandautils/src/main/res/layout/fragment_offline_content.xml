@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.pandautils.features.offline.OfflineContentViewModel" />
+            type="com.instructure.pandautils.features.offline.offlinecontent.OfflineContentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,177 +36,156 @@
             app:onRefreshListener="@{() -> viewModel.onRefresh()}"
             app:refreshState="@{viewModel.state}">
 
-            <androidx.core.widget.NestedScrollView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/storageInfoContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/storageInfoContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:background="@drawable/bg_rounded_outline_6dp"
-                        android:padding="16dp"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <TextView
-                            android:id="@+id/storageLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/offline_content_storage"
-                            android:textColor="@color/textDarkest"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/storageInfo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{viewModel.data.storageInfo.storageInfoText}"
-                            android:textColor="@color/textDark"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <ProgressBar
-                            android:id="@+id/progress"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="12dp"
-                            android:layout_marginTop="16dp"
-                            android:max="100"
-                            android:progress="@{viewModel.data.storageInfo.otherAppsReservedPercent}"
-                            android:progressDrawable="@drawable/storage_progress_bar_background"
-                            android:secondaryProgress="@{viewModel.data.storageInfo.allAppsReservedPercent}"
-                            app:layout_constraintTop_toBottomOf="@id/storageLabel" />
-
-                        <LinearLayout
-                            android:id="@+id/otherContainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:orientation="horizontal"
-                            app:layout_constraintEnd_toStartOf="@id/canvasContainer"
-                            app:layout_constraintHorizontal_chainStyle="spread_inside"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/progress">
-
-                            <View
-                                android:id="@+id/otherIndicator"
-                                android:layout_width="8dp"
-                                android:layout_height="8dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="@drawable/ic_circle"
-                                android:backgroundTint="@color/backgroundDarkest" />
-
-                            <TextView
-                                android:id="@+id/otherLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:ellipsize="end"
-                                android:lines="1"
-                                android:text="@string/offline_content_other"
-                                android:textColor="@color/textDark"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/canvasContainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:layout_marginTop="16dp"
-                            app:layout_constraintEnd_toStartOf="@id/remainingContainer"
-                            app:layout_constraintStart_toEndOf="@id/otherContainer"
-                            app:layout_constraintTop_toBottomOf="@id/progress">
-
-                            <View
-                                android:id="@+id/canvasIndicator"
-                                android:layout_width="8dp"
-                                android:layout_height="8dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="@drawable/ic_circle"
-                                android:backgroundTint="@color/backgroundInfo" />
-
-                            <TextView
-                                android:id="@+id/canvasLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:ellipsize="end"
-                                android:lines="1"
-                                android:text="@string/offline_content_canvas_student"
-                                android:textColor="@color/textDark" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/remainingContainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:layout_marginTop="16dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/canvasContainer"
-                            app:layout_constraintTop_toBottomOf="@id/progress">
-
-                            <View
-                                android:id="@+id/remainingIndicator"
-                                android:layout_width="8dp"
-                                android:layout_height="8dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="@drawable/ic_circle"
-                                android:backgroundTint="#33008EE2" />
-
-                            <TextView
-                                android:id="@+id/remainingLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:ellipsize="end"
-                                android:lines="1"
-                                android:text="@string/offline_content_remaining"
-                                android:textColor="@color/textDark"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bg_rounded_outline_6dp"
+                    android:padding="16dp"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/selectedLabel"
-                        android:layout_width="match_parent"
+                        android:id="@+id/storageLabel"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="24dp"
-                        android:ellipsize="end"
-                        android:lines="1"
-                        android:text="@{@string/offline_content_selected(viewModel.data.selectedCount)}"
+                        android:text="@string/offline_content_storage"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintTop_toBottomOf="@id/storageInfoContainer" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/storageInfo"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:nestedScrollingEnabled="false"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/selectedLabel"
-                        app:recyclerViewItemViewModels="@{viewModel.data.courseItems}"
-                        app:useDiffUtil="@{true}" />
+                        android:text="@{viewModel.data.storageInfo.storageInfoText}"
+                        android:textColor="@color/textDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:layout_marginTop="16dp"
+                        android:max="100"
+                        android:progress="@{viewModel.data.storageInfo.otherAppsReservedPercent}"
+                        android:progressDrawable="@drawable/storage_progress_bar_background"
+                        android:secondaryProgress="@{viewModel.data.storageInfo.allAppsReservedPercent}"
+                        app:layout_constraintTop_toBottomOf="@id/storageLabel" />
+
+                    <LinearLayout
+                        android:id="@+id/otherContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toStartOf="@id/canvasContainer"
+                        app:layout_constraintHorizontal_chainStyle="spread_inside"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/progress">
+
+                        <View
+                            android:id="@+id/otherIndicator"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/ic_circle"
+                            android:backgroundTint="@color/backgroundDarkest" />
+
+                        <TextView
+                            android:id="@+id/otherLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:text="@string/offline_content_other"
+                            android:textColor="@color/textDark"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/canvasContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toStartOf="@id/remainingContainer"
+                        app:layout_constraintStart_toEndOf="@id/otherContainer"
+                        app:layout_constraintTop_toBottomOf="@id/progress">
+
+                        <View
+                            android:id="@+id/canvasIndicator"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/ic_circle"
+                            android:backgroundTint="@color/backgroundInfo" />
+
+                        <TextView
+                            android:id="@+id/canvasLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:text="@string/offline_content_canvas_student"
+                            android:textColor="@color/textDark" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/remainingContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/canvasContainer"
+                        app:layout_constraintTop_toBottomOf="@id/progress">
+
+                        <View
+                            android:id="@+id/remainingIndicator"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/ic_circle"
+                            android:backgroundTint="#33008EE2" />
+
+                        <TextView
+                            android:id="@+id/remainingLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:text="@string/offline_content_remaining"
+                            android:textColor="@color/textDark"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.core.widget.NestedScrollView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="24dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/storageInfoContainer"
+                    app:recyclerViewItemViewModels="@{viewModel.data.courseItems}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

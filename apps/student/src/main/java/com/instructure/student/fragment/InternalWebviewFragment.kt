@@ -29,6 +29,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.ProgressBar
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
@@ -40,12 +41,13 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentWebviewBinding
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FileDownloadJobIntentService
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -238,9 +240,7 @@ open class InternalWebviewFragment : ParentFragment() {
     }
 
     private fun downloadFile() {
-        if (downloadFilename != null && downloadUrl != null) {
-            FileDownloadJobIntentService.scheduleDownloadJob(requireContext(), downloadFilename!!, downloadUrl!!)
-        }
+        WorkManager.getInstance(requireContext()).enqueue(FileDownloadWorker.createOneTimeWorkRequest(downloadFilename.orEmpty(), downloadUrl.orEmpty()))
     }
 
     override fun onStart() {
@@ -408,7 +408,7 @@ open class InternalWebviewFragment : ParentFragment() {
                         .build().toString()
                 }
 
-                binding.canvasWebViewWrapper.webView.loadUrl(url!!, getReferer())
+                if (view != null) binding.canvasWebViewWrapper.webView.loadUrl(url!!, getReferer())
             }
         }
     }

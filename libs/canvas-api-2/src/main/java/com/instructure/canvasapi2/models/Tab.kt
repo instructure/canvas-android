@@ -36,7 +36,8 @@ data class Tab(
         val isHidden: Boolean = false, // only included when true
         val position: Int = 0,
         @SerializedName("url")
-        val ltiUrl: String = ""
+        val ltiUrl: String = "",
+        val enabled: Boolean = true // Helper variable, not included in API response
 ) : CanvasModel<Tab>() {
     override val id get() = position.toLong()
 

@@ -11,7 +11,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.offline.itemviewmodels.CourseItemViewModel" />
+            type="com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,15 +19,16 @@
         android:layout_height="wrap_content"
         android:background="@color/backgroundLight">
 
-        <CheckBox
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:buttonTint="@{ViewStyler.INSTANCE.makeColorStateList(@color/textDarkest, ThemePrefs.INSTANCE.brandColor)}"
-            android:checked="@{itemViewModel.data.checked}"
             android:onCheckedChanged="@{itemViewModel.onCheckChanged}"
+            android:theme="@style/Theme.Material3.DayNight"
             app:accessibleTouchTarget="@{true}"
+            app:checkedState="@{itemViewModel.data.checkedState()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

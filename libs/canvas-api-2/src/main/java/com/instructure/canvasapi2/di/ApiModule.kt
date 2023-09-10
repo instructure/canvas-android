@@ -187,4 +187,59 @@ class ApiModule {
     fun provideFileFolderApi(): FileFolderAPI.FilesFoldersInterface {
         return RestBuilder().build(FileFolderAPI.FilesFoldersInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideQuizApi(): QuizAPI.QuizInterface {
+        return RestBuilder().build(QuizAPI.QuizInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideSubmissionApi(): SubmissionAPI.SubmissionInterface {
+        return RestBuilder().build(SubmissionAPI.SubmissionInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideCalendarEventApi(): CalendarEventAPI.CalendarEventInterface {
+        return RestBuilder().build(CalendarEventAPI.CalendarEventInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideEnrollmentApi(): EnrollmentAPI.EnrollmentInterface {
+        return RestBuilder().build(EnrollmentAPI.EnrollmentInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun providesConferencesApi(): ConferencesApi.ConferencesInterface {
+        return RestBuilder().build(ConferencesApi.ConferencesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun providesOAuthApi(): OAuthAPI.OAuthInterface {
+        return RestBuilder().build(OAuthAPI.OAuthInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideDiscussionApi(): DiscussionAPI.DiscussionInterface {
+        return RestBuilder().build(DiscussionAPI.DiscussionInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideAnnouncementApi(): AnnouncementAPI.AnnouncementInterface {
+        return RestBuilder().build(AnnouncementAPI.AnnouncementInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideModuleApi(): ModuleAPI.ModuleInterface {
+        return RestBuilder().build(ModuleAPI.ModuleInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideFeaturesApi(): FeaturesAPI.FeaturesInterface {
+        return RestBuilder().build(FeaturesAPI.FeaturesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideFileDownloadApi(): FileDownloadAPI {
+        return RestBuilder().build(FileDownloadAPI::class.java, RestParams())
+    }
 }

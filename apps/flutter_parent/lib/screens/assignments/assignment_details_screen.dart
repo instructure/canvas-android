@@ -132,6 +132,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     final l10n = L10n(context);
+    final course = snapshot.data.course;
+    final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
     final assignment = snapshot.data.assignment;
     final submission = assignment.submission(_currentStudent.id);
     final fullyLocked = assignment.isFullyLocked;
@@ -155,11 +157,12 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             titleStyle: textTheme.headline4,
             child: Row(
               children: <Widget>[
-                Text(l10n.assignmentTotalPoints(points),
-                    style: textTheme.caption,
-                    semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
-                    key: Key("assignment_details_total_points")),
-                if (showStatus) SizedBox(width: 16),
+                if (!restrictQuantitativeData)
+                  Text(l10n.assignmentTotalPoints(points),
+                      style: textTheme.caption,
+                      semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
+                      key: Key("assignment_details_total_points")),
+                if (showStatus && !restrictQuantitativeData) SizedBox(width: 16),
                 if (showStatus) _statusIcon(submitted, submittedColor),
                 if (showStatus) SizedBox(width: 8),
                 if (showStatus)
@@ -182,7 +185,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                   style: textTheme.subtitle1, key: Key("assignment_details_due_date")),
             ),
           ],
-          GradeCell.forSubmission(context, assignment, submission),
+          GradeCell.forSubmission(context, course, assignment, submission),
           ..._lockedRow(assignment),
           Divider(),
           ..._rowTile(

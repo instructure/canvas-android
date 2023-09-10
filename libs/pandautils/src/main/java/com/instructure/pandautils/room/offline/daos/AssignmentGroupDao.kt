@@ -31,4 +31,7 @@ interface AssignmentGroupDao {
 
     @Update
     suspend fun update(entity: AssignmentGroupEntity)
+
+    @Query("SELECT * FROM AssignmentGroupEntity WHERE id = :id")
+    suspend fun findById(id: Long): AssignmentGroupEntity
 }

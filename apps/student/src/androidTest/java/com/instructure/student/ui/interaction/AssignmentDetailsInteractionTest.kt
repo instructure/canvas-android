@@ -15,18 +15,26 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.panda_annotations.*
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.SecondaryFeatureCategory
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {
@@ -65,7 +73,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testSubmissionStatus_Missing() {
         // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val assignmentList = data.assignments
         val assignmentWithoutSubmissionEntry = assignmentList.filter { it.value.submission == null && it.value.dueAt != null && !it.value.isSubmitted }
 
@@ -78,7 +87,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testSubmissionStatus_NotSubmitted() {
 
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val assignmentList = data.assignments
         val assignmentWithoutSubmissionEntry = assignmentList.filter {it.value.submission == null && it.value.dueAt == null}
         val assignmentWithoutSubmission = assignmentWithoutSubmissionEntry.entries.first().value
@@ -93,7 +103,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testDisplayToolbarTitles() {
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val assignmentList = data.assignments
         val testAssignment = assignmentList.entries.first().value
         val course = data.courses.values.first()
@@ -108,7 +119,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testDisplayBookmarMenu() {
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val assignmentList = data.assignments
         val testAssignment = assignmentList.entries.first().value
 
@@ -121,7 +133,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testDisplayDueDate() {
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val calendar = Calendar.getInstance().apply { set(2023, 0, 31, 23, 59, 0) }
         val expectedDueDate = "January 31, 2023 11:59 PM"
         val course = data.courses.values.first()
@@ -136,7 +149,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testNavigating_viewAssignmentDetails() {
         // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val assignmentList = data.assignments
         val assignmentWithSubmissionEntry = assignmentList.filter {it.value.submission != null}
         val assignmentWithSubmission = assignmentWithSubmissionEntry.entries.first().value
@@ -151,7 +165,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testNavigating_viewSubmissionDetailsWithSubmission() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val assignmentList = data.assignments
         val assignmentWithSubmissionEntry = assignmentList.filter {it.value.submission != null}
         val assignmentWithSubmission = assignmentWithSubmissionEntry.entries.first().value
@@ -166,7 +181,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testNavigating_viewSubmissionDetailsWithoutSubmission() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
-        val data = goToAssignmentFromList()
+        val data = setUpData()
+        goToAssignmentList()
         val assignmentList = data.assignments
         val assignmentWithoutSubmissionEntry = assignmentList.filter {it.value.submission == null}
         val assignmentWithoutSubmission = assignmentWithoutSubmissionEntry.entries.first().value
@@ -177,39 +193,163 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         submissionDetailsPage.assertPageObjects()
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, SecondaryFeatureCategory.ASSIGNMENT_QUIZZES)
-    fun testQuizzesNext_launchQuizzesNextAssignment() {
-        // Launch into Quizzes.Next assignment
-        /* First attempt based on hardcoded verifier response
-            val data = MockCanvas.init(
-                    studentCount = 1,
-                    courseCount = 1
-            )
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testLetterGradeAssignmentWithoutQuantitativeRestriction() {
+        val data = setUpData()
+        val assignment = addAssignment(data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
 
-            val course = data.courses.values.first()
-            val student = data.students[0]
-            val token = data.tokenFor(student)!!
-            val assignment = data.addAssignment(courseId = course.id, groupType = AssignmentGroupType.UPCOMING, submissionType = Assignment.SubmissionType.EXTERNAL_TOOL, isQuizzesNext = true)
-            val submission = Submission(
-                    id = 123L,
-                    submittedAt = Date(),
-                    attempt = 1L,
-                    late = false
-            )
-            data.addSubmission(course.id, submission, assignment.id)
-            data.addLTITool("Quizzes 2", "https://mobiledev.instructure.com/courses/1567973/external_tools/sessionless_launch?verifier=f85d3d69189890cde2f427a8efdc0e64850d8583bf8f2e0e0fa3704782d48b5378df5d52a35a4497ec18d3b0e201b3b2cab95e1347e7c5e286ac6636bf295c6b")
-            tokenLogin(data.domain, token, student)
-            routeTo("courses/${course.id}/assignments", data.domain)
-
-            assignmentListPage.clickAssignment(assignment)
-            assignmentDetailsPage.clickSubmit()
-            //https://mobiledev.instructure.com/api/v1/courses/1567973/external_tools/sessionless_launch?assignment_id=24378681&launch_type=assessment
-        */
+        assignmentDetailsPage.assertGradeDisplayed("B")
+        assignmentDetailsPage.assertOutOfTextDisplayed("Out of 100 pts")
+        assignmentDetailsPage.assertScoreDisplayed("90")
     }
 
-    private fun goToAssignmentFromList(): MockCanvas {
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testGpaScaleAssignmentWithoutQuantitativeRestriction() {
+        setUpData()
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("3.7")
+        assignmentDetailsPage.assertOutOfTextDisplayed("Out of 100 pts")
+        assignmentDetailsPage.assertScoreDisplayed("90")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPointsAssignmentWithoutQuantitativeRestriction() {
+        setUpData()
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeNotDisplayed()
+        assignmentDetailsPage.assertOutOfTextDisplayed("Out of 100 pts")
+        assignmentDetailsPage.assertScoreDisplayed("90")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPointsAssignmentExcusedWithoutQuantitativeRestriction() {
+        setUpData()
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("EX")
+        assignmentDetailsPage.assertOutOfTextDisplayed("Out of 100 pts")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPercentageAssignmentWithoutQuantitativeRestriction() {
+        setUpData()
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "90%", 90.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("90%")
+        assignmentDetailsPage.assertOutOfTextDisplayed("Out of 100 pts")
+        assignmentDetailsPage.assertScoreDisplayed("90")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPassFailAssignmentWithoutQuantitativeRestriction() {
+        setUpData()
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("Complete")
+        assignmentDetailsPage.assertOutOfTextDisplayed("Out of 0 pts")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testLetterGradeAssignmentWithQuantitativeRestriction() {
+        val data = setUpData(restrictQuantitativeData = true)
+        val assignment = addAssignment(data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("B")
+        assignmentDetailsPage.assertOutOfTextNotDisplayed()
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testGpaScaleAssignmentWithQuantitativeRestriction() {
+        setUpData(restrictQuantitativeData = true)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("3.7")
+        assignmentDetailsPage.assertOutOfTextNotDisplayed()
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPointsAssignmentWithQuantitativeRestriction() {
+        setUpData(restrictQuantitativeData = true)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "65", 65.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("D")
+        assignmentDetailsPage.assertOutOfTextNotDisplayed()
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPointsAssignmentExcusedWithQuantitativeRestriction() {
+        setUpData(restrictQuantitativeData = true)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("EX")
+        assignmentDetailsPage.assertOutOfTextNotDisplayed()
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPercentageAssignmentWithQuantitativeRestriction() {
+        setUpData(restrictQuantitativeData = true)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "70%", 70.0, 100)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("C")
+        assignmentDetailsPage.assertOutOfTextNotDisplayed()
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    fun testPassFailAssignmentWithQuantitativeRestriction() {
+        setUpData(restrictQuantitativeData = true)
+        val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertGradeDisplayed("Complete")
+        assignmentDetailsPage.assertOutOfTextNotDisplayed()
+        assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    private fun setUpData(restrictQuantitativeData: Boolean = false): MockCanvas {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         val data = MockCanvas.init(
             studentCount = 1,
@@ -217,9 +357,32 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         )
 
         val course = data.courses.values.first()
+
+        val gradingScheme = listOf(
+            listOf("A", 0.9),
+            listOf("B", 0.8),
+            listOf("C", 0.7),
+            listOf("D", 0.6),
+            listOf("F", 0.0)
+        )
+
+        val newCourse = course
+            .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
+                gradingSchemeRaw = gradingScheme)
+        data.courses[course.id] = newCourse
+
+        data.addAssignmentsToGroups(newCourse)
+
+        return data
+    }
+
+    private fun goToAssignmentList() {
+        val data = MockCanvas.data
+        val course = data.courses.values.first()
         val student = data.students[0]
         val token = data.tokenFor(student)!!
-        val assignmentGroups = data.addAssignmentsToGroups(course)
+        val assignmentGroups = data.assignmentGroups[course.id]!!
+
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
         assignmentListPage.waitForPage()
@@ -230,8 +393,21 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val assignmentWithoutSubmission = assignmentGroups.flatMap { it.assignments }.find {it.submission == null}
         assertNotNull("Expected at least one assignment with a submission", assignmentWithSubmission)
         assertNotNull("Expected at least one assignment without a submission", assignmentWithoutSubmission)
+    }
 
-        return data
+    private fun addAssignment(data: MockCanvas, gradingType: Assignment.GradingType, grade: String?, score: Double?, maxScore: Int, excused: Boolean = false): Assignment {
+        val course = data.courses.values.first()
+        val student = data.students.first()
 
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            gradingType = Assignment.gradingTypeToAPIString(gradingType) ?: "",
+            pointsPossible = maxScore,
+        )
+
+        data.addSubmissionForAssignment(assignment.id, student.id, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString, grade = grade, score = score, excused = excused)
+
+        return assignment
     }
 }

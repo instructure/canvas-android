@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 
 @Entity
@@ -42,7 +43,7 @@ data class UserEntity(
     val rootAccount: String?,
     val isFakeStudent: Boolean
 ) {
-    constructor(user: User): this(
+    constructor(user: User) : this(
         user.id,
         user.name,
         user.shortName,
@@ -60,5 +61,27 @@ data class UserEntity(
         user.k5User,
         user.rootAccount,
         user.isFakeStudent
+    )
+
+    fun toApiModel(enrollments: List<Enrollment> = emptyList()) = User(
+        id = id,
+        name = name,
+        shortName = shortName,
+        loginId = loginId,
+        avatarUrl = avatarUrl,
+        primaryEmail = primaryEmail,
+        email = email,
+        sortableName = sortableName,
+        bio = bio,
+        enrollments = enrollments,
+        enrollmentIndex = enrollmentIndex,
+        lastLogin = lastLogin,
+        locale = locale,
+        effective_locale = effective_locale,
+        pronouns = pronouns,
+        k5User = k5User,
+        rootAccount = rootAccount,
+        isFakeStudent = isFakeStudent,
+        calendar = null
     )
 }

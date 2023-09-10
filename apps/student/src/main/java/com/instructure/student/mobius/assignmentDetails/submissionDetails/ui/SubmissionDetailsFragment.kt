@@ -18,14 +18,11 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
-import com.instructure.interactions.router.Route
-import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
@@ -40,8 +37,8 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
-class SubmissionDetailsFragment :
-    MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState, FragmentSubmissionDetailsBinding>() {
+abstract class SubmissionDetailsFragment : MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent,
+        SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState, FragmentSubmissionDetailsBinding>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
@@ -50,7 +47,7 @@ class SubmissionDetailsFragment :
     val isObserver by BooleanArg(key = Const.IS_OBSERVER, default = false)
     private val initialSelectedSubmissionAttempt by LongArg(key = Const.SUBMISSION_ATTEMPT)
 
-    override fun makeEffectHandler() = SubmissionDetailsEffectHandler()
+    override fun makeEffectHandler() = SubmissionDetailsEffectHandler(getRepository())
 
     override fun makeUpdate() = SubmissionDetailsUpdate()
 
@@ -96,39 +93,5 @@ class SubmissionDetailsFragment :
         }
     )
 
-    companion object {
-        fun makeRoute(course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null): Route {
-            val bundle = course.makeBundle {
-                putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putBoolean(Const.IS_OBSERVER, isObserver)
-                initialSelectedSubmissionAttempt?.let { putLong(Const.SUBMISSION_ATTEMPT, it) }
-            }
-            return Route(null, SubmissionDetailsFragment::class.java, course, bundle)
-        }
-
-        fun validRoute(route: Route): Boolean {
-            return route.canvasContext is Course &&
-                    (route.arguments.containsKey(Const.ASSIGNMENT_ID) ||
-                            route.paramsHash.containsKey(RouterParams.ASSIGNMENT_ID))
-        }
-
-        fun newInstance(route: Route): SubmissionDetailsFragment? {
-            if (!validRoute(route)) return null
-
-            // If routed from a URL, set the bundle's assignment ID from the url value
-            if (route.paramsHash.containsKey(RouterParams.ASSIGNMENT_ID)) {
-                val assignmentId = route.paramsHash[RouterParams.ASSIGNMENT_ID]?.toLong() ?: -1
-                route.arguments.putLong(Const.ASSIGNMENT_ID, assignmentId)
-            }
-
-            if (route.paramsHash.containsKey(Const.SUBMISSION_ATTEMPT)) {
-                val submissionAttempt = route.paramsHash[Const.SUBMISSION_ATTEMPT]?.toLong() ?: -1
-                route.arguments.putLong(Const.SUBMISSION_ATTEMPT, submissionAttempt)
-            }
-
-            return SubmissionDetailsFragment().withArgs(route.arguments)
-        }
-
-    }
-
+    abstract fun getRepository(): SubmissionDetailsRepository
 }

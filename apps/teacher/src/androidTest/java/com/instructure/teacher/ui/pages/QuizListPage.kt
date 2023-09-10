@@ -16,56 +16,104 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.action.ViewActions
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 
-class QuizListPage : BasePage() {
+/**
+ * Represents the Quiz List Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the elements on the "Quiz List" page.
+ * It contains properties for accessing various views on the page such as the quiz list toolbar, quiz recycler view, search button, search input, and empty panda view.
+ * Additionally, it provides methods for asserting the display of the "No Quizzes" view, checking the presence of a quiz, clicking on a quiz, opening the search bar, entering a search query,
+ * asserting the quiz count, and refreshing the page.
+ */
+class QuizListPage(val searchable: Searchable) : BasePage() {
+
+    /**
+     * The quiz list toolbar view on the page.
+     */
     private val quizListToolbar by OnViewWithId(R.id.quizListToolbar)
 
+    /**
+     * The quiz recycler view on the page.
+     */
     private val quizRecyclerView by OnViewWithId(R.id.quizRecyclerView)
 
+    /**
+     * The search button on the page.
+     */
     private val searchButton by OnViewWithId(R.id.search)
 
+    /**
+     * The search input view on the page.
+     */
     private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
 
-    //Only displayed when assignment list is empty
+    /**
+     * The empty panda view displayed when the quiz list is empty.
+     */
     private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
 
+    /**
+     * Asserts the display of the "No Quizzes" view.
+     */
     fun assertDisplaysNoQuizzesView() {
         emptyPandaView.assertDisplayed()
     }
 
+    /**
+     * Asserts the presence of a quiz on the page.
+     *
+     * @param quiz The quiz object representing the quiz to be checked.
+     */
     fun assertHasQuiz(quiz: Quiz) {
         waitForViewWithText(quiz.title!!).assertDisplayed()
     }
 
+    /**
+     * Clicks on a quiz.
+     *
+     * @param quiz The quiz object representing the quiz to be clicked.
+     */
     fun clickQuiz(quiz: Quiz) {
         clickQuiz(quiz.title!!)
     }
 
+    /**
+     * Clicks on a quiz based on its title.
+     *
+     * @param quizTitle The title of the quiz to be clicked.
+     */
     fun clickQuiz(quizTitle: String) {
         waitForViewWithText(quizTitle).click()
     }
 
-    fun openSearch() {
-        searchButton.click()
-    }
-
-    fun enterSearchQuery(query: String) {
-        searchInput.perform(ViewActions.replaceText(query))
-    }
-
+    /**
+     * Asserts the count of quizzes on the page.
+     *
+     * @param count The expected count of quizzes.
+     */
     fun assertQuizCount(count: Int) {
         quizRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
     }
 
+    /**
+     * Refreshes the page.
+     */
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout)).swipeDown()
     }
 }
+

@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Fechar caixa de diálogo de progresso</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">Fazendo upload para arquivos</string>
+    <string name="fileUploadFailedSubtitle">Falha no carregamento de um ou mais arquivos. Verifique sua conexão à Internet e tente enviar novamente.</string>
     <string name="submissionProgressSubtitle">Carregando envio para \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Realizando upload</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Sucesso do envio</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Envio bem-sucedido</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Falha no envio</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Carregamento de arquivos</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Carregando arquivo</item>
+        <item quantity="other">Carregamento de arquivos</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Carregamento de arquivo bem-sucedido</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Falha no envio do arquivo</string>
     <string name="cancelSubmissionDialogTitle">Cancelar envio</string>
     <string name="cancelSubmissionDialogMessage">Isso cancelará e excluirá seu envio.</string>
     <string name="fileUploadError">Falha no envio do arquivo</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Modo de seleção desativado.</string>
     <string name="a11y_avatarContentDescription">Avatar de %s</string>
     <string name="inboxUndo">Desfazer</string>
+    <string name="aboutAppTitle">Aplicativo</string>
+    <string name="aboutDomainTitle">Domínio</string>
+    <string name="aboutLoginTitle">ID de Login</string>
+    <string name="aboutEmailTitle">E-mail</string>
+    <string name="aboutVersionTitle">Versão</string>
+    <string name="assignmentRefreshError">Houve um problema ao recarregar esta tarefa. Verifique a sua conexão e tente novamente.</string>
 </resources>

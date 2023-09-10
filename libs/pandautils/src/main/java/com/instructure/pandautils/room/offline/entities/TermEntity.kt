@@ -30,11 +30,19 @@ data class TermEntity(
     val endAt: String?,
     val isGroupTerm: Boolean
 ) {
-    constructor(term: Term): this(
+    constructor(term: Term) : this(
         term.id,
         term.name,
         term.startAt,
         term.endAt,
         term.isGroupTerm
+    )
+
+    fun toApiModel() = Term(
+        id = id,
+        name = name,
+        startAt = startAt,
+        endAt = endAt,
+        isGroupTerm = isGroupTerm
     )
 }

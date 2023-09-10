@@ -32,7 +32,11 @@ import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
-import com.instructure.pandautils.room.appdatabase.model.SubmissionCommentWithAttachments
+import com.instructure.pandautils.room.common.model.SubmissionCommentWithAttachments
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post

@@ -17,15 +17,23 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.web.assertion.WebViewAssertions
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.swipeDown
 import com.instructure.student.R
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
 open class SyllabusPage : BasePage(R.id.syllabusPage) {
@@ -39,7 +47,11 @@ open class SyllabusPage : BasePage(R.id.syllabusPage) {
     }
 
     fun selectSummaryTab() {
-        onView(containsTextCaseInsensitive("summary")).click()
+        onView(containsTextCaseInsensitive("summary") + withAncestor(R.id.syllabusTabLayout)).click()
+    }
+
+    fun selectSyllabusTab() {
+        onView(containsTextCaseInsensitive("syllabus") + withAncestor(R.id.syllabusTabLayout)).click()
     }
 
     fun selectSummaryEvent(name: String) {
@@ -50,4 +62,18 @@ open class SyllabusPage : BasePage(R.id.syllabusPage) {
         onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.syllabusPage))).swipeDown()
     }
 
+    fun assertNoTabs() {
+        onView(withId(R.id.syllabusTabLayout)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+    }
+
+    fun assertSyllabusBody(syllabusBody: String) {
+            Web.onWebView(withId(R.id.contentWebView) + withAncestor(R.id.syllabusPage))
+                .withElement(DriverAtoms.findElement(Locator.ID, "content"))
+                .check(
+                    WebViewAssertions.webMatches(
+                        DriverAtoms.getText(),
+                        Matchers.comparesEqualTo(syllabusBody)
+                    )
+                )
+    }
 }

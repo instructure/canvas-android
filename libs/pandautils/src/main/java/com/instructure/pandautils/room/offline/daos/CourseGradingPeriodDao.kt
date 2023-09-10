@@ -17,16 +17,13 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.CourseGradingPeriodEntity
 
 @Dao
 interface CourseGradingPeriodDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: CourseGradingPeriodEntity)
 
     @Delete
@@ -34,4 +31,7 @@ interface CourseGradingPeriodDao {
 
     @Update
     suspend fun update(entity: CourseGradingPeriodEntity)
+
+    @Query("SELECT * FROM CourseGradingPeriodEntity WHERE courseId = :courseId")
+    suspend fun findByCourseId(courseId: Long): List<CourseGradingPeriodEntity>
 }

@@ -37,6 +37,8 @@ class CourseApi {
         'course_image',
         'sections',
         'observed_users',
+        'settings',
+        'grading_scheme'
       ],
       'enrollment_state': 'active',
     };
@@ -56,6 +58,8 @@ class CourseApi {
         'current_grading_period_scores',
         'course_image',
         'observed_users',
+        'settings',
+        'grading_scheme'
       ]
     };
     return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/${courseId}', queryParameters: params));

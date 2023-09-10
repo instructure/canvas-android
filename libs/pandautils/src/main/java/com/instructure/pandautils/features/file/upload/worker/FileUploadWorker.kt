@@ -34,25 +34,35 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
+import com.instructure.pandautils.di.APP_DATABASE
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.appdatabase.entities.*
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.common.entities.AttachmentEntity
+import com.instructure.pandautils.room.common.entities.AuthorEntity
+import com.instructure.pandautils.room.common.entities.MediaCommentEntity
+import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.util.*
+import javax.inject.Named
 
 @HiltWorker
 class FileUploadWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
     private val fileUploadInputDao: FileUploadInputDao,
-    private val attachmentDao: AttachmentDao,
-    private val submissionCommentDao: SubmissionCommentDao,
-    private val mediaCommentDao: MediaCommentDao,
-    private val authorDao: AuthorDao,
+    @Named(APP_DATABASE) private val attachmentDao: AttachmentDao,
+    @Named(APP_DATABASE) private val submissionCommentDao: SubmissionCommentDao,
+    @Named(APP_DATABASE) private val mediaCommentDao: MediaCommentDao,
+    @Named(APP_DATABASE) private val authorDao: AuthorDao,
     private val dashboardFileUploadDao: DashboardFileUploadDao,
     private val apiPrefs: ApiPrefs,
     private val fileUploadUtilsHelper: FileUploadUtilsHelper

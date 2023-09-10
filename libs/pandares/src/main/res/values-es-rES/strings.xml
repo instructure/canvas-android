@@ -1296,11 +1296,17 @@
     <string name="a11y_closeProgress">Cerrar diálogo</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">Cargando a archivos</string>
+    <string name="fileUploadFailedSubtitle">No se han podido cargar uno o más archivos. Comprueba tu conexión a Internet y vuelve a realizar la entrega.</string>
     <string name="submissionProgressSubtitle">Cargando entrega a \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Cargando entrega</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Se ha realizado la entrega</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Entrega realizada correctamente</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">No se ha podido entregar</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Cargando archivos</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Cargando archivo</item>
+        <item quantity="other">Cargando archivos</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Archivo cargado correctamente</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Ha habido un error al cargar el archivo</string>
     <string name="cancelSubmissionDialogTitle">Cancelar entrega</string>
     <string name="cancelSubmissionDialogMessage">Esta acción cancelará y eliminará tu entrega.</string>
     <string name="fileUploadError">Ha habido un error al cargar el archivo</string>
@@ -1379,4 +1385,10 @@
     <string name="a11y_selectionModeDeactivated">Modo de selección desactivado.</string>
     <string name="a11y_avatarContentDescription">Avatar de %s</string>
     <string name="inboxUndo">Deshacer</string>
+    <string name="aboutAppTitle">Aplicación</string>
+    <string name="aboutDomainTitle">Dominio</string>
+    <string name="aboutLoginTitle">Identificación de inicio de sesión</string>
+    <string name="aboutEmailTitle">Correo electrónico</string>
+    <string name="aboutVersionTitle">Versión</string>
+    <string name="assignmentRefreshError">Se ha producido un problema al volver a cargar esta actividad. Comprueba tu conexión y vuelve a intentarlo.</string>
 </resources>

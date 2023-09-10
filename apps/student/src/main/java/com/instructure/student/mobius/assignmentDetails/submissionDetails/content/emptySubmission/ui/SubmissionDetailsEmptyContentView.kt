@@ -15,7 +15,6 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -30,7 +29,7 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.RecordingMediaType
@@ -69,7 +68,7 @@ class SubmissionDetailsEmptyContentView(
     }
 
     override fun onConnect(output: Consumer<SubmissionDetailsEmptyContentEvent>) {
-        binding.submitButton.onClick { output.accept(SubmissionDetailsEmptyContentEvent.SubmitAssignmentClicked) }
+        binding.submitButton.onClickWithRequireNetwork { output.accept(SubmissionDetailsEmptyContentEvent.SubmitAssignmentClicked) }
     }
 
     override fun render(state: SubmissionDetailsEmptyContentViewState) {
@@ -227,7 +226,7 @@ class SubmissionDetailsEmptyContentView(
 
     fun returnToAssignmentDetails() {
         // Not run on main thread of fragment host by default, so force it to run on UI thread
-        (context as Activity).runOnUiThread { (context as Activity).onBackPressed() }
+        activity.runOnUiThread { activity.onBackPressed() }
     }
 
     fun showStudentAnnotationView(assignment: Assignment) {

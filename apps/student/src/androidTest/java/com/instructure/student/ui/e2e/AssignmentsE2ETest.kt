@@ -24,7 +24,14 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -379,10 +386,10 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.expandCollapseAssignmentGroup("Assignments")
 
         Log.d(STEP_TAG, "Click on the 'Search' (magnifying glass) icon at the toolbar.")
-        assignmentListPage.clickOnSearchButton()
+        assignmentListPage.searchable.clickOnSearchButton()
 
         Log.d(STEP_TAG, "Type the name of the '${missingAssignment.name}' assignment.")
-        assignmentListPage.typeToSearchBar(missingAssignment.name.drop(5))
+        assignmentListPage.searchable.typeToSearchBar(missingAssignment.name.drop(5))
 
         Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' assignment has been found by previously typed search string.")
         sleep(3000) // Allow the search input to propagate
@@ -446,6 +453,52 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that the audio comment has been displayed.")
         submissionDetailsPage.assertAudioCommentDisplayed()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)
+    fun testAddFileCommentE2E() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
+        val assignment = createAssignment(course.id, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
+        submitAssignment(assignment, course, student)
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Seed a comment attachment upload.")
+        val commentUploadInfo = uploadTextFile(
+            assignmentId = assignment.id,
+            courseId = course.id,
+            token = student.token,
+            fileUploadType = FileUploadType.COMMENT_ATTACHMENT
+        )
+        commentOnSubmission(student, course, assignment, commentUploadInfo)
+
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG,"Click on ${assignment.name} assignment.")
+        assignmentListPage.clickAssignment(assignment)
+
+        Log.d(STEP_TAG,"Assert that ${commentUploadInfo.fileName} file is displayed as a comment by ${student.name} student.")
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentAttachmentDisplayed(commentUploadInfo.fileName, student)
+
+        Log.d(STEP_TAG,"Navigate to Submission Details Page and open Files Tab.")
+        submissionDetailsPage.openFiles()
     }
 
     @E2E
@@ -680,4 +733,18 @@ class AssignmentsE2ETest: StudentTest() {
         postedGrade = postedGrade,
         excused = false
     )
+
+    private fun commentOnSubmission(
+        student: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        commentUploadInfo: AttachmentApiModel
+    ) {
+        SubmissionsApi.commentOnSubmission(
+            studentToken = student.token,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(commentUploadInfo.id)
+        )
+    }
 }

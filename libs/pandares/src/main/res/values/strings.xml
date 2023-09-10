@@ -431,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Deleted</string>
+    <string name="gradeUpdated">Grade updated</string>
 
     <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
 
@@ -1117,6 +1118,7 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
     <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Grade: %s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1397,6 +1399,8 @@
     <string name="aboutLoginTitle">Login ID</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
+    <string name="instructure_logo">Instructure logo</string>
     <string name="preferences">Preferences</string>
     <string name="offlineContent">Offline Content</string>
     <string name="offlineSyncSettingsTitle">Synchronization</string>
@@ -1416,7 +1420,7 @@
     <string name="offline_content_deselect_all">Deselect All</string>
     <string name="offline_content_loading_error">An error occurred while loading the content.</string>
     <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off then no synchronization will happen. The already downloaded content will not be deleted.</string>
-    <string name="syncSettings_syncFrequencyTitle">Sync Frequency?</string>
+    <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
     <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
     <string name="syncSettings_syncFrequencyDescription">Specify the recurrence of the content synchronization. The system will download the selected content based on the frequency specified here.</string>
     <string name="syncSettings_wifiOnlyTitle">Sync Content Over Wi-Fi Only</string>
@@ -1429,4 +1433,9 @@
     <string name="synySettings_wifiConfirmationMessage">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
     <string name="syncSettings_wifiConfirmationPositiveButton">Turn Off</string>
     <string name="syncSettings_manualDescription">Manual</string>
+    <string name="offlineModeSnackbar">Offline Mode</string>
+    <string name="notAvailableOfflineScreenTitle">Not Available Offline</string>
+    <string name="notAvailableOfflineDescription">This content is not available in offline mode.</string>
+    <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
+    <string name="offline">Offline</string>
 </resources>

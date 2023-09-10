@@ -26,6 +26,14 @@ import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.teacher.R
 
+/**
+ * Represents the SpeedGrader Quiz Submission Page.
+ *
+ * This page provides functionality for interacting with the elements on the SpeedGrader Quiz Submission page. It contains
+ * methods for asserting the different states of the quiz submission, such as no submission state, view quiz state, and
+ * pending review state. It also provides methods for starting and finishing the review process. This page extends the
+ * BasePage class.
+ */
 @Suppress("unused")
 class SpeedGraderQuizSubmissionPage : BasePage() {
 
@@ -36,33 +44,48 @@ class SpeedGraderQuizSubmissionPage : BasePage() {
     private val gradeSubmissionButton by WaitForViewWithId(R.id.gradeQuizButton)
     private val viewQuizButton by WaitForViewWithId(R.id.viewQuizButton)
 
+    /**
+     * Asserts that the page shows the "No Submission" state.
+     */
     fun assertShowsNoSubmissionState() {
         waitForViewWithText(R.string.noSubmissionTeacher)
     }
 
+    /**
+     * Asserts that the page shows the "View Quiz" state.
+     */
     fun assertShowsViewQuizState() {
         viewQuizButton.assertVisible()
     }
 
+    /**
+     * Asserts that the page shows the "Pending Review" state.
+     */
     fun assertShowsPendingReviewState() {
         pendingReviewLabel.assertVisible()
         gradeSubmissionButton.assertVisible()
     }
 
+    /**
+     * Starts the review process by clicking on the "Grade Submission" button.
+     */
     fun startReview() {
         scrollTo(R.id.gradeQuizButton)
         gradeSubmissionButton.click()
     }
 
+    /**
+     * Finishes the review process by performing the necessary actions on the web view.
+     */
     fun finishReview() {
         Web.onWebView()
-                .withElement(
-                        DriverAtoms.findElement(
-                                Locator.CSS_SELECTOR,
-                                """button[class="btn btn-primary update-scores"]"""
-                        )
+            .withElement(
+                DriverAtoms.findElement(
+                    Locator.CSS_SELECTOR,
+                    """button[class="btn btn-primary update-scores"]"""
                 )
-                .perform(DriverAtoms.webClick())
+            )
+            .perform(DriverAtoms.webClick())
     }
 
 }

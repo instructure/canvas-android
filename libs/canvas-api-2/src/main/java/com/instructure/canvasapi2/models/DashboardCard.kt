@@ -21,5 +21,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DashboardCard(
     override val id: Long = 0,
-    val isK5Subject: Boolean = false
+    val isK5Subject: Boolean = false,
+    val shortName: String? = null,
+    val originalName: String? = null,
+    val courseCode: String? = null,
+    val position: Int = Int.MAX_VALUE // We should always get back the position, but in case it's missing we just put it at the end
 ) : CanvasModel<DashboardCard>()

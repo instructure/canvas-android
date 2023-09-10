@@ -21,6 +21,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Grades
+import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.utils.orDefault
 import java.util.*
 
 @Entity(
@@ -29,19 +32,13 @@ import java.util.*
             entity = UserEntity::class,
             parentColumns = ["id"],
             childColumns = ["observedUserId"],
-            onDelete = ForeignKey.NO_ACTION
-        ),
-        ForeignKey(
-            entity = UserEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["userId"],
-            onDelete = ForeignKey.NO_ACTION
+            onDelete = ForeignKey.SET_NULL
         ),
         ForeignKey(
             entity = SectionEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseSectionId"],
-            onDelete = ForeignKey.NO_ACTION
+            onDelete = ForeignKey.SET_NULL
         ),
         ForeignKey(
             entity = CourseEntity::class,
@@ -79,8 +76,8 @@ data class EnrollmentEntity(
 ) {
     constructor(enrollment: Enrollment, courseId: Long? = null, courseSectionId: Long? = null, observedUserId: Long?) : this(
         enrollment.id,
-        enrollment.role?.apiRoleString ?: Enrollment.EnrollmentType.NoEnrollment.apiRoleString,
-        enrollment.type?.apiTypeString ?: Enrollment.EnrollmentType.NoEnrollment.apiTypeString,
+        enrollment.role?.name ?: Enrollment.EnrollmentType.NoEnrollment.name,
+        enrollment.type?.name ?: Enrollment.EnrollmentType.NoEnrollment.name,
         if (enrollment.courseId != 0L) enrollment.courseId else courseId,
         if (enrollment.courseSectionId != 0L) enrollment.courseSectionId else courseSectionId,
         enrollment.enrollmentState,
@@ -101,5 +98,37 @@ data class EnrollmentEntity(
         enrollment.lastActivityAt,
         enrollment.limitPrivilegesToCourseSection,
         observedUserId
+    )
+
+    fun toApiModel(
+        grades: Grades? = null,
+        observedUser: User? = null,
+        user: User? = null
+    ) = Enrollment(
+        id = id,
+        role = Enrollment.EnrollmentType.valueOf(role),
+        type = Enrollment.EnrollmentType.valueOf(type),
+        courseId = courseId.orDefault(),
+        courseSectionId = courseSectionId.orDefault(),
+        enrollmentState = enrollmentState,
+        userId = userId,
+        grades = grades,
+        computedCurrentScore = computedCurrentScore,
+        computedFinalScore = computedFinalScore,
+        computedCurrentGrade = computedCurrentGrade,
+        computedFinalGrade = computedFinalGrade,
+        multipleGradingPeriodsEnabled = multipleGradingPeriodsEnabled,
+        totalsForAllGradingPeriodsOption = totalsForAllGradingPeriodsOption,
+        currentPeriodComputedCurrentScore = currentPeriodComputedCurrentScore,
+        currentPeriodComputedFinalScore = currentPeriodComputedFinalScore,
+        currentPeriodComputedCurrentGrade = currentPeriodComputedCurrentGrade,
+        currentPeriodComputedFinalGrade = currentPeriodComputedFinalGrade,
+        currentGradingPeriodId = currentGradingPeriodId,
+        currentGradingPeriodTitle = currentGradingPeriodTitle,
+        associatedUserId = associatedUserId,
+        lastActivityAt = lastActivityAt,
+        limitPrivilegesToCourseSection = limitPrivilegesToCourseSection,
+        observedUser = observedUser,
+        user = user
     )
 }

@@ -26,7 +26,7 @@ import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.syllabus.ui.SyllabusView
 import kotlinx.coroutines.launch
 
-class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, SyllabusEffect>() {
+class SyllabusEffectHandler(private val repository: SyllabusRepository) : EffectHandler<SyllabusView, SyllabusEvent, SyllabusEffect>() {
     override fun accept(effect: SyllabusEffect) {
         when (effect) {
             is SyllabusEffect.LoadData -> loadData(effect)
@@ -37,12 +37,10 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
 
     private fun loadData(effect: SyllabusEffect.LoadData) {
         launch {
-            val summaryAllowed = CourseManager
-                .getCourseSettingsAsync(effect.courseId, effect.forceNetwork)
-                .await()
-                .dataOrNull?.courseSummary == true
 
-            val course = CourseManager.getCourseWithSyllabusAsync(effect.courseId, effect.forceNetwork).await()
+            val summaryAllowed = repository.getCourseSettings(effect.courseId, effect.forceNetwork)?.courseSummary == true
+
+            val course = repository.getCourseWithSyllabus(effect.courseId, effect.forceNetwork)
 
             val summaryResult: DataResult<List<ScheduleItem>>
             if (course.isFail) {
@@ -56,11 +54,8 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
             } else {
                 val contextCodes = listOf(course.dataOrThrow.contextId)
 
-                val assignmentsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
-                val calendarEventsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
-
-                val assignments = assignmentsDeferred.await()
-                val events = calendarEventsDeferred.await()
+                val assignments = repository.getCalendarEvents(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
+                val events = repository.getCalendarEvents(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
                 val endList = mutableListOf<ScheduleItem>()
 
                 assignments.map { endList.addAll(it) }

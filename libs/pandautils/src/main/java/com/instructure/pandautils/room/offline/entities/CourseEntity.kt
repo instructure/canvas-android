@@ -20,7 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.*
 
 @Entity(
     foreignKeys = [
@@ -61,7 +61,8 @@ data class CourseEntity(
     val restrictEnrollmentsToCourseDate: Boolean,
     val workflowState: String?,
     val homeroomCourse: Boolean,
-    val courseColor: String?
+    val courseColor: String?,
+    val gradingScheme: List<GradingSchemeRow>?
 ) {
     constructor(course: Course) : this(
         course.id,
@@ -73,7 +74,7 @@ data class CourseEntity(
         course.syllabusBody,
         course.hideFinalGrades,
         course.isPublic,
-        course.license?.apiString ?: Course.License.PRIVATE_COPYRIGHTED.apiString,
+        course.license?.name ?: Course.License.PRIVATE_COPYRIGHTED.name,
         course.term?.id,
         course.needsGradingCount,
         course.isApplyAssignmentGroupWeights,
@@ -87,10 +88,57 @@ data class CourseEntity(
         course.bannerImageUrl,
         course.isWeightedGradingPeriods,
         course.hasGradingPeriods,
-        course.homePage?.apiString,
+        course.homePage?.name,
         course.restrictEnrollmentsToCourseDate,
-        course.workflowState?.apiString,
+        course.workflowState?.name,
         course.homeroomCourse,
-        course.courseColor
+        course.courseColor,
+        course.gradingScheme
     )
+
+    fun toApiModel(
+        term: Term? = null,
+        enrollments: MutableList<Enrollment>? = null,
+        sections: List<Section> = emptyList(),
+        gradingPeriods: List<GradingPeriod>? = null,
+        tabs: List<Tab>? = null,
+        settings: CourseSettings? = null
+    ): Course {
+        return Course(
+            id = id,
+            name = name,
+            originalName = originalName,
+            courseCode = courseCode,
+            startAt = startAt,
+            endAt = endAt,
+            syllabusBody = syllabusBody,
+            hideFinalGrades = hideFinalGrades,
+            isPublic = isPublic,
+            license = Course.License.valueOf(license),
+            term = term,
+            enrollments = enrollments,
+            needsGradingCount = needsGradingCount,
+            isApplyAssignmentGroupWeights = isApplyAssignmentGroupWeights,
+            currentScore = currentScore,
+            finalScore = finalScore,
+            currentGrade = currentGrade,
+            finalGrade = finalGrade,
+            isFavorite = isFavorite,
+            accessRestrictedByDate = accessRestrictedByDate,
+            imageUrl = imageUrl,
+            bannerImageUrl = bannerImageUrl,
+            isWeightedGradingPeriods = isWeightedGradingPeriods,
+            hasGradingPeriods = hasGradingPeriods,
+            sections = sections,
+            homePage = homePage?.let { Course.HomePage.valueOf(homePage) },
+            restrictEnrollmentsToCourseDate = restrictEnrollmentsToCourseDate,
+            workflowState = workflowState?.let { Course.WorkflowState.valueOf(it) },
+            homeroomCourse = homeroomCourse,
+            courseColor = courseColor,
+            gradingPeriods = gradingPeriods,
+            tabs = tabs,
+            settings = settings,
+            gradingSchemeRaw = gradingScheme?.map { listOf(it.name, it.value) }
+        )
+    }
 }

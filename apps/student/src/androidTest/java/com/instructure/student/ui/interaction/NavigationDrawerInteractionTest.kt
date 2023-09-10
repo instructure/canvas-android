@@ -20,6 +20,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -34,14 +35,21 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.di.NetworkStateProviderModule
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.R
+import com.instructure.student.espresso.fakes.FakeNetworkStateProvider
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.tokenLoginElementary
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 
+@UninstallModules(NetworkStateProviderModule::class)
 @HiltAndroidTest
 class NavigationDrawerInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
@@ -52,13 +60,19 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     private lateinit var activity: Activity
 
+    private val isOnlineLiveData = MutableLiveData<Boolean>()
+
+    @BindValue
+    @JvmField
+    val networkStateProvider: NetworkStateProvider = FakeNetworkStateProvider(isOnlineLiveData)
+
     @Before
     fun setUp() {
         // If we try to read this later, it may be null, possibly because we will have navigated
         // away from our initial activity.
         activity = activityRule.activity
 
-
+        isOnlineLiveData.postValue(true)
     }
 
     // Should be able to change the user from the navigation drawer
@@ -68,7 +82,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         // This test fails on API-28 in FTL due to a "TOO_MANY_REGISTRATIONS" issue on logout.
         // IMO, this is not something that we can fix.  So let's not run the test.
-        if(Build.VERSION.SDK_INT == 28) {
+        if (Build.VERSION.SDK_INT == 28) {
             return
         }
 
@@ -77,7 +91,8 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         // Need to remember student1 via PreviousUserUtils in order to be able to "change user"
         // back to student1.
-        PreviousUsersUtils.add(ContextKeeper.appContext, SignedInUser(
+        PreviousUsersUtils.add(
+            ContextKeeper.appContext, SignedInUser(
                 user = student1,
                 domain = data.domain,
                 protocol = ApiPrefs.protocol,
@@ -87,7 +102,8 @@ class NavigationDrawerInteractionTest : StudentTest() {
                 clientId = "",
                 clientSecret = "",
                 calendarFilterPrefs = null
-        ))
+            )
+        )
         leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         // Sign in student 2
@@ -112,7 +128,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         // This test fails on API-28 in FTL due to a "TOO_MANY_REGISTRATIONS" issue on logout.
         // IMO, this is not something that we can fix.  So let's not run the test.
-        if(Build.VERSION.SDK_INT == 28) {
+        if (Build.VERSION.SDK_INT == 28) {
             return
         }
 
@@ -120,28 +136,6 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         leftSideNavigationDrawerPage.logout()
         loginLandingPage.assertPageObjects()
-    }
-
-    /**
-     * Create two mocked students, sign in the first one, end up on the dashboard page
-     */
-    private fun signInStudent() : MockCanvas {
-        val data = MockCanvas.init(
-                studentCount = 2,
-                courseCount = 1,
-                favoriteCourseCount = 1
-        )
-
-        student1 = data.students.first()
-        student2 = data.students.last()
-
-        course = data.courses.values.first()
-
-        val token = data.tokenFor(student1)!!
-        tokenLogin(data.domain, token, student1)
-        dashboardPage.waitForRender()
-
-        return data
     }
 
     // Should open a dialog and send a question for the selected course
@@ -200,7 +194,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
         val activities = pkgMgr.queryIntentActivities(intent, 0)
         val matchedChooserActivities = activities.count()
         for (activity in activities) {
-            Log.d("submitFeatureIdea","Resolved activity = $activity")
+            Log.d("submitFeatureIdea", "Resolved activity = $activity")
         }
 
         Intents.init()
@@ -213,12 +207,12 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
             // Formulate what an actual email intent (NOT a chooser intent) would look like
             val emailIntentMatcher = CoreMatchers.allOf(
-                    IntentMatchers.hasAction(Intent.ACTION_SEND),
-                    IntentMatchers.hasType("message/rfc822"),
-                    CoreMatchers.anyOf(
-                            IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("support@instructure.com")),
-                            IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("mobilesupport@instructure.com"))
-                    )
+                IntentMatchers.hasAction(Intent.ACTION_SEND),
+                IntentMatchers.hasType("message/rfc822"),
+                CoreMatchers.anyOf(
+                    IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("support@instructure.com")),
+                    IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("mobilesupport@instructure.com"))
+                )
             )
 
             // Set up our intent catchers
@@ -230,8 +224,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
             // :-( Our production code creates a chooser every time, even if there is only one email app option...
             Intents.intended(chooserIntentMatcher)
-        }
-        finally {
+        } finally {
             Intents.release()
         }
     }
@@ -246,19 +239,98 @@ class NavigationDrawerInteractionTest : StudentTest() {
         Intents.init()
         try {
             val expectedIntent = CoreMatchers.allOf(
-                    IntentMatchers.hasAction(Intent.ACTION_VIEW),
-                    CoreMatchers.anyOf(
-                            // Could be either of these, depending on whether the play store app is installed
-                            IntentMatchers.hasData("market://details?id=com.instructure.candroid"),
-                            IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.candroid")
-                    )
+                IntentMatchers.hasAction(Intent.ACTION_VIEW),
+                CoreMatchers.anyOf(
+                    // Could be either of these, depending on whether the play store app is installed
+                    IntentMatchers.hasData("market://details?id=com.instructure.candroid"),
+                    IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.candroid")
+                )
             )
             Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
             helpPage.shareYourLove()
             Intents.intended(expectedIntent)
-        }
-        finally {
+        } finally {
             Intents.release()
         }
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testMenuItemForDefaultStudent() {
+        signInStudent()
+
+        leftSideNavigationDrawerPage.assertMenuItems(false)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testMenuItemForElementaryStudent() {
+        signInElementaryStudent()
+
+        leftSideNavigationDrawerPage.assertMenuItems(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineIndicatorDisplayedIfOffline() {
+        signInStudent()
+
+        isOnlineLiveData.postValue(false)
+
+        leftSideNavigationDrawerPage.assertOfflineIndicatorDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineIndicatorNotDisplayedIfOnline() {
+        signInStudent()
+
+        isOnlineLiveData.postValue(true)
+
+        leftSideNavigationDrawerPage.assertOfflineIndicatorNotDisplayed()
+    }
+
+    /**
+     * Create two mocked students, sign in the first one, end up on the dashboard page
+     */
+    private fun signInStudent(courseCount: Int = 1, studentCount: Int = 2, favoriteCourseCount: Int = 1): MockCanvas {
+        val data = MockCanvas.init(
+            studentCount = studentCount,
+            courseCount = courseCount,
+            favoriteCourseCount = favoriteCourseCount
+        )
+
+        student1 = data.students.first()
+        student2 = data.students.last()
+
+        course = data.courses.values.first()
+
+        val token = data.tokenFor(student1)!!
+        tokenLogin(data.domain, token, student1)
+        dashboardPage.waitForRender()
+
+        return data
+    }
+
+    private fun signInElementaryStudent(
+        courseCount: Int = 1,
+        pastCourseCount: Int = 0,
+        favoriteCourseCount: Int = 0,
+        announcementCount: Int = 0
+    ): MockCanvas {
+
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = courseCount,
+            pastCourseCount = pastCourseCount,
+            favoriteCourseCount = favoriteCourseCount,
+            accountNotificationCount = announcementCount
+        )
+
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLoginElementary(data.domain, token, student)
+        elementaryDashboardPage.waitForRender()
+        return data
     }
 }

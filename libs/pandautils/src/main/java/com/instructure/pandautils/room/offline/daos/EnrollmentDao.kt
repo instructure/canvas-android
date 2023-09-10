@@ -17,16 +17,13 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
 
 @Dao
 interface EnrollmentDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: EnrollmentEntity): Long
 
     @Delete
@@ -34,4 +31,19 @@ interface EnrollmentDao {
 
     @Update
     suspend fun update(entity: EnrollmentEntity)
+
+    @Query("SELECT * FROM EnrollmentEntity WHERE courseId = :courseId")
+    suspend fun findByCourseId(courseId: Long): List<EnrollmentEntity>
+
+    @Query("SELECT * FROM EnrollmentEntity")
+    suspend fun findAll(): List<EnrollmentEntity>
+
+    @Query("SELECT * FROM EnrollmentEntity WHERE currentGradingPeriodId = :gradingPeriodId")
+    suspend fun findByGradingPeriodId(gradingPeriodId: Long): List<EnrollmentEntity>
+
+    @Query("SELECT * FROM EnrollmentEntity WHERE courseId = :courseId AND role = :role")
+    suspend fun findByCourseIdAndRole(courseId: Long, role: String): List<EnrollmentEntity>
+
+    @Query("SELECT * FROM EnrollmentEntity WHERE userId = :userId")
+    suspend fun findByUserId(userId: Long): EnrollmentEntity?
 }

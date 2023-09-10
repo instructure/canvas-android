@@ -1,0 +1,21 @@
+gcloud:
+  project: delta-essence-114723
+  app: ./libs/pandautils/pandautils-app.apk
+  test: ./libs/pandautils/pandautils-test.apk
+  results-bucket: android-pandautils
+  auto-google-login: true
+  use-orchestrator: true
+  performance-metrics: false
+  timeout: 60m
+  test-targets:
+  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
+  device:
+  - model: Pixel2.arm
+    version: 29
+    locale: en_US
+    orientation: portrait
+
+flank:
+  testShards: 10
+  testRuns: 1
+

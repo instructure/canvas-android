@@ -31,6 +31,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.DiscussionManager.deleteDiscussionEntry
 import com.instructure.canvasapi2.managers.GroupManager
@@ -62,6 +63,7 @@ import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import kotlinx.coroutines.Job
@@ -96,6 +98,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private var discussionEntryId: Long by LongArg(default = 0L, key = DISCUSSION_ENTRY_ID)
     private var isNestedDetail: Boolean by BooleanArg(default = false, key = IS_NESTED_DETAIL)
     private val groupDiscussion: Boolean by BooleanArg(default = false, key = GROUP_DISCUSSION)
+
+    private var courseSettings: CourseSettings? = null
 
     private var scrollPosition: Int = 0
     private var authenticatedSessionURL: String? = null
@@ -248,7 +252,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             successfullyMarkedAsReadIds.forEach {
                 binding.discussionRepliesWebViewWrapper.post {
                     // Posting lets this escape Weave's lifecycle, so use a null-safe call on the webview here
-                    binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
+                    if (view != null) binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
                 }
             }
             if (!groupDiscussion) {
@@ -550,6 +554,16 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
             // Do we have a discussion topic header? if not fetch it, or if forceRefresh is true force a fetch
 
+            val courseId = when (canvasContext) {
+                is Course -> canvasContext.id
+                is Group -> (canvasContext as Group).courseId
+                else -> null
+            }
+
+            if (courseId != null) {
+                courseSettings = CourseManager.getCourseSettingsAsync(courseId, forceRefresh).await().dataOrNull
+            }
+
             if (forceRefresh) {
                 val discussionTopicHeaderId = if (discussionTopicHeaderId == 0L && discussionTopicHeader.id != 0L) discussionTopicHeader.id else discussionTopicHeaderId
                 if (!updateToGroupIfNecessary()) {
@@ -559,6 +573,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 // If there is no discussion (ID not set), then we need to load one
                 if (discussionTopicHeader.id == 0L) {
                     discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, it, true) }
+                }
+
+                // If we had an offline discussion on the list it might need some additional fields so we need to fetch the whole discussion.
+                // We might not need this if we implement offline mode on the discussion details screen.
+                if (discussionTopicHeader.offline) {
+                    discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeader.id, it, true) }
                 }
             }
 
@@ -602,9 +622,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 delay(300)
                 discussionsScrollView.post {
                     if (topLevelReplyPosted) {
-                        discussionsScrollView?.fullScroll(ScrollView.FOCUS_DOWN)
+                        discussionsScrollView.fullScroll(ScrollView.FOCUS_DOWN)
                     } else {
-                        discussionsScrollView?.scrollTo(0, scrollPosition)
+                        discussionsScrollView.scrollTo(0, scrollPosition)
                     }
                 }
             }
@@ -696,7 +716,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
         loadHeaderHtmlJob = discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
-            loadHTMLTopic(it, discussionTopicHeader.title)
+            if (view != null) loadHTMLTopic(it, discussionTopicHeader.title)
         })
 
         attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())
@@ -729,7 +749,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun setupAssignmentDetails(assignment: Assignment) =
         with(binding) {
             with(assignment) {
-                pointsTextView.setVisible()
+                pointsTextView.setVisible(!courseSettings?.restrictQuantitativeData.orDefault())
                 // Points possible
                 pointsTextView.text = resources.getQuantityString(
                     R.plurals.quantityPointsAbbreviated,

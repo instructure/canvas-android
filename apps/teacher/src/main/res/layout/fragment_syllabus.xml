@@ -46,7 +46,9 @@
         app:tabPaddingEnd="4dp"
         app:tabPaddingStart="4dp"
         app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/transparentWhite"
+        app:tabTextColor="@color/white"
+        app:tabTextAppearance="@style/TextAppearance.Design.Tab"
+        app:tabSelectedTextAppearance="@style/NavigationTabTextAppeareance"
         tools:background="#00bcd5"
         tools:visibility="visible">
 

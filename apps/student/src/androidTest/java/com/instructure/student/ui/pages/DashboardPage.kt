@@ -68,8 +68,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(courseName: String) {
-        val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
-        scrollAndAssertDisplayed(matcher)
+        val matcher = allOf(withText(courseName), withId(R.id.titleTextView), withAncestor(R.id.dashboardPage))
+        waitForView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: Course) {
@@ -78,8 +78,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
             // This is the RIGHT way to do it, but it inexplicably fails most of the time.
             scrollRecyclerView(R.id.listView, matcher)
             onView(matcher).assertDisplayed()
-        }
-        catch(pe: PerformException) {
+        } catch (pe: PerformException) {
             // Revert to this weaker operation if the one above fails.
             scrollAndAssertDisplayed(matcher)
         }
@@ -93,22 +92,26 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         assertDisplaysGroupCommon(group.name, course.name)
     }
 
+    fun assertDisplaysGroup(group: GroupApiModel, courseName: String) {
+        assertDisplaysGroupCommon(group.name, courseName)
+    }
+
     fun assertDisplaysGroup(group: Group, course: Course) {
         assertDisplaysGroupCommon(group.name!!, course.name)
     }
 
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().assertDisplayed()
-        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView))
-        onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
+        waitForView(groupNameMatcher).scrollTo().assertDisplayed()
+        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView), hasSibling(groupNameMatcher))
+        waitForView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
         emptyView.assertDisplayed()
-        onViewWithText(R.string.welcome).assertDisplayed()
-        onViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
-        onViewWithId(R.id.addCoursesButton).assertDisplayed()
+        waitForViewWithText(R.string.welcome).assertDisplayed()
+        waitForViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
+        waitForViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
     fun assertCourseLabelTextColor(expectedTextColor: String) {
@@ -162,6 +165,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.gradeTextView)).assertDisplayed()
     }
 
+    fun assertGradeText(gradeText: String) {
+        onViewWithId(R.id.gradeTextView).assertHasText(gradeText)
+    }
+
     // Assumes one course, which is favorited
     fun assertHidesGrades() {
         onView(withId(R.id.gradeTextView)).assertNotDisplayed()
@@ -174,12 +181,17 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().click()
+        waitForView(groupNameMatcher).scrollTo().click()
     }
 
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name) + withId(R.id.titleTextView)).click()
+    }
+
+    fun selectGroup(group: GroupApiModel) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        onView(groupNameMatcher).scrollTo().click()
     }
 
     fun assertAnnouncementShowing(announcement: AccountNotification) {
@@ -247,7 +259,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun clickEditDashboard() {
-        onView(withId(R.id.editDashboardTextView)).click()
+        onView(withId(R.id.editDashboardTextView)).scrollTo().click()
     }
 
     fun assertCourseNotDisplayed(course: CourseApiModel) {
@@ -259,14 +271,35 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(matcher).check(doesNotExist())
     }
 
+    fun assertGroupNotDisplayed(group: GroupApiModel) {
+        val matcher = allOf(
+            withText(group.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
+    fun assertGroupNotDisplayed(group: Group) {
+        val matcher = allOf(
+            withText(group.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        onView(withText(android.R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
-        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
-        onView(courseOverflowMatcher).click()
+        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(
+            withId(R.id.cardView)
+                    + withDescendant(withId(R.id.titleTextView) + withText(courseTitle))
+        )
+        onView(courseOverflowMatcher).scrollTo().click()
         waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
 
@@ -274,7 +307,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
         val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
 
-        onView(matcher).assertDisplayed()
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertCourseGradeNotDisplayed(courseName: String, courseGrade: String) {
@@ -282,6 +315,23 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
 
         onView(matcher).check(matches(Matchers.not(isDisplayed())))
+    }
+
+    fun assertDashboardNotificationDisplayed(title: String, subTitle: String) {
+        onView(withId(R.id.uploadTitle) + withText(title)).assertDisplayed()
+        onView(withId(R.id.uploadSubtitle) + withText(subTitle)).assertDisplayed()
+    }
+
+    fun clickOnDashboardNotification(subTitle: String) {
+        onView(withId(R.id.uploadSubtitle) + withText(subTitle)).click()
+    }
+
+    fun assertOfflineIndicatorDisplayed() {
+        waitForView(withId(R.id.offlineIndicator)).assertDisplayed()
+    }
+
+    fun assertOfflineIndicatorNotDisplayed() {
+        onView(withId(R.id.offlineIndicator)).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 }
 
@@ -291,7 +341,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
  */
 class SetSwitchCompat(val position: Boolean) : ViewAction {
     override fun getDescription(): String {
-        val desiredPosition =  if(position) "On" else "Off"
+        val desiredPosition = if (position) "On" else "Off"
         return "Set SwitchCompat to $desiredPosition"
     }
 
@@ -301,7 +351,7 @@ class SetSwitchCompat(val position: Boolean) : ViewAction {
 
     override fun perform(uiController: UiController?, view: View?) {
         val switch = view as SwitchCompat
-        if(switch != null) {
+        if (switch != null) {
             switch.isChecked = position
         }
     }

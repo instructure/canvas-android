@@ -31,4 +31,7 @@ interface RubricSettingsDao {
 
     @Update
     suspend fun update(entity: RubricSettingsEntity)
+
+    @Query("SELECT * FROM RubricSettingsEntity WHERE id = :id")
+    suspend fun findById(id: Long): RubricSettingsEntity?
 }

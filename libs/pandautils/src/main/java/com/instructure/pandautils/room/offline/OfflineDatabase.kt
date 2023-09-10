@@ -20,7 +20,15 @@ package com.instructure.pandautils.room.offline
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.instructure.pandautils.room.Converters
+import com.instructure.pandautils.room.common.Converters
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.common.entities.AttachmentEntity
+import com.instructure.pandautils.room.common.entities.AuthorEntity
+import com.instructure.pandautils.room.common.entities.MediaCommentEntity
+import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 
@@ -32,10 +40,13 @@ import com.instructure.pandautils.room.offline.entities.*
         AssignmentOverrideEntity::class,
         AssignmentRubricCriterionEntity::class,
         AssignmentScoreStatisticsEntity::class,
+        AssignmentSetEntity::class,
         CourseEntity::class,
         CourseFilesEntity::class,
         CourseGradingPeriodEntity::class,
+        CourseSettingsEntity::class,
         CourseSyncSettingsEntity::class,
+        DashboardCardEntity::class,
         DiscussionEntryAttachmentEntity::class,
         DiscussionEntryEntity::class,
         DiscussionParticipantEntity::class,
@@ -44,11 +55,18 @@ import com.instructure.pandautils.room.offline.entities.*
         DiscussionTopicRemoteFileEntity::class,
         DiscussionTopicSectionEntity::class,
         EnrollmentEntity::class,
+        FileFolderEntity::class,
         ExternalToolAttributesEntity::class,
         GradesEntity::class,
         GradingPeriodEntity::class,
         GroupEntity::class,
         GroupUserEntity::class,
+        LocalFileEntity::class,
+        MasteryPathAssignmentEntity::class,
+        MasteryPathEntity::class,
+        ModuleContentDetailsEntity::class,
+        ModuleItemEntity::class,
+        ModuleObjectEntity::class,
         NeedsGradingCountEntity::class,
         PageEntity::class,
         PlannerOverrideEntity::class,
@@ -57,16 +75,30 @@ import com.instructure.pandautils.room.offline.entities.*
         RubricCriterionEntity::class,
         RubricCriterionRatingEntity::class,
         RubricSettingsEntity::class,
+        ScheduleItemAssignmentOverrideEntity::class,
+        ScheduleItemEntity::class,
         SectionEntity::class,
         SubmissionDiscussionEntryEntity::class,
         SubmissionEntity::class,
-        SubmissionHistoryEntity::class,
         SyncSettingsEntity::class,
         TabEntity::class,
         TermEntity::class,
         UserCalendarEntity::class,
-        UserEntity::class
-    ], version = 3
+        UserEntity::class,
+        QuizEntity::class,
+        LockInfoEntity::class,
+        LockedModuleEntity::class,
+        ModuleNameEntity::class,
+        ModuleCompletionRequirementEntity::class,
+        FileSyncSettingsEntity::class,
+        ConferenceEntity::class,
+        ConferenceRecordingEntity::class,
+        CourseFeaturesEntity::class,
+        AttachmentEntity::class,
+        MediaCommentEntity::class,
+        AuthorEntity::class,
+        SubmissionCommentEntity::class
+    ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
@@ -112,4 +144,66 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun discussionParticipantDao(): DiscussionParticipantDao
 
     abstract fun syncSettingsDao(): SyncSettingsDao
+
+    abstract fun assignmentScoreStatisticsDao(): AssignmentScoreStatisticsDao
+
+    abstract fun rubricCriterionDao(): RubricCriterionDao
+
+    abstract fun quizDao(): QuizDao
+
+    abstract fun lockInfoDao(): LockInfoDao
+
+    abstract fun lockedModuleDao(): LockedModuleDao
+
+    abstract fun moduleNameDao(): ModuleNameDao
+
+    abstract fun moduleCompletionRequirementDao(): ModuleCompletionRequirementDao
+
+    abstract fun dashboardCardDao(): DashboardCardDao
+
+    abstract fun fileSyncSettingsDao(): FileSyncSettingsDao
+
+    abstract fun courseSettingsDao(): CourseSettingsDao
+
+    abstract fun scheduleItemDao(): ScheduleItemDao
+
+    abstract fun scheduleItemAssignmentOverrideDao(): ScheduleItemAssignmentOverrideDao
+
+    abstract fun assignmentOverrideDao(): AssignmentOverrideDao
+
+    abstract fun conferenceDao(): ConferenceDao
+
+    abstract fun conferenceRecordingDao(): ConferenceRecodingDao
+
+    abstract fun moduleObjectDao(): ModuleObjectDao
+
+    abstract fun moduleItemDao(): ModuleItemDao
+
+    abstract fun moduleContentDetailsDao(): ModuleContentDetailsDao
+
+    abstract fun masteryPathDao(): MasteryPathDao
+
+    abstract fun assignmentSetDao(): AssignmentSetDao
+
+    abstract fun masteryPathAssignmentDao(): MasteryPathAssignmentDao
+
+    abstract fun courseFeaturesDao(): CourseFeaturesDao
+
+    abstract fun attachmentDao(): AttachmentDao
+
+    abstract fun authorDao(): AuthorDao
+
+    abstract fun mediaCommentDao(): MediaCommentDao
+
+    abstract fun submissionCommentDao(): SubmissionCommentDao
+
+    abstract fun rubricCriterionAssessmentDao(): RubricCriterionAssessmentDao
+
+    abstract fun rubricCriterionRatingDao(): RubricCriterionRatingDao
+
+    abstract fun assignmentRubricCriterionDao(): AssignmentRubricCriterionDao
+
+    abstract fun fileFolderDao(): FileFolderDao
+
+    abstract fun localFileDao(): LocalFileDao
 }

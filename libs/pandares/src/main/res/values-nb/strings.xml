@@ -1295,11 +1295,17 @@
     <string name="a11y_closeProgress">Lukk fremgangsdialog</string>
     <string name="fileUploadProgress">%1$s av %2$s</string>
     <string name="fileUploadProgressSubtitle">Last opp til Filer</string>
+    <string name="fileUploadFailedSubtitle">En eller flere filer kunne ikke lastes opp. Sjekk internettforbindelsen din og prøv å lever på nytt.</string>
     <string name="submissionProgressSubtitle">Laster opp innlevering til \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Laster opp innlevering</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Innlevering vellykket</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Innlevering feilet</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Laste opp filer</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Laster opp fil</item>
+        <item quantity="other">Laster opp filer</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Filen ble lastet opp</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Filopplasting mislyktes</string>
     <string name="cancelSubmissionDialogTitle">Avbryt innlevering</string>
     <string name="cancelSubmissionDialogMessage">Dette avbryter og sletter innleveringen din.</string>
     <string name="fileUploadError">Filopplasting mislyktes</string>
@@ -1378,4 +1384,10 @@
     <string name="a11y_selectionModeDeactivated">Valgmodus deaktivert.</string>
     <string name="a11y_avatarContentDescription">Avatar av %s</string>
     <string name="inboxUndo">Angre</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domene</string>
+    <string name="aboutLoginTitle">Innloggings-ID</string>
+    <string name="aboutEmailTitle">E-post</string>
+    <string name="aboutVersionTitle">Versjon</string>
+    <string name="assignmentRefreshError">Det oppstod et problem med lasting av denne oppgaven. Kontroller tilkoblingen og prøv på nytt.</string>
 </resources>

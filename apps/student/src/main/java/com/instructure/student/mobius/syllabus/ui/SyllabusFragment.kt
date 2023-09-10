@@ -20,24 +20,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.makeBundle
-import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.databinding.FragmentSyllabusBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.syllabus.*
 
 @ScreenView(SCREEN_VIEW_SYLLABUS)
 @PageView(url = "{canvasContext}/assignments/syllabus")
-class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState, FragmentSyllabusBinding>() {
+abstract class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState, FragmentSyllabusBinding>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
-    override fun makeEffectHandler() = SyllabusEffectHandler()
+    override fun makeEffectHandler() = SyllabusEffectHandler(getRepository())
 
     override fun makeUpdate() = SyllabusUpdate()
 
@@ -47,20 +44,5 @@ class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEf
 
     override fun makeInitModel() = SyllabusModel(canvasContext.id)
 
-    companion object {
-
-        fun makeRoute(course: Course): Route {
-            return Route(null, SyllabusFragment::class.java, course, course.makeBundle())
-        }
-
-        fun validRoute(route: Route): Boolean {
-            return route.canvasContext is Course
-        }
-
-        fun newInstance(route: Route): SyllabusFragment? {
-            if (!validRoute(route)) return null
-
-            return SyllabusFragment().withArgs(route.arguments)
-        }
-    }
+    abstract fun getRepository(): SyllabusRepository
 }

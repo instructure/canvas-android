@@ -1294,11 +1294,17 @@
     <string name="a11y_closeProgress">Fèmen dyalìg pwogrè</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">Transfere nan Fichye</string>
+    <string name="fileUploadFailedSubtitle">Gen yonn oswa plizyè fichye pa rive transfere. Verifye koneksyon entènèt ou a epi eseye re voye yo ankò</string>
     <string name="submissionProgressSubtitle">Transfere Soumisyon nan \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Chajman Soumisyon</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Soumisyon Reyisi</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Soumisyon Echwe</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Ajoute Fichye</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Transfè Fichye</item>
+        <item quantity="other">Ajoute Fichye</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Transfè Fichye Reyisi</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Transfè Fichye Echwe</string>
     <string name="cancelSubmissionDialogTitle">Anile Soumisyon</string>
     <string name="cancelSubmissionDialogMessage">Aksyon sa a ap anile epi efase soumisyon w lan.</string>
     <string name="fileUploadError">Transfè Fichye Echwe</string>
@@ -1377,4 +1383,10 @@
     <string name="a11y_selectionModeDeactivated">Mòd seleksyon dezaktive.</string>
     <string name="a11y_avatarContentDescription">Avatar %s</string>
     <string name="inboxUndo">Defèt</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domèn</string>
+    <string name="aboutLoginTitle">ID Koneksyon</string>
+    <string name="aboutEmailTitle">Imèl</string>
+    <string name="aboutVersionTitle">Vèsyon</string>
+    <string name="assignmentRefreshError">Te gen yon pwoblèm pou rechaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
 </resources>

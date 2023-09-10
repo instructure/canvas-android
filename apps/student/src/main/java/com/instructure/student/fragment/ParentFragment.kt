@@ -112,7 +112,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
                                 InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(loadedMedia.bundle!!))
                             } else if (loadedMedia.intent != null && context != null) {
                                 // Show pdf with PSPDFkit
-                                if (loadedMedia.intent!!.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
+                                if (loadedMedia.intent?.type?.contains("pdf") == true && !loadedMedia.isUseOutsideApps) {
                                     val uri = loadedMedia.intent!!.data
                                     FileUtils.showPdfDocument(uri!!, loadedMedia, requireContext())
                                 } else if (loadedMedia.intent?.type == "video/mp4") {
@@ -375,6 +375,14 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         val owner = activity ?: return
         onMainThread {
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename)
+            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
+        }
+    }
+
+    fun openLocalMedia(mime: String?, path: String?, filename: String?, canvasContext: CanvasContext, useOutsideApps: Boolean = false) {
+        val owner = activity ?: return
+        onMainThread {
+            openMediaBundle = OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, path, filename, useOutsideApps)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
         }
     }

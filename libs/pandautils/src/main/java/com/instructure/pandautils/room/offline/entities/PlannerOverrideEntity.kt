@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerOverride
 
 @Entity
@@ -36,5 +37,13 @@ data class PlannerOverrideEntity(
         plannerOverride.plannableId,
         plannerOverride.dismissed,
         plannerOverride.markedComplete
+    )
+
+    fun toApiModel() = PlannerOverride(
+        id = id,
+        plannableType = PlannableType.valueOf(plannableType),
+        plannableId = plannableId,
+        dismissed = dismissed,
+        markedComplete = markedComplete
     )
 }

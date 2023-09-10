@@ -20,6 +20,12 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
 
+/**
+ * Represents the Not a Teacher Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the elements on the "Not a Teacher" page.
+ * It contains a method to click on the login button.
+ */
 class NotATeacherPage : BasePage() {
 
     private val notATeacherTitle by WaitForViewWithId(R.id.not_a_teacher_header, autoAssert = true)
@@ -28,7 +34,9 @@ class NotATeacherPage : BasePage() {
     private val parentLink by WaitForViewWithId(R.id.parentLink)
     private val loginButton by WaitForViewWithId(R.id.login)
 
-
+    /**
+     * Clicks on the login button.
+     */
     fun clickOnLoginButton() {
         loginButton.click()
     }

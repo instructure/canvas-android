@@ -19,24 +19,26 @@ package com.instructure.student.ui.e2e
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.core.content.FileProvider
+import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
-import java.io.File
 
 @HiltAndroidTest
 class ShareExtensionE2ETest: StudentTest() {
@@ -114,8 +116,20 @@ class ShareExtensionE2ETest: StudentTest() {
         device.pressRecentApps()
         device.findObject(UiSelector().descriptionContains("Canvas")).click()
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is displayed. Select ${course.name} and navigate to Assignments Page.")
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is displayed.")
         dashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the 'Submission Successful' titled dashboard notification is displayed," +
+                "and the '${testAssignmentOne.name}' assignment's name is displayed as the subtitle of the notification. ")
+        dashboardPage.assertDashboardNotificationDisplayed("Submission Successful", testAssignmentOne.name)
+
+        Log.d(STEP_TAG, "Click on the dashboard notification and assert if it's navigating to the Submission Details Page." +
+                "Press back then to navigate back to the Dashboard Page.")
+        dashboardPage.clickOnDashboardNotification(testAssignmentOne.name)
+        submissionDetailsPage.assertPageObjects()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Select ${course.name} and navigate to Assignments Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
 
@@ -148,12 +162,12 @@ class ShareExtensionE2ETest: StudentTest() {
         fileUploadPage.assertPageObjects()
         fileUploadPage.assertDialogTitle("Upload To My Files")
         fileUploadPage.assertFileDisplayed(jpgTestFileName)
-        fileUploadPage.assertFileDisplayed(pdfTestFileName)
+        fileUploadPage.assertFileDisplayed("samplepdf")
 
         Log.d(STEP_TAG,"Remove '$pdfTestFileName' file and assert that it's not displayed any more on the list but the other file is displayed.")
-        fileUploadPage.removeFile(pdfTestFileName)
-        fileUploadPage.assertFileNotDisplayed(pdfTestFileName)
-        fileUploadPage.assertFileDisplayed("$pdfTestFileName.jpg")
+        fileUploadPage.removeFile("samplepdf")
+        fileUploadPage.assertFileNotDisplayed("samplepdf")
+        fileUploadPage.assertFileDisplayed(jpgTestFileName)
 
         Log.d(STEP_TAG, "Click on 'Upload' button to upload the file.")
         fileUploadPage.clickUpload()
@@ -177,7 +191,12 @@ class ShareExtensionE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Navigate to (Global) Files Page.")
         dashboardPage.assertPageObjects()
         Thread.sleep(4000) //Make sure that the toast message has disappeared.
-        leftSideNavigationDrawerPage.clickFilesMenu()
+
+        Log.d(STEP_TAG, "Assert that the 'File Upload Successful' titled dashboard notification is displayed and the subtitle is the uploaded file(s) name (${jpgTestFileName}).")
+        dashboardPage.assertDashboardNotificationDisplayed("File Upload Successful", jpgTestFileName)
+
+        Log.d(STEP_TAG, "Click on the 'File Upload Successful' dashboard notification. Assert that it's navigating to the (Global) Files menu. Press bacck to navigate back to the Dashboard Page.")
+        dashboardPage.clickOnDashboardNotification(jpgTestFileName)
 
         Log.d(STEP_TAG, "Assert that the 'unfiled' directory is displayed." +
                 "Click on it, and assert that the previously uploaded file ($jpgTestFileName) is displayed within the folder.")
@@ -201,20 +220,6 @@ class ShareExtensionE2ETest: StudentTest() {
                 pointsPossible = pointsPossible,
                 dueAt = dueAt
             )
-        )
-    }
-
-    private fun setupFileOnDevice(fileName: String): Uri {
-        copyAssetFileToExternalCache(activityRule.activity, fileName)
-
-        val dir = activityRule.activity.externalCacheDir
-        val file = File(dir?.path, fileName)
-
-        val instrumentationContext = InstrumentationRegistry.getInstrumentation().context
-        return FileProvider.getUriForFile(
-            instrumentationContext,
-            "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
-            file
         )
     }
 

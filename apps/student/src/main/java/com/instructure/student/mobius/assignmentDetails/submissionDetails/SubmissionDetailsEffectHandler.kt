@@ -17,14 +17,10 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
-import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
@@ -36,7 +32,11 @@ import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.launch
 import java.io.File
 
-class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
+class SubmissionDetailsEffectHandler(
+    private val repository: SubmissionDetailsRepository
+) : EffectHandler<SubmissionDetailsView, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
+
+    @ObsoleteCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun accept(effect: SubmissionDetailsEffect) {
         when (effect) {
@@ -47,7 +47,7 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
             is SubmissionDetailsEffect.ShowAudioRecordingView -> {
                 view?.showAudioRecordingView()
             }
-            is SubmissionDetailsEffect.ShowVideoRecordingView-> {
+            is SubmissionDetailsEffect.ShowVideoRecordingView -> {
                 view?.showVideoRecordingView()
             }
             is SubmissionDetailsEffect.ShowVideoRecordingPlayback -> {
@@ -71,59 +71,83 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
     private fun loadData(effect: SubmissionDetailsEffect.LoadData) {
         launch {
             // If the user is an observer, get the id of the first observee that comes back, otherwise use the user's id
-            val enrollmentsResult = EnrollmentManager.getObserveeEnrollmentsAsync(true).await()
-            val observeeId = enrollmentsResult.dataOrNull?.firstOrNull { it.isObserver && it.courseId == effect.courseId }?.associatedUserId
+            val enrollments = repository.getObserveeEnrollments(true).dataOrNull.orEmpty()
+            val observeeId = enrollments.firstOrNull { it.isObserver && it.courseId == effect.courseId }?.associatedUserId
             val userId = observeeId ?: ApiPrefs.user!!.id
 
-            val submissionResult = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, userId, true).await()
-            val assignmentResult = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
+            val submissionResult = repository.getSingleSubmission(effect.courseId, effect.assignmentId, userId, true)
+            val assignmentResult = repository.getAssignment(effect.assignmentId, effect.courseId, true)
 
-            val studioLTIToolResult: DataResult<LTITool> = if (assignmentResult.isSuccess && assignmentResult.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
+            val studioLTIToolResult = if (repository.isOnline() && assignmentResult.containsSubmissionType(Assignment.SubmissionType.ONLINE_UPLOAD)) {
                 effect.courseId.getStudioLTITool()
-            } else DataResult.Fail(null)
+            } else {
+                DataResult.Fail(null)
+            }
 
             // For empty submissions - We need to know if they can make submissions through Studio, only used for file uploads
             val isStudioEnabled = studioLTIToolResult.dataOrNull != null
 
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
             val ltiToolId = assignmentResult.dataOrNull?.externalToolAttributes?.contentId
-            val ltiToolResponse = if(ltiToolId != null && ltiToolId != 0L) {
+            val ltiToolResponse = if (ltiToolId != null && ltiToolId != 0L) {
                 // Use this to create a proper fetch url for the external tool
-                AssignmentManager.getExternalToolLaunchUrlAsync(
-                        assignmentResult.dataOrNull?.courseId!!,
-                        ltiToolId, assignmentResult.dataOrNull?.id!!
-                ).await()
+                repository.getExternalToolLaunchUrl(
+                    assignmentResult.dataOrNull?.courseId!!,
+                    ltiToolId, assignmentResult.dataOrNull?.id!!,
+                    true
+                )
             } else {
                 val assignmentUrl = assignmentResult.dataOrNull?.url
-                if (assignmentUrl != null && assignmentResult.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
-                    SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
-                else DataResult.Fail(null)
+                if (assignmentUrl != null && assignmentResult.containsSubmissionType(Assignment.SubmissionType.EXTERNAL_TOOL)) {
+                    repository.getLtiFromAuthenticationUrl(assignmentUrl, true)
+                } else {
+                    DataResult.Fail(null)
+                }
             }
 
-            val ltiTool = if(ltiToolResponse.isSuccess && ltiToolResponse.dataOrNull != null) {
-                DataResult.Success(ltiToolResponse.dataOrThrow.copy(assignmentId = assignmentResult.dataOrNull?.id!!, courseId = assignmentResult.dataOrNull?.courseId!!))
+            val ltiTool = if (ltiToolResponse.dataOrNull != null) {
+                DataResult.Success(
+                    ltiToolResponse.dataOrThrow.copy(
+                        assignmentId = assignmentResult.dataOrNull?.id!!,
+                        courseId = assignmentResult.dataOrNull?.courseId!!
+                    )
+                )
             } else {
                 ltiToolResponse
             }
 
             // We need to get the quiz for the empty submission page
-            val quizResult = if (assignmentResult.dataOrNull?.turnInType == (Assignment.TurnInType.QUIZ) && assignmentResult.dataOrNull?.quizId != 0L) {
-                try {
-                    QuizManager.getQuizAsync(effect.courseId, assignmentResult.dataOrNull?.quizId!!, true).await()
-                } catch (e: StatusCallbackError) {
-                    if (e.response?.code() == 401) {
-                        DataResult.Fail(Failure.Authorization(e.response?.message()))
-                    } else {
-                        DataResult.Fail(Failure.Network(e.response?.message()))
-                    }
-                }
-            } else null
+            val quizResult = if (assignmentResult.dataOrNull?.turnInType == Assignment.TurnInType.QUIZ
+                && assignmentResult.dataOrNull?.quizId != 0L
+            ) {
+                repository.getQuiz(effect.courseId, assignmentResult.dataOrNull?.quizId!!, true)
+            } else {
+                null
+            }
 
-            val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(effect.courseId, true).await().dataOrNull
+            val featureFlags = repository.getCourseFeatures(effect.courseId, true).dataOrNull
             val assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiTool, isStudioEnabled, quizResult, studioLTIToolResult, effect.isObserver, assignmentEnhancementsEnabled))
+            val restrictQuantitativeData = repository.loadCourseSettings(effect.courseId, true)?.restrictQuantitativeData.orDefault()
+
+            consumer.accept(
+                SubmissionDetailsEvent.DataLoaded(
+                    assignmentResult,
+                    submissionResult,
+                    ltiTool,
+                    isStudioEnabled,
+                    quizResult,
+                    studioLTIToolResult,
+                    effect.isObserver,
+                    assignmentEnhancementsEnabled,
+                    restrictQuantitativeData
+                )
+            )
         }
+    }
+
+    private fun DataResult<Assignment>.containsSubmissionType(type: Assignment.SubmissionType): Boolean {
+        return dataOrNull?.getSubmissionTypes()?.contains(type).orDefault()
     }
 
     @ObsoleteCoroutinesApi

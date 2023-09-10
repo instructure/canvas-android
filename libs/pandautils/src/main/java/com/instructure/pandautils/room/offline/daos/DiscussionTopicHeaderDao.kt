@@ -26,9 +26,21 @@ interface DiscussionTopicHeaderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: DiscussionTopicHeaderEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<DiscussionTopicHeaderEntity>): List<Long>
+
     @Delete
     suspend fun delete(entity: DiscussionTopicHeaderEntity)
 
     @Update
     suspend fun update(entity: DiscussionTopicHeaderEntity)
+
+    @Query("SELECT * FROM DiscussionTopicHeaderEntity WHERE id = :id")
+    suspend fun findById(id: Long): DiscussionTopicHeaderEntity?
+
+    @Query("SELECT * FROM DiscussionTopicHeaderEntity WHERE announcement = 0 AND courseId = :courseId")
+    suspend fun findAllDiscussionsForCourse(courseId: Long): List<DiscussionTopicHeaderEntity>
+
+    @Query("SELECT * FROM DiscussionTopicHeaderEntity WHERE announcement = 1 AND courseId = :courseId ORDER BY postedDate DESC")
+    suspend fun findAllAnnouncementsForCourse(courseId: Long): List<DiscussionTopicHeaderEntity>
 }

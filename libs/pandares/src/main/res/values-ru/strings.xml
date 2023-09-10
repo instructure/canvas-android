@@ -1326,11 +1326,19 @@
     <string name="a11y_closeProgress">Закрыть диалоговое окно выполнения</string>
     <string name="fileUploadProgress">%1$s из %2$s</string>
     <string name="fileUploadProgressSubtitle">Загрузка в файлы</string>
+    <string name="fileUploadFailedSubtitle">Не удалось загрузить один или несколько файлов. Проверьте подключение к Интернету и повторите отправку.</string>
     <string name="submissionProgressSubtitle">Загрузка отправки в \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Загрузка отправки</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Отправка выполнена</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Ошибка отправки</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Загрузка файлов</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Загрузка файла</item>
+        <item quantity="few">Загрузка файлов</item>
+        <item quantity="many">Загрузка файлов</item>
+        <item quantity="other">Загрузка файлов</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Файл успешно загружен</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Не удалось загрузить файл</string>
     <string name="cancelSubmissionDialogTitle">Отменить отправку</string>
     <string name="cancelSubmissionDialogMessage">Данное действие отменит отправку данных и удалит отравляемые данные.</string>
     <string name="fileUploadError">Не удалось загрузить файл</string>
@@ -1411,4 +1419,10 @@
     <string name="a11y_selectionModeDeactivated">Режим выбора деактивирован.</string>
     <string name="a11y_avatarContentDescription">Аватар %s</string>
     <string name="inboxUndo">Отменить</string>
+    <string name="aboutAppTitle">Приложение</string>
+    <string name="aboutDomainTitle">Домен</string>
+    <string name="aboutLoginTitle">Имя пользователя</string>
+    <string name="aboutEmailTitle">Адрес электронной почты</string>
+    <string name="aboutVersionTitle">Версия</string>
+    <string name="assignmentRefreshError">Возникла проблема с перезагрузкой этого задания. Проверьте подключение и попробуйте еще раз.</string>
 </resources>

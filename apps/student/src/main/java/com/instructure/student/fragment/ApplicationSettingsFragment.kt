@@ -58,6 +58,9 @@ class ApplicationSettingsFragment : ParentFragment() {
     @Inject
     lateinit var syncSettingsFacade: SyncSettingsFacade
 
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     private val binding by viewBinding(FragmentApplicationSettingsBinding::bind)
 
     override fun title(): String = getString(R.string.settings)
@@ -168,20 +171,26 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     private fun setUpSyncSettings() {
         lifecycleScope.launch {
-            syncSettingsFacade.getSyncSettingsListenable().observe(viewLifecycleOwner) { syncSettings ->
-                if (syncSettings == null) {
-                    binding.offlineSyncSettingsContainer.setGone()
-                } else {
-                    binding.offlineSyncSettingsStatus.text = if (syncSettings.autoSyncEnabled) {
-                        getString(syncSettings.syncFrequency.readable)
+            if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
+                binding.offlineContentDivider.setGone()
+                binding.offlineContentTitle.setGone()
+                binding.offlineSyncSettingsContainer.setGone()
+            } else {
+                syncSettingsFacade.getSyncSettingsListenable().observe(viewLifecycleOwner) { syncSettings ->
+                    if (syncSettings == null) {
+                        binding.offlineSyncSettingsContainer.setGone()
                     } else {
-                        getString(R.string.syncSettings_manualDescription)
+                        binding.offlineSyncSettingsStatus.text = if (syncSettings.autoSyncEnabled) {
+                            getString(syncSettings.syncFrequency.readable)
+                        } else {
+                            getString(R.string.syncSettings_manualDescription)
+                        }
                     }
                 }
-            }
 
-            binding.offlineSyncSettingsContainer.onClick {
-                addFragment(SyncSettingsFragment.newInstance())
+                binding.offlineSyncSettingsContainer.onClick {
+                    addFragment(SyncSettingsFragment.newInstance())
+                }
             }
         }
     }

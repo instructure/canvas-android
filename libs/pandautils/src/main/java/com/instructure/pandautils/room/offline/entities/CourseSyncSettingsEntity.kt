@@ -19,12 +19,37 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Tab
 
 @Entity
 data class CourseSyncSettingsEntity(
     @PrimaryKey
     val courseId: Long,
-    val assignments: Boolean,
-    val pages: Boolean,
-    val grades: Boolean
-)
+    val fullContentSync: Boolean,
+    val tabs: Map<String, Boolean> = TABS.associateWith { false },
+    val fullFileSync: Boolean = false
+) {
+
+    fun isTabSelected(tabId: String): Boolean {
+        val isSelected = if (tabId == Tab.FILES_ID) {
+            fullFileSync
+        } else {
+            tabs[tabId] ?: false
+        }
+        return fullContentSync || isSelected
+    }
+
+    fun areAnyTabsSelected(tabIds: Set<String>): Boolean {
+        return tabIds.any { isTabSelected(it) }
+    }
+
+    val allTabsEnabled: Boolean
+        get() = tabs.values.all { it == true } && fullFileSync
+
+    val anySyncEnabled: Boolean
+        get() = fullContentSync || fullFileSync || tabs.values.any() { it == true }
+
+    companion object {
+        val TABS = setOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID, Tab.ANNOUNCEMENTS_ID, Tab.DISCUSSIONS_ID, Tab.CONFERENCES_ID, Tab.PEOPLE_ID, Tab.MODULES_ID, Tab.QUIZZES_ID)
+    }
+}

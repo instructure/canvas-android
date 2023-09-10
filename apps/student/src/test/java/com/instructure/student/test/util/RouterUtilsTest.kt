@@ -26,11 +26,20 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.student.activity.BaseRouterActivity
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
+import com.instructure.student.features.discussion.list.DiscussionListFragment
+import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.modules.list.ModuleListFragment
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
+import com.instructure.student.features.pages.list.PageListFragment
+import com.instructure.student.features.people.details.PeopleDetailsFragment
+import com.instructure.student.features.people.list.PeopleListFragment
+import com.instructure.student.features.quiz.list.QuizListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
-import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
-import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
+import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.router.RouteMatcher
 import junit.framework.TestCase
 import org.junit.Test
@@ -354,7 +363,7 @@ class RouterUtilsTest : TestCase() {
     fun testGetInternalRoute_syllabus() {
         val route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/syllabus")
         assertNotNull(route)
-        assertEquals(SyllabusFragment::class.java, route!!.primaryClass)
+        assertEquals(SyllabusRepositoryFragment::class.java, route!!.primaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -452,13 +461,13 @@ class RouterUtilsTest : TestCase() {
         var route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/")
         val expectedParams = hashMapOf(RouterParams.COURSE_ID to courseId)
         assertNotNull(route)
-        assertEquals(ConferenceListFragment::class.java, route!!.primaryClass)
+        assertEquals(ConferenceListRepositoryFragment::class.java, route!!.primaryClass)
         assertEquals(expectedParams, route.paramsHash)
 
         // There is currently no API endpoint for specific conferences, so we must route to the conference list
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/234") // not an actual url
         assertNotNull(route)
-        assertEquals(ConferenceListFragment::class.java, route!!.primaryClass)
+        assertEquals(ConferenceListRepositoryFragment::class.java, route!!.primaryClass)
         assertEquals(expectedParams, route.paramsHash)
     }
 

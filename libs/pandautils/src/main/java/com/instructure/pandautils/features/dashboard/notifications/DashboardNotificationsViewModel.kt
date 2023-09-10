@@ -41,9 +41,9 @@ import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -92,7 +92,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private val fileUploads = dashboardFileUploadDao.getAll(apiPrefs.user?.id.orDefault())
+    private val fileUploads = dashboardFileUploadDao.getAllForUser(apiPrefs.user?.id.orDefault())
 
     init {
         fileUploads.observeForever(runningWorkersObserver)

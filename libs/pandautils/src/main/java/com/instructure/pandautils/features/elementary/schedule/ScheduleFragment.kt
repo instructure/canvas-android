@@ -25,7 +25,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_SCHEDULE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
@@ -34,7 +36,7 @@ import com.instructure.pandautils.utils.StringArg
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@PageView("#schedule")
+@PageView
 @ScreenView(SCREEN_VIEW_K5_SCHEDULE)
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
@@ -143,6 +145,9 @@ class ScheduleFragment : Fragment() {
     private fun toggleJumpToTodayButton(visible: Boolean) {
         (requireParentFragment() as SchedulePagerFragment).setTodayButtonVisibility(visible)
     }
+
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#schedule"
 
     companion object {
 

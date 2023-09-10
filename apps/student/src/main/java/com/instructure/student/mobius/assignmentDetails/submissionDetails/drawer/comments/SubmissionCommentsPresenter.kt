@@ -39,7 +39,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
 
         val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
 
-        val comments = model.comments.filter { it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }.map { comment ->
+        val comments = model.comments.filter { it.attempt == null || it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }.map { comment ->
             val date = comment.createdAt ?: Date(0)
             CommentItemState.CommentItem(
                 id = comment.id,

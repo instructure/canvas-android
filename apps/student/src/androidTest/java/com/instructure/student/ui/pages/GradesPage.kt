@@ -16,10 +16,9 @@
  */
 package com.instructure.student.ui.pages
 
-import android.view.View
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.PerformException
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
@@ -30,14 +29,12 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.student.R
-import org.hamcrest.Matcher
 
 class GradesPage : BasePage(R.id.gradesPage) {
 
@@ -79,6 +76,11 @@ class GradesPage : BasePage(R.id.gradesPage) {
 
     fun assertRecyclerViewNotVisible() {
         gradesRecyclerView.assertNotDisplayed()
+    }
+
+    fun assertProgressNotDisplayed(courseName: String) {
+        val courseNameMatcher = withId(R.id.gradesCourseNameText) + withText(courseName)
+        onView(withId(R.id.progressLayout) + hasSibling(courseNameMatcher)).assertNotDisplayed()
     }
 
     fun clickGradeRow(courseName: String) {

@@ -17,40 +17,31 @@
 
 package com.instructure.pandautils.di
 
-import android.content.Context
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.common.daos.AuthorDao
+import com.instructure.pandautils.room.common.daos.MediaCommentDao
+import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.facade.*
-import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import javax.inject.Named
+
+const val OFFLINE_DATABASE = "offline_database"
 
 @Module
 @InstallIn(SingletonComponent::class)
 class OfflineModule {
 
     @Provides
-    @Singleton
-    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context): OfflineDatabaseProvider {
-        return OfflineDatabaseProvider(context)
-    }
-
-    @Provides
-    fun provideOfflineDatabase(offlineDatabaseProvider: OfflineDatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
+    fun provideOfflineDatabase(offlineDatabaseProvider: DatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
         return offlineDatabaseProvider.getDatabase(apiPrefs.user?.id)
-    }
-
-    @Provides
-    fun provideNetworkStateProvider(@ApplicationContext context: Context): NetworkStateProvider {
-        return NetworkStateProvider(context)
     }
 
     @Provides
@@ -154,13 +145,108 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideAssignmentScoreStatisticsDao(appDatabase: OfflineDatabase): AssignmentScoreStatisticsDao {
+        return appDatabase.assignmentScoreStatisticsDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionDao(appDatabase: OfflineDatabase): RubricCriterionDao {
+        return appDatabase.rubricCriterionDao()
+    }
+
+    @Provides
+    fun provideQuizDao(appDatabase: OfflineDatabase): QuizDao {
+        return appDatabase.quizDao()
+    }
+
+    @Provides
+    fun provideLockInfoDao(appDatabase: OfflineDatabase): LockInfoDao {
+        return appDatabase.lockInfoDao()
+    }
+
+    @Provides
+    fun provideLockedModuleDao(appDatabase: OfflineDatabase): LockedModuleDao {
+        return appDatabase.lockedModuleDao()
+    }
+
+    @Provides
+    fun provideModuleNameDao(appDatabase: OfflineDatabase): ModuleNameDao {
+        return appDatabase.moduleNameDao()
+    }
+
+    @Provides
+    fun provideModuleCompletionRequirementDao(appDatabase: OfflineDatabase): ModuleCompletionRequirementDao {
+        return appDatabase.moduleCompletionRequirementDao()
+    }
+
+    @Provides
+    fun provideDashboardCardDao(offlineDatabase: OfflineDatabase): DashboardCardDao {
+        return offlineDatabase.dashboardCardDao()
+    }
+
+    @Provides
+    fun provideCourseSettingsDao(offlineDatabase: OfflineDatabase): CourseSettingsDao {
+        return offlineDatabase.courseSettingsDao()
+    }
+
+    @Provides
+    fun provideScheduleItemDao(offlineDatabase: OfflineDatabase): ScheduleItemDao {
+        return offlineDatabase.scheduleItemDao()
+    }
+
+    @Provides
+    fun provideScheduleItemAssignmentOverrideDao(offlineDatabase: OfflineDatabase): ScheduleItemAssignmentOverrideDao {
+        return offlineDatabase.scheduleItemAssignmentOverrideDao()
+    }
+
+    @Provides
+    fun provideAssignmentOverrideDao(offlineDatabase: OfflineDatabase): AssignmentOverrideDao {
+        return offlineDatabase.assignmentOverrideDao()
+    }
+
+    @Provides
+    fun provideModuleObjectDao(offlineDatabase: OfflineDatabase): ModuleObjectDao {
+        return offlineDatabase.moduleObjectDao()
+    }
+
+    @Provides
+    fun provideModuleItemDao(offlineDatabase: OfflineDatabase): ModuleItemDao {
+        return offlineDatabase.moduleItemDao()
+    }
+
+    @Provides
+    fun provideModuleContentDetailsDao(offlineDatabase: OfflineDatabase): ModuleContentDetailsDao {
+        return offlineDatabase.moduleContentDetailsDao()
+    }
+
+    @Provides
+    fun provideMasteryPathDao(offlineDatabase: OfflineDatabase): MasteryPathDao {
+        return offlineDatabase.masteryPathDao()
+    }
+
+    @Provides
+    fun provideAssignmentSetDao(offlineDatabase: OfflineDatabase): AssignmentSetDao {
+        return offlineDatabase.assignmentSetDao()
+    }
+
+    @Provides
+    fun provideMasteryPathAssignmentDao(offlineDatabase: OfflineDatabase): MasteryPathAssignmentDao {
+        return offlineDatabase.masteryPathAssignmentDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
         plannerOverrideDao: PlannerOverrideDao,
         rubricSettingsDao: RubricSettingsDao,
         submissionFacade: SubmissionFacade,
-        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+        assignmentScoreStatisticsDao: AssignmentScoreStatisticsDao,
+        rubricCriterionDao: RubricCriterionDao,
+        lockInfoFacade: LockInfoFacade,
+        rubricCriterionRatingDao: RubricCriterionRatingDao,
+        assignmentRubricCriterionDao: AssignmentRubricCriterionDao
     ): AssignmentFacade {
         return AssignmentFacade(
             assignmentGroupDao,
@@ -168,7 +254,12 @@ class OfflineModule {
             plannerOverrideDao,
             rubricSettingsDao,
             submissionFacade,
-            discussionTopicHeaderFacade
+            discussionTopicHeaderFacade,
+            assignmentScoreStatisticsDao,
+            rubricCriterionDao,
+            lockInfoFacade,
+            rubricCriterionRatingDao,
+            assignmentRubricCriterionDao
         )
     }
 
@@ -176,11 +267,18 @@ class OfflineModule {
     fun provideSubmissionFacade(
         submissionDao: SubmissionDao,
         groupDao: GroupDao,
-        mediaCommentDao: MediaCommentDao,
+        @Named(OFFLINE_DATABASE) mediaCommentDao: MediaCommentDao,
         userDao: UserDao,
-        userApi: UserAPI.UsersInterface
+        userApi: UserAPI.UsersInterface,
+        @Named(OFFLINE_DATABASE) submissionCommentDao: SubmissionCommentDao,
+        @Named(OFFLINE_DATABASE) attachmentDao: AttachmentDao,
+        @Named(OFFLINE_DATABASE) authorDao: AuthorDao,
+        rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
     ): SubmissionFacade {
-        return SubmissionFacade(submissionDao, groupDao, mediaCommentDao, userDao, userApi)
+        return SubmissionFacade(
+            submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+            submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
+        )
     }
 
     @Provides
@@ -199,7 +297,8 @@ class OfflineModule {
         courseGradingPeriodDao: CourseGradingPeriodDao,
         sectionDao: SectionDao,
         tabDao: TabDao,
-        enrollmentFacade: EnrollmentFacade
+        enrollmentFacade: EnrollmentFacade,
+        courseSettingsDao: CourseSettingsDao
     ): CourseFacade {
         return CourseFacade(
             termDao,
@@ -208,7 +307,8 @@ class OfflineModule {
             courseGradingPeriodDao,
             sectionDao,
             tabDao,
-            enrollmentFacade
+            enrollmentFacade,
+            courseSettingsDao
         )
     }
 
@@ -230,5 +330,139 @@ class OfflineModule {
     @Provides
     fun provideSyncSettingsFacade(syncSettingsDao: SyncSettingsDao): SyncSettingsFacade {
         return SyncSettingsFacade(syncSettingsDao)
+    }
+
+    @Provides
+    fun provideLockInfoFacade(
+        lockInfoDao: LockInfoDao,
+        lockedModuleDao: LockedModuleDao,
+        moduleNameDao: ModuleNameDao,
+        completionRequirementDao: ModuleCompletionRequirementDao
+    ): LockInfoFacade {
+        return LockInfoFacade(lockInfoDao, lockedModuleDao, moduleNameDao, completionRequirementDao)
+    }
+
+    @Provides
+    fun provideFileSyncSettingsDao(appDatabase: OfflineDatabase): FileSyncSettingsDao {
+        return appDatabase.fileSyncSettingsDao()
+    }
+
+    @Provides
+    fun provideScheduleItemFacade(
+        scheduleItemDao: ScheduleItemDao,
+        assignmentDao: AssignmentDao,
+        assignmentOverrideDao: AssignmentOverrideDao,
+        scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao
+    ): ScheduleItemFacade {
+        return ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentDao)
+    }
+
+    @Provides
+    fun provideConferenceDao(appDatabase: OfflineDatabase): ConferenceDao {
+        return appDatabase.conferenceDao()
+    }
+
+    @Provides
+    fun provideConferenceRecodingDao(appDatabase: OfflineDatabase): ConferenceRecodingDao {
+        return appDatabase.conferenceRecordingDao()
+    }
+
+    @Provides
+    fun provideConferenceFacade(
+        conferenceDao: ConferenceDao,
+        conferenceRecodingDao: ConferenceRecodingDao
+    ): ConferenceFacade {
+        return ConferenceFacade(conferenceDao, conferenceRecodingDao)
+    }
+
+    @Provides
+    fun providePeopleFacade(
+        userDao: UserDao,
+        enrollmentDao: EnrollmentDao,
+        gradesDao: GradesDao,
+        sectionDao: SectionDao,
+    ): UserFacade {
+        return UserFacade(userDao, enrollmentDao, gradesDao, sectionDao)
+    }
+
+    @Provides
+    fun provideModuleFacade(
+        moduleObjectDao: ModuleObjectDao,
+        moduleItemDao: ModuleItemDao,
+        completionRequirementDao: ModuleCompletionRequirementDao,
+        moduleContentDetailsDao: ModuleContentDetailsDao,
+        lockInfoFacade: LockInfoFacade,
+        masteryPathFacade: MasteryPathFacade
+    ): ModuleFacade {
+        return ModuleFacade(moduleObjectDao, moduleItemDao, completionRequirementDao, moduleContentDetailsDao, lockInfoFacade, masteryPathFacade)
+    }
+
+    @Provides
+    fun provideMasteryPathFacade(
+        masteryPathDao: MasteryPathDao,
+        assignmentSetDao: AssignmentSetDao,
+        masteryPathAssignmentDao: MasteryPathAssignmentDao,
+        assignmentFacade: AssignmentFacade
+    ): MasteryPathFacade {
+        return MasteryPathFacade(masteryPathDao, masteryPathAssignmentDao, assignmentSetDao, assignmentFacade)
+    }
+
+    @Provides
+    fun provideCourseFeaturesDao(appDatabase: OfflineDatabase): CourseFeaturesDao {
+        return appDatabase.courseFeaturesDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideAttachmentDao(offlineDatabase: OfflineDatabase): AttachmentDao {
+        return offlineDatabase.attachmentDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideAuthorDao(offlineDatabase: OfflineDatabase): AuthorDao {
+        return offlineDatabase.authorDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideMediaCommentDao(offlineDatabase: OfflineDatabase): MediaCommentDao {
+        return offlineDatabase.mediaCommentDao()
+    }
+
+    @Provides
+    @Named(OFFLINE_DATABASE)
+    fun provideSubmissionCommentDao(offlineDatabase: OfflineDatabase): SubmissionCommentDao {
+        return offlineDatabase.submissionCommentDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionAssessmentDao(offlineDatabase: OfflineDatabase): RubricCriterionAssessmentDao {
+        return offlineDatabase.rubricCriterionAssessmentDao()
+    }
+
+    @Provides
+    fun provideRubricCriterionRatingDao(offlineDatabase: OfflineDatabase): RubricCriterionRatingDao {
+        return offlineDatabase.rubricCriterionRatingDao()
+    }
+
+    @Provides
+    fun provideAssignmentRubricCriterionDao(offlineDatabase: OfflineDatabase): AssignmentRubricCriterionDao {
+        return offlineDatabase.assignmentRubricCriterionDao()
+    }
+
+    @Provides
+    fun providePageFacade(pageDao: PageDao, lockInfoFacade: LockInfoFacade): PageFacade {
+        return PageFacade(pageDao, lockInfoFacade)
+    }
+
+    @Provides
+    fun provideFileFolderDao(appDatabase: OfflineDatabase): FileFolderDao {
+        return appDatabase.fileFolderDao()
+    }
+
+    @Provides
+    fun provideLocalFileDao(appDatabase: OfflineDatabase): LocalFileDao {
+        return appDatabase.localFileDao()
     }
 }

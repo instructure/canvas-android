@@ -14,10 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.instructure.android.buildtools.transform.LocaleTransformer
-import com.instructure.android.buildtools.transform.MasqueradeUITransformer
-import com.instructure.android.buildtools.transform.ProjectTransformer
-import com.instructure.android.buildtools.transform.ScreenViewTransformer
+
+import com.instructure.android.buildtools.transform.*
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -41,8 +39,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 57
-        versionName = '1.23.1'
+        versionCode = 59
+        versionName = '1.25.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -189,6 +187,7 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
+                    new PageViewTransformer(),
                     new LocaleTransformer(project),
                     new ScreenViewTransformer("teacher")
             )
@@ -311,7 +310,6 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
-    testImplementation Libs.ROOM_TEST
 }
 
 apply plugin: 'com.google.gms.google-services'

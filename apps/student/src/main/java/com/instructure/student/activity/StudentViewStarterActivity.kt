@@ -36,7 +36,7 @@ class StudentViewStarterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_student_view_starter)
+        setContentView(binding.root)
         binding.loadingView.setOverrideColor(ContextCompat.getColor(this, R.color.login_studentAppTheme))
 
         val extras = intent.extras!!

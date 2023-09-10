@@ -1300,11 +1300,17 @@
     <string name="a11y_closeProgress">Tutup dialog kemajuan</string>
     <string name="fileUploadProgress">%1$s daripada %2$s</string>
     <string name="fileUploadProgressSubtitle">Memuat Naik ke Fail</string>
+    <string name="fileUploadFailedSubtitle">Satu atau lebih fail gagal dimuat naik. Semak sambungan Internet anda dan cuba semula untuk membuat serahan.</string>
     <string name="submissionProgressSubtitle">Memuat naik serahan ke \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Memuat Naik Serahan</string>
     <string name="dashboardNotificationSubmissionUploadSuccessTitle">Serahan Berjaya</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">Serahan Gagal</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Memuat Naik Fail</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Memuat Naik Fail</item>
+        <item quantity="other">Memuat Naik Fail</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Muat Naik Fail Berjaya</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Muat Naik Fail Gagal</string>
     <string name="cancelSubmissionDialogTitle">Batal Serahan</string>
     <string name="cancelSubmissionDialogMessage">Ini akan membatalkan dan memadamkan serahan anda.</string>
     <string name="fileUploadError">Muat Naik Fail Gagal</string>
@@ -1383,4 +1389,10 @@
     <string name="a11y_selectionModeDeactivated">Mod pilihan diaktifkan.</string>
     <string name="a11y_avatarContentDescription">Avatar %s</string>
     <string name="inboxUndo">Buat asal</string>
+    <string name="aboutAppTitle">Apl</string>
+    <string name="aboutDomainTitle">Domain</string>
+    <string name="aboutLoginTitle">ID Log Masuk</string>
+    <string name="aboutEmailTitle">E-mel</string>
+    <string name="aboutVersionTitle">Versi</string>
+    <string name="assignmentRefreshError">Terdapat sedikit masalah untuk memuat semula tugasan ini. Sila semak sambungan anda dan cuba semula.</string>
 </resources>

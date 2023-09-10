@@ -41,7 +41,8 @@ sealed class SubmissionDetailsEvent {
         val quizResult: DataResult<Quiz>?,
         val studioLTIToolResult: DataResult<LTITool>?,
         val isObserver: Boolean = false,
-        val assignmentEnhancementsEnabled: Boolean
+        val assignmentEnhancementsEnabled: Boolean,
+        val restrictQuantitativeData: Boolean = false
     ) : SubmissionDetailsEvent()
     data class SubmissionCommentsUpdated(val submissionComments: List<SubmissionComment>) : SubmissionDetailsEvent()
 }
@@ -74,7 +75,8 @@ data class SubmissionDetailsModel(
     val ltiTool: DataResult<LTITool>? = null,
     val initialSelectedSubmissionAttempt: Long? = null,
     val submissionComments: List<SubmissionComment>? = null,
-    val assignmentEnhancementsEnabled: Boolean = false
+    val assignmentEnhancementsEnabled: Boolean = false,
+    val restrictQuantitativeData: Boolean = false
 )
 
 sealed class SubmissionDetailsContentType {

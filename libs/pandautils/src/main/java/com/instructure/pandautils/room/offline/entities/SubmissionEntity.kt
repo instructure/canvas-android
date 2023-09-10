@@ -19,11 +19,12 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
-import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.utils.orDefault
 import java.util.*
 
 @Entity(
+    primaryKeys = ["id", "attempt"],
     foreignKeys = [
         ForeignKey(
             entity = GroupEntity::class,
@@ -40,7 +41,6 @@ import java.util.*
     ]
 )
 data class SubmissionEntity(
-    @PrimaryKey
     val id: Long,
     val grade: String?,
     val score: Double,
@@ -67,35 +67,85 @@ data class SubmissionEntity(
     val pointsDeducted: Double?,
     val enteredScore: Double,
     val enteredGrade: String?,
-    val postedAt: Date?
+    val postedAt: Date?,
+    val gradingPeriodId: Long?
 ) {
     constructor(submission: Submission, groupId: Long?, mediaCommentId: String?) : this(
-        submission.id,
-        submission.grade,
-        submission.score,
-        submission.attempt,
-        submission.submittedAt,
-        submission.commentCreated,
-        submission.mediaContentType,
-        submission.mediaCommentUrl,
-        submission.mediaCommentDisplay,
-        submission.body,
-        submission.isGradeMatchesCurrentSubmission,
-        submission.workflowState,
-        submission.submissionType,
-        submission.previewUrl,
-        submission.url,
-        submission.late,
-        submission.excused,
-        submission.missing,
-        mediaCommentId,
-        submission.assignmentId,
-        if (submission.userId == 0L) null else submission.userId,
-        if (submission.graderId == 0L) null else submission.graderId,
-        groupId,
-        submission.pointsDeducted,
-        submission.enteredScore,
-        submission.enteredGrade,
-        submission.postedAt
+        id = submission.id,
+        grade = submission.grade,
+        score = submission.score,
+        attempt = submission.attempt,
+        submittedAt = submission.submittedAt,
+        commentCreated = submission.commentCreated,
+        mediaContentType = submission.mediaContentType,
+        mediaCommentUrl = submission.mediaCommentUrl,
+        mediaCommentDisplay = submission.mediaCommentDisplay,
+        body = submission.body,
+        isGradeMatchesCurrentSubmission = submission.isGradeMatchesCurrentSubmission,
+        workflowState = submission.workflowState,
+        submissionType = submission.submissionType,
+        previewUrl = submission.previewUrl,
+        url = submission.url,
+        late = submission.late,
+        excused = submission.excused,
+        missing = submission.missing,
+        mediaCommentId = mediaCommentId,
+        assignmentId = submission.assignmentId,
+        userId = if (submission.userId == 0L) null else submission.userId,
+        graderId = if (submission.graderId == 0L) null else submission.graderId,
+        groupId = groupId,
+        pointsDeducted = submission.pointsDeducted,
+        enteredScore = submission.enteredScore,
+        enteredGrade = submission.enteredGrade,
+        postedAt = submission.postedAt,
+        gradingPeriodId = submission.gradingPeriodId
+    )
+
+    fun toApiModel(
+        submissionHistory: List<Submission> = emptyList(),
+        submissionComments: List<SubmissionComment> = emptyList(),
+        attachments: List<Attachment> = emptyList(),
+        rubricAssessment: HashMap<String, RubricCriterionAssessment> = hashMapOf(),
+        mediaComment: MediaComment? = null,
+        assignment: Assignment? = null,
+        user: User? = null,
+        group: Group? = null
+    ) = Submission(
+        id = id,
+        grade = grade,
+        score = score,
+        attempt = attempt,
+        submittedAt = submittedAt,
+        submissionComments = submissionComments,
+        commentCreated = commentCreated,
+        mediaContentType = mediaContentType,
+        mediaCommentUrl = mediaCommentUrl,
+        mediaCommentDisplay = mediaCommentDisplay,
+        submissionHistory = submissionHistory,
+        attachments = ArrayList(attachments),
+        body = body,
+        rubricAssessment = rubricAssessment,
+        isGradeMatchesCurrentSubmission = isGradeMatchesCurrentSubmission,
+        workflowState = workflowState,
+        submissionType = submissionType,
+        previewUrl = previewUrl,
+        url = url,
+        late = late,
+        excused = excused,
+        missing = missing,
+        mediaComment = mediaComment,
+        assignmentId = assignmentId,
+        assignment = assignment,
+        userId = userId.orDefault(),
+        graderId = graderId.orDefault(),
+        user = user,
+        //TODO
+        discussionEntries = arrayListOf(),
+        group = group,
+        pointsDeducted = pointsDeducted,
+        enteredScore = enteredScore,
+        enteredGrade = enteredGrade,
+        postedAt = postedAt,
+        gradingPeriodId = gradingPeriodId
     )
 }

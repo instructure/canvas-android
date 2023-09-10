@@ -26,9 +26,15 @@ interface DiscussionParticipantDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: DiscussionParticipantEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<DiscussionParticipantEntity>): List<Long>
+
     @Delete
     suspend fun delete(entity: DiscussionParticipantEntity)
 
     @Update
     suspend fun update(entity: DiscussionParticipantEntity)
+
+    @Query("SELECT * FROM DiscussionParticipantEntity WHERE id = :id")
+    suspend fun findById(id: Long): DiscussionParticipantEntity?
 }

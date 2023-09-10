@@ -83,7 +83,7 @@ class CourseGrade {
 //  double _getFinalScore() =>
 //      _enrollment.grade?.finalScore ?? _enrollment.computedFinalScore;
 
-  String _getCurrentGrade() => _enrollment?.grades?.currentGrade ?? _enrollment?.computedCurrentGrade;
+  String _getCurrentGrade() => _enrollment?.grades?.currentGrade ?? _enrollment?.computedCurrentGrade ?? _enrollment?.computedCurrentLetterGrade;
 
 //  String _getFinalGrade() =>
 //      _enrollment.grade?.finalGrade ?? _enrollment.computedFinalGrade;

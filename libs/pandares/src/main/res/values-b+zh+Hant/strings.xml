@@ -1278,11 +1278,16 @@
     <string name="a11y_closeProgress">關閉進度對話</string>
     <string name="fileUploadProgress">%2$s 的 %1$s</string>
     <string name="fileUploadProgressSubtitle">上傳到檔案</string>
+    <string name="fileUploadFailedSubtitle">上傳一個或多個檔案失敗。檢查您的網際網路連線並重試提交。</string>
     <string name="submissionProgressSubtitle">上傳提交項目到 \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">正在上傳提交項目</string>
-    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提交項目成功</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">成功提交</string>
     <string name="dashboardNotificationSubmissionUploadFailedTitle">提交項目失敗</string>
-    <string name="dashboardNotificationUploadingFilesTitle">上傳檔案</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="other">正在上傳檔案</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">成功上傳檔案</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">檔案上傳失敗</string>
     <string name="cancelSubmissionDialogTitle">取消提交項目</string>
     <string name="cancelSubmissionDialogMessage">此動作將取消並刪除您的提交項目。</string>
     <string name="fileUploadError">檔案上傳失敗</string>
@@ -1360,4 +1365,10 @@
     <string name="a11y_selectionModeDeactivated">選擇模式停用</string>
     <string name="a11y_avatarContentDescription">%s 的頭像</string>
     <string name="inboxUndo">復原</string>
+    <string name="aboutAppTitle">應用程式</string>
+    <string name="aboutDomainTitle">網域</string>
+    <string name="aboutLoginTitle">登入 ID</string>
+    <string name="aboutEmailTitle">電郵</string>
+    <string name="aboutVersionTitle">版本</string>
+    <string name="assignmentRefreshError">重新載入此作業時發生問題。請檢查您的連接然後重試。</string>
 </resources>

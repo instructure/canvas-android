@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
@@ -57,6 +58,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView(url = "{canvasContext}")
 @ScreenView(SCREEN_VIEW_COURSE_BROWSER)
 class CourseBrowserFragment : BaseSyncFragment<
         Tab,
@@ -68,13 +70,13 @@ class CourseBrowserFragment : BaseSyncFragment<
 
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
-    private var mCanvasContext: CanvasContext by ParcelableArg(Course())
+    private var canvasContext: CanvasContext by ParcelableArg(Course())
 
-    private val mCourseBrowserHeader by lazy { rootView.findViewById<CourseBrowserHeaderView>(R.id.courseBrowserHeader) }
+    private val courseBrowserHeader by lazy { rootView.findViewById<CourseBrowserHeaderView>(R.id.courseBrowserHeader) }
 
     companion object {
         fun newInstance(context: CanvasContext) = CourseBrowserFragment().apply {
-            mCanvasContext = context
+            canvasContext = context
         }
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(CourseBrowserFragment::class.java, canvasContext)
@@ -86,7 +88,7 @@ class CourseBrowserFragment : BaseSyncFragment<
 
     override val recyclerView: RecyclerView get() = binding.courseBrowserRecyclerView
     override fun withPagination() = false
-    override fun getPresenterFactory() = CourseBrowserPresenterFactory(mCanvasContext) { tab, attendanceId ->
+    override fun getPresenterFactory() = CourseBrowserPresenterFactory(canvasContext) { tab, attendanceId ->
         //Filter for white-list supported features
         //TODO: support other things like it.isHidden
         when(tab.tabId) {
@@ -133,15 +135,15 @@ class CourseBrowserFragment : BaseSyncFragment<
         presenter.loadData(false)
     }
 
-    override fun onResume() = with(binding) {
+    override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this@CourseBrowserFragment)
         (presenter.canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
+            binding.courseImage.setCourseImage(it, it.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
         }
-        courseBrowserTitle.text = presenter.canvasContext.name
-        courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name.orEmpty()
-        mCourseBrowserHeader.setTitleAndSubtitle(presenter.canvasContext.name.orEmpty(), (presenter.canvasContext as? Course)?.term?.name.orEmpty())
+        binding.courseBrowserTitle.text = presenter.canvasContext.name
+        binding.courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name.orEmpty()
+        courseBrowserHeader.setTitleAndSubtitle(presenter.canvasContext.name.orEmpty(), (presenter.canvasContext as? Course)?.term?.name.orEmpty())
         setupToolbar()
         if (!presenter.isEmpty) {
             checkIfEmpty()
@@ -251,7 +253,7 @@ class CourseBrowserFragment : BaseSyncFragment<
                     presenter.handleStudentViewClick()
                 }
                 Tab.SYLLABUS_ID -> {
-                    RouteMatcher.route(requireContext(), Route(null, SyllabusFragment::class.java, presenter.canvasContext, presenter.canvasContext.makeBundle()))
+                    RouteMatcher.route(requireContext(), Route(SyllabusFragment::class.java, presenter.canvasContext, presenter.canvasContext.makeBundle()))
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {
@@ -296,22 +298,22 @@ class CourseBrowserFragment : BaseSyncFragment<
     /**
      * Manages state of titles & subtitles when users scrolls
      */
-    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) = with(binding) {
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
 
         val percentage = Math.abs(verticalOffset).div(appBarLayout?.totalScrollRange?.toFloat() ?: 1F)
 
         if(percentage <= 0.3F) {
-            val toolbarAnimation = ObjectAnimator.ofFloat(mCourseBrowserHeader, View.ALPHA, mCourseBrowserHeader.alpha, 0F)
-            val titleAnimation = ObjectAnimator.ofFloat(courseBrowserTitle, View.ALPHA, courseBrowserTitle.alpha, 1F)
-            val subtitleAnimation = ObjectAnimator.ofFloat(courseBrowserSubtitle, View.ALPHA, courseBrowserSubtitle.alpha, 0.8F)
+            val toolbarAnimation = ObjectAnimator.ofFloat(courseBrowserHeader, View.ALPHA, courseBrowserHeader.alpha, 0F)
+            val titleAnimation = ObjectAnimator.ofFloat(binding.courseBrowserTitle, View.ALPHA, binding.courseBrowserTitle.alpha, 1F)
+            val subtitleAnimation = ObjectAnimator.ofFloat(binding.courseBrowserSubtitle, View.ALPHA, binding.courseBrowserSubtitle.alpha, 0.8F)
 
             toolbarAnimation.setAutoCancel(true)
             titleAnimation.setAutoCancel(true)
             subtitleAnimation.setAutoCancel(true)
 
-            toolbarAnimation.target = mCourseBrowserHeader
-            titleAnimation.target = courseBrowserTitle
-            subtitleAnimation.target = courseBrowserSubtitle
+            toolbarAnimation.target = courseBrowserHeader
+            titleAnimation.target = binding.courseBrowserTitle
+            subtitleAnimation.target = binding.courseBrowserSubtitle
 
             toolbarAnimation.duration = 200
             titleAnimation.duration = 320
@@ -322,17 +324,17 @@ class CourseBrowserFragment : BaseSyncFragment<
             subtitleAnimation.start()
 
         } else if(percentage > 0.7F) {
-            val toolbarAnimation = ObjectAnimator.ofFloat(mCourseBrowserHeader, View.ALPHA, mCourseBrowserHeader.alpha, 1F)
-            val titleAnimation = ObjectAnimator.ofFloat(courseBrowserTitle, View.ALPHA, courseBrowserTitle.alpha, 0F)
-            val subtitleAnimation = ObjectAnimator.ofFloat(courseBrowserSubtitle, View.ALPHA, courseBrowserSubtitle.alpha, 0F)
+            val toolbarAnimation = ObjectAnimator.ofFloat(courseBrowserHeader, View.ALPHA, courseBrowserHeader.alpha, 1F)
+            val titleAnimation = ObjectAnimator.ofFloat(binding.courseBrowserTitle, View.ALPHA, binding.courseBrowserTitle.alpha, 0F)
+            val subtitleAnimation = ObjectAnimator.ofFloat(binding.courseBrowserSubtitle, View.ALPHA, binding.courseBrowserSubtitle.alpha, 0F)
 
             toolbarAnimation.setAutoCancel(true)
             titleAnimation.setAutoCancel(true)
             subtitleAnimation.setAutoCancel(true)
 
-            toolbarAnimation.target = mCourseBrowserHeader
-            titleAnimation.target = courseBrowserTitle
-            subtitleAnimation.target = courseBrowserSubtitle
+            toolbarAnimation.target = courseBrowserHeader
+            titleAnimation.target = binding.courseBrowserTitle
+            subtitleAnimation.target = binding.courseBrowserSubtitle
 
             toolbarAnimation.duration = 200
             titleAnimation.duration = 200
@@ -377,7 +379,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             `package` = CANVAS_STUDENT_ID
             action = Const.INTENT_ACTION_STUDENT_VIEW
             putExtra(Const.TOKEN, token)
-            putExtra(Const.COURSE_ID, mCanvasContext.id) // Required to create/get test user
+            putExtra(Const.COURSE_ID, canvasContext.id) // Required to create/get test user
             putExtra(Const.DOMAIN, ApiPrefs.domain)
             putExtra(Const.CLIENT_ID, ApiPrefs.clientId)
             putExtra(Const.CLIENT_SECRET, ApiPrefs.clientSecret)

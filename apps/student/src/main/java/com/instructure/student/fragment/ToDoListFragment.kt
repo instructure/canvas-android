@@ -38,7 +38,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListTodoBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 

@@ -20,7 +20,10 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.utils.orDefault
 import java.util.*
 
 @Entity(
@@ -30,12 +33,19 @@ import java.util.*
             parentColumns = ["id"],
             childColumns = ["authorId"],
             onDelete = ForeignKey.SET_NULL
+        ),
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class DiscussionTopicHeaderEntity(
     @PrimaryKey
     val id: Long,
+    val courseId: Long,
     var discussionType: String?,
     var title: String?,
     var message: String?,
@@ -69,8 +79,9 @@ data class DiscussionTopicHeaderEntity(
     var specificSections: String?,
     var anonymousState: String?
 ) {
-    constructor(discussionTopicHeader: DiscussionTopicHeader): this(
+    constructor(discussionTopicHeader: DiscussionTopicHeader, courseId: Long) : this(
         discussionTopicHeader.id,
+        courseId,
         discussionTopicHeader.discussionType,
         discussionTopicHeader.title,
         discussionTopicHeader.message,
@@ -101,5 +112,54 @@ data class DiscussionTopicHeaderEntity(
         discussionTopicHeader.userCanSeePosts,
         discussionTopicHeader.specificSections,
         discussionTopicHeader.anonymousState
+    )
+
+    fun toApiModel(
+        author: DiscussionParticipant? = null,
+        assignment: Assignment? = null
+    ) = DiscussionTopicHeader(
+        id = id,
+        discussionType = discussionType,
+        title = title,
+        message = message,
+        htmlUrl = htmlUrl,
+        postedDate = postedDate,
+        delayedPostDate = delayedPostDate,
+        lastReplyDate = lastReplyDate,
+        requireInitialPost = requireInitialPost,
+        discussionSubentryCount = discussionSubentryCount,
+        readState = readState,
+        unreadCount = unreadCount,
+        position = position,
+        assignmentId = assignmentId.orDefault(),
+        locked = locked,
+        lockedForUser = lockedForUser,
+        lockExplanation = lockExplanation,
+        pinned = pinned,
+        author = author,
+        podcastUrl = podcastUrl,
+        groupCategoryId = groupCategoryId,
+        announcement = announcement,
+        //TODO
+        groupTopicChildren = emptyList(),
+        //TODO
+        attachments = mutableListOf(),
+        //TODO
+        permissions = null,
+        assignment = assignment,
+        //TODO
+        lockInfo = null,
+        published = published,
+        allowRating = allowRating,
+        onlyGradersCanRate = onlyGradersCanRate,
+        sortByRating = sortByRating,
+        subscribed = subscribed,
+        lockAt = lockAt,
+        userCanSeePosts = userCanSeePosts,
+        specificSections = specificSections,
+        //TODO
+        sections = null,
+        anonymousState = anonymousState,
+        offline = true
     )
 }

@@ -19,7 +19,11 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.MasteryPathSelectResponse
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import okhttp3.ResponseBody
@@ -124,23 +128,6 @@ object ModuleManager {
         }
         adapter.statusCallback = depaginatedCallback
         ModuleAPI.getAllModuleItems(adapter, params, canvasContext.id, moduleId, depaginatedCallback)
-    }
-
-    fun markAsDone(canvasContext: CanvasContext, moduleId: Long, itemId: Long, callback: StatusCallback<ResponseBody>) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext)
-        ModuleAPI.markModuleAsDone(adapter, params, canvasContext, moduleId, itemId, callback)
-    }
-
-    fun markAsNotDone(
-        canvasContext: CanvasContext,
-        moduleId: Long,
-        itemId: Long,
-        callback: StatusCallback<ResponseBody>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext)
-        ModuleAPI.markModuleAsNotDone(adapter, params, canvasContext, moduleId, itemId, callback)
     }
 
     fun markModuleItemAsRead(

@@ -77,6 +77,10 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   @BuiltValueField(wireName: 'computed_final_grade')
   String get computedFinalGrade;
 
+  @nullable
+  @BuiltValueField(wireName: 'computed_current_letter_grade')
+  String get computedCurrentLetterGrade;
+
   @BuiltValueField(wireName: 'multiple_grading_periods_enabled')
   bool get multipleGradingPeriodsEnabled;
 
