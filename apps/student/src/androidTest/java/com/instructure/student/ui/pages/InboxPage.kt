@@ -73,6 +73,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).scrollTo().assertDisplayed()
     }
 
+    fun assertConversationWithRecipientsDisplayed(recipients: String) {
+        val matcher = withId(R.id.userName) + withAncestor(R.id.inboxRecyclerView) + withText(recipients)
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
     fun assertConversationNotDisplayed(conversation: ConversationApiModel) {
         assertConversationNotDisplayed(conversation.subject)
     }
@@ -93,6 +98,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
         val matcher = withText(subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).click()
+    }
+
+    fun openConversationWithRecipients(recipients: String) {
+        val matcher = withId(R.id.userName) + withAncestor(R.id.inboxRecyclerView) + withText(recipients)
+        onView(matcher).scrollTo().click()
     }
 
     fun openConversation(conversation: ConversationApiModel) {
