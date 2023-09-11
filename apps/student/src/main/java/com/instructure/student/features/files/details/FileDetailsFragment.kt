@@ -20,7 +20,6 @@ package com.instructure.student.features.files.details
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -124,7 +123,6 @@ class FileDetailsFragment : ParentFragment() {
             file?.let { fileFolder ->
                 when {
                     fileFolder.isLocalFile -> {
-                        Log.d("OPEN_LOCAL_FILE", "CALLED")
                         openLocalMedia(
                             fileFolder.contentType,
                             fileFolder.url,
