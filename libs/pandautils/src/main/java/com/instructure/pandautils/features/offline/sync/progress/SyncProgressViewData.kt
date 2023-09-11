@@ -96,7 +96,6 @@ data class FileTabProgressViewData(
     }
 
     fun updateProgress(progress: Int) {
-        Log.d("PROGRESS UPDATE", "updateProgress: $progress")
         this.progress = progress
         notifyPropertyChanged(BR.progress)
     }
@@ -115,3 +114,8 @@ data class AggregateProgressViewData(
     val progress: Int,
     val queued: Int
 )
+
+sealed class SyncProgressAction {
+    data class CancelConfirmation(val callback: () -> Unit) : SyncProgressAction()
+    object Back : SyncProgressAction()
+}

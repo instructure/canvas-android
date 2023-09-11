@@ -36,6 +36,7 @@ import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.FileProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabProgress
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
@@ -43,6 +44,7 @@ import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -66,19 +68,26 @@ class SyncProgressViewModel @Inject constructor(
     private val syncProgressDao: SyncProgressDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val tabDao: TabDao,
+    private val offlineSyncHelper: OfflineSyncHelper
 ) : ViewModel() {
 
     val data: LiveData<SyncProgressViewData>
         get() = _data
     private val _data = MutableLiveData<SyncProgressViewData>()
 
+    val progressData: LiveData<AggregateProgressViewData>
+        get() = _progressData
+    private val _progressData = MutableLiveData<AggregateProgressViewData>()
+
     val state: LiveData<ViewState>
         get() = _state
     private val _state = MutableLiveData<ViewState>(ViewState.Loading)
 
-    val progressData: LiveData<AggregateProgressViewData>
-        get() = _progressData
-    private val _progressData = MutableLiveData<AggregateProgressViewData>()
+    val events: LiveData<Event<SyncProgressAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<SyncProgressAction>>()
+
+    private val courseIds = mutableListOf<Long>()
 
     private var aggregateProgressLiveData: LiveData<List<WorkInfo>>? = null
 
@@ -90,6 +99,7 @@ class SyncProgressViewModel @Inject constructor(
                     aggregateProgressLiveData?.removeObserver(this)
                     _state.postValue(ViewState.Success)
                 }
+
                 value.all { it.state.isFinished } && value.any { it.state == WorkInfo.State.FAILED } -> {
                     aggregateProgressLiveData?.removeObserver(this)
                     _state.postValue(ViewState.Error())
@@ -108,16 +118,17 @@ class SyncProgressViewModel @Inject constructor(
                 val courseProgress = if (it.state.isFinished) {
                     it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@forEach
                 } else {
-                    it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@forEach
+                    it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
+                        ?: return@forEach
                 }
 
-                val tabSize = courseProgress.tabs.count() * 100*1000
+                val tabSize = courseProgress.tabs.count() * 100 * 1000
                 val courseFileSizes = courseProgress.fileProgresses?.map { it.fileSize }?.sum() ?: 0
                 val courseSize = tabSize + courseFileSizes
 
                 totalSize += courseSize
                 filesSize += courseFileSizes
-                downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * 100*1000
+                downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * 100 * 1000
             }
 
             fileWorkInfos.forEach {
@@ -173,13 +184,16 @@ class SyncProgressViewModel @Inject constructor(
             aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds.toList()))
             aggregateProgressLiveData?.observeForever(aggregateProgressObserver)
         }
-
-        val queueSize = it.size - startedCourses.size
     }
 
     init {
         viewModelScope.launch {
             val courseSyncProgresses = syncProgressDao.findCourseProgresses()
+            if (courseSyncProgresses.isEmpty()) {
+                _events.postValue(Event(SyncProgressAction.Back))
+                return@launch
+            }
+            courseIds.addAll(courseSyncProgresses.map { it.courseId })
 
             val workerIds = courseSyncProgresses.map { UUID.fromString(it.uuid) }
             workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds)).observeForever(courseProgressObserver)
@@ -229,6 +243,37 @@ class SyncProgressViewModel @Inject constructor(
         )
 
         return TabProgressItemViewModel(data, workManager)
+    }
+
+    private fun cancelRunningWorkers() {
+        workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
+        workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
+    }
+
+    private fun retry() {
+        offlineSyncHelper.syncOnce(courseIds)
+    }
+
+    fun onActionClicked() {
+        when (_state.value) {
+            is ViewState.Error -> {
+                viewModelScope.launch {
+                    syncProgressDao.deleteAll()
+                }
+                retry()
+                _events.postValue(Event(SyncProgressAction.Back))
+            }
+
+            is ViewState.Loading -> _events.postValue(Event(SyncProgressAction.CancelConfirmation {
+                cancelRunningWorkers()
+                viewModelScope.launch {
+                    syncProgressDao.deleteAll()
+                }
+                _events.postValue(Event(SyncProgressAction.Back))
+            }))
+
+            else -> Unit
+        }
     }
 
 }

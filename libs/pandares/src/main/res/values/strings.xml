@@ -1443,4 +1443,6 @@
     <string name="syncQueued">Queued</string>
     <string name="offlineContentSyncCompleted">Offline Content Sync Completed</string>
     <string name="offlineContentSyncFailed">Offline Content Sync Failed</string>
+    <string name="sync_progress_cancel_confirmation_title">Cancel Sync?</string>
+    <string name="sync_progress_cancel_confirmation_message">It will stop offline content sync. You can do it again later.</string>
 </resources>

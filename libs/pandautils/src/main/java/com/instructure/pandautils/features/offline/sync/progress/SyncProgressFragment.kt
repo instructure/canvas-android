@@ -18,19 +18,20 @@
 
 package com.instructure.pandautils.features.offline.sync.progress
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentSyncProgressBinding
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,14 +56,79 @@ class SyncProgressFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
+
+        viewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                is ViewState.Loading -> {
+                    setActionTitle(getString(R.string.cancel))
+                }
+
+                is ViewState.Error -> {
+                    setActionTitle(getString(R.string.retry))
+                }
+
+                is ViewState.Success -> {
+                    setActionGone()
+                }
+
+                else -> Unit
+            }
+        }
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
     }
 
     private fun applyTheme() {
-        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(
+            requireActivity(),
+            binding.toolbar,
+            ThemePrefs.primaryColor,
+            ThemePrefs.primaryTextColor
+        )
         binding.toolbar.apply {
             setBackgroundColor(ThemePrefs.primaryColor)
             setupAsBackButton(this@SyncProgressFragment)
+            setMenu(R.menu.menu_sync_progress) {
+                viewModel.onActionClicked()
+            }
         }
+    }
+
+    private fun setActionTitle(title: String) {
+        binding.toolbar.menu.items.firstOrNull()?.title = title
+    }
+
+    private fun setActionGone() {
+        binding.toolbar.menu.items.firstOrNull()?.isVisible = false
+    }
+
+    private fun handleAction(action: SyncProgressAction) {
+        when (action) {
+            is SyncProgressAction.CancelConfirmation -> {
+                showCancelConfirmation(action.callback)
+            }
+
+            is SyncProgressAction.Back -> {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
+    }
+
+    private fun showCancelConfirmation(callback: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.sync_progress_cancel_confirmation_title)
+            .setMessage(R.string.sync_progress_cancel_confirmation_message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                callback()
+            }
+            .setNegativeButton(R.string.no) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     companion object {
