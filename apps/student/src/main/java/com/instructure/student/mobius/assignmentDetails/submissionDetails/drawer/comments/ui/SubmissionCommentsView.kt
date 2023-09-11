@@ -89,7 +89,7 @@ class SubmissionCommentsView(
             }
 
             // Set up add files button
-            addFileButton.onClick {
+            addFileButton.onClickWithRequireNetwork {
                 consumer?.accept(SubmissionCommentsEvent.AddFilesClicked)
             }
 

@@ -235,6 +235,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
+            binding.divider.setVisible(visible)
         }
     }
 
@@ -331,6 +332,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         currentFragment?.let {
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
+            binding.divider.setVisible(visible)
         }
     }
 
