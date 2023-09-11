@@ -22,15 +22,25 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.navigation.datasource.NavigationDataSource
 import com.instructure.student.features.navigation.datasource.NavigationLocalDataSource
+import com.instructure.student.features.navigation.datasource.NavigationNetworkDataSource
 
 class NavigationRepository(
     private val localDataSource: NavigationLocalDataSource,
-    private val networkDataSource: NavigationDataSource,
+    private val networkDataSource: NavigationNetworkDataSource,
     private val networkStateProvider: NetworkStateProvider,
     private val featureFlagProvider: FeatureFlagProvider
 ) : Repository<NavigationDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getCourse(courseId: Long, forceNetwork: Boolean): Course? {
         return dataSource().getCourse(courseId, forceNetwork)
+    }
+
+    suspend fun isTokenValid(): Boolean {
+        try {
+            val result = networkDataSource.getSelf()
+            return result.isSuccess
+        } catch (e: Exception) {
+            return false
+        }
     }
 }

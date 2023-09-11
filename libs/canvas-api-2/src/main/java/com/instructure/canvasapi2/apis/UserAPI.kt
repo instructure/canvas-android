@@ -41,6 +41,9 @@ object UserAPI {
         @GET("users/self/profile")
         fun getSelf(): Call<User>
 
+        @GET("users/self/profile")
+        suspend fun getSelf(@Tag params: RestParams): DataResult<User>
+
         @GET("users/self/settings")
         fun getSelfSettings(): Call<UserSettings>
 

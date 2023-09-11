@@ -17,21 +17,26 @@
 
 package com.instructure.student.features.navigation.datasource
 
-import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
 
 class NavigationNetworkDataSource(
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val userApi: UserAPI.UsersInterface,
 ) : NavigationDataSource {
 
     override suspend fun getCourse(courseId: Long, forceNetwork: Boolean): Course? {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         return courseApi.getCourse(courseId, params).dataOrNull
+    }
+
+    suspend fun getSelf(): DataResult<User> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return userApi.getSelf(params)
     }
 }
