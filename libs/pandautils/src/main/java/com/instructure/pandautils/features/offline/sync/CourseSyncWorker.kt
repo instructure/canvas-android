@@ -74,8 +74,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
 
-const val TAB_PROGRESS_SIZE = 100 * 1000
-
 @HiltWorker
 class CourseSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
@@ -395,7 +393,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
         cleanupSyncedFiles(courseId, allFileIds)
 
-        val fileProgresses = mutableListOf<FileProgress>()
+        val fileSyncData = mutableListOf<FileSyncData>()
         val fileWorkers = mutableListOf<OneTimeWorkRequest>()
         fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
             .forEach {
@@ -407,13 +405,13 @@ class CourseSyncWorker @AssistedInject constructor(
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
                 fileWorkers.add(worker)
-                fileProgresses.add(FileProgress(worker.id.toString(), it.displayName.orEmpty(), it.size))
+                fileSyncData.add(FileSyncData(worker.id.toString(), it.displayName.orEmpty(), it.size))
             }
 
         val chunkedWorkers = fileWorkers.chunked(6)
 
         if (chunkedWorkers.isEmpty()) {
-            progress = progress.copy(fileProgresses = emptyList())
+            progress = progress.copy(fileSyncData = emptyList())
             updateProgress()
             return
         }
@@ -427,7 +425,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
         fileOperation = continuation.enqueue()
 
-        progress = progress.copy(fileProgresses = fileProgresses)
+        progress = progress.copy(fileSyncData = fileSyncData)
         updateProgress()
     }
 
@@ -465,14 +463,12 @@ class CourseSyncWorker @AssistedInject constructor(
             courseId = courseSettings.courseId,
             courseName = courseSettings.courseName,
             tabs = selectedTabs.associateWith { tabId ->
-                TabProgress(
+                TabSyncData(
                     course.tabs?.find { it.tabId == tabId }?.label ?: tabId,
                     ProgressState.IN_PROGRESS
                 )
             },
-            maxSize = selectedTabs.size * TAB_PROGRESS_SIZE,
-            downloadedSize = 0,
-            fileProgresses = emptyList()
+            fileSyncData = emptyList()
         )
     }
 
@@ -516,30 +512,4 @@ class CourseSyncWorker @AssistedInject constructor(
                 .build()
         }
     }
-}
-
-data class CourseProgress(
-    val courseId: Long,
-    val courseName: String,
-    val tabs: Map<String, TabProgress>,
-    val maxSize: Int,
-    val downloadedSize: Int,
-    val fileProgresses: List<FileProgress>? = null
-)
-
-data class TabProgress(
-    val tabName: String,
-    val state: ProgressState
-)
-
-data class FileProgress(
-    val workerId: String,
-    val fileName: String,
-    val fileSize: Long
-)
-
-enum class ProgressState {
-    IN_PROGRESS,
-    COMPLETED,
-    ERROR
 }

@@ -27,16 +27,14 @@ import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
-import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
-import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
-import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
+
+const val TAB_PROGRESS_SIZE = 100 * 1000
 
 data class CourseProgressItemViewModel(
     val data: CourseProgressViewData,
@@ -76,11 +74,11 @@ data class CourseProgressItemViewModel(
             it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson() ?: return@Observer
         }
 
-        if (courseProgress.fileProgresses == null) return@Observer
+        if (courseProgress.fileSyncData == null) return@Observer
 
-        data.updateSize(NumberHelper.readableFileSize(context, courseProgress.tabs.size * 100 * 1000 + courseProgress.fileProgresses.sumOf { it.fileSize }))
+        data.updateSize(NumberHelper.readableFileSize(context, courseProgress.tabs.size * TAB_PROGRESS_SIZE + courseProgress.fileSyncData.sumOf { it.fileSize }))
 
-        aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileProgresses.map { UUID.fromString(it.workerId) } + UUID.fromString(
+        aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileSyncData.map { UUID.fromString(it.workerId) } + UUID.fromString(
             data.workerId
         )))
 

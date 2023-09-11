@@ -24,7 +24,6 @@ import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
-import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.DownloadState
@@ -145,9 +144,3 @@ class FileSyncWorker @AssistedInject constructor(
         }
     }
 }
-
-data class FileSyncProgress(
-    val fileName: String,
-    val progress: Int,
-    val progressState: ProgressState = ProgressState.IN_PROGRESS
-)

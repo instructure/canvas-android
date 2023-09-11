@@ -36,7 +36,7 @@ import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.offline.sync.FileProgress
+import com.instructure.pandautils.features.offline.sync.FileSyncData
 import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 
@@ -78,13 +78,13 @@ data class FileTabProgressItemViewModel(
             it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
         }
 
-        if (progress.fileProgresses == null) return@Observer
+        if (progress.fileSyncData == null) return@Observer
 
-        if (progress.fileProgresses.isEmpty()) {
+        if (progress.fileSyncData.isEmpty()) {
             data.state = ProgressState.COMPLETED
             data.notifyPropertyChanged(BR.state)
         } else {
-            createFileItems(progress.fileProgresses)
+            createFileItems(progress.fileSyncData)
             data.toggleable = true
             data.notifyPropertyChanged(BR.toggleable)
             toggleItems()
@@ -95,11 +95,11 @@ data class FileTabProgressItemViewModel(
         progressLiveData.observeForever(progressObserver)
     }
 
-    private fun createFileItems(fileProgresses: List<FileProgress>) {
+    private fun createFileItems(fileSyncData: List<FileSyncData>) {
         val fileItems = mutableListOf<FileSyncProgressItemViewModel>()
         var totalSize = 0L
         val workerIds = mutableListOf<UUID>()
-        fileProgresses.forEach {
+        fileSyncData.forEach {
             val item = FileSyncProgressItemViewModel(
                 data = FileSyncProgressViewData(
                     fileName = it.fileName,

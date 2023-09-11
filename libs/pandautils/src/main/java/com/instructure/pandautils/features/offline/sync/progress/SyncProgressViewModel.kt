@@ -28,26 +28,20 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
-import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
-import com.instructure.pandautils.features.offline.sync.FileProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
-import com.instructure.pandautils.features.offline.sync.TabProgress
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.SyncProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
-import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.daos.TabDao
@@ -56,7 +50,6 @@ import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.utils.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -125,7 +118,7 @@ class SyncProgressViewModel @Inject constructor(
                 }
 
                 val tabSize = courseProgress.tabs.count() * 100 * 1000
-                val courseFileSizes = courseProgress.fileProgresses?.map { it.fileSize }?.sum() ?: 0
+                val courseFileSizes = courseProgress.fileSyncData?.map { it.fileSize }?.sum() ?: 0
                 val courseSize = tabSize + courseFileSizes
 
                 totalSize += courseSize
@@ -162,7 +155,7 @@ class SyncProgressViewModel @Inject constructor(
     private val courseProgressObserver = Observer<List<WorkInfo>> {
         val startedCourses = it.filter {
             it.state.isFinished || it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)
-                ?.fromJson<CourseProgress>()?.fileProgresses != null
+                ?.fromJson<CourseProgress>()?.fileSyncData != null
         }.toSet()
 
         val workerIds = mutableSetOf<UUID>()
@@ -176,7 +169,7 @@ class SyncProgressViewModel @Inject constructor(
                 it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
             }
 
-            progress?.fileProgresses?.map { UUID.fromString(it.workerId) }?.let {
+            progress?.fileSyncData?.map { UUID.fromString(it.workerId) }?.let {
                 workerIds.addAll(it)
             }
         }
