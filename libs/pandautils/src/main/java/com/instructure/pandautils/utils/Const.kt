@@ -45,6 +45,7 @@ object Const {
     const val DISCUSSION_ID = "discussion_id"
     const val FEATURE_NAME = "featureName"
     const val FILE_URL = "fileUrl"
+    const val FILE_ID = "fileId"
     const val FILE_DOWNLOADED = "fileDownloaded"
     const val FOLDER = "folder"
     const val FOLDER_ID = "folderId"

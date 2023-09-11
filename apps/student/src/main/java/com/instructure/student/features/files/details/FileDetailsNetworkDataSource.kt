@@ -23,20 +23,19 @@ import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.ResponseBody
 
 class FileDetailsNetworkDataSource(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
 ) : FileDetailsDataSource {
-    override suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): DataResult<ResponseBody> {
+    override suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-        return moduleApi.markModuleItemRead(canvasContext.apiContext(), canvasContext.id, moduleId, itemId, restParams)
+        return moduleApi.markModuleItemRead(canvasContext.apiContext(), canvasContext.id, moduleId, itemId, restParams).dataOrNull
     }
 
-    override suspend fun getFileFolderFromURL(url: String, forceNetwork: Boolean): DataResult<FileFolder> {
+    override suspend fun getFileFolderFromURL(url: String, fileId: Long, forceNetwork: Boolean): FileFolder? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-        return fileFolderApi.getFileFolderFromURL(url, restParams)
+        return fileFolderApi.getFileFolderFromURL(url, restParams).dataOrNull
     }
 }

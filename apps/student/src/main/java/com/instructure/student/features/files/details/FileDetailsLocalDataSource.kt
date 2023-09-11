@@ -20,15 +20,23 @@ package com.instructure.student.features.files.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
 import okhttp3.ResponseBody
 
-class FileDetailsLocalDataSource : FileDetailsDataSource {
-    override suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): DataResult<ResponseBody> {
-        TODO("Not yet implemented")
+class FileDetailsLocalDataSource(
+    private val fileFolderDao: FileFolderDao,
+    private val localFileFolderDao: LocalFileDao,
+    private val moduleCompletionRequirementDao: ModuleCompletionRequirementDao,
+) : FileDetailsDataSource {
+    override suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody? {
+        return null
     }
 
-    override suspend fun getFileFolderFromURL(url: String, forceNetwork: Boolean): DataResult<FileFolder> {
-        TODO("Not yet implemented")
+    override suspend fun getFileFolderFromURL(url: String, fileId: Long, forceNetwork: Boolean): FileFolder? {
+        val file = fileFolderDao.findById(fileId)
+        val localFile = localFileFolderDao.findById(fileId)
+        return file?.copy(url = localFile?.path ?: "")?.toApiModel()
     }
 }

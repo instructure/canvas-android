@@ -20,13 +20,12 @@ package com.instructure.student.features.files.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.ResponseBody
 
 interface FileDetailsDataSource {
 
-    suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): DataResult<ResponseBody>
+    suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody?
 
-    suspend fun getFileFolderFromURL(url: String, forceNetwork: Boolean): DataResult<FileFolder>
+    suspend fun getFileFolderFromURL(url: String, fileId: Long, forceNetwork: Boolean): FileFolder?
 
 }

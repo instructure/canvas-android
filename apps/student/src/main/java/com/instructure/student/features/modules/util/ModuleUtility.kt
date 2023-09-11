@@ -31,13 +31,13 @@ import com.instructure.pandautils.features.discussion.details.DiscussionDetailsW
 import com.instructure.student.R
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment.Companion.makeRoute
+import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.LockedModuleItemFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
-import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment
@@ -102,9 +102,9 @@ object ModuleUtility {
         "File" -> { // TODO Handle offline availability after files sync
             val url = removeDomain(item.url)
             if (moduleObject == null) {
-                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, url!!))
+                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, url!!, item.contentId))
             } else {
-                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, moduleObject, item.id, url!!))
+                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, moduleObject, item.id, url!!, item.contentId))
             }
         }
         else -> null

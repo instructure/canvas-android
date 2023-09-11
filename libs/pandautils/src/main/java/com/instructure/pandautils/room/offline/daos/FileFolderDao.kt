@@ -45,7 +45,7 @@ abstract class FileFolderDao {
     abstract suspend fun findAllFilesByCourseId(courseId: Long): List<FileFolderEntity>
 
     @Query("SELECT * FROM FileFolderEntity WHERE id = :id")
-    abstract fun findById(id: Long): FileFolderEntity?
+    abstract suspend fun findById(id: Long): FileFolderEntity?
 
     @Query("SELECT * FROM FileFolderEntity WHERE parentFolderId = :parentId")
     abstract suspend fun findFoldersByParentId(parentId: Long): List<FileFolderEntity>

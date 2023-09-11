@@ -20,6 +20,7 @@ package com.instructure.student.features.files.details
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,9 +74,7 @@ class FileDetailsFragment : ParentFragment() {
 
     private var file: FileFolder? = null
     private var fileUrl: String by StringArg(key = Const.FILE_URL)
-
-    private val fileId: Long
-        get() = file!!.id
+    private var fileId: Long by LongArg(key = Const.FILE_ID)
 
     private val moduleItemId: Long?
         get() = this.getModuleItemId()
@@ -119,8 +118,19 @@ class FileDetailsFragment : ParentFragment() {
 
     private fun setupClickListeners() {
         binding.openButton.setOnClickListener {
-            file?.let {
-                openMedia(it.contentType, it.url, it.displayName, canvasContext)
+            file?.let { fileFolder ->
+                when {
+                    fileFolder.isLocalFile -> {
+                        Log.d("OPEN_LOCAL_FILE", "CALLED")
+                        openLocalMedia(
+                            fileFolder.contentType,
+                            fileFolder.url,
+                            fileFolder.displayName,
+                            canvasContext
+                        )
+                    }
+                    else -> openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, canvasContext)
+                }
                 markAsRead()
             }
         }
@@ -132,6 +142,14 @@ class FileDetailsFragment : ParentFragment() {
                 requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
             }
         }
+
+        if (isOffline()) {
+            binding.downloadButton.visibility = View.GONE
+        }
+    }
+
+    private fun isOffline(): Boolean {
+        return NetworkStateProviderImpl(requireContext()).isOnline().not()
     }
 
     override fun onMediaLoadingStarted() {
@@ -150,7 +168,7 @@ class FileDetailsFragment : ParentFragment() {
     private fun markAsRead() {
         // Mark the module as read
         lifecycleScope.tryLaunch {
-            val result = repository.markAsRead(canvasContext, moduleObject.id, itemId, true).dataOrThrow
+            repository.markAsRead(canvasContext, moduleObject.id, itemId, true)
             ModuleUpdatedEvent(moduleObject).post()
         }.catch {
             Logger.e("Error marking module item as read. " + it.message)
@@ -160,7 +178,7 @@ class FileDetailsFragment : ParentFragment() {
     @Suppress("deprecation")
     private fun getFileFolder() = with(binding) {
         lifecycleScope.tryLaunch {
-            file = repository.getFileFolderFromURL(fileUrl, true).dataOrThrow
+            file = repository.getFileFolderFromURL(fileUrl, fileId, true)
             // Set up everything else now, we should have a file
             file?.let {
                 if (it.lockInfo != null) {
@@ -225,16 +243,20 @@ class FileDetailsFragment : ParentFragment() {
 
     companion object {
 
-        fun makeRoute(canvasContext: CanvasContext, fileUrl: String): Route {
-            val bundle = Bundle().apply { putString(Const.FILE_URL, fileUrl) }
+        fun makeRoute(canvasContext: CanvasContext, fileUrl: String, fileId: Long): Route {
+            val bundle = Bundle().apply {
+                putString(Const.FILE_URL, fileUrl)
+                putLong(Const.FILE_ID, fileId)
+            }
             return Route(null, FileDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        fun makeRoute(canvasContext: CanvasContext, moduleObject: ModuleObject, itemId: Long, fileUrl: String): Route {
+        fun makeRoute(canvasContext: CanvasContext, moduleObject: ModuleObject, itemId: Long, fileUrl: String, fileId: Long): Route {
             val bundle = Bundle().apply {
                 putString(Const.FILE_URL, fileUrl)
                 putParcelable(Const.MODULE_OBJECT, moduleObject)
                 putLong(Const.ITEM_ID, itemId)
+                putLong(Const.FILE_ID, fileId)
             }
             return Route(null, FileDetailsFragment::class.java, canvasContext, bundle)
         }

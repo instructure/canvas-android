@@ -20,7 +20,6 @@ package com.instructure.student.features.files.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -28,16 +27,16 @@ import okhttp3.ResponseBody
 
 class FileDetailsRepository(
         localDataSource: FileDetailsLocalDataSource,
-        networkDataSource: FileDetailsNetworkDataSource,
+        private val networkDataSource: FileDetailsNetworkDataSource,
         networkStateProvider: NetworkStateProvider,
         featureFlagProvider: FeatureFlagProvider
 ) : Repository<FileDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
-    suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): DataResult<ResponseBody> {
-        return dataSource().markAsRead(canvasContext, moduleId, itemId, forceNetwork)
+    suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody? {
+        return networkDataSource.markAsRead(canvasContext, moduleId, itemId, forceNetwork)
     }
 
-    suspend fun getFileFolderFromURL(url: String, forceNetwork: Boolean): DataResult<FileFolder?> {
-        return dataSource().getFileFolderFromURL(url, forceNetwork)
+    suspend fun getFileFolderFromURL(url: String, fileId: Long, forceNetwork: Boolean): FileFolder? {
+        return dataSource().getFileFolderFromURL(url, fileId, forceNetwork)
     }
 }
