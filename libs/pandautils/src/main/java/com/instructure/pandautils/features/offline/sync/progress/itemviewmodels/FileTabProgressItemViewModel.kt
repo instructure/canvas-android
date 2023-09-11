@@ -19,6 +19,7 @@
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -43,17 +44,18 @@ data class FileTabProgressItemViewModel(
     val data: FileTabProgressViewData,
     private val workManager: WorkManager,
     private val context: Context
-) : GroupItemViewModel(collapsable = true, items = data.items, collapsed = true) {
+) : GroupItemViewModel(collapsable = true, items = data.items, collapsed = true), SyncProgressItemViewModel {
     override val layoutId = R.layout.item_file_tab_progress
 
     override val viewType = ViewType.COURSE_FILE_TAB_PROGRESS.viewType
+
+    private var totalProgressLiveData: LiveData<List<WorkInfo>>? = null
 
     private val totalProgressObserver = Observer<List<WorkInfo>> {
         var totalProgress = 0
         if (it.all { it.state.isFinished }) {
             data.state = ProgressState.COMPLETED
             data.notifyPropertyChanged(BR.state)
-            clearObserver()
         } else {
             it.forEach { workInfo ->
                 val progress: FileSyncProgress? = if (workInfo.state.isFinished) {
@@ -67,32 +69,30 @@ data class FileTabProgressItemViewModel(
         }
     }
 
+    private val progressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.courseWorkerId))
+
+    private val progressObserver = Observer<WorkInfo> {
+        val progress = if (it.state.isFinished) {
+            it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@Observer
+        } else {
+            it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
+        }
+
+        if (progress.fileProgresses == null) return@Observer
+
+        if (progress.fileProgresses.isEmpty()) {
+            data.state = ProgressState.COMPLETED
+            data.notifyPropertyChanged(BR.state)
+        } else {
+            createFileItems(progress.fileProgresses)
+            data.toggleable = true
+            data.notifyPropertyChanged(BR.toggleable)
+            toggleItems()
+        }
+    }
+
     init {
-        val progressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.courseWorkerId))
-
-        progressLiveData.observeForever(object : Observer<WorkInfo> {
-            override fun onChanged(value: WorkInfo) {
-                val progress = if (value.state.isFinished) {
-                    value.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return
-                } else {
-                    value.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return
-                }
-
-                if (progress.fileProgresses == null) return
-
-                if (progress.fileProgresses.isEmpty()) {
-                    data.state = ProgressState.COMPLETED
-                    data.notifyPropertyChanged(BR.state)
-                } else {
-                    createFileItems(progress.fileProgresses)
-                    data.toggleable = true
-                    data.notifyPropertyChanged(BR.toggleable)
-                    toggleItems()
-                }
-
-                progressLiveData.removeObserver(this)
-            }
-        })
+        progressLiveData.observeForever(progressObserver)
     }
 
     private fun createFileItems(fileProgresses: List<FileProgress>) {
@@ -113,14 +113,18 @@ data class FileTabProgressItemViewModel(
             fileItems.add(item)
             totalSize += it.fileSize
         }
-        workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds)).observeForever(totalProgressObserver)
+
+        totalProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))
+        totalProgressLiveData?.observeForever(totalProgressObserver)
+
         data.items = fileItems
         items = data.items
         data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
         toggleItems()
     }
 
-    private fun clearObserver() {
-
+    override fun onCleared() {
+        progressLiveData.removeObserver(progressObserver)
+        totalProgressLiveData?.removeObserver(totalProgressObserver)
     }
 }

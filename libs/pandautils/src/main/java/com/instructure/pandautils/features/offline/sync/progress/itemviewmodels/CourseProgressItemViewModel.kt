@@ -43,7 +43,7 @@ data class CourseProgressItemViewModel(
     private val workManager: WorkManager,
     private val context: Context
 ) :
-    GroupItemViewModel(collapsable = true, items = (data.tabs + data.files), collapsed = false) {
+    GroupItemViewModel(collapsable = true, items = (data.tabs + data.files), collapsed = false), SyncProgressItemViewModel {
 
     override val layoutId: Int = R.layout.item_course_progress
 
@@ -99,5 +99,10 @@ data class CourseProgressItemViewModel(
 
     private fun clearAggregateObserver() {
         aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
+    }
+
+    override fun onCleared() {
+        clearCourseObserver()
+        clearAggregateObserver()
     }
 }

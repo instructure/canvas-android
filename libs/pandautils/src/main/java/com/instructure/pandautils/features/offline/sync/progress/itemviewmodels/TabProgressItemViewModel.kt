@@ -30,10 +30,13 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 
-data class TabProgressItemViewModel(val data: TabProgressViewData, val workManager: WorkManager) : ItemViewModel {
+data class TabProgressItemViewModel(val data: TabProgressViewData, val workManager: WorkManager) : ItemViewModel,
+    SyncProgressItemViewModel {
     override val layoutId = R.layout.item_tab_progress
 
     override val viewType = ViewType.COURSE_TAB_PROGRESS.viewType
+
+    private val progressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId))
 
     private val progressObserver = Observer<WorkInfo> {
         val progress = if (it.state.isFinished) {
@@ -48,10 +51,10 @@ data class TabProgressItemViewModel(val data: TabProgressViewData, val workManag
     }
 
     init {
-        workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId)).observeForever(progressObserver)
+        progressLiveData.observeForever(progressObserver)
     }
 
-    fun clearObserver() {
-        workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId)).removeObserver(progressObserver)
+    override fun onCleared() {
+        progressLiveData.removeObserver(progressObserver)
     }
 }

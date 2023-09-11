@@ -18,6 +18,9 @@
 
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.FileSyncProgress
@@ -31,24 +34,33 @@ import java.util.UUID
 data class FileSyncProgressItemViewModel(
     val data: FileSyncProgressViewData,
     val workManager: WorkManager
-) : ItemViewModel {
+) : ItemViewModel, SyncProgressItemViewModel {
     override val layoutId = R.layout.item_file_sync_progress
 
     override val viewType = ViewType.COURSE_FILE_PROGRESS.viewType
 
-    init {
-        workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId)).observeForever {
-            val progress: FileSyncProgress = if (it.state.isFinished) {
-                it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson() ?: return@observeForever
-            } else {
-                it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson() ?: return@observeForever
-            }
-            notifyChange(progress)
+    private var fileSyncProgressLiveData: LiveData<WorkInfo>? = null
+
+    private val fileSyncProgressObserver = Observer<WorkInfo> {
+        val progress: FileSyncProgress = if (it.state.isFinished) {
+            it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson() ?: return@Observer
+        } else {
+            it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson() ?: return@Observer
         }
+        notifyChange(progress)
+    }
+
+    init {
+        fileSyncProgressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId))
+        fileSyncProgressLiveData?.observeForever(fileSyncProgressObserver)
     }
 
     private fun notifyChange(fileSyncProgress: FileSyncProgress) {
         data.updateProgress(fileSyncProgress.progress)
         data.updateState(fileSyncProgress.progressState)
+    }
+
+    override fun onCleared() {
+        fileSyncProgressLiveData?.removeObserver(fileSyncProgressObserver)
     }
 }

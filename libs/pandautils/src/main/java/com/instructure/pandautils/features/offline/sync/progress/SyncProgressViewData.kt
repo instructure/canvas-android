@@ -26,14 +26,16 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel
 
-data class SyncProgressViewData(val items: List<ItemViewModel>)
+data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
 
 data class CourseProgressViewData(
     val courseName: String,
     val workerId: String,
     val tabs: List<TabProgressItemViewModel>,
-    val files: List<ItemViewModel>,
+    val files: List<FileTabProgressItemViewModel>,
     @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
     @Bindable var size: String = ""
 ) : BaseObservable() {
