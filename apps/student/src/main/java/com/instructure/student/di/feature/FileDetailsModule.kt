@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
-import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.files.details.FileDetailsLocalDataSource
@@ -43,8 +42,8 @@ class FileDetailsModule {
     }
 
     @Provides
-    fun provideFileDetailsLocalDataSource(fileFolderDao: FileFolderDao, localFileDao: LocalFileDao, moduleCompletionRequirementDao: ModuleCompletionRequirementDao): FileDetailsLocalDataSource {
-        return FileDetailsLocalDataSource(fileFolderDao, localFileDao, moduleCompletionRequirementDao)
+    fun provideFileDetailsLocalDataSource(fileFolderDao: FileFolderDao, localFileDao: LocalFileDao): FileDetailsLocalDataSource {
+        return FileDetailsLocalDataSource(fileFolderDao, localFileDao)
     }
 
     @Provides

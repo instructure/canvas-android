@@ -22,21 +22,19 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
-import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
 import okhttp3.ResponseBody
 
 class FileDetailsLocalDataSource(
     private val fileFolderDao: FileFolderDao,
     private val localFileFolderDao: LocalFileDao,
-    private val moduleCompletionRequirementDao: ModuleCompletionRequirementDao,
 ) : FileDetailsDataSource {
     override suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody? {
         return null
     }
 
     override suspend fun getFileFolderFromURL(url: String, fileId: Long, forceNetwork: Boolean): FileFolder? {
-        val file = fileFolderDao.findById(fileId)
-        val localFile = localFileFolderDao.findById(fileId)
-        return file?.copy(url = localFile?.path ?: "")?.toApiModel()
+        val file = fileFolderDao.findById(fileId) ?: return null
+        val localFile = localFileFolderDao.findById(fileId) ?: return null
+        return file.copy(url = localFile.path).toApiModel()
     }
 }
