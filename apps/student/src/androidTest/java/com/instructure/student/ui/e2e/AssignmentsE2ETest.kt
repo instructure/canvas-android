@@ -682,7 +682,7 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is 80%.")
         dashboardPage.refresh()
-        dashboardPage.assertCourseGrade(course.name, " 80%")
+        dashboardPage.assertCourseGrade(course.name, "80%")
 
         Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
         var restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
@@ -813,7 +813,7 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Refresh the Dashboard page (to allow the disabled restriction to propagate). Assert that the course grade is 49.47%, since we can now show percentage and numeric data.")
         dashboardPage.refresh()
-        dashboardPage.assertCourseGrade(course.name, " 49.47%")
+        dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
 
     @E2E
