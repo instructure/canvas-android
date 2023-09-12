@@ -194,7 +194,7 @@ class ModuleProgressionRepositoryTest {
 
     @Test
     fun `getSyncedTabs returns only the synced tabs from dao`() = runTest {
-        coEvery { courseSyncSettingsDao.findById(1) } returns CourseSyncSettingsEntity(1, false, mapOf(
+        coEvery { courseSyncSettingsDao.findById(1) } returns CourseSyncSettingsEntity(1, "Course", false, mapOf(
             "Page" to true,
             "Quiz" to false,
             "Assignment" to true,

@@ -44,7 +44,7 @@ class CourseBrowserLocalDataSourceTest {
     @Test
     fun `Get tabs successfully returns api model`() = runTest {
         coEvery { tabDao.findByCourseId(any()) } returns listOf(TabEntity(Tab(label = "Tab", tabId = "123"), 1))
-        coEvery { courseSyncSettingsDao.findById(any()) } returns CourseSyncSettingsEntity(1, false, tabs = mapOf("123" to true))
+        coEvery { courseSyncSettingsDao.findById(any()) } returns CourseSyncSettingsEntity(1, "Course", false, tabs = mapOf("123" to true))
 
         val tabs = dataSource.getTabs(CanvasContext.emptyCourseContext(1), false)
 
@@ -59,7 +59,7 @@ class CourseBrowserLocalDataSourceTest {
             TabEntity(Tab(label = "Tab 3", tabId = "3"), 1)
         )
         coEvery { courseSyncSettingsDao.findById(any()) } returns CourseSyncSettingsEntity(
-            1, false, tabs = mapOf("1" to true, "2" to false)
+            1, "Course", false, tabs = mapOf("1" to true, "2" to false)
         )
 
         val tabs = dataSource.getTabs(CanvasContext.emptyCourseContext(1), false)
