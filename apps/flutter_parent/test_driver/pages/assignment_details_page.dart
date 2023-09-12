@@ -86,11 +86,11 @@ class AssignmentDetailsPage {
 
   static Future<void> _validateDueDate(FlutterDriver? driver, DateTime dueAt) async {
     var localDate = dueAt.toLocal();
-    String date = (DateFormat.MMMd(supportedDateLocale)).format(localDate);
-    String time = (DateFormat.jm(supportedDateLocale)).format(localDate);
-    var dueDateText = (await driver?.getText(find.byValueKey("assignment_details_due_date")))!;
-    // expect(dueDateText.contains(date), true, reason: "Expected due date to contain $date [$dueDateText]");
-    // expect(dueDateText.contains(time), true, reason: "Expected due date to contain $time [$dueDateText]");
+    String date = (DateFormat.MMMd(supportedDateLocale)).format(localDate).replaceAll(RegExp('[^A-Za-z0-9]'), '');
+    String time = (DateFormat.jm(supportedDateLocale)).format(localDate).replaceAll(RegExp('[^A-Za-z0-9]'), '');
+    var dueDateText = (await driver?.getText(find.byValueKey("assignment_details_due_date")))!.replaceAll(RegExp('[^A-Za-z0-9]'), '');
+    expect(dueDateText.contains(date), true, reason: "Expected due date to contain $date [$dueDateText]");
+    expect(dueDateText.contains(time), true, reason: "Expected due date to contain $time [$dueDateText]");
   }
 
   static Future<void> initiateCreateEmail(FlutterDriver? driver) async {
