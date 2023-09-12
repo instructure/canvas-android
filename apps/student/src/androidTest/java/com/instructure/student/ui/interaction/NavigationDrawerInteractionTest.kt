@@ -37,6 +37,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -120,28 +121,6 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         leftSideNavigationDrawerPage.logout()
         loginLandingPage.assertPageObjects()
-    }
-
-    /**
-     * Create two mocked students, sign in the first one, end up on the dashboard page
-     */
-    private fun signInStudent() : MockCanvas {
-        val data = MockCanvas.init(
-                studentCount = 2,
-                courseCount = 1,
-                favoriteCourseCount = 1
-        )
-
-        student1 = data.students.first()
-        student2 = data.students.last()
-
-        course = data.courses.values.first()
-
-        val token = data.tokenFor(student1)!!
-        tokenLogin(data.domain, token, student1)
-        dashboardPage.waitForRender()
-
-        return data
     }
 
     // Should open a dialog and send a question for the selected course
@@ -260,5 +239,63 @@ class NavigationDrawerInteractionTest : StudentTest() {
         finally {
             Intents.release()
         }
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testMenuItemForDefaultStudent() {
+        signInStudent()
+
+        leftSideNavigationDrawerPage.assertMenuItems(false)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testMenuItemForElementaryStudent() {
+        signInElementaryStudent()
+
+        leftSideNavigationDrawerPage.assertMenuItems(true)
+    }
+
+    /**
+     * Create two mocked students, sign in the first one, end up on the dashboard page
+     */
+    private fun signInStudent(courseCount: Int = 1, studentCount: Int = 2, favoriteCourseCount: Int = 1) : MockCanvas {
+        val data = MockCanvas.init(
+            studentCount = studentCount,
+            courseCount = courseCount,
+            favoriteCourseCount = favoriteCourseCount
+        )
+
+        student1 = data.students.first()
+        student2 = data.students.last()
+
+        course = data.courses.values.first()
+
+        val token = data.tokenFor(student1)!!
+        tokenLogin(data.domain, token, student1)
+        dashboardPage.waitForRender()
+
+        return data
+    }
+
+    private fun signInElementaryStudent(
+            courseCount: Int = 1,
+            pastCourseCount: Int = 0,
+            favoriteCourseCount: Int = 0,
+            announcementCount: Int = 0): MockCanvas {
+
+        val data = MockCanvas.init(
+                studentCount = 1,
+                courseCount = courseCount,
+                pastCourseCount = pastCourseCount,
+                favoriteCourseCount = favoriteCourseCount,
+                accountNotificationCount = announcementCount)
+
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLoginElementary(data.domain, token, student)
+        elementaryDashboardPage.waitForRender()
+        return data
     }
 }

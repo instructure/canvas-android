@@ -45,5 +45,13 @@ val appDatabaseMigrations = arrayOf(
     createMigration(5, 6) { database ->
         database.execSQL("ALTER TABLE AttachmentEntity ADD COLUMN submissionId INTEGER")
         database.execSQL("ALTER TABLE SubmissionCommentEntity ADD COLUMN submissionId INTEGER")
+    },
+
+    createMigration(6, 7) { database ->
+        database.execSQL("ALTER TABLE AttachmentEntity ADD COLUMN attempt INTEGER")
+    },
+
+    createMigration(7, 8) { database ->
+        database.execSQL("CREATE TABLE IF NOT EXISTS EnvironmentFeatureFlags (userId INTEGER NOT NULL, featureFlags TEXT NOT NULL, PRIMARY KEY(userId))")
     }
 )

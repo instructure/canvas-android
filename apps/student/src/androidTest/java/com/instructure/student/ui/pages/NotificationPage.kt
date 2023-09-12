@@ -22,16 +22,12 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
@@ -42,11 +38,20 @@ class NotificationPage : BasePage() {
         val matcher = withText(title)
         scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).assertDisplayed()
-
     }
 
     fun assertHasGrade(title: String, grade: String) {
-        val matcher = allOf(withText(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade: $grade")))
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade: $grade")))
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertGradeUpdated(title: String) {
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade updated")))
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertExcused(title: String) {
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Excused")))
         onView(matcher).scrollTo().assertDisplayed()
     }
 
@@ -59,15 +64,14 @@ class NotificationPage : BasePage() {
     fun assertNotificationWithPoll(title: String, times: Int, pollIntervalSeconds: Long) {
         var iteration = 0
         while (iteration < times) {
-            Thread.sleep(pollIntervalSeconds*1000)
+            Thread.sleep(pollIntervalSeconds * 1000)
             try {
                 val words = title.split(" ")
                 onView(containsTextCaseInsensitive(words[0] + " " + words[1] + " " + words[2])).assertDisplayed()
-            }   catch(e: NoMatchingViewException) {
+            } catch (e: NoMatchingViewException) {
                 iteration++
                 refresh()
             }
-
         }
     }
 

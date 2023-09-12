@@ -33,6 +33,7 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
@@ -41,13 +42,14 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.util.concurrent.*
+import java.util.concurrent.TimeUnit
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -77,6 +79,12 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         // Maybe the total grade will take a beat to update properly?
         waitForView(allOf(withId(R.id.txtOverallGrade), matcher))
         gradeValue.check(matches(matcher))
+    }
+
+    fun assertAssignmentDisplayed(name: String, gradeString: String) {
+        onView(withId(R.id.title) + withParent(R.id.textContainer)).assertHasText(name)
+        val siblingMatcher = withId(R.id.title) + withText(name)
+        onView(withId(R.id.points) + hasSibling(siblingMatcher)).assertHasText(gradeString)
     }
 
     // Hopefully this will be sufficient.  We may need to add some logic to scroll

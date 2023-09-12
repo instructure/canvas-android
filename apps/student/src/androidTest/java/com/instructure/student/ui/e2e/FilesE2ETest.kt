@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.os.Environment
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -28,13 +29,22 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.utils.*
+import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
+import com.instructure.student.ui.utils.seedData
+import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
@@ -174,6 +184,16 @@ class FilesE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
 
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${discussionAttachmentFile.name}', the file's name to the search input field.")
+        fileListPage.searchable.clickOnSearchButton()
+        fileListPage.searchable.typeToSearchBar(discussionAttachmentFile.name)
+
+        Log.d(STEP_TAG, "Assert that only 1 file matches for the search text, and it is '${discussionAttachmentFile.name}', and no directories has been shown in the result. Press search back button the quit from search result view.")
+        fileListPage.assertSearchResultCount(1)
+        fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
+        fileListPage.assertItemNotDisplayed("unfiled")
+        fileListPage.searchable.pressSearchBackButton()
+
         Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
@@ -190,6 +210,19 @@ class FilesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
         fileListPage.assertViewEmpty()
+
+        Log.d(STEP_TAG, "Navigate back to global File List Page. Assert that the 'unfiled' folder has 0 items because we deleted the only item in it recently.")
+        Espresso.pressBack()
+        fileListPage.assertFolderSize("unfiled", 0)
+
+        val testFolderName = "Krissinho's Test Folder"
+        Log.d(STEP_TAG, "Click on Add ('+') button and then the 'Add Folder' icon, and create a new folder with the following name: '$testFolderName'.")
+        fileListPage.clickAddButton()
+        fileListPage.clickCreateNewFolderButton()
+        fileListPage.createNewFolder(testFolderName)
+
+        Log.d(STEP_TAG,"Assert that there is a folder called '$testFolderName' is displayed.")
+        fileListPage.assertItemDisplayed(testFolderName)
     }
 
     private fun commentOnSubmission(

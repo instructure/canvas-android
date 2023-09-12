@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">mukua</string>
 
+    <string name="gradeUpdated">Koeke kua whakahoutia</string>
     <string name="loadingCanvas">E uta ana Canvas Ihirangi&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Mai i konei, ka kite koe i nga Taipitopito Tukunga.</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Kōeke: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Meneti</item>
         <item quantity="other">%s meneti</item>

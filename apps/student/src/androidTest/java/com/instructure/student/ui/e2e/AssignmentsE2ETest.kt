@@ -386,10 +386,10 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.expandCollapseAssignmentGroup("Assignments")
 
         Log.d(STEP_TAG, "Click on the 'Search' (magnifying glass) icon at the toolbar.")
-        assignmentListPage.clickOnSearchButton()
+        assignmentListPage.searchable.clickOnSearchButton()
 
         Log.d(STEP_TAG, "Type the name of the '${missingAssignment.name}' assignment.")
-        assignmentListPage.typeToSearchBar(missingAssignment.name.drop(5))
+        assignmentListPage.searchable.typeToSearchBar(missingAssignment.name.drop(5))
 
         Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' assignment has been found by previously typed search string.")
         sleep(3000) // Allow the search input to propagate

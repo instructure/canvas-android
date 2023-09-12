@@ -66,8 +66,8 @@ class DiscussionsE2ETest : TeacherTest() {
 
         val newTitle = "New Discussion"
         Log.d(STEP_TAG,"Edit the discussion's title to: '$newTitle'. Click on 'Save'.")
-        editDiscussionsDetailsPage.editTitle(newTitle)
-        editDiscussionsDetailsPage.clickSave()
+        editDiscussionsDetailsPage.editDiscussionTitle(newTitle)
+        editDiscussionsDetailsPage.saveDiscussion()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the discussion's name has been changed to '$newTitle' and it is published.")
         discussionsDetailsPage.refresh()
@@ -77,7 +77,7 @@ class DiscussionsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Unpublish the '$newTitle' discussion and click on 'Save'.")
         discussionsDetailsPage.openEdit()
         editDiscussionsDetailsPage.togglePublished()
-        editDiscussionsDetailsPage.clickSave()
+        editDiscussionsDetailsPage.saveDiscussion()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the '$newTitle' discussion has been unpublished.")
         discussionsDetailsPage.refresh()
@@ -89,6 +89,10 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.selectOverFlowMenu("Pin")
         discussionsListPage.assertGroupDisplayed("Pinned")
         discussionsListPage.assertDiscussionInGroup("Pinned", discussion2.title)
+
+        Log.d(STEP_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discusssions are displayed.")
+        discussionsListPage.assertHasDiscussion(newTitle)
+        discussionsListPage.assertHasDiscussion(discussion2)
 
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '$newTitle' discussion.")
         discussionsListPage.clickDiscussion(newTitle)
@@ -107,8 +111,8 @@ class DiscussionsE2ETest : TeacherTest() {
 
         val newDiscussionTitle = "Test Discussion Mobile UI"
         Log.d(STEP_TAG,"Set '$newDiscussionTitle' as the discussion's title and set some description as well.")
-        editDiscussionsDetailsPage.editTitle(newDiscussionTitle)
-        editDiscussionsDetailsPage.editDescription("Mobile UI Discussion description")
+        editDiscussionsDetailsPage.editDiscussionTitle(newDiscussionTitle)
+        editDiscussionsDetailsPage.editDiscussionDescription("Mobile UI Discussion description")
 
         Log.d(STEP_TAG,"Toggle Publish checkbox and save the page.")
         editDiscussionsDetailsPage.togglePublished()
@@ -121,23 +125,22 @@ class DiscussionsE2ETest : TeacherTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
-        discussionsListPage.openSearch()
-        discussionsListPage.enterSearchQuery("Test Discussion")
+        discussionsListPage.searchable.clickOnSearchButton()
+        discussionsListPage.searchable.typeToSearchBar("Test Discussion")
 
         Log.d(STEP_TAG,"Assert that the '$newDiscussionTitle' discussion is displayed and it is the only one.")
-        discussionsListPage.assertDiscussionCount(2) // header + single search result
+        discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
-        Espresso.pressBack() // need to press back to exit from the search input field
+        discussionsListPage.searchable.clickOnClearSearchButton()
 
         Log.d(STEP_TAG,"Collapse the discussion list and assert that the '$newDiscussionTitle' discussion can NOT be seen.")
         discussionsListPage.toggleCollapseExpandIcon()
-        discussionsListPage.assertDiscussionCount(1) // header only
+        discussionsListPage.assertDiscussionCount(0) // header only
         discussionsListPage.assertDiscussionDoesNotExist(newDiscussionTitle)
 
         Log.d(STEP_TAG,"Expand the discussion list and assert that the '$newDiscussionTitle' discussion can be seen.")
         discussionsListPage.toggleCollapseExpandIcon()
-        discussionsListPage.assertDiscussionCount(2) // header only + single search result
+        discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
-
     }
 }

@@ -286,7 +286,8 @@ class AssignmentDetailsViewModelTest {
             resources,
             colorKeeper.getOrGenerateColor(Course()),
             Assignment(),
-            Submission()
+            Submission(),
+            false
         )
 
         every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
@@ -306,7 +307,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Missing submission`() {
         val expectedLabelText = "Missing"
-        val expectedTint = R.color.backgroundDanger
+        val expectedTint = R.color.textDanger
         val expectedIcon = R.drawable.ic_no
 
         every { resources.getString(R.string.missingAssignment) } returns expectedLabelText
@@ -335,7 +336,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Not submitted submission`() {
         val expectedLabelText = "Not submitted"
-        val expectedTint = R.color.backgroundDark
+        val expectedTint = R.color.textDark
         val expectedIcon = R.drawable.ic_no
 
         every { resources.getString(R.string.notSubmitted) } returns expectedLabelText
@@ -359,7 +360,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Graded submission`() {
         val expectedLabelText = "Graded"
-        val expectedTint = R.color.backgroundSuccess
+        val expectedTint = R.color.textSuccess
         val expectedIcon = R.drawable.ic_complete_solid
 
         every { resources.getString(R.string.gradedSubmissionLabel) } returns expectedLabelText
@@ -391,7 +392,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Submitted submission`() {
         val expectedLabelText = "Submitted"
-        val expectedTint = R.color.backgroundSuccess
+        val expectedTint = R.color.textSuccess
         val expectedIcon = R.drawable.ic_complete_solid
 
         every { resources.getString(R.string.submitted) } returns expectedLabelText
@@ -435,7 +436,8 @@ class AssignmentDetailsViewModelTest {
             resources,
             colorKeeper.getOrGenerateColor(Course()),
             assignment,
-            firstSubmission
+            firstSubmission,
+            false
         )
 
         every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
@@ -750,5 +752,40 @@ class AssignmentDetailsViewModelTest {
         viewModel.queryResultsChanged()
 
         Assert.assertEquals(expected, viewModel.data.value?.attempts?.last()?.data?.submission)
+    }
+
+    @Test
+    fun `Create viewData with points when quantitative data is not restricted`() {
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        }
+
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submission = Submission(), pointsPossible = 20.0))
+        }
+
+        every { resources.getQuantityString(any(), any(), any()) } returns "20 pts"
+
+        val viewModel = getViewModel()
+
+        Assert.assertEquals("20 pts", viewModel.data.value?.points)
+    }
+
+    @Test
+    fun `Create viewData without points when quantitative data is restricted`() {
+        val courseSettings = CourseSettings(restrictQuantitativeData = true)
+        every { courseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)), settings = courseSettings))
+        }
+
+        every { assignmentManager.getAssignmentWithHistoryAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Assignment(submission = Submission(), pointsPossible = 20.0))
+        }
+
+        every { resources.getQuantityString(any(), any(), any()) } returns "20 pts"
+
+        val viewModel = getViewModel()
+
+        Assert.assertEquals("", viewModel.data.value?.points)
     }
 }

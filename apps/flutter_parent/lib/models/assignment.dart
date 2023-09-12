@@ -185,6 +185,10 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   bool get isDiscussion => submissionTypes.contains(SubmissionTypes.discussionTopic);
 
   bool get isQuiz => submissionTypes.contains(SubmissionTypes.onlineQuiz);
+
+  bool isGradingTypeQuantitative() {
+    return gradingType == GradingType.points || gradingType == GradingType.percent;
+  }
 }
 
 @BuiltValueEnum(wireName: 'grading_type')

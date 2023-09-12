@@ -319,7 +319,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private fun handleExit() {
         // Check to see if the user has made any changes
-        if (binding.editSubject.text.isNotBlank() || binding.message.text.isNotBlank() || attachments.isNotEmpty()) {
+        if (binding.editSubject.text?.isNotBlank() == true || binding.message.text?.isNotBlank() == true || attachments.isNotEmpty()) {
             shouldAllowExit = false
             // Use childFragmentManager so that exiting the compose fragment also dismisses the dialog
             UnsavedChangesExitDialog.show(childFragmentManager) {

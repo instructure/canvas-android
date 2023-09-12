@@ -21,7 +21,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager.createCourseMap
-import com.instructure.canvasapi2.managers.CourseManager.getCourses
+import com.instructure.canvasapi2.managers.CourseManager.getCoursesWithGradingScheme
 import com.instructure.canvasapi2.managers.GroupManager.createGroupMap
 import com.instructure.canvasapi2.managers.GroupManager.getAllGroups
 import com.instructure.canvasapi2.managers.InboxManager.getConversation
@@ -112,7 +112,7 @@ class NotificationListRecyclerAdapter(
     override val isPaginated get() = true
 
     override fun loadFirstPage() {
-        getCourses(true, coursesCallback)
+        getCoursesWithGradingScheme(true, coursesCallback)
         getAllGroups(groupsCallback, true)
         if (canvasContext.type == CanvasContext.Type.USER) {
             getUserStream(streamCallback, true)

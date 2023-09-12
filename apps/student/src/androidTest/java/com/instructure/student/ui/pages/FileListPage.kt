@@ -17,32 +17,37 @@
 package com.instructure.student.ui.pages
 
 import androidx.appcompat.widget.AppCompatButton
-import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withChild
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
 // Tests that files submitted for submissions, submission comments and discussions are
 // properly displayed.
-class FileListPage : BasePage(R.id.fileListPage) {
+class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
 
     private val addButton by OnViewWithId(R.id.addFab)
     private val uploadFileButton by OnViewWithId(R.id.addFileFab, autoAssert = false)
@@ -50,8 +55,12 @@ class FileListPage : BasePage(R.id.fileListPage) {
 
     fun assertItemDisplayed(itemName: String) {
         val matcher = allOf(withId(R.id.fileName), withText(itemName))
-        scrollRecyclerView(R.id.listView, matcher)
-        onView(matcher).assertDisplayed()
+        waitForView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertItemNotDisplayed(itemName: String) {
+        val matcher = allOf(withId(R.id.fileName), withText(itemName))
+        onView(matcher).assertNotDisplayed()
     }
 
     fun selectItem(itemName: String) {
@@ -61,11 +70,20 @@ class FileListPage : BasePage(R.id.fileListPage) {
     }
 
     fun clickAddButton() {
-        addButton.click()
+        onView(allOf(withId(R.id.addFab), isDisplayed())).perform(click())
     }
 
     fun clickUploadFileButton() {
-        uploadFileButton.click()
+        onView(allOf(withId(R.id.addFileFab), isDisplayed())).perform(click())
+    }
+
+    fun clickCreateNewFolderButton() {
+        newFolderButton.click()
+    }
+
+    fun createNewFolder(folderName: String) {
+        waitForViewWithId(R.id.textInput).typeText(folderName)
+        onView(withText(R.string.ok)).click()
     }
 
     fun assertPdfPreviewDisplayed() {
@@ -90,6 +108,7 @@ class FileListPage : BasePage(R.id.fileListPage) {
         onView(withId(R.id.textInput)).clearText()
         onView(withId(R.id.textInput)).typeText(newName)
         onView(containsTextCaseInsensitive("OK")).click()
+        Espresso.pressBack() //Close soft keyboard
         refresh()
     }
 
@@ -103,5 +122,23 @@ class FileListPage : BasePage(R.id.fileListPage) {
         // Weird to have "displayed" as the filter and the check, but it's the only way
         // to distinguish from other emptyViews in the stack.
         onView(allOf(withId(R.id.emptyView), isDisplayed())).assertDisplayed()
+    }
+
+    fun assertSearchResultCount(expectedCount: Int) {
+        Thread.sleep(2000)
+        onView(withId(R.id.fileSearchRecyclerView) + withAncestor(R.id.container)).check(
+            ViewAssertions.matches(ViewMatchers.hasChildCount(expectedCount))
+        )
+    }
+
+    fun assertFileListCount(expectedCount: Int) {
+        Thread.sleep(2000)
+        onView(withId(R.id.listView) + withAncestor(R.id.container)).check(
+            ViewAssertions.matches(ViewMatchers.hasChildCount(expectedCount))
+        )
+    }
+
+    fun assertFolderSize(folderName: String, expectedSize: Int) {
+        waitForView(allOf(withId(R.id.fileSize), hasSibling(withId(R.id.fileName) + withText(folderName)))).check(matches(containsTextCaseInsensitive("$expectedSize ${if (expectedSize == 1) "item" else "items"}")))
     }
 }

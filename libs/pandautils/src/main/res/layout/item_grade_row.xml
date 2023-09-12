@@ -73,7 +73,8 @@
             android:src="@drawable/ic_chevron_right"
             android:layout_marginEnd="8dp"
             android:tint="@color/textDark"
-            app:layout_constraintTop_toBottomOf="@id/gradesCourseNameText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,6 +84,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
+            app:visible="@{!itemViewModel.data.hideProgress}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gradesCourseNameText"
             app:layout_constraintEnd_toStartOf="@id/chevronIcon">

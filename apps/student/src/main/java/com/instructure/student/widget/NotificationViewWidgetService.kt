@@ -31,9 +31,9 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.managers.StreamManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.*
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import com.instructure.student.activity.NotificationWidgetRouter
 import com.instructure.student.util.StringUtilities
@@ -86,8 +86,11 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
 
             if (!BaseRemoteViewsService.shouldHideDetails(appWidgetId)) {
-                if (streamItem.getMessage(ContextKeeper.appContext) != null) {
-                    row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext), Html.FROM_HTML_MODE_LEGACY)))
+                val restrictQuantitativeData = (streamItem.canvasContext as? Course)?.settings?.restrictQuantitativeData ?: false
+                val gradingScheme = (streamItem.canvasContext as? Course)?.gradingScheme ?: emptyList()
+                val message = streamItem.getMessage(ContextKeeper.appContext, restrictQuantitativeData, gradingScheme)
+                if (message != null) {
+                    row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(message, Html.FROM_HTML_MODE_LEGACY)))
                     row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setTextViewText(R.id.message, "")
@@ -138,7 +141,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
         override fun loadData() {
             if(NetworkUtils.isNetworkAvailable && ApiPrefs.user != null) {
                 try {
-                    val courses = CourseManager.getCoursesSynchronous(true)
+                    val courses = CourseManager.getCoursesSynchronousWithGradingScheme(true)
                             .filter { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() }
                     val groups = GroupManager.getFavoriteGroupsSynchronous(false)
                     val userStream = StreamManager.getUserStreamSynchronous(25, true).toMutableList()

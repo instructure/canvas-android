@@ -20,26 +20,35 @@ import androidx.test.espresso.Espresso
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
-class EditAnnouncementPage : BasePage() {
+/**
+ * Represents the Edit Announcement Page.
+ */
+class EditAnnouncementDetailsPage : BasePage() {
 
-    fun openEdit() {
-        waitForView(withId(R.id.menu_edit)).click()
-    }
-
-    fun editAnnouncementName(newName: String) {
+    /**
+     * Edits the name of the announcement with the specified [newName].
+     *
+     * @param newName The new name for the announcement.
+     */
+    fun editAnnouncementTitle(newName: String) {
         onView(withId(R.id.announcementNameEditText)).replaceText(newName)
     }
 
-    fun saveEditAnnouncement() {
+    /**
+     * Saves the edited announcement.
+     */
+    fun saveAnnouncement() {
         onView(withId(R.id.menuSaveAnnouncement)).click()
     }
 
+    /**
+     * Deletes the announcement.
+     */
     fun deleteAnnouncement() {
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.deleteAnnouncementButton)).scrollTo()

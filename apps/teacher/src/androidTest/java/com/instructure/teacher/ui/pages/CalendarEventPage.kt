@@ -25,17 +25,40 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withParent
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 
+/**
+ * Represents a page displaying a calendar event.
+ *
+ * This class extends the `BasePage` class and provides methods for verifying the title and description
+ * of the calendar event.
+ *
+ * @param pageResourceId The resource ID of the calendar event page.
+ * @constructor Creates an instance of the `CalendarEventPage` class.
+ */
 class CalendarEventPage : BasePage(R.id.fragmentCalendarEvent) {
 
+    /**
+     * Verifies that the title of the calendar event matches the specified title.
+     *
+     * @param title The expected title of the calendar event.
+     * @throws AssertionError if the title does not match the expected title.
+     */
     fun verifyTitle(title: String) {
         Espresso.onView(Matchers.allOf(ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar)), containsTextCaseInsensitive(title))).assertDisplayed()
     }
 
+    /**
+     * Verifies that the description of the calendar event matches the specified description.
+     *
+     * @param description The expected description of the calendar event.
+     * @throws AssertionError if the description does not match the expected description.
+     */
     fun verifyDescription(description: String) {
-        Web.onWebView(ViewMatchers.withId(R.id.contentWebView))
+        Web.onWebView(ViewMatchers.withId(R.id.contentWebView) + withParent(R.id.calendarEventWebViewWrapper))
             .withElement(DriverAtoms.findElement(Locator.ID, "content"))
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(description)))
     }

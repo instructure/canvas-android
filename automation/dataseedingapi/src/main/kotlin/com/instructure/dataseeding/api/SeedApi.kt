@@ -16,7 +16,11 @@
 
 package com.instructure.dataseeding.api
 
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.DiscussionApiModel
+import com.instructure.dataseeding.model.EnrollmentApiModel
+import com.instructure.dataseeding.model.FavoriteApiModel
 
 // Data-seeding API
 object SeedApi {
@@ -172,7 +176,7 @@ object SeedApi {
         with(seededData) {
             for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses)) {
                 // Seed course
-                addCourses(createCourse(request.gradingPeriods, request.publishCourses))
+                addCourses(createCourse(request.gradingPeriods, request.publishCourses, syllabusBody = request.syllabusBody))
 
                 // Seed users
                 for (t in 0 until request.teachers) {
@@ -316,7 +320,7 @@ object SeedApi {
         return if (accountId != null) {
             CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse, enrollmentTermId = enrollmentTermId, publish = publishCourses, syllabusBody = syllabusBody)
         } else {
-            CoursesApi.createCourse(enrollmentTermId, publishCourses)
+            CoursesApi.createCourse(enrollmentTermId, publishCourses, syllabusBody = syllabusBody)
         }
     }
 }

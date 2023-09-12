@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Eytt</string>
 
+    <string name="gradeUpdated">Einkunn uppfærð</string>
     <string name="loadingCanvas">Sæki Canvas efni&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Þú getur opnað upplýsingar um skil héðan</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Einkunn: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Mínúta</item>
         <item quantity="other">%s mínútur</item>

@@ -122,7 +122,22 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
             val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(effect.courseId, true).await().dataOrNull
             val assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiTool, isStudioEnabled, quizResult, studioLTIToolResult, effect.isObserver, assignmentEnhancementsEnabled))
+            val restrictQuantitativeData = CourseManager.getCourseSettingsAsync(effect.courseId, true)
+                .await().dataOrNull?.restrictQuantitativeData.orDefault()
+
+            consumer.accept(
+                SubmissionDetailsEvent.DataLoaded(
+                    assignmentResult,
+                    submissionResult,
+                    ltiTool,
+                    isStudioEnabled,
+                    quizResult,
+                    studioLTIToolResult,
+                    effect.isObserver,
+                    assignmentEnhancementsEnabled,
+                    restrictQuantitativeData
+                )
+            )
         }
     }
 

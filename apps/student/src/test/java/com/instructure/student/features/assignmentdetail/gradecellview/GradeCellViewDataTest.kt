@@ -20,13 +20,16 @@ package com.instructure.student.features.assignmentdetail.gradecellview
 import android.content.res.Resources
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
+import java.util.Date
 
 class GradeCellViewDataTest {
 
@@ -67,5 +70,111 @@ class GradeCellViewDataTest {
         )
 
         Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+    }
+
+    @Test
+    fun `Create empty grade cell when assignment is quantitative and quantitative data is restricted and there is no grading scheme`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            Assignment(gradingType = Assignment.POINTS_TYPE),
+            Submission(submittedAt = Date(), grade = "10", score = 10.0),
+            restrictQuantitativeData = true
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.EMPTY, gradeCell.state)
+    }
+
+    @Test
+    fun `Create cell with converted grade when assignment is quantitative and quantitative data is restricted`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            Assignment(gradingType = Assignment.POINTS_TYPE, pointsPossible = 20.0),
+            Submission(submittedAt = Date(), grade = "10", score = 17.0),
+            restrictQuantitativeData = true,
+            gradingScheme = listOf(
+                GradingSchemeRow("A", 0.9),
+                GradingSchemeRow("B", 0.8),
+                GradingSchemeRow("F", 0.0)
+            )
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("B", gradeCell.grade)
+    }
+
+    @Test
+    fun `Create excused grade cell without points when assignment is quantitative and quantitative data is restricted`() {
+        every { resources.getString(R.string.excused) } returns "EX"
+        every { resources.getString(R.string.outOfPointsAbbreviatedFormatted, any()) } returns "out of 10"
+
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            Assignment(gradingType = Assignment.POINTS_TYPE),
+            Submission(submittedAt = Date(), grade = "10", score = 10.0, excused = true),
+            restrictQuantitativeData = true
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("EX", gradeCell.grade)
+        Assert.assertEquals("", gradeCell.outOf)
+    }
+
+    @Test
+    fun `Create excused grade cell with points when assignment is quantitative and quantitative data is not restricted`() {
+        every { resources.getString(R.string.excused) } returns "EX"
+        every { resources.getString(R.string.outOfPointsAbbreviatedFormatted, any()) } returns "out of 10"
+
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            Assignment(gradingType = Assignment.POINTS_TYPE),
+            Submission(submittedAt = Date(), grade = "10", score = 10.0, excused = true),
+            restrictQuantitativeData = false
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("EX", gradeCell.grade)
+        Assert.assertEquals("out of 10", gradeCell.outOf)
+    }
+
+    @Test
+    fun `Create letter grade cell with points when quantitative data is not restricted`() {
+        every { resources.getString(R.string.outOfPointsAbbreviatedFormatted, any()) } returns "out of 10"
+
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 10.0),
+            Submission(submittedAt = Date(), grade = "A", score = 10.0, enteredScore = 10.0),
+            restrictQuantitativeData = false
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("A", gradeCell.grade)
+        Assert.assertEquals("10", gradeCell.score)
+        Assert.assertEquals(1.0f, gradeCell.chartPercent)
+        Assert.assertEquals("out of 10", gradeCell.outOf)
+    }
+
+    @Test
+    fun `Create letter grade cell without points when quantitative data is restricted`() {
+        every { resources.getString(R.string.outOfPointsAbbreviatedFormatted, any()) } returns "out of 10"
+
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 10.0),
+            Submission(submittedAt = Date(), grade = "A", score = 10.0, enteredScore = 10.0),
+            restrictQuantitativeData = true
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("A", gradeCell.grade)
+        Assert.assertEquals("", gradeCell.score)
+        Assert.assertEquals(1.0f, gradeCell.chartPercent)
+        Assert.assertEquals("", gradeCell.outOf)
     }
 }
