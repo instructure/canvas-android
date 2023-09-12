@@ -30,8 +30,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 
-data class TabProgressItemViewModel(val data: TabProgressViewData, val workManager: WorkManager) : ItemViewModel,
-    SyncProgressItemViewModel {
+data class TabProgressItemViewModel(val data: TabProgressViewData, val workManager: WorkManager) : ItemViewModel {
     override val layoutId = R.layout.item_tab_progress
 
     override val viewType = ViewType.COURSE_TAB_PROGRESS.viewType

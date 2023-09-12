@@ -34,7 +34,7 @@ import java.util.UUID
 data class FileSyncProgressItemViewModel(
     val data: FileSyncProgressViewData,
     val workManager: WorkManager
-) : ItemViewModel, SyncProgressItemViewModel {
+) : ItemViewModel {
     override val layoutId = R.layout.item_file_sync_progress
 
     override val viewType = ViewType.COURSE_FILE_PROGRESS.viewType

@@ -38,9 +38,9 @@ import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.SyncProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
@@ -277,7 +277,7 @@ class SyncProgressViewModel @Inject constructor(
         aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
         courseProgressLiveData?.removeObserver(courseProgressObserver)
         _data.value?.items?.map {
-            val itemViewModels = mutableListOf<SyncProgressItemViewModel>()
+            val itemViewModels = mutableListOf<ItemViewModel>()
             itemViewModels.add(it)
             itemViewModels.addAll(it.data.tabs)
             itemViewModels.addAll(it.data.files)

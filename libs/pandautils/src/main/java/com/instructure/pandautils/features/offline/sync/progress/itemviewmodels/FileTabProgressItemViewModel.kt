@@ -44,7 +44,7 @@ data class FileTabProgressItemViewModel(
     val data: FileTabProgressViewData,
     private val workManager: WorkManager,
     private val context: Context
-) : GroupItemViewModel(collapsable = true, items = data.items, collapsed = true), SyncProgressItemViewModel {
+) : GroupItemViewModel(collapsable = true, items = data.items, collapsed = true) {
     override val layoutId = R.layout.item_file_tab_progress
 
     override val viewType = ViewType.COURSE_FILE_TAB_PROGRESS.viewType

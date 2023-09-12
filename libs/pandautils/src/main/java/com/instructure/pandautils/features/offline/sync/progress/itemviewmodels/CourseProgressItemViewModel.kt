@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
+import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 
@@ -41,7 +42,7 @@ data class CourseProgressItemViewModel(
     private val workManager: WorkManager,
     private val context: Context
 ) :
-    GroupItemViewModel(collapsable = true, items = (data.tabs + data.files), collapsed = false), SyncProgressItemViewModel {
+    GroupItemViewModel(collapsable = true, items = (data.tabs + data.files ?: emptyList<ItemViewModel>()), collapsed = false) {
 
     override val layoutId: Int = R.layout.item_course_progress
 
