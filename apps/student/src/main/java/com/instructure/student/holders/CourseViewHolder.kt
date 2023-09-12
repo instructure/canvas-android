@@ -115,7 +115,8 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 }
             } else {
                 val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
-                textView.text = "${if(courseGrade.hasCurrentGradeString()) courseGrade.currentGrade + " " else ""}$scoreString"
+                if(courseGrade.hasCurrentGradeString()) textView.text = "${courseGrade.currentGrade} $scoreString"
+                else textView.text = scoreString
                 textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade ?: "", context)
             }
         }
