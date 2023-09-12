@@ -45,9 +45,15 @@ data class CreateCourse(
         @SerializedName("account_id")
         val accountId: Long? = null,
         @SerializedName("syllabus_body")
-        val syllabusBody: String? = null
+        val syllabusBody: String? = null,
+        @SerializedName("settings")
+        val settings: CourseSettings? = null
 )
 
+data class CourseSettings(
+        @SerializedName("restrict_quantitative_data")
+        var restrictQuantitativeData: Boolean = false,
+)
 
 data class CreateCourseWrapper(
         val course: CreateCourse,
