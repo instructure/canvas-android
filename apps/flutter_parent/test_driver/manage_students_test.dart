@@ -48,14 +48,14 @@ void main() {
 
     // Read in our seeded data
     var students = [
-      seedContext.getNamedObject<SeededUser>("student1"),
-      seedContext.getNamedObject<SeededUser>("student2")
+      seedContext.getNamedObject<SeededUser>("student1")!,
+      seedContext.getNamedObject<SeededUser>("student2")!
     ];
     var courses = [
-      seedContext.getNamedObject<Course>("course1"),
-      seedContext.getNamedObject<Course>("course2"),
+      seedContext.getNamedObject<Course>("course1")!,
+      seedContext.getNamedObject<Course>("course2")!,
     ];
-    var parent = seedContext.getNamedObject<SeededUser>("parent");
+    var parent = seedContext.getNamedObject<SeededUser>("parent")!;
     var pairingCode = seedContext.seedObjects["pairingCode2"]!; // Direct string fetch
 
     // Verify that student[0] and course[0] show up on the main dashboard page

@@ -33,7 +33,7 @@ void main() async {
   var parent = (await UserSeedApi.createUser())!;
   var student1 = (await UserSeedApi.createUser())!;
   var student2 = (await UserSeedApi.createUser())!;
-  var teacher = await UserSeedApi.createUser();
+  var teacher = (await UserSeedApi.createUser())!;
   var course1 = await AppSeedUtils.seedCourseAndEnrollments(student: student1, teacher: teacher);
   var course2 = await AppSeedUtils.seedCourseAndEnrollments(student: student2, teacher: teacher);
   await AppSeedUtils.seedPairing(parent, student1);

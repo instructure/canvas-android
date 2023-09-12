@@ -50,11 +50,11 @@ void main() {
     var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
-    var parent = seedContext.getNamedObject<SeededUser>("parent");
-    var course = seedContext.getNamedObject<Course>("course");
-    var assignment = seedContext.getNamedObject<Assignment>("assignment");
-    var quiz = seedContext.getNamedObject<Quiz>("quiz");
-    var event = seedContext.getNamedObject<ScheduleItem>("event");
+    var parent = seedContext.getNamedObject<SeededUser>("parent")!;
+    var course = seedContext.getNamedObject<Course>("course")!;
+    var assignment = seedContext.getNamedObject<Assignment>("assignment")!;
+    var quiz = seedContext.getNamedObject<Quiz>("quiz")!;
+    var event = seedContext.getNamedObject<ScheduleItem>("event")!;
 
     // Let's check that all of our assignments, quizzes and announcements are displayed
     await DashboardPage.waitForRender(driver);

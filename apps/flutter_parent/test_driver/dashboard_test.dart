@@ -43,11 +43,11 @@ void main() {
 
     print("driver: Seeding complete!");
     var students = [
-      seedContext.getNamedObject<SeededUser>("student1"),
-      seedContext.getNamedObject<SeededUser>("student2")
+      seedContext.getNamedObject<SeededUser>("student1")!,
+      seedContext.getNamedObject<SeededUser>("student2")!
     ];
-    var courses = [seedContext.getNamedObject<Course>("course1"), seedContext.getNamedObject<Course>("course2")];
-    var parent = seedContext.getNamedObject<SeededUser>("parent");
+    var courses = [seedContext.getNamedObject<Course>("course1")!, seedContext.getNamedObject<Course>("course2")!];
+    var parent = seedContext.getNamedObject<SeededUser>("parent")!;
 
     await DashboardPage.waitForRender(driver);
 

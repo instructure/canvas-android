@@ -44,12 +44,12 @@ void main() {
     var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
-    var course = seedContext.getNamedObject<Course>("course");
+    var course = seedContext.getNamedObject<Course>("course")!;
     var assignments = [
-      seedContext.getNamedObject<Assignment>("assignment1"),
-      seedContext.getNamedObject<Assignment>("assignment2"),
-      seedContext.getNamedObject<Assignment>("assignment3"),
-      seedContext.getNamedObject<Assignment>("assignment4")
+      seedContext.getNamedObject<Assignment>("assignment1")!,
+      seedContext.getNamedObject<Assignment>("assignment2")!,
+      seedContext.getNamedObject<Assignment>("assignment3")!,
+      seedContext.getNamedObject<Assignment>("assignment4")!
     ];
 
     // Assignment-specific data

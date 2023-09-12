@@ -51,12 +51,12 @@ void main() {
     var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
-    var parent = seedContext.getNamedObject<SeededUser>("parent");
-    var student = seedContext.getNamedObject<SeededUser>("student");
-    var course = seedContext.getNamedObject<Course>("course");
-    var teacher = seedContext.getNamedObject<SeededUser>("teacher");
-    var conversation = seedContext.getNamedObject<Conversation>("conversation");
-    var assignment = seedContext.getNamedObject<Assignment>("assignment");
+    var parent = seedContext.getNamedObject<SeededUser>("parent")!;
+    var student = seedContext.getNamedObject<SeededUser>("student")!;
+    var course = seedContext.getNamedObject<Course>("course")!;
+    var teacher = seedContext.getNamedObject<SeededUser>("teacher")!;
+    var conversation = seedContext.getNamedObject<Conversation>("conversation")!;
+    var assignment = seedContext.getNamedObject<Assignment>("assignment")!;
 
     // Verify that the pre-seeded conversation shows up
     await DashboardPage.waitForRender(driver);
