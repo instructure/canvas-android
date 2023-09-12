@@ -25,13 +25,15 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
+import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
+import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
-import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 
@@ -42,7 +44,7 @@ data class CourseProgressItemViewModel(
     private val workManager: WorkManager,
     private val context: Context
 ) :
-    GroupItemViewModel(collapsable = true, items = (data.tabs + data.files ?: emptyList<ItemViewModel>()), collapsed = false) {
+    GroupItemViewModel(collapsable = true, items = emptyList(), collapsed = true) {
 
     override val layoutId: Int = R.layout.item_course_progress
 
@@ -75,6 +77,10 @@ data class CourseProgressItemViewModel(
             it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson() ?: return@Observer
         }
 
+        if (data.tabs == null && courseProgress.tabs.isNotEmpty()) {
+            createTabs(courseProgress.tabs, it.id.toString())
+        }
+
         if (courseProgress.fileSyncData == null) return@Observer
 
         data.updateSize(NumberHelper.readableFileSize(context, courseProgress.tabs.size * TAB_PROGRESS_SIZE + courseProgress.fileSyncData.sumOf { it.fileSize }))
@@ -90,6 +96,24 @@ data class CourseProgressItemViewModel(
     init {
         courseProgressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId))
         courseProgressLiveData?.observeForever(progressObserver)
+    }
+
+    private fun createTabs(tabs: Map<String, TabSyncData>, courseWorkerId: String) {
+        val tabViewModels = tabs.map { tabEntry ->
+            TabProgressItemViewModel(
+                TabProgressViewData(
+                    tabEntry.key,
+                    tabEntry.value.tabName,
+                    courseWorkerId,
+                    tabEntry.value.state
+                ),
+                workManager
+            )
+        }
+
+        data.tabs = tabViewModels
+        items = tabViewModels + data.files
+        data.notifyPropertyChanged(BR.tabs)
     }
 
     private fun clearCourseObserver() {

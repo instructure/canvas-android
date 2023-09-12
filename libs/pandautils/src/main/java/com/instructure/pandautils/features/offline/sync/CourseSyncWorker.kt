@@ -121,6 +121,7 @@ class CourseSyncWorker @AssistedInject constructor(
         val course = fetchCourseDetails(courseSettings.courseId)
 
         progress = initProgress(courseSettings, course)
+        updateProgress()
 
         if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
             fetchFiles(courseSettings.courseId)
@@ -458,7 +459,8 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgress {
-        val selectedTabs = courseSettings.tabs.filter { it.value == true }.keys
+        val availableTabs = course.tabs?.map { it.tabId } ?: emptyList()
+        val selectedTabs = courseSettings.tabs.filter { availableTabs.contains(it.key) && it.value == true }.keys
         return CourseProgress(
             courseId = courseSettings.courseId,
             courseName = courseSettings.courseName,
@@ -468,7 +470,7 @@ class CourseSyncWorker @AssistedInject constructor(
                     ProgressState.IN_PROGRESS
                 )
             },
-            fileSyncData = emptyList()
+            fileSyncData = null
         )
     }
 

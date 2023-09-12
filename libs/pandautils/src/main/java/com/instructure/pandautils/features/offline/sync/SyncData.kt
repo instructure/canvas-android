@@ -43,6 +43,7 @@ data class FileSyncData(
 )
 
 enum class ProgressState {
+    STARTING,
     IN_PROGRESS,
     COMPLETED,
     ERROR

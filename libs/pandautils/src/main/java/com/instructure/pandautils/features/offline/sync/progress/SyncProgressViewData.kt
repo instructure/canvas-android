@@ -18,7 +18,6 @@
 
 package com.instructure.pandautils.features.offline.sync.progress
 
-import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.work.WorkInfo
@@ -27,22 +26,28 @@ import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 
 data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
 
 data class CourseProgressViewData(
     val courseName: String,
     val workerId: String,
-    val tabs: List<TabProgressItemViewModel>,
-    val files: List<FileTabProgressItemViewModel>,
+    val files: List<FilesTabProgressItemViewModel>,
+    @Bindable var tabs: List<TabProgressItemViewModel>? = null,
     @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
-    @Bindable var size: String = ""
+    @Bindable var size: String = "",
+    @Bindable var failed: Boolean = false
 ) : BaseObservable() {
 
     fun updateState(newState: WorkInfo.State) {
         state = newState
         notifyPropertyChanged(BR.state)
+
+        if (state == WorkInfo.State.FAILED || state == WorkInfo.State.CANCELLED) {
+            failed = true
+            notifyPropertyChanged(BR.failed)
+        }
     }
 
     fun updateSize(size: String) {
@@ -114,10 +119,10 @@ data class AggregateProgressViewData(
     val totalSize: String,
     val downloadedSize: String,
     val progress: Int,
-    val queued: Int
+    val queued: Int,
 )
 
 sealed class SyncProgressAction {
-    data class CancelConfirmation(val callback: () -> Unit) : SyncProgressAction()
+    object CancelConfirmation : SyncProgressAction()
     object Back : SyncProgressAction()
 }

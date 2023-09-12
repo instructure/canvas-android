@@ -109,7 +109,7 @@ class SyncProgressFragment : Fragment() {
     private fun handleAction(action: SyncProgressAction) {
         when (action) {
             is SyncProgressAction.CancelConfirmation -> {
-                showCancelConfirmation(action.callback)
+                showCancelConfirmation()
             }
 
             is SyncProgressAction.Back -> {
@@ -118,12 +118,12 @@ class SyncProgressFragment : Fragment() {
         }
     }
 
-    private fun showCancelConfirmation(callback: () -> Unit) {
+    private fun showCancelConfirmation() {
         AlertDialog.Builder(requireContext())
-            .setTitle(R.string.sync_progress_cancel_confirmation_title)
-            .setMessage(R.string.sync_progress_cancel_confirmation_message)
+            .setTitle(R.string.syncProgress_cancelConfirmationTitle)
+            .setMessage(R.string.syncProgress_cancelConfirmationMessage)
             .setPositiveButton(R.string.yes) { _, _ ->
-                callback()
+                viewModel.cancel()
             }
             .setNegativeButton(R.string.no) { dialog, _ ->
                 dialog.dismiss()

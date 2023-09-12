@@ -37,7 +37,7 @@ import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -206,29 +206,21 @@ class SyncProgressViewModel @Inject constructor(
         val data = CourseProgressViewData(
             courseName = syncProgress.title,
             workerId = syncProgress.uuid,
-            size = context.getString(R.string.syncQueued),
-            tabs = createTabItems(syncProgress.courseId, syncProgress.uuid),
-            files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true)
+            size = context.getString(R.string.syncProgress_syncQueued),
+            files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true) {
                 listOf(
-                    FileTabProgressItemViewModel(
+                    FilesTabProgressItemViewModel(
                         data = FileTabProgressViewData(courseWorkerId = syncProgress.uuid, items = emptyList()),
                         workManager = workManager,
                         context = context
                     )
-                ) else emptyList()
+                )
+            } else {
+                emptyList()
+            }
         )
 
         return CourseProgressItemViewModel(data, workManager, context)
-    }
-
-    private suspend fun createTabItems(courseId: Long, workerId: String): List<TabProgressItemViewModel> {
-        val courseSettings = courseSyncSettingsDao.findById(courseId) ?: return emptyList()
-        val courseTabs = tabDao.findByCourseId(courseId)
-        return courseTabs.filter { tab ->
-            courseSettings.tabs[tab.id] == true
-        }
-            .map { createTabItem(it, workerId) }
-
     }
 
     private fun createTabItem(tab: TabEntity, workerId: String): TabProgressItemViewModel {
@@ -239,6 +231,14 @@ class SyncProgressViewModel @Inject constructor(
         )
 
         return TabProgressItemViewModel(data, workManager)
+    }
+
+    fun cancel() {
+        cancelRunningWorkers()
+        viewModelScope.launch {
+            syncProgressDao.deleteAll()
+        }
+        _events.postValue(Event(SyncProgressAction.Back))
     }
 
     private fun cancelRunningWorkers() {
@@ -260,13 +260,7 @@ class SyncProgressViewModel @Inject constructor(
                 _events.postValue(Event(SyncProgressAction.Back))
             }
 
-            is ViewState.Loading -> _events.postValue(Event(SyncProgressAction.CancelConfirmation {
-                cancelRunningWorkers()
-                viewModelScope.launch {
-                    syncProgressDao.deleteAll()
-                }
-                _events.postValue(Event(SyncProgressAction.Back))
-            }))
+            is ViewState.Loading -> _events.postValue(Event(SyncProgressAction.CancelConfirmation))
 
             else -> Unit
         }
@@ -279,7 +273,7 @@ class SyncProgressViewModel @Inject constructor(
         _data.value?.items?.map {
             val itemViewModels = mutableListOf<ItemViewModel>()
             itemViewModels.add(it)
-            itemViewModels.addAll(it.data.tabs)
+            it.data.tabs?.let { tabs -> itemViewModels.addAll(tabs) }
             itemViewModels.addAll(it.data.files)
             itemViewModels
         }

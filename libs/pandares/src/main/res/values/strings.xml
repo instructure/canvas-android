@@ -1261,7 +1261,7 @@
 
     <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
     <string name="discussionOpenInBrowser">Open in browser</string>
-    
+
     <string name="dashboardSwitchToListView">Switch to list view</string>
     <string name="dashboardSwitchToGridView">Switch to grid view</string>
 
@@ -1438,11 +1438,13 @@
     <string name="notAvailableOfflineDescription">This content is not available in offline mode.</string>
     <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
     <string name="offline">Offline</string>
-    <string name="sync_failed">Sync Failed</string>
-    <string name="syncProgressDownloading">Downloading %1$s of %2$s</string>
-    <string name="syncQueued">Queued</string>
-    <string name="offlineContentSyncCompleted">Offline Content Sync Completed</string>
-    <string name="offlineContentSyncFailed">Offline Content Sync Failed</string>
-    <string name="sync_progress_cancel_confirmation_title">Cancel Sync?</string>
-    <string name="sync_progress_cancel_confirmation_message">It will stop offline content sync. You can do it again later.</string>
+    <string name="syncProgress_syncFailed">Sync Failed</string>
+    <string name="syncProgress_downloadProgress">Downloading %1$s of %2$s</string>
+    <string name="syncProgress_syncQueued">Queued</string>
+    <string name="syncProgress_offlineContentSyncCompleted">Offline Content Sync Completed</string>
+    <string name="syncProgress_offlineContentSyncFailed">Offline Content Sync Failed</string>
+    <string name="syncProgress_cancelConfirmationTitle">Cancel Sync?</string>
+    <string name="syncProgress_cancelConfirmationMessage">It will stop offline content sync. You can do it again later.</string>
+    <string name="syncProgress_syncErrorSubtitle">One or more files failed to sync. Check your internet connection and retry to submit.</string>
+    <string name="syncProgress_downloadStarting">Download starting</string>
 </resources>

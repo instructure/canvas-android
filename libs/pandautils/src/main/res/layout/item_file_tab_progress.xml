@@ -23,7 +23,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileTabProgressItemViewModel" />
+            type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel" />
 
         <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
 
@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{itemViewModel.data.totalSize}"
                 android:textColor="@color/textDark"
+                android:visibility="@{itemViewModel.data.totalSize.isBlank() ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/courseName"
                 app:layout_constraintStart_toStartOf="parent"

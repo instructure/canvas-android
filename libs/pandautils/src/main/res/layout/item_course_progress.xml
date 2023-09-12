@@ -78,6 +78,7 @@
                 android:padding="12dp"
                 android:rotation="@{itemViewModel.collapsed ? 0 : 180}"
                 android:src="@drawable/ic_arrow_down"
+                android:visibility="@{itemViewModel.data.tabs != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/actionContainer"
                 app:layout_constraintTop_toTopOf="parent"
@@ -97,8 +98,8 @@
                     android:layout_height="20dp"
                     android:indeterminate="true"
                     android:visibility="@{itemViewModel.data.state.isFinished() ? View.GONE : View.VISIBLE}"
-                    app:indicatorSize="16dp"
                     app:indicatorColor="@color/backgroundInfo"
+                    app:indicatorSize="16dp"
                     app:trackThickness="1.5dp" />
 
                 <ImageView
@@ -106,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_close"
-                    android:visibility="@{itemViewModel.data.state == State.FAILED || itemViewModel.data.state == State.CANCELLED ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{itemViewModel.data.failed ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:tint="@color/textDarkest" />
 

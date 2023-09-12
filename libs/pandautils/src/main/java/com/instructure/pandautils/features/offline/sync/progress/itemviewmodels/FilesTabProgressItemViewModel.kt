@@ -40,7 +40,7 @@ import com.instructure.pandautils.features.offline.sync.FileSyncData
 import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 
-data class FileTabProgressItemViewModel(
+data class FilesTabProgressItemViewModel(
     val data: FileTabProgressViewData,
     private val workManager: WorkManager,
     private val context: Context
@@ -87,7 +87,6 @@ data class FileTabProgressItemViewModel(
             createFileItems(progress.fileSyncData)
             data.toggleable = true
             data.notifyPropertyChanged(BR.toggleable)
-            toggleItems()
         }
     }
 
@@ -120,7 +119,6 @@ data class FileTabProgressItemViewModel(
         data.items = fileItems
         items = data.items
         data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
-        toggleItems()
     }
 
     override fun onCleared() {

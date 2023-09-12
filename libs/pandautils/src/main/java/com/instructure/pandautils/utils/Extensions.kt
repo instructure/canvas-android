@@ -17,6 +17,7 @@
 package com.instructure.pandautils.utils
 
 import androidx.work.Data
+import androidx.work.WorkInfo
 import com.google.gson.Gson
 import java.util.*
 import kotlin.math.ln
