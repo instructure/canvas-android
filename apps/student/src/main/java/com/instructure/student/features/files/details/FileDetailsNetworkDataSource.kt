@@ -29,7 +29,7 @@ class FileDetailsNetworkDataSource(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
 ) : FileDetailsDataSource {
-    override suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody? {
+    suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
         return moduleApi.markModuleItemRead(canvasContext.apiContext(), canvasContext.id, moduleId, itemId, restParams).dataOrNull
     }

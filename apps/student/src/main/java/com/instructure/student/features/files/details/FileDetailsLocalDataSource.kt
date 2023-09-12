@@ -18,20 +18,14 @@
 
 package com.instructure.student.features.files.details
 
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
-import okhttp3.ResponseBody
 
 class FileDetailsLocalDataSource(
     private val fileFolderDao: FileFolderDao,
     private val localFileFolderDao: LocalFileDao,
 ) : FileDetailsDataSource {
-    override suspend fun markAsRead(canvasContext: CanvasContext, moduleId: Long, itemId: Long, forceNetwork: Boolean): ResponseBody? {
-        return null
-    }
-
     override suspend fun getFileFolderFromURL(url: String, fileId: Long, forceNetwork: Boolean): FileFolder? {
         val file = fileFolderDao.findById(fileId) ?: return null
         val localFile = localFileFolderDao.findById(fileId) ?: return null

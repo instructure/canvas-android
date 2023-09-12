@@ -64,9 +64,6 @@ class FileDetailsFragment : ParentFragment() {
     @Inject
     lateinit var repository: FileDetailsRepository
 
-    @Inject
-    lateinit var networkStateProvider: NetworkStateProvider
-
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
@@ -145,15 +142,15 @@ class FileDetailsFragment : ParentFragment() {
         }
 
         if (isOffline()) {
-            binding.downloadButton.visibility = View.GONE
+            binding.downloadButton.setVisible(false)
         }
         else {
-            binding.downloadButton.visibility = View.VISIBLE
+            binding.downloadButton.setVisible(true)
         }
     }
 
     private fun isOffline(): Boolean {
-        return networkStateProvider.isOnline().not()
+        return repository.isOnline().not()
     }
 
     override fun onMediaLoadingStarted() {
