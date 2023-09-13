@@ -29,16 +29,13 @@ abstract class Recipient implements Built<Recipient, RecipientBuilder> {
   // The name of the context or short name of the user
   String get name;
 
-  @nullable
-  String get pronouns;
+  String? get pronouns;
 
   @BuiltValueField(wireName: 'avatar_url')
-  @nullable
-  String get avatarUrl;
+  String? get avatarUrl;
 
   @BuiltValueField(wireName: 'common_courses')
-  @nullable
-  BuiltMap<String, BuiltList<String>> get commonCourses;
+  BuiltMap<String, BuiltList<String>>? get commonCourses;
 
   Recipient._();
   factory Recipient([void Function(RecipientBuilder) updates]) = _$Recipient;

@@ -24,7 +24,7 @@ import 'pages/dashboard_page.dart';
 import 'pages/manage_students_page.dart';
 
 void main() {
-  FlutterDriver driver;
+  FlutterDriver? driver;
 
   // Connect to the Flutter driver before running any tests.
   setUpAll(() async {
@@ -34,7 +34,7 @@ void main() {
   // Close the connection to the driver after the tests have completed.
   tearDownAll(() async {
     if (driver != null) {
-      driver.close();
+      driver?.close();
     }
   });
 
@@ -42,21 +42,21 @@ void main() {
   // Does NOT test anything related to alerts or alert settings; that will be the subject of another test.
   test('Manage Students E2E', () async {
     // Wait for seeding to complete
-    var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
+    var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
 
     // Read in our seeded data
     var students = [
-      seedContext.getNamedObject<SeededUser>("student1"),
-      seedContext.getNamedObject<SeededUser>("student2")
+      seedContext.getNamedObject<SeededUser>("student1")!,
+      seedContext.getNamedObject<SeededUser>("student2")!
     ];
     var courses = [
-      seedContext.getNamedObject<Course>("course1"),
-      seedContext.getNamedObject<Course>("course2"),
+      seedContext.getNamedObject<Course>("course1")!,
+      seedContext.getNamedObject<Course>("course2")!,
     ];
-    var parent = seedContext.getNamedObject<SeededUser>("parent");
-    var pairingCode = seedContext.seedObjects["pairingCode2"]; // Direct string fetch
+    var parent = seedContext.getNamedObject<SeededUser>("parent")!;
+    var pairingCode = seedContext.seedObjects["pairingCode2"]!; // Direct string fetch
 
     // Verify that student[0] and course[0] show up on the main dashboard page
     await DashboardPage.waitForRender(driver);
@@ -77,7 +77,7 @@ void main() {
     await ManageStudentsPage.verifyStudentDisplayed(driver, students[1]);
 
     // Back to main dashboard
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
 
     // Switch students and verify that new student's course is showing
     await DashboardPage.changeStudent(driver, students[1]);

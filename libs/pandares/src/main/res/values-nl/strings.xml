@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Verwijderd</string>
 
+    <string name="gradeUpdated">Cijfer bijgewerkt</string>
     <string name="loadingCanvas">Canvas Content aan het uploaden&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">U kunt inleverdetails hier openen</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Cijfer: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuut</item>
         <item quantity="other">%s minuten</item>

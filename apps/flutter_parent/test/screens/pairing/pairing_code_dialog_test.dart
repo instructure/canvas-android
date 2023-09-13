@@ -22,12 +22,13 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import 'pairing_util_test.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
 
-  PairingInteractor interactor = MockPairingInteractor();
+  MockPairingInteractor interactor = MockPairingInteractor();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<PairingInteractor>(() => interactor);
@@ -55,7 +56,7 @@ void main() {
     expect(find.byType(TextFormField), findsOneWidget);
 
     // Buttons
-    var button = find.byType(FlatButton);
+    var button = find.byType(TextButton);
     expect(find.descendant(of: button, matching: find.text(l10n.cancel.toUpperCase())), findsOneWidget);
     expect(find.descendant(of: button, matching: find.text(l10n.ok.toUpperCase())), findsOneWidget);
   });

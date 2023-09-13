@@ -27,7 +27,7 @@ class AttachmentFetcher extends StatefulWidget {
   final Attachment attachment;
   final Widget Function(BuildContext context, File file) builder;
 
-  const AttachmentFetcher({@required this.attachment, @required this.builder, Key key}) : super(key: key);
+  const AttachmentFetcher({required this.attachment, required this.builder, super.key});
 
   @override
   _AttachmentFetcherState createState() => _AttachmentFetcherState();
@@ -35,8 +35,8 @@ class AttachmentFetcher extends StatefulWidget {
 
 class _AttachmentFetcherState extends State<AttachmentFetcher> {
   final _interactor = locator<AttachmentFetcherInteractor>();
-  CancelToken _cancelToken;
-  Future<File> _fileFuture;
+  late CancelToken _cancelToken;
+  late Future<File> _fileFuture;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _AttachmentFetcherState extends State<AttachmentFetcher> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         } else if (snapshot.hasData) {
-          return widget.builder(context, snapshot.data);
+          return widget.builder(context, snapshot.data!);
         } else {
           return ErrorPandaWidget(L10n(context).errorLoadingFile, () {
             setState(() {
@@ -67,7 +67,7 @@ class _AttachmentFetcherState extends State<AttachmentFetcher> {
 
   @override
   void dispose() {
-    _cancelToken?.cancel();
+    _cancelToken.cancel();
     super.dispose();
   }
 }

@@ -22,9 +22,10 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  MockBarcodeScanner scanner = MockBarcodeScanner();
+  MockBarcodeScanVeneer scanner = MockBarcodeScanVeneer();
   MockEnrollmentsApi enrollmentsApi = MockEnrollmentsApi();
 
   setupTestLocator((locator) {

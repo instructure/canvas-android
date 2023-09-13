@@ -27,22 +27,22 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class CalendarScreen extends StatefulWidget {
-  final DateTime startDate;
-  final CalendarView startView;
+  final DateTime? startDate;
+  final CalendarView? startView;
 
   // Keys for the deep link parameter map passed in via DashboardScreen
   static final startDateKey = 'startDate';
   static final startViewKey = 'startView';
 
-  CalendarScreen({Key key, this.startDate, this.startView = CalendarView.Week}) : super(key: key);
+  CalendarScreen({this.startDate, this.startView = CalendarView.Week, super.key});
 
   @override
   State<StatefulWidget> createState() => CalendarScreenState();
 }
 
 class CalendarScreenState extends State<CalendarScreen> {
-  User _student;
-  PlannerFetcher _fetcher;
+  User? _student;
+  PlannerFetcher? _fetcher;
 
   @override
   void didChangeDependencies() {
@@ -53,12 +53,12 @@ class CalendarScreenState extends State<CalendarScreen> {
       _student = _selectedStudent;
       if (_fetcher == null) {
         _fetcher = PlannerFetcher(
-          userId: ApiPrefs.getUser().id,
-          userDomain: ApiPrefs.getDomain(),
-          observeeId: _student.id,
+          userId: ApiPrefs.getUser()!.id,
+          userDomain: ApiPrefs.getDomain()!,
+          observeeId: _student!.id,
         );
       } else {
-        _fetcher.setObserveeId(_student.id);
+        _fetcher!.setObserveeId(_student!.id);
       }
     }
   }
@@ -66,18 +66,18 @@ class CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return CalendarWidget(
-      fetcher: _fetcher,
+      fetcher: _fetcher!,
       startingDate: widget.startDate,
       startingView: widget.startView,
       onFilterTap: () async {
-        Set<String> currentContexts = await _fetcher.getContexts();
+        Set<String> currentContexts = await _fetcher!.getContexts();
         Set<String> updatedContexts = await locator.get<QuickNav>().push(
               context,
               CalendarFilterListScreen(currentContexts),
             );
         if (!SetEquality().equals(currentContexts, updatedContexts)) {
           // Sets are different - update
-          _fetcher.setContexts(updatedContexts);
+          _fetcher?.setContexts(updatedContexts);
         }
       },
       dayBuilder: (BuildContext context, DateTime day) {

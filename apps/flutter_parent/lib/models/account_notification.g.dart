@@ -20,10 +20,10 @@ class _$AccountNotificationSerializer
   final String wireName = 'AccountNotification';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, AccountNotification object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'message',
@@ -42,32 +42,31 @@ class _$AccountNotificationSerializer
 
   @override
   AccountNotification deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AccountNotificationBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'message':
           result.message = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'subject':
           result.subject = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'start_at':
           result.startAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -87,23 +86,22 @@ class _$AccountNotification extends AccountNotification {
   final String startAt;
 
   factory _$AccountNotification(
-          [void Function(AccountNotificationBuilder) updates]) =>
-      (new AccountNotificationBuilder()..update(updates)).build();
+          [void Function(AccountNotificationBuilder)? updates]) =>
+      (new AccountNotificationBuilder()..update(updates))._build();
 
-  _$AccountNotification._({this.id, this.message, this.subject, this.startAt})
+  _$AccountNotification._(
+      {required this.id,
+      required this.message,
+      required this.subject,
+      required this.startAt})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('AccountNotification', 'id');
-    }
-    if (message == null) {
-      throw new BuiltValueNullFieldError('AccountNotification', 'message');
-    }
-    if (subject == null) {
-      throw new BuiltValueNullFieldError('AccountNotification', 'subject');
-    }
-    if (startAt == null) {
-      throw new BuiltValueNullFieldError('AccountNotification', 'startAt');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'AccountNotification', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        message, r'AccountNotification', 'message');
+    BuiltValueNullFieldError.checkNotNull(
+        subject, r'AccountNotification', 'subject');
+    BuiltValueNullFieldError.checkNotNull(
+        startAt, r'AccountNotification', 'startAt');
   }
 
   @override
@@ -127,14 +125,18 @@ class _$AccountNotification extends AccountNotification {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, id.hashCode), message.hashCode), subject.hashCode),
-        startAt.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, message.hashCode);
+    _$hash = $jc(_$hash, subject.hashCode);
+    _$hash = $jc(_$hash, startAt.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('AccountNotification')
+    return (newBuiltValueToStringHelper(r'AccountNotification')
           ..add('id', id)
           ..add('message', message)
           ..add('subject', subject)
@@ -145,34 +147,35 @@ class _$AccountNotification extends AccountNotification {
 
 class AccountNotificationBuilder
     implements Builder<AccountNotification, AccountNotificationBuilder> {
-  _$AccountNotification _$v;
+  _$AccountNotification? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _message;
-  String get message => _$this._message;
-  set message(String message) => _$this._message = message;
+  String? _message;
+  String? get message => _$this._message;
+  set message(String? message) => _$this._message = message;
 
-  String _subject;
-  String get subject => _$this._subject;
-  set subject(String subject) => _$this._subject = subject;
+  String? _subject;
+  String? get subject => _$this._subject;
+  set subject(String? subject) => _$this._subject = subject;
 
-  String _startAt;
-  String get startAt => _$this._startAt;
-  set startAt(String startAt) => _$this._startAt = startAt;
+  String? _startAt;
+  String? get startAt => _$this._startAt;
+  set startAt(String? startAt) => _$this._startAt = startAt;
 
   AccountNotificationBuilder() {
     AccountNotification._initializeBuilder(this);
   }
 
   AccountNotificationBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _message = _$v.message;
-      _subject = _$v.subject;
-      _startAt = _$v.startAt;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _message = $v.message;
+      _subject = $v.subject;
+      _startAt = $v.startAt;
       _$v = null;
     }
     return this;
@@ -180,25 +183,32 @@ class AccountNotificationBuilder
 
   @override
   void replace(AccountNotification other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AccountNotification;
   }
 
   @override
-  void update(void Function(AccountNotificationBuilder) updates) {
+  void update(void Function(AccountNotificationBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$AccountNotification build() {
+  AccountNotification build() => _build();
+
+  _$AccountNotification _build() {
     final _$result = _$v ??
         new _$AccountNotification._(
-            id: id, message: message, subject: subject, startAt: startAt);
+            id: BuiltValueNullFieldError.checkNotNull(
+                id, r'AccountNotification', 'id'),
+            message: BuiltValueNullFieldError.checkNotNull(
+                message, r'AccountNotification', 'message'),
+            subject: BuiltValueNullFieldError.checkNotNull(
+                subject, r'AccountNotification', 'subject'),
+            startAt: BuiltValueNullFieldError.checkNotNull(
+                startAt, r'AccountNotification', 'startAt'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

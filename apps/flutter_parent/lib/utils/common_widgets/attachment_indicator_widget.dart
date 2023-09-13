@@ -22,9 +22,9 @@ import 'package:transparent_image/transparent_image.dart';
 
 class AttachmentIndicatorWidget extends StatelessWidget {
   final Attachment attachment;
-  final Function(Attachment) onAttachmentClicked;
+  final Function(Attachment)? onAttachmentClicked;
 
-  const AttachmentIndicatorWidget({Key key, @required this.attachment, this.onAttachmentClicked}) : super(key: key);
+  const AttachmentIndicatorWidget({required this.attachment, required this.onAttachmentClicked, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +50,12 @@ class AttachmentIndicatorWidget extends StatelessWidget {
                   children: [
                     Icon(
                       attachment.getIcon(),
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 11, 12, 0),
                       child: Text(
-                        attachment.displayName,
+                        attachment.displayName!,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -64,13 +64,13 @@ class AttachmentIndicatorWidget extends StatelessWidget {
                     )
                   ],
                 ),
-                if (attachment.thumbnailUrl != null && attachment.thumbnailUrl.isNotEmpty)
+                if (attachment.thumbnailUrl != null && attachment.thumbnailUrl!.isNotEmpty)
                   ClipRRect(
                     borderRadius: new BorderRadius.circular(4),
                     child: FadeInImage.memoryNetwork(
                       fadeInDuration: const Duration(milliseconds: 300),
                       fit: BoxFit.cover,
-                      image: attachment.thumbnailUrl,
+                      image: attachment.thumbnailUrl!,
                       placeholder: kTransparentImage,
                     ),
                   ),
@@ -78,7 +78,7 @@ class AttachmentIndicatorWidget extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      if (onAttachmentClicked != null) onAttachmentClicked(attachment);
+                      if (onAttachmentClicked != null) onAttachmentClicked!(attachment);
                     },
                   ),
                 ),

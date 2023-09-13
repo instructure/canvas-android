@@ -22,9 +22,10 @@ import 'package:test/test.dart';
 
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  _MockUserApi userApi = _MockUserApi();
+  MockUserApi userApi = MockUserApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<UserApi>(() => userApi);
@@ -39,7 +40,7 @@ void main() {
     String expectedDomain = 'domain';
     ApiPrefs.switchLogins(Login((b) => b..domain = expectedDomain));
 
-    String actualDomain = MasqueradeScreenInteractor().getDomain();
+    String? actualDomain = MasqueradeScreenInteractor().getDomain();
     expect(actualDomain, expectedDomain);
   });
 
@@ -141,7 +142,7 @@ void main() {
     });
 
     test('sanitizeDomain returns an empty string for null input', () {
-      String input = null;
+      String? input = null;
       String expected = '';
 
       String actual = MasqueradeScreenInteractor().sanitizeDomain(input);
@@ -157,5 +158,3 @@ void main() {
     });
   });
 }
-
-class _MockUserApi extends Mock implements UserApi {}

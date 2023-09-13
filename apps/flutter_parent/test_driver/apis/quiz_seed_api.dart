@@ -17,7 +17,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class QuizSeedApi {
-  static Future<Quiz> createQuiz(String courseId, String title, DateTime dueAt, {String description = ""}) async {
+  static Future<Quiz?> createQuiz(String courseId, String title, DateTime dueAt, {String description = ""}) async {
     var queryParams = {
       'quiz[title]': title,
       'quiz[description]': description,
@@ -25,6 +25,7 @@ class QuizSeedApi {
       'quiz[due_at]': dueAt.toIso8601String(),
     };
 
-    return fetch(seedingDio().post('courses/$courseId/quizzes', queryParameters: queryParams));
+    var dio = seedingDio();
+    return fetch(dio.post('courses/$courseId/quizzes', queryParameters: queryParams));
   }
 }

@@ -36,59 +36,46 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
 
   String get id;
 
-  @nullable
-  String get title;
+  String? get title;
 
-  @nullable
-  String get description;
+  String? get description;
 
   @BuiltValueField(wireName: 'start_at')
-  @nullable
-  DateTime get startAt;
+  DateTime? get startAt;
 
   @BuiltValueField(wireName: 'end_at')
-  @nullable
-  DateTime get endAt;
+  DateTime? get endAt;
 
   @BuiltValueField(wireName: 'all_day')
   bool get isAllDay;
 
   @BuiltValueField(wireName: 'all_day_date')
-  @nullable
-  DateTime get allDayDate;
+  DateTime? get allDayDate;
 
   @BuiltValueField(wireName: 'location_address')
-  @nullable
-  String get locationAddress;
+  String? get locationAddress;
 
   String get type; // Either 'event' or 'assignment'
 
   @BuiltValueField(wireName: 'location_name')
-  @nullable
-  String get locationName;
+  String? get locationName;
 
   @BuiltValueField(wireName: 'html_url')
-  @nullable
-  String get htmlUrl;
+  String? get htmlUrl;
 
   @BuiltValueField(wireName: 'context_code')
-  @nullable
-  String get contextCode;
+  String? get contextCode;
 
   @BuiltValueField(wireName: 'effective_context_code')
-  @nullable
-  String get effectiveContextCode;
+  String? get effectiveContextCode;
 
   @BuiltValueField(wireName: 'hidden')
-  @nullable
-  bool get isHidden;
+  bool? get isHidden;
 
-  @nullable
-  Assignment get assignment;
+  Assignment? get assignment;
 
   @BuiltValueField(wireName: 'assignment_overrides')
-  @nullable
-  BuiltList<AssignmentOverride> get assignmentOverrides;
+  BuiltList<AssignmentOverride>? get assignmentOverrides;
 
   ScheduleItem._();
   factory ScheduleItem([void Function(ScheduleItemBuilder) updates]) = _$ScheduleItem;
@@ -121,17 +108,17 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
 
   String getContextId() {
     if (effectiveContextCode != null) {
-      return _parseContextCode(effectiveContextCode);
+      return _parseContextCode(effectiveContextCode!);
     } else {
-      return _parseContextCode(contextCode);
+      return _parseContextCode(contextCode!);
     }
   }
 
   String getContextType() {
     if (effectiveContextCode != null) {
-      return _parseContextType(effectiveContextCode);
+      return _parseContextType(effectiveContextCode!);
     } else {
-      return _parseContextType(contextCode);
+      return _parseContextType(contextCode!);
     }
   }
 
@@ -145,7 +132,7 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
     return code.substring(0, index);
   }
 
-  PlannerSubmission getPlannerSubmission() {
+  PlannerSubmission? getPlannerSubmission() {
     if (assignment == null) return null;
 
     // We are only worried about fetching the single submission here, as the calendar request is
@@ -161,7 +148,7 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
       ..missing = submission.missing);
   }
 
-  PlannerItem toPlannerItem(String courseName) {
+  PlannerItem toPlannerItem(String? courseName) {
     final plannable = Plannable((b) => b
       ..id = id
       ..title = title

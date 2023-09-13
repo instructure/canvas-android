@@ -32,52 +32,41 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
 
   String get id;
 
-  @nullable
-  String get grade;
+  String? get grade;
 
   double get score;
 
   int get attempt;
 
-  @nullable
   @BuiltValueField(wireName: 'submitted_at')
-  DateTime get submittedAt;
+  DateTime? get submittedAt;
 
-  @nullable
-  DateTime get commentCreated;
+  DateTime? get commentCreated;
 
-  @nullable
-  String get mediaContentType;
+  String? get mediaContentType;
 
-  @nullable
-  String get mediaCommentUrl;
+  String? get mediaCommentUrl;
 
-  @nullable
-  String get mediaCommentDisplay;
+  String? get mediaCommentDisplay;
 
   @BuiltValueField(wireName: 'submission_history')
   BuiltList<Submission> get submissionHistory;
 
-  @nullable
-  String get body;
+  String? get body;
 
   @BuiltValueField(wireName: 'grade_matches_current_submission')
   bool get isGradeMatchesCurrentSubmission;
 
-  @nullable
   @BuiltValueField(wireName: 'workflow_state')
-  String get workflowState;
+  String? get workflowState;
 
-  @nullable
   @BuiltValueField(wireName: 'submission_type')
-  String get submissionType;
+  String? get submissionType;
 
-  @nullable
   @BuiltValueField(wireName: 'preview_url')
-  String get previewUrl;
+  String? get previewUrl;
 
-  @nullable
-  String get url;
+  String? get url;
 
   // Not sure why, but build_runner fails when this field is named 'late'
   @BuiltValueField(wireName: 'late')
@@ -91,8 +80,7 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @BuiltValueField(wireName: 'assignment_id')
   String get assignmentId;
 
-  @nullable
-  Assignment get assignment;
+  Assignment? get assignment;
 
   @BuiltValueField(wireName: 'user_id')
   String get userId;
@@ -100,23 +88,19 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @BuiltValueField(wireName: 'grader_id')
   String get graderId;
 
-  @nullable
-  User get user;
+  User? get user;
 
-  @nullable
   @BuiltValueField(wireName: 'points_deducted')
-  double get pointsDeducted;
+  double? get pointsDeducted;
 
   @BuiltValueField(wireName: 'entered_score')
   double get enteredScore;
 
-  @nullable
   @BuiltValueField(wireName: 'entered_grade')
-  String get enteredGrade;
+  String? get enteredGrade;
 
-  @nullable
   @BuiltValueField(wireName: 'posted_at')
-  DateTime get postedAt;
+  DateTime? get postedAt;
 
   bool isGraded() {
     return grade != null && workflowState != 'pending_review' && postedAt != null;

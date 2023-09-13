@@ -43,7 +43,7 @@ void main() {
     test('Course grade low: null/course grade high', () {
       AlertType testingType = AlertType.courseGradeLow;
       String highValue = '42';
-      List<String> expectedResult = [null, highValue];
+      List<String?> expectedResult = [null, highValue];
       AlertThreshold courseGradeLow = _mockThreshold(testingType, value: '24');
       AlertThreshold courseGradeHigh = _mockThreshold(AlertType.courseGradeHigh, value: highValue);
       List<AlertThreshold> thresholds = [courseGradeLow, courseGradeHigh];
@@ -54,7 +54,7 @@ void main() {
     test('Course grade high: course grade low/null', () {
       AlertType testingType = AlertType.courseGradeHigh;
       String lowValue = '24';
-      List<String> expectedResult = [lowValue, null];
+      List<String?> expectedResult = [lowValue, null];
       AlertThreshold courseGradeLow = _mockThreshold(AlertType.courseGradeLow, value: lowValue);
       AlertThreshold courseGradeHigh = _mockThreshold(testingType, value: '42');
       List<AlertThreshold> thresholds = [courseGradeLow, courseGradeHigh];
@@ -65,7 +65,7 @@ void main() {
     test('Assignment grade low: null/assignment grade high', () {
       AlertType testingType = AlertType.assignmentGradeLow;
       String highValue = '42';
-      List<String> expectedResult = [null, highValue];
+      List<String?> expectedResult = [null, highValue];
       AlertThreshold assignmentGradeLow = _mockThreshold(testingType, value: '24');
       AlertThreshold assignmentGradeHigh = _mockThreshold(AlertType.assignmentGradeHigh, value: highValue);
       List<AlertThreshold> thresholds = [assignmentGradeLow, assignmentGradeHigh];
@@ -76,7 +76,7 @@ void main() {
     test('Assignment grade high: assignment grade low/null', () {
       AlertType testingType = AlertType.assignmentGradeHigh;
       String lowValue = '24';
-      List<String> expectedResult = [lowValue, null];
+      List<String?> expectedResult = [lowValue, null];
       AlertThreshold assignmentGradeLow = _mockThreshold(AlertType.assignmentGradeLow, value: lowValue);
       AlertThreshold assignmentGradeHigh = _mockThreshold(testingType, value: '42');
       List<AlertThreshold> thresholds = [assignmentGradeLow, assignmentGradeHigh];
@@ -86,7 +86,7 @@ void main() {
   });
 }
 
-AlertThreshold _mockThreshold(AlertType type, {String value}) => AlertThreshold((b) => b
+AlertThreshold _mockThreshold(AlertType? type, {String? value}) => AlertThreshold((b) => b
   ..alertType = type ?? AlertType.courseGradeLow
   ..threshold = value ?? null
   ..build());

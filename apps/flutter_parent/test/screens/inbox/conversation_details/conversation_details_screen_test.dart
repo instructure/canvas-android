@@ -37,6 +37,7 @@ import '../../../utils/accessibility_utils.dart';
 import '../../../utils/finders.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   mockNetworkImageResponse();
@@ -45,7 +46,7 @@ void main() {
 
   group('Displays messages', () {
     testWidgetsWithAccessibilityChecks('displays single message', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       var conversation = Conversation((c) => c
@@ -76,11 +77,11 @@ void main() {
       var messageWidget = find.byType(MessageWidget);
       expect(messageWidget, findsOneWidget);
       expect(
-          find.descendant(of: messageWidget, matching: find.richText(conversation.messages[0].body)), findsOneWidget);
+          find.descendant(of: messageWidget, matching: find.richText(conversation.messages![0].body!)), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('displays multiple messages in correct order', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       var conversation = Conversation((c) => c
@@ -130,8 +131,8 @@ void main() {
       expect(find.byType(MessageWidget).evaluate().length, 3);
 
       // Get widget positions in the same order as the messages in the conversation
-      var messageWidgetOffsets = conversation.messages
-          .map((it) => find.ancestor(of: find.richText(it.body), matching: find.byType(MessageWidget)))
+      var messageWidgetOffsets = conversation.messages!
+          .map((it) => find.ancestor(of: find.richText(it.body!), matching: find.byType(MessageWidget)))
           .map((it) => tester.getTopLeft(it))
           .toList();
 
@@ -146,7 +147,7 @@ void main() {
   group('Displays base details', () {
     testWidgetsWithAccessibilityChecks('loading state', (tester) async {
       final subject = 'This is a subject';
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       Completer<Conversation> completer = Completer();
@@ -162,7 +163,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('conversation subject', (tester) async {
       final subject = 'This is a subject';
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(Conversation()));
 
@@ -176,7 +177,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('course name', (tester) async {
       final courseName = 'BIO 101';
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(Conversation()));
 
@@ -189,7 +190,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('reply FAB', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(Conversation()));
 
@@ -202,7 +203,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('error state', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.error(''));
 
@@ -224,7 +225,7 @@ void main() {
 
   group('interactions', () {
     testWidgetsWithAccessibilityChecks('Displays conversation reply options', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(Conversation()));
 
@@ -249,7 +250,7 @@ void main() {
           ..jsonId = JsonObject('1')
           ..displayName = 'Attachment 1'),
       ];
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       var conversation = Conversation((c) => c
@@ -287,7 +288,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Replying to conversation calls interactor', (tester) async {
       final conversation = Conversation();
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
 
@@ -310,7 +311,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Replying all to conversation calls interactor', (tester) async {
       final conversation = Conversation();
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
 
@@ -332,7 +333,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Swiping message reveals reply options', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       var conversation = Conversation((c) => c
@@ -367,7 +368,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Replying to individual message calls interactor', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       var conversation = Conversation((c) => c
@@ -400,11 +401,11 @@ void main() {
       await tester.tap(find.text(l10n.reply));
       await tester.pumpAndSettle();
 
-      verify(interactor.addReply(any, conversation, conversation.messages[0], false)).called(1);
+      verify(interactor.addReply(any, conversation, conversation.messages![0], false)).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('Replying all to individual message calls interactor', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       var conversation = Conversation((c) => c
@@ -437,12 +438,12 @@ void main() {
       await tester.tap(find.text(l10n.replyAll));
       await tester.pumpAndSettle();
 
-      verify(interactor.addReply(any, conversation, conversation.messages[0], true)).called(1);
+      verify(interactor.addReply(any, conversation, conversation.messages![0], true)).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('error state refresh calls interactor', (tester) async {
       final conversationId = '100';
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.error(''));
 
@@ -465,7 +466,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('pull-to-refresh calls interactor', (tester) async {
       final conversationId = '100';
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(Conversation()));
 
@@ -485,7 +486,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('updates after adding message', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
       var message1Body = 'Original message';
@@ -537,7 +538,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('route returns true if conversation was updated', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) {
         locator.registerFactory<ConversationDetailsInteractor>(() => interactor);
       });
@@ -550,7 +551,7 @@ void main() {
         TestApp(
           Builder(
             builder: (context) => Material(
-              child: FlatButton(
+              child: TextButton(
                 child: Text('Click me'),
                 onPressed: () async {
                   returnValue = await QuickNav().push(
@@ -579,7 +580,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('route returns false if conversation was not updated', (tester) async {
-      var interactor = _MockInteractor();
+      var interactor = MockConversationDetailsInteractor();
       setupTestLocator((locator) {
         locator.registerFactory<ConversationDetailsInteractor>(() => interactor);
       });
@@ -591,7 +592,7 @@ void main() {
         TestApp(
           Builder(
             builder: (context) => Material(
-              child: FlatButton(
+              child: TextButton(
                 child: Text('Click me'),
                 onPressed: () async {
                   returnValue = await QuickNav().push(
@@ -616,5 +617,3 @@ void main() {
     });
   });
 }
-
-class _MockInteractor extends Mock implements ConversationDetailsInteractor {}

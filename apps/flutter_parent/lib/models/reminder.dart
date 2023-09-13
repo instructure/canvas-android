@@ -30,8 +30,7 @@ abstract class Reminder implements Built<Reminder, ReminderBuilder> {
   static const TYPE_ASSIGNMENT = 'assignment';
   static const TYPE_EVENT = 'event';
 
-  @nullable
-  int get id;
+  int? get id;
 
   String get userDomain;
 
@@ -43,12 +42,12 @@ abstract class Reminder implements Built<Reminder, ReminderBuilder> {
 
   String get courseId;
 
-  DateTime get date;
+  DateTime? get date;
 
   Reminder._();
   factory Reminder([void Function(ReminderBuilder) updates]) = _$Reminder;
 
-  static Reminder fromNotification(NotificationPayload payload) => deserialize(json.decode(payload.data));
+  static Reminder? fromNotification(NotificationPayload? payload) => deserialize(json.decode(payload?.data ?? ''));
 
   static void _initializeBuilder(ReminderBuilder b) => b
     ..userDomain = ''

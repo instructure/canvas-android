@@ -30,6 +30,7 @@ import 'package:test/test.dart';
 import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
 import '../../../utils/test_helpers/mock_helpers.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   setUp(() async {
@@ -44,7 +45,7 @@ void main() {
 
   group('createReply calls InboxApi with correct params', () {
     test('for conversation reply', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
@@ -62,7 +63,7 @@ void main() {
     });
 
     test('for conversation reply all', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       var enrollmentsApi = MockEnrollmentsApi();
       var courseApi = MockCourseApi();
       await setupTestLocator((locator) {
@@ -89,7 +90,7 @@ void main() {
     });
 
     test('for message reply', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
@@ -100,7 +101,7 @@ void main() {
       String body = 'This is a reply';
       List<String> attachmentIds = ['a', 'b', 'c'];
       bool replyAll = false;
-      Message message = conversation.messages[1];
+      Message message = conversation.messages![1];
 
       interactor.createReply(conversation, message, body, attachmentIds, replyAll);
 
@@ -108,7 +109,7 @@ void main() {
     });
 
     test('for message reply all', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       var enrollmentsApi = MockEnrollmentsApi();
       var courseApi = MockCourseApi();
       await setupTestLocator((locator) {
@@ -136,7 +137,7 @@ void main() {
       String body = 'This is a reply';
       List<String> attachmentIds = ['a', 'b', 'c'];
       bool replyAll = true;
-      Message message = conversation.messages[3];
+      Message message = conversation.messages![3];
 
       await interactor.createReply(conversation, message, body, attachmentIds, replyAll);
 
@@ -146,7 +147,7 @@ void main() {
     });
 
     test('for message reply all filters out non-observed students', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       var enrollmentsApi = MockEnrollmentsApi();
       var courseApi = MockCourseApi();
       await setupTestLocator((locator) {
@@ -177,7 +178,7 @@ void main() {
       String body = 'This is a reply';
       List<String> attachmentIds = ['a', 'b', 'c'];
       bool replyAll = true;
-      Message message = conversation.messages[4];
+      Message message = conversation.messages![4];
 
       await interactor.createReply(conversation, message, body, attachmentIds, replyAll);
 
@@ -188,7 +189,7 @@ void main() {
     });
 
     test('for self-authored message reply', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
@@ -199,7 +200,7 @@ void main() {
       String body = 'This is a reply';
       List<String> attachmentIds = ['a', 'b', 'c'];
       bool replyAll = false;
-      Message message = conversation.messages[2];
+      Message message = conversation.messages![2];
 
       interactor.createReply(conversation, message, body, attachmentIds, replyAll);
 
@@ -209,7 +210,7 @@ void main() {
     });
 
     test('for self-authored conversation reply', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
@@ -235,7 +236,7 @@ void main() {
     });
 
     test('for monologue message reply', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
@@ -253,7 +254,7 @@ void main() {
       String body = 'This is a reply';
       List<String> attachmentIds = ['a', 'b', 'c'];
       bool replyAll = false;
-      Message message = conversation.messages[0];
+      Message message = conversation.messages![0];
 
       interactor.createReply(conversation, message, body, attachmentIds, replyAll);
 
@@ -263,7 +264,7 @@ void main() {
     });
 
     test('for monologue conversation reply', () async {
-      var api = _MockInboxApi();
+      var api = MockInboxApi();
       await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
@@ -337,5 +338,3 @@ Recipient _makeRecipient(String id, String type) {
       '123': BuiltList<String>([type])
     }));
 }
-
-class _MockInboxApi extends Mock implements InboxApi {}

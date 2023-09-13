@@ -29,7 +29,7 @@ class QRLoginUtil {
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           shrinkWrap: true,
           children: <Widget>[
-            Text(L10n(context).qrLoginSelect, style: Theme.of(context).textTheme.caption),
+            Text(L10n(context).qrLoginSelect, style: Theme.of(context).textTheme.bodySmall),
             SizedBox(height: 12),
             _login(context),
             _createAccount(context),

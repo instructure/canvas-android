@@ -34,6 +34,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/finders.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../courses/course_summary_screen_test.dart';
 
 /**
@@ -55,7 +56,7 @@ void main() {
     ..id = '123'
     ..passive = true);
 
-  final pairingInfo = QRPairingScanResult.success('123', 'hodor.com', '123');
+  final pairingInfo = QRPairingScanResult.success('123', 'hodor.com', '123') as QRPairingInfo;
   final tosString =
       'By tapping \'Create Account\', you agree to the Terms of Service and acknowledge the Privacy Policy';
 
@@ -87,7 +88,7 @@ void main() {
       expect(find.byIcon(CanvasIcons.eye), findsOneWidget);
 
       expect(find.text('Create Account', skipOffstage: false), findsOneWidget);
-      expect(find.byType(RaisedButton, skipOffstage: false), findsOneWidget);
+      expect(find.byType(ElevatedButton, skipOffstage: false), findsOneWidget);
     }, a11yExclusions: {A11yExclusion.minTapSize});
 
     testWidgetsWithAccessibilityChecks('tos and privacy text visible when passive false', (tester) async {
@@ -148,7 +149,7 @@ void main() {
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       expect(find.text('Please enter full name'), findsNothing);
@@ -166,7 +167,7 @@ void main() {
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       expect(find.text('Please enter full name'), findsOneWidget);
@@ -185,7 +186,7 @@ void main() {
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       expect(find.text('Password must contain at least 8 characters'), findsOneWidget);
@@ -202,7 +203,7 @@ void main() {
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       expect(find.text('Please enter a valid email address'), findsOneWidget);
@@ -235,12 +236,12 @@ void main() {
       // Get text selection for 'Canvas Support' span
       var targetText = l10n.qrCreateAccountTermsOfService;
       var bodyWidget = tester.widget<Text>(find.byKey(AccountCreationScreen.accountCreationTextSpanKey));
-      var bodyText = bodyWidget.textSpan.toPlainText();
+      var bodyText = bodyWidget.textSpan?.toPlainText() ?? '';
       var index = bodyText.indexOf(targetText);
       var selection = TextSelection(baseOffset: index, extentOffset: index + targetText.length);
 
       // Get clickable area
-      RenderParagraph box = AccountCreationScreen.accountCreationTextSpanKey.currentContext.findRenderObject();
+      RenderParagraph box = AccountCreationScreen.accountCreationTextSpanKey.currentContext?.findRenderObject() as RenderParagraph;
       var bodyOffset = box.localToGlobal(Offset.zero);
       var textOffset = box.getBoxesForSelection(selection)[0].toRect().center;
 
@@ -261,12 +262,12 @@ void main() {
       // Get text selection for 'Canvas Support' span
       var targetText = l10n.qrCreateAccountTermsOfService;
       var bodyWidget = tester.widget<Text>(find.byKey(AccountCreationScreen.accountCreationTextSpanKey));
-      var bodyText = bodyWidget.textSpan.toPlainText();
+      var bodyText = bodyWidget.textSpan?.toPlainText() ?? '';
       var index = bodyText.indexOf(targetText);
       var selection = TextSelection(baseOffset: index, extentOffset: index + targetText.length);
 
       // Get clickable area
-      RenderParagraph box = AccountCreationScreen.accountCreationTextSpanKey.currentContext.findRenderObject();
+      RenderParagraph box = AccountCreationScreen.accountCreationTextSpanKey.currentContext?.findRenderObject() as RenderParagraph;
       var bodyOffset = box.localToGlobal(Offset.zero);
       var textOffset = box.getBoxesForSelection(selection)[0].toRect().center;
 
@@ -287,12 +288,12 @@ void main() {
       // Get text selection for 'Canvas Support' span
       var targetText = l10n.qrCreateAccountPrivacyPolicy;
       var bodyWidget = tester.widget<Text>(find.byKey(AccountCreationScreen.accountCreationTextSpanKey));
-      var bodyText = bodyWidget.textSpan.toPlainText();
+      var bodyText = bodyWidget.textSpan?.toPlainText() ?? '';
       var index = bodyText.indexOf(targetText);
       var selection = TextSelection(baseOffset: index, extentOffset: index + targetText.length);
 
       // Get clickable area
-      RenderParagraph box = AccountCreationScreen.accountCreationTextSpanKey.currentContext.findRenderObject();
+      RenderParagraph box = AccountCreationScreen.accountCreationTextSpanKey.currentContext?.findRenderObject() as RenderParagraph;
       var bodyOffset = box.localToGlobal(Offset.zero);
       var textOffset = box.getBoxesForSelection(selection)[0].toRect().center;
 
@@ -320,7 +321,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('valid form account creation pushes login route', (tester) async {
       when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
       when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-          .thenAnswer((_) async => Response(statusCode: 200));
+          .thenAnswer((_) async => Response(statusCode: 200, requestOptions: RequestOptions(path: '')));
 
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
@@ -333,7 +334,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
 
       verify(mockNav.pushRoute(any, PandaRouter.loginWeb('hodor.com', loginFlow: LoginFlow.normal)));
       verify(analytics.logEvent(
@@ -347,7 +348,7 @@ void main() {
           '{\"errors\":{\"user\":{},\"pseudonym\":{},\"observee\":{},\"pairing_code\":{\"code\":[{\"attribute\":\"code\",\"type\":\"invalid\",\"message\":\"invalid\"}]},\"recaptcha\":null}}');
       when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
       when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-          .thenThrow(DioError(response: Response(data: jsonData)));
+          .thenThrow(DioError(response: Response(data: jsonData, requestOptions: RequestOptions(path: '')), requestOptions: RequestOptions(path: '')));
 
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
@@ -360,7 +361,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
 
       await tester.pump();
       await tester.pump();
@@ -378,7 +379,7 @@ void main() {
           '{\"errors\":{\"user\":{\"pseudonyms\":[{\"message\":\"invalid\"}]},\"pseudonym\":{},\"observee\":{},\"pairing_code\":{},\"recaptcha\":null}}');
       when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
       when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-          .thenThrow(DioError(response: Response(data: jsonData)));
+          .thenThrow(DioError(response: Response(data: jsonData, requestOptions: RequestOptions(path: '')), requestOptions: RequestOptions(path: '')));
 
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
@@ -391,7 +392,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
 
       await tester.pump();
       await tester.pump();
@@ -408,7 +409,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('account creation with error shows generic error message', (tester) async {
     when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
     when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
-        .thenThrow(DioError(response: Response()));
+        .thenThrow(DioError(response: Response(requestOptions: RequestOptions(path: '')), requestOptions: RequestOptions(path: '')));
 
     await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
     await tester.pumpAndSettle();
@@ -421,7 +422,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(RaisedButton));
+    await tester.tap(find.byType(ElevatedButton));
 
     await tester.pump();
     await tester.pump();

@@ -162,7 +162,7 @@ void main() {
     await setupWithData(tester, data);
 
     expect(find.byKey(Key('grade-cell-late-penalty')).evaluate(), find.text(data.latePenalty).evaluate());
-    expect(tester.widget<Text>(find.byKey(Key('grade-cell-late-penalty'))).style.color, data.accentColor);
+    expect(tester.widget<Text>(find.byKey(Key('grade-cell-late-penalty'))).style!.color, data.accentColor);
   });
 
   testWidgetsWithAccessibilityChecks('Displays final grade text', (tester) async {

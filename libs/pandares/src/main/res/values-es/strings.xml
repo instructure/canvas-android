@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Eliminado</string>
 
+    <string name="gradeUpdated">Calificación actualizada</string>
     <string name="loadingCanvas">Cargando el contenido de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Desde aquí puede abrir los detalles de Entrega</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Calificación: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
         <item quantity="other">%s minutos</item>

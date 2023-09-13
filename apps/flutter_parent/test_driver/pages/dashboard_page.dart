@@ -20,62 +20,62 @@ import 'package:test/test.dart';
 import '..//flutter_driver_extensions.dart';
 
 class DashboardPage {
-  static Future<void> verifyCourse(FlutterDriver driver, Course course, {String grade = null}) async {
-    var actualName = await driver.getTextWithRefreshes(find.byValueKey("${course.courseCode}_name"));
+  static Future<void> verifyCourse(FlutterDriver? driver, Course course, {String? grade = null}) async {
+    var actualName = await driver?.getTextWithRefreshes(find.byValueKey("${course.courseCode}_name"));
     expect(actualName, course.name);
-    var actualCode = await driver.getText(find.byValueKey("${course.courseCode}_code"));
+    var actualCode = await driver?.getText(find.byValueKey("${course.courseCode}_code"));
     expect(actualCode, course.courseCode);
     if (grade != null) {
       var actualGrade =
-          await driver.getTextWithRefreshes(find.byValueKey("${course.courseCode}_grade"), expectedText: grade);
+          await driver?.getTextWithRefreshes(find.byValueKey("${course.courseCode}_grade"), expectedText: grade);
       expect(actualGrade, grade);
     }
   }
 
-  static Future<void> verifyCourses(FlutterDriver driver, List<Course> courses) async {
-    await courses.forEach((course) async {
+  static Future<void> verifyCourses(FlutterDriver? driver, List<Course> courses) async {
+    courses.forEach((course) async {
       await verifyCourse(driver, course);
     });
   }
 
-  static Future<void> selectCourse(FlutterDriver driver, Course course) async {
-    await driver.tapWithRefreshes(find.text(course.name));
+  static Future<void> selectCourse(FlutterDriver? driver, Course course) async {
+    await driver?.tapWithRefreshes(find.text(course.name));
   }
 
-  static Future<void> waitForRender(FlutterDriver driver) async {
+  static Future<void> waitForRender(FlutterDriver? driver) async {
     print("Waiting for DashboardScreen to appear");
-    await driver.waitFor(find.byType("DashboardScreen"),
-        timeout: Duration(seconds: 10)); // It can take a while sometimes...
+    await driver?.waitFor(find.byType("DashboardScreen"),
+        timeout: Duration(seconds: 30)); // It can take a while sometimes...
   }
 
-  static Future<void> verifyStudentDisplayed(FlutterDriver driver, SeededUser student) async {
-    await driver.waitFor(find.text(student.shortName));
+  static Future<void> verifyStudentDisplayed(FlutterDriver? driver, SeededUser student) async {
+    await driver?.waitFor(find.text(student.shortName));
   }
 
-  static Future<void> changeStudent(FlutterDriver driver, SeededUser newStudent) async {
+  static Future<void> changeStudent(FlutterDriver? driver, SeededUser newStudent) async {
     // Open the student list expansion
-    await driver.tap(find.byValueKey('student_expansion_touch_target'));
+    await driver?.tap(find.byValueKey('student_expansion_touch_target'));
 
     // Select the new student
-    await driver.tap(find.byValueKey("${newStudent.shortName}_text"));
+    await driver?.tap(find.byValueKey("${newStudent.shortName}_text"));
     await Future.delayed(Duration(seconds: 1)); // Wait for animation to complete.
   }
 
-  static Future<void> openNavDrawer(FlutterDriver driver) async {
-    await driver.tap(find.byValueKey("drawer_menu"));
+  static Future<void> openNavDrawer(FlutterDriver? driver) async {
+    await driver?.tap(find.byValueKey("drawer_menu"));
   }
 
-  static Future<void> openInbox(FlutterDriver driver) async {
+  static Future<void> openInbox(FlutterDriver? driver) async {
     await openNavDrawer(driver);
-    await driver.tap(find.text("Inbox"));
+    await driver?.tap(find.text("Inbox"));
   }
 
-  static Future<void> openManageStudents(FlutterDriver driver) async {
+  static Future<void> openManageStudents(FlutterDriver? driver) async {
     await openNavDrawer(driver);
-    await driver.tap(find.text("Manage Students"));
+    await driver?.tap(find.text("Manage Students"));
   }
 
-  static Future<void> goToCalendar(FlutterDriver driver) async {
-    await driver.tap(find.text("Calendar"));
+  static Future<void> goToCalendar(FlutterDriver? driver) async {
+    await driver?.tap(find.text("Calendar"));
   }
 }

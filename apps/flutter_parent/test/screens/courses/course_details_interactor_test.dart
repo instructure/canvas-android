@@ -23,17 +23,18 @@ import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final courseId = '123';
   final studentId = '1337';
   final gradingPeriodId = '321';
 
-  final _MockCourseApi courseApi = _MockCourseApi();
-  final _MockAssignmentApi assignmentApi = _MockAssignmentApi();
+  final MockCourseApi courseApi = MockCourseApi();
+  final MockAssignmentApi assignmentApi = MockAssignmentApi();
   final enrollmentApi = MockEnrollmentsApi();
-  final _MockCalendarApi calendarApi = _MockCalendarApi();
-  final _MockPageApi pageApi = _MockPageApi();
+  final MockCalendarEventsApi calendarApi = MockCalendarEventsApi();
+  final MockPageApi pageApi = MockPageApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<CourseApi>(() => courseApi);
@@ -103,11 +104,3 @@ void main() {
     verify(courseApi.getCourseSettings(courseId, forceRefresh: true)).called(1);
   });
 }
-
-class _MockCalendarApi extends Mock implements CalendarEventsApi {}
-
-class _MockCourseApi extends Mock implements CourseApi {}
-
-class _MockAssignmentApi extends Mock implements AssignmentApi {}
-
-class _MockPageApi extends Mock implements PageApi {}

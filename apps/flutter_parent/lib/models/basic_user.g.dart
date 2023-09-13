@@ -15,63 +15,61 @@ class _$BasicUserSerializer implements StructuredSerializer<BasicUser> {
   final String wireName = 'BasicUser';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, BasicUser object,
+  Iterable<Object?> serialize(Serializers serializers, BasicUser object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
     ];
-    result.add('name');
-    if (object.name == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.name,
-          specifiedType: const FullType(String)));
-    }
-    result.add('pronouns');
-    if (object.pronouns == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.pronouns,
-          specifiedType: const FullType(String)));
-    }
-    result.add('avatar_url');
-    if (object.avatarUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.avatarUrl,
-          specifiedType: const FullType(String)));
-    }
+    Object? value;
+    value = object.name;
+
+    result
+      ..add('name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.pronouns;
+
+    result
+      ..add('pronouns')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.avatarUrl;
+
+    result
+      ..add('avatar_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
-  BasicUser deserialize(Serializers serializers, Iterable<Object> serialized,
+  BasicUser deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new BasicUserBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'pronouns':
           result.pronouns = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'avatar_url':
           result.avatarUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -84,20 +82,18 @@ class _$BasicUser extends BasicUser {
   @override
   final String id;
   @override
-  final String name;
+  final String? name;
   @override
-  final String pronouns;
+  final String? pronouns;
   @override
-  final String avatarUrl;
+  final String? avatarUrl;
 
-  factory _$BasicUser([void Function(BasicUserBuilder) updates]) =>
-      (new BasicUserBuilder()..update(updates)).build();
+  factory _$BasicUser([void Function(BasicUserBuilder)? updates]) =>
+      (new BasicUserBuilder()..update(updates))._build();
 
-  _$BasicUser._({this.id, this.name, this.pronouns, this.avatarUrl})
+  _$BasicUser._({required this.id, this.name, this.pronouns, this.avatarUrl})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('BasicUser', 'id');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'BasicUser', 'id');
   }
 
   @override
@@ -119,14 +115,18 @@ class _$BasicUser extends BasicUser {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, id.hashCode), name.hashCode), pronouns.hashCode),
-        avatarUrl.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, pronouns.hashCode);
+    _$hash = $jc(_$hash, avatarUrl.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('BasicUser')
+    return (newBuiltValueToStringHelper(r'BasicUser')
           ..add('id', id)
           ..add('name', name)
           ..add('pronouns', pronouns)
@@ -136,34 +136,35 @@ class _$BasicUser extends BasicUser {
 }
 
 class BasicUserBuilder implements Builder<BasicUser, BasicUserBuilder> {
-  _$BasicUser _$v;
+  _$BasicUser? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _pronouns;
-  String get pronouns => _$this._pronouns;
-  set pronouns(String pronouns) => _$this._pronouns = pronouns;
+  String? _pronouns;
+  String? get pronouns => _$this._pronouns;
+  set pronouns(String? pronouns) => _$this._pronouns = pronouns;
 
-  String _avatarUrl;
-  String get avatarUrl => _$this._avatarUrl;
-  set avatarUrl(String avatarUrl) => _$this._avatarUrl = avatarUrl;
+  String? _avatarUrl;
+  String? get avatarUrl => _$this._avatarUrl;
+  set avatarUrl(String? avatarUrl) => _$this._avatarUrl = avatarUrl;
 
   BasicUserBuilder() {
     BasicUser._initializeBuilder(this);
   }
 
   BasicUserBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _name = _$v.name;
-      _pronouns = _$v.pronouns;
-      _avatarUrl = _$v.avatarUrl;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _name = $v.name;
+      _pronouns = $v.pronouns;
+      _avatarUrl = $v.avatarUrl;
       _$v = null;
     }
     return this;
@@ -171,25 +172,28 @@ class BasicUserBuilder implements Builder<BasicUser, BasicUserBuilder> {
 
   @override
   void replace(BasicUser other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BasicUser;
   }
 
   @override
-  void update(void Function(BasicUserBuilder) updates) {
+  void update(void Function(BasicUserBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$BasicUser build() {
+  BasicUser build() => _build();
+
+  _$BasicUser _build() {
     final _$result = _$v ??
         new _$BasicUser._(
-            id: id, name: name, pronouns: pronouns, avatarUrl: avatarUrl);
+            id: BuiltValueNullFieldError.checkNotNull(id, r'BasicUser', 'id'),
+            name: name,
+            pronouns: pronouns,
+            avatarUrl: avatarUrl);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

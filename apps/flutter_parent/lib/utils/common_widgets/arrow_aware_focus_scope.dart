@@ -42,7 +42,7 @@ FocusOnKeyCallback _onDirectionKeyCallback = (node, event) {
 
 // A FocusScope that properly handles directional-arrow presses (and dpad).
 class ArrowAwareFocusScope extends FocusScope {
-  ArrowAwareFocusScope({Widget child, FocusScopeNode node})
+  ArrowAwareFocusScope({required Widget child, FocusScopeNode? node})
       : super(child: child, node: node, onKey: _onDirectionKeyCallback);
 }
 

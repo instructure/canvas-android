@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath "com.android.tools.build:gradle:7.4.2"
     }
 }
 
@@ -22,10 +22,10 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -34,6 +34,8 @@ android {
 
     dependencies {
         implementation 'androidx.annotation:annotation:1.0.0'
-        implementation 'androidx.webkit:webkit:1.2.0'
+        implementation 'androidx.webkit:webkit:1.7.0'
     }
+
+    namespace 'io.flutter.plugins.webviewflutter'
 }

@@ -31,11 +31,9 @@ abstract class SubmissionWrapper implements Built<SubmissionWrapper, SubmissionW
   @BuiltValueSerializer(custom: true)
   static Serializer<SubmissionWrapper> get serializer => SubmissionWrapperSerializer();
 
-  @nullable
-  Submission get submission;
+  Submission? get submission;
 
-  @nullable
-  BuiltList<Submission> get submissionList;
+  BuiltList<Submission>? get submissionList;
 
   SubmissionWrapper._();
 
@@ -52,7 +50,7 @@ class SubmissionWrapperSerializer implements StructuredSerializer<SubmissionWrap
     if (serialized.first == 'id' || serialized.first is String) {
       // This is the single submission case
       Submission submission =
-          jsonSerializers.deserializeWith(jsonSerializers.serializerForType(Submission), serialized);
+          jsonSerializers.deserializeWith(jsonSerializers.serializerForType(Submission)!, serialized);
 
       result.submission = submission.toBuilder();
     } else {
@@ -61,7 +59,7 @@ class SubmissionWrapperSerializer implements StructuredSerializer<SubmissionWrap
 
       serialized.forEach((serializedSubmission) {
         submissionList
-            .add(jsonSerializers.deserializeWith(jsonSerializers.serializerForType(Submission), serializedSubmission));
+            .add(jsonSerializers.deserializeWith(jsonSerializers.serializerForType(Submission)!, serializedSubmission));
       });
 
       result.submissionList = BuiltList<Submission>.from(submissionList).toBuilder();
@@ -73,7 +71,7 @@ class SubmissionWrapperSerializer implements StructuredSerializer<SubmissionWrap
   @override
   Iterable serialize(Serializers serializers, SubmissionWrapper object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
+    final result = <Object?>[];
 
     // Regardless of how we were storing it, we need to serialize it as "submission" since that's what the api expects
     if (object.submission != null) {

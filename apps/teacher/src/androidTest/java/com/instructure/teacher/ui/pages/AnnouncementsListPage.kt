@@ -42,9 +42,9 @@ import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
 /**
- * Announcements list page
+ * Announcements list page.
  *
- * @constructor Create empty Announcements list page
+ * @constructor Create empty Announcements list page.
  */
 class AnnouncementsListPage(val searchable: Searchable) : BasePage() {
 
@@ -56,19 +56,19 @@ class AnnouncementsListPage(val searchable: Searchable) : BasePage() {
     /**
      * Click on the discussion given in parameter.
      *
-     * @param discussion: The DiscussionApiModel parameter.
+     * @param announcement: The DiscussionApiModel parameter.
      */
-    fun clickDiscussion(discussion: DiscussionApiModel) {
-        clickDiscussion(discussion.title)
+    fun clickAnnouncement(announcement: DiscussionApiModel) {
+        clickAnnouncement(announcement.title)
     }
 
     /**
      * Click on the discussion with the given title in parameter.
      *
-     * @param discussionTitle: The discussion title parameter string.
+     * @param announcementTitle: The discussion title parameter string.
      */
-    fun clickDiscussion(discussionTitle: String) {
-        waitForViewWithText(discussionTitle).click()
+    fun clickAnnouncement(announcementTitle: String) {
+        waitForViewWithText(announcementTitle).click()
     }
 
     /**

@@ -17,9 +17,9 @@ class _$TermsOfServiceSerializer
   final String wireName = 'TermsOfService';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, TermsOfService object,
+  Iterable<Object?> serialize(Serializers serializers, TermsOfService object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'passive',
@@ -29,55 +29,54 @@ class _$TermsOfServiceSerializer
       serializers.serialize(object.accountId,
           specifiedType: const FullType(String)),
     ];
-    result.add('terms_type');
-    if (object.termsType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.termsType,
-          specifiedType: const FullType(String)));
-    }
-    result.add('content');
-    if (object.content == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.content,
-          specifiedType: const FullType(String)));
-    }
+    Object? value;
+    value = object.termsType;
+
+    result
+      ..add('terms_type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.content;
+
+    result
+      ..add('content')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
   TermsOfService deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new TermsOfServiceBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'terms_type':
           result.termsType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'passive':
           result.passive = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'account_id':
           result.accountId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'content':
           result.content = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -90,29 +89,29 @@ class _$TermsOfService extends TermsOfService {
   @override
   final String id;
   @override
-  final String termsType;
+  final String? termsType;
   @override
   final bool passive;
   @override
   final String accountId;
   @override
-  final String content;
+  final String? content;
 
-  factory _$TermsOfService([void Function(TermsOfServiceBuilder) updates]) =>
-      (new TermsOfServiceBuilder()..update(updates)).build();
+  factory _$TermsOfService([void Function(TermsOfServiceBuilder)? updates]) =>
+      (new TermsOfServiceBuilder()..update(updates))._build();
 
   _$TermsOfService._(
-      {this.id, this.termsType, this.passive, this.accountId, this.content})
+      {required this.id,
+      this.termsType,
+      required this.passive,
+      required this.accountId,
+      this.content})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('TermsOfService', 'id');
-    }
-    if (passive == null) {
-      throw new BuiltValueNullFieldError('TermsOfService', 'passive');
-    }
-    if (accountId == null) {
-      throw new BuiltValueNullFieldError('TermsOfService', 'accountId');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'TermsOfService', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        passive, r'TermsOfService', 'passive');
+    BuiltValueNullFieldError.checkNotNull(
+        accountId, r'TermsOfService', 'accountId');
   }
 
   @override
@@ -136,15 +135,19 @@ class _$TermsOfService extends TermsOfService {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc($jc(0, id.hashCode), termsType.hashCode), passive.hashCode),
-            accountId.hashCode),
-        content.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, termsType.hashCode);
+    _$hash = $jc(_$hash, passive.hashCode);
+    _$hash = $jc(_$hash, accountId.hashCode);
+    _$hash = $jc(_$hash, content.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('TermsOfService')
+    return (newBuiltValueToStringHelper(r'TermsOfService')
           ..add('id', id)
           ..add('termsType', termsType)
           ..add('passive', passive)
@@ -156,37 +159,38 @@ class _$TermsOfService extends TermsOfService {
 
 class TermsOfServiceBuilder
     implements Builder<TermsOfService, TermsOfServiceBuilder> {
-  _$TermsOfService _$v;
+  _$TermsOfService? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _termsType;
-  String get termsType => _$this._termsType;
-  set termsType(String termsType) => _$this._termsType = termsType;
+  String? _termsType;
+  String? get termsType => _$this._termsType;
+  set termsType(String? termsType) => _$this._termsType = termsType;
 
-  bool _passive;
-  bool get passive => _$this._passive;
-  set passive(bool passive) => _$this._passive = passive;
+  bool? _passive;
+  bool? get passive => _$this._passive;
+  set passive(bool? passive) => _$this._passive = passive;
 
-  String _accountId;
-  String get accountId => _$this._accountId;
-  set accountId(String accountId) => _$this._accountId = accountId;
+  String? _accountId;
+  String? get accountId => _$this._accountId;
+  set accountId(String? accountId) => _$this._accountId = accountId;
 
-  String _content;
-  String get content => _$this._content;
-  set content(String content) => _$this._content = content;
+  String? _content;
+  String? get content => _$this._content;
+  set content(String? content) => _$this._content = content;
 
   TermsOfServiceBuilder();
 
   TermsOfServiceBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _termsType = _$v.termsType;
-      _passive = _$v.passive;
-      _accountId = _$v.accountId;
-      _content = _$v.content;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _termsType = $v.termsType;
+      _passive = $v.passive;
+      _accountId = $v.accountId;
+      _content = $v.content;
       _$v = null;
     }
     return this;
@@ -194,29 +198,32 @@ class TermsOfServiceBuilder
 
   @override
   void replace(TermsOfService other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TermsOfService;
   }
 
   @override
-  void update(void Function(TermsOfServiceBuilder) updates) {
+  void update(void Function(TermsOfServiceBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$TermsOfService build() {
+  TermsOfService build() => _build();
+
+  _$TermsOfService _build() {
     final _$result = _$v ??
         new _$TermsOfService._(
-            id: id,
+            id: BuiltValueNullFieldError.checkNotNull(
+                id, r'TermsOfService', 'id'),
             termsType: termsType,
-            passive: passive,
-            accountId: accountId,
+            passive: BuiltValueNullFieldError.checkNotNull(
+                passive, r'TermsOfService', 'passive'),
+            accountId: BuiltValueNullFieldError.checkNotNull(
+                accountId, r'TermsOfService', 'accountId'),
             content: content);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

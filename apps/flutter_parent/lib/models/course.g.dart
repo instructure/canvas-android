@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of course;
+part of 'course.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
@@ -48,9 +48,9 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
   final String wireName = 'Course';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Course object,
+  Iterable<Object?> serialize(Serializers serializers, Course object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
@@ -61,10 +61,6 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       'is_public',
       serializers.serialize(object.isPublic,
           specifiedType: const FullType(bool)),
-      'enrollments',
-      serializers.serialize(object.enrollments,
-          specifiedType:
-              const FullType(BuiltList, const [const FullType(Enrollment)])),
       'needs_grading_count',
       serializers.serialize(object.needsGradingCount,
           specifiedType: const FullType(int)),
@@ -87,7 +83,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       serializers.serialize(object.restrictEnrollmentsToCourseDates,
           specifiedType: const FullType(bool)),
     ];
-    Object value;
+    Object? value;
     value = object.originalName;
 
     result
@@ -118,6 +114,13 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       ..add('syllabus_body')
       ..add(
           serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.enrollments;
+
+    result
+      ..add('enrollments')
+      ..add(serializers.serialize(value,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(Enrollment)])));
     value = object.imageDownloadUrl;
 
     result
@@ -166,117 +169,118 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
   }
 
   @override
-  Course deserialize(Serializers serializers, Iterable<Object> serialized,
+  Course deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CourseBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'original_name':
           result.originalName = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'course_code':
           result.courseCode = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'start_at':
           result.startAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'end_at':
           result.endAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'syllabus_body':
           result.syllabusBody = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'hide_final_grades':
           result.hideFinalGrades = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'is_public':
           result.isPublic = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'enrollments':
           result.enrollments.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(Enrollment)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(Enrollment)]))!
+              as BuiltList<Object?>);
           break;
         case 'needs_grading_count':
           result.needsGradingCount = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'apply_assignment_group_weights':
           result.applyAssignmentGroupWeights = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'is_favorite':
           result.isFavorite = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'access_restricted_by_date':
           result.accessRestrictedByDate = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'image_download_url':
           result.imageDownloadUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'has_weighted_grading_periods':
           result.hasWeightedGradingPeriods = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'has_grading_periods':
           result.hasGradingPeriods = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'restrict_enrollments_to_course_dates':
           result.restrictEnrollmentsToCourseDates = serializers
-              .deserialize(value, specifiedType: const FullType(bool)) as bool;
+              .deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
         case 'workflow_state':
           result.workflowState = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'default_view':
           result.homePage = serializers.deserialize(value,
-              specifiedType: const FullType(HomePage)) as HomePage;
+              specifiedType: const FullType(HomePage)) as HomePage?;
           break;
         case 'term':
           result.term.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Term)) as Term);
+              specifiedType: const FullType(Term))! as Term);
           break;
         case 'sections':
           result.sections.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(Section)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(Section)]))!
+              as BuiltList<Object?>);
           break;
         case 'settings':
           result.settings.replace(serializers.deserialize(value,
-              specifiedType: const FullType(CourseSettings)) as CourseSettings);
+                  specifiedType: const FullType(CourseSettings))!
+              as CourseSettings);
           break;
         case 'grading_scheme':
           result.gradingScheme.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(JsonObject)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(JsonObject)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -304,33 +308,33 @@ class _$HomePageSerializer implements PrimitiveSerializer<HomePage> {
 
 class _$Course extends Course {
   @override
-  final double currentScore;
+  final double? currentScore;
   @override
-  final double finalScore;
+  final double? finalScore;
   @override
-  final String currentGrade;
+  final String? currentGrade;
   @override
-  final String finalGrade;
+  final String? finalGrade;
   @override
   final String id;
   @override
   final String name;
   @override
-  final String originalName;
+  final String? originalName;
   @override
-  final String courseCode;
+  final String? courseCode;
   @override
-  final DateTime startAt;
+  final DateTime? startAt;
   @override
-  final DateTime endAt;
+  final DateTime? endAt;
   @override
-  final String syllabusBody;
+  final String? syllabusBody;
   @override
   final bool hideFinalGrades;
   @override
   final bool isPublic;
   @override
-  final BuiltList<Enrollment> enrollments;
+  final BuiltList<Enrollment>? enrollments;
   @override
   final int needsGradingCount;
   @override
@@ -340,7 +344,7 @@ class _$Course extends Course {
   @override
   final bool accessRestrictedByDate;
   @override
-  final String imageDownloadUrl;
+  final String? imageDownloadUrl;
   @override
   final bool hasWeightedGradingPeriods;
   @override
@@ -348,44 +352,44 @@ class _$Course extends Course {
   @override
   final bool restrictEnrollmentsToCourseDates;
   @override
-  final String workflowState;
+  final String? workflowState;
   @override
-  final HomePage homePage;
+  final HomePage? homePage;
   @override
-  final Term term;
+  final Term? term;
   @override
-  final BuiltList<Section> sections;
+  final BuiltList<Section>? sections;
   @override
-  final CourseSettings settings;
+  final CourseSettings? settings;
   @override
-  final BuiltList<JsonObject> gradingScheme;
+  final BuiltList<JsonObject>? gradingScheme;
 
-  factory _$Course([void Function(CourseBuilder) updates]) =>
-      (new CourseBuilder()..update(updates)).build();
+  factory _$Course([void Function(CourseBuilder)? updates]) =>
+      (new CourseBuilder()..update(updates))._build();
 
   _$Course._(
       {this.currentScore,
       this.finalScore,
       this.currentGrade,
       this.finalGrade,
-      this.id,
-      this.name,
+      required this.id,
+      required this.name,
       this.originalName,
       this.courseCode,
       this.startAt,
       this.endAt,
       this.syllabusBody,
-      this.hideFinalGrades,
-      this.isPublic,
+      required this.hideFinalGrades,
+      required this.isPublic,
       this.enrollments,
-      this.needsGradingCount,
-      this.applyAssignmentGroupWeights,
-      this.isFavorite,
-      this.accessRestrictedByDate,
+      required this.needsGradingCount,
+      required this.applyAssignmentGroupWeights,
+      required this.isFavorite,
+      required this.accessRestrictedByDate,
       this.imageDownloadUrl,
-      this.hasWeightedGradingPeriods,
-      this.hasGradingPeriods,
-      this.restrictEnrollmentsToCourseDates,
+      required this.hasWeightedGradingPeriods,
+      required this.hasGradingPeriods,
+      required this.restrictEnrollmentsToCourseDates,
       this.workflowState,
       this.homePage,
       this.term,
@@ -393,25 +397,24 @@ class _$Course extends Course {
       this.settings,
       this.gradingScheme})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, 'Course', 'id');
-    BuiltValueNullFieldError.checkNotNull(name, 'Course', 'name');
+    BuiltValueNullFieldError.checkNotNull(id, r'Course', 'id');
+    BuiltValueNullFieldError.checkNotNull(name, r'Course', 'name');
     BuiltValueNullFieldError.checkNotNull(
-        hideFinalGrades, 'Course', 'hideFinalGrades');
-    BuiltValueNullFieldError.checkNotNull(isPublic, 'Course', 'isPublic');
-    BuiltValueNullFieldError.checkNotNull(enrollments, 'Course', 'enrollments');
+        hideFinalGrades, r'Course', 'hideFinalGrades');
+    BuiltValueNullFieldError.checkNotNull(isPublic, r'Course', 'isPublic');
     BuiltValueNullFieldError.checkNotNull(
-        needsGradingCount, 'Course', 'needsGradingCount');
+        needsGradingCount, r'Course', 'needsGradingCount');
     BuiltValueNullFieldError.checkNotNull(
-        applyAssignmentGroupWeights, 'Course', 'applyAssignmentGroupWeights');
-    BuiltValueNullFieldError.checkNotNull(isFavorite, 'Course', 'isFavorite');
+        applyAssignmentGroupWeights, r'Course', 'applyAssignmentGroupWeights');
+    BuiltValueNullFieldError.checkNotNull(isFavorite, r'Course', 'isFavorite');
     BuiltValueNullFieldError.checkNotNull(
-        accessRestrictedByDate, 'Course', 'accessRestrictedByDate');
+        accessRestrictedByDate, r'Course', 'accessRestrictedByDate');
     BuiltValueNullFieldError.checkNotNull(
-        hasWeightedGradingPeriods, 'Course', 'hasWeightedGradingPeriods');
+        hasWeightedGradingPeriods, r'Course', 'hasWeightedGradingPeriods');
     BuiltValueNullFieldError.checkNotNull(
-        hasGradingPeriods, 'Course', 'hasGradingPeriods');
+        hasGradingPeriods, r'Course', 'hasGradingPeriods');
     BuiltValueNullFieldError.checkNotNull(restrictEnrollmentsToCourseDates,
-        'Course', 'restrictEnrollmentsToCourseDates');
+        r'Course', 'restrictEnrollmentsToCourseDates');
   }
 
   @override
@@ -458,49 +461,42 @@ class _$Course extends Course {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode), name.hashCode), originalName.hashCode), courseCode.hashCode), startAt.hashCode),
-                                                                                endAt.hashCode),
-                                                                            syllabusBody.hashCode),
-                                                                        hideFinalGrades.hashCode),
-                                                                    isPublic.hashCode),
-                                                                enrollments.hashCode),
-                                                            needsGradingCount.hashCode),
-                                                        applyAssignmentGroupWeights.hashCode),
-                                                    isFavorite.hashCode),
-                                                accessRestrictedByDate.hashCode),
-                                            imageDownloadUrl.hashCode),
-                                        hasWeightedGradingPeriods.hashCode),
-                                    hasGradingPeriods.hashCode),
-                                restrictEnrollmentsToCourseDates.hashCode),
-                            workflowState.hashCode),
-                        homePage.hashCode),
-                    term.hashCode),
-                sections.hashCode),
-            settings.hashCode),
-        gradingScheme.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, currentScore.hashCode);
+    _$hash = $jc(_$hash, finalScore.hashCode);
+    _$hash = $jc(_$hash, currentGrade.hashCode);
+    _$hash = $jc(_$hash, finalGrade.hashCode);
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, originalName.hashCode);
+    _$hash = $jc(_$hash, courseCode.hashCode);
+    _$hash = $jc(_$hash, startAt.hashCode);
+    _$hash = $jc(_$hash, endAt.hashCode);
+    _$hash = $jc(_$hash, syllabusBody.hashCode);
+    _$hash = $jc(_$hash, hideFinalGrades.hashCode);
+    _$hash = $jc(_$hash, isPublic.hashCode);
+    _$hash = $jc(_$hash, enrollments.hashCode);
+    _$hash = $jc(_$hash, needsGradingCount.hashCode);
+    _$hash = $jc(_$hash, applyAssignmentGroupWeights.hashCode);
+    _$hash = $jc(_$hash, isFavorite.hashCode);
+    _$hash = $jc(_$hash, accessRestrictedByDate.hashCode);
+    _$hash = $jc(_$hash, imageDownloadUrl.hashCode);
+    _$hash = $jc(_$hash, hasWeightedGradingPeriods.hashCode);
+    _$hash = $jc(_$hash, hasGradingPeriods.hashCode);
+    _$hash = $jc(_$hash, restrictEnrollmentsToCourseDates.hashCode);
+    _$hash = $jc(_$hash, workflowState.hashCode);
+    _$hash = $jc(_$hash, homePage.hashCode);
+    _$hash = $jc(_$hash, term.hashCode);
+    _$hash = $jc(_$hash, sections.hashCode);
+    _$hash = $jc(_$hash, settings.hashCode);
+    _$hash = $jc(_$hash, gradingScheme.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Course')
+    return (newBuiltValueToStringHelper(r'Course')
           ..add('currentScore', currentScore)
           ..add('finalScore', finalScore)
           ..add('currentGrade', currentGrade)
@@ -535,135 +531,136 @@ class _$Course extends Course {
 }
 
 class CourseBuilder implements Builder<Course, CourseBuilder> {
-  _$Course _$v;
+  _$Course? _$v;
 
-  double _currentScore;
-  double get currentScore => _$this._currentScore;
-  set currentScore(double currentScore) => _$this._currentScore = currentScore;
+  double? _currentScore;
+  double? get currentScore => _$this._currentScore;
+  set currentScore(double? currentScore) => _$this._currentScore = currentScore;
 
-  double _finalScore;
-  double get finalScore => _$this._finalScore;
-  set finalScore(double finalScore) => _$this._finalScore = finalScore;
+  double? _finalScore;
+  double? get finalScore => _$this._finalScore;
+  set finalScore(double? finalScore) => _$this._finalScore = finalScore;
 
-  String _currentGrade;
-  String get currentGrade => _$this._currentGrade;
-  set currentGrade(String currentGrade) => _$this._currentGrade = currentGrade;
+  String? _currentGrade;
+  String? get currentGrade => _$this._currentGrade;
+  set currentGrade(String? currentGrade) => _$this._currentGrade = currentGrade;
 
-  String _finalGrade;
-  String get finalGrade => _$this._finalGrade;
-  set finalGrade(String finalGrade) => _$this._finalGrade = finalGrade;
+  String? _finalGrade;
+  String? get finalGrade => _$this._finalGrade;
+  set finalGrade(String? finalGrade) => _$this._finalGrade = finalGrade;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _originalName;
-  String get originalName => _$this._originalName;
-  set originalName(String originalName) => _$this._originalName = originalName;
+  String? _originalName;
+  String? get originalName => _$this._originalName;
+  set originalName(String? originalName) => _$this._originalName = originalName;
 
-  String _courseCode;
-  String get courseCode => _$this._courseCode;
-  set courseCode(String courseCode) => _$this._courseCode = courseCode;
+  String? _courseCode;
+  String? get courseCode => _$this._courseCode;
+  set courseCode(String? courseCode) => _$this._courseCode = courseCode;
 
-  DateTime _startAt;
-  DateTime get startAt => _$this._startAt;
-  set startAt(DateTime startAt) => _$this._startAt = startAt;
+  DateTime? _startAt;
+  DateTime? get startAt => _$this._startAt;
+  set startAt(DateTime? startAt) => _$this._startAt = startAt;
 
-  DateTime _endAt;
-  DateTime get endAt => _$this._endAt;
-  set endAt(DateTime endAt) => _$this._endAt = endAt;
+  DateTime? _endAt;
+  DateTime? get endAt => _$this._endAt;
+  set endAt(DateTime? endAt) => _$this._endAt = endAt;
 
-  String _syllabusBody;
-  String get syllabusBody => _$this._syllabusBody;
-  set syllabusBody(String syllabusBody) => _$this._syllabusBody = syllabusBody;
+  String? _syllabusBody;
+  String? get syllabusBody => _$this._syllabusBody;
+  set syllabusBody(String? syllabusBody) => _$this._syllabusBody = syllabusBody;
 
-  bool _hideFinalGrades;
-  bool get hideFinalGrades => _$this._hideFinalGrades;
-  set hideFinalGrades(bool hideFinalGrades) =>
+  bool? _hideFinalGrades;
+  bool? get hideFinalGrades => _$this._hideFinalGrades;
+  set hideFinalGrades(bool? hideFinalGrades) =>
       _$this._hideFinalGrades = hideFinalGrades;
 
-  bool _isPublic;
-  bool get isPublic => _$this._isPublic;
-  set isPublic(bool isPublic) => _$this._isPublic = isPublic;
+  bool? _isPublic;
+  bool? get isPublic => _$this._isPublic;
+  set isPublic(bool? isPublic) => _$this._isPublic = isPublic;
 
-  ListBuilder<Enrollment> _enrollments;
+  ListBuilder<Enrollment>? _enrollments;
   ListBuilder<Enrollment> get enrollments =>
       _$this._enrollments ??= new ListBuilder<Enrollment>();
-  set enrollments(ListBuilder<Enrollment> enrollments) =>
+  set enrollments(ListBuilder<Enrollment>? enrollments) =>
       _$this._enrollments = enrollments;
 
-  int _needsGradingCount;
-  int get needsGradingCount => _$this._needsGradingCount;
-  set needsGradingCount(int needsGradingCount) =>
+  int? _needsGradingCount;
+  int? get needsGradingCount => _$this._needsGradingCount;
+  set needsGradingCount(int? needsGradingCount) =>
       _$this._needsGradingCount = needsGradingCount;
 
-  bool _applyAssignmentGroupWeights;
-  bool get applyAssignmentGroupWeights => _$this._applyAssignmentGroupWeights;
-  set applyAssignmentGroupWeights(bool applyAssignmentGroupWeights) =>
+  bool? _applyAssignmentGroupWeights;
+  bool? get applyAssignmentGroupWeights => _$this._applyAssignmentGroupWeights;
+  set applyAssignmentGroupWeights(bool? applyAssignmentGroupWeights) =>
       _$this._applyAssignmentGroupWeights = applyAssignmentGroupWeights;
 
-  bool _isFavorite;
-  bool get isFavorite => _$this._isFavorite;
-  set isFavorite(bool isFavorite) => _$this._isFavorite = isFavorite;
+  bool? _isFavorite;
+  bool? get isFavorite => _$this._isFavorite;
+  set isFavorite(bool? isFavorite) => _$this._isFavorite = isFavorite;
 
-  bool _accessRestrictedByDate;
-  bool get accessRestrictedByDate => _$this._accessRestrictedByDate;
-  set accessRestrictedByDate(bool accessRestrictedByDate) =>
+  bool? _accessRestrictedByDate;
+  bool? get accessRestrictedByDate => _$this._accessRestrictedByDate;
+  set accessRestrictedByDate(bool? accessRestrictedByDate) =>
       _$this._accessRestrictedByDate = accessRestrictedByDate;
 
-  String _imageDownloadUrl;
-  String get imageDownloadUrl => _$this._imageDownloadUrl;
-  set imageDownloadUrl(String imageDownloadUrl) =>
+  String? _imageDownloadUrl;
+  String? get imageDownloadUrl => _$this._imageDownloadUrl;
+  set imageDownloadUrl(String? imageDownloadUrl) =>
       _$this._imageDownloadUrl = imageDownloadUrl;
 
-  bool _hasWeightedGradingPeriods;
-  bool get hasWeightedGradingPeriods => _$this._hasWeightedGradingPeriods;
-  set hasWeightedGradingPeriods(bool hasWeightedGradingPeriods) =>
+  bool? _hasWeightedGradingPeriods;
+  bool? get hasWeightedGradingPeriods => _$this._hasWeightedGradingPeriods;
+  set hasWeightedGradingPeriods(bool? hasWeightedGradingPeriods) =>
       _$this._hasWeightedGradingPeriods = hasWeightedGradingPeriods;
 
-  bool _hasGradingPeriods;
-  bool get hasGradingPeriods => _$this._hasGradingPeriods;
-  set hasGradingPeriods(bool hasGradingPeriods) =>
+  bool? _hasGradingPeriods;
+  bool? get hasGradingPeriods => _$this._hasGradingPeriods;
+  set hasGradingPeriods(bool? hasGradingPeriods) =>
       _$this._hasGradingPeriods = hasGradingPeriods;
 
-  bool _restrictEnrollmentsToCourseDates;
-  bool get restrictEnrollmentsToCourseDates =>
+  bool? _restrictEnrollmentsToCourseDates;
+  bool? get restrictEnrollmentsToCourseDates =>
       _$this._restrictEnrollmentsToCourseDates;
-  set restrictEnrollmentsToCourseDates(bool restrictEnrollmentsToCourseDates) =>
+  set restrictEnrollmentsToCourseDates(
+          bool? restrictEnrollmentsToCourseDates) =>
       _$this._restrictEnrollmentsToCourseDates =
           restrictEnrollmentsToCourseDates;
 
-  String _workflowState;
-  String get workflowState => _$this._workflowState;
-  set workflowState(String workflowState) =>
+  String? _workflowState;
+  String? get workflowState => _$this._workflowState;
+  set workflowState(String? workflowState) =>
       _$this._workflowState = workflowState;
 
-  HomePage _homePage;
-  HomePage get homePage => _$this._homePage;
-  set homePage(HomePage homePage) => _$this._homePage = homePage;
+  HomePage? _homePage;
+  HomePage? get homePage => _$this._homePage;
+  set homePage(HomePage? homePage) => _$this._homePage = homePage;
 
-  TermBuilder _term;
+  TermBuilder? _term;
   TermBuilder get term => _$this._term ??= new TermBuilder();
-  set term(TermBuilder term) => _$this._term = term;
+  set term(TermBuilder? term) => _$this._term = term;
 
-  ListBuilder<Section> _sections;
+  ListBuilder<Section>? _sections;
   ListBuilder<Section> get sections =>
       _$this._sections ??= new ListBuilder<Section>();
-  set sections(ListBuilder<Section> sections) => _$this._sections = sections;
+  set sections(ListBuilder<Section>? sections) => _$this._sections = sections;
 
-  CourseSettingsBuilder _settings;
+  CourseSettingsBuilder? _settings;
   CourseSettingsBuilder get settings =>
       _$this._settings ??= new CourseSettingsBuilder();
-  set settings(CourseSettingsBuilder settings) => _$this._settings = settings;
+  set settings(CourseSettingsBuilder? settings) => _$this._settings = settings;
 
-  ListBuilder<JsonObject> _gradingScheme;
+  ListBuilder<JsonObject>? _gradingScheme;
   ListBuilder<JsonObject> get gradingScheme =>
       _$this._gradingScheme ??= new ListBuilder<JsonObject>();
-  set gradingScheme(ListBuilder<JsonObject> gradingScheme) =>
+  set gradingScheme(ListBuilder<JsonObject>? gradingScheme) =>
       _$this._gradingScheme = gradingScheme;
 
   CourseBuilder() {
@@ -686,7 +683,7 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
       _syllabusBody = $v.syllabusBody;
       _hideFinalGrades = $v.hideFinalGrades;
       _isPublic = $v.isPublic;
-      _enrollments = $v.enrollments.toBuilder();
+      _enrollments = $v.enrollments?.toBuilder();
       _needsGradingCount = $v.needsGradingCount;
       _applyAssignmentGroupWeights = $v.applyAssignmentGroupWeights;
       _isFavorite = $v.isFavorite;
@@ -713,12 +710,14 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   }
 
   @override
-  void update(void Function(CourseBuilder) updates) {
+  void update(void Function(CourseBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Course build() {
+  Course build() => _build();
+
+  _$Course _build() {
     _$Course _$result;
     try {
       _$result = _$v ??
@@ -727,33 +726,33 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
               finalScore: finalScore,
               currentGrade: currentGrade,
               finalGrade: finalGrade,
-              id: BuiltValueNullFieldError.checkNotNull(id, 'Course', 'id'),
-              name:
-                  BuiltValueNullFieldError.checkNotNull(name, 'Course', 'name'),
+              id: BuiltValueNullFieldError.checkNotNull(id, r'Course', 'id'),
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'Course', 'name'),
               originalName: originalName,
               courseCode: courseCode,
               startAt: startAt,
               endAt: endAt,
               syllabusBody: syllabusBody,
               hideFinalGrades: BuiltValueNullFieldError.checkNotNull(
-                  hideFinalGrades, 'Course', 'hideFinalGrades'),
+                  hideFinalGrades, r'Course', 'hideFinalGrades'),
               isPublic: BuiltValueNullFieldError.checkNotNull(
-                  isPublic, 'Course', 'isPublic'),
-              enrollments: enrollments.build(),
+                  isPublic, r'Course', 'isPublic'),
+              enrollments: _enrollments?.build(),
               needsGradingCount: BuiltValueNullFieldError.checkNotNull(
-                  needsGradingCount, 'Course', 'needsGradingCount'),
+                  needsGradingCount, r'Course', 'needsGradingCount'),
               applyAssignmentGroupWeights: BuiltValueNullFieldError.checkNotNull(
-                  applyAssignmentGroupWeights, 'Course', 'applyAssignmentGroupWeights'),
+                  applyAssignmentGroupWeights, r'Course', 'applyAssignmentGroupWeights'),
               isFavorite: BuiltValueNullFieldError.checkNotNull(
-                  isFavorite, 'Course', 'isFavorite'),
+                  isFavorite, r'Course', 'isFavorite'),
               accessRestrictedByDate: BuiltValueNullFieldError.checkNotNull(
-                  accessRestrictedByDate, 'Course', 'accessRestrictedByDate'),
+                  accessRestrictedByDate, r'Course', 'accessRestrictedByDate'),
               imageDownloadUrl: imageDownloadUrl,
               hasWeightedGradingPeriods: BuiltValueNullFieldError.checkNotNull(
-                  hasWeightedGradingPeriods, 'Course', 'hasWeightedGradingPeriods'),
+                  hasWeightedGradingPeriods, r'Course', 'hasWeightedGradingPeriods'),
               hasGradingPeriods:
-                  BuiltValueNullFieldError.checkNotNull(hasGradingPeriods, 'Course', 'hasGradingPeriods'),
-              restrictEnrollmentsToCourseDates: BuiltValueNullFieldError.checkNotNull(restrictEnrollmentsToCourseDates, 'Course', 'restrictEnrollmentsToCourseDates'),
+                  BuiltValueNullFieldError.checkNotNull(hasGradingPeriods, r'Course', 'hasGradingPeriods'),
+              restrictEnrollmentsToCourseDates: BuiltValueNullFieldError.checkNotNull(restrictEnrollmentsToCourseDates, r'Course', 'restrictEnrollmentsToCourseDates'),
               workflowState: workflowState,
               homePage: homePage,
               term: _term?.build(),
@@ -761,10 +760,10 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
               settings: _settings?.build(),
               gradingScheme: _gradingScheme?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'enrollments';
-        enrollments.build();
+        _enrollments?.build();
 
         _$failedField = 'term';
         _term?.build();
@@ -776,7 +775,7 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
         _gradingScheme?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Course', _$failedField, e.toString());
+            r'Course', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -785,4 +784,4 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint
