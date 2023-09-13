@@ -30,12 +30,10 @@ abstract class CreateAssignmentInfo implements Built<CreateAssignmentInfo, Creat
 
   String get name;
 
-  @nullable
-  String get description;
+  String? get description;
 
-  @nullable
   @BuiltValueField(wireName: 'due_at')
-  DateTime get dueAt;
+  DateTime? get dueAt;
 
   @BuiltValueField(wireName: 'points_possible')
   double get pointsPossible;
@@ -43,72 +41,56 @@ abstract class CreateAssignmentInfo implements Built<CreateAssignmentInfo, Creat
   @BuiltValueField(wireName: 'course_id')
   String get courseId;
 
-  @nullable
   @BuiltValueField(wireName: 'grading_type')
-  GradingType get gradingType;
+  GradingType? get gradingType;
 
-  @nullable
   @BuiltValueField(wireName: 'html_url')
-  String get htmlUrl;
+  String? get htmlUrl;
 
-  @nullable
-  String get url;
+  String? get url;
 
-  @nullable
   @BuiltValueField(wireName: 'quiz_id')
-  String get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
+  String? get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
 
-  @nullable
   @BuiltValueField(wireName: 'use_rubric_for_grading')
-  bool get useRubricForGrading;
+  bool? get useRubricForGrading;
 
-  @nullable
   @BuiltValueField(wireName: 'assignment_group_id')
-  String get assignmentGroupId;
+  String? get assignmentGroupId;
 
-  @nullable
-  int get position;
+  int? get position;
 
-  @nullable
   @BuiltValueField(wireName: 'lock_info')
-  LockInfo get lockInfo;
+  LockInfo? get lockInfo;
 
-  @nullable
   @BuiltValueField(wireName: 'locked_for_user')
-  bool get lockedForUser;
+  bool? get lockedForUser;
 
-  @nullable
   @BuiltValueField(wireName: 'lock_at')
-  DateTime get lockAt; // Date the teacher no longer accepts submissions.
+  DateTime? get lockAt; // Date the teacher no longer accepts submissions.
 
-  @nullable
   @BuiltValueField(wireName: 'unlock_at')
-  DateTime get unlockAt;
+  DateTime? get unlockAt;
 
-  @nullable
   @BuiltValueField(wireName: 'lock_explanation')
-  String get lockExplanation;
+  String? get lockExplanation;
 
-  @nullable
   @BuiltValueField(wireName: 'free_form_criterion_comments')
-  bool get freeFormCriterionComments;
+  bool? get freeFormCriterionComments;
 
   bool get published;
 
-  @nullable
-  bool get muted;
+  bool? get muted;
 
-  @nullable
   @BuiltValueField(wireName: 'group_category_id')
-  String get groupCategoryId;
+  String? get groupCategoryId;
 
-  @nullable
   @BuiltValueField(wireName: 'submission_types')
-  BuiltList<SubmissionTypes> get submissionTypes;
+  BuiltList<SubmissionTypes>? get submissionTypes;
 
   static void _initializeBuilder(CreateAssignmentInfoBuilder b) => b;
 
-  bool get isDiscussion => submissionTypes.contains(SubmissionTypes.discussionTopic);
+  bool get isDiscussion => submissionTypes?.contains(SubmissionTypes.discussionTopic) == true;
 
-  bool get isQuiz => submissionTypes.contains(SubmissionTypes.onlineQuiz);
+  bool get isQuiz => submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true;
 }

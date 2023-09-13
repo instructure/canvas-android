@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:collection/collection.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
@@ -24,14 +25,14 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:tuple/tuple.dart';
 
 class ConversationListInteractor {
-  Future<List<Conversation>> getConversations({bool forceRefresh: false}) async {
+  Future<List<Conversation>> getConversations({bool forceRefresh = false}) async {
     var api = locator<InboxApi>();
     try {
       // Get messages from both 'normal' scope 'sent' scopes
-      var results = await Future.wait([
+      var results = (await Future.wait([
         api.getConversations(forceRefresh: forceRefresh),
         api.getConversations(scope: 'sent', forceRefresh: forceRefresh)
-      ]);
+      ])).nonNulls.toList();
 
       // Remove messages in the 'sent' scope that also exist in the normal scope
       results[1].retainWhere((sent) => !results[0].any((it) => it.id == sent.id));
@@ -41,8 +42,8 @@ class ConversationListInteractor {
 
       // Sort by date (descending)
       conversations.sort((a, b) {
-        var dateA = a.lastMessageAt ?? a.lastAuthoredMessageAt;
-        var dateB = b.lastMessageAt ?? b.lastAuthoredMessageAt;
+        var dateA = a.lastMessageAt ?? a.lastAuthoredMessageAt ?? DateTime.now();
+        var dateB = b.lastMessageAt ?? b.lastAuthoredMessageAt ?? DateTime.now();
         return dateB.compareTo(dateA);
       });
       return Future.value(conversations);
@@ -51,11 +52,11 @@ class ConversationListInteractor {
     }
   }
 
-  Future<List<Course>> getCoursesForCompose() async {
+  Future<List<Course>?> getCoursesForCompose() async {
     return locator<CourseApi>().getObserveeCourses();
   }
 
-  Future<List<Enrollment>> getStudentEnrollments() async {
+  Future<List<Enrollment>?> getStudentEnrollments() async {
     return locator<EnrollmentsApi>().getObserveeEnrollments();
   }
 
@@ -66,16 +67,16 @@ class ConversationListInteractor {
     enrollments.retainWhere((e) => e.observedUser != null);
     List<Tuple2<User, Course>> thing = enrollments
         .map((e) {
-          final course = courses.firstWhere((c) => c.id == e.courseId, orElse: () => null);
+          final course = courses.firstWhereOrNull((c) => c.id == e.courseId);
           if (course == null) return null;
-          return Tuple2(e.observedUser, course);
+          return Tuple2(e.observedUser!, course);
         })
-        .where((e) => e != null)
+        .nonNulls
         .toList();
 
     // Sort users in alphabetical order and sort their courses alphabetically
-    thing.sortBy(
-      [(it) => it.item1?.shortName, (it) => it.item2.name],
+    thing.sortBySelector(
+      [(it) => it?.item1.shortName, (it) => it?.item2.name],
     );
 
     return thing;

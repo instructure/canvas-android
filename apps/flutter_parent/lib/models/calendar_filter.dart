@@ -20,8 +20,7 @@ part 'calendar_filter.g.dart';
 /// To have this built_value be generated, run this command from the project root:
 /// flutter pub run build_runner build --delete-conflicting-outputs
 abstract class CalendarFilter implements Built<CalendarFilter, CalendarFilterBuilder> {
-  @nullable
-  int get id;
+  int? get id;
 
   String get userDomain;
 

@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">ลบแล้ว</string>
 
+    <string name="gradeUpdated">อัพเดตเกรดแล้ว</string>
     <string name="loadingCanvas">กำลังโหลดเนื้อหา Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">คุณสามารถเปิดรายละเอียดผลงานจัดส่ง (Submission details) ได้จากที่นี่</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">เกรด: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s นาที</item>
         <item quantity="other">%s นาที</item>

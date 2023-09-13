@@ -196,6 +196,19 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentListPage.assertHasAssignment(assignment[0])
         assignmentListPage.assertNeedsGradingCountOfAssignment(assignment[0].name, 1)
 
+        Log.d(STEP_TAG,"Click on Search button and type '${quizAssignment[0].name}' to the search input field.")
+        assignmentListPage.searchable.clickOnSearchButton()
+        assignmentListPage.searchable.typeToSearchBar(quizAssignment[0].name)
+
+        Log.d(STEP_TAG, "Assert that the '${quizAssignment[0].name}' quiz assignment is the only one which is displayed because it matches the search text.")
+        assignmentListPage.assertHasAssignment(quizAssignment[0])
+        assignmentListPage.assertAssignmentNotDisplayed(assignment[0])
+
+        Log.d(STEP_TAG,"Clear search input field value and assert if both of the assignment are displayed again on the Assignment List Page.")
+        assignmentListPage.searchable.clickOnClearSearchButton()
+        assignmentListPage.assertHasAssignment(assignment[0])
+        assignmentListPage.assertHasAssignment(quizAssignment[0])
+
         val newAssignmentName = "New Assignment Name"
         Log.d(STEP_TAG,"Edit ${assignment[0].name} assignment's name  to: $newAssignmentName.")
         assignmentListPage.clickAssignment(assignment[0])
@@ -336,7 +349,6 @@ class AssignmentE2ETest : TeacherTest() {
         Espresso.pressBack()
         speedGraderCommentsPage.clickOnVideoComment()
         speedGraderCommentsPage.assertMediaCommentPreviewDisplayed()
-
     }
 
     @E2E

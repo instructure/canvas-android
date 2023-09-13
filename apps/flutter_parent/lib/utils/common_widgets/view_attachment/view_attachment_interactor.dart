@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/utils/permission_handler.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
@@ -34,25 +35,12 @@ class ViewAttachmentInteractor {
   }
 
   Future<void> downloadFile(Attachment attachment) async {
-    if (!await checkStoragePermission()) return;
     var dirs = await locator<PathProviderVeneer>().getExternalStorageDirectories(type: StorageDirectory.downloads);
     locator<FlutterDownloaderVeneer>().enqueue(
-      url: attachment.url,
-      savedDir: dirs[0].path,
+      url: attachment.url!,
+      savedDir: dirs![0].path,
       showNotification: true,
       openFileFromNotification: true,
     );
-  }
-
-  Future<bool> checkStoragePermission() async {
-    var permissionHandler = locator<PermissionHandler>();
-    PermissionStatus permission = await permissionHandler.checkPermissionStatus(Permission.storage);
-    if (permission != PermissionStatus.granted) {
-      var permission = await permissionHandler.requestPermission(Permission.storage);
-      if (permission == PermissionStatus.granted) return true;
-    } else {
-      return true;
-    }
-    return false;
   }
 }

@@ -118,7 +118,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Invokes onDaySelected callback', (tester) async {
-    DateTime selected = null;
+    DateTime? selected = null;
 
     await tester.pumpWidget(
       _appWithFetcher(
@@ -229,10 +229,14 @@ void main() {
   });
 }
 
-Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
+Widget _appWithFetcher(Widget child, {PlannerFetcher? fetcher}) {
   return TestApp(
     ChangeNotifierProvider<PlannerFetcher>(
-      create: (BuildContext context) => fetcher ?? _FakeFetcher(),
+      create: (BuildContext context) => fetcher ?? _FakeFetcher(
+        observeeId: '',
+        userDomain: '',
+        userId: '',
+      ),
       child: child,
     ),
   );
@@ -240,6 +244,8 @@ Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
 
 class _FakeFetcher extends PlannerFetcher {
   AsyncSnapshot<List<PlannerItem>> nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
+
+  _FakeFetcher({required super.observeeId, required super.userDomain, required super.userId});
 
   @override
   AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) => nextSnapshot;

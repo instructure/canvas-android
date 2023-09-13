@@ -32,38 +32,31 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   JsonObject get jsonId;
 
   @BuiltValueField(wireName: 'content-type')
-  @nullable
-  String get contentType;
+  String? get contentType;
 
-  @nullable
-  String get filename;
+  String? get filename;
 
   @BuiltValueField(wireName: 'display_name')
-  @nullable
-  String get displayName;
+  String? get displayName;
 
-  @nullable
-  String get url;
+  String? get url;
 
   @BuiltValueField(wireName: 'thumbnail_url')
-  @nullable
-  String get thumbnailUrl;
+  String? get thumbnailUrl;
 
   @BuiltValueField(wireName: 'preview_url')
-  @nullable
-  String get previewUrl;
+  String? get previewUrl;
 
   @BuiltValueField(wireName: 'created_at')
-  @nullable
-  DateTime get createdAt;
+  DateTime? get createdAt;
 
   int get size;
 
-  String inferContentType() {
-    if (contentType != null && contentType.isNotEmpty) return contentType;
+  String? inferContentType() {
+    if (contentType != null && contentType?.isNotEmpty == true) return contentType!;
 
     // First, attempt to infer content type from file name
-    String type = lookupMimeType(filename ?? '');
+    String? type = lookupMimeType(filename ?? '');
 
     // Next, attempt to infer from url
     if (type == null) type = lookupMimeType(url ?? '');

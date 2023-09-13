@@ -46,7 +46,7 @@ class ConversationListScreen extends StatefulWidget {
 }
 
 class ConversationListState extends State<ConversationListScreen> {
-  Future<List<Conversation>> _conversationsFuture;
+  late Future<List<Conversation>> _conversationsFuture;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   ConversationListInteractor interactor = locator<ConversationListInteractor>();
@@ -63,7 +63,7 @@ class ConversationListState extends State<ConversationListScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(L10n(context).inbox),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
         ),
         body: FutureBuilder(
           future: _conversationsFuture,
@@ -72,8 +72,8 @@ class ConversationListState extends State<ConversationListScreen> {
             if (snapshot.hasError) {
               body = _errorState(context);
             } else if (snapshot.hasData) {
-              if (snapshot.data.isNotEmpty) {
-                body = _successState(context, snapshot.data);
+              if (snapshot.data!.isNotEmpty) {
+                body = _successState(context, snapshot.data!);
               } else {
                 body = _emptyState(context);
               }
@@ -106,7 +106,7 @@ class ConversationListState extends State<ConversationListScreen> {
 
   Widget _errorState(BuildContext context) {
     return ErrorPandaWidget(L10n(context).errorLoadingMessages, () {
-      _refreshIndicatorKey.currentState.show();
+      _refreshIndicatorKey.currentState?.show();
     });
   }
 
@@ -139,7 +139,7 @@ class ConversationListState extends State<ConversationListScreen> {
               ),
               Text(
                 _formatMessageDate(item.lastMessageAt ?? item.lastAuthoredMessageAt),
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),
@@ -149,14 +149,14 @@ class ConversationListState extends State<ConversationListScreen> {
               SizedBox(height: 2),
               if (item.contextName?.isNotEmpty == true)
                 Text(
-                  item.contextName,
+                  item.contextName!,
                   style: TextStyle(fontWeight: FontWeight.w500),
                   key: ValueKey('conversation_context_$index'),
                 ),
               SizedBox(height: 4),
               Text(
-                item.lastMessage ?? item.lastAuthoredMessage,
-                style: Theme.of(context).textTheme.bodyText2,
+                item.lastMessage ?? item.lastAuthoredMessage ?? '',
+                style: Theme.of(context).textTheme.bodyMedium,
                 maxLines: 2,
                 key: ValueKey('conversation_message_$index'),
               ),
@@ -171,7 +171,7 @@ class ConversationListState extends State<ConversationListScreen> {
                 courseName: item.contextName,
               ),
             );
-            if (refresh == true || item.isUnread()) _refreshIndicatorKey.currentState.show();
+            if (refresh == true || item.isUnread()) _refreshIndicatorKey.currentState?.show();
           },
         );
         return item.isUnread() ? WidgetBadge(tile) : tile;
@@ -187,7 +187,7 @@ class ConversationListState extends State<ConversationListScreen> {
     );
   }
 
-  String _formatMessageDate(DateTime date) {
+  String _formatMessageDate(DateTime? date) {
     if (date == null) return '';
     date = date.toLocal();
     var format = DateFormat.MMM(supportedDateLocale).add_d();
@@ -204,7 +204,7 @@ class ConversationListState extends State<ConversationListScreen> {
     Widget avatar;
 
     var users = conversation.participants?.toList() ?? [];
-    users.retainWhere((user) => conversation.audience.contains(user.id));
+    users.retainWhere((user) => conversation.audience?.contains(user.id) == true);
 
     if (users.length == 2) {
       avatar = SizedBox(
@@ -248,7 +248,7 @@ class ConversationListState extends State<ConversationListScreen> {
       builder: (context) {
         return FutureBuilder(
           future: Future.wait([coursesFuture, studentsFuture])
-              .then((response) => _CoursesAndStudents(response[0], response[1])),
+              .then((response) => _CoursesAndStudents(response[0] as List<Course>, response[1] as List<Enrollment>)),
           builder: (BuildContext context, AsyncSnapshot<_CoursesAndStudents> snapshot) {
             if (snapshot.hasError) {
               return Padding(
@@ -275,10 +275,10 @@ class ConversationListState extends State<ConversationListScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     child: Text(
                       L10n(context).messageChooseCourse,
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                  ..._courseList(snapshot.data),
+                  ..._courseList(snapshot.data!),
                 ],
               );
             } else {
@@ -304,10 +304,10 @@ class ConversationListState extends State<ConversationListScreen> {
       Course course = t.item2;
       var w = ListTile(
         title: Text(course.name, key: ValueKey('course_list_course_${course.id}')),
-        subtitle: Text(L10n(context).courseForWhom(user.shortName)),
+        subtitle: Text(L10n(context).courseForWhom(user.shortName!)),
         onTap: () async {
           String postscript = L10n(context).messageLinkPostscript(
-            user.shortName,
+            user.shortName!,
             '${ApiPrefs.getDomain()}/courses/${course.id}',
           );
           Navigator.pop(context); // Dismisses the bottom sheet
@@ -319,7 +319,7 @@ class ConversationListState extends State<ConversationListScreen> {
                 course.name,
                 postscript,
               ));
-          if (refresh == true) _refreshIndicatorKey.currentState.show();
+          if (refresh == true) _refreshIndicatorKey.currentState?.show();
         },
       );
       widgets.add(w);

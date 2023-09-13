@@ -24,6 +24,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   group('Render', () {
@@ -57,7 +58,7 @@ void main() {
       await tester.pumpWidget(widget);
       await tester.pumpAndSettle();
 
-      expect(find.byType(FlatButton), findsNWidgets(3));
+      expect(find.byType(TextButton), findsNWidgets(3));
       expect(find.text(AppLocalizations().cancel.toUpperCase()), findsOneWidget);
       expect(find.text(AppLocalizations().never.toUpperCase()), findsOneWidget);
       expect(find.text(AppLocalizations().ok), findsOneWidget);
@@ -179,7 +180,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for error message
-      expect(tester.widget<FlatButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
+      expect(tester.widget<TextButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
     });
 
     testWidgets('disable ok button when setting low >= high', (tester) async {
@@ -200,7 +201,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for error message
-      expect(tester.widget<FlatButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
+      expect(tester.widget<TextButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
     });
 
     testWidgets('disable ok button when setting high <= low', (tester) async {
@@ -221,7 +222,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for error message
-      expect(tester.widget<FlatButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
+      expect(tester.widget<TextButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
     });
   });
 
@@ -230,7 +231,7 @@ void main() {
     testWidgets('never - closes dialog, returns threshold with value of -1', (tester) async {
       AlertThreshold initial = _mockThreshold(type: AlertType.courseGradeLow, value: '42');
       AlertThreshold response = initial.rebuild((b) => b.threshold = '-1');
-      AlertThreshold result;
+      AlertThreshold? result;
 
       var interactor = MockAlertThresholdsInteractor();
       when(interactor.updateAlertThreshold(any, any, any, value: anyNamed('value')))
@@ -240,21 +241,22 @@ void main() {
 
       var widget = TestApp(Builder(
           builder: (context) => Container(
-                child: RaisedButton(onPressed: () async {
+                child: ElevatedButton(onPressed: () async {
                   result = await showDialog(
                       context: context,
                       builder:(_) => AlertThresholdsPercentageDialog([initial], AlertType.courseGradeLow, ''));
-                }),
-              )));
+                },
+                child: Container(),
+              ))));
 
       // Show the dialog
       await tester.pumpWidget(widget);
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       // Check to see if our initial value is there
-      expect(find.text(initial.threshold), findsOneWidget);
+      expect(find.text(initial.threshold!), findsOneWidget);
 
       // Tap on 'never'
       await tester.tap(find.text(AppLocalizations().never.toUpperCase()));
@@ -269,16 +271,18 @@ void main() {
       // The dialog won't dismiss if it is the only child in the TestApp widget
       var widget = TestApp(Builder(
           builder: (context) => Container(
-                child: RaisedButton(onPressed: () async {
-                  showDialog(
-                      context: context, builder:(_) => AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''));
-                }),
+                child: ElevatedButton(
+                  child: Container(),
+                  onPressed: () async {
+                    showDialog(
+                        context: context, builder:(_) => AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''));
+                  }),
               )));
 
       // Show the dialog
       await tester.pumpWidget(widget);
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       // Tap cancel
@@ -352,16 +356,14 @@ void main() {
   });
 }
 
-class MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}
-
-void _setupLocator({AlertThresholdsInteractor thresholdsInteractor}) async {
+void _setupLocator({AlertThresholdsInteractor? thresholdsInteractor}) async {
   var locator = GetIt.instance;
   await locator.reset();
 
   locator.registerFactory<AlertThresholdsInteractor>(() => thresholdsInteractor ?? MockAlertThresholdsInteractor());
 }
 
-AlertThreshold _mockThreshold({AlertType type, String value}) => AlertThreshold((b) => b
+AlertThreshold _mockThreshold({AlertType? type, String? value}) => AlertThreshold((b) => b
   ..alertType = type ?? AlertType.courseGradeLow
   ..threshold = value ?? null
   ..build());

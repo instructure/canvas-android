@@ -31,12 +31,13 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final l10n = AppLocalizations();
-  _MockUrlLauncher launcher = _MockUrlLauncher();
-  _MockAndroidIntentVeneer intentVeneer = _MockAndroidIntentVeneer();
-  HelpScreenInteractor interactor = _MockHelpScreenInteractor();
+  MockUrlLauncher launcher = MockUrlLauncher();
+  MockAndroidIntentVeneer intentVeneer = MockAndroidIntentVeneer();
+  MockHelpScreenInteractor interactor = MockHelpScreenInteractor();
 
   setupTestLocator((locator) {
     locator.registerSingleton<QuickNav>(QuickNav());
@@ -223,16 +224,10 @@ void main() {
   });
 }
 
-HelpLink _createHelpLink({String id, String text, String url}) => HelpLink((b) => b
+HelpLink _createHelpLink({String? id, String? text, String? url}) => HelpLink((b) => b
   ..id = id ?? ''
   ..type = ''
   ..availableTo = BuiltList.of(<AvailableTo>[]).toBuilder()
   ..url = url ?? 'https://www.instructure.com'
   ..text = text ?? 'text'
   ..subtext = 'subtext');
-
-class _MockUrlLauncher extends Mock implements UrlLauncher {}
-
-class _MockAndroidIntentVeneer extends Mock implements AndroidIntentVeneer {}
-
-class _MockHelpScreenInteractor extends Mock implements HelpScreenInteractor {}

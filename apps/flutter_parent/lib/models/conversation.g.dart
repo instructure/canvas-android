@@ -50,9 +50,9 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
   final String wireName = 'Conversation';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Conversation object,
+  Iterable<Object?> serialize(Serializers serializers, Conversation object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'subject',
@@ -74,157 +74,169 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
       serializers.serialize(object.isVisible,
           specifiedType: const FullType(bool)),
     ];
-    if (object.lastMessage != null) {
+    Object? value;
+    value = object.lastMessage;
+    if (value != null) {
       result
         ..add('last_message')
-        ..add(serializers.serialize(object.lastMessage,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    if (object.lastAuthoredMessage != null) {
+    value = object.lastAuthoredMessage;
+    if (value != null) {
       result
         ..add('last_authored_message')
-        ..add(serializers.serialize(object.lastAuthoredMessage,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    if (object.lastMessageAt != null) {
+    value = object.lastMessageAt;
+    if (value != null) {
       result
         ..add('last_message_at')
-        ..add(serializers.serialize(object.lastMessageAt,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(DateTime)));
     }
-    if (object.lastAuthoredMessageAt != null) {
+    value = object.lastAuthoredMessageAt;
+    if (value != null) {
       result
         ..add('last_authored_message_at')
-        ..add(serializers.serialize(object.lastAuthoredMessageAt,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(DateTime)));
     }
-    if (object.avatarUrl != null) {
+    value = object.avatarUrl;
+    if (value != null) {
       result
         ..add('avatar_url')
-        ..add(serializers.serialize(object.avatarUrl,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    if (object.audience != null) {
+    value = object.audience;
+    if (value != null) {
       result
         ..add('audience')
-        ..add(serializers.serialize(object.audience,
+        ..add(serializers.serialize(value,
             specifiedType:
                 const FullType(BuiltList, const [const FullType(String)])));
     }
-    if (object.participants != null) {
+    value = object.participants;
+    if (value != null) {
       result
         ..add('participants')
-        ..add(serializers.serialize(object.participants,
+        ..add(serializers.serialize(value,
             specifiedType:
                 const FullType(BuiltList, const [const FullType(BasicUser)])));
     }
-    if (object.messages != null) {
+    value = object.messages;
+    if (value != null) {
       result
         ..add('messages')
-        ..add(serializers.serialize(object.messages,
+        ..add(serializers.serialize(value,
             specifiedType:
                 const FullType(BuiltList, const [const FullType(Message)])));
     }
-    if (object.contextName != null) {
+    value = object.contextName;
+    if (value != null) {
       result
         ..add('context_name')
-        ..add(serializers.serialize(object.contextName,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    if (object.contextCode != null) {
+    value = object.contextCode;
+    if (value != null) {
       result
         ..add('context_code')
-        ..add(serializers.serialize(object.contextCode,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
     return result;
   }
 
   @override
-  Conversation deserialize(Serializers serializers, Iterable<Object> serialized,
+  Conversation deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new ConversationBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'subject':
           result.subject = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'workflow_state':
           result.workflowState = serializers.deserialize(value,
-                  specifiedType: const FullType(ConversationWorkflowState))
+                  specifiedType: const FullType(ConversationWorkflowState))!
               as ConversationWorkflowState;
           break;
         case 'last_message':
           result.lastMessage = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'last_authored_message':
           result.lastAuthoredMessage = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'last_message_at':
           result.lastMessageAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'last_authored_message_at':
           result.lastAuthoredMessageAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'message_count':
           result.messageCount = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'subscribed':
           result.isSubscribed = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'starred':
           result.isStarred = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'avatar_url':
           result.avatarUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'visible':
           result.isVisible = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'audience':
           result.audience.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltList, const [const FullType(String)]))
-              as BuiltList<Object>);
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
           break;
         case 'participants':
           result.participants.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(BasicUser)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(BasicUser)]))!
+              as BuiltList<Object?>);
           break;
         case 'messages':
           result.messages.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(Message)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(Message)]))!
+              as BuiltList<Object?>);
           break;
         case 'context_name':
           result.contextName = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'context_code':
           result.contextCode = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -260,13 +272,13 @@ class _$Conversation extends Conversation {
   @override
   final ConversationWorkflowState workflowState;
   @override
-  final String lastMessage;
+  final String? lastMessage;
   @override
-  final String lastAuthoredMessage;
+  final String? lastAuthoredMessage;
   @override
-  final DateTime lastMessageAt;
+  final DateTime? lastMessageAt;
   @override
-  final DateTime lastAuthoredMessageAt;
+  final DateTime? lastAuthoredMessageAt;
   @override
   final int messageCount;
   @override
@@ -274,63 +286,54 @@ class _$Conversation extends Conversation {
   @override
   final bool isStarred;
   @override
-  final String avatarUrl;
+  final String? avatarUrl;
   @override
   final bool isVisible;
   @override
-  final BuiltList<String> audience;
+  final BuiltList<String>? audience;
   @override
-  final BuiltList<BasicUser> participants;
+  final BuiltList<BasicUser>? participants;
   @override
-  final BuiltList<Message> messages;
+  final BuiltList<Message>? messages;
   @override
-  final String contextName;
+  final String? contextName;
   @override
-  final String contextCode;
+  final String? contextCode;
 
-  factory _$Conversation([void Function(ConversationBuilder) updates]) =>
-      (new ConversationBuilder()..update(updates)).build();
+  factory _$Conversation([void Function(ConversationBuilder)? updates]) =>
+      (new ConversationBuilder()..update(updates))._build();
 
   _$Conversation._(
-      {this.id,
-      this.subject,
-      this.workflowState,
+      {required this.id,
+      required this.subject,
+      required this.workflowState,
       this.lastMessage,
       this.lastAuthoredMessage,
       this.lastMessageAt,
       this.lastAuthoredMessageAt,
-      this.messageCount,
-      this.isSubscribed,
-      this.isStarred,
+      required this.messageCount,
+      required this.isSubscribed,
+      required this.isStarred,
       this.avatarUrl,
-      this.isVisible,
+      required this.isVisible,
       this.audience,
       this.participants,
       this.messages,
       this.contextName,
       this.contextCode})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Conversation', 'id');
-    }
-    if (subject == null) {
-      throw new BuiltValueNullFieldError('Conversation', 'subject');
-    }
-    if (workflowState == null) {
-      throw new BuiltValueNullFieldError('Conversation', 'workflowState');
-    }
-    if (messageCount == null) {
-      throw new BuiltValueNullFieldError('Conversation', 'messageCount');
-    }
-    if (isSubscribed == null) {
-      throw new BuiltValueNullFieldError('Conversation', 'isSubscribed');
-    }
-    if (isStarred == null) {
-      throw new BuiltValueNullFieldError('Conversation', 'isStarred');
-    }
-    if (isVisible == null) {
-      throw new BuiltValueNullFieldError('Conversation', 'isVisible');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'Conversation', 'id');
+    BuiltValueNullFieldError.checkNotNull(subject, r'Conversation', 'subject');
+    BuiltValueNullFieldError.checkNotNull(
+        workflowState, r'Conversation', 'workflowState');
+    BuiltValueNullFieldError.checkNotNull(
+        messageCount, r'Conversation', 'messageCount');
+    BuiltValueNullFieldError.checkNotNull(
+        isSubscribed, r'Conversation', 'isSubscribed');
+    BuiltValueNullFieldError.checkNotNull(
+        isStarred, r'Conversation', 'isStarred');
+    BuiltValueNullFieldError.checkNotNull(
+        isVisible, r'Conversation', 'isVisible');
   }
 
   @override
@@ -365,51 +368,31 @@ class _$Conversation extends Conversation {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        0,
-                                                                        id
-                                                                            .hashCode),
-                                                                    subject
-                                                                        .hashCode),
-                                                                workflowState
-                                                                    .hashCode),
-                                                            lastMessage
-                                                                .hashCode),
-                                                        lastAuthoredMessage
-                                                            .hashCode),
-                                                    lastMessageAt.hashCode),
-                                                lastAuthoredMessageAt.hashCode),
-                                            messageCount.hashCode),
-                                        isSubscribed.hashCode),
-                                    isStarred.hashCode),
-                                avatarUrl.hashCode),
-                            isVisible.hashCode),
-                        audience.hashCode),
-                    participants.hashCode),
-                messages.hashCode),
-            contextName.hashCode),
-        contextCode.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, subject.hashCode);
+    _$hash = $jc(_$hash, workflowState.hashCode);
+    _$hash = $jc(_$hash, lastMessage.hashCode);
+    _$hash = $jc(_$hash, lastAuthoredMessage.hashCode);
+    _$hash = $jc(_$hash, lastMessageAt.hashCode);
+    _$hash = $jc(_$hash, lastAuthoredMessageAt.hashCode);
+    _$hash = $jc(_$hash, messageCount.hashCode);
+    _$hash = $jc(_$hash, isSubscribed.hashCode);
+    _$hash = $jc(_$hash, isStarred.hashCode);
+    _$hash = $jc(_$hash, avatarUrl.hashCode);
+    _$hash = $jc(_$hash, isVisible.hashCode);
+    _$hash = $jc(_$hash, audience.hashCode);
+    _$hash = $jc(_$hash, participants.hashCode);
+    _$hash = $jc(_$hash, messages.hashCode);
+    _$hash = $jc(_$hash, contextName.hashCode);
+    _$hash = $jc(_$hash, contextCode.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Conversation')
+    return (newBuiltValueToStringHelper(r'Conversation')
           ..add('id', id)
           ..add('subject', subject)
           ..add('workflowState', workflowState)
@@ -433,107 +416,108 @@ class _$Conversation extends Conversation {
 
 class ConversationBuilder
     implements Builder<Conversation, ConversationBuilder> {
-  _$Conversation _$v;
+  _$Conversation? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _subject;
-  String get subject => _$this._subject;
-  set subject(String subject) => _$this._subject = subject;
+  String? _subject;
+  String? get subject => _$this._subject;
+  set subject(String? subject) => _$this._subject = subject;
 
-  ConversationWorkflowState _workflowState;
-  ConversationWorkflowState get workflowState => _$this._workflowState;
-  set workflowState(ConversationWorkflowState workflowState) =>
+  ConversationWorkflowState? _workflowState;
+  ConversationWorkflowState? get workflowState => _$this._workflowState;
+  set workflowState(ConversationWorkflowState? workflowState) =>
       _$this._workflowState = workflowState;
 
-  String _lastMessage;
-  String get lastMessage => _$this._lastMessage;
-  set lastMessage(String lastMessage) => _$this._lastMessage = lastMessage;
+  String? _lastMessage;
+  String? get lastMessage => _$this._lastMessage;
+  set lastMessage(String? lastMessage) => _$this._lastMessage = lastMessage;
 
-  String _lastAuthoredMessage;
-  String get lastAuthoredMessage => _$this._lastAuthoredMessage;
-  set lastAuthoredMessage(String lastAuthoredMessage) =>
+  String? _lastAuthoredMessage;
+  String? get lastAuthoredMessage => _$this._lastAuthoredMessage;
+  set lastAuthoredMessage(String? lastAuthoredMessage) =>
       _$this._lastAuthoredMessage = lastAuthoredMessage;
 
-  DateTime _lastMessageAt;
-  DateTime get lastMessageAt => _$this._lastMessageAt;
-  set lastMessageAt(DateTime lastMessageAt) =>
+  DateTime? _lastMessageAt;
+  DateTime? get lastMessageAt => _$this._lastMessageAt;
+  set lastMessageAt(DateTime? lastMessageAt) =>
       _$this._lastMessageAt = lastMessageAt;
 
-  DateTime _lastAuthoredMessageAt;
-  DateTime get lastAuthoredMessageAt => _$this._lastAuthoredMessageAt;
-  set lastAuthoredMessageAt(DateTime lastAuthoredMessageAt) =>
+  DateTime? _lastAuthoredMessageAt;
+  DateTime? get lastAuthoredMessageAt => _$this._lastAuthoredMessageAt;
+  set lastAuthoredMessageAt(DateTime? lastAuthoredMessageAt) =>
       _$this._lastAuthoredMessageAt = lastAuthoredMessageAt;
 
-  int _messageCount;
-  int get messageCount => _$this._messageCount;
-  set messageCount(int messageCount) => _$this._messageCount = messageCount;
+  int? _messageCount;
+  int? get messageCount => _$this._messageCount;
+  set messageCount(int? messageCount) => _$this._messageCount = messageCount;
 
-  bool _isSubscribed;
-  bool get isSubscribed => _$this._isSubscribed;
-  set isSubscribed(bool isSubscribed) => _$this._isSubscribed = isSubscribed;
+  bool? _isSubscribed;
+  bool? get isSubscribed => _$this._isSubscribed;
+  set isSubscribed(bool? isSubscribed) => _$this._isSubscribed = isSubscribed;
 
-  bool _isStarred;
-  bool get isStarred => _$this._isStarred;
-  set isStarred(bool isStarred) => _$this._isStarred = isStarred;
+  bool? _isStarred;
+  bool? get isStarred => _$this._isStarred;
+  set isStarred(bool? isStarred) => _$this._isStarred = isStarred;
 
-  String _avatarUrl;
-  String get avatarUrl => _$this._avatarUrl;
-  set avatarUrl(String avatarUrl) => _$this._avatarUrl = avatarUrl;
+  String? _avatarUrl;
+  String? get avatarUrl => _$this._avatarUrl;
+  set avatarUrl(String? avatarUrl) => _$this._avatarUrl = avatarUrl;
 
-  bool _isVisible;
-  bool get isVisible => _$this._isVisible;
-  set isVisible(bool isVisible) => _$this._isVisible = isVisible;
+  bool? _isVisible;
+  bool? get isVisible => _$this._isVisible;
+  set isVisible(bool? isVisible) => _$this._isVisible = isVisible;
 
-  ListBuilder<String> _audience;
+  ListBuilder<String>? _audience;
   ListBuilder<String> get audience =>
       _$this._audience ??= new ListBuilder<String>();
-  set audience(ListBuilder<String> audience) => _$this._audience = audience;
+  set audience(ListBuilder<String>? audience) => _$this._audience = audience;
 
-  ListBuilder<BasicUser> _participants;
+  ListBuilder<BasicUser>? _participants;
   ListBuilder<BasicUser> get participants =>
       _$this._participants ??= new ListBuilder<BasicUser>();
-  set participants(ListBuilder<BasicUser> participants) =>
+  set participants(ListBuilder<BasicUser>? participants) =>
       _$this._participants = participants;
 
-  ListBuilder<Message> _messages;
+  ListBuilder<Message>? _messages;
   ListBuilder<Message> get messages =>
       _$this._messages ??= new ListBuilder<Message>();
-  set messages(ListBuilder<Message> messages) => _$this._messages = messages;
+  set messages(ListBuilder<Message>? messages) => _$this._messages = messages;
 
-  String _contextName;
-  String get contextName => _$this._contextName;
-  set contextName(String contextName) => _$this._contextName = contextName;
+  String? _contextName;
+  String? get contextName => _$this._contextName;
+  set contextName(String? contextName) => _$this._contextName = contextName;
 
-  String _contextCode;
-  String get contextCode => _$this._contextCode;
-  set contextCode(String contextCode) => _$this._contextCode = contextCode;
+  String? _contextCode;
+  String? get contextCode => _$this._contextCode;
+  set contextCode(String? contextCode) => _$this._contextCode = contextCode;
 
   ConversationBuilder() {
     Conversation._initializeBuilder(this);
   }
 
   ConversationBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _subject = _$v.subject;
-      _workflowState = _$v.workflowState;
-      _lastMessage = _$v.lastMessage;
-      _lastAuthoredMessage = _$v.lastAuthoredMessage;
-      _lastMessageAt = _$v.lastMessageAt;
-      _lastAuthoredMessageAt = _$v.lastAuthoredMessageAt;
-      _messageCount = _$v.messageCount;
-      _isSubscribed = _$v.isSubscribed;
-      _isStarred = _$v.isStarred;
-      _avatarUrl = _$v.avatarUrl;
-      _isVisible = _$v.isVisible;
-      _audience = _$v.audience?.toBuilder();
-      _participants = _$v.participants?.toBuilder();
-      _messages = _$v.messages?.toBuilder();
-      _contextName = _$v.contextName;
-      _contextCode = _$v.contextCode;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _subject = $v.subject;
+      _workflowState = $v.workflowState;
+      _lastMessage = $v.lastMessage;
+      _lastAuthoredMessage = $v.lastAuthoredMessage;
+      _lastMessageAt = $v.lastMessageAt;
+      _lastAuthoredMessageAt = $v.lastAuthoredMessageAt;
+      _messageCount = $v.messageCount;
+      _isSubscribed = $v.isSubscribed;
+      _isStarred = $v.isStarred;
+      _avatarUrl = $v.avatarUrl;
+      _isVisible = $v.isVisible;
+      _audience = $v.audience?.toBuilder();
+      _participants = $v.participants?.toBuilder();
+      _messages = $v.messages?.toBuilder();
+      _contextName = $v.contextName;
+      _contextCode = $v.contextCode;
       _$v = null;
     }
     return this;
@@ -541,42 +525,49 @@ class ConversationBuilder
 
   @override
   void replace(Conversation other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Conversation;
   }
 
   @override
-  void update(void Function(ConversationBuilder) updates) {
+  void update(void Function(ConversationBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Conversation build() {
+  Conversation build() => _build();
+
+  _$Conversation _build() {
     _$Conversation _$result;
     try {
       _$result = _$v ??
           new _$Conversation._(
-              id: id,
-              subject: subject,
-              workflowState: workflowState,
+              id: BuiltValueNullFieldError.checkNotNull(
+                  id, r'Conversation', 'id'),
+              subject: BuiltValueNullFieldError.checkNotNull(
+                  subject, r'Conversation', 'subject'),
+              workflowState: BuiltValueNullFieldError.checkNotNull(
+                  workflowState, r'Conversation', 'workflowState'),
               lastMessage: lastMessage,
               lastAuthoredMessage: lastAuthoredMessage,
               lastMessageAt: lastMessageAt,
               lastAuthoredMessageAt: lastAuthoredMessageAt,
-              messageCount: messageCount,
-              isSubscribed: isSubscribed,
-              isStarred: isStarred,
+              messageCount: BuiltValueNullFieldError.checkNotNull(
+                  messageCount, r'Conversation', 'messageCount'),
+              isSubscribed: BuiltValueNullFieldError.checkNotNull(
+                  isSubscribed, r'Conversation', 'isSubscribed'),
+              isStarred: BuiltValueNullFieldError.checkNotNull(
+                  isStarred, r'Conversation', 'isStarred'),
               avatarUrl: avatarUrl,
-              isVisible: isVisible,
+              isVisible: BuiltValueNullFieldError.checkNotNull(
+                  isVisible, r'Conversation', 'isVisible'),
               audience: _audience?.build(),
               participants: _participants?.build(),
               messages: _messages?.build(),
               contextName: contextName,
               contextCode: contextCode);
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'audience';
         _audience?.build();
@@ -586,7 +577,7 @@ class ConversationBuilder
         _messages?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Conversation', _$failedField, e.toString());
+            r'Conversation', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -595,4 +586,4 @@ class ConversationBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

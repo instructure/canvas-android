@@ -15,7 +15,7 @@ void main() {
       'com.instructure.parentapp/encrypted_shared_preferences',
     );
 
-    const Map<String, dynamic> kTestValues = <String, dynamic>{
+    const Map<String, Object> kTestValues = <String, Object>{
       'flutter.String': 'hello world',
       'flutter.Bool': true,
       'flutter.Int': 42,
@@ -23,10 +23,10 @@ void main() {
       'flutter.StringList': <String>['foo', 'bar'],
     };
 
-    InMemoryEncryptedSharedPreferencesStore testData;
+    InMemoryEncryptedSharedPreferencesStore? testData;
 
     final List<MethodCall> log = <MethodCall>[];
-    MethodChannelEncryptedSharedPreferencesStore store;
+    MethodChannelEncryptedSharedPreferencesStore? store;
 
     setUp(() async {
       testData = InMemoryEncryptedSharedPreferencesStore.empty();
@@ -34,22 +34,22 @@ void main() {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         if (methodCall.method == 'getAll') {
-          return await testData.getAll();
+          return await testData?.getAll();
         }
         if (methodCall.method == 'remove') {
           final String key = methodCall.arguments['key'];
-          return await testData.remove(key);
+          return await testData?.remove(key);
         }
         if (methodCall.method == 'clear') {
-          return await testData.clear();
+          return await testData?.clear();
         }
         final RegExp setterRegExp = RegExp(r'set(.*)');
-        final Match match = setterRegExp.matchAsPrefix(methodCall.method);
-        if (match.groupCount == 1) {
-          final String valueType = match.group(1);
+        final Match? match = setterRegExp.matchAsPrefix(methodCall.method);
+        if (match != null && match.groupCount == 1) {
+          final String valueType = match.group(1) ?? '';
           final String key = methodCall.arguments['key'];
           final Object value = methodCall.arguments['value'];
-          return await testData.setValue(valueType, key, value);
+          return await testData?.setValue(valueType, key, value);
         }
         fail('Unexpected method call: ${methodCall.method}');
       });
@@ -58,24 +58,24 @@ void main() {
     });
 
     tearDown(() async {
-      await testData.clear();
+      await testData?.clear();
       store = null;
       testData = null;
     });
 
     test('getAll', () async {
       testData = InMemoryEncryptedSharedPreferencesStore.withData(kTestValues);
-      expect(await store.getAll(), kTestValues);
+      expect(await store?.getAll(), kTestValues);
       expect(log.single.method, 'getAll');
     });
 
     test('remove', () async {
       testData = InMemoryEncryptedSharedPreferencesStore.withData(kTestValues);
-      expect(await store.remove('flutter.String'), true);
-      expect(await store.remove('flutter.Bool'), true);
-      expect(await store.remove('flutter.Int'), true);
-      expect(await store.remove('flutter.Double'), true);
-      expect(await testData.getAll(), <String, dynamic>{
+      expect(await store?.remove('flutter.String'), true);
+      expect(await store?.remove('flutter.Bool'), true);
+      expect(await store?.remove('flutter.Int'), true);
+      expect(await store?.remove('flutter.Double'), true);
+      expect(await testData?.getAll(), <String, dynamic>{
         'flutter.StringList': <String>['foo', 'bar'],
       });
 
@@ -86,12 +86,12 @@ void main() {
     });
 
     test('setValue', () async {
-      expect(await testData.getAll(), isEmpty);
+      expect(await testData?.getAll(), isEmpty);
       for (String key in kTestValues.keys) {
         final dynamic value = kTestValues[key];
-        expect(await store.setValue(key.split('.').last, key, value), true);
+        expect(await store?.setValue(key.split('.').last, key, value), true);
       }
-      expect(await testData.getAll(), kTestValues);
+      expect(await testData?.getAll(), kTestValues);
 
       expect(log, hasLength(5));
       expect(log[0].method, 'setString');
@@ -103,9 +103,9 @@ void main() {
 
     test('clear', () async {
       testData = InMemoryEncryptedSharedPreferencesStore.withData(kTestValues);
-      expect(await testData.getAll(), isNotEmpty);
-      expect(await store.clear(), true);
-      expect(await testData.getAll(), isEmpty);
+      expect(await testData?.getAll(), isNotEmpty);
+      expect(await store?.clear(), true);
+      expect(await testData?.getAll(), isEmpty);
       expect(log.single.method, 'clear');
     });
   });

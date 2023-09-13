@@ -15,9 +15,9 @@ class _$HelpLinksSerializer implements StructuredSerializer<HelpLinks> {
   final String wireName = 'HelpLinks';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, HelpLinks object,
+  Iterable<Object?> serialize(Serializers serializers, HelpLinks object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'custom_help_links',
       serializers.serialize(object.customHelpLinks,
           specifiedType:
@@ -32,28 +32,27 @@ class _$HelpLinksSerializer implements StructuredSerializer<HelpLinks> {
   }
 
   @override
-  HelpLinks deserialize(Serializers serializers, Iterable<Object> serialized,
+  HelpLinks deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new HelpLinksBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'custom_help_links':
           result.customHelpLinks.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(HelpLink)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(HelpLink)]))!
+              as BuiltList<Object?>);
           break;
         case 'default_help_links':
           result.defaultHelpLinks.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(HelpLink)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(HelpLink)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -68,16 +67,15 @@ class _$HelpLinks extends HelpLinks {
   @override
   final BuiltList<HelpLink> defaultHelpLinks;
 
-  factory _$HelpLinks([void Function(HelpLinksBuilder) updates]) =>
-      (new HelpLinksBuilder()..update(updates)).build();
+  factory _$HelpLinks([void Function(HelpLinksBuilder)? updates]) =>
+      (new HelpLinksBuilder()..update(updates))._build();
 
-  _$HelpLinks._({this.customHelpLinks, this.defaultHelpLinks}) : super._() {
-    if (customHelpLinks == null) {
-      throw new BuiltValueNullFieldError('HelpLinks', 'customHelpLinks');
-    }
-    if (defaultHelpLinks == null) {
-      throw new BuiltValueNullFieldError('HelpLinks', 'defaultHelpLinks');
-    }
+  _$HelpLinks._({required this.customHelpLinks, required this.defaultHelpLinks})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        customHelpLinks, r'HelpLinks', 'customHelpLinks');
+    BuiltValueNullFieldError.checkNotNull(
+        defaultHelpLinks, r'HelpLinks', 'defaultHelpLinks');
   }
 
   @override
@@ -97,13 +95,16 @@ class _$HelpLinks extends HelpLinks {
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc(0, customHelpLinks.hashCode), defaultHelpLinks.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, customHelpLinks.hashCode);
+    _$hash = $jc(_$hash, defaultHelpLinks.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('HelpLinks')
+    return (newBuiltValueToStringHelper(r'HelpLinks')
           ..add('customHelpLinks', customHelpLinks)
           ..add('defaultHelpLinks', defaultHelpLinks))
         .toString();
@@ -111,26 +112,27 @@ class _$HelpLinks extends HelpLinks {
 }
 
 class HelpLinksBuilder implements Builder<HelpLinks, HelpLinksBuilder> {
-  _$HelpLinks _$v;
+  _$HelpLinks? _$v;
 
-  ListBuilder<HelpLink> _customHelpLinks;
+  ListBuilder<HelpLink>? _customHelpLinks;
   ListBuilder<HelpLink> get customHelpLinks =>
       _$this._customHelpLinks ??= new ListBuilder<HelpLink>();
-  set customHelpLinks(ListBuilder<HelpLink> customHelpLinks) =>
+  set customHelpLinks(ListBuilder<HelpLink>? customHelpLinks) =>
       _$this._customHelpLinks = customHelpLinks;
 
-  ListBuilder<HelpLink> _defaultHelpLinks;
+  ListBuilder<HelpLink>? _defaultHelpLinks;
   ListBuilder<HelpLink> get defaultHelpLinks =>
       _$this._defaultHelpLinks ??= new ListBuilder<HelpLink>();
-  set defaultHelpLinks(ListBuilder<HelpLink> defaultHelpLinks) =>
+  set defaultHelpLinks(ListBuilder<HelpLink>? defaultHelpLinks) =>
       _$this._defaultHelpLinks = defaultHelpLinks;
 
   HelpLinksBuilder();
 
   HelpLinksBuilder get _$this {
-    if (_$v != null) {
-      _customHelpLinks = _$v.customHelpLinks?.toBuilder();
-      _defaultHelpLinks = _$v.defaultHelpLinks?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _customHelpLinks = $v.customHelpLinks.toBuilder();
+      _defaultHelpLinks = $v.defaultHelpLinks.toBuilder();
       _$v = null;
     }
     return this;
@@ -138,19 +140,19 @@ class HelpLinksBuilder implements Builder<HelpLinks, HelpLinksBuilder> {
 
   @override
   void replace(HelpLinks other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$HelpLinks;
   }
 
   @override
-  void update(void Function(HelpLinksBuilder) updates) {
+  void update(void Function(HelpLinksBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$HelpLinks build() {
+  HelpLinks build() => _build();
+
+  _$HelpLinks _build() {
     _$HelpLinks _$result;
     try {
       _$result = _$v ??
@@ -158,7 +160,7 @@ class HelpLinksBuilder implements Builder<HelpLinks, HelpLinksBuilder> {
               customHelpLinks: customHelpLinks.build(),
               defaultHelpLinks: defaultHelpLinks.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'customHelpLinks';
         customHelpLinks.build();
@@ -166,7 +168,7 @@ class HelpLinksBuilder implements Builder<HelpLinks, HelpLinksBuilder> {
         defaultHelpLinks.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'HelpLinks', _$failedField, e.toString());
+            r'HelpLinks', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -175,4 +177,4 @@ class HelpLinksBuilder implements Builder<HelpLinks, HelpLinksBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

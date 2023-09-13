@@ -25,6 +25,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_app.dart';
+import '../../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   setUp(() {
@@ -72,7 +73,7 @@ void main() {
 
   test('fetchAttachmentFile calls fileApi with correct parameters', () async {
     var attachment = _makeAttachment();
-    var fileApi = _MockFileApi();
+    var fileApi = MockFileApi();
 
     _setupLocator((locator) {
       locator.registerLazySingleton<FileApi>(() => fileApi);
@@ -84,7 +85,7 @@ void main() {
 
     verify(
       fileApi.downloadFile(
-        attachment.url,
+        attachment.url!,
         'cache/attachment-123-fake-file.txt',
         cancelToken: cancelToken,
       ),
@@ -99,7 +100,7 @@ void main() {
     await cachedFile.writeAsString('This is a test');
 
     var attachment = _makeAttachment().rebuild((b) => b..size = 14);
-    var fileApi = _MockFileApi();
+    var fileApi = MockFileApi();
 
     _setupLocator((locator) {
       locator.registerLazySingleton<FileApi>(() => fileApi);
@@ -122,7 +123,7 @@ void main() {
     await cachedFile.writeAsString('This is a test but the file size does not match');
 
     var attachment = _makeAttachment().rebuild((b) => b..size = 14);
-    var fileApi = _MockFileApi();
+    var fileApi = MockFileApi();
 
     _setupLocator((locator) {
       locator.registerLazySingleton<FileApi>(() => fileApi);
@@ -142,8 +143,8 @@ void main() {
   });
 }
 
-_setupLocator([config(GetIt locator) = null]) async {
-  var pathProvider = _MockPathProvider();
+_setupLocator([config(GetIt locator)? = null]) async {
+  var pathProvider = MockPathProviderVeneer();
   await setupTestLocator((locator) {
     locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
     if (config != null) config(locator);
@@ -159,7 +160,3 @@ Attachment _makeAttachment() {
     ..size = 14 // File size for text file with the contents 'This is a test'
     ..url = 'https://fake.url.com/fake-file.txt');
 }
-
-class _MockPathProvider extends Mock implements PathProviderVeneer {}
-
-class _MockFileApi extends Mock implements FileApi {}

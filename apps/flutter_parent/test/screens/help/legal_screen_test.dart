@@ -21,6 +21,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final l10n = AppLocalizations();
@@ -37,7 +38,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping privacy policy launches url', (tester) async {
-    var mockLauncher = _MockUrlLauncher();
+    var mockLauncher = MockUrlLauncher();
     setupTestLocator((locator) => locator.registerLazySingleton<UrlLauncher>(() => mockLauncher));
 
     await tester.pumpWidget(TestApp(LegalScreen()));
@@ -50,7 +51,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping github launches url', (tester) async {
-    var mockLauncher = _MockUrlLauncher();
+    var mockLauncher = MockUrlLauncher();
     setupTestLocator((locator) => locator.registerLazySingleton<UrlLauncher>(() => mockLauncher));
 
     await tester.pumpWidget(TestApp(LegalScreen()));
@@ -63,7 +64,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping terms of use navigates to Terms of Use screen', (tester) async {
-    final nav = _MockNav();
+    final nav = MockQuickNav();
     setupTestLocator((locator) => locator.registerSingleton<QuickNav>(nav));
 
     await tester.pumpWidget(TestApp(LegalScreen()));
@@ -75,7 +76,3 @@ void main() {
     verify(nav.pushRoute(any, argThat(matches(PandaRouter.termsOfUse()))));
   });
 }
-
-class _MockUrlLauncher extends Mock implements UrlLauncher {}
-
-class _MockNav extends Mock implements QuickNav {}

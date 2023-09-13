@@ -22,9 +22,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  final api = _MockAuthApi();
+  final api = MockAuthApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<AuthApi>(() => api);
@@ -62,5 +63,3 @@ void main() {
     expect(ApiPrefs.getUser(), user);
   });
 }
-
-class _MockAuthApi extends Mock implements AuthApi {}

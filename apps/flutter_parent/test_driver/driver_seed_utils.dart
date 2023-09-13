@@ -21,15 +21,15 @@ import 'package:flutter_parent/models/serializers.dart';
 // Some driver-side abstractions for grabbing SeedContext from the app.
 class DriverSeedUtils {
   // Driver side: Grab the current seed context (might be incomplete).
-  static Future<SeedContext> _getSeedContext(FlutterDriver driver) async {
-    var jsonContext = await driver.requestData("GetSeedContext");
-    return deserialize<SeedContext>(json.decode(jsonContext));
+  static Future<SeedContext> _getSeedContext(FlutterDriver? driver) async {
+    var jsonContext = await driver?.requestData("GetSeedContext");
+    return deserialize<SeedContext>(json.decode(jsonContext ?? ''))!;
   }
 
   // Driver side: Retrieve the SeedContext once seeding is complete
-  static Future<SeedContext> waitForSeedingToComplete(FlutterDriver driver) async {
+  static Future<SeedContext?> waitForSeedingToComplete(FlutterDriver? driver) async {
     var seedContext = await _getSeedContext(driver);
-    while (!seedContext.seedingComplete) {
+    while (seedContext.seedingComplete == false) {
       await Future.delayed(const Duration(seconds: 1));
       seedContext = await (_getSeedContext(driver));
     }

@@ -46,7 +46,7 @@ import com.instructure.teacher.ui.pages.CourseSettingsPage
 import com.instructure.teacher.ui.pages.DashboardPage
 import com.instructure.teacher.ui.pages.DiscussionsDetailsPage
 import com.instructure.teacher.ui.pages.DiscussionsListPage
-import com.instructure.teacher.ui.pages.EditAnnouncementPage
+import com.instructure.teacher.ui.pages.EditAnnouncementDetailsPage
 import com.instructure.teacher.ui.pages.EditAssignmentDetailsPage
 import com.instructure.teacher.ui.pages.EditDashboardPage
 import com.instructure.teacher.ui.pages.EditDiscussionsDetailsPage
@@ -127,7 +127,7 @@ abstract class TeacherTest : CanvasTest() {
     val assigneeListPage = AssigneeListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentDueDatesPage = AssignmentDueDatesPage()
-    val assignmentListPage = AssignmentListPage()
+    val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assignmentSubmissionListPage = AssignmentSubmissionListPage()
     val postSettingsPage = PostSettingsPage()
     val calendarEventPage = CalendarEventPage()
@@ -147,7 +147,7 @@ abstract class TeacherTest : CanvasTest() {
     val editProfileSettingsPage = EditProfileSettingsPage()
     val discussionsDetailsPage = DiscussionsDetailsPage()
     val discussionsListPage = DiscussionsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val editAnnouncementPage = EditAnnouncementPage()
+    val editAnnouncementDetailsPage = EditAnnouncementDetailsPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()
     val editDiscussionsDetailsPage = EditDiscussionsDetailsPage()
     val editPageDetailsPage = EditPageDetailsPage()

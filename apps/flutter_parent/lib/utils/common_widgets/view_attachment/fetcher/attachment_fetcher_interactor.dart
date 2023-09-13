@@ -28,15 +28,15 @@ class AttachmentFetcherInteractor {
     var file = File(savePath);
     if (await file.exists() && await file.length() == attachment.size) return file;
 
-    return locator<FileApi>().downloadFile(attachment.url, savePath, cancelToken: cancelToken);
+    return locator<FileApi>().downloadFile(attachment.url!, savePath, cancelToken: cancelToken);
   }
 
   Future<String> getAttachmentSavePath(Attachment attachment) async {
     var fileName = attachment.filename;
     if (fileName == null || fileName.isEmpty) {
-      var index = attachment.url.lastIndexOf('/');
-      if (index >= 0 && index < attachment.url.length - 1) {
-        fileName = attachment.url.substring(attachment.url.lastIndexOf('/') + 1);
+      var index = attachment.url!.lastIndexOf('/');
+      if (index >= 0 && index < attachment.url!.length - 1) {
+        fileName = attachment.url!.substring(attachment.url!.lastIndexOf('/') + 1);
       } else {
         fileName = 'file';
       }

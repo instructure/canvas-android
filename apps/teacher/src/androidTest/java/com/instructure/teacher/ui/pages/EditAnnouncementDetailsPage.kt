@@ -20,37 +20,29 @@ import androidx.test.espresso.Espresso
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
 /**
- * Represents the Edit Announcement page.
+ * Represents the Edit Announcement Page.
  */
-class EditAnnouncementPage : BasePage() {
-
-    /**
-     * Opens the edit mode for the announcement.
-     */
-    fun openEdit() {
-        waitForView(withId(R.id.menu_edit)).click()
-    }
+class EditAnnouncementDetailsPage : BasePage() {
 
     /**
      * Edits the name of the announcement with the specified [newName].
      *
      * @param newName The new name for the announcement.
      */
-    fun editAnnouncementName(newName: String) {
+    fun editAnnouncementTitle(newName: String) {
         onView(withId(R.id.announcementNameEditText)).replaceText(newName)
     }
 
     /**
      * Saves the edited announcement.
      */
-    fun saveEditAnnouncement() {
+    fun saveAnnouncement() {
         onView(withId(R.id.menuSaveAnnouncement)).click()
     }
 

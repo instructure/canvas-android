@@ -296,11 +296,6 @@ abstract class CanvasTest : InstructureTestingContract {
         }
     }
 
-    // Does the test device have particularly low screen resolution?
-    fun isLowResDevice() : Boolean {
-        return activityRule.activity.resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
-    }
-
     fun isTabletDevice(): Boolean {
 
         val metrics = activityRule.activity.resources.displayMetrics
@@ -482,6 +477,10 @@ abstract class CanvasTest : InstructureTestingContract {
             return getDeviceOrientation(ApplicationProvider.getApplicationContext()) == Configuration.ORIENTATION_PORTRAIT
         }
 
+        // Does the test device have particularly low screen resolution?
+        fun isLowResDevice() : Boolean {
+            return ApplicationProvider.getApplicationContext<Context?>().resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
+        }
     }
 
 }

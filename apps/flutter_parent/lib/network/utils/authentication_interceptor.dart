@@ -36,7 +36,7 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
     final currentLogin = ApiPrefs.getCurrentLogin();
 
     // Check for any errors
-    if (error.requestOptions?.path?.contains('accounts/self') == true) {
+    if (error.requestOptions.path.contains('accounts/self') == true) {
       // We are likely just checking if the user can masquerade or not, which happens on login - don't try to re-auth here
       return handler.next(error);
     } else if (error.requestOptions.headers[_RETRY_HEADER] != null) {
@@ -50,23 +50,23 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
     }
 
     // Lock new requests from being processed while refreshing the token
-    _dio.interceptors?.requestLock?.lock();
-    _dio.interceptors?.responseLock?.lock();
+    _dio.interceptors.requestLock.lock();
+    _dio.interceptors.responseLock.lock();
 
     // Refresh the token and update the login
-    CanvasToken tokens;
+    CanvasToken? tokens;
 
     tokens = await locator<AuthApi>().refreshToken().catchError((e) => null);
 
     if (tokens == null) {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID);
 
-      _dio.interceptors?.requestLock?.unlock();
-      _dio.interceptors?.responseLock?.unlock();
+      _dio.interceptors.requestLock.unlock();
+      _dio.interceptors.responseLock.unlock();
 
       return handler.next(error);
     } else {
-      Login login = currentLogin.rebuild((b) => b..accessToken = tokens.accessToken);
+      Login login = currentLogin.rebuild((b) => b..accessToken = tokens?.accessToken);
       ApiPrefs.addLogin(login);
       ApiPrefs.switchLogins(login);
 
@@ -76,8 +76,8 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
       requestOptions.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
       requestOptions.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
 
-      _dio.interceptors?.requestLock?.unlock();
-      _dio.interceptors?.responseLock?.unlock();
+      _dio.interceptors.requestLock.unlock();
+      _dio.interceptors.responseLock.unlock();
 
       final response = await _dio.fetch(requestOptions);
       if (response.statusCode == 200 || response.statusCode == 201) {

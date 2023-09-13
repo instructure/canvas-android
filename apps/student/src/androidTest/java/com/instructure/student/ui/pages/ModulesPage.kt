@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -87,11 +88,17 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     }
 
     fun assertPossiblePointsDisplayed(points: String) {
-        onView(withId(R.id.points) + withText("$points pts")).assertDisplayed()
+        val matcher = withId(R.id.points) + withText("$points pts")
+
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).assertDisplayed()
     }
 
     fun assertPossiblePointsNotDisplayed(name: String) {
-        onView(withParent(hasSibling(withChild(withId(R.id.title) + withText(name)))) + withId(R.id.points)).assertNotDisplayed()
+        val matcher = withParent(hasSibling(withChild(withId(R.id.title) + withText(name)))) + withId(R.id.points)
+
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).assertNotDisplayed()
     }
 
     /**

@@ -17,14 +17,14 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CalendarEventsApi {
-  Future<List<ScheduleItem>> getAllCalendarEvents({
+  Future<List<ScheduleItem>?> getAllCalendarEvents({
     bool allEvents = false,
     String type = ScheduleItem.apiTypeCalendar,
-    String startDate = null,
-    String endDate = null,
+    String? startDate = null,
+    String? endDate = null,
     List<String> contexts = const [],
     bool forceRefresh = false,
-  }) {
+  }) async {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var params = {
       'all_events': allEvents,
@@ -36,10 +36,12 @@ class CalendarEventsApi {
     return fetchList(dio.get('calendar_events', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<ScheduleItem> getEvent(String eventId, bool forceRefresh) =>
-      fetch(canvasDio(forceRefresh: forceRefresh).get('calendar_events/$eventId'));
+  Future<ScheduleItem?> getEvent(String? eventId, bool forceRefresh) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('calendar_events/$eventId'));
+  }
 
-  Future<List<ScheduleItem>> getUserCalendarItems(
+  Future<List<ScheduleItem>?> getUserCalendarItems(
     String userId,
     DateTime startDay,
     DateTime endDay,

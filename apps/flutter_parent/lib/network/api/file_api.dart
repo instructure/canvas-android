@@ -28,7 +28,7 @@ class FileApi {
   /// 'total' value of -1 is considered to represent indeterminate progress, and means either the file size is unknown
   /// or the upload is at a stage where progress cannot be determined. In either case, user-facing progress indicators
   /// should be aware of this and show 'indeterminate' progress as needed.
-  Future<Attachment> uploadConversationFile(File file, ProgressCallback progressCallback) async {
+  Future<Attachment?> uploadConversationFile(File file, ProgressCallback progressCallback) async {
     progressCallback(0, -1); // Indeterminate
     final name = basename(file.path);
     final size = await file.length();
@@ -44,7 +44,7 @@ class FileApi {
     });
 
     // Get the upload configuration
-    FileUploadConfig uploadConfig;
+    FileUploadConfig? uploadConfig;
     try {
       uploadConfig = await fetch(dio.post('users/self/files', queryParameters: params));
     } catch (e) {
@@ -53,12 +53,12 @@ class FileApi {
     }
 
     // Build the form data for upload
-    FormData formData = FormData.fromMap(uploadConfig.params.toMap());
+    FormData formData = FormData.fromMap(uploadConfig?.params?.toMap() ?? {});
     formData.files.add(MapEntry('file', await MultipartFile.fromFile(file.path, filename: name)));
 
     // Perform upload with progress
     return fetch(Dio().post(
-      uploadConfig.url,
+      uploadConfig?.url ?? '',
       data: formData,
       onSendProgress: (count, total) {
         if (total > 0 && count >= total) {
@@ -75,10 +75,11 @@ class FileApi {
   Future<File> downloadFile(
     String url,
     String savePath, {
-    CancelToken cancelToken,
-    ProgressCallback onProgress,
+    CancelToken? cancelToken,
+    ProgressCallback? onProgress,
   }) async {
-    await DioConfig.core(forceRefresh: true).dio.download(
+    var dio = DioConfig.core(forceRefresh: true).dio;
+    await dio.download(
           url,
           savePath,
           cancelToken: cancelToken,
@@ -87,5 +88,8 @@ class FileApi {
     return File(savePath);
   }
 
-  Future<void> deleteFile(String fileId) => canvasDio().delete('files/$fileId');
+  Future<void> deleteFile(String fileId) async {
+    var dio = canvasDio();
+    await dio.delete('files/$fileId');
+  }
 }

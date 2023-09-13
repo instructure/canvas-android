@@ -15,9 +15,9 @@ class _$PostUserSerializer implements StructuredSerializer<PostUser> {
   final String wireName = 'PostUser';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, PostUser object,
+  Iterable<Object?> serialize(Serializers serializers, PostUser object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
       'initial_enrollment_type',
@@ -32,27 +32,27 @@ class _$PostUserSerializer implements StructuredSerializer<PostUser> {
   }
 
   @override
-  PostUser deserialize(Serializers serializers, Iterable<Object> serialized,
+  PostUser deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PostUserBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'initial_enrollment_type':
           result.initialEnrollmentType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'terms_of_use':
           result.termsOfUse = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -69,20 +69,19 @@ class _$PostUser extends PostUser {
   @override
   final bool termsOfUse;
 
-  factory _$PostUser([void Function(PostUserBuilder) updates]) =>
-      (new PostUserBuilder()..update(updates)).build();
+  factory _$PostUser([void Function(PostUserBuilder)? updates]) =>
+      (new PostUserBuilder()..update(updates))._build();
 
-  _$PostUser._({this.name, this.initialEnrollmentType, this.termsOfUse})
+  _$PostUser._(
+      {required this.name,
+      required this.initialEnrollmentType,
+      required this.termsOfUse})
       : super._() {
-    if (name == null) {
-      throw new BuiltValueNullFieldError('PostUser', 'name');
-    }
-    if (initialEnrollmentType == null) {
-      throw new BuiltValueNullFieldError('PostUser', 'initialEnrollmentType');
-    }
-    if (termsOfUse == null) {
-      throw new BuiltValueNullFieldError('PostUser', 'termsOfUse');
-    }
+    BuiltValueNullFieldError.checkNotNull(name, r'PostUser', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        initialEnrollmentType, r'PostUser', 'initialEnrollmentType');
+    BuiltValueNullFieldError.checkNotNull(
+        termsOfUse, r'PostUser', 'termsOfUse');
   }
 
   @override
@@ -103,13 +102,17 @@ class _$PostUser extends PostUser {
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, name.hashCode), initialEnrollmentType.hashCode),
-        termsOfUse.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, initialEnrollmentType.hashCode);
+    _$hash = $jc(_$hash, termsOfUse.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('PostUser')
+    return (newBuiltValueToStringHelper(r'PostUser')
           ..add('name', name)
           ..add('initialEnrollmentType', initialEnrollmentType)
           ..add('termsOfUse', termsOfUse))
@@ -118,28 +121,29 @@ class _$PostUser extends PostUser {
 }
 
 class PostUserBuilder implements Builder<PostUser, PostUserBuilder> {
-  _$PostUser _$v;
+  _$PostUser? _$v;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _initialEnrollmentType;
-  String get initialEnrollmentType => _$this._initialEnrollmentType;
-  set initialEnrollmentType(String initialEnrollmentType) =>
+  String? _initialEnrollmentType;
+  String? get initialEnrollmentType => _$this._initialEnrollmentType;
+  set initialEnrollmentType(String? initialEnrollmentType) =>
       _$this._initialEnrollmentType = initialEnrollmentType;
 
-  bool _termsOfUse;
-  bool get termsOfUse => _$this._termsOfUse;
-  set termsOfUse(bool termsOfUse) => _$this._termsOfUse = termsOfUse;
+  bool? _termsOfUse;
+  bool? get termsOfUse => _$this._termsOfUse;
+  set termsOfUse(bool? termsOfUse) => _$this._termsOfUse = termsOfUse;
 
   PostUserBuilder();
 
   PostUserBuilder get _$this {
-    if (_$v != null) {
-      _name = _$v.name;
-      _initialEnrollmentType = _$v.initialEnrollmentType;
-      _termsOfUse = _$v.termsOfUse;
+    final $v = _$v;
+    if ($v != null) {
+      _name = $v.name;
+      _initialEnrollmentType = $v.initialEnrollmentType;
+      _termsOfUse = $v.termsOfUse;
       _$v = null;
     }
     return this;
@@ -147,27 +151,30 @@ class PostUserBuilder implements Builder<PostUser, PostUserBuilder> {
 
   @override
   void replace(PostUser other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$PostUser;
   }
 
   @override
-  void update(void Function(PostUserBuilder) updates) {
+  void update(void Function(PostUserBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$PostUser build() {
+  PostUser build() => _build();
+
+  _$PostUser _build() {
     final _$result = _$v ??
         new _$PostUser._(
-            name: name,
-            initialEnrollmentType: initialEnrollmentType,
-            termsOfUse: termsOfUse);
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'PostUser', 'name'),
+            initialEnrollmentType: BuiltValueNullFieldError.checkNotNull(
+                initialEnrollmentType, r'PostUser', 'initialEnrollmentType'),
+            termsOfUse: BuiltValueNullFieldError.checkNotNull(
+                termsOfUse, r'PostUser', 'termsOfUse'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

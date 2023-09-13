@@ -23,12 +23,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   testWidgets('Submit button disabled when switch is not checked',
       (tester) async {
-    var interactor = _MockInteractor();
-    var nav = _MockNav();
+    var interactor = MockAcceptableUsePolicyInteractor();
+    var nav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<AcceptableUsePolicyInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => nav);
@@ -43,8 +44,8 @@ void main() {
   });
 
   testWidgets('Submit button enabled when switch is checked', (tester) async {
-    var interactor = _MockInteractor();
-    var nav = _MockNav();
+    var interactor = MockAcceptableUsePolicyInteractor();
+    var nav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<AcceptableUsePolicyInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => nav);
@@ -63,11 +64,11 @@ void main() {
   });
 
   testWidgets('Submit button navigates to splash screen', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockAcceptableUsePolicyInteractor();
+    var nav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<AcceptableUsePolicyInteractor>(() => interactor);
-      locator.registerLazySingleton<QuickNav>(() => mockNav);
+      locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
     when(interactor.acceptTermsOfUse()).thenAnswer((_) async => User());
@@ -84,10 +85,6 @@ void main() {
 
     await tester.pump();
 
-    verify(mockNav.pushRouteAndClearStack(any, '/'));
+    verify(nav.pushRouteAndClearStack(any, '/'));
   });
 }
-
-class _MockInteractor extends Mock implements AcceptableUsePolicyInteractor {}
-
-class _MockNav extends Mock implements QuickNav {}

@@ -20,11 +20,11 @@ import 'webview_method_channel.dart';
 class AndroidWebView implements WebViewPlatform {
   @override
   Widget build({
-    BuildContext context,
-    CreationParams creationParams,
-    @required WebViewPlatformCallbacksHandler webViewPlatformCallbacksHandler,
-    WebViewPlatformCreatedCallback onWebViewPlatformCreated,
-    Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers,
+    BuildContext? context,
+    CreationParams? creationParams,
+    @required WebViewPlatformCallbacksHandler? webViewPlatformCallbacksHandler,
+    WebViewPlatformCreatedCallback? onWebViewPlatformCreated,
+    Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
   }) {
     assert(webViewPlatformCallbacksHandler != null);
     return GestureDetector(
@@ -40,7 +40,7 @@ class AndroidWebView implements WebViewPlatform {
       child: AndroidView(
         viewType: 'plugins.flutter.io/webview',
         onPlatformViewCreated: (int id) {
-          if (onWebViewPlatformCreated == null) {
+          if (onWebViewPlatformCreated == null || webViewPlatformCallbacksHandler == null) {
             return;
           }
           onWebViewPlatformCreated(MethodChannelWebViewPlatform(
@@ -52,7 +52,7 @@ class AndroidWebView implements WebViewPlatform {
         // directionality.
         layoutDirection: TextDirection.rtl,
         creationParams:
-            MethodChannelWebViewPlatform.creationParamsToMap(creationParams),
+            creationParams != null ? MethodChannelWebViewPlatform.creationParamsToMap(creationParams) : null,
         creationParamsCodec: const StandardMessageCodec(),
       ),
     );

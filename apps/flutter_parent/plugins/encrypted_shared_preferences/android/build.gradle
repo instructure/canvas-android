@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
+        classpath "com.android.tools.build:gradle:7.4.2"
     }
 }
 
@@ -30,7 +30,7 @@ allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 23
@@ -39,6 +39,8 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+
+    namespace 'com.instructure.parentapp.encryptedsharedpreferences'
 }
 
 dependencies {

@@ -738,7 +738,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 if (moduleItemAsset != ModuleItemAsset.MODULE_ITEM || routeOffline) {
                     // If the asset type is not a module item it means that the secondaryItemAsset will never be null.
                     val newRoute = route.copy(secondaryClass = secondaryItemAsset!!.routeClass, removePreviousScreen = true)
-                    RouteMatcher.route(requireContext(), newRoute)
+                    RouteMatcher.route(requireActivity(), newRoute)
                     return@tryLaunch
                 }
             }

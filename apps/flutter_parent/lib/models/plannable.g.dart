@@ -15,70 +15,68 @@ class _$PlannableSerializer implements StructuredSerializer<Plannable> {
   final String wireName = 'Plannable';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Plannable object,
+  Iterable<Object?> serialize(Serializers serializers, Plannable object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'title',
       serializers.serialize(object.title,
           specifiedType: const FullType(String)),
     ];
-    result.add('points_possible');
-    if (object.pointsPossible == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.pointsPossible,
-          specifiedType: const FullType(double)));
-    }
-    result.add('due_at');
-    if (object.dueAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.dueAt,
+    Object? value;
+    value = object.pointsPossible;
+
+    result
+      ..add('points_possible')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(double)));
+    value = object.dueAt;
+
+    result
+      ..add('due_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('assignment_id');
-    if (object.assignmentId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.assignmentId,
-          specifiedType: const FullType(String)));
-    }
+    value = object.assignmentId;
+
+    result
+      ..add('assignment_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
-  Plannable deserialize(Serializers serializers, Iterable<Object> serialized,
+  Plannable deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PlannableBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'title':
           result.title = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'points_possible':
           result.pointsPossible = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
+              specifiedType: const FullType(double)) as double?;
           break;
         case 'due_at':
           result.dueAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'assignment_id':
           result.assignmentId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -93,24 +91,24 @@ class _$Plannable extends Plannable {
   @override
   final String title;
   @override
-  final double pointsPossible;
+  final double? pointsPossible;
   @override
-  final DateTime dueAt;
+  final DateTime? dueAt;
   @override
-  final String assignmentId;
+  final String? assignmentId;
 
-  factory _$Plannable([void Function(PlannableBuilder) updates]) =>
-      (new PlannableBuilder()..update(updates)).build();
+  factory _$Plannable([void Function(PlannableBuilder)? updates]) =>
+      (new PlannableBuilder()..update(updates))._build();
 
   _$Plannable._(
-      {this.id, this.title, this.pointsPossible, this.dueAt, this.assignmentId})
+      {required this.id,
+      required this.title,
+      this.pointsPossible,
+      this.dueAt,
+      this.assignmentId})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Plannable', 'id');
-    }
-    if (title == null) {
-      throw new BuiltValueNullFieldError('Plannable', 'title');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'Plannable', 'id');
+    BuiltValueNullFieldError.checkNotNull(title, r'Plannable', 'title');
   }
 
   @override
@@ -133,17 +131,19 @@ class _$Plannable extends Plannable {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, id.hashCode), title.hashCode),
-                pointsPossible.hashCode),
-            dueAt.hashCode),
-        assignmentId.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, title.hashCode);
+    _$hash = $jc(_$hash, pointsPossible.hashCode);
+    _$hash = $jc(_$hash, dueAt.hashCode);
+    _$hash = $jc(_$hash, assignmentId.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Plannable')
+    return (newBuiltValueToStringHelper(r'Plannable')
           ..add('id', id)
           ..add('title', title)
           ..add('pointsPossible', pointsPossible)
@@ -154,38 +154,39 @@ class _$Plannable extends Plannable {
 }
 
 class PlannableBuilder implements Builder<Plannable, PlannableBuilder> {
-  _$Plannable _$v;
+  _$Plannable? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String? _title;
+  String? get title => _$this._title;
+  set title(String? title) => _$this._title = title;
 
-  double _pointsPossible;
-  double get pointsPossible => _$this._pointsPossible;
-  set pointsPossible(double pointsPossible) =>
+  double? _pointsPossible;
+  double? get pointsPossible => _$this._pointsPossible;
+  set pointsPossible(double? pointsPossible) =>
       _$this._pointsPossible = pointsPossible;
 
-  DateTime _dueAt;
-  DateTime get dueAt => _$this._dueAt;
-  set dueAt(DateTime dueAt) => _$this._dueAt = dueAt;
+  DateTime? _dueAt;
+  DateTime? get dueAt => _$this._dueAt;
+  set dueAt(DateTime? dueAt) => _$this._dueAt = dueAt;
 
-  String _assignmentId;
-  String get assignmentId => _$this._assignmentId;
-  set assignmentId(String assignmentId) => _$this._assignmentId = assignmentId;
+  String? _assignmentId;
+  String? get assignmentId => _$this._assignmentId;
+  set assignmentId(String? assignmentId) => _$this._assignmentId = assignmentId;
 
   PlannableBuilder();
 
   PlannableBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _title = _$v.title;
-      _pointsPossible = _$v.pointsPossible;
-      _dueAt = _$v.dueAt;
-      _assignmentId = _$v.assignmentId;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _title = $v.title;
+      _pointsPossible = $v.pointsPossible;
+      _dueAt = $v.dueAt;
+      _assignmentId = $v.assignmentId;
       _$v = null;
     }
     return this;
@@ -193,23 +194,24 @@ class PlannableBuilder implements Builder<Plannable, PlannableBuilder> {
 
   @override
   void replace(Plannable other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Plannable;
   }
 
   @override
-  void update(void Function(PlannableBuilder) updates) {
+  void update(void Function(PlannableBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Plannable build() {
+  Plannable build() => _build();
+
+  _$Plannable _build() {
     final _$result = _$v ??
         new _$Plannable._(
-            id: id,
-            title: title,
+            id: BuiltValueNullFieldError.checkNotNull(id, r'Plannable', 'id'),
+            title: BuiltValueNullFieldError.checkNotNull(
+                title, r'Plannable', 'title'),
             pointsPossible: pointsPossible,
             dueAt: dueAt,
             assignmentId: assignmentId);
@@ -218,4 +220,4 @@ class PlannableBuilder implements Builder<Plannable, PlannableBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

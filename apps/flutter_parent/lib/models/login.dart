@@ -29,11 +29,9 @@ abstract class Login implements Built<Login, LoginBuilder> {
 
   String get domain;
 
-  @nullable
-  String get clientId;
+  String? get clientId;
 
-  @nullable
-  String get clientSecret;
+  String? get clientSecret;
 
   String get accessToken;
 
@@ -41,20 +39,15 @@ abstract class Login implements Built<Login, LoginBuilder> {
 
   User get user;
 
-  @nullable
-  String get selectedStudentId;
+  String? get selectedStudentId;
 
-  @nullable
-  bool get canMasquerade;
+  bool? get canMasquerade;
 
-  @nullable
-  User get masqueradeUser;
+  User? get masqueradeUser;
 
-  @nullable
-  String get masqueradeDomain;
+  String? get masqueradeDomain;
 
-  @nullable
-  bool get isMasqueradingFromQRCode;
+  bool? get isMasqueradingFromQRCode;
 
   bool get isMasquerading => masqueradeUser != null && masqueradeDomain != null;
 
