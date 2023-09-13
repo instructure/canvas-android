@@ -53,6 +53,7 @@ import com.instructure.student.fragment.CreateDiscussionFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -256,14 +257,16 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     private fun checkForPermission() {
-        lifecycleScope.tryLaunch {
-            canPost = repository.getCreationPermission(canvasContext, isAnnouncement)
-            if (canPost) {
-                if (view != null) binding.createNewDiscussion.show()
+        lifecycleScope.launch {
+            try {
+                canPost = repository.getCreationPermission(canvasContext, isAnnouncement)
+                if (canPost) {
+                    if (view != null) binding.createNewDiscussion.show()
+                }
+            } catch (e: Exception) {
+                Logger.e("Error getting permissions for discussion permissions. " + e.message)
+                if (view != null) binding.createNewDiscussion.hide()
             }
-        } catch {
-            Logger.e("Error getting permissions for discussion permissions. " + it.message)
-            if (view != null) binding.createNewDiscussion.hide()
         }
     }
 
