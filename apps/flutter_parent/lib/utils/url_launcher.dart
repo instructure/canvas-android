@@ -21,7 +21,7 @@ class UrlLauncher {
 
   MethodChannel channel = MethodChannel(channelName);
 
-  Future<bool> canLaunch(String url, {bool excludeInstructure = true}) {
+  Future<bool?> canLaunch(String url, {bool excludeInstructure = true}) {
     return channel.invokeMethod<bool>(
       canLaunchMethod,
       <String, Object>{

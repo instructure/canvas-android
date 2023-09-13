@@ -32,6 +32,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final interactor = MockCourseRoutingShellInteractor();
@@ -102,14 +103,14 @@ void main() {
     expect(find.text(AppLocalizations().unexpectedError), findsOneWidget);
 
     // Should have the error widgets button for refresh
-    final matchedWidget = find.byType(FlatButton);
+    final matchedWidget = find.byType(TextButton);
     expect(matchedWidget, findsOneWidget);
 
     // Try to refresh
     await tester.tap(matchedWidget);
     await tester.pumpAndSettle();
 
-    verify(interactor.loadCourseShell(any, any)).called(2); // Once for initial load, another for the refresh
+    verify(interactor.loadCourseShell(any, any, forceRefresh: anyNamed('forceRefresh'))).called(2); // Once for initial load, another for the refresh
   });
 
   testWidgetsWithAccessibilityChecks('Refresh displays loading indicator and loads state', (tester) async {

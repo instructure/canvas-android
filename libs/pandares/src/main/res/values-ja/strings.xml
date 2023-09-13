@@ -426,6 +426,7 @@
     <!-- Notifications -->
     <string name="deleted">削除されました</string>
 
+    <string name="gradeUpdated">評定を更新しました</string>
     <string name="loadingCanvas">Canvas コンテンツ&#8230;を読み込み中</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1106,6 +1107,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">「提出」の詳細はここで開くことができます</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">評定：%s</string>
     <plurals name="minutes">
         <item quantity="other">%s 分</item>
     </plurals>

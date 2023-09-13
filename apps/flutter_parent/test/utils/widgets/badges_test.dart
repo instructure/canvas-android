@@ -33,7 +33,7 @@ void main() {
     expect(decoration.color, StudentColorSet.all[0].light);
 
     var state = tester.state(find.byType(MaterialApp));
-    ParentTheme.of(state.context).setSelectedStudent('1');
+    ParentTheme.of(state.context)?.setSelectedStudent('1');
     await tester.pumpAndSettle();
 
     decoration = (tester.widgetList(find.byType(Container)).last as Container).decoration as BoxDecoration;
@@ -117,7 +117,7 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, Colors.white);
       expect((background.decoration as BoxDecoration).color, StudentColorSet.electric.light);
-      expect(text.style.color, Colors.white);
+      expect(text.style?.color, Colors.white);
     });
 
     testWidgetsWithAccessibilityChecks('has a white border with a high contrast blue background', (tester) async {
@@ -133,7 +133,7 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, Colors.white);
       expect((background.decoration as BoxDecoration).color, StudentColorSet.electric.lightHC);
-      expect(text.style.color, Colors.white);
+      expect(text.style?.color, Colors.white);
     });
 
     testWidgetsWithAccessibilityChecks('has a black border with a blue background in dark mode', (tester) async {
@@ -149,7 +149,7 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, Colors.black);
       expect((background.decoration as BoxDecoration).color, StudentColorSet.electric.dark);
-      expect(text.style.color, Colors.black);
+      expect(text.style?.color, Colors.black);
     });
 
     testWidgetsWithAccessibilityChecks('has a black border with a high contrast blue background in dark mode',
@@ -167,7 +167,7 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, Colors.black);
       expect((background.decoration as BoxDecoration).color, StudentColorSet.electric.darkHC);
-      expect(text.style.color, Colors.black);
+      expect(text.style?.color, Colors.black);
     });
 
     // HAMBURGER TESTS
@@ -183,7 +183,7 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, StudentColorSet.electric.light);
       expect((background.decoration as BoxDecoration).color, Colors.white);
-      expect(text.style.color, StudentColorSet.electric.light);
+      expect(text.style?.color, StudentColorSet.electric.light);
     });
 
     testWidgetsWithAccessibilityChecks('hamburger has a high contrast blue border with a white background',
@@ -200,7 +200,7 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, StudentColorSet.electric.lightHC);
       expect((background.decoration as BoxDecoration).color, Colors.white);
-      expect(text.style.color, StudentColorSet.electric.lightHC);
+      expect(text.style?.color, StudentColorSet.electric.lightHC);
     });
 
     testWidgetsWithAccessibilityChecks('hamburger has a black border with a tiara background in dark mode',
@@ -217,7 +217,7 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, Colors.black);
       expect((background.decoration as BoxDecoration).color, ParentColors.tiara);
-      expect(text.style.color, Colors.black);
+      expect(text.style?.color, Colors.black);
     });
 
     testWidgetsWithAccessibilityChecks('hamburger has a black border with a tiara background in dark mode and HC',
@@ -234,15 +234,11 @@ void main() {
 
       expect((border.decoration as BoxDecoration).color, Colors.black);
       expect((background.decoration as BoxDecoration).color, ParentColors.tiara);
-      expect(text.style.color, Colors.black);
+      expect(text.style?.color, Colors.black);
     });
   });
 
   group('WidgetBadge', () {
-    test('throws if null is passed in for the child icon', () {
-      expect(() => WidgetBadge(null), throwsAssertionError);
-    });
-
     testWidgetsWithAccessibilityChecks('shows the widget passed in', (tester) async {
       final child = Icon(Icons.error);
       await tester.pumpWidget(TestApp(WidgetBadge(child)));

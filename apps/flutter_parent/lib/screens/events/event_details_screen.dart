@@ -11,6 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/reminder.dart';
@@ -30,27 +31,26 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 
 class EventDetailsScreen extends StatefulWidget {
-  final ScheduleItem event;
-  final String eventId;
+  final ScheduleItem? event;
+  final String? eventId;
 
   // Course ID is used for messaging. The message FAB will not be shown if it or current student is null.
-  final String courseId;
+  final String? courseId;
 
   EventDetailsScreen.withEvent({
-    Key key,
-    this.event,
+    required this.event,
     this.courseId,
-  })  : assert(event != null),
-        eventId = event.id,
-        super(key: key);
+    super.key
+  }) : assert(event != null),
+      eventId = event!.id;
 
   EventDetailsScreen.withId({
-    Key key,
-    this.eventId,
+    required this.eventId,
     this.courseId,
-  })  : assert(eventId != null),
-        event = null,
-        super(key: key);
+    super.key
+  }) :
+      assert(eventId != null),
+      event = null;
 
   @override
   _EventDetailsScreenState createState() => _EventDetailsScreenState();
@@ -59,9 +59,9 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  Future<ScheduleItem> _eventFuture;
+  late Future<ScheduleItem?> _eventFuture;
 
-  Future<ScheduleItem> _loadEvent({bool forceRefresh = false}) => _interactor.loadEvent(widget.eventId, forceRefresh);
+  Future<ScheduleItem?> _loadEvent({bool forceRefresh = false}) => _interactor.loadEvent(widget.eventId, forceRefresh);
 
   EventDetailsInteractor get _interactor => locator<EventDetailsInteractor>();
 
@@ -79,7 +79,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _eventFuture,
-      builder: (context, AsyncSnapshot<ScheduleItem> snapshot) {
+      builder: (context, AsyncSnapshot<ScheduleItem?> snapshot) {
         return Scaffold(
           appBar: AppBar(title: Text(L10n(context).eventDetailsTitle)),
           floatingActionButton: _fab(snapshot),
@@ -98,11 +98,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     );
   }
 
-  Widget _body(BuildContext context, AsyncSnapshot<ScheduleItem> snapshot) {
+  Widget _body(BuildContext context, AsyncSnapshot<ScheduleItem?> snapshot) {
     if (snapshot.hasError) {
       return ErrorPandaWidget(
         L10n(context).unexpectedError,
-        () => _refreshKey.currentState.show(),
+        () => _refreshKey.currentState?.show(),
       );
     } else if (!snapshot.hasData) {
       return LoadingIndicator();
@@ -111,9 +111,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
-  Widget _fab(AsyncSnapshot<ScheduleItem> snapshot) {
-    User student = ApiPrefs.getCurrentStudent();
-    if (!snapshot.hasData || widget.courseId == null || student.id == null || student.name == null) {
+  Widget? _fab(AsyncSnapshot<ScheduleItem?> snapshot) {
+    User? student = ApiPrefs.getCurrentStudent();
+    if (!snapshot.hasData || widget.courseId == null || student?.id == null || student?.name == null) {
       // The data hasn't loaded, or course/student info is missing (e.g. if we deep linked to this page)
       return null;
     }
@@ -122,11 +122,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       tooltip: L10n(context).assignmentMessageHint,
       child: Padding(padding: const EdgeInsets.only(left: 4, top: 4), child: Icon(CanvasIconsSolid.comment)),
       onPressed: () {
-        final event = snapshot.data;
-        String subject = L10n(context).eventSubjectMessage(student.name, event.title);
-        String postscript = L10n(context).messageLinkPostscript(student.name, event.htmlUrl);
+        final event = snapshot.data!;
+        String subject = L10n(context).eventSubjectMessage(student!.name, event.title!);
+        String postscript = L10n(context).messageLinkPostscript(student.name, event.htmlUrl ?? '');
         Widget screen = CreateConversationScreen(
-          widget.courseId,
+          widget.courseId!,
           student.id,
           subject,
           postscript,
@@ -138,40 +138,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 }
 
 class _EventDetails extends StatelessWidget {
-  final ScheduleItem event;
-  final String courseId;
+  final ScheduleItem? event;
+  final String? courseId;
 
-  const _EventDetails(this.event, this.courseId, {Key key})
-      : assert(event != null),
-        super(key: key);
+  const _EventDetails(this.event, this.courseId, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final l10n = L10n(context);
 
     // Get the date strings
-    String dateLine1, dateLine2;
-    final date = event.startAt ?? event.endAt;
-    if (event.isAllDay) {
+    String? dateLine1, dateLine2;
+    final date = event?.startAt ?? event?.endAt;
+    if (event?.isAllDay == true) {
       dateLine1 = _dateFormat(date);
-    } else if (event.startAt != null && event.endAt != null && event.startAt != event.endAt) {
+      dateLine2 = '';
+    } else if (event?.startAt != null && event?.endAt != null && event?.startAt != event?.endAt) {
       dateLine1 = _dateFormat(date);
-      dateLine2 = l10n.eventTime(_timeFormat(event.startAt), _timeFormat(event.endAt));
+      dateLine2 = l10n.eventTime(_timeFormat(event?.startAt!)!, _timeFormat(event?.endAt!)!);
     } else {
       dateLine1 = _dateFormat(date);
       dateLine2 = _timeFormat(date);
     }
 
     // Get the location strings
-    String locationLine1, locationLine2;
-    if ((event.locationAddress == null || event.locationAddress.isEmpty) &&
-        (event.locationName == null || event.locationName.isEmpty)) {
+    String? locationLine1, locationLine2;
+    if ((event?.locationAddress == null || event?.locationAddress?.isEmpty == true) &&
+        (event?.locationName == null || event?.locationName?.isEmpty == true)) {
       locationLine1 = l10n.eventNoLocation;
-    } else if (event.locationName == null || event.locationName.isEmpty) {
-      locationLine1 = event.locationAddress;
+    } else if (event?.locationName == null || event?.locationName?.isEmpty == true) {
+      locationLine1 = event?.locationAddress ?? '';
     } else {
-      locationLine1 = event.locationName;
-      locationLine2 = event.locationAddress;
+      locationLine1 = event?.locationName ?? '';
+      locationLine2 = event?.locationAddress ?? '';
     }
 
     final textTheme = Theme.of(context).textTheme;
@@ -180,7 +179,7 @@ class _EventDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       children: [
         SizedBox(height: 16),
-        Text(event.title ?? '', style: textTheme.headline4, key: ValueKey('event_details_title')),
+        Text(event?.title ?? '', style: textTheme.headlineMedium, key: ValueKey('event_details_title')),
         SizedBox(height: 16),
         Divider(),
         _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2, keyPrefix: 'event_details_date'),
@@ -192,42 +191,42 @@ class _EventDetails extends StatelessWidget {
             keyPrefix: 'event_details_location'),
         Divider(),
         _SimpleHeader(label: l10n.assignmentRemindMeLabel),
-        _RemindMe(event, courseId, [dateLine1, dateLine2].where((it) => it != null).join('\n')),
+        _RemindMe(event, courseId, <String?>[dateLine1, dateLine2].nonNulls.where((d) => d.isNotEmpty).join('\n')),
         Divider(),
-        HtmlDescriptionTile(html: event.description),
+        HtmlDescriptionTile(html: event?.description),
         // Don't show the bottom divider if there's no content (no empty message shown either)
-        if (event.description != null && event.description.isNotEmpty)
+        if (event?.description != null && event?.description?.isNotEmpty == true)
           Divider(),
       ],
     );
   }
 
-  String _dateFormat(DateTime time) {
+  String? _dateFormat(DateTime? time) {
     return time == null ? null : DateFormat.EEEE(supportedDateLocale).add_yMMMd().format(time.toLocal());
   }
 
-  String _timeFormat(DateTime time) {
+  String? _timeFormat(DateTime? time) {
     return time == null ? null : DateFormat.jm(supportedDateLocale).format(time.toLocal());
   }
 }
 
 class _RemindMe extends StatefulWidget {
-  final ScheduleItem event;
-  final String courseId;
+  final ScheduleItem? event;
+  final String? courseId;
   final String formattedDate;
 
-  const _RemindMe(this.event, this.courseId, this.formattedDate, {Key key}) : super(key: key);
+  const _RemindMe(this.event, this.courseId, this.formattedDate, {super.key});
 
   @override
   _RemindMeState createState() => _RemindMeState();
 }
 
 class _RemindMeState extends State<_RemindMe> {
-  Future<Reminder> _reminderFuture;
+  late Future<Reminder?> _reminderFuture;
 
   EventDetailsInteractor _interactor = locator<EventDetailsInteractor>();
 
-  Future<Reminder> _loadReminder() => _interactor.loadReminder(widget.event.id);
+  Future<Reminder?> _loadReminder() => _interactor.loadReminder(widget.event?.id);
 
   @override
   void initState() {
@@ -240,25 +239,25 @@ class _RemindMeState extends State<_RemindMe> {
     TextTheme textTheme = Theme.of(context).textTheme;
     return FutureBuilder(
       future: _reminderFuture,
-      builder: (BuildContext context, AsyncSnapshot<Reminder> snapshot) {
-        Reminder reminder = snapshot.data;
+      builder: (BuildContext context, AsyncSnapshot<Reminder?> snapshot) {
+        Reminder? reminder = snapshot.data;
         return SwitchListTile(
           contentPadding: EdgeInsets.zero,
           value: reminder != null,
           title: Text(
             reminder?.date == null ? L10n(context).eventRemindMeDescription : L10n(context).eventRemindMeSet,
-            style: textTheme.subtitle1,
+            style: textTheme.titleMedium,
           ),
           subtitle: reminder == null
               ? null
               : Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    reminder.date.l10nFormat(L10n(context).dateAtTime),
-                    style: textTheme.subtitle1.copyWith(color: ParentTheme.of(context).studentColor),
+                    reminder.date.l10nFormat(L10n(context).dateAtTime)!,
+                    style: textTheme.titleMedium?.copyWith(color: ParentTheme.of(context)?.studentColor),
                   ),
                 ),
-          onChanged: (checked) => _handleAlarmSwitch(context, widget.event, checked, reminder, widget.formattedDate),
+          onChanged: (checked) => _handleAlarmSwitch(context, widget.event, checked, reminder, widget.formattedDate)
         );
       },
     );
@@ -266,19 +265,19 @@ class _RemindMeState extends State<_RemindMe> {
 
   _handleAlarmSwitch(
     BuildContext context,
-    ScheduleItem event,
+    ScheduleItem? event,
     bool checked,
-    Reminder reminder,
+    Reminder? reminder,
     String formattedDate,
   ) async {
     if (reminder != null) _interactor.deleteReminder(reminder);
     if (checked) {
       var now = DateTime.now();
-      var eventDate = event.isAllDay ? event.allDayDate.toLocal() : event.startAt.toLocal();
-      var initialDate = eventDate?.isAfter(now) == true ? eventDate : now;
+      var eventDate = event?.isAllDay == true ? event?.allDayDate?.toLocal() : event?.startAt?.toLocal();
+      var initialDate = eventDate?.isAfter(now) == true ? eventDate! : now;
 
-      DateTime date;
-      TimeOfDay time;
+      DateTime? date;
+      TimeOfDay? time;
 
       date = await showDatePicker(
         context: context,
@@ -295,9 +294,9 @@ class _RemindMeState extends State<_RemindMe> {
         await _interactor.createReminder(
           L10n(context),
           reminderDate,
-          event.id,
+          event?.id,
           widget.courseId,
-          event.title,
+          event?.title,
           formattedDate,
         );
       }
@@ -311,9 +310,10 @@ class _RemindMeState extends State<_RemindMe> {
 }
 
 class _SimpleTile extends StatelessWidget {
-  final String label, line1, line2, keyPrefix;
+  final String label, keyPrefix;
+  final String? line1, line2;
 
-  const _SimpleTile({Key key, this.label, this.line1, this.line2, this.keyPrefix}) : super(key: key);
+  const _SimpleTile({required this.label, this.line1, this.line2, required this.keyPrefix, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -323,9 +323,9 @@ class _SimpleTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SimpleHeader(label: label),
-        Text(line1 ?? '', style: textTheme.subtitle1, key: ValueKey('${keyPrefix}_line1')),
+        Text(line1 ?? '', style: textTheme.titleMedium, key: ValueKey('${keyPrefix}_line1')),
         if (line2 != null) SizedBox(height: 8),
-        if (line2 != null) Text(line2, style: textTheme.subtitle1, key: ValueKey('${keyPrefix}_line2')),
+        if (line2 != null) Text(line2!, style: textTheme.titleMedium, key: ValueKey('${keyPrefix}_line2')),
         SizedBox(height: 16),
       ],
     );
@@ -335,7 +335,7 @@ class _SimpleTile extends StatelessWidget {
 class _SimpleHeader extends StatelessWidget {
   final String label;
 
-  const _SimpleHeader({Key key, this.label}) : super(key: key);
+  const _SimpleHeader({required this.label, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +343,7 @@ class _SimpleHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: 16),
-        Text(label, style: Theme.of(context).textTheme.overline),
+        Text(label, style: Theme.of(context).textTheme.labelSmall),
         SizedBox(height: 8),
       ],
     );

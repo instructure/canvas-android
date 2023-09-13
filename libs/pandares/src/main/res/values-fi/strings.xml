@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Poistettu</string>
 
+    <string name="gradeUpdated">Arvosana päivitetty</string>
     <string name="loadingCanvas">Ladataan Canvas-sisältöä&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Voit avata tehtävän palautustiedot täältä</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Arvosana: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minuutti</item>
         <item quantity="other">%s minuuttia</item>

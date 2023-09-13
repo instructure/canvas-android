@@ -38,7 +38,7 @@ class CourseSummaryScreen extends StatelessWidget {
 class _CourseSummary extends StatefulWidget {
   final CourseDetailsModel model;
 
-  const _CourseSummary(this.model, {Key key}) : super(key: key);
+  const _CourseSummary(this.model, {super.key});
 
   @override
   __CourseSummaryState createState() => __CourseSummaryState();
@@ -46,7 +46,7 @@ class _CourseSummary extends StatefulWidget {
 
 class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAliveClientMixin {
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey();
-  Future<List<ScheduleItem>> _future;
+  late Future<List<ScheduleItem>?> _future;
 
   @override
   bool get wantKeepAlive => true; // Retain this screen's state when switching tabs
@@ -61,7 +61,7 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
     setState(() {
       _future = widget.model.loadSummary(refresh: true);
     });
-    return _future.catchError((_) {});
+    _future.catchError((_) { return Future.value(null); });
   }
 
   @override
@@ -72,13 +72,13 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       onRefresh: _refresh,
       child: FutureBuilder(
         future: _future,
-        builder: (BuildContext context, AsyncSnapshot<List<ScheduleItem>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<ScheduleItem>?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
             return LoadingIndicator();
-          } else if (snapshot.hasError) {
+          } else if (snapshot.hasError || !snapshot.hasData) {
             return ErrorPandaWidget(L10n(context).errorLoadingCourseSummary, _refresh);
           } else {
-            return _body(snapshot.data);
+            return _body(snapshot.data!);
           }
         },
       ),
@@ -108,25 +108,25 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
     if (date == null) {
       dateText = L10n(context).noDueDate;
     } else {
-      dateText = date.l10nFormat(L10n(context).dateAtTime);
+      dateText = date.l10nFormat(L10n(context).dateAtTime)!;
     }
 
     // Compute itemId for use with key values, which are used for testing
-    var itemId = item.id;
+    String? itemId = item.id;
     if (item.type == ScheduleItem.apiTypeAssignment && item.assignment != null) {
-      itemId = item.assignment.isQuiz ? item.assignment.quizId : item.assignment.id;
+      itemId = item.assignment!.isQuiz ? item.assignment!.quizId : item.assignment!.id;
     }
 
     return ListTile(
-      title: Text(item.title, key: ValueKey('summary_item_title_$itemId')),
+      title: Text(item.title!, key: ValueKey('summary_item_title_$itemId')),
       subtitle: Text(dateText, key: ValueKey('summary_item_subtitle_$itemId')),
-      leading: Icon(_getIcon(item), color: Theme.of(context).accentColor, key: ValueKey('summary_item_icon_$itemId')),
+      leading: Icon(_getIcon(item), color: Theme.of(context).colorScheme.secondary, key: ValueKey('summary_item_icon_$itemId')),
       onTap: () {
         if (item.type == ScheduleItem.apiTypeCalendar) {
           locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(widget.model.courseId, item.id));
         } else {
           locator<QuickNav>()
-              .pushRoute(context, PandaRouter.assignmentDetails(widget.model.courseId, item.assignment.id));
+              .pushRoute(context, PandaRouter.assignmentDetails(widget.model.courseId, item.assignment!.id));
         }
       },
     );

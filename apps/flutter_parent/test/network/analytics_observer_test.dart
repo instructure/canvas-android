@@ -20,6 +20,7 @@ import 'package:test/test.dart';
 
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final observer = AnalyticsObserver();
@@ -43,8 +44,8 @@ void main() {
       final settings = RouteSettings(name: PandaRouter.courseDetails(courseId));
 
       observer.didPop(
-        MaterialPageRoute(builder: (_) => null),
-        MaterialPageRoute(builder: (_) => null, settings: settings),
+        MaterialPageRoute(builder: (_) => Container()),
+        MaterialPageRoute(builder: (_) => Container(), settings: settings),
       );
 
       verify(analytics.setCurrentScreen(screenName));
@@ -68,7 +69,7 @@ void main() {
       final courseId = '1234';
       final settings = RouteSettings(name: PandaRouter.courseDetails(courseId));
 
-      observer.didReplace(newRoute: MaterialPageRoute(builder: (_) => null, settings: settings));
+      observer.didReplace(newRoute: MaterialPageRoute(builder: (_) => Container(), settings: settings));
 
       verify(analytics.setCurrentScreen(screenName));
       verify(analytics.logMessage('Pushing widget: $screenName with params: {courseId: [$courseId]}'));
@@ -77,7 +78,7 @@ void main() {
     test('does not log analytics with a non PageRoute', () {
       observer.didReplace(
         newRoute: _NonPageRoute(),
-        oldRoute: MaterialPageRoute(builder: (_) => null),
+        oldRoute: MaterialPageRoute(builder: (_) => Container()),
       );
 
       verifyNever(analytics.setCurrentScreen(any));
@@ -92,8 +93,8 @@ void main() {
       final settings = RouteSettings(name: PandaRouter.courseDetails(courseId));
 
       observer.didPush(
-        MaterialPageRoute(builder: (_) => null, settings: settings),
-        MaterialPageRoute(builder: (_) => null),
+        MaterialPageRoute(builder: (_) => Container(), settings: settings),
+        MaterialPageRoute(builder: (_) => Container()),
       );
 
       verify(analytics.setCurrentScreen(screenName));
@@ -103,7 +104,7 @@ void main() {
     test('does not log analytics with a non PageRoute', () {
       observer.didPush(
         _NonPageRoute(),
-        MaterialPageRoute(builder: (_) => null),
+        MaterialPageRoute(builder: (_) => Container()),
       );
 
       verifyNever(analytics.setCurrentScreen(any));
@@ -113,8 +114,8 @@ void main() {
 
   test('does not log analytics with a non null route name', () {
     observer.didPush(
-      MaterialPageRoute(builder: (_) => null, settings: RouteSettings()),
-      MaterialPageRoute(builder: (_) => null),
+      MaterialPageRoute(builder: (_) => Container(), settings: RouteSettings()),
+      MaterialPageRoute(builder: (_) => Container()),
     );
 
     verifyNever(analytics.setCurrentScreen(any));
@@ -124,23 +125,23 @@ void main() {
 
 class _NonPageRoute extends ModalRoute {
   @override
-  bool get opaque => null;
+  bool get opaque => false;
 
   @override
-  Color get barrierColor => null;
+  Color? get barrierColor => null;
 
   @override
-  bool get maintainState => null;
+  bool get maintainState => false;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
-  bool get barrierDismissible => null;
+  bool get barrierDismissible => false;
 
   @override
-  Duration get transitionDuration => null;
+  Duration get transitionDuration => Duration.zero;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => null;
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => Container();
 }

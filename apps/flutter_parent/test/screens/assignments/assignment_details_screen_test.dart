@@ -47,6 +47,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final courseId = '123';
@@ -153,33 +154,35 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Can send a message', (tester) async {
-    when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(Course(), []));
-    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
-        .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
+    await tester.runAsync(() async {
+      when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(Course(), []));
+      when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+          .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
 
-    await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(
-        courseId: courseId,
-        assignmentId: assignmentId,
-      ),
-      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
-    ));
+      await tester.pumpWidget(TestApp(
+        AssignmentDetailsScreen(
+          courseId: courseId,
+          assignmentId: assignmentId,
+        ),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
 
-    // Check to make sure we're on the conversation screen
-    expect(find.byType(CreateConversationScreen), findsOneWidget);
+      // Check to make sure we're on the conversation screen
+      expect(find.byType(CreateConversationScreen), findsOneWidget);
 
-    // Check that we have the correct subject line
-    expect(find.text(AppLocalizations().assignmentSubjectMessage(studentName, assignmentName)), findsOneWidget);
+      // Check that we have the correct subject line
+      expect(find.text(AppLocalizations().assignmentSubjectMessage(studentName, assignmentName)), findsOneWidget);
+    });
   });
 
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
-        .thenAnswer((_) => Future<AssignmentDetails>.error('Failed to get assignment'));
+        .thenAnswer((_) => Future<AssignmentDetails?>.error('Failed to get assignment'));
 
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
@@ -224,13 +227,13 @@ void main() {
     await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(assignmentName), findsOneWidget);
-    expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
     expect(find.text('1.5 pts'), findsOneWidget);
     expect(find.byIcon(Icons.do_not_disturb), findsOneWidget);
-    expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.ash);
+    expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.oxford);
     expect(find.text(AppLocalizations().assignmentNotSubmittedLabel), findsOneWidget);
-    expect((tester.widget(find.text(AppLocalizations().assignmentNotSubmittedLabel)) as Text).style.color,
-        ParentColors.ash);
+    expect((tester.widget(find.text(AppLocalizations().assignmentNotSubmittedLabel)) as Text).style!.color,
+        ParentColors.oxford);
     expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
     expect(find.text(AppLocalizations().descriptionTitle), findsOneWidget);
@@ -278,7 +281,7 @@ void main() {
     expect((iconContainer.decoration as BoxDecoration).color, StudentColorSet.shamrock.light);
 
     expect(find.text(AppLocalizations().assignmentSubmittedLabel), findsOneWidget);
-    expect((tester.widget(find.text(AppLocalizations().assignmentSubmittedLabel)) as Text).style.color,
+    expect((tester.widget(find.text(AppLocalizations().assignmentSubmittedLabel)) as Text).style!.color,
         StudentColorSet.shamrock.light);
   });
 
@@ -499,7 +502,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder without due date', (tester) async {
@@ -539,7 +542,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder with due date', (tester) async {
@@ -581,7 +584,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('deletes reminder', (tester) async {

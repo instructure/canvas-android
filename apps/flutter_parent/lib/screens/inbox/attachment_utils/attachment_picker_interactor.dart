@@ -21,25 +21,21 @@ import 'package:image_picker/image_picker.dart';
 class AttachmentPickerInteractor {
   final ImagePicker _imagePicker = ImagePicker();
 
-  Future<File> getImageFromCamera() {
+  Future<File?> getImageFromCamera() {
     return _imagePicker
         .pickImage(source: ImageSource.camera)
-        .then((value) => File(value.path));
+        .then((value) => File(value!.path));
   }
 
-  Future<File> getFileFromDevice() {
+  Future<File?> getFileFromDevice() {
     final result = FilePicker.platform.pickFiles();
 
-    if (result != null) {
-      return result.then((value) => File(value.files.single.path));
-    } else {
-      return Future.error("");
-    }
+    return result.then((value) => File(value!.files.single.path!)).onError((error, stackTrace) => Future.error(""));
   }
 
-  Future<File> getImageFromGallery() {
+  Future<File?> getImageFromGallery() {
     return _imagePicker
         .pickImage(source: ImageSource.gallery)
-        .then((value) => File(value.path));
+        .then((value) => File(value!.path));
   }
 }

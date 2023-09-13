@@ -25,17 +25,17 @@ import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TermsOfUseScreen extends StatefulWidget {
-  final String accountId;
-  final String domain;
+  final String? accountId;
+  final String? domain;
 
-  const TermsOfUseScreen({this.accountId, this.domain, Key key}) : super(key: key);
+  const TermsOfUseScreen({this.accountId, this.domain, super.key});
 
   @override
   _TermsOfUseScreenState createState() => _TermsOfUseScreenState();
 }
 
 class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
-  Future<TermsOfService> _tosFuture;
+  late Future<TermsOfService?> _tosFuture;
 
   @override
   void initState() {
@@ -43,9 +43,9 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
     super.initState();
   }
 
-  Future<TermsOfService> getTosFuture() {
+  Future<TermsOfService?> getTosFuture() {
     return (widget.accountId != null && widget.domain != null)
-        ? locator<AccountsApi>().getTermsOfServiceForAccount(widget.accountId, widget.domain)
+        ? locator<AccountsApi>().getTermsOfServiceForAccount(widget.accountId!, widget.domain!)
         : locator<AccountsApi>().getTermsOfService();
   }
 
@@ -55,11 +55,11 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(L10n(context).termsOfUse),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
         ),
         body: FutureBuilder(
           future: _tosFuture,
-          builder: (BuildContext context, AsyncSnapshot<TermsOfService> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<TermsOfService?> snapshot) {
             // Loading
             if (snapshot.connectionState != ConnectionState.done) return LoadingIndicator();
 
@@ -75,9 +75,9 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
 
             // Content
             return WebView(
-              darkMode: ParentTheme.of(context).isWebViewDarkMode,
+              darkMode: ParentTheme.of(context)?.isWebViewDarkMode,
               onWebViewCreated: (controller) {
-                controller.loadHtml(snapshot.data.content, horizontalPadding: 16);
+                controller.loadHtml(snapshot.data!.content!, horizontalPadding: 16);
               },
             );
           },

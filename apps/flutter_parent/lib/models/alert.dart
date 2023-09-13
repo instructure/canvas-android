@@ -46,7 +46,7 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
   AlertWorkflowState get workflowState;
 
   @BuiltValueField(wireName: 'action_date')
-  DateTime get actionDate;
+  DateTime? get actionDate;
 
   String get title;
 
@@ -110,7 +110,7 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
     return htmlUrl.substring(index1, index2);
   }
 
-  String getCourseIdForGradeAlerts() {
+  String? getCourseIdForGradeAlerts() {
     if (alertType == AlertType.courseGradeLow || alertType == AlertType.courseGradeHigh) {
       return contextId;
     } else if (alertType == AlertType.assignmentGradeLow || alertType == AlertType.assignmentGradeHigh) {
@@ -120,9 +120,9 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
     }
   }
 
-  String _getCourseIdFromUrl() {
+  String? _getCourseIdFromUrl() {
     RegExp regex = RegExp(r'/courses/(\d+)/');
-    Match match = regex.firstMatch(htmlUrl);
+    Match? match = regex.firstMatch(htmlUrl);
     return (match != null && match.groupCount >= 1) ? match.group(1) : null;
   }
 }
@@ -194,7 +194,7 @@ class AlertType extends EnumClass {
       case AlertType.courseGradeLow:
         return 'course_grade_low';
       default:
-        return null;
+        return '';
     }
   }
 }

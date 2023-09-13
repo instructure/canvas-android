@@ -49,20 +49,20 @@ extension GetTitleFromAlert on AlertType {
   }
 }
 
-extension GetThresholdFromType on List<AlertThreshold> {
-  AlertThreshold getThreshold(AlertType type) {
-    var index = this.indexWhere((threshold) => threshold?.alertType == type);
-    if (index == -1)
+extension GetThresholdFromType on List<AlertThreshold?>? {
+  AlertThreshold? getThreshold(AlertType type) {
+    var index = this?.indexWhere((threshold) => threshold?.alertType == type);
+    if (index == null || index == -1)
       return null;
     else
-      return this[index];
+      return this?[index];
   }
 }
 
 extension GetThresholdMinMax on AlertType {
-  List<String> getMinMax(List<AlertThreshold> thresholds) {
-    String max;
-    String min;
+  List<String?> getMinMax(List<AlertThreshold?>? thresholds) {
+    String? max;
+    String? min;
 
     if (this == AlertType.courseGradeLow) {
       max = thresholds.getThreshold(AlertType.courseGradeHigh)?.threshold;

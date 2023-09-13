@@ -20,80 +20,75 @@ class _$CreateSubmissionInfoSerializer
   final String wireName = 'CreateSubmissionInfo';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, CreateSubmissionInfo object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
-    result.add('submission_type');
-    if (object.submissionType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.submissionType,
-          specifiedType: const FullType(String)));
-    }
-    result.add('body');
-    if (object.body == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.body,
-          specifiedType: const FullType(String)));
-    }
-    result.add('url');
-    if (object.url == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('user_id');
-    if (object.userId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.userId,
-          specifiedType: const FullType(int)));
-    }
-    result.add('submitted_at');
-    if (object.submittedAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.submittedAt,
+    final result = <Object?>[];
+    Object? value;
+    value = object.submissionType;
+
+    result
+      ..add('submission_type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.body;
+
+    result
+      ..add('body')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.url;
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.userId;
+
+    result
+      ..add('user_id')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.submittedAt;
+
+    result
+      ..add('submitted_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
+
     return result;
   }
 
   @override
   CreateSubmissionInfo deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CreateSubmissionInfoBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'submission_type':
           result.submissionType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'body':
           result.body = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'user_id':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'submitted_at':
           result.submittedAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -104,19 +99,19 @@ class _$CreateSubmissionInfoSerializer
 
 class _$CreateSubmissionInfo extends CreateSubmissionInfo {
   @override
-  final String submissionType;
+  final String? submissionType;
   @override
-  final String body;
+  final String? body;
   @override
-  final String url;
+  final String? url;
   @override
-  final int userId;
+  final int? userId;
   @override
-  final DateTime submittedAt;
+  final DateTime? submittedAt;
 
   factory _$CreateSubmissionInfo(
-          [void Function(CreateSubmissionInfoBuilder) updates]) =>
-      (new CreateSubmissionInfoBuilder()..update(updates)).build();
+          [void Function(CreateSubmissionInfoBuilder)? updates]) =>
+      (new CreateSubmissionInfoBuilder()..update(updates))._build();
 
   _$CreateSubmissionInfo._(
       {this.submissionType, this.body, this.url, this.userId, this.submittedAt})
@@ -144,17 +139,19 @@ class _$CreateSubmissionInfo extends CreateSubmissionInfo {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, submissionType.hashCode), body.hashCode),
-                url.hashCode),
-            userId.hashCode),
-        submittedAt.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, submissionType.hashCode);
+    _$hash = $jc(_$hash, body.hashCode);
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, userId.hashCode);
+    _$hash = $jc(_$hash, submittedAt.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CreateSubmissionInfo')
+    return (newBuiltValueToStringHelper(r'CreateSubmissionInfo')
           ..add('submissionType', submissionType)
           ..add('body', body)
           ..add('url', url)
@@ -166,40 +163,41 @@ class _$CreateSubmissionInfo extends CreateSubmissionInfo {
 
 class CreateSubmissionInfoBuilder
     implements Builder<CreateSubmissionInfo, CreateSubmissionInfoBuilder> {
-  _$CreateSubmissionInfo _$v;
+  _$CreateSubmissionInfo? _$v;
 
-  String _submissionType;
-  String get submissionType => _$this._submissionType;
-  set submissionType(String submissionType) =>
+  String? _submissionType;
+  String? get submissionType => _$this._submissionType;
+  set submissionType(String? submissionType) =>
       _$this._submissionType = submissionType;
 
-  String _body;
-  String get body => _$this._body;
-  set body(String body) => _$this._body = body;
+  String? _body;
+  String? get body => _$this._body;
+  set body(String? body) => _$this._body = body;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  int _userId;
-  int get userId => _$this._userId;
-  set userId(int userId) => _$this._userId = userId;
+  int? _userId;
+  int? get userId => _$this._userId;
+  set userId(int? userId) => _$this._userId = userId;
 
-  DateTime _submittedAt;
-  DateTime get submittedAt => _$this._submittedAt;
-  set submittedAt(DateTime submittedAt) => _$this._submittedAt = submittedAt;
+  DateTime? _submittedAt;
+  DateTime? get submittedAt => _$this._submittedAt;
+  set submittedAt(DateTime? submittedAt) => _$this._submittedAt = submittedAt;
 
   CreateSubmissionInfoBuilder() {
     CreateSubmissionInfo._initializeBuilder(this);
   }
 
   CreateSubmissionInfoBuilder get _$this {
-    if (_$v != null) {
-      _submissionType = _$v.submissionType;
-      _body = _$v.body;
-      _url = _$v.url;
-      _userId = _$v.userId;
-      _submittedAt = _$v.submittedAt;
+    final $v = _$v;
+    if ($v != null) {
+      _submissionType = $v.submissionType;
+      _body = $v.body;
+      _url = $v.url;
+      _userId = $v.userId;
+      _submittedAt = $v.submittedAt;
       _$v = null;
     }
     return this;
@@ -207,19 +205,19 @@ class CreateSubmissionInfoBuilder
 
   @override
   void replace(CreateSubmissionInfo other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CreateSubmissionInfo;
   }
 
   @override
-  void update(void Function(CreateSubmissionInfoBuilder) updates) {
+  void update(void Function(CreateSubmissionInfoBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CreateSubmissionInfo build() {
+  CreateSubmissionInfo build() => _build();
+
+  _$CreateSubmissionInfo _build() {
     final _$result = _$v ??
         new _$CreateSubmissionInfo._(
             submissionType: submissionType,
@@ -232,4 +230,4 @@ class CreateSubmissionInfoBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

@@ -28,7 +28,7 @@ class LegalScreen extends StatelessWidget {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(l10n.helpLegalLabel),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
         ),
         body: ListView(
           children: <Widget>[
@@ -59,7 +59,7 @@ class _LegalRow extends StatelessWidget {
   final VoidCallback onTap;
   final IconData icon;
 
-  const _LegalRow({Key key, this.label, this.onTap, this.icon}) : super(key: key);
+  const _LegalRow({ required this.label, required this.onTap, required this.icon, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +68,9 @@ class _LegalRow extends StatelessWidget {
     return ListTile(
       title: Row(
         children: <Widget>[
-          Icon(icon, color: Theme.of(context).accentColor, size: 20),
+          Icon(icon, color: Theme.of(context).colorScheme.secondary, size: 20),
           SizedBox(width: 20),
-          Expanded(child: Text(label, style: textTheme.subtitle1)),
+          Expanded(child: Text(label, style: textTheme.titleMedium)),
         ],
       ),
       onTap: onTap,

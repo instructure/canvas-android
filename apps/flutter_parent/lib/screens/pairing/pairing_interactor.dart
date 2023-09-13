@@ -19,5 +19,8 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class PairingInteractor {
   Future<QRPairingScanResult> scanQRCode() => QRUtils.scanPairingCode();
 
-  Future<bool> pairWithStudent(String pairingCode) => locator<EnrollmentsApi>().pairWithStudent(pairingCode);
+  Future<bool?> pairWithStudent(String? pairingCode) {
+    if (pairingCode == null) return Future.value(null);
+    return locator<EnrollmentsApi>().pairWithStudent(pairingCode);
+  }
 }

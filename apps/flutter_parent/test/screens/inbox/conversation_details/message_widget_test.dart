@@ -29,6 +29,7 @@ import '../../../utils/accessibility_utils.dart';
 import '../../../utils/finders.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   mockNetworkImageResponse();
@@ -61,7 +62,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me');
+      expect(widget.textSpan?.toPlainText(), 'Me');
     });
 
     testWidgetsWithAccessibilityChecks('for message to one other', (tester) async {
@@ -92,7 +93,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to User 1');
+      expect(widget.textSpan?.toPlainText(), 'Me to User 1');
     });
 
     testWidgetsWithAccessibilityChecks('for message to multiple others', (tester) async {
@@ -132,7 +133,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to 4 others');
+      expect(widget.textSpan?.toPlainText(), 'Me to 4 others');
     });
 
     testWidgetsWithAccessibilityChecks('expands to show participant info', (tester) async {
@@ -249,7 +250,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'User 1 to me');
+      expect(widget.textSpan?.toPlainText(), 'User 1 to me');
     });
 
     testWidgetsWithAccessibilityChecks('for message from another to multiple others', (tester) async {
@@ -289,7 +290,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'User 1 to me & 3 others');
+      expect(widget.textSpan?.toPlainText(), 'User 1 to me & 3 others');
     });
 
     testWidgetsWithAccessibilityChecks('with pronoun', (tester) async {
@@ -321,7 +322,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'User 1 (pro/noun) to me');
+      expect(widget.textSpan?.toPlainText(), 'User 1 (pro/noun) to me');
     });
 
     testWidgetsWithAccessibilityChecks('for message to one other with pronouns', (tester) async {
@@ -353,7 +354,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to User 1 (pro/noun)');
+      expect(widget.textSpan?.toPlainText(), 'Me to User 1 (pro/noun)');
     });
 
     testWidgetsWithAccessibilityChecks('for message to unknown user', (tester) async {
@@ -381,7 +382,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to Unknown User');
+      expect(widget.textSpan?.toPlainText(), 'Me to Unknown User');
     });
 
     testWidgetsWithAccessibilityChecks('for message from unknown user', (tester) async {
@@ -409,7 +410,7 @@ void main() {
       expect(find.byKey(Key('author-info')), findsOneWidget);
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Unknown User to me');
+      expect(widget.textSpan?.toPlainText(), 'Unknown User to me');
     });
   });
 
@@ -444,7 +445,7 @@ void main() {
       await tester.pumpAndSettle();
 
       var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to $longUserName');
+      expect(widget.textSpan?.toPlainText(), 'Me to $longUserName');
       // At this point the test should have succeeded without throwing an overflow error
     });
 
@@ -538,12 +539,12 @@ void main() {
 
       var attachment1 = find.byKey(Key('attachment-1'));
       expect(attachment1, findsOneWidget);
-      expect(find.descendant(of: attachment1, matching: find.text(attachments[0].displayName)), findsOneWidget);
+      expect(find.descendant(of: attachment1, matching: find.text(attachments[0].displayName!)), findsOneWidget);
       expect(find.descendant(of: attachment1, matching: find.byType(FadeInImage)), findsNothing);
 
       var attachment2 = find.byKey(Key('attachment-2'));
       expect(attachment2, findsOneWidget);
-      expect(find.descendant(of: attachment2, matching: find.text(attachments[1].displayName)), findsOneWidget);
+      expect(find.descendant(of: attachment2, matching: find.text(attachments[1].displayName!)), findsOneWidget);
       expect(find.descendant(of: attachment2, matching: find.byType(FadeInImage)), findsOneWidget);
     });
 
@@ -579,7 +580,7 @@ void main() {
 
       var attachment1 = find.byKey(Key('attachment-media-comment-fake-id'));
       expect(attachment1, findsOneWidget);
-      expect(find.descendant(of: attachment1, matching: find.text(mediaComment.displayName)), findsOneWidget);
+      expect(find.descendant(of: attachment1, matching: find.text(mediaComment.displayName!)), findsOneWidget);
     });
   });
 
@@ -604,7 +605,7 @@ void main() {
             ..name = 'Myself'),
         ]));
 
-      Attachment actual = null;
+      Attachment? actual = null;
 
       await tester.pumpWidget(
         TestApp(
@@ -676,7 +677,7 @@ void main() {
     testWidgetsWithAccessibilityChecks(
       'links are selectable',
       (tester) async {
-        final nav = _MockNav();
+        final nav = MockQuickNav();
         setupTestLocator((locator) => locator.registerLazySingleton<QuickNav>(() => nav));
 
         final url = 'https://www.google.com';
@@ -712,5 +713,3 @@ void main() {
     );
   });
 }
-
-class _MockNav extends Mock implements QuickNav {}

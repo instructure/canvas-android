@@ -17,9 +17,10 @@ class _$MobileVerifyResultSerializer
   final String wireName = 'MobileVerifyResult';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, MobileVerifyResult object,
+  Iterable<Object?> serialize(
+      Serializers serializers, MobileVerifyResult object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'authorized',
       serializers.serialize(object.authorized,
           specifiedType: const FullType(bool)),
@@ -45,41 +46,40 @@ class _$MobileVerifyResultSerializer
 
   @override
   MobileVerifyResult deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new MobileVerifyResultBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'authorized':
           result.authorized = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'result':
           result.result = serializers.deserialize(value,
-                  specifiedType: const FullType(VerifyResultEnum))
+                  specifiedType: const FullType(VerifyResultEnum))!
               as VerifyResultEnum;
           break;
         case 'client_id':
           result.clientId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'client_secret':
           result.clientSecret = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'api_key':
           result.apiKey = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'base_url':
           result.baseUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -103,35 +103,29 @@ class _$MobileVerifyResult extends MobileVerifyResult {
   final String baseUrl;
 
   factory _$MobileVerifyResult(
-          [void Function(MobileVerifyResultBuilder) updates]) =>
-      (new MobileVerifyResultBuilder()..update(updates)).build();
+          [void Function(MobileVerifyResultBuilder)? updates]) =>
+      (new MobileVerifyResultBuilder()..update(updates))._build();
 
   _$MobileVerifyResult._(
-      {this.authorized,
-      this.result,
-      this.clientId,
-      this.clientSecret,
-      this.apiKey,
-      this.baseUrl})
+      {required this.authorized,
+      required this.result,
+      required this.clientId,
+      required this.clientSecret,
+      required this.apiKey,
+      required this.baseUrl})
       : super._() {
-    if (authorized == null) {
-      throw new BuiltValueNullFieldError('MobileVerifyResult', 'authorized');
-    }
-    if (result == null) {
-      throw new BuiltValueNullFieldError('MobileVerifyResult', 'result');
-    }
-    if (clientId == null) {
-      throw new BuiltValueNullFieldError('MobileVerifyResult', 'clientId');
-    }
-    if (clientSecret == null) {
-      throw new BuiltValueNullFieldError('MobileVerifyResult', 'clientSecret');
-    }
-    if (apiKey == null) {
-      throw new BuiltValueNullFieldError('MobileVerifyResult', 'apiKey');
-    }
-    if (baseUrl == null) {
-      throw new BuiltValueNullFieldError('MobileVerifyResult', 'baseUrl');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        authorized, r'MobileVerifyResult', 'authorized');
+    BuiltValueNullFieldError.checkNotNull(
+        result, r'MobileVerifyResult', 'result');
+    BuiltValueNullFieldError.checkNotNull(
+        clientId, r'MobileVerifyResult', 'clientId');
+    BuiltValueNullFieldError.checkNotNull(
+        clientSecret, r'MobileVerifyResult', 'clientSecret');
+    BuiltValueNullFieldError.checkNotNull(
+        apiKey, r'MobileVerifyResult', 'apiKey');
+    BuiltValueNullFieldError.checkNotNull(
+        baseUrl, r'MobileVerifyResult', 'baseUrl');
   }
 
   @override
@@ -157,19 +151,20 @@ class _$MobileVerifyResult extends MobileVerifyResult {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc($jc($jc(0, authorized.hashCode), result.hashCode),
-                    clientId.hashCode),
-                clientSecret.hashCode),
-            apiKey.hashCode),
-        baseUrl.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, authorized.hashCode);
+    _$hash = $jc(_$hash, result.hashCode);
+    _$hash = $jc(_$hash, clientId.hashCode);
+    _$hash = $jc(_$hash, clientSecret.hashCode);
+    _$hash = $jc(_$hash, apiKey.hashCode);
+    _$hash = $jc(_$hash, baseUrl.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('MobileVerifyResult')
+    return (newBuiltValueToStringHelper(r'MobileVerifyResult')
           ..add('authorized', authorized)
           ..add('result', result)
           ..add('clientId', clientId)
@@ -182,44 +177,45 @@ class _$MobileVerifyResult extends MobileVerifyResult {
 
 class MobileVerifyResultBuilder
     implements Builder<MobileVerifyResult, MobileVerifyResultBuilder> {
-  _$MobileVerifyResult _$v;
+  _$MobileVerifyResult? _$v;
 
-  bool _authorized;
-  bool get authorized => _$this._authorized;
-  set authorized(bool authorized) => _$this._authorized = authorized;
+  bool? _authorized;
+  bool? get authorized => _$this._authorized;
+  set authorized(bool? authorized) => _$this._authorized = authorized;
 
-  VerifyResultEnum _result;
-  VerifyResultEnum get result => _$this._result;
-  set result(VerifyResultEnum result) => _$this._result = result;
+  VerifyResultEnum? _result;
+  VerifyResultEnum? get result => _$this._result;
+  set result(VerifyResultEnum? result) => _$this._result = result;
 
-  String _clientId;
-  String get clientId => _$this._clientId;
-  set clientId(String clientId) => _$this._clientId = clientId;
+  String? _clientId;
+  String? get clientId => _$this._clientId;
+  set clientId(String? clientId) => _$this._clientId = clientId;
 
-  String _clientSecret;
-  String get clientSecret => _$this._clientSecret;
-  set clientSecret(String clientSecret) => _$this._clientSecret = clientSecret;
+  String? _clientSecret;
+  String? get clientSecret => _$this._clientSecret;
+  set clientSecret(String? clientSecret) => _$this._clientSecret = clientSecret;
 
-  String _apiKey;
-  String get apiKey => _$this._apiKey;
-  set apiKey(String apiKey) => _$this._apiKey = apiKey;
+  String? _apiKey;
+  String? get apiKey => _$this._apiKey;
+  set apiKey(String? apiKey) => _$this._apiKey = apiKey;
 
-  String _baseUrl;
-  String get baseUrl => _$this._baseUrl;
-  set baseUrl(String baseUrl) => _$this._baseUrl = baseUrl;
+  String? _baseUrl;
+  String? get baseUrl => _$this._baseUrl;
+  set baseUrl(String? baseUrl) => _$this._baseUrl = baseUrl;
 
   MobileVerifyResultBuilder() {
     MobileVerifyResult._initializeBuilder(this);
   }
 
   MobileVerifyResultBuilder get _$this {
-    if (_$v != null) {
-      _authorized = _$v.authorized;
-      _result = _$v.result;
-      _clientId = _$v.clientId;
-      _clientSecret = _$v.clientSecret;
-      _apiKey = _$v.apiKey;
-      _baseUrl = _$v.baseUrl;
+    final $v = _$v;
+    if ($v != null) {
+      _authorized = $v.authorized;
+      _result = $v.result;
+      _clientId = $v.clientId;
+      _clientSecret = $v.clientSecret;
+      _apiKey = $v.apiKey;
+      _baseUrl = $v.baseUrl;
       _$v = null;
     }
     return this;
@@ -227,30 +223,36 @@ class MobileVerifyResultBuilder
 
   @override
   void replace(MobileVerifyResult other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MobileVerifyResult;
   }
 
   @override
-  void update(void Function(MobileVerifyResultBuilder) updates) {
+  void update(void Function(MobileVerifyResultBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$MobileVerifyResult build() {
+  MobileVerifyResult build() => _build();
+
+  _$MobileVerifyResult _build() {
     final _$result = _$v ??
         new _$MobileVerifyResult._(
-            authorized: authorized,
-            result: result,
-            clientId: clientId,
-            clientSecret: clientSecret,
-            apiKey: apiKey,
-            baseUrl: baseUrl);
+            authorized: BuiltValueNullFieldError.checkNotNull(
+                authorized, r'MobileVerifyResult', 'authorized'),
+            result: BuiltValueNullFieldError.checkNotNull(
+                result, r'MobileVerifyResult', 'result'),
+            clientId: BuiltValueNullFieldError.checkNotNull(
+                clientId, r'MobileVerifyResult', 'clientId'),
+            clientSecret: BuiltValueNullFieldError.checkNotNull(
+                clientSecret, r'MobileVerifyResult', 'clientSecret'),
+            apiKey: BuiltValueNullFieldError.checkNotNull(
+                apiKey, r'MobileVerifyResult', 'apiKey'),
+            baseUrl: BuiltValueNullFieldError.checkNotNull(
+                baseUrl, r'MobileVerifyResult', 'baseUrl'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

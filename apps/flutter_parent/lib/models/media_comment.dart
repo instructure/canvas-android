@@ -28,23 +28,19 @@ abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> 
   static Serializer<MediaComment> get serializer => _$mediaCommentSerializer;
 
   @BuiltValueField(wireName: 'media_id')
-  @nullable
-  String get mediaId;
+  String? get mediaId;
 
   @BuiltValueField(wireName: 'display_name')
-  @nullable
-  String get displayName;
+  String? get displayName;
 
-  @nullable
-  String get url;
+  String? get url;
 
   /// Can be either 'audio' or 'video'
   @BuiltValueField(wireName: 'media_type')
   MediaType get mediaType;
 
   @BuiltValueField(wireName: 'content-type')
-  @nullable
-  String get contentType;
+  String? get contentType;
 
   MediaComment._();
   factory MediaComment([void Function(MediaCommentBuilder) updates]) = _$MediaComment;

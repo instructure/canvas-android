@@ -27,13 +27,12 @@ class CalendarWeek extends StatelessWidget {
   final List<DateTime> days;
 
   CalendarWeek({
-    Key key,
-    @required this.firstDay,
-    @required this.selectedDay,
-    @required this.onDaySelected,
-    @required this.displayDayOfWeekHeader,
-  })  : days = generateDays(firstDay),
-        super(key: key);
+    required this.firstDay,
+    required this.selectedDay,
+    required this.onDaySelected,
+    required this.displayDayOfWeekHeader,
+    super.key
+  })  : days = generateDays(firstDay);
 
   static List<DateTime> generateDays(DateTime firstDay) {
     return List.generate(7, (index) => DateTime(firstDay.year, firstDay.month, firstDay.day + index));

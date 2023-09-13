@@ -17,21 +17,19 @@ import 'package:flutter/material.dart';
 /// _DialogRoute copied (with minor changes) from flutter/lib/src/widget/routes.dart
 class _DialogRoute<T> extends PopupRoute<T> {
   _DialogRoute({
-    @required RoutePageBuilder pageBuilder,
+    required pageBuilder,
+    required String barrierLabel,
+    required RouteTransitionsBuilder transitionBuilder,
     bool barrierDismissible = true,
-    String barrierLabel,
     Color barrierColor = const Color(0x80000000),
     Duration transitionDuration = const Duration(milliseconds: 200),
-    RouteTransitionsBuilder transitionBuilder,
-    RouteSettings settings,
-  })  : assert(barrierDismissible != null),
-        _pageBuilder = pageBuilder,
+    super.settings,
+  })  : _pageBuilder = pageBuilder,
         _barrierDismissible = barrierDismissible,
         _barrierLabel = barrierLabel,
         _barrierColor = barrierColor,
         _transitionDuration = transitionDuration,
-        _transitionBuilder = transitionBuilder,
-        super(settings: settings);
+        _transitionBuilder = transitionBuilder;
 
   final RoutePageBuilder _pageBuilder;
 
@@ -76,30 +74,28 @@ class _DialogRoute<T> extends PopupRoute<T> {
 /// Similar to [showDialog], but instead of taking a [BuildContext] this takes a [GlobalKey] of type [NavigatorState].
 /// This is useful in situations where [showDialog] will not work because a [Navigator] is not accessible via the
 /// available [BuildContext], such as the masquerading UI which is an ancestor of the [Navigator].
-Future<T> showDialogWithNavigatorKey<T>({
-  @required GlobalKey<NavigatorState> navKey,
-  @required WidgetBuilder builder,
+Future<T?> showDialogWithNavigatorKey<T>({
+  required GlobalKey<NavigatorState> navKey,
+  required WidgetBuilder builder,
+  required BuildContext buildContext,
   bool barrierDismissible = true,
 }) {
-  assert(navKey != null);
-  assert(builder != null);
-  assert(barrierDismissible != null);
-  BuildContext context = navKey.currentContext;
+  BuildContext context = navKey.currentContext ?? buildContext;
   assert(debugCheckHasMaterialLocalizations(context));
 
   var route = _DialogRoute<T>(
     pageBuilder: (_, __, ___) => SafeArea(child: Builder(builder: builder)),
-    barrierDismissible: barrierDismissible,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-    barrierColor: Colors.black54,
-    transitionDuration: const Duration(milliseconds: 150),
     transitionBuilder: (_, animation, __, child) {
       return FadeTransition(
         opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
         child: child,
       );
     },
+    barrierDismissible: barrierDismissible,
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 150),
   );
 
-  return navKey.currentState.push<T>(route);
+  return (navKey.currentState)?.push<T>(route) ?? Future<T>.value(null);
 }

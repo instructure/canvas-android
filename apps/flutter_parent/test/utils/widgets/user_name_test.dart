@@ -18,7 +18,7 @@ import 'package:test/test.dart';
 void main() {
   test('text returns only username if pronouns is null', () {
     String name = 'User Name';
-    String pronouns = null;
+    String? pronouns = null;
 
     UserName userName = UserName(name, pronouns);
     expect(userName.text, name);

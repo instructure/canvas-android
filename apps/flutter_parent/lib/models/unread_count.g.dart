@@ -15,9 +15,9 @@ class _$UnreadCountSerializer implements StructuredSerializer<UnreadCount> {
   final String wireName = 'UnreadCount';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, UnreadCount object,
+  Iterable<Object?> serialize(Serializers serializers, UnreadCount object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'unread_count',
       serializers.serialize(object.count,
           specifiedType: const FullType(JsonObject)),
@@ -27,20 +27,19 @@ class _$UnreadCountSerializer implements StructuredSerializer<UnreadCount> {
   }
 
   @override
-  UnreadCount deserialize(Serializers serializers, Iterable<Object> serialized,
+  UnreadCount deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new UnreadCountBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'unread_count':
           result.count = serializers.deserialize(value,
-              specifiedType: const FullType(JsonObject)) as JsonObject;
+              specifiedType: const FullType(JsonObject))! as JsonObject;
           break;
       }
     }
@@ -53,13 +52,11 @@ class _$UnreadCount extends UnreadCount {
   @override
   final JsonObject count;
 
-  factory _$UnreadCount([void Function(UnreadCountBuilder) updates]) =>
-      (new UnreadCountBuilder()..update(updates)).build();
+  factory _$UnreadCount([void Function(UnreadCountBuilder)? updates]) =>
+      (new UnreadCountBuilder()..update(updates))._build();
 
-  _$UnreadCount._({this.count}) : super._() {
-    if (count == null) {
-      throw new BuiltValueNullFieldError('UnreadCount', 'count');
-    }
+  _$UnreadCount._({required this.count}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(count, r'UnreadCount', 'count');
   }
 
   @override
@@ -77,28 +74,32 @@ class _$UnreadCount extends UnreadCount {
 
   @override
   int get hashCode {
-    return $jf($jc(0, count.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, count.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('UnreadCount')..add('count', count))
+    return (newBuiltValueToStringHelper(r'UnreadCount')..add('count', count))
         .toString();
   }
 }
 
 class UnreadCountBuilder implements Builder<UnreadCount, UnreadCountBuilder> {
-  _$UnreadCount _$v;
+  _$UnreadCount? _$v;
 
-  JsonObject _count;
-  JsonObject get count => _$this._count;
-  set count(JsonObject count) => _$this._count = count;
+  JsonObject? _count;
+  JsonObject? get count => _$this._count;
+  set count(JsonObject? count) => _$this._count = count;
 
   UnreadCountBuilder();
 
   UnreadCountBuilder get _$this {
-    if (_$v != null) {
-      _count = _$v.count;
+    final $v = _$v;
+    if ($v != null) {
+      _count = $v.count;
       _$v = null;
     }
     return this;
@@ -106,23 +107,26 @@ class UnreadCountBuilder implements Builder<UnreadCount, UnreadCountBuilder> {
 
   @override
   void replace(UnreadCount other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$UnreadCount;
   }
 
   @override
-  void update(void Function(UnreadCountBuilder) updates) {
+  void update(void Function(UnreadCountBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$UnreadCount build() {
-    final _$result = _$v ?? new _$UnreadCount._(count: count);
+  UnreadCount build() => _build();
+
+  _$UnreadCount _build() {
+    final _$result = _$v ??
+        new _$UnreadCount._(
+            count: BuiltValueNullFieldError.checkNotNull(
+                count, r'UnreadCount', 'count'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

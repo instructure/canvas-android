@@ -15,9 +15,9 @@ class _$PseudonymSerializer implements StructuredSerializer<Pseudonym> {
   final String wireName = 'Pseudonym';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Pseudonym object,
+  Iterable<Object?> serialize(Serializers serializers, Pseudonym object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'unique_id',
       serializers.serialize(object.uniqueId,
           specifiedType: const FullType(String)),
@@ -30,24 +30,23 @@ class _$PseudonymSerializer implements StructuredSerializer<Pseudonym> {
   }
 
   @override
-  Pseudonym deserialize(Serializers serializers, Iterable<Object> serialized,
+  Pseudonym deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PseudonymBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'unique_id':
           result.uniqueId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'password':
           result.password = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -62,16 +61,12 @@ class _$Pseudonym extends Pseudonym {
   @override
   final String password;
 
-  factory _$Pseudonym([void Function(PseudonymBuilder) updates]) =>
-      (new PseudonymBuilder()..update(updates)).build();
+  factory _$Pseudonym([void Function(PseudonymBuilder)? updates]) =>
+      (new PseudonymBuilder()..update(updates))._build();
 
-  _$Pseudonym._({this.uniqueId, this.password}) : super._() {
-    if (uniqueId == null) {
-      throw new BuiltValueNullFieldError('Pseudonym', 'uniqueId');
-    }
-    if (password == null) {
-      throw new BuiltValueNullFieldError('Pseudonym', 'password');
-    }
+  _$Pseudonym._({required this.uniqueId, required this.password}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(uniqueId, r'Pseudonym', 'uniqueId');
+    BuiltValueNullFieldError.checkNotNull(password, r'Pseudonym', 'password');
   }
 
   @override
@@ -91,12 +86,16 @@ class _$Pseudonym extends Pseudonym {
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, uniqueId.hashCode), password.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, uniqueId.hashCode);
+    _$hash = $jc(_$hash, password.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Pseudonym')
+    return (newBuiltValueToStringHelper(r'Pseudonym')
           ..add('uniqueId', uniqueId)
           ..add('password', password))
         .toString();
@@ -104,24 +103,25 @@ class _$Pseudonym extends Pseudonym {
 }
 
 class PseudonymBuilder implements Builder<Pseudonym, PseudonymBuilder> {
-  _$Pseudonym _$v;
+  _$Pseudonym? _$v;
 
-  String _uniqueId;
-  String get uniqueId => _$this._uniqueId;
-  set uniqueId(String uniqueId) => _$this._uniqueId = uniqueId;
+  String? _uniqueId;
+  String? get uniqueId => _$this._uniqueId;
+  set uniqueId(String? uniqueId) => _$this._uniqueId = uniqueId;
 
-  String _password;
-  String get password => _$this._password;
-  set password(String password) => _$this._password = password;
+  String? _password;
+  String? get password => _$this._password;
+  set password(String? password) => _$this._password = password;
 
   PseudonymBuilder() {
     Pseudonym._initializeBuilder(this);
   }
 
   PseudonymBuilder get _$this {
-    if (_$v != null) {
-      _uniqueId = _$v.uniqueId;
-      _password = _$v.password;
+    final $v = _$v;
+    if ($v != null) {
+      _uniqueId = $v.uniqueId;
+      _password = $v.password;
       _$v = null;
     }
     return this;
@@ -129,24 +129,28 @@ class PseudonymBuilder implements Builder<Pseudonym, PseudonymBuilder> {
 
   @override
   void replace(Pseudonym other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Pseudonym;
   }
 
   @override
-  void update(void Function(PseudonymBuilder) updates) {
+  void update(void Function(PseudonymBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Pseudonym build() {
-    final _$result =
-        _$v ?? new _$Pseudonym._(uniqueId: uniqueId, password: password);
+  Pseudonym build() => _build();
+
+  _$Pseudonym _build() {
+    final _$result = _$v ??
+        new _$Pseudonym._(
+            uniqueId: BuiltValueNullFieldError.checkNotNull(
+                uniqueId, r'Pseudonym', 'uniqueId'),
+            password: BuiltValueNullFieldError.checkNotNull(
+                password, r'Pseudonym', 'password'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

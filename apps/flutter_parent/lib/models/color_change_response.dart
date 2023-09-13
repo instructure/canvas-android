@@ -10,8 +10,7 @@ abstract class ColorChangeResponse implements Built<ColorChangeResponse, ColorCh
   static Serializer<ColorChangeResponse> get serializer => _$colorChangeResponseSerializer;
 
   @BuiltValueField(wireName: 'hexcode')
-  @nullable
-  String get hexCode;
+  String? get hexCode;
 
   ColorChangeResponse._();
   factory ColorChangeResponse([void Function(ColorChangeResponseBuilder) updates]) = _$ColorChangeResponse;

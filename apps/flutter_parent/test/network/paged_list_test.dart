@@ -22,12 +22,12 @@ import 'package:test/test.dart';
 
 void main() {
   test('has no data', () {
-    PagedList list = PagedList(Response());
+    PagedList list = PagedList(Response(requestOptions: RequestOptions(path: '')));
     expect(list.data, []);
   });
 
   test('has no headers', () {
-    PagedList list = PagedList(Response());
+    PagedList list = PagedList(Response(requestOptions: RequestOptions(path: '')));
     expect(list.nextUrl, null);
   });
 
@@ -35,7 +35,7 @@ void main() {
     final map = {
       'key': ['value']
     };
-    PagedList list = PagedList(Response(headers: Headers.fromMap(map)));
+    PagedList list = PagedList(Response(headers: Headers.fromMap(map), requestOptions: RequestOptions(path: '')));
     expect(list.nextUrl, null);
   });
 
@@ -43,7 +43,7 @@ void main() {
     final map = {
       'link': ['<https://www.google.com>; rel="last"']
     };
-    PagedList list = PagedList(Response(headers: Headers.fromMap(map)));
+    PagedList list = PagedList(Response(headers: Headers.fromMap(map), requestOptions: RequestOptions(path: '')));
     expect(list.nextUrl, null);
   });
 
@@ -56,7 +56,7 @@ void main() {
             .trim()
       ]
     });
-    PagedList list = PagedList(Response(headers: testHeaders));
+    PagedList list = PagedList(Response(headers: testHeaders, requestOptions: RequestOptions(path: '')));
     expect(list.nextUrl,
         'https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10');
   });
@@ -70,10 +70,10 @@ void main() {
             .trim()
       ]
     });
-    PagedList list = PagedList(Response());
+    PagedList list = PagedList(Response(requestOptions: RequestOptions(path: '')));
     expect(list.nextUrl, null);
 
-    list.updateWithResponse(Response(headers: testHeaders));
+    list.updateWithResponse(Response(headers: testHeaders, requestOptions: RequestOptions(path: '')));
     expect(list.nextUrl,
         'https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10');
   });
@@ -87,10 +87,10 @@ void main() {
             .trim()
       ]
     });
-    PagedList list = PagedList(Response());
+    PagedList list = PagedList(Response(requestOptions: RequestOptions(path: '')));
     expect(list.nextUrl, null);
 
-    list.updateWithPagedList(PagedList(Response(headers: testHeaders)));
+    list.updateWithPagedList(PagedList(Response(headers: testHeaders, requestOptions: RequestOptions(path: ''))));
     expect(list.nextUrl,
         'https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10');
   });
@@ -108,7 +108,7 @@ void main() {
         ..domain = 'Domain $index');
     });
     final serializedData = serializer.serialize(BuiltList<SchoolDomain>(data), specifiedType: type);
-    PagedList<SchoolDomain> list = PagedList<SchoolDomain>(Response(data: serializedData));
+    PagedList<SchoolDomain> list = PagedList<SchoolDomain>(Response(data: serializedData, requestOptions: RequestOptions(path: '')));
 
     expect(list.data, data);
   });
@@ -126,7 +126,7 @@ void main() {
         ..domain = 'Domain $index');
     });
     final serializedData = serializer.serialize(BuiltList<SchoolDomain>(data), specifiedType: type);
-    PagedList<SchoolDomain> list = PagedList<SchoolDomain>(Response(data: serializedData));
+    PagedList<SchoolDomain> list = PagedList<SchoolDomain>(Response(data: serializedData, requestOptions: RequestOptions(path: '')));
 
     final dataAlt = List.generate(4, (index) {
       return SchoolDomain((builder) => builder
@@ -135,7 +135,7 @@ void main() {
     });
     final serializedDataAlt = serializer.serialize(BuiltList<SchoolDomain>(dataAlt), specifiedType: type);
 
-    list.updateWithResponse(Response(data: serializedDataAlt));
+    list.updateWithResponse(Response(data: serializedDataAlt, requestOptions: RequestOptions(path: '')));
 
     expect(list.data, data + dataAlt);
   });
@@ -153,7 +153,7 @@ void main() {
         ..domain = 'Domain $index');
     });
     final serializedData = serializer.serialize(BuiltList<SchoolDomain>(data), specifiedType: type);
-    PagedList<SchoolDomain> list = PagedList<SchoolDomain>(Response(data: serializedData));
+    PagedList<SchoolDomain> list = PagedList<SchoolDomain>(Response(data: serializedData, requestOptions: RequestOptions(path: '')));
 
     final dataAlt = List.generate(4, (index) {
       return SchoolDomain((builder) => builder
@@ -161,7 +161,7 @@ void main() {
         ..domain = 'Alt Domain $index');
     });
     final serializedDataAlt = serializer.serialize(BuiltList<SchoolDomain>(dataAlt), specifiedType: type);
-    PagedList<SchoolDomain> listAlt = PagedList<SchoolDomain>(Response(data: serializedDataAlt));
+    PagedList<SchoolDomain> listAlt = PagedList<SchoolDomain>(Response(data: serializedDataAlt, requestOptions: RequestOptions(path: '')));
 
     list.updateWithPagedList(listAlt);
 

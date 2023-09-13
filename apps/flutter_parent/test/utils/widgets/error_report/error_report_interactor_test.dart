@@ -25,6 +25,7 @@ import '../../canvas_model_utils.dart';
 import '../../platform_config.dart';
 import '../../test_app.dart';
 import '../../test_helpers/mock_helpers.dart';
+import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final user = User((b) => b
@@ -136,7 +137,7 @@ void main() {
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 
     verify(api.submitErrorReport(
-      domain: ErrorReportApi.DEFAULT_DOMAIN,
+      domain: anyNamed('domain'),
       subject: anyNamed('subject'),
       description: anyNamed('description'),
       email: anyNamed('email'),

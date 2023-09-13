@@ -46,10 +46,10 @@ class ReminderDb {
         columnType: data.type,
         columnItemId: data.itemId,
         columnCourseId: data.courseId,
-        columnDate: data.date.toIso8601String(),
+        columnDate: data.date?.toIso8601String(),
       };
 
-  static Reminder fromMap(Map<String, dynamic> map) => Reminder((b) => b
+  static Reminder fromMap(Map<dynamic, dynamic> map) => Reminder((b) => b
     ..id = map[columnId]
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
@@ -78,18 +78,18 @@ class ReminderDb {
     }
   }
 
-  Future<Reminder> insert(Reminder data) async {
+  Future<Reminder?> insert(Reminder data) async {
     var id = await db.insert(tableName, toMap(data));
     return getById(id);
   }
 
-  Future<Reminder> getById(int id) async {
+  Future<Reminder?> getById(int id) async {
     List<Map> maps = await db.query(tableName, columns: allColumns, where: '$columnId = ?', whereArgs: [id]);
     if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 
-  Future<Reminder> getByItem(String userDomain, String userId, String type, String itemId) async {
+  Future<Reminder?> getByItem(String? userDomain, String? userId, String? type, String? itemId) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,
@@ -100,7 +100,7 @@ class ReminderDb {
     return null;
   }
 
-  Future<List<Reminder>> getAllForUser(String userDomain, String userId) async {
+  Future<List<Reminder>>? getAllForUser(String? userDomain, String? userId) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,
@@ -110,11 +110,11 @@ class ReminderDb {
     return maps.map((it) => fromMap(it)).toList();
   }
 
-  Future<int> deleteById(int id) {
+  Future<int> deleteById(int? id) {
     return db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<int> deleteAllForUser(String userDomain, String userId) {
+  Future<int> deleteAllForUser(String? userDomain, String? userId) {
     return db.delete(
       tableName,
       where: '$columnUserDomain = ? AND $columnUserId = ?',

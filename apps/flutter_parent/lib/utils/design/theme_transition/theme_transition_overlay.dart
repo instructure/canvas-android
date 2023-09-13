@@ -32,12 +32,12 @@ class ThemeTransitionOverlay extends StatefulWidget {
     this.imageBytes,
     this.anchorCenter,
     this.onReady, {
-    Key key,
-  }) : super(key: key);
+    super.key,
+  });
 
-  static display(BuildContext context, GlobalKey anchorKey, Function() onReady) async {
+  static display(BuildContext context, GlobalKey? anchorKey, Function() onReady) async {
     // Get center of anchor, which will be the origin point of the transition animation
-    RenderBox box = anchorKey.currentContext.findRenderObject();
+    RenderBox box = anchorKey?.currentContext!.findRenderObject() as RenderBox;
     var anchorCenter = box.localToGlobal(box.size.center(Offset(0, 0)));
 
     // Get the target widget over which the animation will be displayed
@@ -45,11 +45,11 @@ class ThemeTransitionOverlay extends StatefulWidget {
     if (target == null) throw 'ThemeTransitionTarget not found in the widget tree';
 
     // Get the repaint boundary of the target, render at 1/2 scale to a PNG image
-    RenderRepaintBoundary boundary = ThemeTransitionTarget.of(context).boundaryKey.currentContext.findRenderObject();
+    RenderRepaintBoundary boundary = ThemeTransitionTarget.of(context)!.boundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     var scale = WidgetsBinding.instance.window.devicePixelRatio / 2;
     var img = await boundary.toImage(pixelRatio: scale);
     var byteData = await img.toByteData(format: ImageByteFormat.png);
-    Uint8List pngBytes = byteData.buffer.asUint8List();
+    Uint8List pngBytes = byteData!.buffer.asUint8List();
 
     // Custom route to ThemeTransitionOverlay
     Navigator.of(context).push(
@@ -67,8 +67,8 @@ class ThemeTransitionOverlay extends StatefulWidget {
 class _ThemeTransitionOverlayState extends State<ThemeTransitionOverlay> with TickerProviderStateMixin {
   static const maxSplashOpacity = 0.35;
 
-  AnimationController _animationController;
-  Animation _animation;
+  late AnimationController _animationController;
+  late Animation _animation;
   bool _onReadyCalled = false;
 
   @override

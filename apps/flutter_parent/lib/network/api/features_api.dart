@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 
 class FeaturesApi {
 
-  Future<FeatureFlags> getFeatureFlags() {
+  Future<FeatureFlags?> getFeatureFlags() async {
     var dio = canvasDio(forceRefresh: true);
 
     return fetch(dio.get('/features/environment'));

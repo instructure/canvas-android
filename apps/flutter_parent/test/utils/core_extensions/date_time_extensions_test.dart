@@ -29,7 +29,7 @@ void main() {
     String expectedDefaultOutput = localize(expectedDefaultDate, expectedDefaultTime);
 
     test('returns null if DateTime is null', () {
-      DateTime date = null;
+      DateTime? date = null;
       expect(date.l10nFormat(localize), isNull);
     });
 
@@ -52,14 +52,14 @@ void main() {
     test('applies specified date format', () {
       String expectedDate = DateFormat.MMMMEEEEd().format(now);
       String expected = localize(expectedDate, expectedDefaultTime);
-      String actual = now.l10nFormat(localize, dateFormat: DateFormat.MMMMEEEEd());
+      String? actual = now.l10nFormat(localize, dateFormat: DateFormat.MMMMEEEEd());
       expect(actual, expected);
     });
 
     test('applies specified time format', () {
       String expectedTime = DateFormat.MMMMEEEEd().format(now);
       String expected = localize(expectedDefaultDate, expectedTime);
-      String actual = now.l10nFormat(localize, timeFormat: DateFormat.MMMMEEEEd());
+      String? actual = now.l10nFormat(localize, timeFormat: DateFormat.MMMMEEEEd());
       expect(actual, expected);
     });
   });
@@ -71,20 +71,20 @@ void main() {
     });
 
     test('returns false if this date is null', () {
-      DateTime date1 = null;
+      DateTime? date1 = null;
       DateTime date2 = DateTime.now();
       expect(date1.isSameDayAs(date2), isFalse);
     });
 
     test('returns false if other date is null', () {
       DateTime date1 = DateTime.now();
-      DateTime date2 = null;
+      DateTime? date2 = null;
       expect(date1.isSameDayAs(date2), isFalse);
     });
 
     test('returns false if both dates are null', () {
-      DateTime date1 = null;
-      DateTime date2 = null;
+      DateTime? date1 = null;
+      DateTime? date2 = null;
       expect(date1.isSameDayAs(date2), isFalse);
     });
 
@@ -109,7 +109,7 @@ void main() {
     });
 
     test('returns null if date is null', () {
-      DateTime date = null;
+      DateTime? date = null;
       expect(date.withFirstDayOfWeek(), isNull);
     });
 
@@ -170,7 +170,7 @@ void main() {
     });
 
     test('returns false if date is null', () {
-      DateTime date = null;
+      DateTime? date = null;
       expect(date.isWeekend(), isFalse);
     });
 

@@ -29,16 +29,18 @@ import 'package:mockito/mockito.dart';
 
 import '../../../accessibility_utils.dart';
 import '../../../test_app.dart';
+import '../../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   testWidgetsWithAccessibilityChecks('displays loading state', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAttachmentFetcherInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AttachmentFetcherInteractor>(() => interactor);
     });
 
     Completer<File> completer = Completer();
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => completer.future);
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(Material(child: AttachmentFetcher(attachment: Attachment(), builder: (_, __) => Container()))),
@@ -49,15 +51,16 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('provides correct file to builder', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAttachmentFetcherInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AttachmentFetcherInteractor>(() => interactor);
     });
 
     var expectedFile = File('fakefile.exe');
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.value(expectedFile));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
-    File actualFile;
+    late File actualFile;
     await tester.pumpWidget(
       TestApp(Material(
           child: AttachmentFetcher(
@@ -74,13 +77,14 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('builds child on success', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAttachmentFetcherInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AttachmentFetcherInteractor>(() => interactor);
     });
 
     var expectedFile = File('fakefile.exe');
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.value(expectedFile));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(Material(
@@ -95,12 +99,13 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('displays error state', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAttachmentFetcherInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AttachmentFetcherInteractor>(() => interactor);
     });
 
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.error(''));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(
@@ -114,12 +119,13 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('performs retry', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAttachmentFetcherInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AttachmentFetcherInteractor>(() => interactor);
     });
 
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.error(''));
+    when(interactor.generateCancelToken()).thenAnswer((_) => CancelToken());
 
     await tester.pumpWidget(
       TestApp(
@@ -140,28 +146,31 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('cancels request on dispose', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAttachmentFetcherInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AttachmentFetcherInteractor>(() => interactor);
     });
 
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.error(''));
 
-    var cancelToken = _MockCancelToken();
+    var cancelToken = MockCancelToken();
     when(interactor.generateCancelToken()).thenReturn(cancelToken);
 
     await tester.pumpWidget(
       TestApp(
         Builder(
           builder: (context) => Center(
-            child: RaisedButton(
-              color: Colors.white,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
               onPressed: () => QuickNav().push(
                 context,
                 Material(child: AttachmentFetcher(attachment: Attachment(), builder: (_, __) => Container())),
               ),
               child: Text(
                 'click me',
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ),
@@ -170,18 +179,14 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(RaisedButton));
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     expect(find.byType(AttachmentFetcher), findsOneWidget);
 
-    TestApp.navigatorKey.currentState.pop();
+    TestApp.navigatorKey.currentState?.pop();
     await tester.pumpAndSettle();
 
     verify(cancelToken.cancel()).called(1);
   });
 }
-
-class _MockInteractor extends Mock implements AttachmentFetcherInteractor {}
-
-class _MockCancelToken extends Mock implements CancelToken {}

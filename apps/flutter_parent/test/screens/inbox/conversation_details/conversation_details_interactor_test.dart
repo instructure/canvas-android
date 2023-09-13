@@ -29,15 +29,16 @@ import 'package:test/test.dart';
 
 import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   test('getConversation calls InboxApi with correct parameters', () async {
     final conversationId = '123';
 
-    var api = _MockInboxApi();
+    var api = MockInboxApi();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => api);
-      locator.registerLazySingleton<InboxCountNotifier>(() => _MockInboxNotifier());
+      locator.registerLazySingleton<InboxCountNotifier>(() => MockInboxCountNotifier());
     });
 
     await ConversationDetailsInteractor().getConversation(conversationId);
@@ -45,8 +46,8 @@ void main() {
   });
 
   test('getConversation updates InboxCountNotifier when successful', () async {
-    var api = _MockInboxApi();
-    var notifier = _MockInboxNotifier();
+    var api = MockInboxApi();
+    var notifier = MockInboxCountNotifier();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => api);
@@ -72,7 +73,7 @@ void main() {
   });
 
   test('addReply calls QuickNav with correct parameters', () async {
-    var nav = _MockNav();
+    var nav = MockQuickNav();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
@@ -80,7 +81,7 @@ void main() {
     Conversation conversation = Conversation();
     Message message = Message();
     bool replyAll = true;
-    BuildContext context = _MockContext();
+    BuildContext context = MockBuildContext();
 
     await ConversationDetailsInteractor().addReply(context, conversation, message, replyAll);
     var verification = verify(nav.push(context, captureAny));
@@ -95,13 +96,13 @@ void main() {
   });
 
   test('viewAttachment calls QuickNav with correct parameters', () async {
-    var nav = _MockNav();
+    var nav = MockQuickNav();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
     Attachment attachment = Attachment();
-    BuildContext context = _MockContext();
+    BuildContext context = MockBuildContext();
 
     await ConversationDetailsInteractor().viewAttachment(context, attachment);
     var verification = verify(nav.push(context, captureAny));
@@ -111,11 +112,3 @@ void main() {
     expect((verification.captured[0] as ViewAttachmentScreen).attachment, attachment);
   });
 }
-
-class _MockNav extends Mock implements QuickNav {}
-
-class _MockContext extends Mock implements BuildContext {}
-
-class _MockInboxApi extends Mock implements InboxApi {}
-
-class _MockInboxNotifier extends Mock implements InboxCountNotifier {}

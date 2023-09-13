@@ -22,9 +22,8 @@ part 'course_permissions.g.dart';
 abstract class CoursePermissions implements Built<CoursePermissions, CoursePermissionsBuilder> {
   static Serializer<CoursePermissions> get serializer => _$coursePermissionsSerializer;
 
-  @nullable
   @BuiltValueField(wireName: 'send_messages')
-  bool get sendMessages;
+  bool? get sendMessages;
 
   CoursePermissions._();
   factory CoursePermissions([void Function(CoursePermissionsBuilder) updates]) = _$CoursePermissions;

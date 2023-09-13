@@ -32,6 +32,7 @@ import 'package:tuple/tuple.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 const _studentId = '123';
 const _studentName = 'billy jean';
@@ -182,7 +183,7 @@ void main() {
     test('Does not fail with an empty group response', () async {
       // Mock the data with null response
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null, forceRefresh: false))
-          .thenAnswer((_) async => null);
+          .thenAnswer((_) async => Future.value(null));
 
       // Make the call to test
       final model = CourseDetailsModel.withCourse(_student, _course);
@@ -239,7 +240,7 @@ void main() {
 
       expect(gradeDetails.assignmentGroups, [
         publishedGroup,
-        unpublishedGroup.rebuild((b) => b..assignments = BuiltList.of(List<Assignment>()).toBuilder())
+        unpublishedGroup.rebuild((b) => b..assignments = BuiltList.of(<Assignment>[]).toBuilder())
       ]);
     });
 

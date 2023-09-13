@@ -28,10 +28,10 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:tuple/tuple.dart';
 
 class QRPairingScreen extends StatefulWidget {
-  final QRPairingInfo pairingInfo;
+  final QRPairingInfo? pairingInfo;
   final bool isCreatingAccount;
 
-  const QRPairingScreen({Key key, this.pairingInfo, this.isCreatingAccount = false}) : super(key: key);
+  const QRPairingScreen({this.pairingInfo, this.isCreatingAccount = false, super.key});
 
   @override
   _QRPairingScreenState createState() => _QRPairingScreenState();
@@ -41,7 +41,7 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   bool _isPairing = false;
-  Tuple2<String, String> _errorInfo;
+  Tuple2<String, String>? _errorInfo;
 
   PairingInteractor _interactor = locator<PairingInteractor>();
 
@@ -50,7 +50,7 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
     if (widget.pairingInfo != null) {
       _isPairing = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _handleScanResult(widget.pairingInfo);
+        _handleScanResult(widget.pairingInfo!);
       });
     }
     super.initState();
@@ -65,7 +65,7 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
         appBar: AppBar(
           title: Text(showTutorial ? L10n(context).qrPairingTutorialTitle : L10n(context).qrPairingTitle),
           automaticallyImplyLeading: true,
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
             if (showTutorial) _nextButton(context),
           ],
@@ -90,7 +90,7 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: <Widget>[
-          Text(L10n(context).qrPairingTutorialMessage, style: Theme.of(context).textTheme.subtitle1),
+          Text(L10n(context).qrPairingTutorialMessage, style: Theme.of(context).textTheme.titleMedium),
           Expanded(
             child: FractionallySizedBox(
               alignment: Alignment.center,
@@ -110,10 +110,12 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
     return ButtonTheme(
       textTheme: Theme.of(context).buttonTheme.textTheme,
       minWidth: 48,
-      child: FlatButton(
-        visualDensity: VisualDensity.compact,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          visualDensity: VisualDensity.compact,
+          shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+        ),
         child: Text(L10n(context).next.toUpperCase()),
-        shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
         onPressed: () async {
           QRPairingScanResult result = await _interactor.scanQRCode();
           _handleScanResult(result);
@@ -125,8 +127,8 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
   Widget _errorMessage(BuildContext context) {
     return EmptyPandaWidget(
       svgPath: 'assets/svg/panda-no-pairing-code.svg',
-      title: _errorInfo.item1,
-      subtitle: _errorInfo.item2,
+      title: _errorInfo!.item1,
+      subtitle: _errorInfo!.item2,
       buttonText: L10n(context).retry,
       onButtonTap: () async {
         QRPairingScanResult result = await _interactor.scanQRCode();
@@ -153,7 +155,7 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
       }
     } else if (result is QRPairingScanError) {
       locator<Analytics>().logMessage(result.type.toString());
-      Tuple2<String, String> errorInfo;
+      Tuple2<String, String>? errorInfo;
       switch (result.type) {
         case QRPairingScanErrorType.invalidCode:
           errorInfo = Tuple2(l10n.qrPairingInvalidCodeTitle, l10n.invalidQRCodeError);
@@ -178,11 +180,11 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
   void _handleScanResultForPairing(QRPairingInfo result) async {
     var l10n = L10n(context);
     // 'success' is true if pairing worked, false for API/pairing error, null for network error
-    bool success = await _interactor.pairWithStudent(result.code);
+    bool? success = await _interactor.pairWithStudent(result.code);
 
     if (success == true) {
       // If opened from a deep link in a cold state, this will be the top route and we'll want to go to the splash instead of popping
-      if (ModalRoute.of(context).isFirst) {
+      if (ModalRoute.of(context)?.isFirst == true) {
         locator<QuickNav>().replaceRoute(context, PandaRouter.rootSplash());
       } else {
         locator<StudentAddedNotifier>().notify();
@@ -191,7 +193,7 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
     } else {
       Tuple2<String, String> errorInfo;
       if (success == false) {
-        if (ApiPrefs.isLoggedIn() && !ApiPrefs.getDomain().endsWith(result.domain)) {
+        if (ApiPrefs.isLoggedIn() && ApiPrefs.getDomain()?.endsWith(result.domain) == false) {
           errorInfo = Tuple2(l10n.qrPairingWrongDomainTitle, l10n.qrPairingWrongDomainSubtitle);
         } else {
           errorInfo = Tuple2(l10n.qrPairingFailedTitle, l10n.qrPairingFailedSubtitle);

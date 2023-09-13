@@ -15,9 +15,9 @@ class _$OAuthTokenSerializer implements StructuredSerializer<OAuthToken> {
   final String wireName = 'OAuthToken';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, OAuthToken object,
+  Iterable<Object?> serialize(Serializers serializers, OAuthToken object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'access_token',
       serializers.serialize(object.accessToken,
           specifiedType: const FullType(String)),
@@ -27,20 +27,19 @@ class _$OAuthTokenSerializer implements StructuredSerializer<OAuthToken> {
   }
 
   @override
-  OAuthToken deserialize(Serializers serializers, Iterable<Object> serialized,
+  OAuthToken deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new OAuthTokenBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'access_token':
           result.accessToken = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -53,13 +52,12 @@ class _$OAuthToken extends OAuthToken {
   @override
   final String accessToken;
 
-  factory _$OAuthToken([void Function(OAuthTokenBuilder) updates]) =>
-      (new OAuthTokenBuilder()..update(updates)).build();
+  factory _$OAuthToken([void Function(OAuthTokenBuilder)? updates]) =>
+      (new OAuthTokenBuilder()..update(updates))._build();
 
-  _$OAuthToken._({this.accessToken}) : super._() {
-    if (accessToken == null) {
-      throw new BuiltValueNullFieldError('OAuthToken', 'accessToken');
-    }
+  _$OAuthToken._({required this.accessToken}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        accessToken, r'OAuthToken', 'accessToken');
   }
 
   @override
@@ -77,31 +75,35 @@ class _$OAuthToken extends OAuthToken {
 
   @override
   int get hashCode {
-    return $jf($jc(0, accessToken.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, accessToken.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('OAuthToken')
+    return (newBuiltValueToStringHelper(r'OAuthToken')
           ..add('accessToken', accessToken))
         .toString();
   }
 }
 
 class OAuthTokenBuilder implements Builder<OAuthToken, OAuthTokenBuilder> {
-  _$OAuthToken _$v;
+  _$OAuthToken? _$v;
 
-  String _accessToken;
-  String get accessToken => _$this._accessToken;
-  set accessToken(String accessToken) => _$this._accessToken = accessToken;
+  String? _accessToken;
+  String? get accessToken => _$this._accessToken;
+  set accessToken(String? accessToken) => _$this._accessToken = accessToken;
 
   OAuthTokenBuilder() {
     OAuthToken._initializeBuilder(this);
   }
 
   OAuthTokenBuilder get _$this {
-    if (_$v != null) {
-      _accessToken = _$v.accessToken;
+    final $v = _$v;
+    if ($v != null) {
+      _accessToken = $v.accessToken;
       _$v = null;
     }
     return this;
@@ -109,23 +111,26 @@ class OAuthTokenBuilder implements Builder<OAuthToken, OAuthTokenBuilder> {
 
   @override
   void replace(OAuthToken other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$OAuthToken;
   }
 
   @override
-  void update(void Function(OAuthTokenBuilder) updates) {
+  void update(void Function(OAuthTokenBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$OAuthToken build() {
-    final _$result = _$v ?? new _$OAuthToken._(accessToken: accessToken);
+  OAuthToken build() => _build();
+
+  _$OAuthToken _build() {
+    final _$result = _$v ??
+        new _$OAuthToken._(
+            accessToken: BuiltValueNullFieldError.checkNotNull(
+                accessToken, r'OAuthToken', 'accessToken'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

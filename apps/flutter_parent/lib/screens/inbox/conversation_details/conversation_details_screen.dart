@@ -30,15 +30,15 @@ import 'conversation_details_interactor.dart';
 
 class ConversationDetailsScreen extends StatefulWidget {
   final String conversationId;
-  final String conversationSubject;
-  final String courseName;
+  final String? conversationSubject;
+  final String? courseName;
 
   const ConversationDetailsScreen({
-    Key key,
-    this.conversationId,
+    required this.conversationId,
     this.conversationSubject,
     this.courseName,
-  }) : super(key: key);
+    super.key
+  });
 
   @override
   _ConversationDetailsScreenState createState() => _ConversationDetailsScreenState();
@@ -46,7 +46,7 @@ class ConversationDetailsScreen extends StatefulWidget {
 
 class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
   ConversationDetailsInteractor _interactor = locator<ConversationDetailsInteractor>();
-  Future<Conversation> _conversationFuture;
+  late Future<Conversation?> _conversationFuture;
 
   bool _hasBeenUpdated = false;
 
@@ -67,7 +67,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
       child: DefaultParentTheme(
         builder: (context) => FutureBuilder(
           future: _conversationFuture,
-          builder: (BuildContext context, AsyncSnapshot<Conversation> snapshot) => Scaffold(
+          builder: (BuildContext context, AsyncSnapshot<Conversation?> snapshot) => Scaffold(
             appBar: _appBar(context),
             body: _body(context, snapshot),
             floatingActionButton: _fab(context, snapshot),
@@ -77,28 +77,28 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
     );
   }
 
-  Widget _appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
-              widget.conversationSubject == null || widget.conversationSubject.isEmpty
+              widget.conversationSubject == null || widget.conversationSubject!.isEmpty
                   ? L10n(context).noSubject
-                  : widget.conversationSubject,
+                  : widget.conversationSubject!,
               key: ValueKey('subjectText')),
-          if (widget.courseName != null && widget.courseName.isNotEmpty)
-            Text(widget.courseName, style: Theme.of(context).textTheme.caption, key: ValueKey('courseText')),
+          if (widget.courseName != null && widget.courseName!.isNotEmpty)
+            Text(widget.courseName!, style: Theme.of(context).textTheme.bodySmall, key: ValueKey('courseText')),
         ],
       ),
-      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+      bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
     );
   }
 
-  Widget _fab(BuildContext context, AsyncSnapshot<Conversation> snapshot) {
+  Widget _fab(BuildContext context, AsyncSnapshot<Conversation?> snapshot) {
     if (!snapshot.hasData) return Container();
-    Conversation conversation = snapshot.data;
+    Conversation conversation = snapshot.data!;
     return FloatingActionButton(
       child: Icon(CanvasIconsSolid.reply, size: 20),
       tooltip: L10n(context).reply,
@@ -112,14 +112,14 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
                   children: <Widget>[
                     ListTile(
                         leading: Icon(CanvasIconsSolid.reply, size: 20, color: Theme.of(context).iconTheme.color),
-                        title: Text(L10n(context).reply),
+                        title: Text(L10n(context).reply, style: Theme.of(context).textTheme.bodyMedium),
                         onTap: () {
                           Navigator.of(context).pop();
                           _reply(context, conversation, null, false);
                         }),
                     ListTile(
                         leading: Icon(CanvasIconsSolid.reply_all_2, size: 20, color: Theme.of(context).iconTheme.color),
-                        title: Text(L10n(context).replyAll),
+                        title: Text(L10n(context).replyAll, style: Theme.of(context).textTheme.bodyMedium),
                         onTap: () {
                           Navigator.of(context).pop();
                           _reply(context, conversation, null, true);
@@ -132,9 +132,9 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
     );
   }
 
-  Widget _body(BuildContext context, AsyncSnapshot<Conversation> snapshot) {
+  Widget _body(BuildContext context, AsyncSnapshot<Conversation?> snapshot) {
     if (snapshot.hasError) return _errorState(context);
-    if (snapshot.hasData) return _successState(context, snapshot.data);
+    if (snapshot.hasData) return _successState(context, snapshot.data!);
     return LoadingIndicator();
   }
 
@@ -148,7 +148,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
 
   Widget _successState(BuildContext context, Conversation conversation) {
     return Container(
-      color: ParentTheme.of(context).nearSurfaceColor,
+      color: ParentTheme.of(context)?.nearSurfaceColor,
       child: RefreshIndicator(
         onRefresh: () {
           setState(() {
@@ -161,7 +161,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
           itemCount: conversation.messages?.length ?? 0,
           separatorBuilder: (context, index) => SizedBox(height: 12),
           itemBuilder: (context, index) {
-            var message = conversation.messages[index];
+            var message = conversation.messages![index];
             return _message(context, conversation, message, index);
           },
         ),
@@ -177,35 +177,26 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
       },
       child: Slidable(
         key: Key('message-${message.id}'),
-        actionPane: SlidableDrawerActionPane(),
-        secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: L10n(context).replyAll,
-            color: ParentTheme.of(context).isDarkMode ? ParentColors.tiara : ParentColors.oxford,
-            foregroundColor: Theme.of(context).accentIconTheme.color,
-            iconWidget: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Icon(
-                CanvasIconsSolid.reply_all_2,
-                color: Theme.of(context).accentIconTheme.color,
+        endActionPane: ActionPane(
+            motion: const DrawerMotion(),
+            extentRatio: 0.5,
+            children: [
+              SlidableAction(
+                label: L10n(context).replyAll,
+                backgroundColor: ParentTheme.of(context)?.isDarkMode == true ? ParentColors.tiara : ParentColors.oxford,
+                foregroundColor: ParentTheme.of(context)?.isDarkMode == true ? Colors.black : Colors.white,
+                icon: CanvasIconsSolid.reply_all_2,
+                onPressed: (context) => _reply(context, conversation, message, true),
               ),
-            ),
-            onTap: () => _reply(context, conversation, message, true),
-          ),
-          IconSlideAction(
-            caption: L10n(context).reply,
-            color: Theme.of(context).accentColor,
-            foregroundColor: Theme.of(context).accentIconTheme.color,
-            iconWidget: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Icon(
-                CanvasIconsSolid.reply,
-                color: Theme.of(context).accentIconTheme.color,
+              SlidableAction(
+                label: L10n(context).reply,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: ParentTheme.of(context)?.isDarkMode == true ? Colors.black : Colors.white,
+                icon: CanvasIconsSolid.reply,
+                onPressed: (context) => _reply(context, conversation, message, false),
               ),
-            ),
-            onTap: () => _reply(context, conversation, message, false),
-          ),
-        ],
+            ],
+        ),
         child: MessageWidget(
           conversation: conversation,
           message: message,
@@ -219,7 +210,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
     );
   }
 
-  Future<void> _reply(BuildContext context, Conversation conversation, Message message, bool replyAll) async {
+  Future<void> _reply(BuildContext context, Conversation? conversation, Message? message, bool replyAll) async {
     var newConversation = await _interactor.addReply(context, conversation, message, replyAll);
     if (newConversation != null) {
       _hasBeenUpdated = true;

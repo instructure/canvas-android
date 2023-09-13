@@ -26,12 +26,13 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
       '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
-  final interactor = _MockInteractor();
-  final mockNav = _MockNav();
+  final interactor = MockQRLoginTutorialScreenInteractor();
+  final mockNav = MockQuickNav();
 
   setupTestLocator((locator) {
     locator.registerFactory<QRLoginTutorialScreenInteractor>(() => interactor);
@@ -49,8 +50,8 @@ void main() {
 
     await tester.runAsync(() async {
       Element element = tester.element(find.byType(FractionallySizedBox));
-      final FractionallySizedBox widget = element.widget;
-      final Image image = widget.child;
+      final FractionallySizedBox widget = element.widget as FractionallySizedBox;
+      final Image image = widget.child as Image;
       final ImageProvider imageProvider = image.image;
       await precacheImage(imageProvider, element);
       await tester.pumpAndSettle();
@@ -117,7 +118,3 @@ void main() {
     expect(find.text(AppLocalizations().loginWithQRCodeError), findsOneWidget);
   });
 }
-
-class _MockInteractor extends Mock implements QRLoginTutorialScreenInteractor {}
-
-class _MockNav extends Mock implements QuickNav {}

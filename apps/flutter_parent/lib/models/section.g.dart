@@ -15,58 +15,57 @@ class _$SectionSerializer implements StructuredSerializer<Section> {
   final String wireName = 'Section';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Section object,
+  Iterable<Object?> serialize(Serializers serializers, Section object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
-    result.add('start_at');
-    if (object.startAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.startAt,
+    Object? value;
+    value = object.startAt;
+
+    result
+      ..add('start_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('end_at');
-    if (object.endAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.endAt,
+    value = object.endAt;
+
+    result
+      ..add('end_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
+
     return result;
   }
 
   @override
-  Section deserialize(Serializers serializers, Iterable<Object> serialized,
+  Section deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new SectionBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'start_at':
           result.startAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'end_at':
           result.endAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -81,20 +80,17 @@ class _$Section extends Section {
   @override
   final String name;
   @override
-  final DateTime startAt;
+  final DateTime? startAt;
   @override
-  final DateTime endAt;
+  final DateTime? endAt;
 
-  factory _$Section([void Function(SectionBuilder) updates]) =>
-      (new SectionBuilder()..update(updates)).build();
+  factory _$Section([void Function(SectionBuilder)? updates]) =>
+      (new SectionBuilder()..update(updates))._build();
 
-  _$Section._({this.id, this.name, this.startAt, this.endAt}) : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Section', 'id');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('Section', 'name');
-    }
+  _$Section._({required this.id, required this.name, this.startAt, this.endAt})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(id, r'Section', 'id');
+    BuiltValueNullFieldError.checkNotNull(name, r'Section', 'name');
   }
 
   @override
@@ -116,14 +112,18 @@ class _$Section extends Section {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, id.hashCode), name.hashCode), startAt.hashCode),
-        endAt.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, startAt.hashCode);
+    _$hash = $jc(_$hash, endAt.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Section')
+    return (newBuiltValueToStringHelper(r'Section')
           ..add('id', id)
           ..add('name', name)
           ..add('startAt', startAt)
@@ -133,34 +133,35 @@ class _$Section extends Section {
 }
 
 class SectionBuilder implements Builder<Section, SectionBuilder> {
-  _$Section _$v;
+  _$Section? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  DateTime _startAt;
-  DateTime get startAt => _$this._startAt;
-  set startAt(DateTime startAt) => _$this._startAt = startAt;
+  DateTime? _startAt;
+  DateTime? get startAt => _$this._startAt;
+  set startAt(DateTime? startAt) => _$this._startAt = startAt;
 
-  DateTime _endAt;
-  DateTime get endAt => _$this._endAt;
-  set endAt(DateTime endAt) => _$this._endAt = endAt;
+  DateTime? _endAt;
+  DateTime? get endAt => _$this._endAt;
+  set endAt(DateTime? endAt) => _$this._endAt = endAt;
 
   SectionBuilder() {
     Section._initializeBuilder(this);
   }
 
   SectionBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _name = _$v.name;
-      _startAt = _$v.startAt;
-      _endAt = _$v.endAt;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _name = $v.name;
+      _startAt = $v.startAt;
+      _endAt = $v.endAt;
       _$v = null;
     }
     return this;
@@ -168,24 +169,29 @@ class SectionBuilder implements Builder<Section, SectionBuilder> {
 
   @override
   void replace(Section other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Section;
   }
 
   @override
-  void update(void Function(SectionBuilder) updates) {
+  void update(void Function(SectionBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Section build() {
+  Section build() => _build();
+
+  _$Section _build() {
     final _$result = _$v ??
-        new _$Section._(id: id, name: name, startAt: startAt, endAt: endAt);
+        new _$Section._(
+            id: BuiltValueNullFieldError.checkNotNull(id, r'Section', 'id'),
+            name:
+                BuiltValueNullFieldError.checkNotNull(name, r'Section', 'name'),
+            startAt: startAt,
+            endAt: endAt);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

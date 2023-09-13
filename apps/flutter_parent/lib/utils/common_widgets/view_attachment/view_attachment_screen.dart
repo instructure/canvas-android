@@ -24,7 +24,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ViewAttachmentScreen extends StatefulWidget {
-  const ViewAttachmentScreen(this.attachment, {Key key}) : super(key: key);
+  const ViewAttachmentScreen(this.attachment, {super.key});
 
   final Attachment attachment;
 
@@ -44,8 +44,8 @@ class _ViewAttachmentScreenState extends State<ViewAttachmentScreen> {
         key: scaffoldKey,
         appBar: AppBar(
           elevation: 2,
-          title: Text(widget.attachment.displayName ?? widget.attachment.filename),
-          bottom: ParentTheme.of(context).appBarDivider(),
+          title: Text(widget.attachment.displayName ?? widget.attachment.filename ?? ''),
+          bottom: ParentTheme.of(context)?.appBarDivider(),
           actions: <Widget>[_overflowMenu()],
         ),
         body: _body(context),
@@ -54,7 +54,7 @@ class _ViewAttachmentScreenState extends State<ViewAttachmentScreen> {
   }
 
   Widget _body(BuildContext context) {
-    String contentType = widget.attachment.inferContentType();
+    String? contentType = widget.attachment.inferContentType();
 
     if (contentType == null) return UnknownAttachmentTypeViewer(widget.attachment);
 
@@ -101,7 +101,7 @@ class _ViewAttachmentScreenState extends State<ViewAttachmentScreen> {
 
   _openExternally() {
     _interactor.openExternally(widget.attachment).catchError((_) {
-      scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(L10n(context).noApplicationsToHandleFile),
         ),
