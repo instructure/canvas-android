@@ -38,8 +38,8 @@ class StudentEditDashboardRepository(
     featureFlagProvider: FeatureFlagProvider
 ) : Repository<StudentEditDashboardDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), EditDashboardRepository {
 
-    override suspend fun getCurses(): List<List<Course>> {
-        return dataSource().getCurses()
+    override suspend fun getCourses(): List<List<Course>> {
+        return dataSource().getCourses()
     }
 
     override suspend fun getGroups(): List<Group> = dataSource().getGroups()

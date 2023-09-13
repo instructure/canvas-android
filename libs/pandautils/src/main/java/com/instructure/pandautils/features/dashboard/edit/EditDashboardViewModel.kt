@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,7 +40,8 @@ import javax.inject.Inject
 class EditDashboardViewModel @Inject constructor(
     private val courseManager: CourseManager,
     private val groupManager: GroupManager,
-    private val repository: EditDashboardRepository
+    private val repository: EditDashboardRepository,
+    private val networkStateProvider: NetworkStateProvider
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -83,7 +85,7 @@ class EditDashboardViewModel @Inject constructor(
     fun loadItems() {
         viewModelScope.launch {
             try {
-                val courses = repository.getCurses()
+                val courses = repository.getCourses()
                 currentCourses = courses.getOrNull(0).orEmpty()
                 pastCourses = courses.getOrNull(1).orEmpty()
                 futureCourses = courses.getOrNull(2).orEmpty()
@@ -283,7 +285,7 @@ class EditDashboardViewModel @Inject constructor(
     }
 
     private fun selectAllCourses() {
-        val coursesToFavorite = (currentCoursesViewData + futureCoursesViewData).filter { !it.isFavorite && it.favoriteable }
+        val coursesToFavorite = (currentCoursesViewData + futureCoursesViewData).filter { !it.isFavorite && it.favoritableOnline }
         var counter = 0
         coursesToFavorite.forEach {
             viewModelScope.launch {
@@ -327,46 +329,33 @@ class EditDashboardViewModel @Inject constructor(
     private fun getCurrentCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         favoriteCourseMap.clear()
         favoriteCourseMap.putAll(courses.filter { it.isFavorite }.associateBy { it.id })
-        return courses.map {
-            EditDashboardCourseItemViewModel(
-                    id = it.id,
-                    name = it.name,
-                    isFavorite = it.isFavorite,
-                    favoriteable = repository.isFavoriteable(it),
-                    openable = repository.isOpenable(it),
-//                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", TODO
-                    actionHandler = ::handleAction
-            )
-        }
+        return courses.map { createCourseItem(it) }
     }
 
     private fun getPastCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        return courses.map {
-            EditDashboardCourseItemViewModel(
-                    id = it.id,
-                    name = it.name,
-                    isFavorite = it.isFavorite,
-                    favoriteable = repository.isFavoriteable(it),
-                    openable = repository.isOpenable(it),
-//                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", TODO
-                    actionHandler = ::handleAction
-            )
-        }
+        return courses.map { createCourseItem(it) }
     }
 
     private fun getFutureCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         favoriteCourseMap.putAll(courses.filter { it.isFavorite }.associateBy { it.id })
-        return courses.map {
-            EditDashboardCourseItemViewModel(
-                    id = it.id,
-                    name = it.name,
-                    isFavorite = it.isFavorite,
-                    favoriteable = repository.isFavoriteable(it),
-                    openable = repository.isOpenable(it),
-//                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", TODO
-                    actionHandler = ::handleAction
-            )
-        }
+        return courses.map { createCourseItem(it) }
+    }
+
+    private fun createCourseItem(course: Course): EditDashboardCourseItemViewModel {
+        val termName = course.term?.name
+        val enrollmentType = course.enrollments?.firstOrNull()?.type?.apiTypeString.orEmpty()
+        val termTitle = if (termName != null) "$termName | $enrollmentType" else enrollmentType
+
+        return EditDashboardCourseItemViewModel(
+            id = course.id,
+            name = course.name,
+            isFavorite = course.isFavorite,
+            favoritableOnline = repository.isFavoriteable(course),
+            openable = repository.isOpenable(course),
+            termTitle = termTitle,
+            online = networkStateProvider.isOnline(),
+            actionHandler = ::handleAction
+        )
     }
 
     private fun getGroups(groups: List<Group>): List<EditDashboardGroupItemViewModel> {

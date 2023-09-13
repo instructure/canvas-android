@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 
 interface EditDashboardRepository {
-    suspend fun getCurses(): List<List<Course>>
+    suspend fun getCourses(): List<List<Course>>
     suspend fun getGroups(): List<Group>
     fun isOpenable(course: Course): Boolean
     fun isFavoriteable(course: Course): Boolean

@@ -83,7 +83,7 @@ class EditDashboardViewModelTest {
         //Given
         val groups = listOf(createGroup(id = 1L, name = "Group1"))
 
-        coEvery { repository.getCurses() } throws IllegalStateException()
+        coEvery { repository.getCourses() } throws IllegalStateException()
 
         coEvery { repository.getGroups() } returns groups
 
@@ -100,7 +100,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(Course(id = 1L, name = "Course"))
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         coEvery { repository.getGroups() } throws IllegalStateException()
 
@@ -117,7 +117,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current Course"))
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         coEvery { repository.getGroups() } returns emptyList()
 
@@ -140,7 +140,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Correct headers for groups`() {
         //Given
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(Group(id = 1L, name = "Group1"))
 
@@ -166,7 +166,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course"))
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         every { repository.isFavoriteable(any()) } returns true
 
@@ -198,7 +198,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course", true))
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         every { repository.isFavoriteable(any()) } returns true
 
@@ -228,7 +228,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add group to favorites`() {
         //Given
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(createGroup(1L, "Group"))
         coEvery { repository.getGroups() } returns groups
@@ -257,7 +257,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove group from favorites`() {
         //Given
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(createGroup(1L, "Group", true))
         coEvery { repository.getGroups() } returns groups
@@ -290,7 +290,7 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2")
         )
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         every { repository.isFavoriteable(any()) } returns true
 
@@ -328,7 +328,7 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2", false)
         )
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         coEvery { repository.getGroups() } returns emptyList()
 
@@ -361,7 +361,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add all groups to favorites`() {
         //Given
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(
                 createGroup(1L, "Group"),
@@ -397,7 +397,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove all groups from favorites`() {
         //Given
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(
                 createGroup(1L, "Group", true),
@@ -440,7 +440,7 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         coEvery { repository.getGroups() } returns groups
 
@@ -470,7 +470,7 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         coEvery { repository.getGroups() } returns groups
 
@@ -500,7 +500,7 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         coEvery { repository.getGroups() } returns groups
 
@@ -523,7 +523,7 @@ class EditDashboardViewModelTest {
         val futureCourse = createCourse(2L, "Future course", false, OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1))
         val currentCourse = createCourse(3L, "Current course", false)
 
-        coEvery { repository.getCurses() } returns listOf(listOf(currentCourse), listOf(pastCourse), listOf(futureCourse))
+        coEvery { repository.getCourses() } returns listOf(listOf(currentCourse), listOf(pastCourse), listOf(futureCourse))
 
         val groups = listOf(
                 createGroup(4L, "Group", true),
@@ -581,7 +581,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Past course"))
 
-        coEvery { repository.getCurses() } returns listOf(emptyList(), courses, emptyList())
+        coEvery { repository.getCourses() } returns listOf(emptyList(), courses, emptyList())
 
         every { repository.isFavoriteable(any()) } returns false
 
@@ -620,7 +620,7 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Unpublished future course", workflowState = Course.WorkflowState.UNPUBLISHED)
         )
 
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), courses)
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), courses)
 
         every { repository.isFavoriteable(courses.first()) } returns true
 
@@ -666,7 +666,7 @@ class EditDashboardViewModelTest {
     fun `Open course`() {
         val courses = listOf(createCourse(1L, "Current course"))
 
-        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
 
         every { repository.isOpenable(any()) } returns true
 
@@ -699,7 +699,7 @@ class EditDashboardViewModelTest {
 
     @Test
     fun `Open group`() {
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(createGroup(1L, "Group"))
         coEvery { repository.getGroups() } returns groups
@@ -733,7 +733,7 @@ class EditDashboardViewModelTest {
     fun `Not isOpenable courses cannot be opened`() {
         val courses = listOf(createCourse(1L, "Unpublished course", workflowState = Course.WorkflowState.UNPUBLISHED))
 
-        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), courses)
+        coEvery { repository.getCourses() } returns listOf(emptyList(), emptyList(), courses)
 
         every { repository.isOpenable(any()) } returns false
 

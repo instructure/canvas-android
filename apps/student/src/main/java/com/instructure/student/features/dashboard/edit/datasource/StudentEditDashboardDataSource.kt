@@ -21,6 +21,6 @@ import com.instructure.canvasapi2.models.Group
 
 interface StudentEditDashboardDataSource {
 
-    suspend fun getCurses(): List<List<Course>>
+    suspend fun getCourses(): List<List<Course>>
     suspend fun getGroups(): List<Group>
 }

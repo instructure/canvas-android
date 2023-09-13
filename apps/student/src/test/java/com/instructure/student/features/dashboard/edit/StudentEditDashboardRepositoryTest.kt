@@ -64,7 +64,7 @@ class StudentEditDashboardRepositoryTest {
         )
 
         // When
-        val result = repository.getCurses()
+        val result = repository.getCourses()
 
         // Then
         val expected = listOf(coursesActive, coursesCompleted, coursesInvitedOrPending)

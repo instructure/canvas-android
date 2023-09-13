@@ -28,7 +28,7 @@ class StudentEditDashboardLocalDataSource(
     private val editDashboardItemDao: EditDashboardItemDao
 ) : StudentEditDashboardDataSource {
 
-    override suspend fun getCurses(): List<List<Course>> {
+    override suspend fun getCourses(): List<List<Course>> {
         val courseMapper: suspend (EditDashboardItemEntity) -> Course = {
             courseFacade.getCourseById(it.courseId)?.copy(isFavorite = it.isFavorite) ?: it.toCourse()
         }

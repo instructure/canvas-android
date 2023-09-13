@@ -28,7 +28,7 @@ class StudentEditDashboardNetworkDataSource(
     private val groupApi: GroupAPI.GroupInterface
 ) : StudentEditDashboardDataSource {
 
-    override suspend fun getCurses(): List<List<Course>> {
+    override suspend fun getCourses(): List<List<Course>> {
         val params = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
 
         val currentCourses = courseApi.firstPageCoursesByEnrollmentState("active", params)
