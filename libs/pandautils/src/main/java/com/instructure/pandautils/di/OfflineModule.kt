@@ -470,4 +470,9 @@ class OfflineModule {
     fun provideSyncProgressDao(appDatabase: OfflineDatabase): SyncProgressDao {
         return appDatabase.syncProgressDao()
     }
+
+    @Provides
+    fun provideEditDashboardItemDao(appDatabase: OfflineDatabase): EditDashboardItemDao {
+        return appDatabase.editDashboardItemDao()
+    }
 }

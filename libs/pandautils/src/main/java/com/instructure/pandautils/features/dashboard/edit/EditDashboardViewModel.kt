@@ -334,7 +334,7 @@ class EditDashboardViewModel @Inject constructor(
                     isFavorite = it.isFavorite,
                     favoriteable = repository.isFavoriteable(it),
                     openable = repository.isOpenable(it),
-                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
+//                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", TODO
                     actionHandler = ::handleAction
             )
         }
@@ -348,7 +348,7 @@ class EditDashboardViewModel @Inject constructor(
                     isFavorite = it.isFavorite,
                     favoriteable = repository.isFavoriteable(it),
                     openable = repository.isOpenable(it),
-                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
+//                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", TODO
                     actionHandler = ::handleAction
             )
         }
@@ -363,7 +363,7 @@ class EditDashboardViewModel @Inject constructor(
                     isFavorite = it.isFavorite,
                     favoriteable = repository.isFavoriteable(it),
                     openable = repository.isOpenable(it),
-                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
+//                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", TODO
                     actionHandler = ::handleAction
             )
         }

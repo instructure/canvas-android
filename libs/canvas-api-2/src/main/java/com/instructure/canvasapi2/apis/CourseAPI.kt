@@ -100,7 +100,7 @@ object CourseAPI {
         suspend fun getFullCourseContent(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<Course>
 
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=current_and_concluded")
-        fun firstPageCoursesByEnrollmentState(@Query("enrollment_state") enrollmentState: String): Call<List<Course>>
+        suspend fun firstPageCoursesByEnrollmentState(@Query("enrollment_state") enrollmentState: String, @Tag params: RestParams): DataResult<List<Course>>
 
         @GET
         fun next(@Url nextURL: String): Call<List<Course>>
@@ -309,9 +309,5 @@ object CourseAPI {
 
     fun getFirstPageCoursesWithGrades(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getFirstPageCoursesWithGrades()).enqueue(callback)
-    }
-
-    fun getFirstPageCoursesByEnrollmentState(enrollmentState: String, adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
-        callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesByEnrollmentState(enrollmentState)).enqueue(callback)
     }
 }

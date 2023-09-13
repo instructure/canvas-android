@@ -29,7 +29,7 @@ class EditDashboardCourseItemViewModel(
         @get:Bindable var isFavorite: Boolean,
         val favoriteable: Boolean,
         val openable: Boolean,
-        val termTitle: String?,
+        val termTitle: String? = null,
         private val actionHandler: (EditDashboardItemAction) -> Unit
 ) : ItemViewModel, BaseObservable() {
 
