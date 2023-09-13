@@ -20,10 +20,6 @@ import 'package:mockito/mockito.dart';
 import '../accessibility_utils.dart';
 
 void main() {
-  test('throws error when horizontal padding is null', () {
-    expect(() => FullScreenScrollContainer(children: <Widget>[], horizontalPadding: null), throwsAssertionError);
-  });
-
   group('Single child', () {
     testWidgetsWithAccessibilityChecks('is visible', (tester) async {
       final children = [Text('a')];
@@ -170,7 +166,7 @@ class _Refresher extends Mock {
   void refresh();
 }
 
-Widget _refreshingWidget(List<Widget> children, {_Refresher refresher, Widget header}) {
+Widget _refreshingWidget(List<Widget> children, {_Refresher? refresher, Widget? header}) {
   return MaterialApp(
     home: Scaffold(
       body: RefreshIndicator(

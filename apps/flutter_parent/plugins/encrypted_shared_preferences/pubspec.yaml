@@ -26,5 +26,5 @@ dev_dependencies:
   pedantic: ^1.8.0
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
-  flutter: "2.5.3"
+  sdk: ">=3.0.0 <3.10.6"
+  flutter: 3.13.2

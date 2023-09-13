@@ -25,26 +25,21 @@ abstract class CreateSubmissionInfo implements Built<CreateSubmissionInfo, Creat
   factory CreateSubmissionInfo([void Function(CreateSubmissionInfoBuilder) updates]) = _$CreateSubmissionInfo;
 
   // Shouldn't be null for submissions, can be null for grades
-  @nullable
   @BuiltValueField(wireName: "submission_type")
-  String get submissionType;
+  String? get submissionType;
 
-  @nullable
-  String get body;
+  String? get body;
 
-  @nullable
-  String get url;
+  String? get url;
 
   // TODO: Support file submissions
   // TODO: Support media comments
 
-  @nullable
   @BuiltValueField(wireName: "user_id")
-  int get userId;
+  int? get userId;
 
-  @nullable
   @BuiltValueField(wireName: "submitted_at")
-  DateTime get submittedAt;
+  DateTime? get submittedAt;
 
   static void _initializeBuilder(CreateSubmissionInfoBuilder b) => b;
 }

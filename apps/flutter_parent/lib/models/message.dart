@@ -30,11 +30,9 @@ abstract class Message implements Built<Message, MessageBuilder> {
   String get id;
 
   @BuiltValueField(wireName: 'created_at')
-  @nullable
-  DateTime get createdAt;
+  DateTime? get createdAt;
 
-  @nullable
-  String get body;
+  String? get body;
 
   @BuiltValueField(wireName: 'author_id')
   String get authorId;
@@ -42,20 +40,16 @@ abstract class Message implements Built<Message, MessageBuilder> {
   @BuiltValueField(wireName: 'generated')
   bool get isGenerated;
 
-  @nullable
-  BuiltList<Attachment> get attachments;
+  BuiltList<Attachment>? get attachments;
 
   @BuiltValueField(wireName: 'media_comment')
-  @nullable
-  MediaComment get mediaComment;
+  MediaComment? get mediaComment;
 
   @BuiltValueField(wireName: 'forwarded_messages')
-  @nullable
-  BuiltList<Message> get forwardedMessages;
+  BuiltList<Message>? get forwardedMessages;
 
   @BuiltValueField(wireName: 'participating_user_ids')
-  @nullable
-  BuiltList<String> get participatingUserIds;
+  BuiltList<String>? get participatingUserIds;
 
   Message._();
   factory Message([void Function(MessageBuilder) updates]) = _$Message;

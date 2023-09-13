@@ -19,41 +19,41 @@ import 'package:test/test.dart';
 import '../flutter_driver_extensions.dart';
 
 class CourseGradesPage {
-  static Future<void> verifyTotalGradeContains(FlutterDriver driver, String text) async {
-    var totalGradeText = await driver.getTextWithRefreshes(_totalGradeFinder);
-    expect(totalGradeText.toLowerCase().contains(text.toLowerCase()), true,
+  static Future<void> verifyTotalGradeContains(FlutterDriver? driver, String text) async {
+    var totalGradeText = await driver?.getTextWithRefreshes(_totalGradeFinder);
+    expect(totalGradeText?.toLowerCase().contains(text.toLowerCase()), true,
         reason: "Expected total grade to contain $text");
   }
 
-  static Future<void> verifyAssignment(FlutterDriver driver, Assignment assignment,
-      {String grade = null, String status = null}) async {
+  static Future<void> verifyAssignment(FlutterDriver? driver, Assignment assignment,
+      {String? grade = null, String? status = null}) async {
     var rowFinder = _assignmentRowFinder(assignment);
-    await driver.scrollIntoView(rowFinder);
+    await driver?.scrollIntoView(rowFinder);
 
     var nameFinder = _assignmentNameFinder(assignment);
-    var nameText = await driver.getTextWithRefreshes(nameFinder);
+    var nameText = await driver?.getTextWithRefreshes(nameFinder);
     expect(nameText, assignment.name, reason: "Expected assignment name of ${assignment.name}");
 
     var gradeFinder = _assignmentGradeFinder(assignment);
-    var gradeText = await driver.getTextWithRefreshes(gradeFinder);
-    expect(gradeText.contains(assignment.pointsPossible.toInt().toString()), true,
+    var gradeText = await driver?.getTextWithRefreshes(gradeFinder);
+    expect(gradeText?.contains(assignment.pointsPossible.toInt().toString()), true,
         reason: "Expected grade to contain ${assignment.pointsPossible.toInt()}");
     if (grade != null) {
-      expect(gradeText.contains(grade), true, reason: "Expected grade to contain $grade");
+      expect(gradeText?.contains(grade), true, reason: "Expected grade to contain $grade");
     }
 
     if (status != null) {
       var statusFinder = _assignmentStatusFinder(assignment);
-      var statusText = await driver.getTextWithRefreshes(statusFinder);
-      expect(statusText.toLowerCase().contains(status.toLowerCase()), true,
+      var statusText = await driver?.getTextWithRefreshes(statusFinder);
+      expect(statusText?.toLowerCase().contains(status.toLowerCase()), true,
           reason: "Expected status to contain $status");
     }
   }
 
-  static Future<void> selectAssignment(FlutterDriver driver, Assignment assignment) async {
+  static Future<void> selectAssignment(FlutterDriver? driver, Assignment assignment) async {
     var rowFinder = _assignmentRowFinder(assignment);
-    await driver.scrollIntoView(rowFinder);
-    await driver.tap(_assignmentNameFinder(assignment));
+    await driver?.scrollIntoView(rowFinder);
+    await driver?.tap(_assignmentNameFinder(assignment));
   }
 
   static final _totalGradeFinder = find.byValueKey("total_grade");
@@ -74,7 +74,7 @@ class CourseGradesPage {
     return find.byValueKey("assignment_${assignment.id}_grade");
   }
 
-  static Future<void> initiateCreateEmail(FlutterDriver driver) async {
-    await driver.tap(find.byType('FloatingActionButton'));
+  static Future<void> initiateCreateEmail(FlutterDriver? driver) async {
+    await driver?.tap(find.byType('FloatingActionButton'));
   }
 }

@@ -22,36 +22,36 @@ class ThemePrefs {
 
   static String PREF_KEY_HC_MODE = 'high_contrast_mode';
 
-  static SharedPreferences _prefs;
+  static SharedPreferences? _prefs;
 
   static Future<void> init() async {
     if (_prefs == null) _prefs = await SharedPreferences.getInstance();
   }
 
   @visibleForTesting
-  static Future<bool> clear() => _prefs.clear();
+  static Future<bool> clear() => _prefs?.clear() ?? Future(() => false);
 
   const ThemePrefs();
 
   /// Returns the stored preference for dark mode. The get the value for the theme in use, call ParentTheme.of(context).isDarkMode
-  bool get darkMode => _prefs.getBool(PREF_KEY_DARK_MODE) ?? false;
+  bool get darkMode => _prefs?.getBool(PREF_KEY_DARK_MODE) ?? false;
 
   /// Sets the dark mode value. Note that calling this only changes the stored preference. To update the theme in use,
   /// prefer setting ParentTheme.of(context).isDarkMode
-  set darkMode(bool value) => _prefs.setBool(PREF_KEY_DARK_MODE, value);
+  set darkMode(bool value) => _prefs?.setBool(PREF_KEY_DARK_MODE, value);
 
   /// Returns the stored preference for dark mode for WebViews. The get the value for the theme in use,
   /// call ParentTheme.of(context).isWebViewDarkMode
-  bool get webViewDarkMode => _prefs.getBool(PREF_KEY_WEB_VIEW_DARK_MODE) ?? false;
+  bool get webViewDarkMode => _prefs?.getBool(PREF_KEY_WEB_VIEW_DARK_MODE) ?? false;
 
   /// Sets the dark mode value for WebViews. Note that calling this only changes the stored preference. To update the
   /// theme in use, prefer setting ParentTheme.of(context).isWebViewDarkMode
-  set webViewDarkMode(bool value) => _prefs.setBool(PREF_KEY_WEB_VIEW_DARK_MODE, value);
+  set webViewDarkMode(bool value) => _prefs?.setBool(PREF_KEY_WEB_VIEW_DARK_MODE, value);
 
   /// Returns the stored preference for high-contrast mode. To get the value for the theme in use, call ParentTheme.of(context).isHC
-  bool get hcMode => _prefs.getBool(PREF_KEY_HC_MODE) ?? false;
+  bool get hcMode => _prefs?.getBool(PREF_KEY_HC_MODE) ?? false;
 
   /// Sets the high contrast mode value. Note that calling this only changes the stored preference. To update the theme
   /// in use, prefer setting ParentTheme.of(context).isHC
-  set hcMode(bool value) => _prefs.setBool(PREF_KEY_HC_MODE, value);
+  set hcMode(bool value) => _prefs?.setBool(PREF_KEY_HC_MODE, value);
 }

@@ -19,9 +19,9 @@ import 'package:flutter_parent/models/user.dart';
 
 class UserName extends StatelessWidget {
   final String userName;
-  final String pronouns;
-  final TextStyle style;
-  final TextOverflow overflow;
+  final String? pronouns;
+  final TextStyle? style;
+  final TextOverflow? overflow;
 
   UserName(this.userName, this.pronouns, {this.style, this.overflow});
 
@@ -30,11 +30,11 @@ class UserName extends StatelessWidget {
         pronouns = user.pronouns;
 
   UserName.fromUserShortName(User user, {this.style = null, this.overflow = null})
-      : userName = user.shortName,
+      : userName = user.shortName!,
         pronouns = user.pronouns;
 
   UserName.fromBasicUser(BasicUser user, {this.style = null, this.overflow = null})
-      : userName = user.name,
+      : userName = user.name!,
         pronouns = user.pronouns;
 
   UserName.fromRecipient(Recipient recipient, {this.style = null, this.overflow = null})
@@ -42,7 +42,7 @@ class UserName extends StatelessWidget {
         pronouns = recipient.pronouns;
 
   String get text {
-    if (pronouns != null && pronouns.isNotEmpty) {
+    if (pronouns != null && pronouns!.isNotEmpty) {
       return ('$userName ($pronouns)');
     } else {
       return userName;
@@ -62,6 +62,7 @@ class UserName extends StatelessWidget {
     return Text.rich(
       span,
       overflow: overflow,
+      style: Theme.of(context).textTheme.titleMedium
     );
   }
 }

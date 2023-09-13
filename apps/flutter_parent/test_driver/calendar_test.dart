@@ -26,8 +26,9 @@ import 'pages/assignment_details_page.dart';
 import 'pages/calendar_page.dart';
 import 'pages/dashboard_page.dart';
 
+// Run test with command: flutter drive --target=test_driver/calendar.dart
 void main() {
-  FlutterDriver driver;
+  FlutterDriver? driver;
 
   // Connect to the Flutter driver before running any tests.
   setUpAll(() async {
@@ -37,7 +38,7 @@ void main() {
   // Close the connection to the driver after the tests have completed.
   tearDownAll(() async {
     if (driver != null) {
-      driver.close();
+      driver?.close();
     }
   });
 
@@ -52,15 +53,15 @@ void main() {
   // as we usually run the test M-F.
   test('Calendar E2E', () async {
     // Wait for seeding to complete
-    var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
+    var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
     var parent = seedContext.getNamedObject<SeededUser>("parent");
     var student = seedContext.getNamedObject<SeededUser>("student");
-    var courses = [seedContext.getNamedObject<Course>("course1"), seedContext.getNamedObject<Course>("course2")];
-    var assignment1 = seedContext.getNamedObject<Assignment>("assignment1"); // From first course
-    var assignment2 = seedContext.getNamedObject<Assignment>("assignment2"); // From second course
-    var event2 = seedContext.getNamedObject<ScheduleItem>("event2"); // From second course
+    var courses = [seedContext.getNamedObject<Course>("course1")!, seedContext.getNamedObject<Course>("course2")!];
+    var assignment1 = seedContext.getNamedObject<Assignment>("assignment1")!; // From first course
+    var assignment2 = seedContext.getNamedObject<Assignment>("assignment2")!; // From second course
+    var event2 = seedContext.getNamedObject<ScheduleItem>("event2")!; // From second course
 
     // Let's check that all of our assignments, quizzes and announcements are displayed
     await DashboardPage.waitForRender(driver);
@@ -73,7 +74,7 @@ void main() {
     // Let's try opening an assignment
     await CalendarPage.openAssignment(driver, assignment1);
     await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignment1);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
 
     // Let's filter out the first course and try again
     await CalendarPage.toggleFilter(driver, courses[0]);

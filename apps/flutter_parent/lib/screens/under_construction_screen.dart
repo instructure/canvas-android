@@ -20,7 +20,7 @@ import 'package:flutter_svg/svg.dart';
 class UnderConstructionScreen extends StatelessWidget {
   final bool showAppBar;
 
-  const UnderConstructionScreen({this.showAppBar = false, Key key}) : super(key: key);
+  const UnderConstructionScreen({this.showAppBar = false, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class UnderConstructionScreen extends StatelessWidget {
               elevation: 0,
               backgroundColor: Colors.transparent,
               iconTheme: Theme.of(context).iconTheme,
-              bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+              bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
             )
           : null,
       body: _body(context),
@@ -60,7 +60,7 @@ class UnderConstructionScreen extends StatelessWidget {
               Text(
                 L10n(context).currentlyBuildingThisFeature,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.normal),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.normal),
               ),
             ],
           ),

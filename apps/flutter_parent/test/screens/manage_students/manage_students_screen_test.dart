@@ -38,22 +38,23 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   mockNetworkImageResponse();
-  final analytics = _MockAnalytics();
+  final analytics = MockAnalytics();
   final MockPairingUtil pairingUtil = MockPairingUtil();
   final MockUserColorsDb userColorsDb = MockUserColorsDb();
 
-  _setupLocator([_MockManageStudentsInteractor interactor]) async {
+  _setupLocator([MockManageStudentsInteractor? interactor]) async {
     final locator = GetIt.instance;
     await locator.reset();
 
-    var thresholdInteractor = _MockAlertThresholdsInteractor();
+    var thresholdInteractor = MockAlertThresholdsInteractor();
     when(thresholdInteractor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
 
     locator.registerFactory<AlertThresholdsInteractor>(() => thresholdInteractor);
-    locator.registerFactory<ManageStudentsInteractor>(() => interactor ?? _MockManageStudentsInteractor());
+    locator.registerFactory<ManageStudentsInteractor>(() => interactor ?? MockManageStudentsInteractor());
     locator.registerFactory<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<Analytics>(() => analytics);
     locator.registerLazySingleton<PairingUtil>(() => pairingUtil);
@@ -66,9 +67,9 @@ void main() {
     reset(userColorsDb);
   });
 
-  void _clickFAB(WidgetTester tester) async {
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
+  Future<void> _clickFAB(WidgetTester? tester) async {
+    await tester?.tap(find.byType(FloatingActionButton));
+    await tester?.pumpAndSettle();
   }
 
   group('Refresh', () {
@@ -77,7 +78,7 @@ void main() {
       var postRefreshStudent = [CanvasModelTestUtils.mockUser(shortName: 'Sally')];
 
       // Mock the behavior of the interactor to return a student
-      final interactor = _MockManageStudentsInteractor();
+      final interactor = MockManageStudentsInteractor();
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value(postRefreshStudent));
       _setupLocator(interactor);
@@ -99,8 +100,8 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Error on pull to refresh', (tester) async {
-      var interactor = _MockManageStudentsInteractor();
-      Completer completer = Completer<List<User>>();
+      var interactor = MockManageStudentsInteractor();
+      Completer<List<User>?> completer = Completer<List<User>?>();
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
       _setupLocator(interactor);
 
@@ -127,8 +128,8 @@ void main() {
       var observedStudents = [CanvasModelTestUtils.mockUser(shortName: 'Billy')];
 
       // Mock interactor to return an error when retrieving student list
-      var interactor = _MockManageStudentsInteractor();
-      Completer completer = Completer<List<User>>();
+      var interactor = MockManageStudentsInteractor();
+      Completer<List<User>?> completer = Completer<List<User>?>();
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
       _setupLocator(interactor);
 
@@ -320,6 +321,7 @@ void main() {
       // Pump and settle the page transition animation
       await tester.pump();
       await tester.pump();
+      await tester.pumpAndSettle();
 
       // Find the thresholds screen
       expect(find.byType(AlertThresholdsScreen), findsOneWidget);
@@ -328,7 +330,7 @@ void main() {
 
   group('Add Student', () {
     testWidgetsWithAccessibilityChecks('Displays FAB for pairing', (tester) async {
-      var interactor = _MockManageStudentsInteractor();
+      var interactor = MockManageStudentsInteractor();
       _setupLocator(interactor);
 
       await tester.pumpWidget(TestApp(
@@ -341,7 +343,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Tapping FAB calls PairingUtil', (tester) async {
-      var interactor = _MockManageStudentsInteractor();
+      var interactor = MockManageStudentsInteractor();
       _setupLocator(interactor);
 
       var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
@@ -362,7 +364,7 @@ void main() {
       var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy')];
 
       // Mock return value for success when pairing a student
-      final interactor = _MockManageStudentsInteractor();
+      final interactor = MockManageStudentsInteractor();
       when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
       // Mock retrieving students, also add an extra student to the list
@@ -398,7 +400,7 @@ void main() {
       var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy', id: "1771")];
 
       // Mock return value for success when pairing a student
-      final interactor = _MockManageStudentsInteractor();
+      final interactor = MockManageStudentsInteractor();
       when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
       // Mock retrieving students, also add an extra student to the list
@@ -409,7 +411,7 @@ void main() {
 
       _setupLocator(interactor);
 
-      final observer = _MockNavigatorObserver();
+      final observer = MockNavigatorObserver();
 
       // Setup page
       await _pumpTestableWidgetWithBackButton(tester, ManageStudentsScreen(observedStudent), observer);
@@ -445,11 +447,11 @@ void main() {
 }
 
 /// Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
-Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, _MockNavigatorObserver observer) async {
-  var mockObserver = _MockNavigatorObserver();
+Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, MockNavigatorObserver observer) async {
+  var mockObserver = MockNavigatorObserver();
   final app = TestApp(
     Builder(
-      builder: (context) => FlatButton(
+      builder: (context) => TextButton(
         child: Semantics(label: 'test', child: const SizedBox()),
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget)),
       ),
@@ -459,15 +461,7 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, _MockNavig
 
   await tester.pumpWidget(app);
   await tester.pumpAndSettle();
-  await tester.tap(find.byType(FlatButton));
+  await tester.tap(find.byType(TextButton));
   await tester.pumpAndSettle();
   verify(mockObserver.didPush(any, any)).called(2); // Twice, first for the initial page, then for the navigator route
 }
-
-class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}
-
-class _MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}
-
-class _MockAnalytics extends Mock implements Analytics {}
-
-class _MockNavigatorObserver extends Mock implements NavigatorObserver {}

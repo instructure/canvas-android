@@ -25,8 +25,8 @@ import 'package:provider/provider.dart';
 
 class StudentHorizontalListView extends StatefulWidget {
   final List<User> _students;
-  final Function onTap;
-  final Function onAddStudent;
+  final Function? onTap;
+  final Function? onAddStudent;
 
   StudentHorizontalListView(this._students, {this.onTap, this.onAddStudent});
 
@@ -53,10 +53,10 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         ApiPrefs.updateCurrentLogin((b) => b..selectedStudentId = student.id);
-        ParentTheme.of(context).setSelectedStudent(student.id);
+        ParentTheme.of(context)?.setSelectedStudent(student.id);
         Provider.of<SelectedStudentNotifier>(context, listen: false).update(student);
         ApiPrefs.setCurrentStudent(student);
-        widget.onTap();
+        if (widget.onTap != null) widget.onTap!();
       },
       child: Semantics(
         label: L10n(context).tapToSelectStudent,
@@ -76,9 +76,9 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  student.shortName,
+                  student.shortName ?? '',
                   key: Key("${student.shortName}_text"),
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(color: ParentTheme.of(context).onSurfaceColor),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(color: ParentTheme.of(context)?.onSurfaceColor),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
@@ -95,37 +95,43 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
       child: Container(
         width: 120,
         height: 92,
-        child: Column(
+        child: ListView(
           children: <Widget>[
             SizedBox(height: 12),
             Container(
               width: 48,
               height: 48,
-              child: RaisedButton(
-                padding: EdgeInsets.zero,
-                color: Theme.of(context).scaffoldBackgroundColor,
+              child: ElevatedButton(
                 child: Semantics(
                   label: L10n(context).tapToPairNewStudent,
                   child: Icon(
                     Icons.add,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-                shape: CircleBorder(
-                  side: BorderSide(
-                      color: ParentTheme.of(context).isDarkMode ? Theme.of(context).accentColor : Colors.white,
-                      width: 1),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  surfaceTintColor: Theme.of(context).canvasColor,
+                  shape: CircleBorder(
+                    side: BorderSide(
+                        color: ParentTheme.of(context)?.isDarkMode == true ? Theme.of(context).colorScheme.secondary : Colors.white,
+                        width: 1),
+                  ),
+                  elevation: 8,
                 ),
-                elevation: 8,
                 onPressed: () {
-                  locator<PairingUtil>().pairNewStudent(context, () => widget.onAddStudent());
+                  locator<PairingUtil>().pairNewStudent(context, () => { if (widget.onAddStudent != null) widget.onAddStudent!() });
                 },
               ),
             ),
             SizedBox(height: 8),
-            Text(
-              L10n(context).addStudent,
-              style: Theme.of(context).textTheme.subtitle2.copyWith(color: ParentTheme.of(context).onSurfaceColor),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                L10n(context).addStudent,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(color: ParentTheme.of(context)?.onSurfaceColor),
+              ),
             ),
           ],
         ),

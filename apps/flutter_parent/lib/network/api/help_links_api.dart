@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 const String _helpLinksEndpoint = 'accounts/self/help_links';
 
 class HelpLinksApi {
-  Future<HelpLinks> getHelpLinks({forceRefresh = false}) {
+  Future<HelpLinks?> getHelpLinks({forceRefresh = false}) async {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     return fetch(dio.get(_helpLinksEndpoint));
   }

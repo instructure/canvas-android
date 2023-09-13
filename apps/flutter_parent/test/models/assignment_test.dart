@@ -78,12 +78,12 @@ void main() {
   group('getStatus', () {
     test('returns NONE for none submission type', () {
       final assignment = _mockAssignment(types: [SubmissionTypes.none]);
-      expect(assignment.getStatus(), SubmissionStatus.NONE);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.NONE);
     });
 
     test('returns NONE for on paper submission type', () {
       final assignment = _mockAssignment(types: [SubmissionTypes.onPaper]);
-      expect(assignment.getStatus(), SubmissionStatus.NONE);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.NONE);
     });
 
     test('returns LATE for a late submission', () {
@@ -100,7 +100,7 @@ void main() {
       final past = DateTime.now().subtract(Duration(seconds: 1));
       final assignment = _mockAssignment(dueAt: past, submission: null);
 
-      expect(assignment.getStatus(), SubmissionStatus.MISSING);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.MISSING);
     });
 
     test('returns MISSING for a pass due assignment with an empty (server generated) submission', () {
@@ -118,7 +118,7 @@ void main() {
       final assignment = _mockAssignment(dueAt: past, submission: null)
           .rebuild((b) => b..submissionTypes = BuiltList.of([SubmissionTypes.externalTool]).toBuilder());
 
-      expect(assignment.getStatus(), SubmissionStatus.NOT_SUBMITTED);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.NOT_SUBMITTED);
     });
 
     test('returns NOT_SUBMITTED for a submission with no submitted at time', () {
@@ -214,8 +214,8 @@ void main() {
 }
 
 Assignment _mockAssignment({
-  DateTime dueAt,
-  SubmissionBuilder submission,
+  DateTime? dueAt,
+  SubmissionBuilder? submission,
   List<SubmissionTypes> types = const [SubmissionTypes.onlineTextEntry],
 }) {
   List<Submission> submissionList = submission != null ? [submission.build()] : [];

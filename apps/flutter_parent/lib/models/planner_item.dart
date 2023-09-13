@@ -28,43 +28,30 @@ abstract class PlannerItem implements Built<PlannerItem, PlannerItemBuilder> {
 
   PlannerItem._();
 
-  @nullable
   @BuiltValueField(wireName: 'course_id')
-  String get courseId;
+  String? get courseId;
 
-  @nullable
   @BuiltValueField(wireName: 'context_type')
-  String get contextType;
+  String? get contextType;
 
-  @nullable
   @BuiltValueField(wireName: 'context_name')
-  String get contextName;
+  String? get contextName;
 
   @BuiltValueField(wireName: 'plannable_type')
   String get plannableType;
 
   Plannable get plannable;
 
-  @nullable
   @BuiltValueField(wireName: 'plannable_date')
-  DateTime get plannableDate;
+  DateTime? get plannableDate;
 
-  @nullable
   @BuiltValueField(wireName: 'submissions')
-  JsonObject get submissionStatusRaw;
+  JsonObject? get submissionStatusRaw;
 
-  @nullable
   @BuiltValueField(wireName: 'html_url')
-  String get htmlUrl;
+  String? get htmlUrl;
 
-  @nullable
-  PlannerSubmission get submissionStatus;
-
-//  @nullable TODO - keep in place for potentially moving back to planner api
-//  PlannerSubmission get submissionStatus {
-//    if (submissionStatusRaw == null || submissionStatusRaw.isBool) return null;
-//    return deserialize<PlannerSubmission>(submissionStatusRaw.value);
-//  }
+  PlannerSubmission? get submissionStatus;
 
   factory PlannerItem([void Function(PlannerItemBuilder) updates]) = _$PlannerItem;
 }

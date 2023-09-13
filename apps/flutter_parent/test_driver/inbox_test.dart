@@ -32,7 +32,7 @@ import 'pages/course_grades_page.dart';
 import 'pages/dashboard_page.dart';
 
 void main() {
-  FlutterDriver driver;
+  FlutterDriver? driver;
 
   // Connect to the Flutter driver before running any tests.
   setUpAll(() async {
@@ -42,29 +42,29 @@ void main() {
   // Close the connection to the driver after the tests have completed.
   tearDownAll(() async {
     if (driver != null) {
-      driver.close();
+      driver?.close();
     }
   });
 
   test('Inbox E2E', () async {
     // Wait for seeding to complete
-    var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
+    var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
-    var parent = seedContext.getNamedObject<SeededUser>("parent");
-    var student = seedContext.getNamedObject<SeededUser>("student");
-    var course = seedContext.getNamedObject<Course>("course");
-    var teacher = seedContext.getNamedObject<SeededUser>("teacher");
-    var conversation = seedContext.getNamedObject<Conversation>("conversation");
-    var assignment = seedContext.getNamedObject<Assignment>("assignment");
+    var parent = seedContext.getNamedObject<SeededUser>("parent")!;
+    var student = seedContext.getNamedObject<SeededUser>("student")!;
+    var course = seedContext.getNamedObject<Course>("course")!;
+    var teacher = seedContext.getNamedObject<SeededUser>("teacher")!;
+    var conversation = seedContext.getNamedObject<Conversation>("conversation")!;
+    var assignment = seedContext.getNamedObject<Assignment>("assignment")!;
 
     // Verify that the pre-seeded conversation shows up
     await DashboardPage.waitForRender(driver);
     await DashboardPage.openInbox(driver);
     await ConversationListPage.verifyConversationDataDisplayed(driver, /*index*/ 0,
         partialSubjects: [conversation.subject],
-        partialContexts: [conversation.contextName],
-        partialBodies: [conversation.lastMessage ?? conversation.lastAuthoredMessage]);
+        partialContexts: [conversation.contextName!],
+        partialBodies: [conversation.lastMessage ?? conversation.lastAuthoredMessage!]);
 
     // Create a conversation from the Inbox
     await ConversationListPage.initiateCreateEmail(driver, course); // Will this work with only one course?
@@ -78,7 +78,7 @@ void main() {
         partialBodies: ['Message 1 Body'], partialSubjects: [course.name]);
 
     // Back to the dashboard
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
 
     // Select a course and send a grades-related email
     await DashboardPage.selectCourse(driver, course);
@@ -106,11 +106,11 @@ void main() {
     await ConversationCreatePage.populateBody(driver, 'Assignment Body');
     await ConversationCreatePage.sendMail(driver);
 
-    await driver.tap(find.pageBack()); // assignment details -> grades list
-    await driver.tap(find.pageBack()); // grades list -> dashboard
+    await driver?.tap(find.pageBack()); // assignment details -> grades list
+    await driver?.tap(find.pageBack()); // grades list -> dashboard
 
     await DashboardPage.openInbox(driver);
-    await driver.refresh(); // To make sure and load the latest emails
+    await driver?.refresh(); // To make sure and load the latest emails
     await Future.delayed(const Duration(seconds: 2)); // Give ourselves a moment to load
 
     // Let's make sure that the three most recent emails that we created show up in our
@@ -118,7 +118,7 @@ void main() {
 
     // The most recent email -- the assignment email -- should be on top (index 0)
     await ConversationListPage.verifyConversationDataDisplayed(driver, 0,
-        partialSubjects: [student.name, assignment.name],
+        partialSubjects: [student.name, assignment.name!],
         partialContexts: [course.name],
         partialBodies: ['Assignment Body', student.name]);
 
@@ -149,8 +149,8 @@ void main() {
     await ConversationCreatePage.sendMail(driver);
 
     // And make sure that our new message shows up on the conversation list page...
-    await driver.tap(find.pageBack()); // From conversation detail page to conversation list page
-    await driver.refresh();
+    await driver?.tap(find.pageBack()); // From conversation detail page to conversation list page
+    await driver?.refresh();
     await ConversationListPage.verifyConversationDataDisplayed(driver, 0, partialBodies: ['reply body']);
   }, timeout: Timeout(Duration(minutes: 2)));
 }

@@ -18,13 +18,13 @@ import 'dart:async';
 /// Mainly used for when large amounts of user input can cause an unnecessary large amount of network calls
 class Debouncer {
   final Duration _duration;
-  Timer _timer;
+  Timer? _timer;
 
   Debouncer(this._duration);
 
-  void debounce(Function callback) {
+  void debounce(void Function() callback) {
     if (_timer != null) {
-      _timer.cancel();
+      _timer!.cancel();
     }
     _timer = Timer(_duration, callback);
   }

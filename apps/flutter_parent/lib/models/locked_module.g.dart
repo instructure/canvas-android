@@ -16,81 +16,78 @@ class _$LockedModuleSerializer implements StructuredSerializer<LockedModule> {
   final String wireName = 'LockedModule';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, LockedModule object,
+  Iterable<Object?> serialize(Serializers serializers, LockedModule object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'context_id',
       serializers.serialize(object.contextId,
           specifiedType: const FullType(String)),
     ];
-    result.add('context_type');
-    if (object.contextType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.contextType,
-          specifiedType: const FullType(String)));
-    }
-    result.add('name');
-    if (object.name == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.name,
-          specifiedType: const FullType(String)));
-    }
-    result.add('unlock_at');
-    if (object.unlockAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.unlockAt,
+    Object? value;
+    value = object.contextType;
+
+    result
+      ..add('context_type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.name;
+
+    result
+      ..add('name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.unlockAt;
+
+    result
+      ..add('unlock_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('require_sequential_progress');
-    if (object.isRequireSequentialProgress == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.isRequireSequentialProgress,
-          specifiedType: const FullType(bool)));
-    }
+    value = object.isRequireSequentialProgress;
+
+    result
+      ..add('require_sequential_progress')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+
     return result;
   }
 
   @override
-  LockedModule deserialize(Serializers serializers, Iterable<Object> serialized,
+  LockedModule deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new LockedModuleBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'context_id':
           result.contextId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'context_type':
           result.contextType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'unlock_at':
           result.unlockAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'require_sequential_progress':
           result.isRequireSequentialProgress = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
       }
     }
@@ -105,31 +102,28 @@ class _$LockedModule extends LockedModule {
   @override
   final String contextId;
   @override
-  final String contextType;
+  final String? contextType;
   @override
-  final String name;
+  final String? name;
   @override
-  final DateTime unlockAt;
+  final DateTime? unlockAt;
   @override
-  final bool isRequireSequentialProgress;
+  final bool? isRequireSequentialProgress;
 
-  factory _$LockedModule([void Function(LockedModuleBuilder) updates]) =>
-      (new LockedModuleBuilder()..update(updates)).build();
+  factory _$LockedModule([void Function(LockedModuleBuilder)? updates]) =>
+      (new LockedModuleBuilder()..update(updates))._build();
 
   _$LockedModule._(
-      {this.id,
-      this.contextId,
+      {required this.id,
+      required this.contextId,
       this.contextType,
       this.name,
       this.unlockAt,
       this.isRequireSequentialProgress})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('LockedModule', 'id');
-    }
-    if (contextId == null) {
-      throw new BuiltValueNullFieldError('LockedModule', 'contextId');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'LockedModule', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        contextId, r'LockedModule', 'contextId');
   }
 
   @override
@@ -153,19 +147,20 @@ class _$LockedModule extends LockedModule {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc($jc($jc(0, id.hashCode), contextId.hashCode),
-                    contextType.hashCode),
-                name.hashCode),
-            unlockAt.hashCode),
-        isRequireSequentialProgress.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, contextId.hashCode);
+    _$hash = $jc(_$hash, contextType.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, unlockAt.hashCode);
+    _$hash = $jc(_$hash, isRequireSequentialProgress.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('LockedModule')
+    return (newBuiltValueToStringHelper(r'LockedModule')
           ..add('id', id)
           ..add('contextId', contextId)
           ..add('contextType', contextType)
@@ -178,43 +173,44 @@ class _$LockedModule extends LockedModule {
 
 class LockedModuleBuilder
     implements Builder<LockedModule, LockedModuleBuilder> {
-  _$LockedModule _$v;
+  _$LockedModule? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _contextId;
-  String get contextId => _$this._contextId;
-  set contextId(String contextId) => _$this._contextId = contextId;
+  String? _contextId;
+  String? get contextId => _$this._contextId;
+  set contextId(String? contextId) => _$this._contextId = contextId;
 
-  String _contextType;
-  String get contextType => _$this._contextType;
-  set contextType(String contextType) => _$this._contextType = contextType;
+  String? _contextType;
+  String? get contextType => _$this._contextType;
+  set contextType(String? contextType) => _$this._contextType = contextType;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  DateTime _unlockAt;
-  DateTime get unlockAt => _$this._unlockAt;
-  set unlockAt(DateTime unlockAt) => _$this._unlockAt = unlockAt;
+  DateTime? _unlockAt;
+  DateTime? get unlockAt => _$this._unlockAt;
+  set unlockAt(DateTime? unlockAt) => _$this._unlockAt = unlockAt;
 
-  bool _isRequireSequentialProgress;
-  bool get isRequireSequentialProgress => _$this._isRequireSequentialProgress;
-  set isRequireSequentialProgress(bool isRequireSequentialProgress) =>
+  bool? _isRequireSequentialProgress;
+  bool? get isRequireSequentialProgress => _$this._isRequireSequentialProgress;
+  set isRequireSequentialProgress(bool? isRequireSequentialProgress) =>
       _$this._isRequireSequentialProgress = isRequireSequentialProgress;
 
   LockedModuleBuilder();
 
   LockedModuleBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _contextId = _$v.contextId;
-      _contextType = _$v.contextType;
-      _name = _$v.name;
-      _unlockAt = _$v.unlockAt;
-      _isRequireSequentialProgress = _$v.isRequireSequentialProgress;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _contextId = $v.contextId;
+      _contextType = $v.contextType;
+      _name = $v.name;
+      _unlockAt = $v.unlockAt;
+      _isRequireSequentialProgress = $v.isRequireSequentialProgress;
       _$v = null;
     }
     return this;
@@ -222,23 +218,25 @@ class LockedModuleBuilder
 
   @override
   void replace(LockedModule other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$LockedModule;
   }
 
   @override
-  void update(void Function(LockedModuleBuilder) updates) {
+  void update(void Function(LockedModuleBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$LockedModule build() {
+  LockedModule build() => _build();
+
+  _$LockedModule _build() {
     final _$result = _$v ??
         new _$LockedModule._(
-            id: id,
-            contextId: contextId,
+            id: BuiltValueNullFieldError.checkNotNull(
+                id, r'LockedModule', 'id'),
+            contextId: BuiltValueNullFieldError.checkNotNull(
+                contextId, r'LockedModule', 'contextId'),
             contextType: contextType,
             name: name,
             unlockAt: unlockAt,
@@ -248,4 +246,4 @@ class LockedModuleBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

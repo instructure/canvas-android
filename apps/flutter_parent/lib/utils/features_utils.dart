@@ -20,7 +20,7 @@ class FeaturesUtils {
 
   static const String KEY_SEND_USAGE_METRICS = 'send_usage_metrics';
 
-  static EncryptedSharedPreferences _prefs;
+  static EncryptedSharedPreferences? _prefs;
 
   static Future<void> init() async {
     if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
@@ -29,17 +29,17 @@ class FeaturesUtils {
   static Future<void> checkUsageMetricFeatureFlag() async {
     await init();
     final featureFlags = await locator<FeaturesApi>().getFeatureFlags();
-    await _prefs.setBool(KEY_SEND_USAGE_METRICS, featureFlags.sendUsageMetrics);
+    await _prefs?.setBool(KEY_SEND_USAGE_METRICS, featureFlags?.sendUsageMetrics);
   }
 
   static Future<bool> getUsageMetricFeatureFlag() async {
     await init();
-    return await _prefs.getBool(KEY_SEND_USAGE_METRICS) == true;
+    return await _prefs?.getBool(KEY_SEND_USAGE_METRICS) == true;
   }
 
   static Future<void> performLogout() async {
     if (_prefs != null) {
-      await _prefs.remove(KEY_SEND_USAGE_METRICS);
+      await _prefs?.remove(KEY_SEND_USAGE_METRICS);
     }
   }
 }

@@ -21,23 +21,19 @@ void main() async {
   var course = data.courses[0];
   var student = data.students[0];
   // past-due
-  var assignment1 =
-      await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().subtract(Duration(days: 1)).toUtc());
+  var assignment1 = (await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().subtract(Duration(days: 1)).toUtc()))!;
   // Unsubmitted
-  var assignment2 =
-      await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc());
+  var assignment2 = (await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc()))!;
   // Submitted
-  var assignment3 =
-      await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc());
+  var assignment3 = (await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc()))!;
   await Future.delayed(const Duration(seconds: 2)); // Allow some time for assignment-creation delayed jobs to complete
-  var submission3 = await SubmissionSeedApi.createSubmission(course.id, assignment3, student.id);
+  var submission3 = (await SubmissionSeedApi.createSubmission(course.id, assignment3, student.id))!;
 
   // Graded
-  var assignment4 =
-      await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 3)).toUtc());
+  var assignment4 = (await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 3)).toUtc()))!;
   await Future.delayed(const Duration(seconds: 2)); // Allow some time for assignment-creation delayed jobs to complete
-  var submission4 = await SubmissionSeedApi.createSubmission(course.id, assignment4, student.id);
-  var grade4 = await SubmissionSeedApi.gradeSubmission(course.id, assignment4, student.id, "19");
+  var submission4 = (await SubmissionSeedApi.createSubmission(course.id, assignment4, student.id))!;
+  var grade4 = (await SubmissionSeedApi.gradeSubmission(course.id, assignment4, student.id, "19"))!;
 
   // Sign in the parent
   await AppSeedUtils.signIn(data.parents.first);

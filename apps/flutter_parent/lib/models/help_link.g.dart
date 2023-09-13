@@ -52,9 +52,9 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
   final String wireName = 'HelpLink';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, HelpLink object,
+  Iterable<Object?> serialize(Serializers serializers, HelpLink object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'type',
@@ -76,42 +76,41 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
   }
 
   @override
-  HelpLink deserialize(Serializers serializers, Iterable<Object> serialized,
+  HelpLink deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new HelpLinkBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'type':
           result.type = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'available_to':
           result.availableTo.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(AvailableTo)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(AvailableTo)]))!
+              as BuiltList<Object?>);
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'text':
           result.text = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'subtext':
           result.subtext = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -151,30 +150,24 @@ class _$HelpLink extends HelpLink {
   @override
   final String subtext;
 
-  factory _$HelpLink([void Function(HelpLinkBuilder) updates]) =>
-      (new HelpLinkBuilder()..update(updates)).build();
+  factory _$HelpLink([void Function(HelpLinkBuilder)? updates]) =>
+      (new HelpLinkBuilder()..update(updates))._build();
 
   _$HelpLink._(
-      {this.id, this.type, this.availableTo, this.url, this.text, this.subtext})
+      {required this.id,
+      required this.type,
+      required this.availableTo,
+      required this.url,
+      required this.text,
+      required this.subtext})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('HelpLink', 'id');
-    }
-    if (type == null) {
-      throw new BuiltValueNullFieldError('HelpLink', 'type');
-    }
-    if (availableTo == null) {
-      throw new BuiltValueNullFieldError('HelpLink', 'availableTo');
-    }
-    if (url == null) {
-      throw new BuiltValueNullFieldError('HelpLink', 'url');
-    }
-    if (text == null) {
-      throw new BuiltValueNullFieldError('HelpLink', 'text');
-    }
-    if (subtext == null) {
-      throw new BuiltValueNullFieldError('HelpLink', 'subtext');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'HelpLink', 'id');
+    BuiltValueNullFieldError.checkNotNull(type, r'HelpLink', 'type');
+    BuiltValueNullFieldError.checkNotNull(
+        availableTo, r'HelpLink', 'availableTo');
+    BuiltValueNullFieldError.checkNotNull(url, r'HelpLink', 'url');
+    BuiltValueNullFieldError.checkNotNull(text, r'HelpLink', 'text');
+    BuiltValueNullFieldError.checkNotNull(subtext, r'HelpLink', 'subtext');
   }
 
   @override
@@ -198,19 +191,20 @@ class _$HelpLink extends HelpLink {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc($jc($jc(0, id.hashCode), type.hashCode),
-                    availableTo.hashCode),
-                url.hashCode),
-            text.hashCode),
-        subtext.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, type.hashCode);
+    _$hash = $jc(_$hash, availableTo.hashCode);
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, text.hashCode);
+    _$hash = $jc(_$hash, subtext.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('HelpLink')
+    return (newBuiltValueToStringHelper(r'HelpLink')
           ..add('id', id)
           ..add('type', type)
           ..add('availableTo', availableTo)
@@ -222,44 +216,45 @@ class _$HelpLink extends HelpLink {
 }
 
 class HelpLinkBuilder implements Builder<HelpLink, HelpLinkBuilder> {
-  _$HelpLink _$v;
+  _$HelpLink? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _type;
-  String get type => _$this._type;
-  set type(String type) => _$this._type = type;
+  String? _type;
+  String? get type => _$this._type;
+  set type(String? type) => _$this._type = type;
 
-  ListBuilder<AvailableTo> _availableTo;
+  ListBuilder<AvailableTo>? _availableTo;
   ListBuilder<AvailableTo> get availableTo =>
       _$this._availableTo ??= new ListBuilder<AvailableTo>();
-  set availableTo(ListBuilder<AvailableTo> availableTo) =>
+  set availableTo(ListBuilder<AvailableTo>? availableTo) =>
       _$this._availableTo = availableTo;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  String _text;
-  String get text => _$this._text;
-  set text(String text) => _$this._text = text;
+  String? _text;
+  String? get text => _$this._text;
+  set text(String? text) => _$this._text = text;
 
-  String _subtext;
-  String get subtext => _$this._subtext;
-  set subtext(String subtext) => _$this._subtext = subtext;
+  String? _subtext;
+  String? get subtext => _$this._subtext;
+  set subtext(String? subtext) => _$this._subtext = subtext;
 
   HelpLinkBuilder();
 
   HelpLinkBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _type = _$v.type;
-      _availableTo = _$v.availableTo?.toBuilder();
-      _url = _$v.url;
-      _text = _$v.text;
-      _subtext = _$v.subtext;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _type = $v.type;
+      _availableTo = $v.availableTo.toBuilder();
+      _url = $v.url;
+      _text = $v.text;
+      _subtext = $v.subtext;
       _$v = null;
     }
     return this;
@@ -267,37 +262,41 @@ class HelpLinkBuilder implements Builder<HelpLink, HelpLinkBuilder> {
 
   @override
   void replace(HelpLink other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$HelpLink;
   }
 
   @override
-  void update(void Function(HelpLinkBuilder) updates) {
+  void update(void Function(HelpLinkBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$HelpLink build() {
+  HelpLink build() => _build();
+
+  _$HelpLink _build() {
     _$HelpLink _$result;
     try {
       _$result = _$v ??
           new _$HelpLink._(
-              id: id,
-              type: type,
+              id: BuiltValueNullFieldError.checkNotNull(id, r'HelpLink', 'id'),
+              type: BuiltValueNullFieldError.checkNotNull(
+                  type, r'HelpLink', 'type'),
               availableTo: availableTo.build(),
-              url: url,
-              text: text,
-              subtext: subtext);
+              url: BuiltValueNullFieldError.checkNotNull(
+                  url, r'HelpLink', 'url'),
+              text: BuiltValueNullFieldError.checkNotNull(
+                  text, r'HelpLink', 'text'),
+              subtext: BuiltValueNullFieldError.checkNotNull(
+                  subtext, r'HelpLink', 'subtext'));
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'availableTo';
         availableTo.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'HelpLink', _$failedField, e.toString());
+            r'HelpLink', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -306,4 +305,4 @@ class HelpLinkBuilder implements Builder<HelpLink, HelpLinkBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

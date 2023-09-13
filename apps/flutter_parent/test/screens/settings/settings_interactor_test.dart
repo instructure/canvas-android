@@ -25,6 +25,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   test('Returns true for debug mode', () {
@@ -33,12 +34,12 @@ void main() {
   });
 
   test('routeToThemeViewer call through to navigator', () async {
-    var nav = _MockNav();
+    var nav = MockQuickNav();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
-    var context = _MockContext();
+    var context = MockBuildContext();
     SettingsInteractor().routeToThemeViewer(context);
 
     var screen = verify(nav.push(context, captureAny)).captured[0];
@@ -46,12 +47,12 @@ void main() {
   });
 
   test('routeToRemoteConfig call through to navigator', () async {
-    var nav = _MockNav();
+    var nav = MockQuickNav();
     await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
-    var context = _MockContext();
+    var context = MockBuildContext();
     SettingsInteractor().routeToRemoteConfig(context);
 
     var screen = verify(nav.push(context, captureAny)).captured[0];
@@ -60,7 +61,7 @@ void main() {
 
   testNonWidgetsWithContext('toggle dark mode sets dark mode to true', (tester) async {
     await setupPlatformChannels();
-    final analytics = _MockAnalytics();
+    final analytics = MockAnalytics();
 
     await setupTestLocator((locator) => locator.registerLazySingleton<Analytics>(() => analytics));
 
@@ -68,13 +69,13 @@ void main() {
     await tester.pumpAndSettle();
 
     final context = tester.state(find.byType(MaterialApp)).context;
-    expect(ParentTheme.of(context).isDarkMode, false);
+    expect(ParentTheme.of(context)?.isDarkMode, false);
 
     SettingsInteractor().toggleDarkMode(context, null);
-    expect(ParentTheme.of(context).isDarkMode, true);
+    expect(ParentTheme.of(context)?.isDarkMode, true);
 
     SettingsInteractor().toggleDarkMode(context, null);
-    expect(ParentTheme.of(context).isDarkMode, false);
+    expect(ParentTheme.of(context)?.isDarkMode, false);
 
     verify(analytics.logEvent(AnalyticsEventConstants.DARK_MODE_OFF)).called(1);
     verify(analytics.logEvent(AnalyticsEventConstants.DARK_MODE_ON)).called(1);
@@ -82,7 +83,7 @@ void main() {
 
   testNonWidgetsWithContext('toggle hc mode sets hc mode to true', (tester) async {
     await setupPlatformChannels();
-    final analytics = _MockAnalytics();
+    final analytics = MockAnalytics();
 
     await setupTestLocator((locator) => locator.registerLazySingleton<Analytics>(() => analytics));
 
@@ -90,21 +91,15 @@ void main() {
     await tester.pumpAndSettle();
 
     final context = tester.state(find.byType(MaterialApp)).context;
-    expect(ParentTheme.of(context).isHC, false);
+    expect(ParentTheme.of(context)?.isHC, false);
 
     SettingsInteractor().toggleHCMode(context);
-    expect(ParentTheme.of(context).isHC, true);
+    expect(ParentTheme.of(context)?.isHC, true);
 
     SettingsInteractor().toggleHCMode(context);
-    expect(ParentTheme.of(context).isHC, false);
+    expect(ParentTheme.of(context)?.isHC, false);
 
     verify(analytics.logEvent(AnalyticsEventConstants.HC_MODE_OFF)).called(1);
     verify(analytics.logEvent(AnalyticsEventConstants.HC_MODE_ON)).called(1);
   });
 }
-
-class _MockNav extends Mock implements QuickNav {}
-
-class _MockContext extends Mock implements BuildContext {}
-
-class _MockAnalytics extends Mock implements Analytics {}

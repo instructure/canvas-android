@@ -41,7 +41,7 @@ void main() {
     test('returns true if hasGradingPeriods is true and there are no course enrollments', () {
       final course = Course((b) => b
         ..hasGradingPeriods = true
-        ..enrollments = BuiltList.of(List<Enrollment>()).toBuilder());
+        ..enrollments = BuiltList.of(<Enrollment>[]).toBuilder());
       final grade = CourseGrade(course, null);
 
       expect(grade.isCourseGradeLocked(), true);

@@ -17,9 +17,10 @@ class _$AccountPermissionsSerializer
   final String wireName = 'AccountPermissions';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, AccountPermissions object,
+  Iterable<Object?> serialize(
+      Serializers serializers, AccountPermissions object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'become_user',
       serializers.serialize(object.becomeUser,
           specifiedType: const FullType(bool)),
@@ -30,20 +31,19 @@ class _$AccountPermissionsSerializer
 
   @override
   AccountPermissions deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AccountPermissionsBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'become_user':
           result.becomeUser = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -57,13 +57,12 @@ class _$AccountPermissions extends AccountPermissions {
   final bool becomeUser;
 
   factory _$AccountPermissions(
-          [void Function(AccountPermissionsBuilder) updates]) =>
-      (new AccountPermissionsBuilder()..update(updates)).build();
+          [void Function(AccountPermissionsBuilder)? updates]) =>
+      (new AccountPermissionsBuilder()..update(updates))._build();
 
-  _$AccountPermissions._({this.becomeUser}) : super._() {
-    if (becomeUser == null) {
-      throw new BuiltValueNullFieldError('AccountPermissions', 'becomeUser');
-    }
+  _$AccountPermissions._({required this.becomeUser}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        becomeUser, r'AccountPermissions', 'becomeUser');
   }
 
   @override
@@ -83,12 +82,15 @@ class _$AccountPermissions extends AccountPermissions {
 
   @override
   int get hashCode {
-    return $jf($jc(0, becomeUser.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, becomeUser.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('AccountPermissions')
+    return (newBuiltValueToStringHelper(r'AccountPermissions')
           ..add('becomeUser', becomeUser))
         .toString();
   }
@@ -96,19 +98,20 @@ class _$AccountPermissions extends AccountPermissions {
 
 class AccountPermissionsBuilder
     implements Builder<AccountPermissions, AccountPermissionsBuilder> {
-  _$AccountPermissions _$v;
+  _$AccountPermissions? _$v;
 
-  bool _becomeUser;
-  bool get becomeUser => _$this._becomeUser;
-  set becomeUser(bool becomeUser) => _$this._becomeUser = becomeUser;
+  bool? _becomeUser;
+  bool? get becomeUser => _$this._becomeUser;
+  set becomeUser(bool? becomeUser) => _$this._becomeUser = becomeUser;
 
   AccountPermissionsBuilder() {
     AccountPermissions._initializeBuilder(this);
   }
 
   AccountPermissionsBuilder get _$this {
-    if (_$v != null) {
-      _becomeUser = _$v.becomeUser;
+    final $v = _$v;
+    if ($v != null) {
+      _becomeUser = $v.becomeUser;
       _$v = null;
     }
     return this;
@@ -116,23 +119,26 @@ class AccountPermissionsBuilder
 
   @override
   void replace(AccountPermissions other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AccountPermissions;
   }
 
   @override
-  void update(void Function(AccountPermissionsBuilder) updates) {
+  void update(void Function(AccountPermissionsBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$AccountPermissions build() {
-    final _$result = _$v ?? new _$AccountPermissions._(becomeUser: becomeUser);
+  AccountPermissions build() => _build();
+
+  _$AccountPermissions _build() {
+    final _$result = _$v ??
+        new _$AccountPermissions._(
+            becomeUser: BuiltValueNullFieldError.checkNotNull(
+                becomeUser, r'AccountPermissions', 'becomeUser'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

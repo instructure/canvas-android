@@ -21,7 +21,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class EnrollmentSeedApi {
-  static Future<Enrollment> createEnrollment(
+  static Future<Enrollment?> createEnrollment(
       String userId, String courseId, String role, String associatedUserId) async {
     final dio = seedingDio();
     final enrollmentWrapper = CreateEnrollmentWrapper((b) => b

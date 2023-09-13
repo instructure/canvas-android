@@ -28,6 +28,7 @@ import 'package:test/test.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final _api = MockCourseApi();
@@ -90,8 +91,8 @@ void main() {
     final result = await CoursesInteractor().getCourses(isRefresh: true, studentId: null);
 
     verify(_api.getObserveeCourses(forceRefresh: true));
-    expect(result.length, 1);
-    expect(result.first.id, _course.id);
+    expect(result?.length, 1);
+    expect(result?.first.id, _course.id);
   });
 
   test('getCourses returns only courses for studentId parameter and is valid', () async {
@@ -100,8 +101,8 @@ void main() {
     final result = await CoursesInteractor().getCourses(isRefresh: true, studentId: _invalidStudentId);
 
     verify(_api.getObserveeCourses(forceRefresh: true));
-    expect(result.length, 1);
-    expect(result.first.id, _invalidCourse.id);
+    expect(result?.length, 1);
+    expect(result?.first.id, _invalidCourse.id);
   });
 
   test('getCourses returns no courses for invalid studentId but valid dates', () async {

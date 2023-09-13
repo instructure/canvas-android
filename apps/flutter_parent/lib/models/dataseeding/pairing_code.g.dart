@@ -15,9 +15,9 @@ class _$PairingCodeSerializer implements StructuredSerializer<PairingCode> {
   final String wireName = 'PairingCode';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, PairingCode object,
+  Iterable<Object?> serialize(Serializers serializers, PairingCode object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'user_id',
       serializers.serialize(object.userId,
           specifiedType: const FullType(String)),
@@ -35,32 +35,31 @@ class _$PairingCodeSerializer implements StructuredSerializer<PairingCode> {
   }
 
   @override
-  PairingCode deserialize(Serializers serializers, Iterable<Object> serialized,
+  PairingCode deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PairingCodeBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'user_id':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'code':
           result.code = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'expires_at':
           result.expiresAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'workflow_state':
           result.workflowState = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -79,23 +78,21 @@ class _$PairingCode extends PairingCode {
   @override
   final String workflowState;
 
-  factory _$PairingCode([void Function(PairingCodeBuilder) updates]) =>
-      (new PairingCodeBuilder()..update(updates)).build();
+  factory _$PairingCode([void Function(PairingCodeBuilder)? updates]) =>
+      (new PairingCodeBuilder()..update(updates))._build();
 
-  _$PairingCode._({this.userId, this.code, this.expiresAt, this.workflowState})
+  _$PairingCode._(
+      {required this.userId,
+      required this.code,
+      required this.expiresAt,
+      required this.workflowState})
       : super._() {
-    if (userId == null) {
-      throw new BuiltValueNullFieldError('PairingCode', 'userId');
-    }
-    if (code == null) {
-      throw new BuiltValueNullFieldError('PairingCode', 'code');
-    }
-    if (expiresAt == null) {
-      throw new BuiltValueNullFieldError('PairingCode', 'expiresAt');
-    }
-    if (workflowState == null) {
-      throw new BuiltValueNullFieldError('PairingCode', 'workflowState');
-    }
+    BuiltValueNullFieldError.checkNotNull(userId, r'PairingCode', 'userId');
+    BuiltValueNullFieldError.checkNotNull(code, r'PairingCode', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        expiresAt, r'PairingCode', 'expiresAt');
+    BuiltValueNullFieldError.checkNotNull(
+        workflowState, r'PairingCode', 'workflowState');
   }
 
   @override
@@ -117,14 +114,18 @@ class _$PairingCode extends PairingCode {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, userId.hashCode), code.hashCode), expiresAt.hashCode),
-        workflowState.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, userId.hashCode);
+    _$hash = $jc(_$hash, code.hashCode);
+    _$hash = $jc(_$hash, expiresAt.hashCode);
+    _$hash = $jc(_$hash, workflowState.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('PairingCode')
+    return (newBuiltValueToStringHelper(r'PairingCode')
           ..add('userId', userId)
           ..add('code', code)
           ..add('expiresAt', expiresAt)
@@ -134,23 +135,23 @@ class _$PairingCode extends PairingCode {
 }
 
 class PairingCodeBuilder implements Builder<PairingCode, PairingCodeBuilder> {
-  _$PairingCode _$v;
+  _$PairingCode? _$v;
 
-  String _userId;
-  String get userId => _$this._userId;
-  set userId(String userId) => _$this._userId = userId;
+  String? _userId;
+  String? get userId => _$this._userId;
+  set userId(String? userId) => _$this._userId = userId;
 
-  String _code;
-  String get code => _$this._code;
-  set code(String code) => _$this._code = code;
+  String? _code;
+  String? get code => _$this._code;
+  set code(String? code) => _$this._code = code;
 
-  String _expiresAt;
-  String get expiresAt => _$this._expiresAt;
-  set expiresAt(String expiresAt) => _$this._expiresAt = expiresAt;
+  String? _expiresAt;
+  String? get expiresAt => _$this._expiresAt;
+  set expiresAt(String? expiresAt) => _$this._expiresAt = expiresAt;
 
-  String _workflowState;
-  String get workflowState => _$this._workflowState;
-  set workflowState(String workflowState) =>
+  String? _workflowState;
+  String? get workflowState => _$this._workflowState;
+  set workflowState(String? workflowState) =>
       _$this._workflowState = workflowState;
 
   PairingCodeBuilder() {
@@ -158,11 +159,12 @@ class PairingCodeBuilder implements Builder<PairingCode, PairingCodeBuilder> {
   }
 
   PairingCodeBuilder get _$this {
-    if (_$v != null) {
-      _userId = _$v.userId;
-      _code = _$v.code;
-      _expiresAt = _$v.expiresAt;
-      _workflowState = _$v.workflowState;
+    final $v = _$v;
+    if ($v != null) {
+      _userId = $v.userId;
+      _code = $v.code;
+      _expiresAt = $v.expiresAt;
+      _workflowState = $v.workflowState;
       _$v = null;
     }
     return this;
@@ -170,28 +172,32 @@ class PairingCodeBuilder implements Builder<PairingCode, PairingCodeBuilder> {
 
   @override
   void replace(PairingCode other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$PairingCode;
   }
 
   @override
-  void update(void Function(PairingCodeBuilder) updates) {
+  void update(void Function(PairingCodeBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$PairingCode build() {
+  PairingCode build() => _build();
+
+  _$PairingCode _build() {
     final _$result = _$v ??
         new _$PairingCode._(
-            userId: userId,
-            code: code,
-            expiresAt: expiresAt,
-            workflowState: workflowState);
+            userId: BuiltValueNullFieldError.checkNotNull(
+                userId, r'PairingCode', 'userId'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'PairingCode', 'code'),
+            expiresAt: BuiltValueNullFieldError.checkNotNull(
+                expiresAt, r'PairingCode', 'expiresAt'),
+            workflowState: BuiltValueNullFieldError.checkNotNull(
+                workflowState, r'PairingCode', 'workflowState'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

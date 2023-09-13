@@ -22,9 +22,10 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  AlertThreshold _mockThreshold(AlertType type, {String value}) => AlertThreshold((b) => b
+  AlertThreshold _mockThreshold(AlertType type, {String? value}) => AlertThreshold((b) => b
     ..alertType = type
     ..threshold = value
     ..build());
@@ -43,7 +44,7 @@ void main() {
   });
 
   test('Switch created api call', () async {
-    when(api.createThreshold(any, any)).thenAnswer((_) => null);
+    when(api.createThreshold(any, any)).thenAnswer((_) => Future.value(null));
 
     var type = AlertType.assignmentMissing;
     var alertThreshold = null;
@@ -55,7 +56,7 @@ void main() {
   });
 
   test('Switch deleted api call', () async {
-    when(api.deleteAlert(any)).thenAnswer((_) => null);
+    when(api.deleteAlert(any)).thenAnswer((_) => Future.value(null));
 
     var type = AlertType.assignmentMissing;
     var alertThreshold = _mockThreshold(type);
@@ -67,7 +68,7 @@ void main() {
   });
 
   test('Percentage updated api call', () async {
-    when(api.createThreshold(any, any)).thenAnswer((_) => null);
+    when(api.createThreshold(any, any)).thenAnswer((_) => Future.value(null));
 
     var type = AlertType.courseGradeLow;
     var value = '42';
@@ -80,7 +81,7 @@ void main() {
   });
 
   test('Percentage deleted api call', () async {
-    when(api.deleteAlert(any)).thenAnswer((_) => null);
+    when(api.deleteAlert(any)).thenAnswer((_) => Future.value(null));
 
     var type = AlertType.courseGradeLow;
     var value = '-1';

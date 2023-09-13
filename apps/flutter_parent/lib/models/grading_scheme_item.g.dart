@@ -17,39 +17,46 @@ class _$GradingSchemeItemSerializer
   final String wireName = 'GradingSchemeItem';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, GradingSchemeItem object,
+  Iterable<Object?> serialize(Serializers serializers, GradingSchemeItem object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
-      'grade',
-      serializers.serialize(object.grade,
-          specifiedType: const FullType(String)),
-      'value',
-      serializers.serialize(object.value,
-          specifiedType: const FullType(double)),
-    ];
-
+    final result = <Object?>[];
+    Object? value;
+    value = object.grade;
+    if (value != null) {
+      result
+        ..add('grade')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.value;
+    if (value != null) {
+      result
+        ..add('value')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
+    }
     return result;
   }
 
   @override
   GradingSchemeItem deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new GradingSchemeItemBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'grade':
           result.grade = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'value':
           result.value = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
+              specifiedType: const FullType(double)) as double?;
           break;
       }
     }
@@ -60,18 +67,15 @@ class _$GradingSchemeItemSerializer
 
 class _$GradingSchemeItem extends GradingSchemeItem {
   @override
-  final String grade;
+  final String? grade;
   @override
-  final double value;
+  final double? value;
 
   factory _$GradingSchemeItem(
-          [void Function(GradingSchemeItemBuilder) updates]) =>
-      (new GradingSchemeItemBuilder()..update(updates)).build();
+          [void Function(GradingSchemeItemBuilder)? updates]) =>
+      (new GradingSchemeItemBuilder()..update(updates))._build();
 
-  _$GradingSchemeItem._({this.grade, this.value}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(grade, 'GradingSchemeItem', 'grade');
-    BuiltValueNullFieldError.checkNotNull(value, 'GradingSchemeItem', 'value');
-  }
+  _$GradingSchemeItem._({this.grade, this.value}) : super._();
 
   @override
   GradingSchemeItem rebuild(void Function(GradingSchemeItemBuilder) updates) =>
@@ -91,12 +95,16 @@ class _$GradingSchemeItem extends GradingSchemeItem {
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, grade.hashCode), value.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, grade.hashCode);
+    _$hash = $jc(_$hash, value.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('GradingSchemeItem')
+    return (newBuiltValueToStringHelper(r'GradingSchemeItem')
           ..add('grade', grade)
           ..add('value', value))
         .toString();
@@ -105,15 +113,15 @@ class _$GradingSchemeItem extends GradingSchemeItem {
 
 class GradingSchemeItemBuilder
     implements Builder<GradingSchemeItem, GradingSchemeItemBuilder> {
-  _$GradingSchemeItem _$v;
+  _$GradingSchemeItem? _$v;
 
-  String _grade;
-  String get grade => _$this._grade;
-  set grade(String grade) => _$this._grade = grade;
+  String? _grade;
+  String? get grade => _$this._grade;
+  set grade(String? grade) => _$this._grade = grade;
 
-  double _value;
-  double get value => _$this._value;
-  set value(double value) => _$this._value = value;
+  double? _value;
+  double? get value => _$this._value;
+  set value(double? value) => _$this._value = value;
 
   GradingSchemeItemBuilder();
 
@@ -134,21 +142,19 @@ class GradingSchemeItemBuilder
   }
 
   @override
-  void update(void Function(GradingSchemeItemBuilder) updates) {
+  void update(void Function(GradingSchemeItemBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$GradingSchemeItem build() {
-    final _$result = _$v ??
-        new _$GradingSchemeItem._(
-            grade: BuiltValueNullFieldError.checkNotNull(
-                grade, 'GradingSchemeItem', 'grade'),
-            value: BuiltValueNullFieldError.checkNotNull(
-                value, 'GradingSchemeItem', 'value'));
+  GradingSchemeItem build() => _build();
+
+  _$GradingSchemeItem _build() {
+    final _$result =
+        _$v ?? new _$GradingSchemeItem._(grade: grade, value: value);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

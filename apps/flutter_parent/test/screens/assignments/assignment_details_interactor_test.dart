@@ -28,6 +28,7 @@ import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final assignmentId = '123';
@@ -66,7 +67,7 @@ void main() {
       final details =
           await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
 
-      expect(details.course, course);
+      expect(details?.course, course);
     });
 
     test('loadReminder calls ReminderDb', () async {
@@ -164,7 +165,7 @@ void main() {
       final details =
           await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
 
-      expect(details.assignment, assignment);
+      expect(details?.assignment, assignment);
     });
   });
 }

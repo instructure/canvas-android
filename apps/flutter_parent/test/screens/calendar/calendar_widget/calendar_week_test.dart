@@ -71,7 +71,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Invokes onDaySelected callback', (tester) async {
-    DateTime selected = null;
+    DateTime? selected = null;
     await tester.pumpWidget(
       _appWithFetcher(
         CalendarWeek(
@@ -168,7 +168,7 @@ void main() {
     }).toList();
 
     // We expect X positions to be in ascending order
-    final List<double> expectedCenters = List<double>.from(centers).sortBy([(it) => it]);
+    final List<double?>? expectedCenters = List<double>.from(centers).sortBySelector([(it) => it]);
 
     expect(centers, expectedCenters);
   });
@@ -195,16 +195,20 @@ void main() {
     }).toList();
 
     // We expect X positions to be in descending order
-    final List<double> expectedCenters = List<double>.from(centers).sortBy([(it) => it], descending: true);
+    final List<double?>? expectedCenters = List<double>.from(centers).sortBySelector([(it) => it], descending: true);
 
     expect(centers, expectedCenters);
   });
 }
 
-Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher, Locale locale}) {
+Widget _appWithFetcher(Widget child, {PlannerFetcher? fetcher, Locale? locale}) {
   return TestApp(
     ChangeNotifierProvider<PlannerFetcher>(
-      create: (BuildContext context) => fetcher ?? _FakeFetcher(),
+      create: (BuildContext context) => fetcher ?? _FakeFetcher(
+        observeeId: '',
+        userDomain: '',
+        userId: '',
+      ),
       child: child,
     ),
     locale: locale,
@@ -213,6 +217,8 @@ Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher, Locale locale}) {
 
 class _FakeFetcher extends PlannerFetcher {
   AsyncSnapshot<List<PlannerItem>> nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
+
+  _FakeFetcher({required super.observeeId, required super.userDomain, required super.userId});
 
   @override
   AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) => nextSnapshot;
