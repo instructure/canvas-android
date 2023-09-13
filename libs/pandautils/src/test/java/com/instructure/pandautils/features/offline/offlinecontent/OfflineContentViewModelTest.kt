@@ -82,10 +82,11 @@ class OfflineContentViewModelTest {
         every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns null
 
         coEvery { offlineContentRepository.findCourseSyncSettings(any()) } answers {
-            val courseId = arg<Long>(0)
+            val course = arg<Course>(0)
             CourseSyncSettingsWithFiles(
                 CourseSyncSettingsEntity(
-                    courseId = courseId,
+                    courseId = course.id,
+                    courseName = "Course",
                     fullContentSync = false
                 ),
                 emptyList()
@@ -307,9 +308,9 @@ class OfflineContentViewModelTest {
         createViewModel()
 
         val tabs = CourseSyncSettingsEntity.TABS.associateWith { true }
-        val expected = CourseSyncSettingsEntity(1L, true, tabs, true)
+        val expected = CourseSyncSettingsEntity(1L, "Course", true, tabs, true)
         val expectedFiles =
-            listOf(FileSyncSettingsEntity(1L, "File 1", 1L, null), FileSyncSettingsEntity(2L, "File 2",1L, null))
+            listOf(FileSyncSettingsEntity(1L, "File 1", 1L, null), FileSyncSettingsEntity(2L, "File 2", 1L, null))
 
         viewModel.data.value?.courseItems?.first()?.apply {
             onCheckedChanged.invoke(true, this)

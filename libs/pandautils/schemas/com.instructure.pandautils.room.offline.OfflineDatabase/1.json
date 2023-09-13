@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fc5d8b298d78ec4ac49369f84df3223f",
+    "identityHash": "2fcbcb15d24b07efb3ecd0f510c70f60",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -971,12 +971,18 @@
       },
       {
         "tableName": "CourseSyncSettingsEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `fullContentSync` INTEGER NOT NULL, `tabs` TEXT NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `courseName` TEXT NOT NULL, `fullContentSync` INTEGER NOT NULL, `tabs` TEXT NOT NULL, `fullFileSync` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
             "columnName": "courseId",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseName",
+            "columnName": "courseName",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -3770,6 +3776,38 @@
         ]
       },
       {
+        "tableName": "SyncProgressEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `title` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "uuid"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "SyncSettingsEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `autoSyncEnabled` INTEGER NOT NULL, `syncFrequency` TEXT NOT NULL, `wifiOnly` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
@@ -5046,7 +5084,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fc5d8b298d78ec4ac49369f84df3223f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2fcbcb15d24b07efb3ecd0f510c70f60')"
     ]
   }
 }

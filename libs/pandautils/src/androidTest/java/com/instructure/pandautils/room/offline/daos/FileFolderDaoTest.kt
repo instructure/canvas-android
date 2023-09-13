@@ -383,7 +383,7 @@ class FileFolderDaoTest {
     fun testFindFilesToSyncSyncSettingsNoLocalFiles() = runTest {
         courseDao.insert(CourseEntity(Course(id = 1L, name = "course1")))
 
-        val courseSyncSettings = CourseSyncSettingsEntity(courseId = 1L, fullContentSync = true)
+        val courseSyncSettings = CourseSyncSettingsEntity(courseId = 1L, courseName = "Course 1", fullContentSync = true)
         courseSyncSettingsDao.insert(courseSyncSettings)
 
         val fileSyncSettings = FileSyncSettingsEntity(id = 3L, courseId = 1L, fileName = "file1", url = "url1")
@@ -475,7 +475,7 @@ class FileFolderDaoTest {
         courseDao.insert(CourseEntity(Course(id = 1L, name = "course1")))
         courseDao.insert(CourseEntity(Course(id = 2L, name = "course2")))
 
-        val courseSyncSettings = CourseSyncSettingsEntity(courseId = 1L, fullContentSync = false)
+        val courseSyncSettings = CourseSyncSettingsEntity(courseId = 1L, courseName = "Course 1", fullContentSync = false)
         courseSyncSettingsDao.insert(courseSyncSettings)
 
         val fileSyncSettings = listOf(

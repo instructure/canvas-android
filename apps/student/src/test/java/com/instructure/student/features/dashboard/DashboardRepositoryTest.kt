@@ -175,12 +175,12 @@ class DashboardRepositoryTest {
     @Test
     fun `Correctly filtered course ids are returned from getSyncedCourseIds`() = runTest {
         val entities = listOf(
-            CourseSyncSettingsEntity(1, true),
-            CourseSyncSettingsEntity(2, false),
-            CourseSyncSettingsEntity(3, false, fullFileSync = true),
-            CourseSyncSettingsEntity(4, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.ANNOUNCEMENTS_ID }),
-            CourseSyncSettingsEntity(5, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.DISCUSSIONS_ID }),
-            CourseSyncSettingsEntity(6, false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.PAGES_ID }),
+            CourseSyncSettingsEntity(1, "Course 1",true),
+            CourseSyncSettingsEntity(2, "Course 2",false),
+            CourseSyncSettingsEntity(3, "Course 3",false, fullFileSync = true),
+            CourseSyncSettingsEntity(4, "Course 4",false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.ANNOUNCEMENTS_ID }),
+            CourseSyncSettingsEntity(5, "Course 5",false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.DISCUSSIONS_ID }),
+            CourseSyncSettingsEntity(6, "Course 6",false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.PAGES_ID }),
         )
         coEvery { courseSyncSettingsDao.findAll() } returns entities
 

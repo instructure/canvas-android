@@ -24,14 +24,15 @@ import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
-import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
+import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
@@ -47,6 +48,8 @@ class FileSyncWorker @AssistedInject constructor(
 
     private var fileExists = false
 
+    private lateinit var progress: FileSyncProgress
+
     override suspend fun doWork(): Result {
         val fileId = inputData.getLong(INPUT_FILE_ID, -1)
         val fileName = "${fileId}_${inputData.getString(INPUT_FILE_NAME) ?: ""}"
@@ -57,12 +60,16 @@ class FileSyncWorker @AssistedInject constructor(
 
         var downloadedFile = getDownloadFile(fileName)
 
+        progress = FileSyncProgress(fileName, 0)
+        setProgress(workDataOf(PROGRESS to progress.toJson()))
+
         fileDownloadApi.downloadFile(fileUrl)
             .saveFile(downloadedFile)
             .collect {
                 when (it) {
                     is DownloadState.InProgress -> {
-
+                        progress = FileSyncProgress(fileName, it.progress)
+                        setProgress(workDataOf(PROGRESS to progress.toJson()))
                     }
 
                     is DownloadState.Success -> {
@@ -70,12 +77,14 @@ class FileSyncWorker @AssistedInject constructor(
                             downloadedFile = rewriteOriginalFile(downloadedFile, fileName)
                         }
                         localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
-                        result = Result.success()
+                        progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
+                        result = Result.success(workDataOf(OUTPUT to progress.toJson()))
                     }
 
                     is DownloadState.Failure -> {
                         downloadedFile.delete()
-                        result = Result.failure()
+                        progress = FileSyncProgress(fileName, 100, ProgressState.ERROR)
+                        result = Result.failure(workDataOf(OUTPUT to progress.toJson()))
                     }
                 }
             }
@@ -110,6 +119,9 @@ class FileSyncWorker @AssistedInject constructor(
         const val INPUT_FILE_NAME = "INPUT_FILE_NAME"
         const val INPUT_FILE_URL = "INPUT_FILE_URL"
         const val INPUT_COURSE_ID = "INPUT_COURSE_ID"
+        const val PROGRESS = "fileSyncProgress"
+        const val OUTPUT = "fileSyncOutput"
+        const val TAG = "FileSyncWorker"
 
         fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String, wifiOnly: Boolean): OneTimeWorkRequest {
             val inputData = androidx.work.Data.Builder()
@@ -120,6 +132,7 @@ class FileSyncWorker @AssistedInject constructor(
                 .build()
 
             return OneTimeWorkRequest.Builder(FileSyncWorker::class.java)
+                .addTag(TAG)
                 .setInputData(inputData)
                 .setConstraints(
                     Constraints.Builder()

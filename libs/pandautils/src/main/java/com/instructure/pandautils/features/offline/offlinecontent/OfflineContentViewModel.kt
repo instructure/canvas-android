@@ -116,7 +116,7 @@ class OfflineContentViewModel @Inject constructor(
 
     private suspend fun getCourseSyncSettings(courses: List<Course>): List<Pair<Long, CourseSyncSettingsWithFiles>> {
         return courses.map {
-            it.id to offlineContentRepository.findCourseSyncSettings(it.id)
+            it.id to offlineContentRepository.findCourseSyncSettings(it)
         }
     }
 

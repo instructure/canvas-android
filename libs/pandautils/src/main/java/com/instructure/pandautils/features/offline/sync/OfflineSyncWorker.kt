@@ -26,7 +26,9 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -44,7 +46,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseApi: CourseAPI.CoursesInterface,
     private val dashboardCardDao: DashboardCardDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val syncSettingsFacade: SyncSettingsFacade
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val syncProgressDao: SyncProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -59,8 +62,21 @@ class OfflineSyncWorker @AssistedInject constructor(
             courseSyncSettingsDao.findByIds(courseIds.toList())
         } ?: courseSyncSettingsDao.findAll()
 
+        val settingsMap = courses.associateBy { it.courseId }
+
         val courseWorkers =  courses.filter { it.anySyncEnabled }
             .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
+
+        val syncProgress = courseWorkers.map {
+            val courseId = it.workSpec.input.getLong(CourseSyncWorker.COURSE_ID, 0)
+            SyncProgressEntity(
+                it.id.toString(),
+                courseId,
+                settingsMap[courseId]?.courseName.orEmpty(),
+            )
+        }
+
+        syncProgressDao.clearAndInsert(syncProgress)
 
         workManager.beginWith(courseWorkers)
             .enqueue()
