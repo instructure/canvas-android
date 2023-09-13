@@ -61,7 +61,6 @@ class SyncProgressViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val syncProgressDao: SyncProgressDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val tabDao: TabDao,
     private val offlineSyncHelper: OfflineSyncHelper
 ) : ViewModel() {
 
