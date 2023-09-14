@@ -62,6 +62,7 @@ class ModuleUtilityTest : TestCase() {
         var expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putString(Const.FILE_URL, expectedUrl)
+        expectedBundle.putInt(Const.FILE_ID, 0)
         expectedBundle.putLong(Const.ITEM_ID, moduleItem.id)
         expectedBundle.putParcelable(com.instructure.pandautils.utils.Const.MODULE_OBJECT, moduleObject)
 
@@ -76,6 +77,7 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putString(Const.FILE_URL, expectedUrl)
+        expectedBundle.putInt(Const.FILE_ID, 0)
         parentFragment = callGetFragment(moduleItem, course, moduleObject)
         TestCase.assertNotNull(parentFragment)
         TestCase.assertEquals(FileDetailsFragment::class.java, parentFragment!!.javaClass)

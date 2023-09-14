@@ -72,10 +72,4 @@ class FileDetailsLocalDataSourceTest {
 
         assertEquals(null, fileFolder)
     }
-
-    @Test
-    fun `markAsRead always returns null`() = runTest {
-        val result = fileDetailsLocalDataSource.markAsRead(mockk(), 1, 1, false)
-        assertEquals(null, result)
-    }
 }

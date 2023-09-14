@@ -141,16 +141,7 @@ class FileDetailsFragment : ParentFragment() {
             }
         }
 
-        if (isOffline()) {
-            binding.downloadButton.setVisible(false)
-        }
-        else {
-            binding.downloadButton.setVisible(true)
-        }
-    }
-
-    private fun isOffline(): Boolean {
-        return repository.isOnline().not()
+        binding.downloadButton.setVisible(repository.isOnline())
     }
 
     override fun onMediaLoadingStarted() {
