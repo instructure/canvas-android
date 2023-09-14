@@ -22,6 +22,9 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.depaginate
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 class StudentEditDashboardNetworkDataSource(
     private val courseApi: CourseAPI.CoursesInterface,
@@ -31,14 +34,16 @@ class StudentEditDashboardNetworkDataSource(
     override suspend fun getCourses(): List<List<Course>> {
         val params = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
 
-        val currentCourses = courseApi.firstPageCoursesByEnrollmentState("active", params)
-            .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow
-        val pastCourses = courseApi.firstPageCoursesByEnrollmentState("completed", params)
-            .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow
-        val futureCourses = courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params)
-            .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow
+        return coroutineScope {
+            val currentCourses = async { courseApi.firstPageCoursesByEnrollmentState("active", params)
+                .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow }
+            val pastCourses = async { courseApi.firstPageCoursesByEnrollmentState("completed", params)
+                .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow }
+            val futureCourses = async { courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params)
+                .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow }
 
-        return listOf(currentCourses, pastCourses, futureCourses)
+            return@coroutineScope listOf(currentCourses, pastCourses, futureCourses).awaitAll()
+        }
     }
 
     override suspend fun getGroups(): List<Group> {
