@@ -27,7 +27,12 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardDescriptionItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardEnrollmentItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardNoteItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
@@ -69,6 +74,7 @@ class EditDashboardViewModel @Inject constructor(
 
     private lateinit var groupHeader: EditDashboardHeaderViewModel
     private lateinit var courseHeader: EditDashboardHeaderViewModel
+    private var noteItem: EditDashboardNoteItemViewModel? = null
 
     private lateinit var currentCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var pastCoursesViewData: List<EditDashboardCourseItemViewModel>
@@ -384,9 +390,10 @@ class EditDashboardViewModel @Inject constructor(
 
         val items = mutableListOf<ItemViewModel>()
         if (currentCoursesViewData.isNotEmpty() || pastCoursesViewData.isNotEmpty() || futureCoursesViewData.isNotEmpty()) {
-            val courseHeaderTitle = if (isFiltered) R.string.courses else R.string.all_courses
+            createNoteItem()?.let { items.add(it) }
+
             courseHeader = EditDashboardHeaderViewModel(
-                courseHeaderTitle,
+                R.string.courses,
                 favoriteCourseMap.isNotEmpty(),
                 ::selectAllCourses,
                 ::deselectAllCourses,
@@ -409,9 +416,8 @@ class EditDashboardViewModel @Inject constructor(
             items.addAll(futureCoursesViewData)
         }
         if (groupsViewData.isNotEmpty()) {
-            val groupHeaderTitle = if (isFiltered) R.string.groups else R.string.all_groups
             groupHeader = EditDashboardHeaderViewModel(
-                groupHeaderTitle,
+                R.string.groups,
                 favoriteGroupMap.isNotEmpty(),
                 ::selectAllGroups,
                 ::deselectAllGroups,
@@ -423,6 +429,17 @@ class EditDashboardViewModel @Inject constructor(
         }
 
         return items
+    }
+
+    private fun createNoteItem(): EditDashboardNoteItemViewModel? {
+        noteItem = if (!networkStateProvider.isOnline()) {
+            EditDashboardNoteItemViewModel {
+                val newItems = _data.value?.items?.minus(noteItem)?.filterNotNull()
+                _data.postValue(EditDashboardViewData(newItems.orEmpty()))
+            }
+        } else null
+
+        return noteItem
     }
 
     fun queryItems(query: String) {
@@ -445,8 +462,12 @@ class EditDashboardViewModel @Inject constructor(
     }
 
     fun refresh() {
-        _state.postValue(ViewState.Refresh)
-        loadItems()
+        if (networkStateProvider.isOnline()) {
+            _state.postValue(ViewState.Refresh)
+            loadItems()
+        } else {
+            _state.postValue(ViewState.Success)
+        }
     }
 
 }

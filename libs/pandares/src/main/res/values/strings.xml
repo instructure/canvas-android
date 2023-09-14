@@ -1448,4 +1448,10 @@
     <string name="syncProgress_syncErrorSubtitle">One or more files failed to sync. Check your internet connection and retry to submit.</string>
     <string name="syncProgress_downloadStarting">Download starting</string>
     <string name="coursesCannotBeFavoritedOffline">Courses cannot be favorited offline.</string>
+    <string name="allCoursesScreenHeader">All Courses</string>
+    <string name="allCoursesCourseHeader">Courses</string>
+    <string name="allCoursesGroupHeader">Groups</string>
+    <string name="dashboardAllCoursesButton">All Courses</string>
+    <string name="allCoursesOfflineNote">Selecting courses for Dashboard can only be done online. You can navigate to offline course details.</string>
+    <string name="allCoursesOfflineNoteTitle">Note</string>
 </resources>
