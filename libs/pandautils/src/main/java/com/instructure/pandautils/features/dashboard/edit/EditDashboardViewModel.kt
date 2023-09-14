@@ -75,6 +75,9 @@ class EditDashboardViewModel @Inject constructor(
     private lateinit var futureCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var groupsViewData: List<EditDashboardGroupItemViewModel>
 
+    private var syncedCourseIds = emptySet<Long>()
+    private var offlineEnabled = false
+
     var hasChanges = false
 
     init {
@@ -89,6 +92,9 @@ class EditDashboardViewModel @Inject constructor(
                 currentCourses = courses.getOrNull(0).orEmpty()
                 pastCourses = courses.getOrNull(1).orEmpty()
                 futureCourses = courses.getOrNull(2).orEmpty()
+
+                syncedCourseIds = repository.getSyncedCourseIds()
+                offlineEnabled = repository.offlineEnabled()
 
                 courseMap = (currentCourses + pastCourses + futureCourses).associateBy { it.id }
 
@@ -345,6 +351,7 @@ class EditDashboardViewModel @Inject constructor(
         val termName = course.term?.name
         val enrollmentType = course.enrollments?.firstOrNull()?.type?.apiTypeString.orEmpty()
         val termTitle = if (termName != null) "$termName | $enrollmentType" else enrollmentType
+        val availableOffline = syncedCourseIds.contains(course.id)
 
         return EditDashboardCourseItemViewModel(
             id = course.id,
@@ -354,7 +361,9 @@ class EditDashboardViewModel @Inject constructor(
             openable = repository.isOpenable(course),
             termTitle = termTitle,
             online = networkStateProvider.isOnline(),
-            actionHandler = ::handleAction
+            actionHandler = ::handleAction,
+            availableOffline = availableOffline,
+            enabled = !offlineEnabled || networkStateProvider.isOnline() || availableOffline
         )
     }
 

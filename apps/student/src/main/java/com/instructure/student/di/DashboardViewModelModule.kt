@@ -20,6 +20,8 @@ package com.instructure.student.di
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
+import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -52,8 +54,10 @@ class DashboardViewModelModule {
     fun provideEditDashboardRepository(localDataSource: StudentEditDashboardLocalDataSource,
                                        networkDataSource: StudentEditDashboardNetworkDataSource,
                                        networkStateProvider: NetworkStateProvider,
-                                       featureFlagProvider: FeatureFlagProvider
+                                       featureFlagProvider: FeatureFlagProvider,
+                                       courseSyncSettingsDao: CourseSyncSettingsDao,
+                                       courseDao: CourseDao
     ): EditDashboardRepository {
-        return StudentEditDashboardRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        return StudentEditDashboardRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao, courseDao)
     }
 }

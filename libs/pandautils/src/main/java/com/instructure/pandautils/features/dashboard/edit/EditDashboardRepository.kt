@@ -25,4 +25,7 @@ interface EditDashboardRepository {
     suspend fun getGroups(): List<Group>
     fun isOpenable(course: Course): Boolean
     fun isFavoriteable(course: Course): Boolean
+
+    suspend fun getSyncedCourseIds(): Set<Long>
+    suspend fun offlineEnabled(): Boolean
 }

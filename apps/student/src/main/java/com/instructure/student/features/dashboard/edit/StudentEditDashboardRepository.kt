@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.utils.isPublished
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.dashboard.edit.datasource.StudentEditDashboardDataSource
@@ -35,7 +37,9 @@ class StudentEditDashboardRepository(
     localDataSource: StudentEditDashboardLocalDataSource,
     networkDataSource: StudentEditDashboardNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
+    featureFlagProvider: FeatureFlagProvider,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val courseDao: CourseDao
 ) : Repository<StudentEditDashboardDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), EditDashboardRepository {
 
     override suspend fun getCourses(): List<List<Course>> {
@@ -47,4 +51,19 @@ class StudentEditDashboardRepository(
     override fun isOpenable(course: Course) = course.isNotDeleted() && course.isPublished()
 
     override fun isFavoriteable(course: Course) = course.isValidTerm() && course.isNotDeleted() && course.isPublished() && course.hasActiveEnrollment()
+
+    override suspend fun getSyncedCourseIds(): Set<Long> {
+        if (!isOfflineEnabled()) return emptySet()
+
+        val courseSyncSettings = courseSyncSettingsDao.findAll()
+        val syncedCourseIds = courseSyncSettings
+            .filter { it.anySyncEnabled }
+            .map { it.courseId }
+            .toSet()
+
+        val syncedCourses = courseDao.findByIds(syncedCourseIds)
+        return syncedCourses.map { it.id }.toSet()
+    }
+
+    override suspend fun offlineEnabled(): Boolean = isOfflineEnabled()
 }

@@ -31,6 +31,8 @@ class EditDashboardCourseItemViewModel(
     val openable: Boolean,
     val termTitle: String,
     val online: Boolean,
+    val availableOffline: Boolean,
+    val enabled: Boolean,
     private val actionHandler: (EditDashboardItemAction) -> Unit
 ) : ItemViewModel, BaseObservable() {
 
