@@ -26,13 +26,15 @@ class EditDashboardItemEntity(
     val courseId: Long,
     val name: String,
     val isFavorite: Boolean,
-    val enrollmentState: EnrollmentState
+    val enrollmentState: EnrollmentState,
+    val position: Int
 ) {
-    constructor(course: Course, enrollmentState: EnrollmentState) : this(
+    constructor(course: Course, enrollmentState: EnrollmentState, position: Int) : this(
         courseId = course.id,
         name = course.name,
         isFavorite = course.isFavorite,
-        enrollmentState = enrollmentState
+        enrollmentState = enrollmentState,
+        position = position
     )
 
     fun toCourse(): Course {

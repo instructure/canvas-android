@@ -27,7 +27,8 @@ class EditDashboardHeaderViewModel(
         @get:StringRes val title: Int,
         @get:Bindable var hasItemSelected: Boolean,
         val selectAllHandler: () -> Unit,
-        val deselectAllHandler: () -> Unit
+        val deselectAllHandler: () -> Unit,
+        val online: Boolean
 ) : ItemViewModel, BaseObservable() {
     override val layoutId: Int = R.layout.viewholder_edit_dashboard_header
 

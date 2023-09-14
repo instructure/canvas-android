@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ce32f73f5f61a7ee2276f4f12e043d6c",
+    "identityHash": "cdcd97f94bf9f65706fc37b599f00ca9",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -2016,7 +2016,7 @@
       },
       {
         "tableName": "EditDashboardItemEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `name` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, `enrollmentState` TEXT NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `name` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, `enrollmentState` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
@@ -2040,6 +2040,12 @@
             "fieldPath": "enrollmentState",
             "columnName": "enrollmentState",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -5122,7 +5128,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ce32f73f5f61a7ee2276f4f12e043d6c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cdcd97f94bf9f65706fc37b599f00ca9')"
     ]
   }
 }

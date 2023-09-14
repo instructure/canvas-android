@@ -66,9 +66,9 @@ class OfflineSyncWorker @AssistedInject constructor(
         val pastCourses = courseApi.firstPageCoursesByEnrollmentState("completed", params).dataOrNull.orEmpty()
         val futureCourses = courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params).dataOrNull.orEmpty()
 
-        val allCourses = currentCourses.map { EditDashboardItemEntity(it, EnrollmentState.CURRENT) } +
-            pastCourses.map { EditDashboardItemEntity(it, EnrollmentState.PAST) } +
-            futureCourses.map { EditDashboardItemEntity(it, EnrollmentState.FUTURE) }
+        val allCourses = currentCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.CURRENT, index) } +
+            pastCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.PAST, index) } +
+            futureCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.FUTURE, index) }
         editDashboardItemDao.updateEntities(allCourses)
 
         val courseIds = inputData.getLongArray(COURSE_IDS)

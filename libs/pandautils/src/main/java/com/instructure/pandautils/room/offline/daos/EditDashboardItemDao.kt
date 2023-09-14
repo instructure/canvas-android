@@ -41,7 +41,7 @@ interface EditDashboardItemDao {
     @Query("DELETE FROM EditDashboardItemEntity")
     abstract suspend fun dropAll()
 
-    @Query("SELECT * FROM EditDashboardItemEntity WHERE enrollmentState = :enrollmentState")
+    @Query("SELECT * FROM EditDashboardItemEntity WHERE enrollmentState = :enrollmentState ORDER BY position")
     abstract suspend fun findByEnrollmentState(enrollmentState: EnrollmentState): List<EditDashboardItemEntity>
 
     @Transaction

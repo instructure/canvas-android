@@ -376,7 +376,13 @@ class EditDashboardViewModel @Inject constructor(
         val items = mutableListOf<ItemViewModel>()
         if (currentCoursesViewData.isNotEmpty() || pastCoursesViewData.isNotEmpty() || futureCoursesViewData.isNotEmpty()) {
             val courseHeaderTitle = if (isFiltered) R.string.courses else R.string.all_courses
-            courseHeader = EditDashboardHeaderViewModel(courseHeaderTitle, favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
+            courseHeader = EditDashboardHeaderViewModel(
+                courseHeaderTitle,
+                favoriteCourseMap.isNotEmpty(),
+                ::selectAllCourses,
+                ::deselectAllCourses,
+                networkStateProvider.isOnline()
+            )
             items.add(courseHeader)
             items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_course_description))
         }
@@ -395,7 +401,13 @@ class EditDashboardViewModel @Inject constructor(
         }
         if (groupsViewData.isNotEmpty()) {
             val groupHeaderTitle = if (isFiltered) R.string.groups else R.string.all_groups
-            groupHeader = EditDashboardHeaderViewModel(groupHeaderTitle, favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
+            groupHeader = EditDashboardHeaderViewModel(
+                groupHeaderTitle,
+                favoriteGroupMap.isNotEmpty(),
+                ::selectAllGroups,
+                ::deselectAllGroups,
+                networkStateProvider.isOnline()
+            )
             items.add(groupHeader)
             items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_group_description))
             items.addAll(groupsViewData)
