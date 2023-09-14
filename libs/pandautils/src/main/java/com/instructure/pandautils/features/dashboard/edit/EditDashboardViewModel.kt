@@ -75,6 +75,7 @@ class EditDashboardViewModel @Inject constructor(
     private lateinit var groupHeader: EditDashboardHeaderViewModel
     private lateinit var courseHeader: EditDashboardHeaderViewModel
     private var noteItem: EditDashboardNoteItemViewModel? = null
+    private var noteItemHidden = false
 
     private lateinit var currentCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var pastCoursesViewData: List<EditDashboardCourseItemViewModel>
@@ -432,10 +433,11 @@ class EditDashboardViewModel @Inject constructor(
     }
 
     private fun createNoteItem(): EditDashboardNoteItemViewModel? {
-        noteItem = if (!networkStateProvider.isOnline()) {
+        noteItem = if (!networkStateProvider.isOnline() && offlineEnabled && !noteItemHidden) {
             EditDashboardNoteItemViewModel {
                 val newItems = _data.value?.items?.minus(noteItem)?.filterNotNull()
                 _data.postValue(EditDashboardViewData(newItems.orEmpty()))
+                noteItemHidden = true
             }
         } else null
 
