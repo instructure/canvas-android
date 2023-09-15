@@ -18,7 +18,7 @@
 package com.instructure.pandautils.room.offline.facade
 
 import androidx.lifecycle.LiveData
-import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.daos.SyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import io.mockk.*

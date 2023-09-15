@@ -60,10 +60,12 @@ data class CourseProgressItemViewModel(
                 data.updateState(WorkInfo.State.SUCCEEDED)
                 clearAggregateObserver()
             }
+
             it.any { it.state == WorkInfo.State.CANCELLED || it.state == WorkInfo.State.FAILED } -> {
                 data.updateState(WorkInfo.State.FAILED)
                 clearAggregateObserver()
             }
+
             else -> {
                 data.updateState(WorkInfo.State.RUNNING)
             }
@@ -83,11 +85,16 @@ data class CourseProgressItemViewModel(
 
         if (courseProgress.fileSyncData == null) return@Observer
 
-        data.updateSize(NumberHelper.readableFileSize(context, courseProgress.tabs.size * TAB_PROGRESS_SIZE + courseProgress.fileSyncData.sumOf { it.fileSize }))
+        data.updateSize(
+            NumberHelper.readableFileSize(
+                context,
+                courseProgress.tabs.size * TAB_PROGRESS_SIZE + courseProgress.fileSyncData.sumOf { it.fileSize })
+        )
 
-        aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileSyncData.map { UUID.fromString(it.workerId) } + UUID.fromString(
-            data.workerId
-        )))
+        aggregateProgressLiveData =
+            workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileSyncData.map { UUID.fromString(it.workerId) } + UUID.fromString(
+                data.workerId
+            )))
 
         aggregateProgressLiveData?.observeForever(aggregateProgressObserver)
         clearCourseObserver()
@@ -127,5 +134,7 @@ data class CourseProgressItemViewModel(
     override fun onCleared() {
         clearCourseObserver()
         clearAggregateObserver()
+        data.tabs?.forEach { it.onCleared() }
+        data.files.forEach { it.onCleared() }
     }
 }

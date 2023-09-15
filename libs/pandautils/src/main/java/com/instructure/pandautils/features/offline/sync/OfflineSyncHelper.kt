@@ -19,7 +19,7 @@ package com.instructure.pandautils.features.offline.sync
 
 import androidx.work.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import java.util.*
 import java.util.concurrent.TimeUnit

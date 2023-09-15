@@ -21,7 +21,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
 import com.instructure.canvasapi2.models.GradingRule
-import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 
 @TypeConverters
 class OfflineConverters {
