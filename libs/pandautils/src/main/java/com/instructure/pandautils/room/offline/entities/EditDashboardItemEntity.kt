@@ -21,7 +21,7 @@ import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Course
 
 @Entity
-class EditDashboardItemEntity(
+data class EditDashboardItemEntity(
     @PrimaryKey
     val courseId: Long,
     val name: String,

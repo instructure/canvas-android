@@ -104,14 +104,14 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
 
     fun selectAllCourses() {
         val childMatcher = withContentDescription("Add all to dashboard")
-        val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+        val itemMatcher = allOf(hasDescendant(withText("Courses")), hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
 
     fun unselectAllCourses() {
         val childMatcher = withContentDescription("Remove all from dashboard")
-        val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+        val itemMatcher = allOf(hasDescendant(withText("Courses")), hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
