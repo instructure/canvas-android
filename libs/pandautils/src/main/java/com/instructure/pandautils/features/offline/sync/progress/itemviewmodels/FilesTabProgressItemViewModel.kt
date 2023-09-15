@@ -56,17 +56,17 @@ data class FilesTabProgressItemViewModel(
         if (it.all { it.state.isFinished }) {
             data.state = ProgressState.COMPLETED
             data.notifyPropertyChanged(BR.state)
-        } else {
-            it.forEach { workInfo ->
-                val progress: FileSyncProgress? = if (workInfo.state.isFinished) {
-                    workInfo.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson()
-                } else {
-                    workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson()
-                }
-                totalProgress += progress?.progress ?: 0
-            }
-            data.updateProgress(totalProgress / it.size)
         }
+
+        it.forEach { workInfo ->
+            val progress: FileSyncProgress? = if (workInfo.state.isFinished) {
+                workInfo.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson()
+            } else {
+                workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson()
+            }
+            totalProgress += progress?.progress ?: 0
+        }
+        data.updateProgress(totalProgress / it.size)
     }
 
     private val progressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.courseWorkerId))
