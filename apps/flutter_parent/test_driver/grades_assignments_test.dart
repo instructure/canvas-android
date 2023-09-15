@@ -25,7 +25,7 @@ import 'pages/course_grades_page.dart';
 import 'pages/dashboard_page.dart';
 
 void main() {
-  FlutterDriver driver;
+  FlutterDriver? driver;
 
   // Connect to the Flutter driver before running any tests.
   setUpAll(() async {
@@ -35,21 +35,21 @@ void main() {
   // Close the connection to the driver after the tests have completed.
   tearDownAll(() async {
     if (driver != null) {
-      driver.close();
+      driver?.close();
     }
   });
 
   test('Grades+Assignments E2E', () async {
     // Wait for seeding to complete
-    var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
+    var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
-    var course = seedContext.getNamedObject<Course>("course");
+    var course = seedContext.getNamedObject<Course>("course")!;
     var assignments = [
-      seedContext.getNamedObject<Assignment>("assignment1"),
-      seedContext.getNamedObject<Assignment>("assignment2"),
-      seedContext.getNamedObject<Assignment>("assignment3"),
-      seedContext.getNamedObject<Assignment>("assignment4")
+      seedContext.getNamedObject<Assignment>("assignment1")!,
+      seedContext.getNamedObject<Assignment>("assignment2")!,
+      seedContext.getNamedObject<Assignment>("assignment3")!,
+      seedContext.getNamedObject<Assignment>("assignment4")!
     ];
 
     // Assignment-specific data
@@ -79,18 +79,18 @@ void main() {
     // For each assignment, open the assignment details page and verify its correctness
     await CourseGradesPage.selectAssignment(driver, assignments[0]);
     await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignments[0]);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
 
     await CourseGradesPage.selectAssignment(driver, assignments[1]);
     await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignments[1]);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
 
     await CourseGradesPage.selectAssignment(driver, assignments[2]);
     await AssignmentDetailsPage.validateSubmittedAssignment(driver, assignments[2]);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
 
     await CourseGradesPage.selectAssignment(driver, assignments[3]);
     await AssignmentDetailsPage.validateGradedAssignment(driver, assignments[3], "19");
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
   }, timeout: Timeout(Duration(minutes: 2)));
 }

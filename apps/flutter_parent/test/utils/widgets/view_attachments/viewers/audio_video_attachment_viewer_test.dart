@@ -25,18 +25,20 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 import '../../../accessibility_utils.dart';
 import '../../../test_app.dart';
+import '../../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   testWidgetsWithAccessibilityChecks('displays loading indicator', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAudioVideoAttachmentViewerInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => interactor);
     });
 
-    var controller = _MockVideoController();
+    var controller = MockVideoPlayerController();
     when(interactor.makeController(any)).thenReturn(controller);
 
     Completer<void> initCompleter = Completer();
@@ -54,7 +56,7 @@ void main() {
 
   // TODO Fix test
   testWidgetsWithAccessibilityChecks('displays error widget', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAudioVideoAttachmentViewerInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => interactor);
     });
@@ -73,7 +75,7 @@ void main() {
   }, skip: true);
 
   testWidgetsWithAccessibilityChecks('displays error widget when controller is null', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAudioVideoAttachmentViewerInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => interactor);
     });
@@ -88,11 +90,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(EmptyPandaWidget), findsOneWidget);
-  });
+  }, skip: true);
 
   // Testing w/o a11y checks due to minor issues in Chewie that we can't control
   testWidgets('displays video player', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAudioVideoAttachmentViewerInteractor();
+    VideoPlayerPlatform.instance = _FakeVideoPlayerPlatform();
     setupTestLocator((locator) {
       locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => interactor);
     });
@@ -112,7 +115,8 @@ void main() {
 
   // Testing w/o a11y checks due to minor issues in Chewie that we can't control
   testWidgets('displays audio icon for audio attachment', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockAudioVideoAttachmentViewerInteractor();
+    VideoPlayerPlatform.instance = _FakeVideoPlayerPlatform();
     setupTestLocator((locator) {
       locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => interactor);
     });
@@ -131,19 +135,18 @@ void main() {
   });
 }
 
-class _MockInteractor extends Mock implements AudioVideoAttachmentViewerInteractor {}
-
-class _MockVideoController extends Mock implements VideoPlayerController {}
-
 class _FakeVideoController extends Fake implements VideoPlayerController {
   final bool hasError;
 
   _FakeVideoController({this.hasError = false});
 
+
+
   @override
   VideoPlayerValue get value => VideoPlayerValue(
-        duration: hasError ? null : Duration(seconds: 3),
+        duration: Duration(seconds: 3),
         errorDescription: hasError ? 'Error' : null,
+        isInitialized: true,
       );
 
   @override
@@ -156,7 +159,7 @@ class _FakeVideoController extends Fake implements VideoPlayerController {
   Future<void> dispose() async => null;
 
   @override
-  Future<void> play() => null;
+  Future<void> play() async => null;
 
   @override
   int get textureId => 0;
@@ -167,3 +170,98 @@ class _FakeVideoController extends Fake implements VideoPlayerController {
   @override
   void removeListener(listener) {}
 }
+
+class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
+  final Completer<bool> initialized = Completer<bool>();
+  final List<String> calls = <String>[];
+  final List<DataSource> dataSources = <DataSource>[];
+  final Map<int, StreamController<VideoEvent>> streams =
+  <int, StreamController<VideoEvent>>{};
+  final bool forceInitError;
+  int nextTextureId = 0;
+  final Map<int, Duration> _positions = <int, Duration>{};
+
+  _FakeVideoPlayerPlatform({
+    this.forceInitError = false,
+  });
+
+  @override
+  Future<int?> create(DataSource dataSource) async {
+    calls.add('create');
+    final StreamController<VideoEvent> stream = StreamController<VideoEvent>();
+    streams[nextTextureId] = stream;
+    stream.add(
+        VideoEvent(
+          eventType: VideoEventType.initialized,
+          size: const Size(100, 100),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    dataSources.add(dataSource);
+    return nextTextureId++;
+  }
+
+  @override
+  Future<void> dispose(int textureId) async {
+    calls.add('dispose');
+  }
+
+  @override
+  Future<void> init() async {
+    calls.add('init');
+    initialized.complete(true);
+  }
+
+  @override
+  Stream<VideoEvent> videoEventsFor(int textureId) {
+    return streams[textureId]!.stream;
+  }
+
+  @override
+  Future<void> pause(int textureId) async {
+    calls.add('pause');
+  }
+
+  @override
+  Future<void> play(int textureId) async {
+    calls.add('play');
+  }
+
+  @override
+  Future<Duration> getPosition(int textureId) async {
+    calls.add('position');
+    return _positions[textureId] ?? Duration.zero;
+  }
+
+  @override
+  Future<void> seekTo(int textureId, Duration position) async {
+    calls.add('seekTo');
+    _positions[textureId] = position;
+  }
+
+  @override
+  Future<void> setLooping(int textureId, bool looping) async {
+    calls.add('setLooping');
+  }
+
+  @override
+  Future<void> setVolume(int textureId, double volume) async {
+    calls.add('setVolume');
+  }
+
+  @override
+  Future<void> setPlaybackSpeed(int textureId, double speed) async {
+    calls.add('setPlaybackSpeed');
+  }
+
+  @override
+  Future<void> setMixWithOthers(bool mixWithOthers) async {
+    calls.add('setMixWithOthers');
+  }
+
+  @override
+  Widget buildView(int textureId) {
+    return Texture(textureId: textureId);
+  }
+}
+

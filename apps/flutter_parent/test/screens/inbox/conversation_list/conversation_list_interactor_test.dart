@@ -28,10 +28,11 @@ import 'package:tuple/tuple.dart';
 
 import '../../../utils/test_app.dart';
 import '../../../utils/test_helpers/mock_helpers.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   test('getConversations calls api for normal scope and sent scope', () async {
-    var inboxApi = _MockInboxApi();
+    var inboxApi = MockInboxApi();
 
     when(inboxApi.getConversations(
       scope: anyNamed('scope'),
@@ -49,7 +50,7 @@ void main() {
   });
 
   test('getConversations merges scopes and removes duplicates from sent scope', () async {
-    var inboxApi = _MockInboxApi();
+    var inboxApi = MockInboxApi();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
@@ -95,7 +96,7 @@ void main() {
   });
 
   test('getConversations orders items by date (descending)', () async {
-    var inboxApi = _MockInboxApi();
+    var inboxApi = MockInboxApi();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
@@ -143,7 +144,7 @@ void main() {
   });
 
   test('getConversations produces error when API fails', () async {
-    var inboxApi = _MockInboxApi();
+    var inboxApi = MockInboxApi();
 
     await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
@@ -164,7 +165,7 @@ void main() {
   });
 
   test('getCoursesForCompose calls CourseApi', () async {
-    var api = _MockCourseApi();
+    var api = MockCourseApi();
     await setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
     ConversationListInteractor().getCoursesForCompose();
     verify(api.getObserveeCourses()).called(1);
@@ -202,13 +203,13 @@ void main() {
       ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
 
     List<Tuple2<User, Course>> expectedResult = [
-      Tuple2(andyEnrollments[0].observedUser, boxingCourse),
-      Tuple2(andyEnrollments[1].observedUser, choirCourse),
-      Tuple2(billEnrollments[1].observedUser, arithmeticCourse),
-      Tuple2(billEnrollments[0].observedUser, choirCourse),
-      Tuple2(chericeEnrollments[1].observedUser, arithmeticCourse),
-      Tuple2(chericeEnrollments[2].observedUser, boxingCourse),
-      Tuple2(chericeEnrollments[0].observedUser, choirCourse),
+      Tuple2(andyEnrollments[0].observedUser!, boxingCourse),
+      Tuple2(andyEnrollments[1].observedUser!, choirCourse),
+      Tuple2(billEnrollments[1].observedUser!, arithmeticCourse),
+      Tuple2(billEnrollments[0].observedUser!, choirCourse),
+      Tuple2(chericeEnrollments[1].observedUser!, arithmeticCourse),
+      Tuple2(chericeEnrollments[2].observedUser!, boxingCourse),
+      Tuple2(chericeEnrollments[0].observedUser!, choirCourse),
     ];
 
     List<Tuple2<User, Course>> actual = ConversationListInteractor()
@@ -247,13 +248,13 @@ void main() {
       ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
 
     List<Tuple2<User, Course>> expectedResult = [
-      Tuple2(andyEnrollments[0].observedUser, boxingCourse),
-      Tuple2(andyEnrollments[1].observedUser, choirCourse),
-      Tuple2(billEnrollments[1].observedUser, arithmeticCourse),
-      Tuple2(billEnrollments[0].observedUser, choirCourse),
-      Tuple2(chericeEnrollments[1].observedUser, arithmeticCourse),
-      Tuple2(chericeEnrollments[2].observedUser, boxingCourse),
-      Tuple2(chericeEnrollments[0].observedUser, choirCourse),
+      Tuple2(andyEnrollments[0].observedUser!, boxingCourse),
+      Tuple2(andyEnrollments[1].observedUser!, choirCourse),
+      Tuple2(billEnrollments[1].observedUser!, arithmeticCourse),
+      Tuple2(billEnrollments[0].observedUser!, choirCourse),
+      Tuple2(chericeEnrollments[1].observedUser!, arithmeticCourse),
+      Tuple2(chericeEnrollments[2].observedUser!, boxingCourse),
+      Tuple2(chericeEnrollments[0].observedUser!, choirCourse),
     ];
 
     List<Tuple2<User, Course>> actual = ConversationListInteractor()
@@ -290,13 +291,13 @@ void main() {
       ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
 
     List<Tuple2<User, Course>> expected = [
-      Tuple2(andyEnrollments[0].observedUser, boxingCourse),
-      Tuple2(andyEnrollments[1].observedUser, choirCourse),
-      Tuple2(billEnrollments[1].observedUser, arithmeticCourse),
-      Tuple2(billEnrollments[0].observedUser, choirCourse),
-      Tuple2(chericeEnrollments[1].observedUser, arithmeticCourse),
-      Tuple2(chericeEnrollments[2].observedUser, boxingCourse),
-      Tuple2(chericeEnrollments[0].observedUser, choirCourse),
+      Tuple2(andyEnrollments[0].observedUser!, boxingCourse),
+      Tuple2(andyEnrollments[1].observedUser!, choirCourse),
+      Tuple2(billEnrollments[1].observedUser!, arithmeticCourse),
+      Tuple2(billEnrollments[0].observedUser!, choirCourse),
+      Tuple2(chericeEnrollments[1].observedUser!, arithmeticCourse),
+      Tuple2(chericeEnrollments[2].observedUser!, boxingCourse),
+      Tuple2(chericeEnrollments[0].observedUser!, choirCourse),
     ];
 
     List<Tuple2<User, Course>> actual = ConversationListInteractor().combineEnrollmentsAndCourses(
@@ -318,7 +319,3 @@ List<Enrollment> _createEnrollments(String studentName, List<String> courseIds) 
         ..courseId = id))
       .toList();
 }
-
-class _MockInboxApi extends Mock implements InboxApi {}
-
-class _MockCourseApi extends Mock implements CourseApi {}

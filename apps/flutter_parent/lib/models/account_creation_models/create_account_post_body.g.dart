@@ -20,10 +20,10 @@ class _$CreateAccountPostBodySerializer
   final String wireName = 'CreateAccountPostBody';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, CreateAccountPostBody object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'pseudonym',
       serializers.serialize(object.pseudonym,
           specifiedType: const FullType(PostPseudonym)),
@@ -40,28 +40,28 @@ class _$CreateAccountPostBodySerializer
 
   @override
   CreateAccountPostBody deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CreateAccountPostBodyBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'pseudonym':
           result.pseudonym.replace(serializers.deserialize(value,
-              specifiedType: const FullType(PostPseudonym)) as PostPseudonym);
+              specifiedType: const FullType(PostPseudonym))! as PostPseudonym);
           break;
         case 'pairing_code':
           result.pairingCode.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(PostPairingCode))
+                  specifiedType: const FullType(PostPairingCode))!
               as PostPairingCode);
           break;
         case 'user':
           result.user.replace(serializers.deserialize(value,
-              specifiedType: const FullType(PostUser)) as PostUser);
+              specifiedType: const FullType(PostUser))! as PostUser);
           break;
       }
     }
@@ -79,21 +79,18 @@ class _$CreateAccountPostBody extends CreateAccountPostBody {
   final PostUser user;
 
   factory _$CreateAccountPostBody(
-          [void Function(CreateAccountPostBodyBuilder) updates]) =>
-      (new CreateAccountPostBodyBuilder()..update(updates)).build();
+          [void Function(CreateAccountPostBodyBuilder)? updates]) =>
+      (new CreateAccountPostBodyBuilder()..update(updates))._build();
 
-  _$CreateAccountPostBody._({this.pseudonym, this.pairingCode, this.user})
+  _$CreateAccountPostBody._(
+      {required this.pseudonym, required this.pairingCode, required this.user})
       : super._() {
-    if (pseudonym == null) {
-      throw new BuiltValueNullFieldError('CreateAccountPostBody', 'pseudonym');
-    }
-    if (pairingCode == null) {
-      throw new BuiltValueNullFieldError(
-          'CreateAccountPostBody', 'pairingCode');
-    }
-    if (user == null) {
-      throw new BuiltValueNullFieldError('CreateAccountPostBody', 'user');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        pseudonym, r'CreateAccountPostBody', 'pseudonym');
+    BuiltValueNullFieldError.checkNotNull(
+        pairingCode, r'CreateAccountPostBody', 'pairingCode');
+    BuiltValueNullFieldError.checkNotNull(
+        user, r'CreateAccountPostBody', 'user');
   }
 
   @override
@@ -116,13 +113,17 @@ class _$CreateAccountPostBody extends CreateAccountPostBody {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc(0, pseudonym.hashCode), pairingCode.hashCode), user.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, pseudonym.hashCode);
+    _$hash = $jc(_$hash, pairingCode.hashCode);
+    _$hash = $jc(_$hash, user.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CreateAccountPostBody')
+    return (newBuiltValueToStringHelper(r'CreateAccountPostBody')
           ..add('pseudonym', pseudonym)
           ..add('pairingCode', pairingCode)
           ..add('user', user))
@@ -132,31 +133,32 @@ class _$CreateAccountPostBody extends CreateAccountPostBody {
 
 class CreateAccountPostBodyBuilder
     implements Builder<CreateAccountPostBody, CreateAccountPostBodyBuilder> {
-  _$CreateAccountPostBody _$v;
+  _$CreateAccountPostBody? _$v;
 
-  PostPseudonymBuilder _pseudonym;
+  PostPseudonymBuilder? _pseudonym;
   PostPseudonymBuilder get pseudonym =>
       _$this._pseudonym ??= new PostPseudonymBuilder();
-  set pseudonym(PostPseudonymBuilder pseudonym) =>
+  set pseudonym(PostPseudonymBuilder? pseudonym) =>
       _$this._pseudonym = pseudonym;
 
-  PostPairingCodeBuilder _pairingCode;
+  PostPairingCodeBuilder? _pairingCode;
   PostPairingCodeBuilder get pairingCode =>
       _$this._pairingCode ??= new PostPairingCodeBuilder();
-  set pairingCode(PostPairingCodeBuilder pairingCode) =>
+  set pairingCode(PostPairingCodeBuilder? pairingCode) =>
       _$this._pairingCode = pairingCode;
 
-  PostUserBuilder _user;
+  PostUserBuilder? _user;
   PostUserBuilder get user => _$this._user ??= new PostUserBuilder();
-  set user(PostUserBuilder user) => _$this._user = user;
+  set user(PostUserBuilder? user) => _$this._user = user;
 
   CreateAccountPostBodyBuilder();
 
   CreateAccountPostBodyBuilder get _$this {
-    if (_$v != null) {
-      _pseudonym = _$v.pseudonym?.toBuilder();
-      _pairingCode = _$v.pairingCode?.toBuilder();
-      _user = _$v.user?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _pseudonym = $v.pseudonym.toBuilder();
+      _pairingCode = $v.pairingCode.toBuilder();
+      _user = $v.user.toBuilder();
       _$v = null;
     }
     return this;
@@ -164,19 +166,19 @@ class CreateAccountPostBodyBuilder
 
   @override
   void replace(CreateAccountPostBody other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CreateAccountPostBody;
   }
 
   @override
-  void update(void Function(CreateAccountPostBodyBuilder) updates) {
+  void update(void Function(CreateAccountPostBodyBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CreateAccountPostBody build() {
+  CreateAccountPostBody build() => _build();
+
+  _$CreateAccountPostBody _build() {
     _$CreateAccountPostBody _$result;
     try {
       _$result = _$v ??
@@ -185,7 +187,7 @@ class CreateAccountPostBodyBuilder
               pairingCode: pairingCode.build(),
               user: user.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'pseudonym';
         pseudonym.build();
@@ -195,7 +197,7 @@ class CreateAccountPostBodyBuilder
         user.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'CreateAccountPostBody', _$failedField, e.toString());
+            r'CreateAccountPostBody', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -204,4 +206,4 @@ class CreateAccountPostBodyBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

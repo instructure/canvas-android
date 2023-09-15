@@ -21,7 +21,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 
 class AuthApi {
-  Future<CanvasToken> refreshToken() async {
+  Future<CanvasToken?> refreshToken() async {
     var dio = DioConfig.canvas(includeApiPath: false).dio;
     var params = {
       'client_id': ApiPrefs.getClientId(),
@@ -33,18 +33,18 @@ class AuthApi {
     return fetch(dio.post('login/oauth2/token', data: params));
   }
 
-  Future<CanvasToken> getTokens(MobileVerifyResult verifyResult, String requestCode) async {
+  Future<CanvasToken?> getTokens(MobileVerifyResult? verifyResult, String requestCode) async {
     var dio = DioConfig().dio;
     var params = {
-      'client_id': verifyResult.clientId,
-      'client_secret': verifyResult.clientSecret,
+      'client_id': verifyResult?.clientId,
+      'client_secret': verifyResult?.clientSecret,
       'code': requestCode,
       'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
     };
-    return fetch(dio.post('${verifyResult.baseUrl}/login/oauth2/token', data: params));
+    return fetch(dio.post('${verifyResult?.baseUrl}/login/oauth2/token', data: params));
   }
 
-  Future<MobileVerifyResult> mobileVerify(String domain, {bool forceBetaDomain = false}) async {
+  Future<MobileVerifyResult?> mobileVerify(String domain, {bool forceBetaDomain = false}) async {
     // We only want to switch over to the beta mobile verify domain if either:
     //   (1) we are forcing the beta domain (typically in UI tests) OR
     //   (2) the remote firebase config setting for MOBILE_VERIFY_BETA_ENABLED is true

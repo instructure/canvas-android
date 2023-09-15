@@ -30,12 +30,13 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
   final analytics = MockAnalytics();
   final webInteractor = MockWebLoginInteractor();
-  final interactor = _MockInteractor();
+  final interactor = MockDomainSearchInteractor();
 
   setUp(() async {
     reset(analytics);
@@ -213,12 +214,12 @@ void main() {
     await tester.tap(find.byType(TextField));
     await tester.enterText(find.byType(TextField), 'testing123');
     await tester.pumpAndSettle(); // Add in debounce time
-    expect(tester.widget<TextField>(find.byType(TextField)).controller.text, 'testing123');
+    expect(tester.widget<TextField>(find.byType(TextField)).controller?.text, 'testing123');
     expect(find.byKey(Key('clear-query')), findsOneWidget);
 
     await tester.tap(find.byKey(Key('clear-query')));
     await tester.pump();
-    expect(tester.widget<TextField>(find.byType(TextField)).controller.text, '');
+    expect(tester.widget<TextField>(find.byType(TextField)).controller?.text, '');
 
     // Wait for debounce to finish so test doesn't fail
     await tester.pump(Duration(milliseconds: 500));
@@ -302,12 +303,12 @@ void main() {
     // Get text selection for 'Canvas Support' span
     var targetText = l10n.canvasGuides;
     var bodyWidget = tester.widget<Text>(find.byKey(DomainSearchScreen.helpDialogBodyKey));
-    var bodyText = bodyWidget.textSpan.toPlainText();
+    var bodyText = bodyWidget.textSpan?.toPlainText() ?? '';
     var index = bodyText.indexOf(targetText);
     var selection = TextSelection(baseOffset: index, extentOffset: index + targetText.length);
 
     // Get clickable area
-    RenderParagraph box = DomainSearchScreen.helpDialogBodyKey.currentContext.findRenderObject();
+    RenderParagraph box = DomainSearchScreen.helpDialogBodyKey.currentContext?.findRenderObject() as RenderParagraph;
     var bodyOffset = box.localToGlobal(Offset.zero);
     var textOffset = box.getBoxesForSelection(selection)[0].toRect().center;
 
@@ -327,12 +328,12 @@ void main() {
     // Get text selection for 'Canvas Support' span
     var targetText = l10n.canvasSupport;
     var bodyWidget = tester.widget<Text>(find.byKey(DomainSearchScreen.helpDialogBodyKey));
-    var bodyText = bodyWidget.textSpan.toPlainText();
+    var bodyText = bodyWidget.textSpan?.toPlainText() ?? '';
     var index = bodyText.indexOf(targetText);
     var selection = TextSelection(baseOffset: index, extentOffset: index + targetText.length);
 
     // Get clickable area
-    RenderParagraph box = DomainSearchScreen.helpDialogBodyKey.currentContext.findRenderObject();
+    RenderParagraph box = DomainSearchScreen.helpDialogBodyKey.currentContext?.findRenderObject() as RenderParagraph;
     var bodyOffset = box.localToGlobal(Offset.zero);
     var textOffset = box.getBoxesForSelection(selection)[0].toRect().center;
 
@@ -484,5 +485,3 @@ void main() {
     expect(webLogin.domain, 'mobileqa.beta.instructure.com');
   });
 }
-
-class _MockInteractor extends Mock implements DomainSearchInteractor {}

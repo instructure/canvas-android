@@ -19,14 +19,15 @@ import 'package:flutter_parent/models/login.dart';
 
 class PlatformConfig {
   final bool initDeviceInfo;
-  final Login initLoggedInUser;
+  final Login? initLoggedInUser;
   final bool initPackageInfo;
-  final RemoteConfig initRemoteConfig;
+  final bool initPathProvider;
+  final FirebaseRemoteConfig? initRemoteConfig;
   final bool initWebview;
 
-  final Map<String, dynamic> _mockApiPrefs;
+  final Map<String, dynamic>? _mockApiPrefs;
 
-  final Map<String, dynamic> _mockPrefs;
+  final Map<String, dynamic>? _mockPrefs;
 
   static const _testPrefix = 'flutter.';
 
@@ -43,19 +44,21 @@ class PlatformConfig {
     this.initDeviceInfo = true,
     this.initLoggedInUser = null,
     this.initPackageInfo = true,
+    this.initPathProvider = true,
     this.initRemoteConfig = null,
     this.initWebview = false,
-    Map<String, dynamic> mockApiPrefs = const {},
-    Map<String, dynamic> mockPrefs = null,
+
+    Map<String, dynamic>? mockApiPrefs = const {},
+    Map<String, dynamic>? mockPrefs = null,
   })  : this._mockApiPrefs = mockApiPrefs,
         this._mockPrefs = mockPrefs;
 
   /// SharedPreferences requires that test configurations use 'flutter.' at the beginning of keys in the map
-  Map<String, dynamic> get mockApiPrefs => _safeMap(_mockApiPrefs);
+  Map<String, Object>? get mockApiPrefs => _safeMap(_mockApiPrefs);
 
-  Map<String, dynamic> get mockPrefs => _safeMap(_mockPrefs);
+  Map<String, Object>? get mockPrefs => _safeMap(_mockPrefs);
 
-  Map<String, dynamic> _safeMap(Map<String, dynamic> map) => map?.map((k, v) => MapEntry(_testKey(k), v));
+  Map<String, Object>? _safeMap(Map<String, dynamic>? map) => map?.map((k, v) => MapEntry(_testKey(k), v));
 
   String _testKey(String key) {
     return key.startsWith(_testPrefix) ? key : '$_testPrefix$key';

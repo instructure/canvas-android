@@ -23,6 +23,7 @@ import 'package:test/test.dart';
 
 import 'test_app.dart';
 import 'test_helpers/mock_helpers.dart';
+import 'test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   String _getQRUrl(
@@ -102,7 +103,7 @@ void main() {
   });
 
   group('scanPairingCode', () {
-    BarcodeScanVeneer barcodeScanner = MockBarcodeScanner();
+    MockBarcodeScanVeneer barcodeScanner = MockBarcodeScanVeneer();
     setupTestLocator((locator) => locator.registerLazySingleton<BarcodeScanVeneer>(() => barcodeScanner));
 
     setUp(() {
@@ -115,8 +116,8 @@ void main() {
       var result = await QRUtils.scanPairingCode();
       expect(result, isA<QRPairingInfo>());
       expect((result as QRPairingInfo).domain, 'test.instructure.com');
-      expect((result as QRPairingInfo).code, 'aBc123');
-      expect((result as QRPairingInfo).accountId, '1234');
+      expect((result).code, 'aBc123');
+      expect((result).accountId, '1234');
     });
 
     test('scanPairingCode returns canceled result if scan was canceled', () async {

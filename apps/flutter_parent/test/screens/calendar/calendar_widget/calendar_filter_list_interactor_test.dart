@@ -28,6 +28,7 @@ import '../../../utils/canvas_model_utils.dart';
 import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
 import '../../../utils/test_helpers/mock_helpers.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final _api = MockCourseApi();

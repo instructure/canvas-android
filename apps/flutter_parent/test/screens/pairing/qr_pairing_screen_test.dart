@@ -33,14 +33,15 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import 'pairing_util_test.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
 
-  PairingInteractor interactor = MockPairingInteractor();
-  QuickNav nav = MockQuickNav();
-  StudentAddedNotifier studentAddedNotifier = MockStudentAddedNotifier();
+  MockPairingInteractor interactor = MockPairingInteractor();
+  MockQuickNav nav = MockQuickNav();
+  MockStudentAddedNotifier studentAddedNotifier = MockStudentAddedNotifier();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<PairingInteractor>(() => interactor);
@@ -101,7 +102,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Navigates to splash screen on success if first route', (tester) async {
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => true);
 
-    await tester.pumpWidget(TestApp(QRPairingScreen(pairingInfo: QRPairingScanResult.success('', '', ''))));
+    await tester.pumpWidget(TestApp(QRPairingScreen(pairingInfo: QRPairingScanResult.success('', '', '') as QRPairingInfo)));
     await tester.pump();
 
     verify(nav.replaceRoute(any, PandaRouter.rootSplash()));
@@ -267,7 +268,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Initiates pairing on launch if pairing info is provided', (tester) async {
-    QRPairingInfo pairingInfo = QRPairingScanResult.success('123acb', '', '');
+    QRPairingInfo pairingInfo = QRPairingScanResult.success('123acb', '', '') as QRPairingInfo;
     await tester.pumpWidget(TestApp(QRPairingScreen(pairingInfo: pairingInfo)));
     await tester.pump();
 

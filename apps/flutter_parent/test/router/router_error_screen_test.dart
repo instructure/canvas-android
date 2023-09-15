@@ -14,20 +14,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import '../screens/courses/course_summary_screen_test.dart';
 import '../utils/accessibility_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final String _domain = 'https://test.instructure.com';
@@ -35,6 +41,7 @@ void main() {
   setUp(() async {
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
     await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
+    ApiPrefs.init();
   });
 
   tearDown(() {
@@ -72,18 +79,20 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('router error screen switch users', (tester) async {
-    setupTestLocator((locator) {
-      locator.registerLazySingleton<QuickNav>(() => QuickNav());
-    });
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<QuickNav>(() => QuickNav());
+        locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
+      });
 
-    await tester.pumpWidget(TestApp(
-      RouterErrorScreen(_domain),
-    ));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(AppLocalizations().switchUsers));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(TestApp(
+        RouterErrorScreen(_domain),
+      ));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.switchUsers));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(LoginLandingScreen), findsOneWidget);
-    expect(ApiPrefs.isLoggedIn(), false);
+      expect(find.byType(LoginLandingScreen), findsOneWidget);
+      expect(ApiPrefs.isLoggedIn(), false);
+
   });
 }

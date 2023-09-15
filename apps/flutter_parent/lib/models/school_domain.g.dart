@@ -16,48 +16,53 @@ class _$SchoolDomainSerializer implements StructuredSerializer<SchoolDomain> {
   final String wireName = 'SchoolDomain';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, SchoolDomain object,
+  Iterable<Object?> serialize(Serializers serializers, SchoolDomain object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'domain',
       serializers.serialize(object.domain,
           specifiedType: const FullType(String)),
-      'name',
-      serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
-    result.add('authentication_provider');
-    if (object.authenticationProvider == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.authenticationProvider,
-          specifiedType: const FullType(String)));
-    }
+    Object? value;
+    value = object.name;
+
+    result
+      ..add('name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.authenticationProvider;
+
+    result
+      ..add('authentication_provider')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
-  SchoolDomain deserialize(Serializers serializers, Iterable<Object> serialized,
+  SchoolDomain deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new SchoolDomainBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'domain':
           result.domain = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'authentication_provider':
           result.authenticationProvider = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -70,21 +75,17 @@ class _$SchoolDomain extends SchoolDomain {
   @override
   final String domain;
   @override
-  final String name;
+  final String? name;
   @override
-  final String authenticationProvider;
+  final String? authenticationProvider;
 
-  factory _$SchoolDomain([void Function(SchoolDomainBuilder) updates]) =>
-      (new SchoolDomainBuilder()..update(updates)).build();
+  factory _$SchoolDomain([void Function(SchoolDomainBuilder)? updates]) =>
+      (new SchoolDomainBuilder()..update(updates))._build();
 
-  _$SchoolDomain._({this.domain, this.name, this.authenticationProvider})
+  _$SchoolDomain._(
+      {required this.domain, this.name, this.authenticationProvider})
       : super._() {
-    if (domain == null) {
-      throw new BuiltValueNullFieldError('SchoolDomain', 'domain');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('SchoolDomain', 'name');
-    }
+    BuiltValueNullFieldError.checkNotNull(domain, r'SchoolDomain', 'domain');
   }
 
   @override
@@ -105,13 +106,17 @@ class _$SchoolDomain extends SchoolDomain {
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, domain.hashCode), name.hashCode),
-        authenticationProvider.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, domain.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, authenticationProvider.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('SchoolDomain')
+    return (newBuiltValueToStringHelper(r'SchoolDomain')
           ..add('domain', domain)
           ..add('name', name)
           ..add('authenticationProvider', authenticationProvider))
@@ -121,28 +126,29 @@ class _$SchoolDomain extends SchoolDomain {
 
 class SchoolDomainBuilder
     implements Builder<SchoolDomain, SchoolDomainBuilder> {
-  _$SchoolDomain _$v;
+  _$SchoolDomain? _$v;
 
-  String _domain;
-  String get domain => _$this._domain;
-  set domain(String domain) => _$this._domain = domain;
+  String? _domain;
+  String? get domain => _$this._domain;
+  set domain(String? domain) => _$this._domain = domain;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _authenticationProvider;
-  String get authenticationProvider => _$this._authenticationProvider;
-  set authenticationProvider(String authenticationProvider) =>
+  String? _authenticationProvider;
+  String? get authenticationProvider => _$this._authenticationProvider;
+  set authenticationProvider(String? authenticationProvider) =>
       _$this._authenticationProvider = authenticationProvider;
 
   SchoolDomainBuilder();
 
   SchoolDomainBuilder get _$this {
-    if (_$v != null) {
-      _domain = _$v.domain;
-      _name = _$v.name;
-      _authenticationProvider = _$v.authenticationProvider;
+    final $v = _$v;
+    if ($v != null) {
+      _domain = $v.domain;
+      _name = $v.name;
+      _authenticationProvider = $v.authenticationProvider;
       _$v = null;
     }
     return this;
@@ -150,22 +156,23 @@ class SchoolDomainBuilder
 
   @override
   void replace(SchoolDomain other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SchoolDomain;
   }
 
   @override
-  void update(void Function(SchoolDomainBuilder) updates) {
+  void update(void Function(SchoolDomainBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$SchoolDomain build() {
+  SchoolDomain build() => _build();
+
+  _$SchoolDomain _build() {
     final _$result = _$v ??
         new _$SchoolDomain._(
-            domain: domain,
+            domain: BuiltValueNullFieldError.checkNotNull(
+                domain, r'SchoolDomain', 'domain'),
             name: name,
             authenticationProvider: authenticationProvider);
     replace(_$result);
@@ -173,4 +180,4 @@ class SchoolDomainBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

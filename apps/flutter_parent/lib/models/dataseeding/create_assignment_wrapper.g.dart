@@ -20,10 +20,10 @@ class _$CreateAssignmentWrapperSerializer
   final String wireName = 'CreateAssignmentWrapper';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, CreateAssignmentWrapper object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'assignment',
       serializers.serialize(object.assignment,
           specifiedType: const FullType(CreateAssignmentInfo)),
@@ -34,20 +34,19 @@ class _$CreateAssignmentWrapperSerializer
 
   @override
   CreateAssignmentWrapper deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CreateAssignmentWrapperBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'assignment':
           result.assignment.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(CreateAssignmentInfo))
+                  specifiedType: const FullType(CreateAssignmentInfo))!
               as CreateAssignmentInfo);
           break;
       }
@@ -62,14 +61,12 @@ class _$CreateAssignmentWrapper extends CreateAssignmentWrapper {
   final CreateAssignmentInfo assignment;
 
   factory _$CreateAssignmentWrapper(
-          [void Function(CreateAssignmentWrapperBuilder) updates]) =>
-      (new CreateAssignmentWrapperBuilder()..update(updates)).build();
+          [void Function(CreateAssignmentWrapperBuilder)? updates]) =>
+      (new CreateAssignmentWrapperBuilder()..update(updates))._build();
 
-  _$CreateAssignmentWrapper._({this.assignment}) : super._() {
-    if (assignment == null) {
-      throw new BuiltValueNullFieldError(
-          'CreateAssignmentWrapper', 'assignment');
-    }
+  _$CreateAssignmentWrapper._({required this.assignment}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        assignment, r'CreateAssignmentWrapper', 'assignment');
   }
 
   @override
@@ -89,12 +86,15 @@ class _$CreateAssignmentWrapper extends CreateAssignmentWrapper {
 
   @override
   int get hashCode {
-    return $jf($jc(0, assignment.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, assignment.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CreateAssignmentWrapper')
+    return (newBuiltValueToStringHelper(r'CreateAssignmentWrapper')
           ..add('assignment', assignment))
         .toString();
   }
@@ -103,12 +103,12 @@ class _$CreateAssignmentWrapper extends CreateAssignmentWrapper {
 class CreateAssignmentWrapperBuilder
     implements
         Builder<CreateAssignmentWrapper, CreateAssignmentWrapperBuilder> {
-  _$CreateAssignmentWrapper _$v;
+  _$CreateAssignmentWrapper? _$v;
 
-  CreateAssignmentInfoBuilder _assignment;
+  CreateAssignmentInfoBuilder? _assignment;
   CreateAssignmentInfoBuilder get assignment =>
       _$this._assignment ??= new CreateAssignmentInfoBuilder();
-  set assignment(CreateAssignmentInfoBuilder assignment) =>
+  set assignment(CreateAssignmentInfoBuilder? assignment) =>
       _$this._assignment = assignment;
 
   CreateAssignmentWrapperBuilder() {
@@ -116,8 +116,9 @@ class CreateAssignmentWrapperBuilder
   }
 
   CreateAssignmentWrapperBuilder get _$this {
-    if (_$v != null) {
-      _assignment = _$v.assignment?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _assignment = $v.assignment.toBuilder();
       _$v = null;
     }
     return this;
@@ -125,31 +126,31 @@ class CreateAssignmentWrapperBuilder
 
   @override
   void replace(CreateAssignmentWrapper other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CreateAssignmentWrapper;
   }
 
   @override
-  void update(void Function(CreateAssignmentWrapperBuilder) updates) {
+  void update(void Function(CreateAssignmentWrapperBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CreateAssignmentWrapper build() {
+  CreateAssignmentWrapper build() => _build();
+
+  _$CreateAssignmentWrapper _build() {
     _$CreateAssignmentWrapper _$result;
     try {
       _$result = _$v ??
           new _$CreateAssignmentWrapper._(assignment: assignment.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'assignment';
         assignment.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'CreateAssignmentWrapper', _$failedField, e.toString());
+            r'CreateAssignmentWrapper', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -158,4 +159,4 @@ class CreateAssignmentWrapperBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

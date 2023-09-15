@@ -23,6 +23,7 @@ import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final alertId = '123';
@@ -73,7 +74,7 @@ void main() {
     final actual = await AlertsInteractor().getAlertsForStudent(studentId, false);
 
     verify(api.getAlertsDepaginated(studentId, false)).called(1);
-    expect(actual.alerts, data.reversed.toList()); // Verify that the actual list sorted correctly
+    expect(actual?.alerts, data.reversed.toList()); // Verify that the actual list sorted correctly
   });
 
   test('get alerts for student returns thresholds', () async {
@@ -86,7 +87,7 @@ void main() {
 
     verify(api.getAlertThresholds(studentId, false)).called(1);
     verifyNever(notifier.update(any)); // No call to notifier since we didn't force update
-    expect(actual.thresholds, data); // Verify that the actual list sorted correctly
+    expect(actual?.thresholds, data); // Verify that the actual list sorted correctly
   });
 
   test('updates alert count notifier when forcing refresh', () async {

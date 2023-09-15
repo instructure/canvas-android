@@ -19,17 +19,17 @@ import 'package:test/test.dart';
 class ConversationListPage {
   /// Since subjects/messages/contexts can be pretty complex, allow for portions of those
   /// fields to be verified.
-  static Future<void> verifyConversationDataDisplayed(FlutterDriver driver, int index,
-      {List<String> partialSubjects: null,
-      List<String> partialBodies: null,
-      List<String> partialContexts: null}) async {
+  static Future<void> verifyConversationDataDisplayed(FlutterDriver? driver, int index,
+      {List<String>? partialSubjects = null,
+      List<String>? partialBodies = null,
+      List<String>? partialContexts = null}) async {
     // Validate any specified partial subjects
     if (partialSubjects != null) {
       var finder = find.byValueKey('conversation_subject_$index');
-      await driver.scrollIntoView(finder);
-      var fullText = await driver.getText(finder);
+      await driver?.scrollIntoView(finder);
+      var fullText = await driver?.getText(finder);
       for (String partialSubject in partialSubjects) {
-        expect(fullText.toLowerCase().contains(partialSubject.toLowerCase()), true,
+        expect(fullText?.toLowerCase().contains(partialSubject.toLowerCase()), true,
             reason: "Message subject \"$partialSubject\" in \"$fullText\"");
       }
     }
@@ -37,10 +37,10 @@ class ConversationListPage {
     // Validate any specified partial contexts
     if (partialContexts != null) {
       var finder = find.byValueKey('conversation_context_$index');
-      await driver.scrollIntoView(finder);
-      var fullText = await driver.getText(finder);
+      await driver?.scrollIntoView(finder);
+      var fullText = await driver?.getText(finder);
       for (String partialContext in partialContexts) {
-        expect(fullText.toLowerCase().contains(partialContext.toLowerCase()), true,
+        expect(fullText?.toLowerCase().contains(partialContext.toLowerCase()), true,
             reason: "Message context \"$partialContext\" in \"$fullText\"");
       }
     }
@@ -48,25 +48,25 @@ class ConversationListPage {
     // Validate any specified partial messages bodies
     if (partialBodies != null) {
       var finder = find.byValueKey('conversation_message_$index');
-      await driver.scrollIntoView(finder);
-      var fullText = await driver.getText(finder);
+      await driver?.scrollIntoView(finder);
+      var fullText = await driver?.getText(finder);
       for (String partialMessage in partialBodies) {
-        expect(fullText.toLowerCase().contains(partialMessage.toLowerCase()), true,
+        expect(fullText?.toLowerCase().contains(partialMessage.toLowerCase()), true,
             reason: "Message body \"$partialMessage\" in \"$fullText\"");
       }
     }
   }
 
   /// Gets you to the CreateConversationScreen
-  static Future<void> initiateCreateEmail(FlutterDriver driver, Course forCourse) async {
-    await driver.tap(find.byType('FloatingActionButton'));
-    await driver.tap(find.byValueKey('course_list_course_${forCourse.id}'));
+  static Future<void> initiateCreateEmail(FlutterDriver? driver, Course forCourse) async {
+    await driver?.tap(find.byType('FloatingActionButton'));
+    await driver?.tap(find.byValueKey('course_list_course_${forCourse.id}'));
     await Future.delayed(const Duration(seconds: 1)); // Allow time for population
   }
 
-  static Future<void> selectMessage(FlutterDriver driver, int index) async {
+  static Future<void> selectMessage(FlutterDriver? driver, int index) async {
     var finder = find.byValueKey('conversation_subject_$index');
-    await driver.scrollIntoView(finder);
-    await driver.tap(finder);
+    await driver?.scrollIntoView(finder);
+    await driver?.tap(finder);
   }
 }

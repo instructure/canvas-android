@@ -60,8 +60,8 @@ class QRLoginTutorialScreenInteractor {
 
 class BarcodeScanResult {
   final bool isSuccess;
-  final QRError errorType;
-  final String result;
+  final QRError? errorType;
+  final String? result;
 
   BarcodeScanResult(this.isSuccess, {this.errorType = null, this.result = null});
 }

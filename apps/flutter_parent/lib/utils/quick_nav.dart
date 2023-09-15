@@ -22,28 +22,28 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class QuickNav {
   @Deprecated('Deprecated in favor of using PushRoute etc, end goal is for all routes to go through PandaRouter')
-  Future<T> push<T extends Object>(BuildContext context, Widget widget) {
+  Future<dynamic> push<T extends Object>(BuildContext context, Widget widget) {
     _logShow(widget);
-    return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget));
+    return Navigator.of(context).push<T>(MaterialPageRoute(builder: (context) => widget));
   }
 
   /// Default method for pushing screens, uses material transition
-  Future<T> pushRoute<T extends Object>(BuildContext context, String route,
+  Future<dynamic> pushRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
     return PandaRouter.router.navigateTo(context, route, transition: transitionType);
   }
 
-  Future<T> replaceRoute<T extends Object>(BuildContext context, String route,
+  Future<dynamic> replaceRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
     return PandaRouter.router.navigateTo(context, route, transition: transitionType, replace: true);
   }
 
-  Future<T> pushRouteAndClearStack<T extends Object>(BuildContext context, String route,
+  Future<dynamic> pushRouteAndClearStack<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
     return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true);
   }
 
-  Future<T> pushRouteWithCustomTransition<T extends Object>(BuildContext context, String route, bool clearStack,
+  Future<dynamic> pushRouteWithCustomTransition<T extends Object>(BuildContext context, String route, bool clearStack,
       Duration transitionDuration, RouteTransitionsBuilder transitionsBuilder,
       {TransitionType transitionType = TransitionType.custom}) {
     return PandaRouter.router.navigateTo(context, route,
@@ -64,12 +64,12 @@ class QuickNav {
     locator<Analytics>().setCurrentScreen(widgetName);
   }
 
-  Future<T> showDialog<T>({
-    @required BuildContext context,
+  Future<T?> showDialog<T>({
+    required BuildContext context,
     bool barrierDismissible = true,
-    WidgetBuilder builder,
+    required WidgetBuilder builder,
     bool useRootNavigator = true,
-    RouteSettings routeSettings,
+    RouteSettings? routeSettings,
   }) =>
       Material.showDialog(
         context: context,

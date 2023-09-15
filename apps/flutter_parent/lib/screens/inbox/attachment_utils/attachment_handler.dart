@@ -26,17 +26,17 @@ enum AttachmentUploadStage { CREATED, UPLOADING, FAILED, FINISHED }
 class AttachmentHandler with ChangeNotifier {
   AttachmentHandler(this._file);
 
-  final File _file;
-  Function(AttachmentUploadStage) onStageChange;
-  double progress = null;
-  Attachment attachment;
+  final File? _file;
+  Function(AttachmentUploadStage)? onStageChange;
+  double? progress = null;
+  Attachment? attachment;
   AttachmentUploadStage _stage = AttachmentUploadStage.CREATED;
 
   AttachmentUploadStage get stage => _stage;
 
   set stage(AttachmentUploadStage stage) {
     _stage = stage;
-    if (onStageChange != null) onStageChange(_stage);
+    if (onStageChange != null) onStageChange!(_stage);
   }
 
   String get displayName => attachment?.displayName ?? attachment?.filename ?? basename(_file?.path ?? '');
@@ -51,7 +51,7 @@ class AttachmentHandler with ChangeNotifier {
 
     try {
       // Upload the file and monitor progress
-      attachment = await locator<FileApi>().uploadConversationFile(_file, (current, total) {
+      attachment = await locator<FileApi>().uploadConversationFile(_file!, (current, total) {
         progress = total == -1 ? null : current.toDouble() / total;
         notifyListeners();
       });
@@ -85,11 +85,14 @@ class AttachmentHandler with ChangeNotifier {
         pathProvider.getExternalStorageDirectory(),
       ]);
 
-      var dirPaths = dirs.map((it) => it.absolute.path);
-      var filePath = _file.absolute.path;
+      var dirPaths = dirs.map((it) => it?.absolute.path);
+      var filePath = _file?.absolute.path;
 
-      if (dirPaths.any((it) => filePath.startsWith(it))) {
-        await _file.delete();
+      if (dirPaths.any((it) {
+        if (it == null) return false;
+          return (filePath?.startsWith(it) == true);
+      })) {
+        await _file?.delete();
       }
     } on Error catch (e) {
       print('Unable to clean up attachment source file');
@@ -101,8 +104,8 @@ class AttachmentHandler with ChangeNotifier {
   Future<void> deleteAttachment() async {
     if (attachment == null) return;
     try {
-      await locator<FileApi>().deleteFile(attachment.id);
-      print('Deleted attachment "${attachment.displayName}"');
+      await locator<FileApi>().deleteFile(attachment!.id);
+      print('Deleted attachment "${attachment!.displayName}"');
     } on Error catch (e) {
       print('Unable to delete attachment');
       print(e.stackTrace);

@@ -22,27 +22,26 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class SplashScreen extends StatefulWidget {
-  final String qrLoginUrl;
+  final String? qrLoginUrl;
 
-  SplashScreen({this.qrLoginUrl, Key key}) : super(key: key);
+  SplashScreen({this.qrLoginUrl, super.key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  Future<SplashScreenData> _dataFuture;
-  Future<int> _cameraFuture;
+  Future<SplashScreenData?>? _dataFuture;
+  Future<int>? _cameraFuture;
 
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
-  AnimationController _controller;
-  Animation<double> _animation;
-  String _route;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  late String _route;
 
   @override
   void initState() {
@@ -79,9 +78,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         backgroundColor: Theme.of(context).primaryColor,
         body: FutureBuilder(
           future: _dataFuture,
-          builder: (BuildContext context, AsyncSnapshot<SplashScreenData> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<SplashScreenData?> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.isObserver || snapshot.data.canMasquerade) {
+              if (snapshot.data!.isObserver || snapshot.data!.canMasquerade) {
                 _navigateToDashboardOrAup();
               } else {
                 // User is not an observer and cannot masquerade. Show the not-a-parent screen.
@@ -130,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     locator<SplashScreenInteractor>()
         .isTermsAcceptanceRequired()
         .then((aupRequired) => {
-      if (aupRequired) {
+      if (aupRequired == true) {
         _navigate(PandaRouter.aup())
       }
       else {
@@ -186,15 +185,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
 class _CircleClipTransition extends AnimatedWidget {
   const _CircleClipTransition({
-    Key key,
-    @required Animation<double> scale,
+    required Animation<double> scale,
     this.child,
-  })  : assert(scale != null),
-        super(key: key, listenable: scale);
+    super.key
+  })  : super(listenable: scale);
 
-  Animation<double> get animation => listenable;
+  Animation<double> get animation => listenable as Animation<double>;
 
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {

@@ -25,12 +25,10 @@ abstract class FileUploadConfig implements Built<FileUploadConfig, FileUploadCon
   static Serializer<FileUploadConfig> get serializer => _$fileUploadConfigSerializer;
 
   @BuiltValueField(wireName: 'upload_url')
-  @nullable
-  String get url;
+  String? get url;
 
   @BuiltValueField(wireName: 'upload_params')
-  @nullable
-  BuiltMap<String, String> get params;
+  BuiltMap<String, String>? get params;
 
   FileUploadConfig._();
   factory FileUploadConfig([void Function(FileUploadConfigBuilder) updates]) = _$FileUploadConfig;

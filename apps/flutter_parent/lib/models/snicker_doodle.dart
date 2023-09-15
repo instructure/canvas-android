@@ -16,11 +16,11 @@ import 'package:flutter/foundation.dart';
 
 class SnickerDoodle {
   const SnickerDoodle({
-    @required this.title,
-    @required this.subtitle,
-    @required this.username,
-    @required this.password,
-    @required this.domain,
+    required this.title,
+    required this.subtitle,
+    required this.username,
+    required this.password,
+    required this.domain,
   });
 
   final String title;

@@ -27,27 +27,24 @@ abstract class LockInfo implements Built<LockInfo, LockInfoBuilder> {
 
   factory LockInfo([void Function(LockInfoBuilder) updates]) = _$LockInfo;
 
-  @nullable
   @BuiltValueField(wireName: 'context_module')
-  LockedModule get contextModule;
+  LockedModule? get contextModule;
 
-  @nullable
   @BuiltValueField(wireName: 'unlock_at')
-  DateTime get unlockAt;
+  DateTime? get unlockAt;
 
-  @nullable
   @BuiltValueField(serialize: false)
-  List<String> get modulePrerequisiteNames;
+  List<String>? get modulePrerequisiteNames;
 
   @BuiltValueField(serialize: false)
   bool get isEmpty {
     return (contextModule?.name == null &&
-        (modulePrerequisiteNames == null || modulePrerequisiteNames.length == 0) &&
+        (modulePrerequisiteNames == null || modulePrerequisiteNames?.length == 0) &&
         unlockAt == null);
   }
 
   @BuiltValueField(serialize: false)
   bool get hasModuleName {
-    return contextModule?.name != null && contextModule.name.isNotEmpty && contextModule.name != 'null';
+    return contextModule?.name != null && contextModule?.name?.isNotEmpty == true && contextModule?.name != 'null';
   }
 }

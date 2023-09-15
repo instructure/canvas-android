@@ -44,7 +44,7 @@ class CalendarFilterDb {
         columnFilters: joinFilters(data.filters.toSet()),
       };
 
-  static CalendarFilter fromMap(Map<String, dynamic> map) => CalendarFilter((b) => b
+  static CalendarFilter fromMap(Map<dynamic, dynamic> map) => CalendarFilter((b) => b
     ..id = map[columnId]
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
@@ -76,18 +76,18 @@ class CalendarFilterDb {
     }
   }
 
-  static String joinFilters(Set<String> filters) {
+  static String joinFilters(Set<String>? filters) {
     if (filters == null || filters.isEmpty) return '';
     return filters.join('|');
   }
 
-  static Set<String> splitFilters(String joinedFilters) {
+  static Set<String> splitFilters(String? joinedFilters) {
     if (joinedFilters == null || joinedFilters.isEmpty) return {};
     return joinedFilters.split('|').toSet();
   }
 
-  Future<CalendarFilter> insertOrUpdate(CalendarFilter data) async {
-    CalendarFilter existing = await getByObserveeId(data.userDomain, data.userId, data.observeeId);
+  Future<CalendarFilter?> insertOrUpdate(CalendarFilter data) async {
+    CalendarFilter? existing = await getByObserveeId(data.userDomain, data.userId, data.observeeId);
     if (existing == null) {
       var id = await db.insert(tableName, toMap(data));
       return getById(id);
@@ -98,13 +98,13 @@ class CalendarFilterDb {
     }
   }
 
-  Future<CalendarFilter> getById(int id) async {
+  Future<CalendarFilter?> getById(int id) async {
     List<Map> maps = await db.query(tableName, columns: allColumns, where: '$columnId = ?', whereArgs: [id]);
     if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 
-  Future<CalendarFilter> getByObserveeId(String userDomain, String userId, String observeeId) async {
+  Future<CalendarFilter?> getByObserveeId(String userDomain, String userId, String observeeId) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,
@@ -119,7 +119,7 @@ class CalendarFilterDb {
     return db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<int> deleteAllForUser(String userDomain, String userId) {
+  Future<int> deleteAllForUser(String? userDomain, String? userId) {
     return db.delete(
       tableName,
       where: '$columnUserDomain = ? AND $columnUserId = ?',

@@ -25,12 +25,13 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   // Setup
-  final eventsApi = _MockEventsApi();
-  final reminderDb = _MockReminderDb();
-  final notificationUtil = _MockNotificationUtil();
+  final eventsApi = MockCalendarEventsApi();
+  final reminderDb = MockReminderDb();
+  final notificationUtil = MockNotificationUtil();
   final login = Login((b) => b
     ..domain = 'test-domain'
     ..user = User((u) => u..id = '123').toBuilder());
@@ -131,9 +132,3 @@ void main() {
     verify(notificationUtil.scheduleReminder(l10n, event.title, formattedDate, savedReminder));
   });
 }
-
-class _MockEventsApi extends Mock implements CalendarEventsApi {}
-
-class _MockReminderDb extends Mock implements ReminderDb {}
-
-class _MockNotificationUtil extends Mock implements NotificationUtil {}

@@ -46,31 +46,32 @@ import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboard_interactor.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({Key key, this.students, this.startingPage, this.deepLinkParams}) : super(key: key);
+  DashboardScreen({this.students, this.startingPage, this.deepLinkParams, super.key});
 
-  final List<User> students;
+  final List<User>? students;
 
   // Used when deep linking into the courses, calendar, or alert screen
-  final DashboardContentScreens startingPage;
-  final Map<String, Object> deepLinkParams;
+  final DashboardContentScreens? startingPage;
+  final Map<String, Object>? deepLinkParams;
 
   @override
   State<StatefulWidget> createState() => DashboardState();
 }
 
 class DashboardState extends State<DashboardScreen> {
-  GlobalKey<ScaffoldState> scaffoldKey;
+  late GlobalKey<ScaffoldState> scaffoldKey;
   DashboardInteractor _interactor = locator<DashboardInteractor>();
 
   // Dashboard State
   List<User> _students = [];
-  User _self;
+  late User? _self;
 
   bool _studentsLoading = false;
   bool _selfLoading = false;
@@ -79,18 +80,18 @@ class DashboardState extends State<DashboardScreen> {
   // ignore: unused_field
   bool _studentsError = false;
 
-  User _selectedStudent;
-  DashboardContentScreens _currentIndex;
+  User? _selectedStudent;
+  late DashboardContentScreens _currentIndex;
 
   bool expand = false;
 
-  SelectedStudentNotifier _selectedStudentNotifier;
-  CalendarTodayNotifier _showTodayNotifier;
+  late SelectedStudentNotifier _selectedStudentNotifier;
+  late CalendarTodayNotifier _showTodayNotifier;
 
   @visibleForTesting
-  Map<String, Object> currentDeepLinkParams;
+  Map<String, Object>? currentDeepLinkParams;
 
-  Function() _onStudentAdded;
+  late Function() _onStudentAdded;
 
   @override
   void initState() {
@@ -101,13 +102,13 @@ class DashboardState extends State<DashboardScreen> {
     _showTodayNotifier = CalendarTodayNotifier();
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
-      _students = widget.students;
-      String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
+      _students = widget.students!;
+      String? selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
       _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
-      _updateStudentColor(_selectedStudent.id);
-      _selectedStudentNotifier.value = _selectedStudent;
+      _updateStudentColor(_selectedStudent!.id);
+      _selectedStudentNotifier.value = _selectedStudent!;
       ApiPrefs.setCurrentStudent(_selectedStudent);
-      _interactor.getAlertCountNotifier().update(_selectedStudent.id);
+      _interactor.getAlertCountNotifier().update(_selectedStudent!.id);
     } else {
       _loadStudents();
     }
@@ -122,6 +123,8 @@ class DashboardState extends State<DashboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       RatingDialog.asDialog(context);
     });
+
+    _interactor.requestNotificationPermission();
   }
 
   @override
@@ -132,7 +135,7 @@ class DashboardState extends State<DashboardScreen> {
 
   void _updateStudentColor(String studentId) {
     WidgetsBinding.instance.scheduleFrameCallback((_) {
-      ParentTheme.of(context).setSelectedStudent(studentId);
+      ParentTheme.of(context)?.setSelectedStudent(studentId);
     });
   }
 
@@ -143,7 +146,7 @@ class DashboardState extends State<DashboardScreen> {
     });
 
     _interactor.getSelf(app: ParentApp.of(context)).then((user) {
-      _self = user;
+      _self = user!;
       setState(() {
         _selfLoading = false;
       });
@@ -162,16 +165,16 @@ class DashboardState extends State<DashboardScreen> {
     });
 
     _interactor.getStudents().then((users) {
-      _students = users;
+      _students = users!;
 
       if (_selectedStudent == null && _students.isNotEmpty) {
         setState(() {
-          String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
+          String? selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
           _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
-          _selectedStudentNotifier.value = _selectedStudent;
-          _updateStudentColor(_selectedStudent.id);
+          _selectedStudentNotifier.value = _selectedStudent!;
+          _updateStudentColor(_selectedStudent!.id);
           ApiPrefs.setCurrentStudent(_selectedStudent);
-          _interactor.getAlertCountNotifier().update(_selectedStudent.id);
+          _interactor.getAlertCountNotifier().update(_selectedStudent!.id);
         });
       }
 
@@ -196,7 +199,7 @@ class DashboardState extends State<DashboardScreen> {
     _interactor.getStudents(forceRefresh: true).then((users) {
       setState(() {
         print('users: $users');
-        _students = users;
+        _students = users!;
         _studentsLoading = false;
       });
     }).catchError((error) {
@@ -253,24 +256,26 @@ class DashboardState extends State<DashboardScreen> {
                   child: _appBarStudents(_students, model.value),
                 ),
                 centerTitle: true,
-                bottom: ParentTheme.of(context).appBarDivider(),
+                bottom: ParentTheme.of(context)?.appBarDivider(),
                 leading: IconButton(
                   icon: WidgetBadge(
                     Icon(
                       Icons.menu,
-                      color: Theme.of(context).primaryIconTheme.color,
                       key: Key("drawer_menu"),
                     ),
                     countListenable: _interactor.getInboxCountNotifier(),
                     options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
                   ),
-                  onPressed: () => scaffoldKey.currentState.openDrawer(),
+                  onPressed: () => scaffoldKey.currentState?.openDrawer(),
                   tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               ),
             ),
-            drawer: Drawer(
-              child: SafeArea(child: _navDrawer(_self)),
+            drawer: SafeArea(
+              child: Drawer(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                child: SafeArea(child: _navDrawer(_self)),
+              ),
             ),
             body: Column(children: [
               StudentExpansionWidget(
@@ -291,7 +296,7 @@ class DashboardState extends State<DashboardScreen> {
                       preferredSize: Size.fromHeight(1),
                       child: Divider(
                           height: 1,
-                          color: ParentTheme.of(context).isDarkMode
+                          color: ParentTheme.of(context)?.isDarkMode == true
                               ? ParentColors.oxford
                               : ParentColors.appBarDividerLight),
                     ),
@@ -300,13 +305,13 @@ class DashboardState extends State<DashboardScreen> {
               ),
               Expanded(child: _currentPage())
             ]),
-            bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
+            bottomNavigationBar: ParentTheme.of(context)?.bottomNavigationDivider(
               _students.isEmpty
                   ? Container()
                   : BottomNavigationBar(
-                      unselectedItemColor: ParentTheme.of(context).onSurfaceColor,
-                      selectedFontSize: 10,
-                      unselectedFontSize: 10,
+                      unselectedItemColor: ParentTheme.of(context)?.onSurfaceColor,
+                      selectedFontSize: 12,
+                      unselectedFontSize: 12,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       items: _bottomNavigationBarItems(),
                       currentIndex: this._currentIndex.index,
@@ -319,7 +324,7 @@ class DashboardState extends State<DashboardScreen> {
     );
   }
 
-  Widget _appBarStudents(List<User> students, User selectedStudent) {
+  Widget _appBarStudents(List<User> students, User? selectedStudent) {
     if (students.isEmpty) {
       // No students yet, we are either still loading, or there was an error
       if (_studentsLoading) {
@@ -330,7 +335,6 @@ class DashboardState extends State<DashboardScreen> {
         return Center(
           child: Text(
             L10n(context).noStudents,
-            style: Theme.of(context).primaryTextTheme.headline6,
           ),
         );
     }
@@ -344,16 +348,18 @@ class DashboardState extends State<DashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Avatar(selectedStudent.avatarUrl,
-                  name: selectedStudent.shortName, radius: 24, key: Key("student_expansion_touch_target")),
+              Avatar(selectedStudent?.avatarUrl,
+                  name: selectedStudent?.shortName ?? '',
+                  radius: 24,
+                  key: Key("student_expansion_touch_target")),
               SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.subtitle1),
+                  UserName.fromUserShortName(selectedStudent!, style: TextStyle(color: Theme.of(context).primaryIconTheme.color ?? Colors.white)),
                   SizedBox(width: 6),
-                  DropdownArrow(rotate: expand),
+                  DropdownArrow(rotate: expand, color: Theme.of(context).primaryIconTheme.color ?? Colors.white),
                 ],
               )
             ],
@@ -375,10 +381,7 @@ class DashboardState extends State<DashboardScreen> {
           light: 'assets/svg/bottom-nav/courses-light-selected.svg',
           dark: 'assets/svg/bottom-nav/courses-dark-selected.svg',
         ),
-        title: Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: Text(L10n(context).coursesLabel),
-        ),
+        label: L10n(context).coursesLabel,
       ),
       BottomNavigationBarItem(
         icon: _navBarIcon(
@@ -390,10 +393,7 @@ class DashboardState extends State<DashboardScreen> {
           light: 'assets/svg/bottom-nav/calendar-light-selected.svg',
           dark: 'assets/svg/bottom-nav/calendar-dark-selected.svg',
         ),
-        title: Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: Text(L10n(context).calendarLabel),
-        ),
+        label: L10n(context).calendarLabel,
       ),
       BottomNavigationBarItem(
         icon: WidgetBadge(
@@ -415,48 +415,48 @@ class DashboardState extends State<DashboardScreen> {
           options: BadgeOptions(includeBorder: true),
           key: Key('alerts-count'),
         ),
-        title: Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: Text(L10n(context).alertsLabel),
-        ),
+        label: L10n(context).alertsLabel
       ),
     ];
   }
 
-  Widget _navBarIcon({@required String light, @required String dark, bool active: false}) {
-    bool darkMode = ParentTheme.of(context).isDarkMode;
+  Widget _navBarIcon({required String light, required String dark, bool active = false}) {
+    bool darkMode = ParentTheme.of(context)?.isDarkMode ?? false;
     return SvgPicture.asset(
       darkMode ? dark : light,
-      color: active? ParentTheme.of(context).studentColor : null,
+      color: active? ParentTheme.of(context)?.studentColor : null,
       width: 24,
       height: 24,
     );
   }
 
-  Widget _navDrawer(User user) {
+  Widget _navDrawer(User? user) {
     if (_selfLoading) {
       // Still loading...
       return LoadingIndicator();
     }
 
-    return ListTileTheme(
-      style: ListTileStyle.list,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // Header
-        _navDrawerHeader(user),
-        Divider(),
-        // Tiles (Inbox, Manage Students, Sign Out, etc)
-        Expanded(
-          child: _navDrawerItemsList(),
-        ),
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: ListTileTheme(
+        style: ListTileStyle.list,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          // Header
+          _navDrawerHeader(user),
+          Divider(),
+          // Tiles (Inbox, Manage Students, Sign Out, etc)
+          Expanded(
+            child: _navDrawerItemsList(),
+          ),
 
-        // App version
-        if (ApiPrefs.getCurrentLogin()?.canMasquerade == true && !ApiPrefs.isMasquerading())
-          _navDrawerActAsUser(),
-        if (ApiPrefs.isMasquerading())
-          _navDrawerStopActingAsUser(),
-        _navDrawerAppVersion(),
-      ]),
+          // App version
+          if (ApiPrefs.getCurrentLogin()?.canMasquerade == true && !ApiPrefs.isMasquerading())
+            _navDrawerActAsUser(),
+          if (ApiPrefs.isMasquerading())
+            _navDrawerStopActingAsUser(),
+          _navDrawerAppVersion(),
+        ]),
+      ),
     );
   }
 
@@ -486,13 +486,13 @@ class DashboardState extends State<DashboardScreen> {
       case DashboardContentScreens.Calendar:
         _page = CalendarScreen(
           startDate: currentDeepLinkParams != null
-              ? (currentDeepLinkParams.containsKey(CalendarScreen.startDateKey)
-                  ? currentDeepLinkParams[CalendarScreen.startDateKey] as DateTime
+              ? (currentDeepLinkParams?.containsKey(CalendarScreen.startDateKey) == true
+                  ? currentDeepLinkParams![CalendarScreen.startDateKey] as DateTime?
                   : null)
               : null,
           startView: currentDeepLinkParams != null
-              ? (currentDeepLinkParams.containsKey(CalendarScreen.startViewKey)
-                  ? currentDeepLinkParams[CalendarScreen.startViewKey] as CalendarView
+              ? (currentDeepLinkParams?.containsKey(CalendarScreen.startViewKey) == true
+                  ? currentDeepLinkParams![CalendarScreen.startViewKey] as CalendarView
                   : null)
               : null,
         );
@@ -513,7 +513,7 @@ class DashboardState extends State<DashboardScreen> {
   }
 
   _showOldReminderMessage() async {
-    if (await _interactor.shouldShowOldReminderMessage()) {
+    if ((await _interactor.shouldShowOldReminderMessage()) == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
@@ -523,7 +523,7 @@ class DashboardState extends State<DashboardScreen> {
                 title: Text(L10n(context).oldReminderMessageTitle),
                 content: Text(L10n(context).oldReminderMessage),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Text(L10n(context).ok),
                     onPressed: () {
                       locator<Analytics>().logEvent(AnalyticsEventConstants.VIEWED_OLD_REMINDER_MESSAGE);
@@ -546,10 +546,8 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToManageStudents(context) async {
     // Close the drawer, then push the Manage Children screen in
     Navigator.of(context).pop();
-    var _addedStudentFuture = await locator<QuickNav>().push(context, ManageStudentsScreen(_students));
-    if (_addedStudentFuture) {
-      _addStudent();
-    }
+    await locator<QuickNav>().push(context, ManageStudentsScreen(_students));
+    _addStudent();
   }
 
   _navigateToSettings(context) {
@@ -566,11 +564,10 @@ class DashboardState extends State<DashboardScreen> {
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     try {
-      await ParentTheme.of(context).setSelectedStudent(null);
-      await locator<Analytics>()
-          .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
+      await ParentTheme.of(context)?.setSelectedStudent(null);
+      locator<Analytics>().logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
       await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
-      MasqueradeUI.of(context).refresh();
+      MasqueradeUI.of(context)?.refresh();
       locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
       await FeaturesUtils.performLogout();
     } catch (e) {
@@ -579,22 +576,22 @@ class DashboardState extends State<DashboardScreen> {
     }
   }
 
-  _navDrawerHeader(User user) => Column(
+  _navDrawerHeader(User? user) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: const EdgeInsets.fromLTRB(24, 16, 0, 8),
-        child: Avatar(user.avatarUrl, name: user.shortName, radius: 40),
+        child: Avatar(user?.avatarUrl, name: user?.shortName, radius: 40),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: UserName.fromUser(user, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+        child: UserName.fromUser(user!, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
       ),
       Padding(
         padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
         child: Text(
-          user?.primaryEmail ?? '',
-          style: Theme.of(context).textTheme.caption,
+          user.primaryEmail ?? '',
+          style: Theme.of(context).textTheme.bodySmall,
           overflow: TextOverflow.fade,
         ),
       )
@@ -619,7 +616,7 @@ class DashboardState extends State<DashboardScreen> {
 
   // Create the inbox tile with an infinite badge count, since there's lots of space we don't need to limit the count to 99+
   _navDrawerInbox() => ListTile(
-        title: Text(L10n(context).inbox),
+        title: Text(L10n(context).inbox, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToInbox(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -633,7 +630,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerManageStudents() => ListTile(
-        title: Text(L10n(context).manageStudents),
+        title: Text(L10n(context).manageStudents, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToManageStudents(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -642,7 +639,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerSettings() => ListTile(
-        title: Text(L10n(context).settings),
+        title: Text(L10n(context).settings, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToSettings(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -651,7 +648,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerHelp() => ListTile(
-        title: Text(L10n(context).help),
+        title: Text(L10n(context).help, style: Theme.of(context).textTheme.titleMedium),
         onTap: () => _navigateToHelp(context),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -660,7 +657,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerLogOut() => ListTile(
-        title: Text(L10n(context).logOut),
+        title: Text(L10n(context).logOut, style: Theme.of(context).textTheme.titleMedium),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: SvgPicture.asset('assets/svg/ic_logout.svg', height: 24, width: 24,),
@@ -672,12 +669,12 @@ class DashboardState extends State<DashboardScreen> {
               return AlertDialog(
                 content: Text(L10n(context).logoutConfirmation),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Text(
                         MaterialLocalizations.of(context).cancelButtonLabel),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
-                  FlatButton(
+                  TextButton(
                     child:
                         Text(MaterialLocalizations.of(context).okButtonLabel),
                     onPressed: () => _performLogOut(context),
@@ -690,7 +687,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerSwitchUsers() => ListTile(
-        title: Text(L10n(context).switchUsers),
+        title: Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.titleMedium),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: SvgPicture.asset('assets/svg/ic_change_user.svg', height: 24, width: 24),
@@ -703,7 +700,7 @@ class DashboardState extends State<DashboardScreen> {
           padding: const EdgeInsets.only(left: 8.0),
           child: Icon(CanvasIcons.masquerade),
         ),
-        title: Text(L10n(context).actAsUser),
+        title: Text(L10n(context).actAsUser, style: Theme.of(context).textTheme.titleMedium),
         onTap: () {
           Navigator.of(context).pop();
           locator<QuickNav>().push(context, MasqueradeScreen());
@@ -715,10 +712,10 @@ class DashboardState extends State<DashboardScreen> {
           padding: const EdgeInsets.only(left: 8.0),
           child: Icon(CanvasIcons.masquerade),
         ),
-        title: Text(L10n(context).stopActAsUser),
+        title: Text(L10n(context).stopActAsUser, style: Theme.of(context).textTheme.titleMedium),
         onTap: () {
           Navigator.of(context).pop();
-          MasqueradeUI.showMasqueradeCancelDialog(Navigator.of(context).widget.key);
+          MasqueradeUI.showMasqueradeCancelDialog(GlobalKey(), context);
         },
       );
 
@@ -732,8 +729,8 @@ class DashboardState extends State<DashboardScreen> {
                 future: PackageInfo.fromPlatform(),
                 builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
-                    L10n(context).appVersion(snapshot.data?.version),
-                    style: Theme.of(context).textTheme.subtitle2,
+                    L10n(context).appVersion(snapshot.data?.version ?? ''),
+                    style: Theme.of(context).textTheme.titleSmall,
                   );
                 },
               ),

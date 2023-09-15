@@ -62,9 +62,9 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..finalGrade = '';
 
   static GradeCellData forSubmission(
-    Course course,
-    Assignment assignment,
-    Submission submission,
+    Course? course,
+    Assignment? assignment,
+    Submission? submission,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
@@ -73,13 +73,13 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
 
     // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' or restricted grading type
     final restricted = restrictQuantitativeData &&
-        assignment.isGradingTypeQuantitative() &&
-        (course.gradingSchemeItems.isEmpty || assignment?.pointsPossible == 0) &&
+        assignment?.isGradingTypeQuantitative() == true &&
+        (course?.gradingSchemeItems.isEmpty == true || assignment?.pointsPossible == 0) &&
         !excused;
 
     if (assignment == null ||
         submission == null ||
-        (submission?.submittedAt == null && !excused && submission?.grade == null) ||
+        (submission.submittedAt == null && !excused && submission.grade == null) ||
         assignment.gradingType == GradingType.notGraded ||
         restricted) {
       return GradeCellData();
@@ -89,13 +89,13 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     if (submission.submittedAt != null && submission.grade == null && !excused) {
       return GradeCellData((b) => b
         ..state = GradeCellState.submitted
-        ..submissionText = submission.submittedAt.l10nFormat(
+        ..submissionText = submission.submittedAt!.l10nFormat(
           l10n.submissionStatusSuccessSubtitle,
           dateFormat: DateFormat.MMMMd(supportedDateLocale),
         ));
     }
 
-    var accentColor = theme.accentColor;
+    var accentColor = theme.colorScheme.secondary;
 
     var pointsPossibleText = NumberFormat.decimalPattern().format(assignment.pointsPossible);
 
@@ -132,7 +132,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     var grade = assignment.gradingType != GradingType.points ? submission.grade ?? '' : '';
 
     if (restrictQuantitativeData && assignment.isGradingTypeQuantitative()) {
-      grade = course.convertScoreToLetterGrade(submission.score, assignment.pointsPossible);
+      grade = course?.convertScoreToLetterGrade(submission.score, assignment.pointsPossible) ?? '';
     }
 
     // Screen reader fails on letter grades with a minus (e.g. 'A-'), so we replace the dash with the word 'minus'
@@ -147,7 +147,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
       grade = ''; // Grade will be shown in the 'final grade' text
       var pointsDeducted = NumberFormat.decimalPattern().format(submission.pointsDeducted ?? 0.0);
       latePenalty = l10n.latePenalty(pointsDeducted);
-      finalGrade = l10n.finalGrade(submission.grade);
+      finalGrade = l10n.finalGrade(submission.grade ?? grade);
     }
 
     return restrictQuantitativeData

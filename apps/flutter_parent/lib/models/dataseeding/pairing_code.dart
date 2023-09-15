@@ -26,9 +26,12 @@ abstract class PairingCode implements Built<PairingCode, PairingCodeBuilder> {
 
   @BuiltValueField(wireName: "user_id")
   String get userId;
+
   String get code;
+
   @BuiltValueField(wireName: "expires_at")
   String get expiresAt;
+
   @BuiltValueField(wireName: "workflow_state")
   String get workflowState;
 

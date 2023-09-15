@@ -42,12 +42,16 @@ class MethodChannelEncryptedSharedPreferencesStore extends EncryptedSharedPrefer
   }
 
   @override
-  Future<bool> clear() {
-    return _kChannel.invokeMethod<bool>('clear');
+  Future<bool> clear() async {
+    bool? result = await _kChannel.invokeMethod<bool>('clear');
+    if (result == null) return false;
+    return result;
   }
 
   @override
-  Future<Map<String, Object>> getAll() {
-    return _kChannel.invokeMapMethod<String, Object>('getAll');
+  Future<Map<String, Object>> getAll() async {
+    Map<String, Object>? results = await _kChannel.invokeMapMethod<String, Object>('getAll');
+    if (results == null) return <String, Object>{};
+    return results;
   }
 }
