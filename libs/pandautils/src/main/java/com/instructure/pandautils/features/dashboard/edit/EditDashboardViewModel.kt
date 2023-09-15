@@ -368,9 +368,9 @@ class EditDashboardViewModel @Inject constructor(
             openable = repository.isOpenable(course),
             termTitle = termTitle,
             online = networkStateProvider.isOnline(),
-            actionHandler = ::handleAction,
             availableOffline = availableOffline,
-            enabled = !offlineEnabled || networkStateProvider.isOnline() || availableOffline
+            enabled = !offlineEnabled || networkStateProvider.isOnline() || availableOffline,
+            actionHandler = ::handleAction
         )
     }
 

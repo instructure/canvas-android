@@ -30,9 +30,16 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardDescriptionItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardEnrollmentItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardNoteItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +48,9 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -58,6 +67,7 @@ class EditDashboardViewModelTest {
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val groupManager: GroupManager = mockk(relaxed = true)
     private val repository: EditDashboardRepository = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -68,6 +78,7 @@ class EditDashboardViewModelTest {
 
     @Before
     fun setUp() {
+        every { networkStateProvider.isOnline() } returns true
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
     }
@@ -88,7 +99,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
 
         //Then
@@ -105,7 +116,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } throws IllegalStateException()
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
 
         //Then
@@ -122,7 +133,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns emptyList()
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -132,6 +143,7 @@ class EditDashboardViewModelTest {
         val data = viewModel.data.value?.items ?: emptyList()
         assertEquals(4, data.size)
         assertTrue(data[0] is EditDashboardHeaderViewModel)
+        assertTrue((data[0] as EditDashboardHeaderViewModel).online)
         assertTrue(data[1] is EditDashboardDescriptionItemViewModel)
         assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
         assertTrue(data[3] is EditDashboardCourseItemViewModel)
@@ -147,7 +159,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -157,6 +169,7 @@ class EditDashboardViewModelTest {
         val data = viewModel.data.value?.items ?: emptyList()
         assertEquals(3, data.size)
         assertTrue(data[0] is EditDashboardHeaderViewModel)
+        assertTrue((data[0] as EditDashboardHeaderViewModel).online)
         assertTrue(data[1] is EditDashboardDescriptionItemViewModel)
         assertTrue(data[2] is EditDashboardGroupItemViewModel)
     }
@@ -177,7 +190,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -191,6 +204,41 @@ class EditDashboardViewModelTest {
         val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
         itemViewModel.onFavoriteClick()
         assertTrue(itemViewModel.isFavorite)
+    }
+
+    @Test
+    fun `Don't allow adding to favorites while offline`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        every { networkStateProvider.isOnline() } returns false
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onFavoriteClick()
+
+        //Then
+        assertFalse(itemViewModel.isFavorite)
+
+        val failedEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(failedEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.coursesCannotBeFavoritedOffline, (failedEvent as EditDashboardItemAction.ShowSnackBar).res)
     }
 
     @Test
@@ -209,7 +257,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -238,7 +286,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -267,7 +315,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -301,7 +349,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -337,7 +385,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -374,7 +422,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -410,7 +458,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -445,7 +493,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -475,7 +523,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -505,7 +553,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -532,7 +580,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -591,8 +639,10 @@ class EditDashboardViewModelTest {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
         }
 
+        every { networkStateProvider.isOnline() } returns true
+
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -633,7 +683,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -677,7 +727,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -709,7 +759,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -744,7 +794,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -762,6 +812,234 @@ class EditDashboardViewModelTest {
         val openEvent = viewModel.events.value?.getContentIfNotHandled()
         assert(openEvent is EditDashboardItemAction.ShowSnackBar)
         assertEquals(R.string.unauthorized, (openEvent as EditDashboardItemAction.ShowSnackBar).res)
+    }
+
+    @Test
+    fun `Show note when device is offline and offline is enabled`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { repository.offlineEnabled() } returns true
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val data = viewModel.data.value?.items ?: emptyList()
+        assertEquals(5, data.size)
+        assertTrue(data[0] is EditDashboardNoteItemViewModel)
+        assertTrue(data[1] is EditDashboardHeaderViewModel)
+        assertTrue(data[2] is EditDashboardDescriptionItemViewModel)
+        assertTrue(data[3] is EditDashboardEnrollmentItemViewModel)
+        assertTrue(data[4] is EditDashboardCourseItemViewModel)
+    }
+
+    @Test
+    fun `Remove note when close clicked`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { repository.offlineEnabled() } returns true
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val data = viewModel.data.value?.items ?: emptyList()
+        assertEquals(5, data.size)
+        assertTrue(data[0] is EditDashboardNoteItemViewModel)
+        val note = data[0] as EditDashboardNoteItemViewModel
+        note.onCloseClicked()
+
+        //Then
+        val updatedData = viewModel.data.value?.items ?: emptyList()
+        assertEquals(4, updatedData.size)
+        assertTrue(updatedData[0] is EditDashboardHeaderViewModel)
+        assertTrue(updatedData[1] is EditDashboardDescriptionItemViewModel)
+        assertTrue(updatedData[2] is EditDashboardEnrollmentItemViewModel)
+        assertTrue(updatedData[3] is EditDashboardCourseItemViewModel)
+    }
+
+    @Test
+    fun `Do not show note when device is online and offline is enabled`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { repository.offlineEnabled() } returns true
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val data = viewModel.data.value?.items ?: emptyList()
+        assertEquals(4, data.size)
+        assertTrue(data[0] is EditDashboardHeaderViewModel)
+        assertTrue(data[1] is EditDashboardDescriptionItemViewModel)
+        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+    }
+
+    @Test
+    fun `Do not show note when device is offline and offline is disabled`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { repository.offlineEnabled() } returns false
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val data = viewModel.data.value?.items ?: emptyList()
+        assertEquals(4, data.size)
+        assertTrue(data[0] is EditDashboardHeaderViewModel)
+        assertTrue(data[1] is EditDashboardDescriptionItemViewModel)
+        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+    }
+
+    @Test
+    fun `Create disabled course item when device is offline and course is not synced`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { repository.offlineEnabled() } returns true
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        //Then
+        val data = viewModel.data.value?.items ?: emptyList()
+        assertTrue(data[4] is EditDashboardCourseItemViewModel)
+
+        val courseItem = data[4] as EditDashboardCourseItemViewModel
+        assertFalse(courseItem.enabled)
+        assertFalse(courseItem.availableOffline)
+    }
+
+    @Test
+    fun `Create enabled course item when device is offline and course is synced`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { repository.offlineEnabled() } returns true
+        coEvery { repository.getSyncedCourseIds() } returns setOf(1L)
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        //Then
+        val data = viewModel.data.value?.items ?: emptyList()
+        assertTrue(data[4] is EditDashboardCourseItemViewModel)
+
+        val courseItem = data[4] as EditDashboardCourseItemViewModel
+        assertTrue(courseItem.enabled)
+        assertTrue(courseItem.availableOffline)
+    }
+
+    @Test
+    fun `Create enabled course item that is not available offline when device is online and course is not synced`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { repository.offlineEnabled() } returns true
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        //Then
+        val data = viewModel.data.value?.items ?: emptyList()
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+
+        val courseItem = data[3] as EditDashboardCourseItemViewModel
+        assertTrue(courseItem.enabled)
+        assertFalse(courseItem.availableOffline)
+    }
+
+    @Test
+    fun `Refresh loads items again when device is online`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns true
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        val stateUpdates = mutableListOf<ViewState>()
+        viewModel.state.observeForever {
+            stateUpdates.add(it)
+        }
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.refresh()
+
+        //Then
+        assertTrue(stateUpdates.contains(ViewState.Refresh))
+        coVerify(exactly = 2) { repository.getCourses() }
+    }
+
+    @Test
+    fun `Refresh does not load items again when device is offline`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current Course"))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+        coEvery { repository.getGroups() } returns emptyList()
+        every { networkStateProvider.isOnline() } returns false
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        val stateUpdates = mutableListOf<ViewState>()
+        viewModel.state.observeForever {
+            stateUpdates.add(it)
+        }
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.refresh()
+
+        //Then
+        assertFalse(stateUpdates.contains(ViewState.Refresh))
+        coVerify(exactly = 1) { repository.getCourses() }
     }
 
     private fun createCourse(
