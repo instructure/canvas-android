@@ -279,7 +279,7 @@ object FileUploadUtils {
         } else if (CONTENT_SCHEME.equals(scheme, ignoreCase = true)) {
             mimeType = resolver.getType(uri)
             val fileName = getFileNameFromUri(resolver, uri)
-            val extension = fileName?.substringAfterLast('.')
+            val extension = fileName?.substringAfterLast('.')?.substringBefore(' ')
             if (APPLE_EXTENSIONS_MIME_TYPES.keys.contains(extension)) {
                 mimeType = APPLE_EXTENSIONS_MIME_TYPES[extension]
             }
