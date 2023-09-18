@@ -275,9 +275,6 @@ object FileUploadUtils {
             if (uri.lastPathSegment != null) {
                 val extension = uri.lastPathSegment!!
                 mimeType = getMimeTypeFromFileNameWithExtension(extension)
-                if (APPLE_EXTENSIONS_MIME_TYPES.keys.contains(extension)) {
-                    mimeType = APPLE_EXTENSIONS_MIME_TYPES[extension]
-                }
             }
         } else if (CONTENT_SCHEME.equals(scheme, ignoreCase = true)) {
             mimeType = resolver.getType(uri)
