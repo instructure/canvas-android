@@ -297,7 +297,12 @@ object FileUploadUtils {
         if (index != -1) {
             ext = fileNameWithExtension.substring(index + 1).lowercase(Locale.getDefault()) // Add one so the dot isn't included
         }
-        return mime.getMimeTypeFromExtension(ext).orEmpty()
+        var mimeType = mime.getMimeTypeFromExtension(ext).orEmpty()
+        val extension = fileNameWithExtension.substringAfterLast('.')
+        if (APPLE_EXTENSIONS_MIME_TYPES.keys.contains(extension)) {
+            mimeType = APPLE_EXTENSIONS_MIME_TYPES[extension].orEmpty()
+        }
+        return mimeType
     }
 
     private fun getTempFilename(fileName: String?): String {
