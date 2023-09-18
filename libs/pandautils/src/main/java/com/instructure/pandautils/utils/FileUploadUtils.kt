@@ -43,6 +43,12 @@ object FileUploadUtils {
     private const val FILE_SCHEME = "file"
     private const val CONTENT_SCHEME = "content"
 
+    private val APPLE_EXTENSIONS_MIME_TYPES = mapOf<String, String> (
+        "pages" to "application/vnd.apple.pages",
+        "numbers" to "application/vnd.apple.numbers",
+        "key" to "application/vnd.apple.keynote",
+    )
+
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
@@ -267,10 +273,19 @@ object FileUploadUtils {
         var mimeType: String? = null
         if (FILE_SCHEME.equals(scheme, ignoreCase = true)) {
             if (uri.lastPathSegment != null) {
-                mimeType = getMimeTypeFromFileNameWithExtension(uri.lastPathSegment!!)
+                val extension = uri.lastPathSegment!!
+                mimeType = getMimeTypeFromFileNameWithExtension(extension)
+                if (APPLE_EXTENSIONS_MIME_TYPES.keys.contains(extension)) {
+                    mimeType = APPLE_EXTENSIONS_MIME_TYPES[extension]
+                }
             }
         } else if (CONTENT_SCHEME.equals(scheme, ignoreCase = true)) {
             mimeType = resolver.getType(uri)
+            val fileName = getFileNameFromUri(resolver, uri)
+            val extension = fileName?.substringAfterLast('.')
+            if (APPLE_EXTENSIONS_MIME_TYPES.keys.contains(extension)) {
+                mimeType = APPLE_EXTENSIONS_MIME_TYPES[extension]
+            }
         }
         return mimeType ?: "*/*"
     }
