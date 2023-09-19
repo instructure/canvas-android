@@ -22,7 +22,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.pandautils.features.offline.syncsettings.SyncSettingsViewModel" />
+            type="com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".features.offline.syncsettings.SyncSettingsFragment">
+        tools:context=".features.offline.sync.settings.SyncSettingsFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

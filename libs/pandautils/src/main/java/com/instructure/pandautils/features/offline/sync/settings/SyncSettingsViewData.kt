@@ -13,15 +13,25 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
 
-package com.instructure.pandautils.features.offline.syncsettings
+package com.instructure.pandautils.features.offline.sync.settings
 
-import androidx.annotation.StringRes
-import com.instructure.pandautils.R
+data class SyncSettingsViewData(
+    val autoSyncEnabled: Boolean,
+    val syncFrequency: String,
+    val wifiOnly: Boolean
+)
 
-enum class SyncFrequency(@StringRes val readable: Int) {
-    DAILY(R.string.daily),
+sealed class SyncSettingsAction {
+    data class ShowFrequencySelector(
+        val items: List<String>,
+        val selectedItemPosition: Int,
+        val onItemSelected: (Int) -> Unit
+    ) : SyncSettingsAction()
 
-    WEEKLY(R.string.weekly)
+    data class ShowWifiConfirmation(
+        val confirmationCallback: (Boolean) -> Unit
+    ) : SyncSettingsAction()
 }

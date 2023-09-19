@@ -35,7 +35,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
-import com.instructure.pandautils.features.offline.syncsettings.SyncSettingsFragment
+import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.*

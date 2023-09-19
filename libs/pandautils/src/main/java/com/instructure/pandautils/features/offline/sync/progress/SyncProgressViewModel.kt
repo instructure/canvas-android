@@ -38,15 +38,12 @@ import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TAB_PROGRESS_SIZE
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
-import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
-import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.utils.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -116,13 +113,13 @@ class SyncProgressViewModel @Inject constructor(
                         ?: return@forEach
                 }
 
-                val tabSize = courseProgress.tabs.count() * 100 * 1000
-                val courseFileSizes = courseProgress.fileSyncData?.map { it.fileSize }?.sum() ?: 0
+                val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
+                val courseFileSizes = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
                 val courseSize = tabSize + courseFileSizes
 
                 totalSize += courseSize
                 filesSize += courseFileSizes
-                downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * 100 * 1000
+                downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * TAB_PROGRESS_SIZE
             }
 
             fileWorkInfos.forEach {
@@ -222,16 +219,6 @@ class SyncProgressViewModel @Inject constructor(
         return CourseProgressItemViewModel(data, workManager, context)
     }
 
-    private fun createTabItem(tab: TabEntity, workerId: String): TabProgressItemViewModel {
-        val data = TabProgressViewData(
-            tabId = tab.id,
-            tabName = tab.label.orEmpty(),
-            workerId = workerId
-        )
-
-        return TabProgressItemViewModel(data, workManager)
-    }
-
     fun cancel() {
         cancelRunningWorkers()
         viewModelScope.launch {
@@ -269,17 +256,6 @@ class SyncProgressViewModel @Inject constructor(
         super.onCleared()
         aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
         courseProgressLiveData?.removeObserver(courseProgressObserver)
-        _data.value?.items?.map {
-            val itemViewModels = mutableListOf<ItemViewModel>()
-            itemViewModels.add(it)
-            it.data.tabs?.let { tabs -> itemViewModels.addAll(tabs) }
-            itemViewModels.addAll(it.data.files)
-            itemViewModels
-        }
-            ?.flatten()
-            ?.forEach {
-                it.onCleared()
-            }
-
+        _data.value?.items?.forEach { it.onCleared() }
     }
 }

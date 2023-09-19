@@ -13,9 +13,10 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
 
-package com.instructure.pandautils.features.offline.syncsettings
+package com.instructure.pandautils.features.offline.sync.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater

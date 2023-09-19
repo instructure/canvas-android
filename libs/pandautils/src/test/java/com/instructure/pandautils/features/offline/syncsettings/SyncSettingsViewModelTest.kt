@@ -30,6 +30,10 @@ import org.junit.Before
 import org.junit.Test
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
+import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsAction
+import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewData
+import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewModel
 import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.*

@@ -26,6 +26,7 @@ import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 
 data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
@@ -90,7 +91,7 @@ data class FileSyncProgressViewData(
 
 data class FileTabProgressViewData(
     val courseWorkerId: String,
-    var items: List<ItemViewModel>,
+    var items: List<FileSyncProgressItemViewModel>,
     @Bindable var totalSize: String = "",
     @Bindable var progress: Int = 0,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
