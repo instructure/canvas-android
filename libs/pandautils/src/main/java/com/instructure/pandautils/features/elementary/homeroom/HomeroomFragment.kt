@@ -142,7 +142,6 @@ class HomeroomFragment : Fragment() {
     private fun setupWebView(announcementWebView: CanvasWebView) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
         announcementWebView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
-        announcementWebView.settings.allowFileAccess = true
         announcementWebView.settings.loadWithOverviewMode = true
         announcementWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun routeInternallyCallback(url: String) {

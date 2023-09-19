@@ -105,7 +105,8 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
-    private val syncSettingsFacade: SyncSettingsFacade
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val htmlParser: HtmlParser
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseProgress
@@ -216,6 +217,7 @@ class CourseSyncWorker @AssistedInject constructor(
                 .depaginate { nextUrl ->
                     pageApi.getNextPagePagesList(nextUrl, params)
                 }.dataOrNull.orEmpty()
+                .map { it.copy(body = htmlParser.createHtmlStringWithLocalFiles(it.body)) }
 
             pageFacade.insertPages(pages, courseId)
 

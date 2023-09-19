@@ -24,6 +24,8 @@ import android.webkit.CookieManager
 import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.pandautils.features.offline.sync.HtmlParser
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
@@ -97,5 +99,10 @@ class ApplicationModule {
     @Singleton
     fun provideStorageUtils(@ApplicationContext context: Context): StorageUtils {
         return StorageUtils(context)
+    }
+
+    @Provides
+    fun provideHtmlParses(localFileDao: LocalFileDao): HtmlParser {
+        return HtmlParser(localFileDao)
     }
 }

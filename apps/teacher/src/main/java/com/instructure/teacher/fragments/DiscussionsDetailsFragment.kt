@@ -506,7 +506,6 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         webView.settings.javaScriptEnabled = true
         if(addJSSupport) webView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
         webView.settings.useWideViewPort = true
-        webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.canvasWebViewClientCallback = object: CanvasWebView.CanvasWebViewClientCallback {
