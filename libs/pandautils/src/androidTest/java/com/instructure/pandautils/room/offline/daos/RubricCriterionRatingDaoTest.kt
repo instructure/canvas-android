@@ -21,9 +21,11 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.entities.AssignmentEntity
 import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
 import com.instructure.pandautils.room.offline.entities.RubricCriterionRatingEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,6 +44,7 @@ class RubricCriterionRatingDaoTest {
     private lateinit var db: OfflineDatabase
     private lateinit var rubricCriterionRatingDao: RubricCriterionRatingDao
     private lateinit var rubricCriterionDao: RubricCriterionDao
+    private lateinit var assignmentDao: AssignmentDao
 
     @Before
     fun setUp() {
@@ -49,10 +52,12 @@ class RubricCriterionRatingDaoTest {
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         rubricCriterionRatingDao = db.rubricCriterionRatingDao()
         rubricCriterionDao = db.rubricCriterionDao()
+        assignmentDao = db.assignmentDao()
 
         runBlocking {
-            rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("1")))
-            rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("2")))
+            assignmentDao.insert(AssignmentEntity(Assignment(1L), null, null, null, null))
+            rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("1"), 1L))
+            rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("2"), 1L))
         }
     }
 
@@ -80,7 +85,7 @@ class RubricCriterionRatingDaoTest {
 
         rubricCriterionRatingDao.insert(rubricCriterionRatingEntity)
 
-        rubricCriterionDao.delete(RubricCriterionEntity(RubricCriterion("1")))
+        rubricCriterionDao.delete(RubricCriterionEntity(RubricCriterion("1"), 1L))
 
         val result = rubricCriterionRatingDao.findByRubricCriterionId("1")
 

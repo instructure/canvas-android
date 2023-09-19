@@ -14,7 +14,4 @@ interface MediaCommentDao {
 
     @Update
     suspend fun update(mediaComment: MediaCommentEntity)
-
-    @Query("SELECT * FROM MediaCommentEntity WHERE mediaId = :id")
-    suspend fun findById(id: String?): MediaCommentEntity?
 }

@@ -58,8 +58,8 @@ class RubricCriterionAssessmentDaoTest {
         )
         rubricCriterionAssessmentDao.insertAll(entities)
 
-        val result = rubricCriterionAssessmentDao.findBySubmissionId(1)
+        val result = rubricCriterionAssessmentDao.findByAssignmentId(1)
 
-        Assert.assertEquals(entities.filter { it.submissionId == 1L }, result)
+        Assert.assertEquals(entities.filter { it.assignmentId == 1L }, result)
     }
 }

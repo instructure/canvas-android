@@ -10,9 +10,6 @@ interface SubmissionCommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(submissionComment: SubmissionCommentEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(submissionComments: List<SubmissionCommentEntity>)
-
     @Delete
     suspend fun delete(submissionComment: SubmissionCommentEntity)
 
@@ -22,7 +19,4 @@ interface SubmissionCommentDao {
     @Transaction
     @Query("SELECT * FROM SubmissionCommentEntity WHERE id=:id")
     suspend fun findById(id: Long): SubmissionCommentWithAttachments?
-
-    @Query("SELECT * FROM SubmissionCommentEntity WHERE submissionId=:submissionId")
-    suspend fun findBySubmissionId(submissionId: Long): List<SubmissionCommentWithAttachments>
 }

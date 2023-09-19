@@ -20,8 +20,10 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.entities.AssignmentEntity
 import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -37,12 +39,14 @@ class RubricCriterionDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var rubricCriterionDao: RubricCriterionDao
+    private lateinit var assignmentDao: AssignmentDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         rubricCriterionDao = db.rubricCriterionDao()
+        assignmentDao = db.assignmentDao()
     }
 
     @After
@@ -52,8 +56,9 @@ class RubricCriterionDaoTest {
 
     @Test
     fun testFindById() = runTest {
-        val rubricCriterionEntity = RubricCriterionEntity(RubricCriterion("1"))
-        val rubricCriterionEntity2 = RubricCriterionEntity(RubricCriterion("2"))
+        assignmentDao.insert(AssignmentEntity(Assignment(1L), null, null, null, null))
+        val rubricCriterionEntity = RubricCriterionEntity(RubricCriterion("1"), 1L)
+        val rubricCriterionEntity2 = RubricCriterionEntity(RubricCriterion("2"), 1L)
         rubricCriterionDao.insert(rubricCriterionEntity)
         rubricCriterionDao.insert(rubricCriterionEntity2)
 

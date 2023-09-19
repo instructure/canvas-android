@@ -14,17 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.room.appdatabase.daos
+package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.pandautils.room.appdatabase.AppDatabase
-import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
-import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
-import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
-import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
+import com.instructure.canvasapi2.models.MediaComment
+import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.entities.AttachmentEntity
+import com.instructure.pandautils.room.offline.entities.AuthorEntity
+import com.instructure.pandautils.room.offline.entities.MediaCommentEntity
+import com.instructure.pandautils.room.offline.entities.SubmissionCommentEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -37,7 +38,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SubmissionCommentDaoTest {
 
-    private lateinit var db: AppDatabase
+    private lateinit var db: OfflineDatabase
     private lateinit var submissionCommentDao: SubmissionCommentDao
 
     private lateinit var attachmentDao: AttachmentDao
@@ -47,7 +48,7 @@ class SubmissionCommentDaoTest {
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         submissionCommentDao = db.submissionCommentDao()
 
         attachmentDao = db.attachmentDao()
@@ -80,7 +81,7 @@ class SubmissionCommentDaoTest {
         submissionCommentDao.insert(submissionComment2)
         authorDao.insert(AuthorEntity(id = 1, displayName = "Obi-Wan"))
         attachmentDao.insert(AttachmentEntity(id = 5, submissionCommentId = 1, filename = "droids.mp4"))
-        mediaCommentDao.insert(MediaCommentEntity(mediaId = "66", displayName = "Order 66"))
+        mediaCommentDao.insert(MediaCommentEntity(MediaComment(mediaId = "66", displayName = "Order 66"), 1, 1))
 
         // Verify correct query
         val result = submissionCommentDao.findById(id)
@@ -90,5 +91,27 @@ class SubmissionCommentDaoTest {
         Assert.assertEquals("droids.mp4", result.attachments!!.first().filename)
         Assert.assertEquals("Obi-Wan", result.author!!.displayName)
         Assert.assertEquals("Order 66", result.mediaComment!!.displayName)
+    }
+
+    @Test
+    fun testFindBySubmissionId() = runTest {
+        val submissionComment = SubmissionCommentEntity(
+            id = 1,
+            comment = "These are the droids you are looking for",
+            authorId = 1,
+            mediaCommentId = "66",
+            submissionId = 1
+        )
+        val submissionComment2 = SubmissionCommentEntity(
+            id = 2,
+            comment = "These are not the droids you are looking for",
+            submissionId = 2
+        )
+        submissionCommentDao.insertAll(listOf(submissionComment, submissionComment2))
+
+        val result = submissionCommentDao.findBySubmissionId(1)
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals(submissionComment, result.first().submissionComment)
     }
 }

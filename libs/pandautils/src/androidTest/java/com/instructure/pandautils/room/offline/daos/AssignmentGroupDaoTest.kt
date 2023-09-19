@@ -20,9 +20,12 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.AssignmentGroupEntity
+import com.instructure.pandautils.room.offline.entities.CourseEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -37,12 +40,18 @@ class AssignmentGroupDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var assignmentGroupDao: AssignmentGroupDao
+    private lateinit var courseDao: CourseDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         assignmentGroupDao = db.assignmentGroupDao()
+        courseDao = db.courseDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1)))
+        }
     }
 
     @After
@@ -57,7 +66,8 @@ class AssignmentGroupDaoTest {
             name = "Name 1",
             position = 0,
             groupWeight = 0.0,
-            rules = null
+            rules = null,
+            1L
         )
 
         val assignmentGroupEntity2 = assignmentGroupEntity.copy(id = 2L, name = "Name 2")
@@ -77,7 +87,8 @@ class AssignmentGroupDaoTest {
             name = "Name 1",
             position = 0,
             groupWeight = 0.0,
-            rules = null
+            rules = null,
+            1L
         )
 
         val assignmentGroupEntity2 = assignmentGroupEntity.copy(id = 2L, name = "Name 2")
@@ -97,7 +108,8 @@ class AssignmentGroupDaoTest {
             name = "Name 1",
             position = 0,
             groupWeight = 0.0,
-            rules = null
+            rules = null,
+            1L
         )
 
         assignmentGroupDao.insert(assignmentGroupEntity)
