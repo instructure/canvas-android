@@ -2,6 +2,7 @@ package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.ConferenceRecording
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.ConferenceDao
 import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
 import com.instructure.pandautils.room.offline.entities.ConferenceEntity
@@ -17,8 +18,9 @@ class ConferenceFacadeTest {
 
     private val conferenceDao: ConferenceDao = mockk(relaxed = true)
     private val conferenceRecordingDao: ConferenceRecodingDao = mockk(relaxed = true)
+    private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
-    private val facade = ConferenceFacade(conferenceDao, conferenceRecordingDao)
+    private val facade = ConferenceFacade(conferenceDao, conferenceRecordingDao, offlineDatabase)
 
     @Test
     fun `Calling insertConferences should insert conferences and related entities`() = runTest {

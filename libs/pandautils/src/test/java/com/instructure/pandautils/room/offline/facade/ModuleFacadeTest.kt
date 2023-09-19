@@ -16,12 +16,8 @@
  */
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.canvasapi2.models.MasteryPath
-import com.instructure.canvasapi2.models.ModuleCompletionRequirement
-import com.instructure.canvasapi2.models.ModuleContentDetails
-import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
 import com.instructure.pandautils.room.offline.daos.ModuleContentDetailsDao
 import com.instructure.pandautils.room.offline.daos.ModuleItemDao
@@ -48,6 +44,7 @@ class ModuleFacadeTest {
     private val moduleContentDetailsDao: ModuleContentDetailsDao = mockk(relaxed = true)
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
     private val masteryPathFacade: MasteryPathFacade = mockk(relaxed = true)
+    private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
     private val moduleFacade = ModuleFacade(
         moduleObjectDao,
@@ -55,18 +52,23 @@ class ModuleFacadeTest {
         completionRequirementDao,
         moduleContentDetailsDao,
         lockInfoFacade,
-        masteryPathFacade
+        masteryPathFacade,
+        offlineDatabase
     )
 
     @Test
     fun `insertModules inserts all the ModuleObject related entities into the database`() = runTest {
-        val moduleObject = ModuleObject(id = 1, position = 1, name = "Module 1", items = listOf(
-            ModuleItem(id = 2, position = 1, title = "Module 1 Item 1"),
-            ModuleItem(id = 3, position = 2, title = "Module 1 Item 2",
-                completionRequirement = ModuleCompletionRequirement(minScore = 10.0),
-                moduleDetails = ModuleContentDetails(lockAt = "2020-01-01T00:00:00Z", lockInfo = LockInfo(unlockAt = "2020-01-01T00:00:00Z")),
-                masteryPaths = MasteryPath(isLocked = true)
-        )))
+        val moduleObject = ModuleObject(
+            id = 1, position = 1, name = "Module 1", items = listOf(
+                ModuleItem(id = 2, position = 1, title = "Module 1 Item 1"),
+                ModuleItem(
+                    id = 3, position = 2, title = "Module 1 Item 2",
+                    completionRequirement = ModuleCompletionRequirement(minScore = 10.0),
+                    moduleDetails = ModuleContentDetails(lockAt = "2020-01-01T00:00:00Z", lockInfo = LockInfo(unlockAt = "2020-01-01T00:00:00Z")),
+                    masteryPaths = MasteryPath(isLocked = true)
+                )
+            )
+        )
 
         moduleFacade.insertModules(listOf(moduleObject), 1)
 

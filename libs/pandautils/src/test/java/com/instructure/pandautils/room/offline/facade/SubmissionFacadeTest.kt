@@ -22,16 +22,9 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.daos.AuthorDao
-import com.instructure.pandautils.room.common.daos.MediaCommentDao
-import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
-import com.instructure.pandautils.room.common.entities.MediaCommentEntity
-import com.instructure.pandautils.room.offline.daos.GroupDao
-import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
-import com.instructure.pandautils.room.offline.daos.SubmissionDao
-import com.instructure.pandautils.room.offline.daos.UserDao
+import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.GroupEntity
+import com.instructure.pandautils.room.offline.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
 import io.mockk.*
@@ -82,7 +75,7 @@ class SubmissionFacadeTest {
         facade.insertSubmission(submission)
 
         coVerify { groupDao.insert(GroupEntity(group)) }
-        coVerify { mediaCommentDao.insert(MediaCommentEntity(mediaComment)) }
+        coVerify { mediaCommentDao.insert(MediaCommentEntity(mediaComment, 1L, 0)) }
         coVerify { userDao.insert(UserEntity(user)) }
         coVerify { submissionDao.insert(SubmissionEntity(submission, group.id, mediaComment.mediaId)) }
     }
@@ -97,7 +90,7 @@ class SubmissionFacadeTest {
         val submissionHistory = listOf(Submission(id = submissionId, attempt = 1), Submission(id = submissionId, attempt = 2), submission)
 
         coEvery { groupDao.findById(any()) } returns GroupEntity(group)
-        coEvery { mediaCommentDao.findById(any()) } returns MediaCommentEntity(mediaComment)
+        coEvery { mediaCommentDao.findById(any()) } returns MediaCommentEntity(mediaComment, 1L, 0)
         coEvery { userDao.findById(any()) } returns UserEntity(user)
         coEvery { submissionDao.findById(any()) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
 
@@ -129,7 +122,7 @@ class SubmissionFacadeTest {
         val submissionHistory = listOf(Submission(id = submissionId, attempt = 1), Submission(id = submissionId, attempt = 2), submission)
 
         coEvery { groupDao.findById(group.id) } returns GroupEntity(group)
-        coEvery { mediaCommentDao.findById(mediaComment.mediaId) } returns MediaCommentEntity(mediaComment)
+        coEvery { mediaCommentDao.findById(mediaComment.mediaId) } returns MediaCommentEntity(mediaComment, 1L, 0)
         coEvery { userDao.findById(user.id) } returns UserEntity(user)
         coEvery { submissionDao.findByAssignmentIds(listOf(assignmentId)) } returns submissionHistory.map {
             SubmissionEntity(
@@ -168,7 +161,7 @@ class SubmissionFacadeTest {
         val submissionHistory = listOf(Submission(id = submissionId, attempt = 1), Submission(id = submissionId, attempt = 2), submission)
 
         coEvery { groupDao.findById(group.id) } returns GroupEntity(group)
-        coEvery { mediaCommentDao.findById(mediaComment.mediaId) } returns MediaCommentEntity(mediaComment)
+        coEvery { mediaCommentDao.findById(mediaComment.mediaId) } returns MediaCommentEntity(mediaComment, 1L, 0)
         coEvery { userDao.findById(user.id) } returns UserEntity(user)
         coEvery { submissionDao.findByAssignmentId(assignmentId) } returns SubmissionEntity(submission, group.id, mediaComment.mediaId)
         coEvery { submissionDao.findById(submissionId) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }

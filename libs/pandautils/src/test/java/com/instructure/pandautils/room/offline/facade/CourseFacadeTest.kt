@@ -38,7 +38,16 @@ class CourseFacadeTest {
     private val enrollmentFacade: EnrollmentFacade = mockk(relaxed = true)
     private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
 
-    private val facade = CourseFacade(termDao, courseDao, gradingPeriodDao, courseGradingPeriodDao, sectionDao, tabDao, enrollmentFacade, courseSettingsDao)
+    private val facade = CourseFacade(
+        termDao,
+        courseDao,
+        gradingPeriodDao,
+        courseGradingPeriodDao,
+        sectionDao,
+        tabDao,
+        enrollmentFacade,
+        courseSettingsDao
+    )
 
     @Test
     fun `Calling insertCourse should insert course and related entities`() = runTest {
@@ -48,7 +57,8 @@ class CourseFacadeTest {
         val sections = listOf(Section())
         val tabs = listOf(Tab())
         val settings = CourseSettings(restrictQuantitativeData = true)
-        val course = Course(term = term, enrollments = enrollments, gradingPeriods = gradingPeriods, sections = sections, tabs = tabs, settings = settings)
+        val course =
+            Course(term = term, enrollments = enrollments, gradingPeriods = gradingPeriods, sections = sections, tabs = tabs, settings = settings)
 
         coEvery { termDao.insert(any()) } just Runs
         coEvery { courseDao.insert(any()) } just Runs

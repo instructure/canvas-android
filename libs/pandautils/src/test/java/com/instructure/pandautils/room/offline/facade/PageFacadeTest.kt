@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.facade
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.entities.PageEntity
 import io.mockk.*
@@ -34,8 +35,9 @@ class PageFacadeTest {
 
     private val pageDao: PageDao = mockk(relaxed = true)
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
+    private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
-    private val facade = PageFacade(pageDao, lockInfoFacade)
+    private val facade = PageFacade(pageDao, lockInfoFacade, offlineDatabase)
 
     @Test
     fun `Calling insertPages should insert pages and related entities`() = runTest {

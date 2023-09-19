@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
 import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
@@ -36,8 +37,9 @@ class DiscussionTopicHeaderFacadeTest {
 
     private val discussionTopicHeaderDao: DiscussionTopicHeaderDao = mockk(relaxed = true)
     private val discussionParticipantDao: DiscussionParticipantDao = mockk(relaxed = true)
+    private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
-    private val facade = DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao)
+    private val facade = DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, offlineDatabase)
 
     @Test
     fun `Calling insertDiscussion should insert discussion topic header and related entities`() = runTest {
@@ -60,10 +62,24 @@ class DiscussionTopicHeaderFacadeTest {
         val discussionTopicHeader = DiscussionTopicHeader(author = discussionParticipant)
         val discussionTopicHeader2 = DiscussionTopicHeader(author = discussionParticipant2)
 
-        facade.insertDiscussions(listOf(discussionTopicHeader, discussionTopicHeader2), 1)
+        facade.insertDiscussions(listOf(discussionTopicHeader, discussionTopicHeader2), 1, false)
 
-        coVerify { discussionParticipantDao.insertAll(listOf(DiscussionParticipantEntity(discussionParticipant), DiscussionParticipantEntity(discussionParticipant2))) }
-        coVerify { discussionTopicHeaderDao.insertAll(listOf(DiscussionTopicHeaderEntity(discussionTopicHeader, 1), DiscussionTopicHeaderEntity(discussionTopicHeader2, 1))) }
+        coVerify {
+            discussionParticipantDao.insertAll(
+                listOf(
+                    DiscussionParticipantEntity(discussionParticipant),
+                    DiscussionParticipantEntity(discussionParticipant2)
+                )
+            )
+        }
+        coVerify {
+            discussionTopicHeaderDao.insertAll(
+                listOf(
+                    DiscussionTopicHeaderEntity(discussionTopicHeader, 1),
+                    DiscussionTopicHeaderEntity(discussionTopicHeader2, 1)
+                )
+            )
+        }
     }
 
     @Test
@@ -89,7 +105,8 @@ class DiscussionTopicHeaderFacadeTest {
 
         coEvery { discussionParticipantDao.findById(any()) } returns DiscussionParticipantEntity(discussionParticipant)
         coEvery { discussionTopicHeaderDao.findAllDiscussionsForCourse(any()) } returns listOf(
-            DiscussionTopicHeaderEntity(discussionTopicHeader, 1), DiscussionTopicHeaderEntity(discussionTopicHeader2, 1))
+            DiscussionTopicHeaderEntity(discussionTopicHeader, 1), DiscussionTopicHeaderEntity(discussionTopicHeader2, 1)
+        )
 
         val result = facade.getDiscussionsForCourse(1)
 
