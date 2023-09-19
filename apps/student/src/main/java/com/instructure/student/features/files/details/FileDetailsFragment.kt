@@ -23,6 +23,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
@@ -205,15 +206,28 @@ class FileDetailsFragment : ParentFragment() {
                     setupTextViews()
                     setupClickListeners()
                     // If the file has a thumbnail then show it. Make it a little bigger since the thumbnail size is pretty small
-                    if (!TextUtils.isEmpty(it.thumbnailUrl)) {
+                    if (repository.isOnline()) {
+                        if (!TextUtils.isEmpty(it.thumbnailUrl)) {
 
-                        fileIcon.layoutParams.apply {
-                            height = requireActivity().DP(230).toInt()
-                            width = height
+                            fileIcon.layoutParams.apply {
+                                height = requireActivity().DP(230).toInt()
+                                width = height
+                            }
+
+                            fileIcon.contentDescription =
+                                getString(R.string.filePreviewContentDescription)
+                            Glide.with(requireActivity()).load(it.thumbnailUrl)
+                                .apply(RequestOptions().fitCenter()).into(fileIcon)
                         }
-
-                        fileIcon.contentDescription = getString(R.string.filePreviewContentDescription)
-                        Glide.with(requireActivity()).load(it.thumbnailUrl).apply(RequestOptions().fitCenter()).into(fileIcon)
+                    }
+                    else {
+                        if (it.contentType?.contains("image") == true) {
+                            fileIcon.layoutParams.apply {
+                                height = requireActivity().DP(230).toInt()
+                                width = height
+                            }
+                            fileIcon.setImageURI(it.url?.toUri())
+                        }
                     }
                 }
                 setPageViewReady()
