@@ -40,15 +40,16 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 final _studentId = '123';
 void main() {
   final String domain = 'https://test.instructure.com';
 
-  final interactor = _MockAlertsInteractor();
-  final announcementInteractor = _MockAnnouncementDetailsInteractor();
-  final alertNotifier = _MockAlertCountNotifier();
-  final mockNav = _MockNav();
+  final interactor = MockAlertsInteractor();
+  final announcementInteractor = MockAnnouncementDetailsInteractor();
+  final alertNotifier = MockAlertCountNotifier();
+  final mockNav = MockQuickNav();
 
   setupTestLocator((locator) {
     locator.registerFactory<AlertsInteractor>(() => interactor);
@@ -65,7 +66,7 @@ void main() {
     reset(mockNav);
   });
 
-  void _pumpAndTapAlert(WidgetTester tester, Alert alert) async {
+  Future<void> _pumpAndTapAlert(WidgetTester tester, Alert alert) async {
     final alerts = List.of([alert]);
 
     when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
@@ -84,7 +85,7 @@ void main() {
 
   group('Loading', () {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
-      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value());
+      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(null));
 
       await tester.pumpWidget(_testableWidget());
       await tester.pump();
@@ -93,7 +94,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Does not show once loaded', (tester) async {
-      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value());
+      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(null));
 
       await tester.pumpWidget(_testableWidget());
       await tester.pump();
@@ -105,7 +106,7 @@ void main() {
 
   group('Empty message', () {
     testWidgetsWithAccessibilityChecks('Shows when response is null', (tester) async {
-      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => null);
+      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(null));
 
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
@@ -116,7 +117,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Shows when list is empty', (tester) async {
-      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(AlertsList(List(), null)));
+      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(AlertsList([], null)));
 
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
@@ -157,7 +158,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('refreshes when student changes', (tester) async {
       final notifier = SelectedStudentNotifier();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value());
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(null));
 
       await tester.pumpWidget(_testableWidget(notifier: notifier));
       await tester.pumpAndSettle();
@@ -165,8 +166,8 @@ void main() {
       verify(interactor.getAlertsForStudent(_studentId, any)).called(1);
 
       final newStudentId = _studentId + 'new';
-      final newStudent = notifier.value.rebuild((b) => b..id = newStudentId);
-      notifier.update(newStudent);
+      final newStudent = notifier.value?.rebuild((b) => b..id = newStudentId);
+      notifier.update(newStudent!);
       await tester.pump();
 
       verify(interactor.getAlertsForStudent(newStudentId, true)).called(1);
@@ -182,9 +183,9 @@ void main() {
 
       final title = find.text(AppLocalizations().institutionAnnouncement);
       expect(title, findsOneWidget);
-      expect((tester.widget(title) as Text).style.color, ParentColors.ash);
+      expect((tester.widget(title) as Text).style!.color, ParentColors.ash);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
     });
@@ -199,9 +200,9 @@ void main() {
 
       final title = find.text(AppLocalizations().courseAnnouncement);
       expect(title, findsOneWidget);
-      expect((tester.widget(title) as Text).style.color, ParentColors.ash);
+      expect((tester.widget(title) as Text).style!.color, ParentColors.ash);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
     });
@@ -223,9 +224,9 @@ void main() {
 
       final title = find.text(AppLocalizations().courseGradeAboveThreshold(thresholdValue));
       expect(title, findsOneWidget);
-      expect((tester.widget(title) as Text).style.color, StudentColorSet.electric.light);
+      expect((tester.widget(title) as Text).style!.color, StudentColorSet.electric.light);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, StudentColorSet.electric.light);
     });
@@ -247,9 +248,9 @@ void main() {
 
       final title = find.text(AppLocalizations().assignmentGradeAboveThreshold(thresholdValue));
       expect(title, findsOneWidget);
-      expect((tester.widget(title) as Text).style.color, StudentColorSet.electric.light);
+      expect((tester.widget(title) as Text).style!.color, StudentColorSet.electric.light);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, StudentColorSet.electric.light);
     });
@@ -271,9 +272,9 @@ void main() {
 
       final title = find.text(AppLocalizations().courseGradeBelowThreshold(thresholdValue));
       expect(title, findsOneWidget);
-      expect((tester.widget(title) as Text).style.color, ParentColors.failure);
+      expect((tester.widget(title) as Text).style!.color, ParentColors.failure);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
@@ -295,9 +296,9 @@ void main() {
 
       final title = find.text(AppLocalizations().assignmentGradeBelowThreshold(thresholdValue));
       expect(title, findsOneWidget);
-      expect((tester.widget(title) as Text).style.color, ParentColors.failure);
+      expect((tester.widget(title) as Text).style!.color, ParentColors.failure);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
@@ -312,9 +313,9 @@ void main() {
 
       final title = find.text(AppLocalizations().assignmentMissing);
       expect(title, findsOneWidget);
-      expect((tester.widget(title) as Text).style.color, ParentColors.failure);
+      expect((tester.widget(title) as Text).style!.color, ParentColors.failure);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
@@ -510,7 +511,7 @@ void main() {
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
-      final semantics = find.bySemanticsLabel(AppLocalizations().dismissAlertLabel(alert.title));
+      final semantics = find.byTooltip(AppLocalizations().dismissAlertLabel(alert.title));
       final icon = find.byIcon(Icons.clear);
 
       expect(find.descendant(of: semantics, matching: icon), findsOneWidget);
@@ -518,11 +519,11 @@ void main() {
   });
 }
 
-Widget _testableWidget({SelectedStudentNotifier notifier}) {
+Widget _testableWidget({SelectedStudentNotifier? notifier}) {
   notifier = notifier ?? SelectedStudentNotifier();
   return TestApp(
     ChangeNotifierProvider(
-      create: (context) => notifier..value = CanvasModelTestUtils.mockUser(id: _studentId, name: 'Trevor'),
+      create: (context) => notifier?..value = CanvasModelTestUtils.mockUser(id: _studentId, name: 'Trevor'),
       child: Consumer<SelectedStudentNotifier>(builder: (context, model, _) {
         return Scaffold(body: AlertsScreen());
       }),
@@ -532,7 +533,7 @@ Widget _testableWidget({SelectedStudentNotifier notifier}) {
 }
 
 List<Alert> _mockData(
-    {int size = 1, AlertType type, AlertWorkflowState state = AlertWorkflowState.read, String htmlUrl = ''}) {
+    {int size = 1, AlertType? type, AlertWorkflowState state = AlertWorkflowState.read, String htmlUrl = ''}) {
   return List.generate(
       size,
       (index) => Alert((b) => b
@@ -543,11 +544,3 @@ List<Alert> _mockData(
         ..htmlUrl = htmlUrl
         ..lockedForUser = false));
 }
-
-class _MockAlertsInteractor extends Mock implements AlertsInteractor {}
-
-class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
-
-class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
-
-class _MockNav extends Mock implements QuickNav {}

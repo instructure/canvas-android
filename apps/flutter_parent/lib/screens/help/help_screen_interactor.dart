@@ -20,7 +20,9 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class HelpScreenInteractor {
   Future<List<HelpLink>> getObserverCustomHelpLinks({bool forceRefresh = false}) async {
-    HelpLinks links = await locator.get<HelpLinksApi>().getHelpLinks(forceRefresh: forceRefresh);
+    HelpLinks? links = await locator.get<HelpLinksApi>().getHelpLinks(forceRefresh: forceRefresh);
+
+    if (links == null) return Future.value([]);
 
     // Filter observer custom links if we have any, otherwise return an empty list
     return Future.value(filterObserverLinks(

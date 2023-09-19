@@ -15,63 +15,61 @@ class _$TermSerializer implements StructuredSerializer<Term> {
   final String wireName = 'Term';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Term object,
+  Iterable<Object?> serialize(Serializers serializers, Term object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
     ];
-    result.add('name');
-    if (object.name == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.name,
-          specifiedType: const FullType(String)));
-    }
-    result.add('start_at');
-    if (object.startAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.startAt,
+    Object? value;
+    value = object.name;
+
+    result
+      ..add('name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.startAt;
+
+    result
+      ..add('start_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('end_at');
-    if (object.endAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.endAt,
+    value = object.endAt;
+
+    result
+      ..add('end_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
+
     return result;
   }
 
   @override
-  Term deserialize(Serializers serializers, Iterable<Object> serialized,
+  Term deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new TermBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'start_at':
           result.startAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'end_at':
           result.endAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -84,19 +82,18 @@ class _$Term extends Term {
   @override
   final String id;
   @override
-  final String name;
+  final String? name;
   @override
-  final DateTime startAt;
+  final DateTime? startAt;
   @override
-  final DateTime endAt;
+  final DateTime? endAt;
 
-  factory _$Term([void Function(TermBuilder) updates]) =>
-      (new TermBuilder()..update(updates)).build();
+  factory _$Term([void Function(TermBuilder)? updates]) =>
+      (new TermBuilder()..update(updates))._build();
 
-  _$Term._({this.id, this.name, this.startAt, this.endAt}) : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Term', 'id');
-    }
+  _$Term._({required this.id, this.name, this.startAt, this.endAt})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(id, r'Term', 'id');
   }
 
   @override
@@ -118,14 +115,18 @@ class _$Term extends Term {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, id.hashCode), name.hashCode), startAt.hashCode),
-        endAt.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, startAt.hashCode);
+    _$hash = $jc(_$hash, endAt.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Term')
+    return (newBuiltValueToStringHelper(r'Term')
           ..add('id', id)
           ..add('name', name)
           ..add('startAt', startAt)
@@ -135,34 +136,35 @@ class _$Term extends Term {
 }
 
 class TermBuilder implements Builder<Term, TermBuilder> {
-  _$Term _$v;
+  _$Term? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  DateTime _startAt;
-  DateTime get startAt => _$this._startAt;
-  set startAt(DateTime startAt) => _$this._startAt = startAt;
+  DateTime? _startAt;
+  DateTime? get startAt => _$this._startAt;
+  set startAt(DateTime? startAt) => _$this._startAt = startAt;
 
-  DateTime _endAt;
-  DateTime get endAt => _$this._endAt;
-  set endAt(DateTime endAt) => _$this._endAt = endAt;
+  DateTime? _endAt;
+  DateTime? get endAt => _$this._endAt;
+  set endAt(DateTime? endAt) => _$this._endAt = endAt;
 
   TermBuilder() {
     Term._initializeBuilder(this);
   }
 
   TermBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _name = _$v.name;
-      _startAt = _$v.startAt;
-      _endAt = _$v.endAt;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _name = $v.name;
+      _startAt = $v.startAt;
+      _endAt = $v.endAt;
       _$v = null;
     }
     return this;
@@ -170,24 +172,28 @@ class TermBuilder implements Builder<Term, TermBuilder> {
 
   @override
   void replace(Term other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Term;
   }
 
   @override
-  void update(void Function(TermBuilder) updates) {
+  void update(void Function(TermBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Term build() {
-    final _$result =
-        _$v ?? new _$Term._(id: id, name: name, startAt: startAt, endAt: endAt);
+  Term build() => _build();
+
+  _$Term _build() {
+    final _$result = _$v ??
+        new _$Term._(
+            id: BuiltValueNullFieldError.checkNotNull(id, r'Term', 'id'),
+            name: name,
+            startAt: startAt,
+            endAt: endAt);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

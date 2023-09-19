@@ -25,6 +25,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final l10n = AppLocalizations();
@@ -33,7 +34,7 @@ void main() {
   final _page = CanvasPage((b) => b
     ..id = '1'
     ..body = '');
-  final _interactor = _MockCourseDetailsInteractor();
+  final _interactor = MockCourseDetailsInteractor();
 
   setupTestLocator((locator) {
     locator.registerFactory<CourseDetailsInteractor>(() => _interactor);
@@ -80,5 +81,3 @@ void main() {
     expect(find.byType(WebView), findsOneWidget);
   });
 }
-
-class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}

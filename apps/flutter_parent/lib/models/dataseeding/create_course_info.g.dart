@@ -17,9 +17,9 @@ class _$CreateCourseInfoSerializer
   final String wireName = 'CreateCourseInfo';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, CreateCourseInfo object,
+  Iterable<Object?> serialize(Serializers serializers, CreateCourseInfo object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
       'course_code',
@@ -28,55 +28,53 @@ class _$CreateCourseInfoSerializer
       'role',
       serializers.serialize(object.role, specifiedType: const FullType(String)),
     ];
-    result.add('enrollment_term_id');
-    if (object.enrollmentTermId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.enrollmentTermId,
-          specifiedType: const FullType(int)));
-    }
-    result.add('syllabus_body');
-    if (object.syllabusBody == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.syllabusBody,
-          specifiedType: const FullType(String)));
-    }
+    Object? value;
+    value = object.enrollmentTermId;
+
+    result
+      ..add('enrollment_term_id')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.syllabusBody;
+
+    result
+      ..add('syllabus_body')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
   CreateCourseInfo deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CreateCourseInfoBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'course_code':
           result.courseCode = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'enrollment_term_id':
           result.enrollmentTermId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'role':
           result.role = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'syllabus_body':
           result.syllabusBody = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -91,32 +89,27 @@ class _$CreateCourseInfo extends CreateCourseInfo {
   @override
   final String courseCode;
   @override
-  final int enrollmentTermId;
+  final int? enrollmentTermId;
   @override
   final String role;
   @override
-  final String syllabusBody;
+  final String? syllabusBody;
 
   factory _$CreateCourseInfo(
-          [void Function(CreateCourseInfoBuilder) updates]) =>
-      (new CreateCourseInfoBuilder()..update(updates)).build();
+          [void Function(CreateCourseInfoBuilder)? updates]) =>
+      (new CreateCourseInfoBuilder()..update(updates))._build();
 
   _$CreateCourseInfo._(
-      {this.name,
-      this.courseCode,
+      {required this.name,
+      required this.courseCode,
       this.enrollmentTermId,
-      this.role,
+      required this.role,
       this.syllabusBody})
       : super._() {
-    if (name == null) {
-      throw new BuiltValueNullFieldError('CreateCourseInfo', 'name');
-    }
-    if (courseCode == null) {
-      throw new BuiltValueNullFieldError('CreateCourseInfo', 'courseCode');
-    }
-    if (role == null) {
-      throw new BuiltValueNullFieldError('CreateCourseInfo', 'role');
-    }
+    BuiltValueNullFieldError.checkNotNull(name, r'CreateCourseInfo', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        courseCode, r'CreateCourseInfo', 'courseCode');
+    BuiltValueNullFieldError.checkNotNull(role, r'CreateCourseInfo', 'role');
   }
 
   @override
@@ -140,17 +133,19 @@ class _$CreateCourseInfo extends CreateCourseInfo {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, name.hashCode), courseCode.hashCode),
-                enrollmentTermId.hashCode),
-            role.hashCode),
-        syllabusBody.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, courseCode.hashCode);
+    _$hash = $jc(_$hash, enrollmentTermId.hashCode);
+    _$hash = $jc(_$hash, role.hashCode);
+    _$hash = $jc(_$hash, syllabusBody.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CreateCourseInfo')
+    return (newBuiltValueToStringHelper(r'CreateCourseInfo')
           ..add('name', name)
           ..add('courseCode', courseCode)
           ..add('enrollmentTermId', enrollmentTermId)
@@ -162,40 +157,41 @@ class _$CreateCourseInfo extends CreateCourseInfo {
 
 class CreateCourseInfoBuilder
     implements Builder<CreateCourseInfo, CreateCourseInfoBuilder> {
-  _$CreateCourseInfo _$v;
+  _$CreateCourseInfo? _$v;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _courseCode;
-  String get courseCode => _$this._courseCode;
-  set courseCode(String courseCode) => _$this._courseCode = courseCode;
+  String? _courseCode;
+  String? get courseCode => _$this._courseCode;
+  set courseCode(String? courseCode) => _$this._courseCode = courseCode;
 
-  int _enrollmentTermId;
-  int get enrollmentTermId => _$this._enrollmentTermId;
-  set enrollmentTermId(int enrollmentTermId) =>
+  int? _enrollmentTermId;
+  int? get enrollmentTermId => _$this._enrollmentTermId;
+  set enrollmentTermId(int? enrollmentTermId) =>
       _$this._enrollmentTermId = enrollmentTermId;
 
-  String _role;
-  String get role => _$this._role;
-  set role(String role) => _$this._role = role;
+  String? _role;
+  String? get role => _$this._role;
+  set role(String? role) => _$this._role = role;
 
-  String _syllabusBody;
-  String get syllabusBody => _$this._syllabusBody;
-  set syllabusBody(String syllabusBody) => _$this._syllabusBody = syllabusBody;
+  String? _syllabusBody;
+  String? get syllabusBody => _$this._syllabusBody;
+  set syllabusBody(String? syllabusBody) => _$this._syllabusBody = syllabusBody;
 
   CreateCourseInfoBuilder() {
     CreateCourseInfo._initializeBuilder(this);
   }
 
   CreateCourseInfoBuilder get _$this {
-    if (_$v != null) {
-      _name = _$v.name;
-      _courseCode = _$v.courseCode;
-      _enrollmentTermId = _$v.enrollmentTermId;
-      _role = _$v.role;
-      _syllabusBody = _$v.syllabusBody;
+    final $v = _$v;
+    if ($v != null) {
+      _name = $v.name;
+      _courseCode = $v.courseCode;
+      _enrollmentTermId = $v.enrollmentTermId;
+      _role = $v.role;
+      _syllabusBody = $v.syllabusBody;
       _$v = null;
     }
     return this;
@@ -203,29 +199,32 @@ class CreateCourseInfoBuilder
 
   @override
   void replace(CreateCourseInfo other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CreateCourseInfo;
   }
 
   @override
-  void update(void Function(CreateCourseInfoBuilder) updates) {
+  void update(void Function(CreateCourseInfoBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CreateCourseInfo build() {
+  CreateCourseInfo build() => _build();
+
+  _$CreateCourseInfo _build() {
     final _$result = _$v ??
         new _$CreateCourseInfo._(
-            name: name,
-            courseCode: courseCode,
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'CreateCourseInfo', 'name'),
+            courseCode: BuiltValueNullFieldError.checkNotNull(
+                courseCode, r'CreateCourseInfo', 'courseCode'),
             enrollmentTermId: enrollmentTermId,
-            role: role,
+            role: BuiltValueNullFieldError.checkNotNull(
+                role, r'CreateCourseInfo', 'role'),
             syllabusBody: syllabusBody);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

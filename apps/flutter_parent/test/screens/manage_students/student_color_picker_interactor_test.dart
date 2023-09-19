@@ -26,7 +26,7 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
-import '../dashboard/dashboard_interactor_test.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() async {
   Login login = Login((b) => b

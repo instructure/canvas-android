@@ -23,13 +23,13 @@ class BaseModel extends ChangeNotifier {
 
   ViewState get state => _state;
 
-  void setState({ViewState viewState}) {
-    if (viewState != null) _state = viewState;
+  void setState({required ViewState viewState}) {
+    _state = viewState;
     notifyListeners();
   }
 
   // A helper method to set the state to busy when starting a load, and setting the state back to idle when done
-  Future<void> work(Future Function() loadBlock) async {
+  Future<void> work(Future Function()? loadBlock) async {
     try {
       setState(viewState: ViewState.Busy);
       if (loadBlock != null) await loadBlock();

@@ -24,6 +24,7 @@ import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final api = MockEnrollmentsApi();
@@ -100,7 +101,7 @@ User _mockStudent(String name) => User((b) => b
   ..sortableName = name
   ..build());
 
-Enrollment _mockEnrollment(UserBuilder observedUser) => Enrollment((b) => b
+Enrollment _mockEnrollment(UserBuilder? observedUser) => Enrollment((b) => b
   ..enrollmentState = ''
   ..observedUser = observedUser
   ..build());

@@ -44,11 +44,12 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() async {
-  final analytics = _MockAnalytics();
-  final interactor = _MockInteractor();
-  final authApi = _MockAuthApi();
+  final analytics = MockAnalytics();
+  final interactor = MockDashboardInteractor();
+  final authApi = MockAuthApi();
   final pairingInteractor = MockPairingInteractor();
 
   final login = Login((b) => b
@@ -65,7 +66,7 @@ void main() async {
     locator.registerLazySingleton<PairingInteractor>(() => pairingInteractor);
     locator.registerFactory<DashboardInteractor>(() => interactor);
     locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
-    locator.registerFactory<DomainSearchInteractor>(() => _MockDomainSearchInteractor());
+    locator.registerFactory<DomainSearchInteractor>(() => MockDomainSearchInteractor());
   });
 
   setUp(() async {
@@ -75,6 +76,7 @@ void main() async {
     final mockRemoteConfig = setupMockRemoteConfig(
         valueSettings: {'qr_login_enabled_parent': 'true', 'qr_account_creation_enabled': 'true'});
     await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
+    await ApiPrefs.init();
   });
 
   tearDown(() {
@@ -85,21 +87,20 @@ void main() async {
     Offset center = tester.getCenter(find.byType(TwoFingerDoubleTapGestureDetector));
 
     // Perform first two-finger tap
-    TestGesture pointer1 = await tester.startGesture(center.translate(-64, 0));
-    TestGesture pointer2 = await tester.startGesture(center.translate(64, 0));
+    TestGesture pointer1 = await tester.startGesture(center.translate(-64, 64));
+    TestGesture pointer2 = await tester.startGesture(center.translate(64, 64));
     await pointer1.up();
     await pointer2.up();
 
     // Perform second two-finger tap
     await tester.pump(Duration(milliseconds: 100));
-    pointer1 = await tester.startGesture(center.translate(-64, 0));
-    pointer2 = await tester.startGesture(center.translate(64, 0));
+    pointer1 = await tester.startGesture(center.translate(-64, 64));
+    pointer2 = await tester.startGesture(center.translate(64, 64));
     await pointer1.up();
     await pointer2.up();
     await tester.pump();
   }
 
-  // TODO Fix test
   testWidgetsWithAccessibilityChecks('Opens domain search screen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
@@ -109,10 +110,7 @@ void main() async {
     await tester.pumpAndSettle();
 
     expect(find.byType(DomainSearchScreen), findsOneWidget);
-
-    // TODO: Remove this back press once DomainSearchScreen is passing accessibility checks
-    await tester.pageBack();
-  }, skip: true);
+  });
 
   testWidgetsWithAccessibilityChecks('Displays Snicker Doodles drawer', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
@@ -134,6 +132,7 @@ void main() async {
   });
 
   testWidgetsWithAccessibilityChecks('Displays login list if there are previous logins', (tester) async {
+
     List<Login> logins = [
       Login((b) => b
         ..domain = 'domain1'
@@ -143,9 +142,11 @@ void main() async {
         ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
     ];
 
+
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await ApiPrefs.saveLogins(logins);
     await tester.pumpAndSettle();
+
 
     expect(find.text(AppLocalizations().previousLogins), findsOneWidget);
     expect(find.byKey(Key('previous-logins')), findsOneWidget);
@@ -157,67 +158,75 @@ void main() async {
     expect(find.text(logins[1].domain), findsOneWidget);
 
     expect(find.byType(Avatar), findsNWidgets(2));
-    expect(find.bySemanticsLabel(AppLocalizations().delete), findsNWidgets(2));
+    expect(find.byIcon(Icons.clear), findsNWidgets(2));
+
   });
 
   testWidgetsWithAccessibilityChecks('Displays Previous Login correctly for masquerade', (tester) async {
-    Login login = Login((b) => b
-      ..domain = 'domain1'
-      ..masqueradeDomain = 'masqueradeDomain'
-      ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()
-      ..masqueradeUser = CanvasModelTestUtils.mockUser(name: 'masqueradeUser').toBuilder());
+    await tester.runAsync(() async {
 
-    await tester.pumpWidget(TestApp(LoginLandingScreen()));
-    await ApiPrefs.saveLogins([login]);
-    await tester.pumpAndSettle();
+      Login login = Login((b) => b
+        ..domain = 'domain1'
+        ..masqueradeDomain = 'masqueradeDomain'
+        ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()
+        ..masqueradeUser = CanvasModelTestUtils.mockUser(name: 'masqueradeUser').toBuilder());
 
-    expect(find.text(AppLocalizations().previousLogins), findsOneWidget);
-    expect(find.byKey(Key('previous-logins')), findsOneWidget);
+      await tester.pumpWidget(TestApp(LoginLandingScreen()));
+      await ApiPrefs.saveLogins([login]);
+      await tester.pumpAndSettle();
 
-    expect(find.text(login.user.name), findsNothing);
-    expect(find.text(login.masqueradeUser.name), findsOneWidget);
+      expect(find.text(AppLocalizations().previousLogins), findsOneWidget);
+      expect(find.byKey(Key('previous-logins')), findsOneWidget);
 
-    expect(find.text(login.domain), findsNothing);
-    expect(find.text(login.masqueradeDomain), findsOneWidget);
+      expect(find.text(login.user.name), findsNothing);
+      expect(find.text(login.masqueradeUser!.name), findsOneWidget);
 
-    expect(find.byType(Avatar), findsOneWidget);
-    expect(find.bySemanticsLabel(AppLocalizations().delete), findsOneWidget);
-    expect(find.byIcon(CanvasIconsSolid.masquerade), findsOneWidget);
+      expect(find.text(login.domain), findsNothing);
+      expect(find.text(login.masqueradeDomain!), findsOneWidget);
+
+      expect(find.byType(Avatar), findsOneWidget);
+      expect(find.byIcon(Icons.clear), findsOneWidget);
+      expect(find.byIcon(CanvasIconsSolid.masquerade), findsOneWidget);
+    });
   });
 
   testWidgetsWithAccessibilityChecks('Clearing previous login removes it from the list', (tester) async {
-    List<Login> logins = [
-      Login((b) => b
-        ..domain = 'domain1'
-        ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()),
-      Login((b) => b
-        ..domain = 'domain2'
-        ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
-    ];
+    await tester.runAsync(() async {
 
-    await tester.pumpWidget(TestApp(LoginLandingScreen()));
-    await ApiPrefs.saveLogins(logins);
-    await tester.pumpAndSettle();
+      List<Login> logins = [
+        Login((b) => b
+          ..domain = 'domain1'
+          ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()),
+        Login((b) => b
+          ..domain = 'domain2'
+          ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
+      ];
 
-    expect(find.byKey(Key('previous-logins')), findsOneWidget);
-    expect(find.text(logins[0].user.name), findsOneWidget);
-    expect(find.text(logins[1].user.name), findsOneWidget);
+      await tester.pumpWidget(TestApp(LoginLandingScreen()));
+      await ApiPrefs.saveLogins(logins);
+      await tester.pumpAndSettle();
 
-    // Remove second login
-    await tester.tap(find.bySemanticsLabel(AppLocalizations().delete).last);
-    await tester.pumpAndSettle();
+      expect(find.byKey(Key('previous-logins')), findsOneWidget);
+      expect(find.text(logins[0].user.name), findsOneWidget);
+      expect(find.text(logins[1].user.name), findsOneWidget);
 
-    expect(find.byKey(Key('previous-logins')), findsOneWidget);
-    expect(find.text(logins[0].user.name), findsOneWidget);
-    expect(find.text(logins[1].user.name), findsNothing);
+      // Remove second login
+      await tester.tap(find.byIcon(Icons.clear).last);
+      await tester.pumpAndSettle();
 
-    // Remove first login
-    await tester.tap(find.bySemanticsLabel(AppLocalizations().delete));
-    await tester.pumpAndSettle();
+      expect(find.byKey(Key('previous-logins')), findsOneWidget);
+      expect(find.text(logins[0].user.name), findsOneWidget);
+      expect(find.text(logins[1].user.name), findsNothing);
 
-    expect(find.byKey(Key('previous-logins')), findsNothing);
-    expect(find.text(logins[0].user.name), findsNothing);
-    expect(find.text(logins[1].user.name), findsNothing);
+      // Remove first login
+      await tester.tap(find.byIcon(Icons.clear));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(Key('previous-logins')), findsNothing);
+      expect(find.text(logins[0].user.name), findsNothing);
+      expect(find.text(logins[1].user.name), findsNothing);
+
+    });
   });
 
   testWidgetsWithAccessibilityChecks('Tapping a login sets the current login and loads splash screen', (tester) async {
@@ -237,7 +246,7 @@ void main() async {
 
     expect(find.byType(SplashScreen), findsOneWidget);
     expect(ApiPrefs.getCurrentLogin(), logins[0]);
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Uses two-finger double-tap to cycle login flows', (tester) async {
@@ -263,7 +272,6 @@ void main() async {
     await tester.pumpAndSettle(); // Wait for SnackBar to finish displaying
   });
 
-  // TODO Fix test
   testWidgetsWithAccessibilityChecks('Passes selected LoginFlow to DomainSearchScreen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
@@ -282,9 +290,7 @@ void main() async {
     DomainSearchScreen domainSearch = tester.widget(find.byType(DomainSearchScreen));
     expect(domainSearch.loginFlow, LoginFlow.skipMobileVerify);
 
-    // TODO: Remove this back press once DomainSearchScreen is passing accessibility checks
-    await tester.pageBack();
-  }, skip: true);
+  });
 
   testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login picker', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
@@ -335,11 +341,3 @@ void main() async {
     expect(find.text(AppLocalizations().qrCode), findsNothing);
   });
 }
-
-class _MockAnalytics extends Mock implements Analytics {}
-
-class _MockInteractor extends Mock implements DashboardInteractor {}
-
-class _MockAuthApi extends Mock implements AuthApi {}
-
-class _MockDomainSearchInteractor extends Mock implements DomainSearchInteractor {}

@@ -20,10 +20,10 @@ class _$GradeSubmissionWrapperSerializer
   final String wireName = 'GradeSubmissionWrapper';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, GradeSubmissionWrapper object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'submission',
       serializers.serialize(object.submission,
           specifiedType: const FullType(GradeSubmissionInfo)),
@@ -34,20 +34,19 @@ class _$GradeSubmissionWrapperSerializer
 
   @override
   GradeSubmissionWrapper deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new GradeSubmissionWrapperBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'submission':
           result.submission.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(GradeSubmissionInfo))
+                  specifiedType: const FullType(GradeSubmissionInfo))!
               as GradeSubmissionInfo);
           break;
       }
@@ -62,14 +61,12 @@ class _$GradeSubmissionWrapper extends GradeSubmissionWrapper {
   final GradeSubmissionInfo submission;
 
   factory _$GradeSubmissionWrapper(
-          [void Function(GradeSubmissionWrapperBuilder) updates]) =>
-      (new GradeSubmissionWrapperBuilder()..update(updates)).build();
+          [void Function(GradeSubmissionWrapperBuilder)? updates]) =>
+      (new GradeSubmissionWrapperBuilder()..update(updates))._build();
 
-  _$GradeSubmissionWrapper._({this.submission}) : super._() {
-    if (submission == null) {
-      throw new BuiltValueNullFieldError(
-          'GradeSubmissionWrapper', 'submission');
-    }
+  _$GradeSubmissionWrapper._({required this.submission}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        submission, r'GradeSubmissionWrapper', 'submission');
   }
 
   @override
@@ -89,12 +86,15 @@ class _$GradeSubmissionWrapper extends GradeSubmissionWrapper {
 
   @override
   int get hashCode {
-    return $jf($jc(0, submission.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, submission.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('GradeSubmissionWrapper')
+    return (newBuiltValueToStringHelper(r'GradeSubmissionWrapper')
           ..add('submission', submission))
         .toString();
   }
@@ -102,12 +102,12 @@ class _$GradeSubmissionWrapper extends GradeSubmissionWrapper {
 
 class GradeSubmissionWrapperBuilder
     implements Builder<GradeSubmissionWrapper, GradeSubmissionWrapperBuilder> {
-  _$GradeSubmissionWrapper _$v;
+  _$GradeSubmissionWrapper? _$v;
 
-  GradeSubmissionInfoBuilder _submission;
+  GradeSubmissionInfoBuilder? _submission;
   GradeSubmissionInfoBuilder get submission =>
       _$this._submission ??= new GradeSubmissionInfoBuilder();
-  set submission(GradeSubmissionInfoBuilder submission) =>
+  set submission(GradeSubmissionInfoBuilder? submission) =>
       _$this._submission = submission;
 
   GradeSubmissionWrapperBuilder() {
@@ -115,8 +115,9 @@ class GradeSubmissionWrapperBuilder
   }
 
   GradeSubmissionWrapperBuilder get _$this {
-    if (_$v != null) {
-      _submission = _$v.submission?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _submission = $v.submission.toBuilder();
       _$v = null;
     }
     return this;
@@ -124,31 +125,31 @@ class GradeSubmissionWrapperBuilder
 
   @override
   void replace(GradeSubmissionWrapper other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GradeSubmissionWrapper;
   }
 
   @override
-  void update(void Function(GradeSubmissionWrapperBuilder) updates) {
+  void update(void Function(GradeSubmissionWrapperBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$GradeSubmissionWrapper build() {
+  GradeSubmissionWrapper build() => _build();
+
+  _$GradeSubmissionWrapper _build() {
     _$GradeSubmissionWrapper _$result;
     try {
       _$result =
           _$v ?? new _$GradeSubmissionWrapper._(submission: submission.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'submission';
         submission.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'GradeSubmissionWrapper', _$failedField, e.toString());
+            r'GradeSubmissionWrapper', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -157,4 +158,4 @@ class GradeSubmissionWrapperBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

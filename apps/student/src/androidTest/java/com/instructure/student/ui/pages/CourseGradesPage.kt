@@ -45,6 +45,7 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -82,9 +83,8 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     }
 
     fun assertAssignmentDisplayed(name: String, gradeString: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer)).assertHasText(name)
-        val siblingMatcher = withId(R.id.title) + withText(name)
-        onView(withId(R.id.points) + hasSibling(siblingMatcher)).assertHasText(gradeString)
+        val siblingMatcher = withId(R.id.title) + withParent(R.id.textContainer) + withText(name) + withAncestor(R.id.courseGradesPage)
+        onView(withId(R.id.points) + hasSibling(siblingMatcher)).scrollTo().assertHasText(gradeString)
     }
 
     // Hopefully this will be sufficient.  We may need to add some logic to scroll

@@ -24,6 +24,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../../accessibility_utils.dart';
 import '../../../test_app.dart';
+import '../../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   setUpAll(() async {
@@ -55,7 +56,7 @@ void main() {
     await tester.pumpAndSettle();
 
     var widget = await tester.widget<Text>(find.text(text));
-    expect(widget.style.fontSize, 14);
+    expect(widget.style?.fontSize, 14);
 
     // Start two gestures separated by 100px
     var finger1 = await tester.startGesture(Offset(100, 300));
@@ -71,7 +72,7 @@ void main() {
 
     // Font size should have increased 200% (from 14 to 28)
     widget = await tester.widget<Text>(find.text(text));
-    expect(widget.style.fontSize, 28);
+    expect(widget.style?.fontSize, 28);
   });
 
   testWidgetsWithAccessibilityChecks('zooms to min font size of 10', (tester) async {
@@ -82,7 +83,7 @@ void main() {
     await tester.pumpAndSettle();
 
     var widget = await tester.widget<Text>(find.text(text));
-    expect(widget.style.fontSize, 14);
+    expect(widget.style?.fontSize, 14);
 
     // Start two gestures separated by 400px
     var finger1 = await tester.startGesture(Offset(100, 300));
@@ -98,7 +99,7 @@ void main() {
 
     // Font size should have decreased to only 10
     widget = await tester.widget<Text>(find.text(text));
-    expect(widget.style.fontSize, 10);
+    expect(widget.style?.fontSize, 10);
   });
 
   testWidgetsWithAccessibilityChecks('zooms to max font size of 48', (tester) async {
@@ -109,7 +110,7 @@ void main() {
     await tester.pumpAndSettle();
 
     var widget = await tester.widget<Text>(find.text(text));
-    expect(widget.style.fontSize, 14);
+    expect(widget.style?.fontSize, 14);
 
     // Start two gestures separated by 100px
     var finger1 = await tester.startGesture(Offset(100, 300));
@@ -125,7 +126,7 @@ void main() {
 
     // Font size should have increased only 48
     widget = await tester.widget<Text>(find.text(text));
-    expect(widget.style.fontSize, 48);
+    expect(widget.style?.fontSize, 48);
   });
 }
 
@@ -135,12 +136,10 @@ _setupLocator(String text) {
   file.writeAsStringSync(text);
 
   // Set up interactor
-  var interactor = _MockInteractor();
+  var interactor = MockAttachmentFetcherInteractor();
   setupTestLocator((locator) {
     locator.registerLazySingleton<AttachmentFetcherInteractor>(() => interactor);
   });
   when(interactor.generateCancelToken()).thenReturn(CancelToken());
   when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.value(file));
 }
-
-class _MockInteractor extends Mock implements AttachmentFetcherInteractor {}

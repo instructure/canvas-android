@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
@@ -22,7 +21,6 @@ import 'package:flutter_parent/screens/aup/acceptable_use_policy_interactor.dart
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/html_description_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -67,14 +65,13 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
                         style: TextStyle(fontSize: 16),
                       )),
                   Divider(),
-                  FlatButton(
+                  TextButton(
                       onPressed: _readPolicy,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      style: TextButton.styleFrom(padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12)),
                       child: Row(
                         children: [
                           Text(L10n(context).acceptableUsePolicyTitle,
-                            style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16)),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16)),
                           Spacer(),
                           Icon(
                             CanvasIcons.arrow_open_right,
@@ -108,12 +105,12 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
 
   _close() async {
     try {
-      await locator<Analytics>().logEvent(AnalyticsEventConstants.LOGOUT);
-      await ParentTheme.of(context).setSelectedStudent(null);
+      locator<Analytics>().logEvent(AnalyticsEventConstants.LOGOUT);
+      await ParentTheme.of(context)?.setSelectedStudent(null);
       await ApiPrefs.performLogout(app: ParentApp.of(context));
-      MasqueradeUI.of(context).refresh();
-      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+      MasqueradeUI.of(context)?.refresh();
       await FeaturesUtils.performLogout();
+      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
     } catch (e) {
       // Just in case we experience any error we still need to go back to the login screen.
       locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
@@ -130,7 +127,7 @@ class _AcceptableUsePolicyState extends State<AcceptableUsePolicyScreen> {
     _interactor.getTermsOfService().then((termsOfService) => locator<QuickNav>()
         .push(
             context,
-            HtmlDescriptionScreen(termsOfService.content,
+            HtmlDescriptionScreen(termsOfService?.content,
                 L10n(context).acceptableUsePolicyTitle)));
   }
 

@@ -28,7 +28,7 @@ import 'pages/course_summary_page.dart';
 import 'pages/dashboard_page.dart';
 
 void main() {
-  FlutterDriver driver;
+  FlutterDriver? driver;
 
   // Connect to the Flutter driver before running any tests.
   setUpAll(() async {
@@ -38,7 +38,7 @@ void main() {
   // Close the connection to the driver after the tests have completed.
   tearDownAll(() async {
     if (driver != null) {
-      driver.close();
+      driver?.close();
     }
   });
 
@@ -47,14 +47,14 @@ void main() {
   // verifies that they show up correctly on the summary page.
   test('Summary E2E', () async {
     // Wait for seeding to complete
-    var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
+    var seedContext = (await DriverSeedUtils.waitForSeedingToComplete(driver))!;
 
     print("driver: Seeding complete!");
-    var parent = seedContext.getNamedObject<SeededUser>("parent");
-    var course = seedContext.getNamedObject<Course>("course");
-    var assignment = seedContext.getNamedObject<Assignment>("assignment");
-    var quiz = seedContext.getNamedObject<Quiz>("quiz");
-    var event = seedContext.getNamedObject<ScheduleItem>("event");
+    var parent = seedContext.getNamedObject<SeededUser>("parent")!;
+    var course = seedContext.getNamedObject<Course>("course")!;
+    var assignment = seedContext.getNamedObject<Assignment>("assignment")!;
+    var quiz = seedContext.getNamedObject<Quiz>("quiz")!;
+    var event = seedContext.getNamedObject<ScheduleItem>("event")!;
 
     // Let's check that all of our assignments, quizzes and announcements are displayed
     await DashboardPage.waitForRender(driver);

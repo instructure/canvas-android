@@ -28,26 +28,29 @@ abstract class SeededUser implements Built<SeededUser, SeededUserBuilder> {
   factory SeededUser([void Function(SeededUserBuilder) updates]) = _$SeededUser;
 
   String get id;
+
   String get name;
+
   @BuiltValueField(wireName: "short_name")
   String get shortName;
+
   @BuiltValueField(wireName: "sortable_name")
   String get sortableName;
-  @nullable
+
   @BuiltValueField(wireName: "terms_of_use")
-  bool get termsOfUse;
-  @nullable
+  bool? get termsOfUse;
+
   @BuiltValueField(wireName: "login_id")
-  String get loginId;
-  @nullable
-  String get password;
-  @nullable
+  String? get loginId;
+
+  String? get password;
+
   @BuiltValueField(wireName: "avatar_url")
-  String get avatarUrl;
-  @nullable
-  String get token;
-  @nullable
-  String get domain;
+  String? get avatarUrl;
+
+  String? get token;
+
+  String? get domain;
 
   static void _initializeBuilder(SeededUserBuilder b) => b..name = '';
 

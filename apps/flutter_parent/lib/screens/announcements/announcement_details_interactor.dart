@@ -30,7 +30,7 @@ class AnnouncementDetailsInteractor {
 
   CourseApi _courseApi() => locator<CourseApi>();
 
-  Future<AnnouncementViewState> getAnnouncement(
+  Future<AnnouncementViewState?> getAnnouncement(
     String announcementId,
     AnnouncementType type,
     String courseId,
@@ -38,10 +38,13 @@ class AnnouncementDetailsInteractor {
     bool forceRefresh,
   ) async {
     if (type == AnnouncementType.COURSE) {
-      Announcement announcement =
+      Announcement? announcement =
           await _announcementApi().getCourseAnnouncement(courseId, announcementId, forceRefresh);
 
-      Course course = await _courseApi().getCourse(courseId);
+      Course? course = await _courseApi().getCourse(courseId);
+      if (announcement == null || course == null) {
+        return null;
+      }
 
       return AnnouncementViewState(
         course.name,
@@ -51,8 +54,11 @@ class AnnouncementDetailsInteractor {
         announcement.attachments.isNotEmpty ? announcement.attachments.first.toAttachment() : null,
       );
     } else {
-      AccountNotification accountNotification =
+      AccountNotification? accountNotification =
           await _announcementApi().getAccountNotification(announcementId, forceRefresh);
+
+      if (accountNotification == null)
+        return null;
 
       return AnnouncementViewState(
         institutionToolbarTitle,

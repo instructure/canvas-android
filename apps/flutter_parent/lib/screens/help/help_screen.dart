@@ -23,7 +23,7 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'help_screen_interactor.dart';
 
@@ -34,8 +34,8 @@ class HelpScreen extends StatefulWidget {
 
 class _HelpScreenState extends State<HelpScreen> {
   final _interactor = locator<HelpScreenInteractor>();
-  Future<List<HelpLink>> _helpLinksFuture;
-  AppLocalizations l10n;
+  late Future<List<HelpLink>> _helpLinksFuture;
+  late AppLocalizations l10n;
 
   @override
   void initState() {
@@ -55,34 +55,34 @@ class _HelpScreenState extends State<HelpScreen> {
             builder: (context) => Scaffold(
                 appBar: AppBar(
                   title: Text(l10n.help),
-                  bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+                  bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
                 ),
                 body: _body),
           );
         });
   }
 
-  Widget _success(List<HelpLink> links) => ListView(children: _generateLinks(links));
+  Widget _success(List<HelpLink>? links) => ListView(children: _generateLinks(links));
 
-  List<Widget> _generateLinks(List<HelpLink> links) {
-    List<Widget> helpLinks = List.from(links.map(
+  List<Widget> _generateLinks(List<HelpLink>? links) {
+    List<Widget> helpLinks = List.from(links?.map(
       (l) => ListTile(
-        title: Text(l.text),
-        subtitle: Text(l.subtext),
+        title: Text(l.text, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(l.subtext, style: Theme.of(context).textTheme.bodySmall),
         onTap: () => _linkClick(l),
       ),
-    ));
+    ) ?? []);
 
     // Add in the legal and share the love tiles
     helpLinks.addAll([
       ListTile(
-        title: Text(l10n.helpShareLoveLabel),
-        subtitle: Text(l10n.helpShareLoveDescription),
+        title: Text(l10n.helpShareLoveLabel, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(l10n.helpShareLoveDescription, style: Theme.of(context).textTheme.bodySmall),
         onTap: _showShareLove,
       ),
       ListTile(
-        title: Text(l10n.helpLegalLabel),
-        subtitle: Text(l10n.helpLegalDescription),
+        title: Text(l10n.helpLegalLabel, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(l10n.helpLegalDescription, style: Theme.of(context).textTheme.bodySmall),
         onTap: () => _showLegal(),
       )
     ]);
@@ -132,7 +132,7 @@ class _HelpScreenState extends State<HelpScreen> {
     final parentId = ApiPrefs.getUser()?.id ?? 0;
     final email = ApiPrefs.getUser()?.primaryEmail ?? '';
     final domain = ApiPrefs.getDomain() ?? '';
-    final locale = ApiPrefs.effectiveLocale().toLanguageTag();
+    final locale = ApiPrefs.effectiveLocale()?.toLanguageTag();
 
     PackageInfo package = await PackageInfo.fromPlatform();
 

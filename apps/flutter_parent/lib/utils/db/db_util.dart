@@ -33,11 +33,11 @@ class DbUtil {
   static const dbVersion = 4;
   static const dbName = 'canvas_parent.db';
 
-  static Database _db;
+  static Database? _db;
 
   static Database get instance {
     if (_db == null) throw StateError('DbUtil has not been initialized!');
-    return _db;
+    return _db!;
   }
 
   static Future<void> init() async {

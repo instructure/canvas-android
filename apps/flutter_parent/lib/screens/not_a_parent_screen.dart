@@ -61,14 +61,14 @@ class NotAParentScreen extends StatelessWidget {
           child: Text(
             L10n(context).studentOrTeacherTitle,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
         children: [
           Text(
             L10n(context).studentOrTeacherSubtitle,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           SizedBox(height: 24),
           _appButton(context, L10n(context).studentApp, L10n(context).canvasStudentApp, ParentColors.studentApp, () {

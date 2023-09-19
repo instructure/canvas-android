@@ -24,7 +24,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart' as test_package;
-import 'package:test_api/src/frontend/async_matcher.dart';
 
 /// Exclusions for the [AccessibilityGuideline] checks.
 ///
@@ -46,15 +45,11 @@ extension A11yExclusionExtension on A11yExclusion {
     switch (this) {
       case A11yExclusion.multipleNodesWithSameLabel:
         return 'Multiple nodes with the same label';
-        break;
       case A11yExclusion.minContrastRatio:
         return 'Expected contrast ratio of at least';
-        break;
       case A11yExclusion.minTapSize:
         return 'expected tap target size of at least';
-        break;
     }
-    return null;
   }
 }
 
@@ -75,8 +70,7 @@ void testWidgetsWithAccessibilityChecks(
   String description,
   WidgetTesterCallback callback, {
   bool skip = false,
-  test_package.Timeout timeout,
-  Duration initialTimeout,
+  test_package.Timeout? timeout,
   bool semanticsEnabled = true,
   Set<A11yExclusion> a11yExclusions = const {},
 }) {
@@ -84,11 +78,11 @@ void testWidgetsWithAccessibilityChecks(
 
   testWidgets(description, (tester) async {
     if (envVars["deviceWidth"] != null && envVars["deviceHeight"] != null) {
-      var width = double.parse(envVars["deviceWidth"]);
-      var height = double.parse(envVars["deviceHeight"]);
+      var width = double.parse(envVars["deviceWidth"]!);
+      var height = double.parse(envVars["deviceHeight"]!);
       double ratio = 1.0;
       if (envVars["pixelRatio"] != null) {
-        ratio = double.parse(envVars["pixelRatio"]);
+        ratio = double.parse(envVars["pixelRatio"]!);
       }
 
       print("Changing device res to width=$width, height=$height, ratio=$ratio");
@@ -99,19 +93,19 @@ void testWidgetsWithAccessibilityChecks(
     await callback(tester);
 
     // Run our accessibility test suite at the end of the test.
-    await runAccessibilityTests(tester, a11yExclusions);
+    await runAccessibilityTests(tester);
 
     handle.dispose();
-  }, skip: skip, timeout: timeout, initialTimeout: initialTimeout, semanticsEnabled: semanticsEnabled);
+  }, skip: skip, timeout: timeout, semanticsEnabled: semanticsEnabled);
 }
 
 // Break this out into its own method, so that it can be used mid-test.
-Future<void> runAccessibilityTests(WidgetTester tester, Set<A11yExclusion> exclusions) async {
-  await expectLater(tester, meetsGuidelineWithExclusions(textContrastGuideline, exclusions));
-  await expectLater(tester, meetsGuidelineWithExclusions(labeledTapTargetGuideline, exclusions));
-  await expectLater(tester, meetsGuidelineWithExclusions(androidTapTargetGuideline, exclusions));
+Future<void> runAccessibilityTests(WidgetTester tester) async {
+  await expectLater(tester, meetsGuideline(textContrastGuideline));
+  await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+  await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
   // Needs to be last, because it fiddles with UI
-  await expectLater(tester, meetsGuidelineWithExclusions(TextFieldNavigationGuideline(), exclusions));
+  await expectLater(tester, meetsGuideline(TextFieldNavigationGuideline()));
 }
 
 // Here's an example of a custom guideline.  We can conceivably write
@@ -125,7 +119,7 @@ class NoHintsGuideline extends AccessibilityGuideline {
 
   @override
   FutureOr<Evaluation> evaluate(WidgetTester tester) {
-    final SemanticsNode root = tester.binding.pipelineOwner.semanticsOwner.rootSemanticsNode;
+    final SemanticsNode? root = tester.binding.pipelineOwner.semanticsOwner?.rootSemanticsNode;
 
     // Traversal logic that recurses to children
     Evaluation traverse(SemanticsNode node) {
@@ -135,7 +129,7 @@ class NoHintsGuideline extends AccessibilityGuideline {
         return true;
       });
 
-      if (node.hint != null && node.hint.isNotEmpty) {
+      if (node.hint.isNotEmpty) {
         //print("Node $node hint = ${node.hint}");
         result += Evaluation.fail('$node has hint \'${node.hint}\'!\n');
       }
@@ -143,7 +137,7 @@ class NoHintsGuideline extends AccessibilityGuideline {
       return result; // Returns aggregate result
     }
 
-    return traverse(root); // Start traversing at the root.
+    return traverse(root!); // Start traversing at the root.
   }
 }
 
@@ -156,7 +150,7 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
 
   // Grab the focusable SemanticsNodes associated with this screen.
   List<SemanticsNode> _getFocusableSemanticsNodes(SemanticsNode root) {
-    List<SemanticsNode> result = List<SemanticsNode>();
+    List<SemanticsNode> result = [];
     if (root.hasFlag(SemanticsFlag.isFocusable) &&
         !root.isMergedIntoParent &&
         !root.isInvisible &&
@@ -178,7 +172,7 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
       return root;
     }
 
-    SemanticsNode result = null;
+    SemanticsNode? result = null;
     root.visitChildren((SemanticsNode child) {
       if (result == null) {
         result = _findFocusedNode(child);
@@ -186,7 +180,7 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
       return true;
     });
 
-    return result;
+    return result!;
   }
 
   //
@@ -217,7 +211,7 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
   Future<FocusNode> _move(WidgetTester tester, LogicalKeyboardKey key) async {
     await tester.sendKeyEvent(key);
     await tester.pumpAndSettle();
-    FocusNode newFocus = tester.binding.focusManager.primaryFocus;
+    FocusNode newFocus = tester.binding.focusManager.primaryFocus!;
     return newFocus;
   }
 
@@ -225,17 +219,17 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
 
   @override
   FutureOr<Evaluation> evaluate(WidgetTester tester) async {
-    final SemanticsNode root = tester.binding.pipelineOwner.semanticsOwner.rootSemanticsNode;
+    final SemanticsNode? root = tester.binding.pipelineOwner.semanticsOwner?.rootSemanticsNode;
 
     // Default result
     Evaluation result = Evaluation.pass();
 
     // Gather all focusable SemanticsNodes for our screen
     // We can't get this info through the focus node tree.
-    List<SemanticsNode> focusableSemanticsNodes = _getFocusableSemanticsNodes(root);
+    List<SemanticsNode> focusableSemanticsNodes = _getFocusableSemanticsNodes(root!);
 
     Iterable<FocusNode> editableTextFocusNodes = tester.binding.focusManager.rootScope.descendants
-        .where((fn) => fn.context != null && fn.context.widget is EditableText);
+        .where((fn) => fn.context != null && fn.context?.widget is EditableText);
 
     if (focusableSemanticsNodes.length > 1) {
       // Only test navigability if there is something else to which to navigate.
@@ -245,7 +239,7 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
         await tester.pumpAndSettle();
 
         // and then try to navigate out of it.
-        FocusNode currFocus = tester.binding.focusManager.primaryFocus;
+        FocusNode? currFocus = tester.binding.focusManager.primaryFocus;
         FocusNode newFocus = await _moveUp(tester);
         if (newFocus == currFocus) {
           newFocus = await _moveDown(tester);
@@ -265,35 +259,5 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
     }
 
     return result;
-  }
-}
-
-AsyncMatcher meetsGuidelineWithExclusions(AccessibilityGuideline guideline, Set<A11yExclusion> exclusions) {
-  return _MatchesAccessibilityGuidelineWithExclusions(guideline, exclusions);
-}
-
-class _MatchesAccessibilityGuidelineWithExclusions extends AsyncMatcher {
-  _MatchesAccessibilityGuidelineWithExclusions(this.guideline, this.exclusions);
-
-  final AccessibilityGuideline guideline;
-  final Set<A11yExclusion> exclusions;
-
-  @override
-  Description describe(Description description) {
-    return description.add(guideline.description);
-  }
-
-  @override
-  Future<String> matchAsync(covariant WidgetTester tester) async {
-    final Evaluation result = await guideline.evaluate(tester);
-    if (result.passed) return null;
-    for (var exclusion in exclusions) {
-      if (result.reason.contains(exclusion.errorMessageContents)) {
-        print('A11y check failure ignored because $exclusion was applied:');
-        print('    - ${result.reason}');
-        return null;
-      }
-    }
-    return result.reason;
   }
 }

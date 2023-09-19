@@ -32,12 +32,13 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   // For user images
   mockNetworkImageResponse();
 
-  final interactor = _MockAlertThresholdsInteractor();
+  final interactor = MockAlertThresholdsInteractor();
 
   setupTestLocator((locator) {
     locator.registerFactory<AlertThresholdsInteractor>(() => interactor);
@@ -240,7 +241,7 @@ void main() {
         TestApp(
           Builder(builder: (context) {
             return Material(
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () async {
                   popValue = await QuickNav().push(
                     context,
@@ -254,7 +255,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(FlatButton));
+      await tester.tap(find.byType(TextButton));
       await tester.pumpAndSettle();
 
       // Tap overflow menu
@@ -312,7 +313,7 @@ void main() {
       await tester.pump();
 
       // Check to make sure we have the initial value
-      expect(find.text(NumberFormat.percentPattern().format(int.tryParse(initialValue) / 100)), findsOneWidget);
+      expect(find.text(NumberFormat.percentPattern().format(int.tryParse(initialValue)! / 100)), findsOneWidget);
 
       // Tap on a percent threshold
       await tester.tap(find.text(AppLocalizations().courseGradeBelow));
@@ -329,25 +330,25 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for the update
-      expect(find.text(NumberFormat.percentPattern().format(int.tryParse(updatedValue) / 100)), findsOneWidget);
+      expect(find.text(NumberFormat.percentPattern().format(int.tryParse(updatedValue)! / 100)), findsOneWidget);
     });
   });
 }
 
-Finder _percentageThresholdFinder(String title, {String value}) => find.byWidgetPredicate((widget) {
+Finder _percentageThresholdFinder(String title, {String? value}) => find.byWidgetPredicate((widget) {
       return widget is ListTile &&
               widget.title is Text &&
               (widget.title as Text).data == title &&
               widget.trailing is Text &&
               (widget.trailing as Text).data ==
                   (value != null
-                      ? NumberFormat.percentPattern().format(int.tryParse(value) / 100)
+                      ? NumberFormat.percentPattern().format(int.tryParse(value)! / 100)
                       : AppLocalizations().never)
           ? true
           : false;
     });
 
-Finder _switchThresholdFinder(String title, {bool switchedOn}) => find.byWidgetPredicate((widget) {
+Finder _switchThresholdFinder(String title, {bool? switchedOn}) => find.byWidgetPredicate((widget) {
       return widget is SwitchListTile &&
               widget.title is Text &&
               (widget.title as Text).data == title &&
@@ -356,15 +357,14 @@ Finder _switchThresholdFinder(String title, {bool switchedOn}) => find.byWidgetP
           : false;
     });
 
-void _setupScreen(WidgetTester tester, [User student]) async {
+Future<void> _setupScreen(WidgetTester tester, [User? student]) async {
   var user = student ?? CanvasModelTestUtils.mockUser();
   var screen = TestApp(AlertThresholdsScreen(user));
   await tester.pumpWidget(screen);
 }
 
-AlertThreshold _mockThreshold({AlertType type, String value}) => AlertThreshold((b) => b
+AlertThreshold _mockThreshold({AlertType? type, String? value}) => AlertThreshold((b) => b
   ..alertType = type ?? AlertType.courseGradeLow
   ..threshold = value ?? null
   ..build());
 
-class _MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}

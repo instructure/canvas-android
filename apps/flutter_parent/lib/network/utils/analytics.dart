@@ -11,13 +11,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:device_info/device_info.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/network/api/heap_api.dart';
 import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
 
 /// Event names
 /// The naming scheme for the majority of these is found in a google doc so that we can be consistent

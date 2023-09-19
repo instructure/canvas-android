@@ -28,33 +28,33 @@ import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseDetailsInteractor {
-  Future<Course> loadCourse(String courseId, {bool forceRefresh = false}) {
+  Future<Course?> loadCourse(String courseId, {bool forceRefresh = false}) {
     return locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
   }
 
-  Future<List<CourseTab>> loadCourseTabs(String courseId, {bool forceRefresh = false}) =>
+  Future<List<CourseTab>?> loadCourseTabs(String courseId, {bool forceRefresh = false}) =>
       locator<CourseApi>().getCourseTabs(courseId, forceRefresh: forceRefresh);
 
-  Future<CourseSettings> loadCourseSettings(String courseId, {bool forceRefresh = false}) =>
+  Future<CourseSettings?> loadCourseSettings(String courseId, {bool forceRefresh = false}) =>
       locator<CourseApi>().getCourseSettings(courseId, forceRefresh: forceRefresh);
 
-  Future<List<AssignmentGroup>> loadAssignmentGroups(String courseId, String studentId, String gradingPeriodId,
+  Future<List<AssignmentGroup>?> loadAssignmentGroups(String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) {
     return locator<AssignmentApi>().getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId, gradingPeriodId,
         forceRefresh: forceRefresh);
   }
 
-  Future<GradingPeriodResponse> loadGradingPeriods(String courseId, {bool forceRefresh = false}) {
+  Future<GradingPeriodResponse?> loadGradingPeriods(String courseId, {bool forceRefresh = false}) {
     return locator<CourseApi>().getGradingPeriods(courseId, forceRefresh: forceRefresh);
   }
 
-  Future<List<Enrollment>> loadEnrollmentsForGradingPeriod(String courseId, String studentId, String gradingPeriodId,
+  Future<List<Enrollment>?> loadEnrollmentsForGradingPeriod(String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) {
     return locator<EnrollmentsApi>()
         .getEnrollmentsByGradingPeriod(courseId, studentId, gradingPeriodId, forceRefresh: forceRefresh);
   }
 
-  Future<List<ScheduleItem>> loadScheduleItems(String courseId, String type, bool refresh) {
+  Future<List<ScheduleItem>?> loadScheduleItems(String courseId, String type, bool refresh) {
     return locator<CalendarEventsApi>().getAllCalendarEvents(
       allEvents: true,
       type: type,
@@ -63,6 +63,6 @@ class CourseDetailsInteractor {
     );
   }
 
-  Future<CanvasPage> loadFrontPage(String courseId, {bool forceRefresh = false}) =>
+  Future<CanvasPage?> loadFrontPage(String courseId, {bool forceRefresh = false}) =>
       locator<PageApi>().getCourseFrontPage(courseId, forceRefresh: forceRefresh);
 }

@@ -27,22 +27,24 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class AccountsApi {
-  Future<List<SchoolDomain>> searchDomains(String query) async {
+  Future<List<SchoolDomain>?> searchDomains(String query) async {
     var dio = DioConfig.core(cacheMaxAge: Duration(minutes: 5)).dio;
     return fetchList(dio.get('accounts/search', queryParameters: {'search_term': query}));
   }
 
-  Future<TermsOfService> getTermsOfService() {
-    return fetch(canvasDio().get('accounts/self/terms_of_service'));
+  Future<TermsOfService?> getTermsOfService() async {
+    var dio = canvasDio();
+    return fetch(dio.get('accounts/self/terms_of_service'));
   }
 
-  Future<TermsOfService> getTermsOfServiceForAccount(String accountId, String domain) {
+  Future<TermsOfService?> getTermsOfServiceForAccount(String accountId, String domain) async {
     var dio = DioConfig(baseUrl: 'https://$domain/api/v1/', forceRefresh: true).dio;
     return fetch(dio.get('accounts/$accountId/terms_of_service'));
   }
 
-  Future<AccountPermissions> getAccountPermissions() {
-    return fetch(canvasDio().get('accounts/self/permissions'));
+  Future<AccountPermissions?> getAccountPermissions() async {
+    var dio = canvasDio();
+    return fetch(dio.get('accounts/self/permissions'));
   }
 
   /**
@@ -51,7 +53,8 @@ class AccountsApi {
    * Awaiting api changes to make this call w/o authentication prior to user account creation
    */
   Future<bool> getPairingAllowed() async {
-    var response = await canvasDio().get('accounts/self/authentication_providers/canvas');
+    var dio = canvasDio();
+    var response = await dio.get('accounts/self/authentication_providers/canvas');
     var selfRegistration = response.data['self_registration'];
     return selfRegistration == 'observer' || selfRegistration == 'all';
   }

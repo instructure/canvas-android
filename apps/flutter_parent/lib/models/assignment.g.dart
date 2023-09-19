@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of assignment;
+part of 'assignment.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
@@ -114,9 +114,9 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
   final String wireName = 'Assignment';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Assignment object,
+  Iterable<Object?> serialize(Serializers serializers, Assignment object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'points_possible',
@@ -134,9 +134,6 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       'position',
       serializers.serialize(object.position,
           specifiedType: const FullType(int)),
-      'lock_info',
-      serializers.serialize(object.lockInfo,
-          specifiedType: const FullType(LockInfo)),
       'locked_for_user',
       serializers.serialize(object.lockedForUser,
           specifiedType: const FullType(bool)),
@@ -165,231 +162,225 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       serializers.serialize(object.isStudioEnabled,
           specifiedType: const FullType(bool)),
     ];
-    result.add('name');
-    if (object.name == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.name,
-          specifiedType: const FullType(String)));
-    }
-    result.add('description');
-    if (object.description == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.description,
-          specifiedType: const FullType(String)));
-    }
-    result.add('due_at');
-    if (object.dueAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.dueAt,
+    Object? value;
+    value = object.name;
+
+    result
+      ..add('name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.description;
+
+    result
+      ..add('description')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.dueAt;
+
+    result
+      ..add('due_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('grading_type');
-    if (object.gradingType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.gradingType,
+    value = object.gradingType;
+
+    result
+      ..add('grading_type')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(GradingType)));
-    }
-    result.add('html_url');
-    if (object.htmlUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.htmlUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('url');
-    if (object.url == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('quiz_id');
-    if (object.quizId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.quizId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('submission');
-    if (object.submissionWrapper == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.submissionWrapper,
+    value = object.htmlUrl;
+
+    result
+      ..add('html_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.url;
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.quizId;
+
+    result
+      ..add('quiz_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.submissionWrapper;
+
+    result
+      ..add('submission')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(SubmissionWrapper)));
-    }
-    result.add('lock_at');
-    if (object.lockAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockAt,
+    value = object.lockInfo;
+
+    result
+      ..add('lock_info')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(LockInfo)));
+    value = object.lockAt;
+
+    result
+      ..add('lock_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('unlock_at');
-    if (object.unlockAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.unlockAt,
+    value = object.unlockAt;
+
+    result
+      ..add('unlock_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('lock_explanation');
-    if (object.lockExplanation == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockExplanation,
-          specifiedType: const FullType(String)));
-    }
-    result.add('group_category_id');
-    if (object.groupCategoryId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.groupCategoryId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('submission_types');
-    if (object.submissionTypes == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.submissionTypes,
+    value = object.lockExplanation;
+
+    result
+      ..add('lock_explanation')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.groupCategoryId;
+
+    result
+      ..add('group_category_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.submissionTypes;
+
+    result
+      ..add('submission_types')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(
               BuiltList, const [const FullType(SubmissionTypes)])));
-    }
+
     return result;
   }
 
   @override
-  Assignment deserialize(Serializers serializers, Iterable<Object> serialized,
+  Assignment deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AssignmentBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'description':
           result.description = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'due_at':
           result.dueAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'points_possible':
           result.pointsPossible = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
+              specifiedType: const FullType(double))! as double;
           break;
         case 'course_id':
           result.courseId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'grading_type':
           result.gradingType = serializers.deserialize(value,
-              specifiedType: const FullType(GradingType)) as GradingType;
+              specifiedType: const FullType(GradingType)) as GradingType?;
           break;
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'quiz_id':
           result.quizId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'use_rubric_for_grading':
           result.useRubricForGrading = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'submission':
           result.submissionWrapper.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(SubmissionWrapper))
+                  specifiedType: const FullType(SubmissionWrapper))!
               as SubmissionWrapper);
           break;
         case 'assignment_group_id':
           result.assignmentGroupId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'position':
           result.position = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'lock_info':
           result.lockInfo.replace(serializers.deserialize(value,
-              specifiedType: const FullType(LockInfo)) as LockInfo);
+              specifiedType: const FullType(LockInfo))! as LockInfo);
           break;
         case 'locked_for_user':
           result.lockedForUser = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'lock_at':
           result.lockAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'unlock_at':
           result.unlockAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'lock_explanation':
           result.lockExplanation = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'free_form_criterion_comments':
           result.freeFormCriterionComments = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'published':
           result.published = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'group_category_id':
           result.groupCategoryId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'user_submitted':
           result.userSubmitted = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'only_visible_to_overrides':
           result.onlyVisibleToOverrides = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'anonymous_peer_reviews':
           result.anonymousPeerReviews = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'moderated_grading':
           result.moderatedGrading = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'anonymous_grading':
           result.anonymousGrading = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'isStudioEnabled':
           result.isStudioEnabled = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'submission_types':
           result.submissionTypes.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(SubmissionTypes)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(SubmissionTypes)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -429,7 +420,8 @@ class _$GradingTypeSerializer implements PrimitiveSerializer<GradingType> {
   @override
   GradingType deserialize(Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
-      GradingType.valueOf(_fromWire[serialized] ?? serialized as String);
+      GradingType.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$SubmissionTypesSerializer
@@ -468,54 +460,55 @@ class _$SubmissionTypesSerializer
   @override
   SubmissionTypes deserialize(Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
-      SubmissionTypes.valueOf(_fromWire[serialized] ?? serialized as String);
+      SubmissionTypes.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$Assignment extends Assignment {
   @override
   final String id;
   @override
-  final String name;
+  final String? name;
   @override
-  final String description;
+  final String? description;
   @override
-  final DateTime dueAt;
+  final DateTime? dueAt;
   @override
   final double pointsPossible;
   @override
   final String courseId;
   @override
-  final GradingType gradingType;
+  final GradingType? gradingType;
   @override
-  final String htmlUrl;
+  final String? htmlUrl;
   @override
-  final String url;
+  final String? url;
   @override
-  final String quizId;
+  final String? quizId;
   @override
   final bool useRubricForGrading;
   @override
-  final SubmissionWrapper submissionWrapper;
+  final SubmissionWrapper? submissionWrapper;
   @override
   final String assignmentGroupId;
   @override
   final int position;
   @override
-  final LockInfo lockInfo;
+  final LockInfo? lockInfo;
   @override
   final bool lockedForUser;
   @override
-  final DateTime lockAt;
+  final DateTime? lockAt;
   @override
-  final DateTime unlockAt;
+  final DateTime? unlockAt;
   @override
-  final String lockExplanation;
+  final String? lockExplanation;
   @override
   final bool freeFormCriterionComments;
   @override
   final bool published;
   @override
-  final String groupCategoryId;
+  final String? groupCategoryId;
   @override
   final bool userSubmitted;
   @override
@@ -529,92 +522,69 @@ class _$Assignment extends Assignment {
   @override
   final bool isStudioEnabled;
   @override
-  final BuiltList<SubmissionTypes> submissionTypes;
+  final BuiltList<SubmissionTypes>? submissionTypes;
 
-  factory _$Assignment([void Function(AssignmentBuilder) updates]) =>
-      (new AssignmentBuilder()..update(updates)).build();
+  factory _$Assignment([void Function(AssignmentBuilder)? updates]) =>
+      (new AssignmentBuilder()..update(updates))._build();
 
   _$Assignment._(
-      {this.id,
+      {required this.id,
       this.name,
       this.description,
       this.dueAt,
-      this.pointsPossible,
-      this.courseId,
+      required this.pointsPossible,
+      required this.courseId,
       this.gradingType,
       this.htmlUrl,
       this.url,
       this.quizId,
-      this.useRubricForGrading,
+      required this.useRubricForGrading,
       this.submissionWrapper,
-      this.assignmentGroupId,
-      this.position,
+      required this.assignmentGroupId,
+      required this.position,
       this.lockInfo,
-      this.lockedForUser,
+      required this.lockedForUser,
       this.lockAt,
       this.unlockAt,
       this.lockExplanation,
-      this.freeFormCriterionComments,
-      this.published,
+      required this.freeFormCriterionComments,
+      required this.published,
       this.groupCategoryId,
-      this.userSubmitted,
-      this.onlyVisibleToOverrides,
-      this.anonymousPeerReviews,
-      this.moderatedGrading,
-      this.anonymousGrading,
-      this.isStudioEnabled,
+      required this.userSubmitted,
+      required this.onlyVisibleToOverrides,
+      required this.anonymousPeerReviews,
+      required this.moderatedGrading,
+      required this.anonymousGrading,
+      required this.isStudioEnabled,
       this.submissionTypes})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'id');
-    }
-    if (pointsPossible == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'pointsPossible');
-    }
-    if (courseId == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'courseId');
-    }
-    if (useRubricForGrading == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'useRubricForGrading');
-    }
-    if (assignmentGroupId == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'assignmentGroupId');
-    }
-    if (position == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'position');
-    }
-    if (lockInfo == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'lockInfo');
-    }
-    if (lockedForUser == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'lockedForUser');
-    }
-    if (freeFormCriterionComments == null) {
-      throw new BuiltValueNullFieldError(
-          'Assignment', 'freeFormCriterionComments');
-    }
-    if (published == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'published');
-    }
-    if (userSubmitted == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'userSubmitted');
-    }
-    if (onlyVisibleToOverrides == null) {
-      throw new BuiltValueNullFieldError(
-          'Assignment', 'onlyVisibleToOverrides');
-    }
-    if (anonymousPeerReviews == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'anonymousPeerReviews');
-    }
-    if (moderatedGrading == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'moderatedGrading');
-    }
-    if (anonymousGrading == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'anonymousGrading');
-    }
-    if (isStudioEnabled == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'isStudioEnabled');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'Assignment', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        pointsPossible, r'Assignment', 'pointsPossible');
+    BuiltValueNullFieldError.checkNotNull(courseId, r'Assignment', 'courseId');
+    BuiltValueNullFieldError.checkNotNull(
+        useRubricForGrading, r'Assignment', 'useRubricForGrading');
+    BuiltValueNullFieldError.checkNotNull(
+        assignmentGroupId, r'Assignment', 'assignmentGroupId');
+    BuiltValueNullFieldError.checkNotNull(position, r'Assignment', 'position');
+    BuiltValueNullFieldError.checkNotNull(
+        lockedForUser, r'Assignment', 'lockedForUser');
+    BuiltValueNullFieldError.checkNotNull(
+        freeFormCriterionComments, r'Assignment', 'freeFormCriterionComments');
+    BuiltValueNullFieldError.checkNotNull(
+        published, r'Assignment', 'published');
+    BuiltValueNullFieldError.checkNotNull(
+        userSubmitted, r'Assignment', 'userSubmitted');
+    BuiltValueNullFieldError.checkNotNull(
+        onlyVisibleToOverrides, r'Assignment', 'onlyVisibleToOverrides');
+    BuiltValueNullFieldError.checkNotNull(
+        anonymousPeerReviews, r'Assignment', 'anonymousPeerReviews');
+    BuiltValueNullFieldError.checkNotNull(
+        moderatedGrading, r'Assignment', 'moderatedGrading');
+    BuiltValueNullFieldError.checkNotNull(
+        anonymousGrading, r'Assignment', 'anonymousGrading');
+    BuiltValueNullFieldError.checkNotNull(
+        isStudioEnabled, r'Assignment', 'isStudioEnabled');
   }
 
   @override
@@ -661,49 +631,43 @@ class _$Assignment extends Assignment {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode), quizId.hashCode),
-                                                                                useRubricForGrading.hashCode),
-                                                                            submissionWrapper.hashCode),
-                                                                        assignmentGroupId.hashCode),
-                                                                    position.hashCode),
-                                                                lockInfo.hashCode),
-                                                            lockedForUser.hashCode),
-                                                        lockAt.hashCode),
-                                                    unlockAt.hashCode),
-                                                lockExplanation.hashCode),
-                                            freeFormCriterionComments.hashCode),
-                                        published.hashCode),
-                                    groupCategoryId.hashCode),
-                                userSubmitted.hashCode),
-                            onlyVisibleToOverrides.hashCode),
-                        anonymousPeerReviews.hashCode),
-                    moderatedGrading.hashCode),
-                anonymousGrading.hashCode),
-            isStudioEnabled.hashCode),
-        submissionTypes.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, description.hashCode);
+    _$hash = $jc(_$hash, dueAt.hashCode);
+    _$hash = $jc(_$hash, pointsPossible.hashCode);
+    _$hash = $jc(_$hash, courseId.hashCode);
+    _$hash = $jc(_$hash, gradingType.hashCode);
+    _$hash = $jc(_$hash, htmlUrl.hashCode);
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, quizId.hashCode);
+    _$hash = $jc(_$hash, useRubricForGrading.hashCode);
+    _$hash = $jc(_$hash, submissionWrapper.hashCode);
+    _$hash = $jc(_$hash, assignmentGroupId.hashCode);
+    _$hash = $jc(_$hash, position.hashCode);
+    _$hash = $jc(_$hash, lockInfo.hashCode);
+    _$hash = $jc(_$hash, lockedForUser.hashCode);
+    _$hash = $jc(_$hash, lockAt.hashCode);
+    _$hash = $jc(_$hash, unlockAt.hashCode);
+    _$hash = $jc(_$hash, lockExplanation.hashCode);
+    _$hash = $jc(_$hash, freeFormCriterionComments.hashCode);
+    _$hash = $jc(_$hash, published.hashCode);
+    _$hash = $jc(_$hash, groupCategoryId.hashCode);
+    _$hash = $jc(_$hash, userSubmitted.hashCode);
+    _$hash = $jc(_$hash, onlyVisibleToOverrides.hashCode);
+    _$hash = $jc(_$hash, anonymousPeerReviews.hashCode);
+    _$hash = $jc(_$hash, moderatedGrading.hashCode);
+    _$hash = $jc(_$hash, anonymousGrading.hashCode);
+    _$hash = $jc(_$hash, isStudioEnabled.hashCode);
+    _$hash = $jc(_$hash, submissionTypes.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Assignment')
+    return (newBuiltValueToStringHelper(r'Assignment')
           ..add('id', id)
           ..add('name', name)
           ..add('description', description)
@@ -738,139 +702,140 @@ class _$Assignment extends Assignment {
 }
 
 class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
-  _$Assignment _$v;
+  _$Assignment? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _description;
-  String get description => _$this._description;
-  set description(String description) => _$this._description = description;
+  String? _description;
+  String? get description => _$this._description;
+  set description(String? description) => _$this._description = description;
 
-  DateTime _dueAt;
-  DateTime get dueAt => _$this._dueAt;
-  set dueAt(DateTime dueAt) => _$this._dueAt = dueAt;
+  DateTime? _dueAt;
+  DateTime? get dueAt => _$this._dueAt;
+  set dueAt(DateTime? dueAt) => _$this._dueAt = dueAt;
 
-  double _pointsPossible;
-  double get pointsPossible => _$this._pointsPossible;
-  set pointsPossible(double pointsPossible) =>
+  double? _pointsPossible;
+  double? get pointsPossible => _$this._pointsPossible;
+  set pointsPossible(double? pointsPossible) =>
       _$this._pointsPossible = pointsPossible;
 
-  String _courseId;
-  String get courseId => _$this._courseId;
-  set courseId(String courseId) => _$this._courseId = courseId;
+  String? _courseId;
+  String? get courseId => _$this._courseId;
+  set courseId(String? courseId) => _$this._courseId = courseId;
 
-  GradingType _gradingType;
-  GradingType get gradingType => _$this._gradingType;
-  set gradingType(GradingType gradingType) => _$this._gradingType = gradingType;
+  GradingType? _gradingType;
+  GradingType? get gradingType => _$this._gradingType;
+  set gradingType(GradingType? gradingType) =>
+      _$this._gradingType = gradingType;
 
-  String _htmlUrl;
-  String get htmlUrl => _$this._htmlUrl;
-  set htmlUrl(String htmlUrl) => _$this._htmlUrl = htmlUrl;
+  String? _htmlUrl;
+  String? get htmlUrl => _$this._htmlUrl;
+  set htmlUrl(String? htmlUrl) => _$this._htmlUrl = htmlUrl;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  String _quizId;
-  String get quizId => _$this._quizId;
-  set quizId(String quizId) => _$this._quizId = quizId;
+  String? _quizId;
+  String? get quizId => _$this._quizId;
+  set quizId(String? quizId) => _$this._quizId = quizId;
 
-  bool _useRubricForGrading;
-  bool get useRubricForGrading => _$this._useRubricForGrading;
-  set useRubricForGrading(bool useRubricForGrading) =>
+  bool? _useRubricForGrading;
+  bool? get useRubricForGrading => _$this._useRubricForGrading;
+  set useRubricForGrading(bool? useRubricForGrading) =>
       _$this._useRubricForGrading = useRubricForGrading;
 
-  SubmissionWrapperBuilder _submissionWrapper;
+  SubmissionWrapperBuilder? _submissionWrapper;
   SubmissionWrapperBuilder get submissionWrapper =>
       _$this._submissionWrapper ??= new SubmissionWrapperBuilder();
-  set submissionWrapper(SubmissionWrapperBuilder submissionWrapper) =>
+  set submissionWrapper(SubmissionWrapperBuilder? submissionWrapper) =>
       _$this._submissionWrapper = submissionWrapper;
 
-  String _assignmentGroupId;
-  String get assignmentGroupId => _$this._assignmentGroupId;
-  set assignmentGroupId(String assignmentGroupId) =>
+  String? _assignmentGroupId;
+  String? get assignmentGroupId => _$this._assignmentGroupId;
+  set assignmentGroupId(String? assignmentGroupId) =>
       _$this._assignmentGroupId = assignmentGroupId;
 
-  int _position;
-  int get position => _$this._position;
-  set position(int position) => _$this._position = position;
+  int? _position;
+  int? get position => _$this._position;
+  set position(int? position) => _$this._position = position;
 
-  LockInfoBuilder _lockInfo;
+  LockInfoBuilder? _lockInfo;
   LockInfoBuilder get lockInfo => _$this._lockInfo ??= new LockInfoBuilder();
-  set lockInfo(LockInfoBuilder lockInfo) => _$this._lockInfo = lockInfo;
+  set lockInfo(LockInfoBuilder? lockInfo) => _$this._lockInfo = lockInfo;
 
-  bool _lockedForUser;
-  bool get lockedForUser => _$this._lockedForUser;
-  set lockedForUser(bool lockedForUser) =>
+  bool? _lockedForUser;
+  bool? get lockedForUser => _$this._lockedForUser;
+  set lockedForUser(bool? lockedForUser) =>
       _$this._lockedForUser = lockedForUser;
 
-  DateTime _lockAt;
-  DateTime get lockAt => _$this._lockAt;
-  set lockAt(DateTime lockAt) => _$this._lockAt = lockAt;
+  DateTime? _lockAt;
+  DateTime? get lockAt => _$this._lockAt;
+  set lockAt(DateTime? lockAt) => _$this._lockAt = lockAt;
 
-  DateTime _unlockAt;
-  DateTime get unlockAt => _$this._unlockAt;
-  set unlockAt(DateTime unlockAt) => _$this._unlockAt = unlockAt;
+  DateTime? _unlockAt;
+  DateTime? get unlockAt => _$this._unlockAt;
+  set unlockAt(DateTime? unlockAt) => _$this._unlockAt = unlockAt;
 
-  String _lockExplanation;
-  String get lockExplanation => _$this._lockExplanation;
-  set lockExplanation(String lockExplanation) =>
+  String? _lockExplanation;
+  String? get lockExplanation => _$this._lockExplanation;
+  set lockExplanation(String? lockExplanation) =>
       _$this._lockExplanation = lockExplanation;
 
-  bool _freeFormCriterionComments;
-  bool get freeFormCriterionComments => _$this._freeFormCriterionComments;
-  set freeFormCriterionComments(bool freeFormCriterionComments) =>
+  bool? _freeFormCriterionComments;
+  bool? get freeFormCriterionComments => _$this._freeFormCriterionComments;
+  set freeFormCriterionComments(bool? freeFormCriterionComments) =>
       _$this._freeFormCriterionComments = freeFormCriterionComments;
 
-  bool _published;
-  bool get published => _$this._published;
-  set published(bool published) => _$this._published = published;
+  bool? _published;
+  bool? get published => _$this._published;
+  set published(bool? published) => _$this._published = published;
 
-  String _groupCategoryId;
-  String get groupCategoryId => _$this._groupCategoryId;
-  set groupCategoryId(String groupCategoryId) =>
+  String? _groupCategoryId;
+  String? get groupCategoryId => _$this._groupCategoryId;
+  set groupCategoryId(String? groupCategoryId) =>
       _$this._groupCategoryId = groupCategoryId;
 
-  bool _userSubmitted;
-  bool get userSubmitted => _$this._userSubmitted;
-  set userSubmitted(bool userSubmitted) =>
+  bool? _userSubmitted;
+  bool? get userSubmitted => _$this._userSubmitted;
+  set userSubmitted(bool? userSubmitted) =>
       _$this._userSubmitted = userSubmitted;
 
-  bool _onlyVisibleToOverrides;
-  bool get onlyVisibleToOverrides => _$this._onlyVisibleToOverrides;
-  set onlyVisibleToOverrides(bool onlyVisibleToOverrides) =>
+  bool? _onlyVisibleToOverrides;
+  bool? get onlyVisibleToOverrides => _$this._onlyVisibleToOverrides;
+  set onlyVisibleToOverrides(bool? onlyVisibleToOverrides) =>
       _$this._onlyVisibleToOverrides = onlyVisibleToOverrides;
 
-  bool _anonymousPeerReviews;
-  bool get anonymousPeerReviews => _$this._anonymousPeerReviews;
-  set anonymousPeerReviews(bool anonymousPeerReviews) =>
+  bool? _anonymousPeerReviews;
+  bool? get anonymousPeerReviews => _$this._anonymousPeerReviews;
+  set anonymousPeerReviews(bool? anonymousPeerReviews) =>
       _$this._anonymousPeerReviews = anonymousPeerReviews;
 
-  bool _moderatedGrading;
-  bool get moderatedGrading => _$this._moderatedGrading;
-  set moderatedGrading(bool moderatedGrading) =>
+  bool? _moderatedGrading;
+  bool? get moderatedGrading => _$this._moderatedGrading;
+  set moderatedGrading(bool? moderatedGrading) =>
       _$this._moderatedGrading = moderatedGrading;
 
-  bool _anonymousGrading;
-  bool get anonymousGrading => _$this._anonymousGrading;
-  set anonymousGrading(bool anonymousGrading) =>
+  bool? _anonymousGrading;
+  bool? get anonymousGrading => _$this._anonymousGrading;
+  set anonymousGrading(bool? anonymousGrading) =>
       _$this._anonymousGrading = anonymousGrading;
 
-  bool _isStudioEnabled;
-  bool get isStudioEnabled => _$this._isStudioEnabled;
-  set isStudioEnabled(bool isStudioEnabled) =>
+  bool? _isStudioEnabled;
+  bool? get isStudioEnabled => _$this._isStudioEnabled;
+  set isStudioEnabled(bool? isStudioEnabled) =>
       _$this._isStudioEnabled = isStudioEnabled;
 
-  ListBuilder<SubmissionTypes> _submissionTypes;
+  ListBuilder<SubmissionTypes>? _submissionTypes;
   ListBuilder<SubmissionTypes> get submissionTypes =>
       _$this._submissionTypes ??= new ListBuilder<SubmissionTypes>();
-  set submissionTypes(ListBuilder<SubmissionTypes> submissionTypes) =>
+  set submissionTypes(ListBuilder<SubmissionTypes>? submissionTypes) =>
       _$this._submissionTypes = submissionTypes;
 
   AssignmentBuilder() {
@@ -878,36 +843,37 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   }
 
   AssignmentBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _name = _$v.name;
-      _description = _$v.description;
-      _dueAt = _$v.dueAt;
-      _pointsPossible = _$v.pointsPossible;
-      _courseId = _$v.courseId;
-      _gradingType = _$v.gradingType;
-      _htmlUrl = _$v.htmlUrl;
-      _url = _$v.url;
-      _quizId = _$v.quizId;
-      _useRubricForGrading = _$v.useRubricForGrading;
-      _submissionWrapper = _$v.submissionWrapper?.toBuilder();
-      _assignmentGroupId = _$v.assignmentGroupId;
-      _position = _$v.position;
-      _lockInfo = _$v.lockInfo?.toBuilder();
-      _lockedForUser = _$v.lockedForUser;
-      _lockAt = _$v.lockAt;
-      _unlockAt = _$v.unlockAt;
-      _lockExplanation = _$v.lockExplanation;
-      _freeFormCriterionComments = _$v.freeFormCriterionComments;
-      _published = _$v.published;
-      _groupCategoryId = _$v.groupCategoryId;
-      _userSubmitted = _$v.userSubmitted;
-      _onlyVisibleToOverrides = _$v.onlyVisibleToOverrides;
-      _anonymousPeerReviews = _$v.anonymousPeerReviews;
-      _moderatedGrading = _$v.moderatedGrading;
-      _anonymousGrading = _$v.anonymousGrading;
-      _isStudioEnabled = _$v.isStudioEnabled;
-      _submissionTypes = _$v.submissionTypes?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _name = $v.name;
+      _description = $v.description;
+      _dueAt = $v.dueAt;
+      _pointsPossible = $v.pointsPossible;
+      _courseId = $v.courseId;
+      _gradingType = $v.gradingType;
+      _htmlUrl = $v.htmlUrl;
+      _url = $v.url;
+      _quizId = $v.quizId;
+      _useRubricForGrading = $v.useRubricForGrading;
+      _submissionWrapper = $v.submissionWrapper?.toBuilder();
+      _assignmentGroupId = $v.assignmentGroupId;
+      _position = $v.position;
+      _lockInfo = $v.lockInfo?.toBuilder();
+      _lockedForUser = $v.lockedForUser;
+      _lockAt = $v.lockAt;
+      _unlockAt = $v.unlockAt;
+      _lockExplanation = $v.lockExplanation;
+      _freeFormCriterionComments = $v.freeFormCriterionComments;
+      _published = $v.published;
+      _groupCategoryId = $v.groupCategoryId;
+      _userSubmitted = $v.userSubmitted;
+      _onlyVisibleToOverrides = $v.onlyVisibleToOverrides;
+      _anonymousPeerReviews = $v.anonymousPeerReviews;
+      _moderatedGrading = $v.moderatedGrading;
+      _anonymousGrading = $v.anonymousGrading;
+      _isStudioEnabled = $v.isStudioEnabled;
+      _submissionTypes = $v.submissionTypes?.toBuilder();
       _$v = null;
     }
     return this;
@@ -915,66 +881,76 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
 
   @override
   void replace(Assignment other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Assignment;
   }
 
   @override
-  void update(void Function(AssignmentBuilder) updates) {
+  void update(void Function(AssignmentBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Assignment build() {
+  Assignment build() => _build();
+
+  _$Assignment _build() {
     _$Assignment _$result;
     try {
       _$result = _$v ??
           new _$Assignment._(
-              id: id,
+              id: BuiltValueNullFieldError.checkNotNull(
+                  id, r'Assignment', 'id'),
               name: name,
               description: description,
               dueAt: dueAt,
-              pointsPossible: pointsPossible,
-              courseId: courseId,
+              pointsPossible: BuiltValueNullFieldError.checkNotNull(
+                  pointsPossible, r'Assignment', 'pointsPossible'),
+              courseId: BuiltValueNullFieldError.checkNotNull(
+                  courseId, r'Assignment', 'courseId'),
               gradingType: gradingType,
               htmlUrl: htmlUrl,
               url: url,
               quizId: quizId,
-              useRubricForGrading: useRubricForGrading,
+              useRubricForGrading: BuiltValueNullFieldError.checkNotNull(
+                  useRubricForGrading, r'Assignment', 'useRubricForGrading'),
               submissionWrapper: _submissionWrapper?.build(),
-              assignmentGroupId: assignmentGroupId,
-              position: position,
-              lockInfo: lockInfo.build(),
-              lockedForUser: lockedForUser,
+              assignmentGroupId: BuiltValueNullFieldError.checkNotNull(
+                  assignmentGroupId, r'Assignment', 'assignmentGroupId'),
+              position: BuiltValueNullFieldError.checkNotNull(
+                  position, r'Assignment', 'position'),
+              lockInfo: _lockInfo?.build(),
+              lockedForUser: BuiltValueNullFieldError.checkNotNull(
+                  lockedForUser, r'Assignment', 'lockedForUser'),
               lockAt: lockAt,
               unlockAt: unlockAt,
               lockExplanation: lockExplanation,
-              freeFormCriterionComments: freeFormCriterionComments,
-              published: published,
+              freeFormCriterionComments: BuiltValueNullFieldError.checkNotNull(
+                  freeFormCriterionComments,
+                  r'Assignment',
+                  'freeFormCriterionComments'),
+              published: BuiltValueNullFieldError.checkNotNull(published, r'Assignment', 'published'),
               groupCategoryId: groupCategoryId,
-              userSubmitted: userSubmitted,
-              onlyVisibleToOverrides: onlyVisibleToOverrides,
-              anonymousPeerReviews: anonymousPeerReviews,
-              moderatedGrading: moderatedGrading,
-              anonymousGrading: anonymousGrading,
-              isStudioEnabled: isStudioEnabled,
+              userSubmitted: BuiltValueNullFieldError.checkNotNull(userSubmitted, r'Assignment', 'userSubmitted'),
+              onlyVisibleToOverrides: BuiltValueNullFieldError.checkNotNull(onlyVisibleToOverrides, r'Assignment', 'onlyVisibleToOverrides'),
+              anonymousPeerReviews: BuiltValueNullFieldError.checkNotNull(anonymousPeerReviews, r'Assignment', 'anonymousPeerReviews'),
+              moderatedGrading: BuiltValueNullFieldError.checkNotNull(moderatedGrading, r'Assignment', 'moderatedGrading'),
+              anonymousGrading: BuiltValueNullFieldError.checkNotNull(anonymousGrading, r'Assignment', 'anonymousGrading'),
+              isStudioEnabled: BuiltValueNullFieldError.checkNotNull(isStudioEnabled, r'Assignment', 'isStudioEnabled'),
               submissionTypes: _submissionTypes?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'submissionWrapper';
         _submissionWrapper?.build();
 
         _$failedField = 'lockInfo';
-        lockInfo.build();
+        _lockInfo?.build();
 
         _$failedField = 'submissionTypes';
         _submissionTypes?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Assignment', _$failedField, e.toString());
+            r'Assignment', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -983,4 +959,4 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint
