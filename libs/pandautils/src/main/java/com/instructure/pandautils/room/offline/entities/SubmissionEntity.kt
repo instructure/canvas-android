@@ -27,10 +27,11 @@ import java.util.*
     primaryKeys = ["id", "attempt"],
     foreignKeys = [
         ForeignKey(
-            entity = GroupEntity::class,
+            entity = AssignmentEntity::class,
             parentColumns = ["id"],
-            childColumns = ["groupId"],
-            onDelete = ForeignKey.SET_NULL
+            childColumns = ["assignmentId"],
+            onDelete = ForeignKey.CASCADE,
+            deferred = true
         ),
         ForeignKey(
             entity = UserEntity::class,

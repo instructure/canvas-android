@@ -17,8 +17,10 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
 import com.instructure.pandautils.room.offline.daos.GradesDao
 import com.instructure.pandautils.room.offline.daos.SectionDao
@@ -32,32 +34,41 @@ class UserFacade(
     private val enrollmentDao: EnrollmentDao,
     private val gradesDao: GradesDao,
     private val sectionDao: SectionDao,
+    private val offlineDatabase: OfflineDatabase
 ) {
     suspend fun insertUsers(userList: List<User>, courseId: Long) {
-        userList.forEach { user ->
-            userDao.insert(UserEntity(user))
-            user.enrollments.forEach { enrollment ->
-                enrollment.observedUser?.let { userDao.insert(UserEntity(it)) }
+        offlineDatabase.withTransaction {
+            userList.forEach { user ->
+                userDao.insertOrUpdate(UserEntity(user))
+                user.enrollments.forEach { enrollment ->
+                    enrollment.observedUser?.let {
+                        userDao.insertOrUpdate(UserEntity(it))
+                    }
 
-                val courseSectionIds = sectionDao.findByCourseId(courseId).map { it.id }
-                val enrollmentId = if (courseSectionIds.contains(enrollment.courseSectionId)) {
-                    enrollmentDao.insert(EnrollmentEntity(
-                            enrollment,
-                            courseId = courseId,
-                            observedUserId = null
-                    ))
+                    val courseSectionIds = sectionDao.findByCourseId(courseId).map { it.id }
+                    val enrollmentId = if (courseSectionIds.contains(enrollment.courseSectionId)) {
+                        enrollmentDao.insert(
+                            EnrollmentEntity(
+                                enrollment,
+                                courseId = courseId,
+                                observedUserId = null
+                            )
+                        )
+                    } else {
+                        enrollmentDao.insert(
+                            EnrollmentEntity(
+                                enrollment.copy(courseSectionId = 0L),
+                                courseId = courseId,
+                                courseSectionId = null,
+                                observedUserId = null,
+                            )
+                        )
+                    }
+
+                    enrollment.grades?.let { grades ->
+                        gradesDao.insert(GradesEntity(grades, enrollmentId))
+                    }
                 }
-                else {
-                    enrollmentDao.insert(EnrollmentEntity(
-                            enrollment.copy(courseSectionId = 0L),
-                            courseId = courseId,
-                            courseSectionId = null,
-                            observedUserId = null,
-                    ))
-                }
-
-
-                enrollment.grades?.let { grades -> gradesDao.insert(GradesEntity(grades, enrollmentId)) }
             }
         }
     }
@@ -79,9 +90,8 @@ class UserFacade(
     }
 
     suspend fun getUserById(userId: Long): User? {
-        enrollmentDao.findByUserId(userId)?.let {
-            return getUsersFromEnrollment(listOf(it)).firstOrNull()
+        return enrollmentDao.findByUserId(userId)?.let {
+            getUsersFromEnrollment(listOf(it)).firstOrNull()
         }
-        return null
     }
 }

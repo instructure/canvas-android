@@ -37,4 +37,7 @@ interface ConferenceDao {
 
     @Query("SELECT * FROM ConferenceEntity WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): List<ConferenceEntity>
+
+    @Query("DELETE FROM ConferenceEntity WHERE courseId = :courseId")
+    suspend fun deleteAllByCourseId(courseId: Long)
 }

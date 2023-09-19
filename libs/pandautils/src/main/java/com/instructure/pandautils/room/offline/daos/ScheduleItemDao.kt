@@ -30,6 +30,9 @@ interface ScheduleItemDao {
     @Delete
     suspend fun delete(entity: ScheduleItemEntity)
 
+    @Query("DELETE FROM ScheduleItemEntity WHERE courseId=:courseId")
+    suspend fun deleteAllByCourseId(courseId: Long)
+
     @Update
     suspend fun update(entity: ScheduleItemEntity)
 
@@ -38,5 +41,4 @@ interface ScheduleItemDao {
 
     @Query("SELECT * FROM ScheduleItemEntity WHERE contextCode IN (:contextCodes) AND type=:type")
     suspend fun findByItemType(contextCodes: List<String>, type: String): List<ScheduleItemEntity>
-
 }

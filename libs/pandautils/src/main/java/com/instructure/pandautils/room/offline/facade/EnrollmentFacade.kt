@@ -40,14 +40,14 @@ class EnrollmentFacade(
                 enrollment.userId,
                 RestParams(isForceReadFromNetwork = true)
             ).dataOrThrow
-            userDao.insert(UserEntity(user))
+            userDao.insertOrUpdate(UserEntity(user))
         }
 
         enrollment.observedUser?.let { observedUser ->
-            userDao.insert(UserEntity(observedUser))
+            userDao.insertOrUpdate(UserEntity(observedUser))
         }
 
-        val enrollmentId = enrollmentDao.insert(
+        val enrollmentId = enrollmentDao.insertOrUpdate(
             EnrollmentEntity(
                 enrollment,
                 courseId = courseId,

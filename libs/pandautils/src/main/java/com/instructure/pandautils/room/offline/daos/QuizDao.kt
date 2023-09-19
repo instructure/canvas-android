@@ -26,6 +26,18 @@ interface QuizDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: QuizEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<QuizEntity>)
+
+    @Query("DELETE FROM QuizEntity WHERE courseId = :courseId")
+    suspend fun deleteAllByCourseId(courseId: Long)
+
+    @Transaction
+    suspend fun deleteAndInsertAll(entities: List<QuizEntity>, courseId: Long) {
+        deleteAllByCourseId(courseId)
+        insertAll(entities)
+    }
+
     @Delete
     suspend fun delete(entity: QuizEntity)
 

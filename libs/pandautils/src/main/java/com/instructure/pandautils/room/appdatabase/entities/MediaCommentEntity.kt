@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room.common.entities
+package com.instructure.pandautils.room.appdatabase.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

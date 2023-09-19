@@ -31,14 +31,20 @@ import java.util.*
         ForeignKey(
             entity = UserEntity::class,
             parentColumns = ["id"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["id"],
             childColumns = ["observedUserId"],
-            onDelete = ForeignKey.SET_NULL
+            onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = SectionEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseSectionId"],
-            onDelete = ForeignKey.SET_NULL
+            onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = CourseEntity::class,

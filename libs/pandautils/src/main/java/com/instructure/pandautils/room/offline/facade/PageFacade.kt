@@ -17,18 +17,27 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.Page
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.entities.PageEntity
 
 class PageFacade(
     private val pageDao: PageDao,
-    private val lockedInfoFacade: LockInfoFacade
+    private val lockedInfoFacade: LockInfoFacade,
+    private val offlineDatabase: OfflineDatabase
 ) {
-
     suspend fun insertPages(pages: List<Page>, courseId: Long) {
-        pageDao.insertAll(pages.map { PageEntity(it, courseId) })
-        pages.forEach { page -> page.lockInfo?.let { lockedInfoFacade.insertLockInfoForPage(it, page.id) } }
+        offlineDatabase.withTransaction {
+            deleteAllByCourseId(courseId)
+            pageDao.insertAll(pages.map { PageEntity(it, courseId) })
+            pages.forEach { page ->
+                page.lockInfo?.let {
+                    lockedInfoFacade.insertLockInfoForPage(it, page.id)
+                }
+            }
+        }
     }
 
     suspend fun getFrontPage(courseId: Long): Page? {
@@ -41,6 +50,10 @@ class PageFacade(
 
     suspend fun getPageDetails(courseId: Long, pageId: String): Page? {
         return pageDao.getPageDetails(courseId, pageId)?.let { createFullApiModel(it) }
+    }
+
+    suspend fun deleteAllByCourseId(courseId: Long) {
+        pageDao.deleteAllByCourseId(courseId)
     }
 
     private suspend fun createFullApiModel(pageEntity: PageEntity): Page {

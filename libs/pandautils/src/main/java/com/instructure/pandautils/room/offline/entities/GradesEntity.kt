@@ -23,12 +23,14 @@ import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Grades
 
 @Entity(
-    foreignKeys = [ForeignKey(
-        entity = EnrollmentEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["enrollmentId"],
-        onDelete = ForeignKey.CASCADE
-    )]
+    foreignKeys = [
+        ForeignKey(
+            entity = EnrollmentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["enrollmentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 class GradesEntity(
     @PrimaryKey

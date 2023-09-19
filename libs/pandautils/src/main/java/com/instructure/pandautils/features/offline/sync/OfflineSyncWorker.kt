@@ -24,6 +24,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
@@ -47,14 +48,14 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val dashboardCardDao: DashboardCardDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val syncSettingsFacade: SyncSettingsFacade,
-    private val syncProgressDao: SyncProgressDao
+    private val syncProgressDao: SyncProgressDao,
+    private val courseDao: CourseDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
         if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) return Result.success()
 
-        val dashboardCards =
-            courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
+        val dashboardCards = courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
         dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
 
         val courseIds = inputData.getLongArray(COURSE_IDS)
@@ -62,9 +63,12 @@ class OfflineSyncWorker @AssistedInject constructor(
             courseSyncSettingsDao.findByIds(courseIds.toList())
         } ?: courseSyncSettingsDao.findAll()
 
+        val courseIdsToRemove = courseSyncSettingsDao.findAll().filter { !it.anySyncEnabled }.map { it.courseId }
+        courseDao.deleteByIds(courseIdsToRemove)
+
         val settingsMap = courses.associateBy { it.courseId }
 
-        val courseWorkers =  courses.filter { it.anySyncEnabled }
+        val courseWorkers = courses.filter { it.anySyncEnabled }
             .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
 
         val syncProgress = courseWorkers.map {

@@ -26,6 +26,9 @@ interface EnrollmentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: EnrollmentEntity): Long
 
+    @Upsert(entity = EnrollmentEntity::class)
+    suspend fun insertOrUpdate(entity: EnrollmentEntity): Long
+
     @Delete
     suspend fun delete(entity: EnrollmentEntity)
 

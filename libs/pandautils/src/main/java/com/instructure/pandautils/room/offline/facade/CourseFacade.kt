@@ -35,13 +35,17 @@ class CourseFacade(
 
     suspend fun insertCourse(course: Course) {
         course.term?.let {
-            termDao.insert(TermEntity(it))
+            termDao.insertOrUpdate(TermEntity(it))
         }
 
-        courseDao.insert(CourseEntity(course))
+        courseDao.insertOrUpdate(CourseEntity(course))
 
         course.settings?.let {
             courseSettingsDao.insert(CourseSettingsEntity(it, course.id))
+        }
+
+        course.sections.forEach { section ->
+            sectionDao.insertOrUpdate(SectionEntity(section, course.id))
         }
 
         course.enrollments?.forEach { enrollment ->
@@ -51,10 +55,6 @@ class CourseFacade(
         course.gradingPeriods?.forEach { gradingPeriod ->
             gradingPeriodDao.insert(GradingPeriodEntity(gradingPeriod))
             courseGradingPeriodDao.insert(CourseGradingPeriodEntity(course.id, gradingPeriod.id))
-        }
-
-        course.sections.forEach { section ->
-            sectionDao.insert(SectionEntity(section, course.id))
         }
 
         course.tabs?.forEach { tab ->

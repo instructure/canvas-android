@@ -16,12 +16,7 @@
  */
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
 
 @Dao
@@ -44,4 +39,7 @@ interface ModuleObjectDao {
 
     @Query("SELECT * FROM ModuleObjectEntity WHERE id = :id")
     suspend fun findById(id: Long): ModuleObjectEntity?
+
+    @Query("DELETE FROM ModuleObjectEntity WHERE courseId = :courseId")
+    suspend fun deleteAllByCourseId(courseId: Long)
 }

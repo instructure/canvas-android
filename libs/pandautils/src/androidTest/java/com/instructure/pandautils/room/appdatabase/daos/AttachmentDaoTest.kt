@@ -21,8 +21,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.room.appdatabase.AppDatabase
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.entities.AttachmentEntity
+import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
