@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2fcbcb15d24b07efb3ecd0f510c70f60",
+    "identityHash": "cdcd97f94bf9f65706fc37b599f00ca9",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -2009,6 +2009,50 @@
           "autoGenerate": false,
           "columnNames": [
             "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "EditDashboardItemEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `name` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, `enrollmentState` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`courseId`))",
+        "fields": [
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "isFavorite",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enrollmentState",
+            "columnName": "enrollmentState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "courseId"
           ]
         },
         "indices": [],
@@ -5084,7 +5128,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2fcbcb15d24b07efb3ecd0f510c70f60')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cdcd97f94bf9f65706fc37b599f00ca9')"
     ]
   }
 }
