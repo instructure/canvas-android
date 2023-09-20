@@ -414,7 +414,7 @@ class ModuleUtilityTest : TestCase() {
         TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
     }
 
-    private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?, isOnline: Boolean = true, tabs: Set<String> = emptySet()): Fragment? {
-        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false, isOnline, tabs, context)
+    private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?, isOnline: Boolean = true, tabs: Set<String> = emptySet(), files: List<Long> = emptyList()): Fragment? {
+        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false, isOnline, tabs, files, context)
     }
 }
