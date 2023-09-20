@@ -78,4 +78,17 @@ class EditDashboardItemDaoTest {
         val updatedResult = editDashboardItemDao.findByEnrollmentState(EnrollmentState.CURRENT)
         assertEquals(listOf(item1, item3), updatedResult)
     }
+
+    @Test
+    fun testInsertReplace() = runTest {
+        val item = EditDashboardItemEntity(courseId = 1, name = "Course 1", isFavorite = true, enrollmentState = EnrollmentState.CURRENT, position = 2)
+        val updated = EditDashboardItemEntity(courseId = 1, name = "Course Updated", isFavorite = true, enrollmentState = EnrollmentState.CURRENT, position = 2)
+
+        editDashboardItemDao.insertAll(listOf(item))
+        editDashboardItemDao.insertAll(listOf(updated))
+
+        val result = editDashboardItemDao.findByEnrollmentState(EnrollmentState.CURRENT)
+
+        assertEquals(updated, result[0])
+    }
 }
