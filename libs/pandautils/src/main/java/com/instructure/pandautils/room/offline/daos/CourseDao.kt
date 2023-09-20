@@ -38,6 +38,9 @@ interface CourseDao {
     @Query("SELECT * FROM CourseEntity WHERE id = :id")
     suspend fun findById(id: Long): CourseEntity?
 
+    @Query("SELECT * FROM CourseEntity WHERE id IN (:ids)")
+    suspend fun findByIds(ids: Set<Long>): List<CourseEntity>
+
     @Query("SELECT * FROM CourseEntity")
     suspend fun findAll(): List<CourseEntity>
 

@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -32,6 +33,7 @@ class DashboardRepository(
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val courseDao: CourseDao
 ) : Repository<DashboardDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getCourses(forceNetwork: Boolean): List<Course> {
@@ -54,9 +56,12 @@ class DashboardRepository(
         if (!isOfflineEnabled()) return emptySet()
 
         val courseSyncSettings = courseSyncSettingsDao.findAll()
-        return courseSyncSettings
+        val syncedCourseIds = courseSyncSettings
             .filter { it.anySyncEnabled }
             .map { it.courseId }
             .toSet()
+
+        val syncedCourses = courseDao.findByIds(syncedCourseIds)
+        return syncedCourses.map { it.id }.toSet()
     }
 }

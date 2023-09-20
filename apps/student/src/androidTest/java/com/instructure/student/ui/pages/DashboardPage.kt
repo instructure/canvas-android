@@ -60,7 +60,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
         listView.assertDisplayed()
         onViewWithText("Courses").assertDisplayed()
-        onViewWithText("Edit Dashboard").assertDisplayed()
+        onViewWithText("All Courses").assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: CourseApiModel) {

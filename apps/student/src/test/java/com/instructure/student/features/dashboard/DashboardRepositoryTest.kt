@@ -16,12 +16,13 @@
  */
 package com.instructure.student.features.dashboard
 
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.entities.CourseEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -44,8 +45,9 @@ class DashboardRepositoryTest {
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val courseDao: CourseDao = mockk(relaxed = true)
 
-    private val repository = DashboardRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao)
+    private val repository = DashboardRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao, courseDao)
 
     @Before
     fun setup() = runTest {
@@ -183,9 +185,29 @@ class DashboardRepositoryTest {
             CourseSyncSettingsEntity(6, "Course 6",false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.PAGES_ID }),
         )
         coEvery { courseSyncSettingsDao.findAll() } returns entities
+        coEvery { courseDao.findByIds(any()) } returns entities.map { CourseEntity(Course(it.courseId)) }.filter { it.id != 2L }
 
         val result = repository.getSyncedCourseIds()
         val expectedIds = setOf(1L, 3L, 4L, 5L, 6L)
+
+        Assert.assertEquals(expectedIds, result)
+    }
+
+    @Test
+    fun `Do not return course ids that are not synced yet`() = runTest {
+        val entities = listOf(
+            CourseSyncSettingsEntity(1, "Course 1",true),
+            CourseSyncSettingsEntity(2, "Course 2",false),
+            CourseSyncSettingsEntity(3, "Course 3",false, fullFileSync = true),
+            CourseSyncSettingsEntity(4, "Course 4",false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.ANNOUNCEMENTS_ID }),
+            CourseSyncSettingsEntity(5, "Course 5",false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.DISCUSSIONS_ID }),
+            CourseSyncSettingsEntity(6, "Course 6",false, CourseSyncSettingsEntity.TABS.associateWith { it == Tab.PAGES_ID }),
+        )
+        coEvery { courseSyncSettingsDao.findAll() } returns entities
+        coEvery { courseDao.findByIds(any()) } returns listOf(CourseEntity(Course(1)), CourseEntity(Course(3)))
+
+        val result = repository.getSyncedCourseIds()
+        val expectedIds = setOf(1L, 3L)
 
         Assert.assertEquals(expectedIds, result)
     }

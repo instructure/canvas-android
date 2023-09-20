@@ -17,8 +17,6 @@
 
 package com.instructure.student.features.dashboard.edit
 
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
@@ -26,30 +24,46 @@ import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.isPublished
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
-import kotlinx.coroutines.awaitAll
+import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.dashboard.edit.datasource.StudentEditDashboardDataSource
+import com.instructure.student.features.dashboard.edit.datasource.StudentEditDashboardLocalDataSource
+import com.instructure.student.features.dashboard.edit.datasource.StudentEditDashboardNetworkDataSource
 
 class StudentEditDashboardRepository(
-    val courseManager: CourseManager,
-    val groupManager: GroupManager
-) : EditDashboardRepository {
+    localDataSource: StudentEditDashboardLocalDataSource,
+    networkDataSource: StudentEditDashboardNetworkDataSource,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val courseDao: CourseDao
+) : Repository<StudentEditDashboardDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), EditDashboardRepository {
 
-    override suspend fun getCurses(): List<List<Course>> {
-        val (currentCoursesDeferred, pastCoursesDeferred, futureCoursesDeferred) = listOf(
-            courseManager.getCoursesByEnrollmentStateAsync("active", true),
-            courseManager.getCoursesByEnrollmentStateAsync("completed", true),
-            courseManager.getCoursesByEnrollmentStateAsync("invited_or_pending", true)
-        ).awaitAll()
-
-        val currentCourses = currentCoursesDeferred.dataOrThrow
-        val pastCourses = pastCoursesDeferred.dataOrThrow
-        val futureCourses = futureCoursesDeferred.dataOrThrow
-
-        return listOf(currentCourses, pastCourses, futureCourses)
+    override suspend fun getCourses(): List<List<Course>> {
+        return dataSource().getCourses()
     }
 
-    override suspend fun getGroups(): List<Group> = groupManager.getAllGroupsAsync(true).await().dataOrThrow
+    override suspend fun getGroups(): List<Group> = dataSource().getGroups()
 
     override fun isOpenable(course: Course) = course.isNotDeleted() && course.isPublished()
 
     override fun isFavoriteable(course: Course) = course.isValidTerm() && course.isNotDeleted() && course.isPublished() && course.hasActiveEnrollment()
+
+    override suspend fun getSyncedCourseIds(): Set<Long> {
+        if (!isOfflineEnabled()) return emptySet()
+
+        val courseSyncSettings = courseSyncSettingsDao.findAll()
+        val syncedCourseIds = courseSyncSettings
+            .filter { it.anySyncEnabled }
+            .map { it.courseId }
+            .toSet()
+
+        val syncedCourses = courseDao.findByIds(syncedCourseIds)
+        return syncedCourses.map { it.id }.toSet()
+    }
+
+    override suspend fun offlineEnabled(): Boolean = isOfflineEnabled()
 }

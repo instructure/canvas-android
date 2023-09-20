@@ -40,6 +40,7 @@ import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
@@ -91,7 +92,8 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     // to the top of the list first.  We have to use the custom constraints because the
     // swipeRefreshLayout may extend below the screen, and therefore may not be 90% visible.
     fun refresh() {
-        onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.courseGradesPage)).swipeDown()
+        onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.courseGradesPage))
+            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
         sleep(1000) // Allow some time to react to the update.

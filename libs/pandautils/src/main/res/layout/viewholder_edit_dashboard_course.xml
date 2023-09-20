@@ -36,6 +36,7 @@
             android:background="?android:selectableItemBackground"
             android:contentDescription="@{itemViewModel.favorite ? @string/courseFavorited(itemViewModel.name) : @string/courseNotFavorited(itemViewModel.name)}"
             android:onClick="@{() -> itemViewModel.onClick()}"
+            android:clickable="@{itemViewModel.enabled}"
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
 
@@ -43,13 +44,13 @@
                 android:id="@+id/favoriteButton"
                 android:layout_width="56dp"
                 android:layout_height="48dp"
-                android:alpha="@{itemViewModel.favoriteable ? 1.0f : 0.5f}"
+                android:alpha="@{itemViewModel.favoritable ? 1.0f : 0.4f}"
                 android:contentDescription="@{itemViewModel.favorite ? @string/a11y_content_description_remove_from_dashboard : @string/a11y_content_description_add_to_dashboard}"
                 android:onClick="@{() -> itemViewModel.onFavoriteClick()}"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
-                android:tint="@{itemViewModel.favoriteable ? @color/textInfo : @color/textDarkest}"
+                android:tint="@{itemViewModel.favoritable ? @color/textInfo : @color/textDark}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -62,8 +63,10 @@
                 android:text="@{itemViewModel.name}"
                 android:textColor="@color/textDarkest"
                 android:textSize="17sp"
+                android:paddingEnd="8dp"
+                android:alpha="@{itemViewModel.enabled ? 1.0f : 0.4f}"
                 app:layout_constraintBottom_toTopOf="@+id/termTitle"
-                app:layout_constraintEnd_toStartOf="@+id/openButton"
+                app:layout_constraintEnd_toStartOf="@+id/offlineSyncIcon"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Course name" />
@@ -77,12 +80,25 @@
                 android:textAllCaps="true"
                 android:textColor="@color/textDark"
                 android:textSize="12sp"
-                android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
+                android:visibility="@{itemViewModel.termTitle.isEmpty() ? View.GONE : View.VISIBLE}"
+                android:paddingEnd="8dp"
+                android:alpha="@{itemViewModel.enabled ? 1.0f : 0.4f}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/openButton"
+                app:layout_constraintEnd_toStartOf="@+id/offlineSyncIcon"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 tools:text="DEFAULT TERM | STUDENT" />
+
+            <ImageView
+                android:id="@+id/offlineSyncIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_offline_synced"
+                app:visible="@{itemViewModel.availableOffline}"
+                app:tint="@color/textDark"
+                app:layout_constraintEnd_toStartOf="@+id/openButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <ImageView
                 android:id="@+id/openButton"
@@ -92,6 +108,7 @@
                 android:src="@drawable/ic_open_arrow"
                 android:visibility="@{itemViewModel.openable ? View.VISIBLE : View.GONE}"
                 android:tint="@color/textDark"
+                android:alpha="@{itemViewModel.enabled ? 1.0f : 0.4f}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
