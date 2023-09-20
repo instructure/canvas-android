@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.*
@@ -25,7 +26,9 @@ import com.instructure.pandautils.utils.orDefault
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -58,6 +61,25 @@ class AssignmentFacadeTest {
         assignmentRubricCriterionDao,
         offlineDatabase
     )
+
+    @Before
+    fun setup() {
+        MockKAnnotations.init(this)
+
+        mockkStatic(
+            "androidx.room.RoomDatabaseKt"
+        )
+
+        val transactionLambda = slot<suspend () -> Unit>()
+        coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
+            transactionLambda.captured.invoke()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @Test
     fun `Calling insertAssignmentGroups should insert assignment groups and related entities`() = runTest {
@@ -108,7 +130,7 @@ class AssignmentFacadeTest {
                 }
                 coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
                 coVerify {
-                    assignmentDao.insert(
+                    assignmentDao.insertOrUpdate(
                         AssignmentEntity(
                             assignment = assignment,
                             1L,
@@ -170,7 +192,7 @@ class AssignmentFacadeTest {
         }
         coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
         coVerify {
-            assignmentDao.insert(
+            assignmentDao.insertOrUpdate(
                 AssignmentEntity(
                     assignment = assignment,
                     1L,

@@ -27,7 +27,7 @@ interface EnrollmentDao {
     suspend fun insert(entity: EnrollmentEntity): Long
 
     @Upsert(entity = EnrollmentEntity::class)
-    suspend fun insertOrUpdate(entity: EnrollmentEntity): Long
+    suspend fun insertOrUpdate(entity: EnrollmentEntity)
 
     @Delete
     suspend fun delete(entity: EnrollmentEntity)

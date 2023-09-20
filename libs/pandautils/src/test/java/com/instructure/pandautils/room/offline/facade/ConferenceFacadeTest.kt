@@ -1,5 +1,6 @@
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.ConferenceRecording
 import com.instructure.pandautils.room.offline.OfflineDatabase
@@ -10,7 +11,9 @@ import com.instructure.pandautils.room.offline.entities.ConferenceRecordingEntit
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -21,6 +24,25 @@ class ConferenceFacadeTest {
     private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
     private val facade = ConferenceFacade(conferenceDao, conferenceRecordingDao, offlineDatabase)
+
+    @Before
+    fun setup() {
+        MockKAnnotations.init(this)
+
+        mockkStatic(
+            "androidx.room.RoomDatabaseKt"
+        )
+
+        val transactionLambda = slot<suspend () -> Unit>()
+        coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
+            transactionLambda.captured.invoke()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @Test
     fun `Calling insertConferences should insert conferences and related entities`() = runTest {

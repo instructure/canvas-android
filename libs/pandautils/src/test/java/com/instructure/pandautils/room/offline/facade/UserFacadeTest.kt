@@ -1,5 +1,6 @@
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.offline.OfflineDatabase
@@ -12,6 +13,8 @@ import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -23,6 +26,25 @@ class UserFacadeTest {
     private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
     private val userFacade = UserFacade(userDao, enrollmentDao, sectionDao, enrollmentFacade, offlineDatabase)
+
+    @Before
+    fun setup() {
+        MockKAnnotations.init(this)
+
+        mockkStatic(
+            "androidx.room.RoomDatabaseKt"
+        )
+
+        val transactionLambda = slot<suspend () -> Unit>()
+        coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
+            transactionLambda.captured.invoke()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @Test
     fun `Get users as api model`() = runTest {
@@ -47,14 +69,10 @@ class UserFacadeTest {
             User(id = 1L, name = "User 1", enrollments = listOf(Enrollment(1L, userId = 1L), Enrollment(2L, userId = 1L))),
             User(id = 2L, name = "User 2", enrollments = listOf(Enrollment(3L, userId = 2L))),
         )
-        coEvery { userDao.insert(any()) } just Runs
-        coEvery { enrollmentDao.insert(any()) } returns 1L
 
         userFacade.insertUsers(users, 1L)
 
-        coVerify(exactly = 2) { userDao.insert(any()) }
-        coVerify(exactly = 3) { enrollmentDao.insert(any()) }
-
+        coVerify(exactly = 3) { enrollmentFacade.insertEnrollment(any(), 1L) }
     }
 
     @Test
@@ -130,5 +148,4 @@ class UserFacadeTest {
 
         assertEquals(expectedUsers, result)
     }
-
 }

@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
@@ -26,13 +27,12 @@ import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirem
 import com.instructure.pandautils.room.offline.entities.ModuleContentDetailsEntity
 import com.instructure.pandautils.room.offline.entities.ModuleItemEntity
 import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
-import io.mockk.slot
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -55,6 +55,25 @@ class ModuleFacadeTest {
         masteryPathFacade,
         offlineDatabase
     )
+
+    @Before
+    fun setup() {
+        MockKAnnotations.init(this)
+
+        mockkStatic(
+            "androidx.room.RoomDatabaseKt"
+        )
+
+        val transactionLambda = slot<suspend () -> Unit>()
+        coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
+            transactionLambda.captured.invoke()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @Test
     fun `insertModules inserts all the ModuleObject related entities into the database`() = runTest {

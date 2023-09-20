@@ -27,7 +27,9 @@ import com.instructure.pandautils.room.offline.entities.GroupEntity
 import com.instructure.pandautils.room.offline.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -68,16 +70,14 @@ class SubmissionFacadeTest {
         )
 
         coEvery { groupDao.insert(any()) } returns 1L
-        coEvery { mediaCommentDao.insert(any()) } just Runs
-        coEvery { userDao.insert(any()) } just Runs
         coEvery { submissionDao.insert(any()) } returns 1L
 
         facade.insertSubmission(submission)
 
         coVerify { groupDao.insert(GroupEntity(group)) }
         coVerify { mediaCommentDao.insert(MediaCommentEntity(mediaComment, 1L, 0)) }
-        coVerify { userDao.insert(UserEntity(user)) }
-        coVerify { submissionDao.insert(SubmissionEntity(submission, group.id, mediaComment.mediaId)) }
+        coVerify { userDao.insertOrUpdate(UserEntity(user)) }
+        coVerify { submissionDao.insertOrUpdate(SubmissionEntity(submission, group.id, mediaComment.mediaId)) }
     }
 
     @Test

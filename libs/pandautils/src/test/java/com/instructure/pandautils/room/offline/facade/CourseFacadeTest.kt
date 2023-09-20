@@ -20,7 +20,9 @@ package com.instructure.pandautils.room.offline.facade
 import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -57,22 +59,15 @@ class CourseFacadeTest {
         val sections = listOf(Section())
         val tabs = listOf(Tab())
         val settings = CourseSettings(restrictQuantitativeData = true)
-        val course =
-            Course(term = term, enrollments = enrollments, gradingPeriods = gradingPeriods, sections = sections, tabs = tabs, settings = settings)
-
-        coEvery { termDao.insert(any()) } just Runs
-        coEvery { courseDao.insert(any()) } just Runs
-        coEvery { enrollmentFacade.insertEnrollment(any(), any()) } just Runs
-        coEvery { gradingPeriodDao.insert(any()) } just Runs
-        coEvery { courseGradingPeriodDao.insert(any()) } just Runs
-        coEvery { sectionDao.insert(any()) } just Runs
-        coEvery { tabDao.insert(any()) } just Runs
-        coEvery { courseSettingsDao.insert(any()) } just Runs
+        val course = Course(
+            term = term, enrollments = enrollments, gradingPeriods = gradingPeriods,
+            sections = sections, tabs = tabs, settings = settings
+        )
 
         facade.insertCourse(course)
 
-        coVerify { termDao.insert(TermEntity(term)) }
-        coVerify { courseDao.insert(CourseEntity(course)) }
+        coVerify { termDao.insertOrUpdate(TermEntity(term)) }
+        coVerify { courseDao.insertOrUpdate(CourseEntity(course)) }
         enrollments.forEach { enrollment ->
             coVerify { enrollmentFacade.insertEnrollment(enrollment, course.id) }
         }
@@ -81,7 +76,7 @@ class CourseFacadeTest {
             coVerify { courseGradingPeriodDao.insert(CourseGradingPeriodEntity(course.id, gradingPeriod.id)) }
         }
         sections.forEach { section ->
-            coVerify { sectionDao.insert(SectionEntity(section, course.id)) }
+            coVerify { sectionDao.insertOrUpdate(SectionEntity(section, course.id)) }
         }
         tabs.forEach { tab ->
             coVerify { tabDao.insert(TabEntity(tab, course.id)) }
