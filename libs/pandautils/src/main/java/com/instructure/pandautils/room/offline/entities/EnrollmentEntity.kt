@@ -55,7 +55,7 @@ import java.util.*
     ]
 )
 data class EnrollmentEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long,
     val role: String,
     val type: String,

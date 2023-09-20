@@ -22,52 +22,29 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
-import com.instructure.pandautils.room.offline.daos.GradesDao
 import com.instructure.pandautils.room.offline.daos.SectionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
-import com.instructure.pandautils.room.offline.entities.GradesEntity
-import com.instructure.pandautils.room.offline.entities.UserEntity
 
 class UserFacade(
     private val userDao: UserDao,
     private val enrollmentDao: EnrollmentDao,
-    private val gradesDao: GradesDao,
     private val sectionDao: SectionDao,
+    private val enrollmentFacade: EnrollmentFacade,
     private val offlineDatabase: OfflineDatabase
 ) {
     suspend fun insertUsers(userList: List<User>, courseId: Long) {
         offlineDatabase.withTransaction {
+            val courseSectionIds = sectionDao.findByCourseId(courseId).map { it.id }
             userList.forEach { user ->
-                userDao.insertOrUpdate(UserEntity(user))
                 user.enrollments.forEach { enrollment ->
-                    enrollment.observedUser?.let {
-                        userDao.insertOrUpdate(UserEntity(it))
-                    }
-
-                    val courseSectionIds = sectionDao.findByCourseId(courseId).map { it.id }
-                    val enrollmentId = if (courseSectionIds.contains(enrollment.courseSectionId)) {
-                        enrollmentDao.insert(
-                            EnrollmentEntity(
-                                enrollment,
-                                courseId = courseId,
-                                observedUserId = null
-                            )
-                        )
-                    } else {
-                        enrollmentDao.insert(
-                            EnrollmentEntity(
-                                enrollment.copy(courseSectionId = 0L),
-                                courseId = courseId,
-                                courseSectionId = null,
-                                observedUserId = null,
-                            )
-                        )
-                    }
-
-                    enrollment.grades?.let { grades ->
-                        gradesDao.insert(GradesEntity(grades, enrollmentId))
-                    }
+                    val hasSection = courseSectionIds.contains(enrollment.courseSectionId)
+                    enrollmentFacade.insertEnrollment(
+                        enrollment.copy(
+                            user = user,
+                            courseSectionId = enrollment.courseSectionId.takeIf { hasSection } ?: 0
+                        ), courseId
+                    )
                 }
             }
         }

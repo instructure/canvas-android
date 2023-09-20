@@ -377,11 +377,11 @@ class OfflineModule {
     fun providePeopleFacade(
         userDao: UserDao,
         enrollmentDao: EnrollmentDao,
-        gradesDao: GradesDao,
         sectionDao: SectionDao,
+        enrollmentFacade: EnrollmentFacade,
         offlineDatabase: OfflineDatabase
     ): UserFacade {
-        return UserFacade(userDao, enrollmentDao, gradesDao, sectionDao, offlineDatabase)
+        return UserFacade(userDao, enrollmentDao, sectionDao, enrollmentFacade, offlineDatabase)
     }
 
     @Provides

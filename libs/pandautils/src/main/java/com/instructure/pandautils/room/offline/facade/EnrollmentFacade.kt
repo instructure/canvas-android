@@ -47,7 +47,7 @@ class EnrollmentFacade(
             userDao.insertOrUpdate(UserEntity(observedUser))
         }
 
-        val enrollmentId = enrollmentDao.insertOrUpdate(
+        enrollmentDao.insertOrUpdate(
             EnrollmentEntity(
                 enrollment,
                 courseId = courseId,
@@ -55,7 +55,9 @@ class EnrollmentFacade(
             )
         )
 
-        enrollment.grades?.let { grades -> gradesDao.insert(GradesEntity(grades, enrollmentId)) }
+        enrollment.grades?.let { grades ->
+            gradesDao.insert(GradesEntity(grades, enrollment.id))
+        }
     }
 
     suspend fun getEnrollmentsByCourseId(id: Long): List<Enrollment> {

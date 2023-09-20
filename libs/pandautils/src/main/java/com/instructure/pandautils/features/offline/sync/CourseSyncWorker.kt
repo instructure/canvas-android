@@ -69,7 +69,8 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
-    private val syncSettingsFacade: SyncSettingsFacade
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseProgress
@@ -77,7 +78,6 @@ class CourseSyncWorker @AssistedInject constructor(
     private var fileOperation: Operation? = null
 
     override suspend fun doWork(): Result {
-
         val courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
         val courseId = courseSettings.courseId
@@ -231,8 +231,11 @@ class CourseSyncWorker @AssistedInject constructor(
     private suspend fun fetchCourseDetails(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
         val course = courseApi.getFullCourseContent(courseId, params).dataOrThrow
+        val enrollments = course.enrollments.orEmpty().flatMap {
+            enrollmentsApi.getEnrollmentsForUserInCourse(courseId, it.userId, params).dataOrThrow
+        }.toMutableList()
 
-        courseFacade.insertCourse(course)
+        courseFacade.insertCourse(course.copy(enrollments = enrollments))
 
         val courseFeatures = featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull
         courseFeatures?.let {

@@ -4,7 +4,6 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
-import com.instructure.pandautils.room.offline.daos.GradesDao
 import com.instructure.pandautils.room.offline.daos.SectionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
@@ -19,11 +18,11 @@ import org.junit.Test
 class UserFacadeTest {
     private val userDao: UserDao = mockk(relaxed = true)
     private val enrollmentDao: EnrollmentDao = mockk(relaxed = true)
-    private val gradesDao: GradesDao = mockk(relaxed = true)
+    private val enrollmentFacade: EnrollmentFacade = mockk(relaxed = true)
     private val sectionDao: SectionDao = mockk(relaxed = true)
     private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
-    private val userFacade = UserFacade(userDao, enrollmentDao, gradesDao, sectionDao, offlineDatabase)
+    private val userFacade = UserFacade(userDao, enrollmentDao, sectionDao, enrollmentFacade, offlineDatabase)
 
     @Test
     fun `Get users as api model`() = runTest {
