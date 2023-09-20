@@ -53,6 +53,7 @@ object ModuleUtility {
         navigatedFromModules: Boolean,
         isOnline: Boolean,
         syncedTabs: Set<String>,
+        syncedFileIds: List<Long>,
         context: Context
     ): Fragment? = when (item.type) {
         "Page" -> {
@@ -100,11 +101,27 @@ object ModuleUtility {
             }
         }
         "File" -> { // TODO Handle offline availability after files sync
-            val url = removeDomain(item.url)
-            if (moduleObject == null) {
-                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, url!!, item.contentId))
-            } else {
-                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, moduleObject, item.id, url!!, item.contentId))
+            createFileDetailsFragmentWithOfflineCheck(isOnline, course, item, syncedFileIds, context) {
+                val url = removeDomain(item.url)
+                if (moduleObject == null) {
+                    FileDetailsFragment.newInstance(
+                        FileDetailsFragment.makeRoute(
+                            course,
+                            url!!,
+                            item.contentId
+                        )
+                    )
+                } else {
+                    FileDetailsFragment.newInstance(
+                        FileDetailsFragment.makeRoute(
+                            course,
+                            moduleObject,
+                            item.id,
+                            url!!,
+                            item.contentId
+                        )
+                    )
+                }
             }
         }
         else -> null
@@ -124,6 +141,21 @@ object ModuleUtility {
         } else {
             val descriptionResource = if (tab == null) R.string.notAvailableOfflineDescription else R.string.notAvailableOfflineDescriptionForTabs
             NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(descriptionResource)))
+        }
+    }
+
+    private fun createFileDetailsFragmentWithOfflineCheck(
+        isOnline: Boolean,
+        course: Course,
+        item: ModuleItem,
+        syncedFiles: List<Long>,
+        context: Context,
+        creationBlock: () -> Fragment?
+    ): Fragment? {
+        return if (isOnline || syncedFiles.contains(item.contentId)) {
+            creationBlock()
+        } else {
+            NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(R.string.notAvailableOfflineDescriptionForTabs)))
         }
     }
 
