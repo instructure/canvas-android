@@ -86,9 +86,6 @@ class SyncProgressViewModel @Inject constructor(
             }
             courseIds.addAll(courseSyncProgresses.map { it.courseId })
 
-            val workerIds = courseSyncProgresses.map { UUID.fromString(it.uuid) }
-            aggregateProgressObserver.setCourseWorkerIds(workerIds)
-
             val courses = courseSyncProgresses.map {
                 createCourseItem(it)
             }

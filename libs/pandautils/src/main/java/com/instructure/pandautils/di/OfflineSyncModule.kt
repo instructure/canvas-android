@@ -22,6 +22,7 @@ import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import dagger.Module
 import dagger.Provides
@@ -39,7 +40,7 @@ class OfflineSyncModule {
     }
 
     @Provides
-    fun provideAggregateProgressObserver(@ApplicationContext context: Context, workManager: WorkManager): AggregateProgressObserver {
-        return AggregateProgressObserver(workManager, context)
+    fun provideAggregateProgressObserver(@ApplicationContext context: Context, workManager: WorkManager, syncProgressDao: SyncProgressDao): AggregateProgressObserver {
+        return AggregateProgressObserver(workManager, context, syncProgressDao)
     }
 }

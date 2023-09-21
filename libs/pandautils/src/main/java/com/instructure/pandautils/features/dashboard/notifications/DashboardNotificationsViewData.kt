@@ -22,16 +22,19 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.SyncProgressItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
+import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.mvvm.ItemViewModel
 import java.util.*
 
 data class DashboardNotificationsViewData(
     val items: List<ItemViewModel>,
-    var uploadItems: List<UploadItemViewModel>
+    var uploadItems: List<UploadItemViewModel>,
+    var syncProgressItems: SyncProgressItemViewModel? = null,
 ) : BaseObservable() {
     @Bindable
-    fun getConcatenatedItems() = uploadItems + items
+    fun getConcatenatedItems() = uploadItems + items + (syncProgressItems?.let { listOf(it) } ?: emptyList())
 }
 
 data class InvitationViewData(
@@ -62,6 +65,13 @@ data class UploadViewData(
     val isUploading: Boolean
 )
 
+data class SyncProgressViewData(
+    @Bindable var title: String = "",
+    @Bindable var subtitle: String = "",
+    @Bindable var progress: Int = 0,
+    @Bindable var progressState: ProgressState = ProgressState.STARTING,
+) : BaseObservable()
+
 sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String) : DashboardNotificationsActions()
     data class LaunchConference(val canvasContext: CanvasContext, val url: String) : DashboardNotificationsActions()
@@ -73,4 +83,5 @@ sealed class DashboardNotificationsActions {
         val attemptId: Long
     ) : DashboardNotificationsActions()
     data class NavigateToMyFiles(val canvasContext: CanvasContext, val folderId: Long) : DashboardNotificationsActions()
+    object OpenSyncProgress: DashboardNotificationsActions()
 }

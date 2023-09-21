@@ -28,12 +28,15 @@ import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TAB_PROGRESS_SIZE
+import com.instructure.pandautils.room.offline.daos.SyncProgressDao
+import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 import com.instructure.pandautils.utils.fromJson
 import java.util.UUID
 
 class AggregateProgressObserver(
     private val workManager: WorkManager,
-    private val context: Context
+    private val context: Context,
+    syncProgressDao: SyncProgressDao
 ) {
 
     val progressData: LiveData<AggregateProgressViewData>
@@ -42,6 +45,21 @@ class AggregateProgressObserver(
 
     private var aggregateProgressLiveData: LiveData<List<WorkInfo>>? = null
     private var courseProgressLiveData: LiveData<List<WorkInfo>>? = null
+
+    private val syncProgressObserver = Observer<List<SyncProgressEntity>> {
+        courseProgressLiveData?.removeObserver(courseProgressObserver)
+        aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
+        val workerIds = it.map { UUID.fromString(it.uuid) }
+        if (workerIds.isEmpty()) {
+            _progressData.postValue(
+                AggregateProgressViewData(
+                    title = "",
+                    progressState = ProgressState.COMPLETED
+                ))
+        } else {
+            setCourseWorkerIds(workerIds)
+        }
+    }
 
     private val aggregateProgressObserver = object : Observer<List<WorkInfo>> {
         override fun onChanged(value: List<WorkInfo>) {
@@ -153,18 +171,23 @@ class AggregateProgressObserver(
             aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
             aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds.toList()))
             aggregateProgressLiveData?.observeForever(aggregateProgressObserver)
+        } else {
+            _progressData.postValue(
+                AggregateProgressViewData(
+                    title = context.getString(R.string.syncProgress_downloadStarting),
+                    progressState = ProgressState.STARTING
+                )
+            )
         }
     }
 
     init {
-        _progressData.postValue(
-            AggregateProgressViewData(
-                title = context.getString(R.string.syncProgress_downloadStarting)
-            )
-        )
+        syncProgressDao.findCourseProgressesLiveData().observeForever(syncProgressObserver)
     }
 
-    fun setCourseWorkerIds(workerIds: List<UUID>) {
+    private fun setCourseWorkerIds(workerIds: List<UUID>) {
+        if (workerIds.isEmpty()) return
+
         courseProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))
         courseProgressLiveData?.observeForever(courseProgressObserver)
     }

@@ -110,6 +110,9 @@ class DashboardNotificationsFragment : Fragment() {
             is DashboardNotificationsActions.NavigateToMyFiles -> {
                 dashboardRouter.routeToMyFiles(action.canvasContext, action.folderId)
             }
+            is DashboardNotificationsActions.OpenSyncProgress -> {
+                dashboardRouter.routeToSyncProgress()
+            }
         }
     }
 

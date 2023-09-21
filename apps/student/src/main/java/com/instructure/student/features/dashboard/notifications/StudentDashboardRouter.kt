@@ -19,6 +19,7 @@ package com.instructure.student.features.dashboard.notifications
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
@@ -50,6 +51,13 @@ class StudentDashboardRouter(private val activity: FragmentActivity) : Dashboard
         RouteMatcher.route(
             activity,
             FileListFragment.makeRoute(canvasContext, folderId)
+        )
+    }
+
+    override fun routeToSyncProgress() {
+        RouteMatcher.route(
+            activity,
+            SyncProgressFragment.makeRoute()
         )
     }
 }
