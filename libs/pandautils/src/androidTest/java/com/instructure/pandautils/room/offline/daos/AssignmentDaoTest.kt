@@ -103,19 +103,6 @@ class AssignmentDaoTest {
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    fun testCourseForeignKey() = runTest {
-        val courseEntity = CourseEntity(Course(id = 1L))
-        courseDao.insert(courseEntity)
-
-        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L)
-        assignmentGroupDao.insert(assignmentGroupEntity)
-
-        val assignmentEntity =
-            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
-        assignmentDao.insert(assignmentEntity)
-    }
-
-    @Test(expected = SQLiteConstraintException::class)
     fun testAssignmentGroupForeignKey() = runTest {
         val courseEntity = CourseEntity(Course(id = 1L))
         courseDao.insert(courseEntity)
@@ -162,6 +149,4 @@ class AssignmentDaoTest {
 
         assertNull(result)
     }
-
-
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2fcbcb15d24b07efb3ecd0f510c70f60",
+    "identityHash": "5904b5acd62d9d4971f17fc5a32e5969",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -3693,7 +3693,7 @@
       },
       {
         "tableName": "SubmissionEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `grade` TEXT, `score` REAL NOT NULL, `attempt` INTEGER NOT NULL, `submittedAt` INTEGER, `commentCreated` INTEGER, `mediaContentType` TEXT, `mediaCommentUrl` TEXT, `mediaCommentDisplay` TEXT, `body` TEXT, `isGradeMatchesCurrentSubmission` INTEGER NOT NULL, `workflowState` TEXT, `submissionType` TEXT, `previewUrl` TEXT, `url` TEXT, `late` INTEGER NOT NULL, `excused` INTEGER NOT NULL, `missing` INTEGER NOT NULL, `mediaCommentId` TEXT, `assignmentId` INTEGER NOT NULL, `userId` INTEGER, `graderId` INTEGER, `groupId` INTEGER, `pointsDeducted` REAL, `enteredScore` REAL NOT NULL, `enteredGrade` TEXT, `postedAt` INTEGER, `gradingPeriodId` INTEGER, PRIMARY KEY(`id`, `attempt`), FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `grade` TEXT, `score` REAL NOT NULL, `attempt` INTEGER NOT NULL, `submittedAt` INTEGER, `commentCreated` INTEGER, `mediaContentType` TEXT, `mediaCommentUrl` TEXT, `mediaCommentDisplay` TEXT, `body` TEXT, `isGradeMatchesCurrentSubmission` INTEGER NOT NULL, `workflowState` TEXT, `submissionType` TEXT, `previewUrl` TEXT, `url` TEXT, `late` INTEGER NOT NULL, `excused` INTEGER NOT NULL, `missing` INTEGER NOT NULL, `mediaCommentId` TEXT, `assignmentId` INTEGER NOT NULL, `userId` INTEGER, `graderId` INTEGER, `groupId` INTEGER, `pointsDeducted` REAL, `enteredScore` REAL NOT NULL, `enteredGrade` TEXT, `postedAt` INTEGER, `gradingPeriodId` INTEGER, PRIMARY KEY(`id`, `attempt`), FOREIGN KEY(`groupId`) REFERENCES `GroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -3873,6 +3873,17 @@
         },
         "indices": [],
         "foreignKeys": [
+          {
+            "table": "GroupEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "groupId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
           {
             "table": "AssignmentEntity",
             "onDelete": "CASCADE",
@@ -5036,7 +5047,7 @@
       },
       {
         "tableName": "AttachmentEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contentType` TEXT, `filename` TEXT, `displayName` TEXT, `url` TEXT, `thumbnailUrl` TEXT, `previewUrl` TEXT, `createdAt` INTEGER, `size` INTEGER NOT NULL, `workerId` TEXT, `submissionCommentId` INTEGER, `submissionId` INTEGER, `attempt` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`submissionCommentId`) REFERENCES `SubmissionCommentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`submissionId`, `attempt`) REFERENCES `SubmissionEntity`(`id`, `attempt`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `contentType` TEXT, `filename` TEXT, `displayName` TEXT, `url` TEXT, `thumbnailUrl` TEXT, `previewUrl` TEXT, `createdAt` INTEGER, `size` INTEGER NOT NULL, `workerId` TEXT, `submissionCommentId` INTEGER, `submissionId` INTEGER, `attempt` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`submissionCommentId`) REFERENCES `SubmissionCommentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -5135,19 +5146,6 @@
             "referencedColumns": [
               "id"
             ]
-          },
-          {
-            "table": "SubmissionEntity",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "submissionId",
-              "attempt"
-            ],
-            "referencedColumns": [
-              "id",
-              "attempt"
-            ]
           }
         ]
       },
@@ -5159,18 +5157,6 @@
             "fieldPath": "mediaId",
             "columnName": "mediaId",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "submissionId",
-            "columnName": "submissionId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "attemptId",
-            "columnName": "attemptId",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -5363,7 +5349,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2fcbcb15d24b07efb3ecd0f510c70f60')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5904b5acd62d9d4971f17fc5a32e5969')"
     ]
   }
 }

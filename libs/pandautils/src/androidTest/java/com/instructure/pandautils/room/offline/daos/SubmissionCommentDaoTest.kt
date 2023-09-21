@@ -17,22 +17,22 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.MediaComment
+import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.entities.AttachmentEntity
-import com.instructure.pandautils.room.offline.entities.AuthorEntity
-import com.instructure.pandautils.room.offline.entities.MediaCommentEntity
-import com.instructure.pandautils.room.offline.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.offline.entities.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -44,6 +44,10 @@ class SubmissionCommentDaoTest {
     private lateinit var attachmentDao: AttachmentDao
     private lateinit var mediaCommentDao: MediaCommentDao
     private lateinit var authorDao: AuthorDao
+    private lateinit var courseDao: CourseDao
+    private lateinit var assignmentGroupDao: AssignmentGroupDao
+    private lateinit var assignmentDao: AssignmentDao
+    private lateinit var submissionDao: SubmissionDao
 
     @Before
     fun setUp() {
@@ -54,6 +58,17 @@ class SubmissionCommentDaoTest {
         attachmentDao = db.attachmentDao()
         mediaCommentDao = db.mediaCommentDao()
         authorDao = db.authorDao()
+        courseDao = db.courseDao()
+        assignmentGroupDao = db.assignmentGroupDao()
+        assignmentDao = db.assignmentDao()
+        submissionDao = db.submissionDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1L)))
+            assignmentGroupDao.insert(AssignmentGroupEntity(AssignmentGroup(1L), 1L))
+            assignmentDao.insert(AssignmentEntity(Assignment(1L, assignmentGroupId = 1L), null, null, null, null))
+            submissionDao.insert(SubmissionEntity(Submission(1L, attempt = 1L, assignmentId = 1L), null, null))
+        }
     }
 
     @After
@@ -69,12 +84,16 @@ class SubmissionCommentDaoTest {
             id = id,
             comment = "These are the droids you are looking for",
             authorId = 1,
-            mediaCommentId = "66"
+            mediaCommentId = "66",
+            submissionId = 1L,
+            attemptId = 1L
         )
 
         val submissionComment2 = SubmissionCommentEntity(
             id = 2,
             comment = "These are not the droids you are looking for",
+            submissionId = 1L,
+            attemptId = 1L
         )
 
         submissionCommentDao.insert(submissionComment)
@@ -113,5 +132,25 @@ class SubmissionCommentDaoTest {
 
         Assert.assertEquals(1, result.size)
         Assert.assertEquals(submissionComment, result.first().submissionComment)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testSubmissionForeignKey() = runTest {
+        val submissionComment = SubmissionCommentEntity(id = 2, comment = "Comment", submissionId = 2, attemptId = 1)
+
+        submissionCommentDao.insert(submissionComment)
+    }
+
+    @Test
+    fun testSubmissionCascade() = runTest {
+        val submissionComment = SubmissionCommentEntity(id = 2, comment = "Comment", submissionId = 1, attemptId = 1)
+
+        submissionCommentDao.insert(submissionComment)
+
+        submissionDao.delete(SubmissionEntity(Submission(1L, attempt = 1L, assignmentId = 1L), null, null))
+
+        val result = submissionCommentDao.findBySubmissionId(1)
+
+        Assert.assertTrue(result.isEmpty())
     }
 }

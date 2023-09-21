@@ -38,9 +38,9 @@ class SubmissionFacade(
     private val fetchedUsers = mutableMapOf<Long, User?>()
 
     suspend fun insertSubmission(submission: Submission) {
-        val groupId = submission.group?.let { group -> groupDao.insert(GroupEntity(group)) }
+        submission.group?.let { group -> groupDao.insertOrUpdate(GroupEntity(group)) }
 
-        submissionDao.insertOrUpdate(SubmissionEntity(submission, groupId, submission.mediaComment?.mediaId))
+        submissionDao.insertOrUpdate(SubmissionEntity(submission, submission.group?.id, submission.mediaComment?.mediaId))
 
         submission.mediaComment?.let { mediaComment ->
             mediaCommentDao.insert(MediaCommentEntity(mediaComment, submission.id, submission.attempt))

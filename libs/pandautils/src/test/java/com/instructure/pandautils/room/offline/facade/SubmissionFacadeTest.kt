@@ -69,12 +69,11 @@ class SubmissionFacadeTest {
             submissionHistory = submissionHistory
         )
 
-        coEvery { groupDao.insert(any()) } returns 1L
         coEvery { submissionDao.insert(any()) } returns 1L
 
         facade.insertSubmission(submission)
 
-        coVerify { groupDao.insert(GroupEntity(group)) }
+        coVerify { groupDao.insertOrUpdate(GroupEntity(group)) }
         coVerify { mediaCommentDao.insert(MediaCommentEntity(mediaComment, 1L, 0)) }
         coVerify { userDao.insertOrUpdate(UserEntity(user)) }
         coVerify { submissionDao.insertOrUpdate(SubmissionEntity(submission, group.id, mediaComment.mediaId)) }
