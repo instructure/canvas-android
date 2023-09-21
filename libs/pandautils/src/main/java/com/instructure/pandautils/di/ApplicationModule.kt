@@ -23,8 +23,12 @@ import android.content.res.Resources
 import android.webkit.CookieManager
 import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.HtmlParser
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
@@ -102,7 +106,14 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideHtmlParses(localFileDao: LocalFileDao): HtmlParser {
-        return HtmlParser(localFileDao)
+    fun provideHtmlParses(
+        localFileDao: LocalFileDao,
+        apiPrefs: ApiPrefs,
+        fileFolderDao: FileFolderDao,
+        @ApplicationContext context: Context,
+        fileSyncSettingsDao: FileSyncSettingsDao,
+        fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    ): HtmlParser {
+        return HtmlParser(localFileDao, apiPrefs, fileFolderDao, context, fileSyncSettingsDao, fileFolderApi)
     }
 }

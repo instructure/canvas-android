@@ -52,7 +52,8 @@ class FileSyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val fileId = inputData.getLong(INPUT_FILE_ID, -1)
-        val fileName = "${fileId}_${inputData.getString(INPUT_FILE_NAME) ?: ""}"
+        val inputFileName = inputData.getString(INPUT_FILE_NAME) ?: ""
+        val fileName = if (inputFileName.isNotEmpty()) "${fileId}_$inputFileName" else fileId.toString()
         val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
         val courseId = inputData.getLong(INPUT_COURSE_ID, -1)
 

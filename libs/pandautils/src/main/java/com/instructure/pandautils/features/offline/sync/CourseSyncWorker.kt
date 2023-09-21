@@ -19,6 +19,7 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -36,6 +37,7 @@ import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
@@ -106,12 +108,15 @@ class CourseSyncWorker @AssistedInject constructor(
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
     private val syncSettingsFacade: SyncSettingsFacade,
-    private val htmlParser: HtmlParser
+    private val htmlParser: HtmlParser,
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseProgress
 
     private var fileOperation: Operation? = null
+
+    private val additionalFileIdsToSync = mutableSetOf<Long>()
 
     override suspend fun doWork(): Result {
 
@@ -157,6 +162,8 @@ class CourseSyncWorker @AssistedInject constructor(
         if (courseSettings.isTabSelected(Tab.QUIZZES_ID)) {
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseSettings.courseId)
         }
+
+        syncAdditionalFiles(courseSettings)
 
         return Result.success(workDataOf(OUTPUT to progress.toJson()))
     }
@@ -217,7 +224,11 @@ class CourseSyncWorker @AssistedInject constructor(
                 .depaginate { nextUrl ->
                     pageApi.getNextPagePagesList(nextUrl, params)
                 }.dataOrNull.orEmpty()
-                .map { it.copy(body = htmlParser.createHtmlStringWithLocalFiles(it.body)) }
+                .map {
+                    val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(it.body, courseId)
+                    additionalFileIdsToSync.addAll(htmlParsingResult.internalFileIds)
+                    it.copy(body = htmlParsingResult.htmlWithLocalFileLinks)
+                }
 
             pageFacade.insertPages(pages, courseId)
 
@@ -430,6 +441,66 @@ class CourseSyncWorker @AssistedInject constructor(
 
         progress = progress.copy(fileSyncData = fileSyncData)
         updateProgress()
+    }
+
+    private suspend fun syncAdditionalFiles(syncSettings: CourseSyncSettingsEntity) {
+        val courseId = syncSettings.courseId
+
+        val fileSyncData = mutableListOf<FileSyncData>()
+        val fileWorkers = mutableListOf<OneTimeWorkRequest>()
+        val additionalPublicFilesToSync = fileFolderDao.findByIds(additionalFileIdsToSync)
+
+        additionalPublicFilesToSync.forEach {
+                Log.d("asdasd", "Syncing additional file: ${it.id}_${it.displayName}")
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
+                    courseId,
+                    it.id,
+                    it.displayName.orEmpty(),
+                    it.url.orEmpty(),
+                    syncSettingsFacade.getSyncSettings().wifiOnly
+                )
+                fileWorkers.add(worker)
+                fileSyncData.add(FileSyncData(worker.id.toString(), it.displayName.orEmpty(), it.size))
+            }
+
+        val nonPublicFileIds = additionalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
+        nonPublicFileIds.forEach {
+            val file = fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
+            if (file != null) {
+                Log.d("asdasd", "Syncing additional non public file: ${file.id}_${file.displayName}")
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
+                    courseId,
+                    file.id,
+                    file.displayName.orEmpty(),
+                    file.url.orEmpty(),
+                    syncSettingsFacade.getSyncSettings().wifiOnly
+                )
+                fileWorkers.add(worker)
+                fileSyncData.add(FileSyncData(worker.id.toString(), file.displayName.orEmpty(), file.size))
+            } else {
+                Log.d("asdasd", "File not found: $it")
+            }
+        }
+
+        val chunkedWorkers = fileWorkers.chunked(6)
+
+//        if (chunkedWorkers.isEmpty()) {
+//            progress = progress.copy(fileSyncData = emptyList())
+//            updateProgress()
+//            return
+//        }
+
+        var continuation = workManager
+            .beginWith(chunkedWorkers.first())
+
+        chunkedWorkers.drop(1).forEach {
+            continuation = continuation.then(it)
+        }
+
+        continuation.enqueue()
+
+//        progress = progress.copy(fileSyncData = fileSyncData)
+//        updateProgress()
     }
 
     private suspend fun fetchFiles(courseId: Long) {

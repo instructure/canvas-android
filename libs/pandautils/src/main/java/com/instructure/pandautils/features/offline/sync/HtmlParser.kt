@@ -16,30 +16,84 @@
  */
 package com.instructure.pandautils.features.offline.sync
 
+import android.content.Context
 import android.util.Log
+import com.instructure.canvasapi2.apis.FileFolderAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 
-class HtmlParser(private var localFileDao: LocalFileDao) {
+class HtmlParser(
+    private var localFileDao: LocalFileDao,
+    private val apiPrefs: ApiPrefs,
+    private val fileFolderDao: FileFolderDao,
+    @ApplicationContext private val context: Context,
+    private val fileSyncSettingsDao: FileSyncSettingsDao,
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
+) {
 
-    private val imageRegex = Regex("<img.*src=\"([^\"]*)\".*>")
+    private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
+    private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)") // .*tamaskozmer\.instructure\.com.*files\/(\d+)
 
-    suspend fun createHtmlStringWithLocalFiles(html: String?): String? {
-        if (html == null) return null
+    suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long): HtmlParsingResult {
+        if (html == null) return HtmlParsingResult(null, emptySet(), emptySet())
 
-        var result: String = html
-        val matches = imageRegex.findAll(result)
+        var resultHtml: String = html
+        val internalFileIds = mutableSetOf<Long>()
+
+        val matches = imageRegex.findAll(resultHtml)
         matches.forEach { match ->
-            Log.d("asdasd", "match: ${match.groupValues[0]}   src match: ${match.groupValues[1]}")
             val imageUrl = match.groupValues[1]
-            val fileId = Regex("files/(\\d+)").find(imageUrl)?.groupValues?.get(1)?.toLongOrNull()
+            val fileId = internalFileRegex.find(imageUrl)?.groupValues?.get(1)?.toLongOrNull()
             if (fileId != null) {
-                val file = localFileDao.findById(fileId)
-                file?.path?.let {
-                    result = result.replace(imageUrl, "file://$it")
-                }
+                val (newHtml, shouldSyncFile) = replaceInternalFileUrl(resultHtml, courseId, fileId, imageUrl)
+                resultHtml = newHtml
+                if (shouldSyncFile) internalFileIds.add(fileId)
             }
         }
 
-        return result
+        return HtmlParsingResult(resultHtml, internalFileIds, emptySet())
+    }
+
+    private suspend fun replaceInternalFileUrl(html: String, courseId: Long, fileId: Long, imageUrl: String): Pair<String, Boolean> {
+        var resultHtml = html
+        var shouldSyncFile = false
+
+        val filePath = localFileDao.findById(fileId)?.path
+        if (filePath != null) {
+            resultHtml = resultHtml.replace(imageUrl, "file://$filePath")
+        } else {
+            resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePath(fileId, courseId)}")
+            if (fileSyncSettingsDao.findById(fileId) == null) {
+                Log.d("asdasd", "adding file to syncable files: $fileId")
+                shouldSyncFile = true
+            }
+        }
+
+        return Pair(resultHtml, shouldSyncFile)
+    }
+
+    private suspend fun createLocalFilePath(fileId: Long, courseId: Long): String {
+        var fileName = fileFolderDao.findById(fileId)?.displayName.orEmpty()
+        if (fileName.isEmpty()) {
+            val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams(isForceReadFromNetwork = false)).dataOrNull
+            fileName = file?.displayName.orEmpty()
+        }
+        val fileNameWithId = if (fileName.isNotEmpty()) "${fileId}_$fileName" else "$fileId"
+        val dir = File(context.filesDir, apiPrefs.user?.id.toString())
+
+        val downloadedFile = File(dir, fileNameWithId)
+        Log.d("asdasd", "path is null, downloadedFile: ${downloadedFile.absolutePath}")
+        return downloadedFile.absolutePath
     }
 }
+
+data class HtmlParsingResult(
+    val htmlWithLocalFileLinks: String?,
+    val internalFileIds: Set<Long>,
+    val externalFileUrls: Set<String> // TODO
+)
