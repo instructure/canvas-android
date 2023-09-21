@@ -120,13 +120,13 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
 
         if (someSelected) {
             val childMatcher = withContentDescription("Remove all from dashboard")
-            val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+            val itemMatcher = allOf(hasDescendant(withText(R.string.allCoursesCourseHeader)), hasDescendant(childMatcher))
 
             onView(withParent(itemMatcher) + childMatcher).assertDisplayed()
         }
         else {
             val childMatcher = withContentDescription("Add all to dashboard")
-            val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+            val itemMatcher = allOf(hasDescendant(withText(R.string.allCoursesCourseHeader)), hasDescendant(childMatcher))
 
             onView(withParent(itemMatcher) + childMatcher).assertDisplayed()
         }
@@ -135,12 +135,12 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
     fun assertGroupMassSelectButtonIsDisplayed(someSelected: Boolean) {
         if (someSelected) {
             val itemMatcher = withContentDescription("Remove all from dashboard")
-            val parentMatcher = allOf(hasDescendant(withText("All groups")), hasDescendant(itemMatcher))
+            val parentMatcher = allOf(hasDescendant(withText(R.string.allCoursesGroupHeader)), hasDescendant(itemMatcher))
             onView(withParent(parentMatcher) + itemMatcher).scrollTo().assertDisplayed()
         }
         else {
             val itemMatcher = withContentDescription("Add all to dashboard")
-            val parentMatcher = allOf(hasDescendant(withText("All groups")), hasDescendant(itemMatcher))
+            val parentMatcher = allOf(hasDescendant(withText(R.string.allCoursesGroupHeader)), hasDescendant(itemMatcher))
             onView(withParent(parentMatcher) + itemMatcher).scrollTo().assertDisplayed()
         }
     }
