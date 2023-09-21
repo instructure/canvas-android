@@ -17,15 +17,15 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.entities.AssignmentEntity
-import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
+import com.instructure.pandautils.room.offline.entities.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -40,6 +40,8 @@ class RubricCriterionDaoTest {
     private lateinit var db: OfflineDatabase
     private lateinit var rubricCriterionDao: RubricCriterionDao
     private lateinit var assignmentDao: AssignmentDao
+    private lateinit var courseDao: CourseDao
+    private lateinit var assignmentGroupDao: AssignmentGroupDao
 
     @Before
     fun setUp() {
@@ -47,6 +49,14 @@ class RubricCriterionDaoTest {
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         rubricCriterionDao = db.rubricCriterionDao()
         assignmentDao = db.assignmentDao()
+        courseDao = db.courseDao()
+        assignmentGroupDao = db.assignmentGroupDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1L)))
+            assignmentGroupDao.insert(AssignmentGroupEntity(AssignmentGroup(1L), 1L))
+            assignmentDao.insert(AssignmentEntity(Assignment(1L, assignmentGroupId = 1L), null, null, null, null))
+        }
     }
 
     @After
@@ -56,7 +66,6 @@ class RubricCriterionDaoTest {
 
     @Test
     fun testFindById() = runTest {
-        assignmentDao.insert(AssignmentEntity(Assignment(1L), null, null, null, null))
         val rubricCriterionEntity = RubricCriterionEntity(RubricCriterion("1"), 1L)
         val rubricCriterionEntity2 = RubricCriterionEntity(RubricCriterion("2"), 1L)
         rubricCriterionDao.insert(rubricCriterionEntity)
@@ -65,5 +74,21 @@ class RubricCriterionDaoTest {
         val result = rubricCriterionDao.findById("1")
 
         Assert.assertEquals(rubricCriterionEntity, result)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testAssignmentForeignKey() = runTest {
+        rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("1"), 2L))
+    }
+
+    @Test
+    fun testAssignmentCascade() = runTest {
+        rubricCriterionDao.insert(RubricCriterionEntity(RubricCriterion("1"), 1L))
+
+        assignmentDao.delete(AssignmentEntity(Assignment(1L, assignmentGroupId = 1L), null, null, null, null))
+
+        val result = rubricCriterionDao.findById("1")
+
+        Assert.assertNull(result)
     }
 }

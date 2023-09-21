@@ -17,25 +17,22 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.ModuleCompletionRequirement
-import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.entities.CourseEntity
-import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirementEntity
-import com.instructure.pandautils.room.offline.entities.ModuleItemEntity
-import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
+import com.instructure.pandautils.room.offline.entities.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -43,7 +40,6 @@ class ModuleCompletionRequirementDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var moduleCompletionRequirementDao: ModuleCompletionRequirementDao
-    private lateinit var moduleItemDao: ModuleItemDao
     private lateinit var moduleObjectDao: ModuleObjectDao
     private lateinit var courseDao: CourseDao
 
@@ -52,9 +48,13 @@ class ModuleCompletionRequirementDaoTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         moduleCompletionRequirementDao = db.moduleCompletionRequirementDao()
-        moduleItemDao = db.moduleItemDao()
         moduleObjectDao = db.moduleObjectDao()
         courseDao = db.courseDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(id = 1)))
+            moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+        }
     }
 
     @After
@@ -64,17 +64,19 @@ class ModuleCompletionRequirementDaoTest {
 
     @Test
     fun testFindByModuleId() = runTest {
-        courseDao.insert(CourseEntity(Course(id = 1)))
-        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
+        moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 2), 1))
 
-        moduleItemDao.insert(ModuleItemEntity(ModuleItem(id = 1), 1 ))
-        moduleItemDao.insert(ModuleItemEntity(ModuleItem(id = 2), 1 ))
+        moduleCompletionRequirementDao.insert(
+            ModuleCompletionRequirementEntity(
+                ModuleCompletionRequirement(id = 1, minScore = 10.0), 1
+            )
+        )
 
-        moduleCompletionRequirementDao.insert(ModuleCompletionRequirementEntity(
-            ModuleCompletionRequirement(id = 1, minScore = 10.0), 1))
-
-        moduleCompletionRequirementDao.insert(ModuleCompletionRequirementEntity(
-            ModuleCompletionRequirement(id = 2, minScore = 20.0), 2))
+        moduleCompletionRequirementDao.insert(
+            ModuleCompletionRequirementEntity(
+                ModuleCompletionRequirement(id = 2, minScore = 20.0), 2
+            )
+        )
 
         val result = moduleCompletionRequirementDao.findByModuleId(1)
 
@@ -88,18 +90,41 @@ class ModuleCompletionRequirementDaoTest {
         courseDao.insert(CourseEntity(Course(id = 1)))
         moduleObjectDao.insert(ModuleObjectEntity(ModuleObject(id = 1), 1))
 
-        moduleItemDao.insert(ModuleItemEntity(ModuleItem(id = 1), 1 ))
-        moduleItemDao.insert(ModuleItemEntity(ModuleItem(id = 2), 1 ))
+        moduleCompletionRequirementDao.insert(
+            ModuleCompletionRequirementEntity(
+                ModuleCompletionRequirement(id = 1, minScore = 10.0), 1
+            )
+        )
 
-        moduleCompletionRequirementDao.insert(ModuleCompletionRequirementEntity(
-            ModuleCompletionRequirement(id = 1, minScore = 10.0), 1))
-
-        moduleCompletionRequirementDao.insert(ModuleCompletionRequirementEntity(
-            ModuleCompletionRequirement(id = 2, minScore = 20.0), 2))
+        moduleCompletionRequirementDao.insert(
+            ModuleCompletionRequirementEntity(
+                ModuleCompletionRequirement(id = 2, minScore = 20.0), 1
+            )
+        )
 
         val result = moduleCompletionRequirementDao.findById(1)
 
         Assert.assertEquals(1L, result!!.id)
         Assert.assertEquals(10.0, result.minScore, 0.0)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testModuleItemForeignKey() = runTest {
+        moduleCompletionRequirementDao.insert(
+            ModuleCompletionRequirementEntity(ModuleCompletionRequirement(id = 1, minScore = 10.0), 2)
+        )
+    }
+
+    @Test
+    fun testModuleItemCascade() = runTest {
+        moduleCompletionRequirementDao.insert(
+            ModuleCompletionRequirementEntity(ModuleCompletionRequirement(id = 1, minScore = 10.0), 1)
+        )
+
+        moduleObjectDao.delete(ModuleObjectEntity(ModuleObject(id = 1), 1))
+
+        val result = moduleCompletionRequirementDao.findByModuleId(1)
+
+        Assert.assertTrue(result.isEmpty())
     }
 }
