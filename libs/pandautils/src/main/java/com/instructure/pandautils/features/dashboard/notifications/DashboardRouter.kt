@@ -25,4 +25,6 @@ interface DashboardRouter {
     fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long)
 
     fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long)
+
+    fun routeToSyncProgress()
 }
