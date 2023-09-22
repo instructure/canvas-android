@@ -225,7 +225,7 @@ class ModuleProgressionRepositoryTest {
             ),
         )
 
-        val courseSyncSettingsEntity = CourseSyncSettingsEntity(1, false, mapOf(
+        val courseSyncSettingsEntity = CourseSyncSettingsEntity(1, "Course name", false, mapOf(
             "Page" to true,
             "Quiz" to false,
             "Assignment" to true,
