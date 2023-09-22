@@ -243,7 +243,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
                     val args = LtiLaunchFragment.makeBundle(course, ltiUrl, assignment.name!!, true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, course, args))
+                    RouteMatcher.route(requireActivity(), Route(LtiLaunchFragment::class.java, course, args))
                 }
             }
         }
@@ -290,7 +290,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), assignment.description, {
             descriptionWebViewWrapper.loadHtml(it, assignment.name, baseUrl = assignment.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), course, it)
+            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), course, it)
         }
     }
 
@@ -368,7 +368,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun setupListeners(assignment: Assignment) = with(binding) {
         dueLayout.setOnClickListener {
             val args = DueDatesFragment.makeBundle(assignment)
-            RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, course, args))
+            RouteMatcher.route(requireActivity(), Route(null, DueDatesFragment::class.java, course, args))
         }
 
         submissionsLayout.setOnClickListener {
@@ -392,7 +392,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
         assignment.discussionTopicHeader?.let { discussionTopicHeader ->
             viewDiscussionButton.setOnClickListener {
-                RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(course, discussionTopicHeader))
+                RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(course, discussionTopicHeader))
             }
         } ?: viewDiscussionButton.setGone()
 
@@ -401,7 +401,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun openEditPage(assignment: Assignment) {
         if(APIHelper.hasNetworkConnection()) {
             val args = EditAssignmentDetailsFragment.makeBundle(assignment, false)
-            RouteMatcher.route(requireContext(), Route(EditAssignmentDetailsFragment::class.java, course, args))
+            RouteMatcher.route(requireActivity(), Route(EditAssignmentDetailsFragment::class.java, course, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -409,7 +409,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     private fun navigateToSubmissions(course: Course, assignment: Assignment, filter: AssignmentSubmissionListPresenter.SubmissionListFilter) {
         val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
-        RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
+        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }
 
     override fun onResume() {

@@ -382,7 +382,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), quiz.description, {
             instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = this@QuizDetailsFragment.quiz.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
         }
     }
 
@@ -390,7 +390,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         dueLayout.setOnClickListener {
             if(quiz._assignment != null) {
                 val args = DueDatesFragment.makeBundle(quiz._assignment!!)
-                RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, course, args))
+                RouteMatcher.route(requireActivity(), Route(null, DueDatesFragment::class.java, course, args))
             }
         }
 
@@ -419,7 +419,7 @@ class QuizDetailsFragment : BasePresenterFragment<
                 val uri = URI(url.protocol, url.userInfo, url.host, url.port, url.path, url.query, url.ref)
                 urlStr = uri.toASCIIString()
                 val args = QuizPreviewWebviewFragment.makeBundle(urlStr, getString(R.string.quizPreview))
-                RouteMatcher.route(requireContext(), Route(QuizPreviewWebviewFragment::class.java, course, args))
+                RouteMatcher.route(requireActivity(), Route(QuizPreviewWebviewFragment::class.java, course, args))
             } catch (e: UnsupportedEncodingException) {}
         }
     }
@@ -428,7 +428,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         assignment ?: return // We can't navigate to the submission list if there isn't an associated assignment
         val assignmentWithAnonymousGrading = assignment.copy(anonymousGrading = quiz.allowAnonymousSubmissions)
         val args = AssignmentSubmissionListFragment.makeBundle(assignmentWithAnonymousGrading, filter)
-        RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
+        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }
 
     private fun clearListeners() = with(binding) {
@@ -443,7 +443,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun openEditPage(quiz: Quiz) {
         if(APIHelper.hasNetworkConnection()) {
             val args = EditQuizDetailsFragment.makeBundle(quiz, false)
-            RouteMatcher.route(requireContext(), Route(EditQuizDetailsFragment::class.java, course, args))
+            RouteMatcher.route(requireActivity(), Route(EditQuizDetailsFragment::class.java, course, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }

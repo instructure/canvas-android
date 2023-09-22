@@ -247,7 +247,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 }
 
             RouteMatcher.route(
-                requireContext(),
+                requireActivity(),
                 Route(
                     ChooseRecipientsFragment::class.java,
                     canvasContext,

@@ -154,7 +154,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override fun onRefreshStarted() {}
     override fun onRefreshFinished() {}
 
-    private val onAttachmentClicked = { attachment: Attachment -> attachment.view(requireContext()) }
+    private val onAttachmentClicked = { attachment: Attachment -> attachment.view(requireActivity()) }
 
     private val commentLibraryViewModel: CommentLibraryViewModel by activityViewModels()
 
