@@ -30,6 +30,7 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -78,7 +79,7 @@ class QuizDaoTest {
         val quizEntities = listOf(QuizEntity(quizzes[0], 2L), QuizEntity(quizzes[1], 1L), QuizEntity(quizzes[2], 2L))
         val expectedQuizEntities = quizEntities.filter { it.courseId == 2L }
 
-        quizEntities.forEach {quizDao.insert(it)}
+        quizEntities.forEach { quizDao.insert(it) }
 
         val result = quizDao.findByCourseId(2L)
         assertEquals(expectedQuizEntities.map { it.title }, result.map { it.title })
@@ -96,11 +97,42 @@ class QuizDaoTest {
         val result = quizDao.findById(1L)
 
         assertEquals(expectedTitle, result?.title)
-
     }
 
     @Test(expected = SQLiteConstraintException::class)
     fun testForeignKeyConstraint() = runTest {
         quizDao.insert(QuizEntity(Quiz(id = 1L), 1L))
+    }
+
+    @Test
+    fun testDeleteAndInsertAll() = runTest {
+        courseDao.insert(CourseEntity(Course(1L)))
+
+        val quizzes = listOf(Quiz(id = 1L, title = "Quiz 1"), Quiz(id = 1L, title = "Quiz 2")).map { QuizEntity(it, 1L) }
+        quizDao.insertAll(quizzes)
+
+        val expected = listOf(Quiz(id = 3L, title = "Quiz 3"), Quiz(id = 4L, title = "Quiz 4")).map { QuizEntity(it, 1L) }
+        quizDao.deleteAndInsertAll(expected, 1L)
+
+        val result = quizDao.findByCourseId(1L)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testDeleteAllByCourseId() = runTest {
+        courseDao.insert(CourseEntity(Course(1L)))
+
+        val quizEntity = QuizEntity(Quiz(id = 1L, title = "Quiz 1"), 1L)
+        quizDao.insert(quizEntity)
+
+        val result = quizDao.findByCourseId(1L)
+
+        assertEquals(listOf(quizEntity), result)
+
+        quizDao.deleteAllByCourseId(1L)
+
+        val deletedResult = quizDao.findByCourseId(1L)
+
+        Assert.assertTrue(deletedResult.isEmpty())
     }
 }

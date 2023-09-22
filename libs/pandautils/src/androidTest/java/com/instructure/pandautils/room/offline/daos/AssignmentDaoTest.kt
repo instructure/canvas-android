@@ -139,9 +139,11 @@ class AssignmentDaoTest {
         val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L)
         assignmentGroupDao.insert(assignmentGroupEntity)
 
-        val assignmentEntity =
-            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
-        assignmentDao.insert(assignmentEntity)
+        val assignmentEntity = AssignmentEntity(
+            Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L),
+            null, null, null, null
+        )
+        assignmentDao.insertOrUpdate(assignmentEntity)
 
         assignmentGroupDao.delete(assignmentGroupEntity)
 

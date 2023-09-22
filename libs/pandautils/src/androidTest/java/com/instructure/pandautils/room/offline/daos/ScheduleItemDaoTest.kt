@@ -32,6 +32,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -106,5 +107,24 @@ class ScheduleItemDaoTest {
         val result = scheduleItemDao.findByItemType(listOf("course_1"), "assignment")
 
         assertEquals(listOf(assignmentEvent, assignmentEvent2), result)
+    }
+
+    @Test
+    fun testDeleteAllByCourseId() = runTest {
+        val assignmentEvent = ScheduleItemEntity(
+            ScheduleItem(itemId = "event_1", title = "schedule item", type = "assignment", contextCode = "course_1"), 1L
+        )
+
+        scheduleItemDao.insert(assignmentEvent)
+
+        val result = scheduleItemDao.findById("event_1")
+
+        assertEquals(assignmentEvent, result)
+
+        scheduleItemDao.deleteAllByCourseId(1L)
+
+        val deletedResult = scheduleItemDao.findById("event_1")
+
+        Assert.assertNull(deletedResult)
     }
 }

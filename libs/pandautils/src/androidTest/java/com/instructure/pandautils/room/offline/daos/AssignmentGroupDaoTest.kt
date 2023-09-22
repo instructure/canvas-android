@@ -121,4 +121,27 @@ class AssignmentGroupDaoTest {
 
         Assert.assertEquals(updated, result)
     }
+
+    @Test
+    fun testDeleteAllByCourseId() = runTest {
+        val assignmentGroupEntity = AssignmentGroupEntity(
+            id = 1L,
+            name = "Name 1",
+            position = 0,
+            groupWeight = 0.0,
+            rules = null,
+            1L
+        )
+        assignmentGroupDao.insert(assignmentGroupEntity)
+
+        val result = assignmentGroupDao.findById(1L)
+
+        Assert.assertEquals(assignmentGroupEntity, result)
+
+        assignmentGroupDao.deleteAllByCourseId(1L)
+
+        val deletedResult = assignmentGroupDao.findById(1L)
+
+        Assert.assertNull(deletedResult)
+    }
 }
