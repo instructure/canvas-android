@@ -86,6 +86,26 @@ class ModuleUtilityTest : TestCase() {
     }
 
     @Test
+    fun testGetFragment_fileOfflineNotAvailable() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/assignments/123456789"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "File",
+            url = url
+        )
+
+        val moduleObject: ModuleObject = ModuleObject(
+            id = 1234
+        )
+
+        val course = Course()
+
+        val filDetailsFragment = callGetFragment(moduleItem, course, moduleObject, isOnline = false)
+        TestCase.assertNotNull(filDetailsFragment)
+        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, filDetailsFragment!!.javaClass)
+    }
+
+    @Test
     fun testGetFragment_page() {
         val url = "https://mobile.canvas.net/api/v1/courses/222/pages/hello-world"
         val moduleItem = ModuleItem(

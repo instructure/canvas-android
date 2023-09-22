@@ -101,28 +101,7 @@ object ModuleUtility {
             }
         }
         "File" -> { // TODO Handle offline availability after files sync
-            createFileDetailsFragmentWithOfflineCheck(isOnline, course, item, syncedFileIds, context) {
-                val url = removeDomain(item.url)
-                if (moduleObject == null) {
-                    FileDetailsFragment.newInstance(
-                        FileDetailsFragment.makeRoute(
-                            course,
-                            url!!,
-                            item.contentId
-                        )
-                    )
-                } else {
-                    FileDetailsFragment.newInstance(
-                        FileDetailsFragment.makeRoute(
-                            course,
-                            moduleObject,
-                            item.id,
-                            url!!,
-                            item.contentId
-                        )
-                    )
-                }
-            }
+            createFileDetailsFragmentWithOfflineCheck(isOnline, course, item, moduleObject, syncedFileIds, context)
         }
         else -> null
     }
@@ -148,12 +127,31 @@ object ModuleUtility {
         isOnline: Boolean,
         course: Course,
         item: ModuleItem,
+        moduleObject: ModuleObject?,
         syncedFiles: List<Long>,
         context: Context,
-        creationBlock: () -> Fragment?
     ): Fragment? {
         return if (isOnline || syncedFiles.contains(item.contentId)) {
-            creationBlock()
+            val url = removeDomain(item.url)
+            if (moduleObject == null) {
+                FileDetailsFragment.newInstance(
+                    FileDetailsFragment.makeRoute(
+                        course,
+                        url!!,
+                        item.contentId
+                    )
+                )
+            } else {
+                FileDetailsFragment.newInstance(
+                    FileDetailsFragment.makeRoute(
+                        course,
+                        moduleObject,
+                        item.id,
+                        url!!,
+                        item.contentId
+                    )
+                )
+            }
         } else {
             NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(R.string.notAvailableOfflineDescriptionForTabs)))
         }
