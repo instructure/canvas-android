@@ -28,7 +28,6 @@ import androidx.fragment.app.viewModels
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentSyncProgressBinding
-import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -58,19 +57,21 @@ class SyncProgressFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
 
-        viewModel.progressData.observe(viewLifecycleOwner) {
-            when (it.progressState) {
-                ProgressState.IN_PROGRESS -> {
+        viewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                is ViewState.Loading -> {
                     setActionTitle(getString(R.string.cancel))
                 }
 
-                ProgressState.ERROR -> {
+                is ViewState.Error -> {
                     setActionTitle(getString(R.string.retry))
                 }
 
-                else -> {
+                is ViewState.Success -> {
                     setActionGone()
                 }
+
+                else -> Unit
             }
         }
 
@@ -98,7 +99,6 @@ class SyncProgressFragment : Fragment() {
     }
 
     private fun setActionTitle(title: String) {
-        binding.toolbar.menu.items.firstOrNull()?.isVisible = true
         binding.toolbar.menu.items.firstOrNull()?.title = title
     }
 

@@ -112,6 +112,7 @@ class DashboardFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
+        recyclerBinding.syncProgressButton.onClick { RouteMatcher.route(requireContext(), SyncProgressFragment.makeRoute()) }
         applyTheme()
     }
 

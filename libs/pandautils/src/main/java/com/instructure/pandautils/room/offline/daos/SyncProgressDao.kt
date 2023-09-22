@@ -18,7 +18,6 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -28,7 +27,6 @@ import androidx.room.Update
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 
 @Dao
-
 abstract class SyncProgressDao {
 
     @Insert
@@ -45,9 +43,6 @@ abstract class SyncProgressDao {
 
     @Query("SELECT * FROM SyncProgressEntity")
     abstract suspend fun findCourseProgresses(): List<SyncProgressEntity>
-
-    @Query("SELECT * FROM SyncProgressEntity")
-    abstract fun findCourseProgressesLiveData(): LiveData<List<SyncProgressEntity>>
 
     @Query("DELETE FROM SyncProgressEntity")
     abstract suspend fun deleteAll()
