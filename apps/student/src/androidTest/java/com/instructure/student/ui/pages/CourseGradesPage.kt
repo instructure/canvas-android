@@ -91,8 +91,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     // to the top of the list first.  We have to use the custom constraints because the
     // swipeRefreshLayout may extend below the screen, and therefore may not be 90% visible.
     fun refresh() {
-        onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.courseGradesPage)).swipeDown()
-        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
+        onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.courseGradesPage), isDisplayed()))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
         sleep(1000) // Allow some time to react to the update.
     }
