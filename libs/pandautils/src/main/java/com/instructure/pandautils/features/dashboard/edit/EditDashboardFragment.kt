@@ -76,7 +76,7 @@ class EditDashboardFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        binding.toolbar.setTitle(R.string.editDashboard)
+        binding.toolbar.setTitle(R.string.allCoursesScreenHeader)
         binding.toolbar.setupAsBackButton(this)
         binding.toolbar.addSearch {
             viewModel.queryItems(it)

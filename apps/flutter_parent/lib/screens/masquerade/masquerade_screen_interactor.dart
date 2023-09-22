@@ -17,7 +17,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class MasqueradeScreenInteractor {
-  String getDomain() => ApiPrefs.getDomain();
+  String? getDomain() => ApiPrefs.getDomain();
 
   static final siteAdminDomain = 'siteadmin.instructure.com';
 
@@ -26,7 +26,7 @@ class MasqueradeScreenInteractor {
       var user = await locator<UserApi>().getUserForDomain(masqueradingDomain, masqueradingUserId);
       ApiPrefs.updateCurrentLogin((b) => b
         ..masqueradeDomain = masqueradingDomain
-        ..masqueradeUser = user.toBuilder());
+        ..masqueradeUser = user?.toBuilder());
       return true;
     } catch (e) {
       return false;
@@ -35,7 +35,7 @@ class MasqueradeScreenInteractor {
 
   /// Cleans up the input domain and adds protocol and '.instructure.com' as necessary. Returns an empty string
   /// if sanitizing failed.
-  String sanitizeDomain(String domain) {
+  String sanitizeDomain(String? domain) {
     if (domain == null || domain.isEmpty) return '';
 
     // Remove white space

@@ -26,25 +26,21 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.StringArg
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentNotAvailableOfflineBinding
 import com.instructure.student.fragment.ParentFragment
 
 private const val MODULE_ITEM_NAME = "module_item_name"
 private const val DESCRIPTION = "description"
+private const val SHOW_TOOLBAR = "show-toolbar"
 
 class NotAvailableOfflineFragment : ParentFragment() {
 
     private var moduleItemName: String by StringArg(key = MODULE_ITEM_NAME)
     private var description: String by StringArg(key = DESCRIPTION)
     private var course: Course by ParcelableArg(key = Const.COURSE)
+    private var showToolbar: Boolean by BooleanArg(key = SHOW_TOOLBAR, default = true)
 
     private val binding by viewBinding(FragmentNotAvailableOfflineBinding::bind)
 
@@ -56,37 +52,38 @@ class NotAvailableOfflineFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.title = moduleItemName
-        binding.description.text = description
         setIconVisibility()
-
-        binding.toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
+        binding.description.text = description
+        if (showToolbar) {
+            binding.toolbar.title = moduleItemName
+            binding.toolbar.setupAsBackButton(this)
+            ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
+        } else {
+            binding.toolbar.setGone()
+        }
     }
     //endregion
 
     //region Fragment Interaction Overrides
     override fun title(): String = moduleItemName
 
-    override fun applyTheme() { }
+    override fun applyTheme() {}
     //endregion
 
     companion object {
-        fun makeRoute(course: CanvasContext, moduleItemName: String?, description: String?): Route {
+        fun makeRoute(course: CanvasContext, moduleItemName: String? = null, description: String? = null, showToolbar: Boolean = true): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.COURSE, course)
-                putString(MODULE_ITEM_NAME, moduleItemName ?: "")
-                putString(DESCRIPTION, description ?: "")
+                putString(MODULE_ITEM_NAME, moduleItemName.orEmpty())
+                putString(DESCRIPTION, description.orEmpty())
+                putBoolean(SHOW_TOOLBAR, showToolbar)
             }
             return Route(NotAvailableOfflineFragment::class.java, null, bundle)
         }
 
-        fun newInstance(route: Route) = if (validRoute(route)) { NotAvailableOfflineFragment().apply {
-                arguments = route.arguments
-            }
-        } else null
-
-        private fun validRoute(route: Route) = route.arguments.containsKey(MODULE_ITEM_NAME)
+        fun newInstance(route: Route) = NotAvailableOfflineFragment().apply {
+            arguments = route.arguments
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

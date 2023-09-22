@@ -22,9 +22,9 @@ import '../test_app.dart';
 
 void main() {
   var errorString = AppLocalizations().errorLoadingMessages;
-  var callback = null;
+  Function? callback = null;
 
-  testWidgetsWithAccessibilityChecks('Shows warning icon', (tester) async {
+  testWidgetsWithAccessibilityChecks('Shows warning icon', (WidgetTester tester) async {
     await tester.pumpWidget(TestApp(
       ErrorPandaWidget(errorString, callback),
     ));
@@ -48,7 +48,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.byType(FlatButton), findsOneWidget);
+    expect(find.byType(TextButton), findsOneWidget);
     expect(find.text(AppLocalizations().retry), findsOneWidget);
   });
 
@@ -63,7 +63,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Click retry button
-    await tester.tap(find.byType(FlatButton));
+    await tester.tap(find.byType(TextButton));
     await tester.pumpAndSettle();
 
     // Verify the callback was called
@@ -76,7 +76,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.byType(FlatButton), findsOneWidget);
+    expect(find.byType(TextButton), findsOneWidget);
     expect(find.text(AppLocalizations().retry), findsOneWidget);
     expect(find.text('header here'), findsOneWidget);
   });

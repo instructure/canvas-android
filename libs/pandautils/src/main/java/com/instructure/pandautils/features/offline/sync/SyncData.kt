@@ -13,24 +13,38 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *
+ *
  */
 
-package com.instructure.pandautils.features.offline.syncsettings
+package com.instructure.pandautils.features.offline.sync
 
-data class SyncSettingsViewData(
-    val autoSyncEnabled: Boolean,
-    val syncFrequency: String,
-    val wifiOnly: Boolean
+data class CourseProgress(
+    val courseId: Long,
+    val courseName: String,
+    val tabs: Map<String, TabSyncData>,
+    val fileSyncData: List<FileSyncData>? = null
 )
 
-sealed class SyncSettingsAction {
-    data class ShowFrequencySelector(
-        val items: List<String>,
-        val selectedItemPosition: Int,
-        val onItemSelected: (Int) -> Unit
-    ) : SyncSettingsAction()
+data class FileSyncProgress(
+    val fileName: String,
+    val progress: Int,
+    val progressState: ProgressState = ProgressState.IN_PROGRESS
+)
 
-    data class ShowWifiConfirmation(
-        val confirmationCallback: (Boolean) -> Unit
-    ) : SyncSettingsAction()
+data class TabSyncData(
+    val tabName: String,
+    val state: ProgressState
+)
+
+data class FileSyncData(
+    val workerId: String,
+    val fileName: String,
+    val fileSize: Long
+)
+
+enum class ProgressState {
+    STARTING,
+    IN_PROGRESS,
+    COMPLETED,
+    ERROR
 }

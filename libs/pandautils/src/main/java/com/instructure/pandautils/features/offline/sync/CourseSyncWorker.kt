@@ -19,13 +19,13 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.Operation
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -44,21 +44,19 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
-import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
-import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
@@ -71,6 +69,7 @@ import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.room.offline.facade.UserFacade
+import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
@@ -108,13 +107,28 @@ class CourseSyncWorker @AssistedInject constructor(
     private val workManager: WorkManager,
     private val syncSettingsFacade: SyncSettingsFacade
 ) : CoroutineWorker(context, workerParameters) {
+
+    private lateinit var progress: CourseProgress
+
+    private var fileOperation: Operation? = null
+
     override suspend fun doWork(): Result {
 
         val courseSettingsWithFiles =
             courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
 
-        fetchCourseDetails(courseSettings.courseId)
+        val course = fetchCourseDetails(courseSettings.courseId)
+
+        progress = initProgress(courseSettings, course)
+        updateProgress()
+
+        if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
+            fetchFiles(courseSettings.courseId)
+        }
+
+        syncFiles(courseSettings)
+
         if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
             fetchPages(courseSettings.courseId)
         }
@@ -142,30 +156,31 @@ class CourseSyncWorker @AssistedInject constructor(
         if (courseSettings.isTabSelected(Tab.QUIZZES_ID)) {
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseSettings.courseId)
         }
-        if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
-            fetchFiles(courseSettings.courseId)
-        }
 
-        syncFiles(courseSettings)
-
-        return Result.success()
+        return Result.success(workDataOf(OUTPUT to progress.toJson()))
     }
 
     private suspend fun fetchSyllabus(courseIds: List<Long>) {
-        if (courseIds.isNotEmpty()) {
-            val calendarEvents = fetchCalendarEvents(courseIds)
-            val assignmentEvents = fetchCalendarAssignments(courseIds)
-            val scheduleItems = mutableListOf<ScheduleItem>()
+        try {
+            if (courseIds.isNotEmpty()) {
+                val calendarEvents = fetchCalendarEvents(courseIds)
+                val assignmentEvents = fetchCalendarAssignments(courseIds)
+                val scheduleItems = mutableListOf<ScheduleItem>()
 
-            if (calendarEvents != null) {
-                scheduleItems.addAll(calendarEvents)
-            }
-            if (assignmentEvents != null) {
-                scheduleItems.addAll(assignmentEvents)
-            }
+                if (calendarEvents != null) {
+                    scheduleItems.addAll(calendarEvents)
+                }
+                if (assignmentEvents != null) {
+                    scheduleItems.addAll(assignmentEvents)
+                }
 
-            scheduleItemFacade.insertScheduleItems(scheduleItems)
+                scheduleItemFacade.insertScheduleItems(scheduleItems)
+                updateTabSuccess(Tab.SYLLABUS_ID)
+            }
+        } catch (e: Exception) {
+            updateTabError(Tab.SYLLABUS_ID)
         }
+
     }
 
     private suspend fun fetchCalendarEvents(courseIds: List<Long>): List<ScheduleItem>? {
@@ -195,28 +210,41 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchPages(courseId: Long) {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val pages = pageApi.getFirstPagePagesWithBody(courseId, CanvasContext.Type.COURSE.apiString, params)
-            .depaginate { nextUrl ->
-                pageApi.getNextPagePagesList(nextUrl, params)
-            }.dataOrNull.orEmpty()
+        try {
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val pages = pageApi.getFirstPagePagesWithBody(courseId, CanvasContext.Type.COURSE.apiString, params)
+                .depaginate { nextUrl ->
+                    pageApi.getNextPagePagesList(nextUrl, params)
+                }.dataOrNull.orEmpty()
 
-        pageFacade.insertPages(pages, courseId)
+            pageFacade.insertPages(pages, courseId)
+
+            updateTabSuccess(Tab.PAGES_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.PAGES_ID)
+        }
     }
 
     private suspend fun fetchAssignments(courseId: Long) {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
-            .depaginate { nextUrl ->
-                assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
-            }.dataOrNull.orEmpty()
+        try {
+            val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
+                .depaginate { nextUrl ->
+                    assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
+                }.dataOrNull.orEmpty()
 
-        fetchQuizzes(assignmentGroups)
+            fetchQuizzes(assignmentGroups)
 
-        assignmentFacade.insertAssignmentGroups(assignmentGroups)
+            assignmentFacade.insertAssignmentGroups(assignmentGroups)
+            updateTabSuccess(Tab.ASSIGNMENTS_ID)
+            updateTabSuccess(Tab.GRADES_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.ASSIGNMENTS_ID)
+            updateTabError(Tab.GRADES_ID)
+        }
     }
 
-    private suspend fun fetchCourseDetails(courseId: Long) {
+    private suspend fun fetchCourseDetails(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
         val course = courseApi.getFullCourseContent(courseId, params).dataOrThrow
 
@@ -226,15 +254,22 @@ class CourseSyncWorker @AssistedInject constructor(
         courseFeatures?.let {
             courseFeaturesDao.insert(CourseFeaturesEntity(courseId, it))
         }
+
+        return course
     }
 
     private suspend fun fetchUsers(courseId: Long) {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)
-            .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
+        try {
+            val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)
+                .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
 
-        users.let {
-            userFacade.insertUsers(it, courseId)
+            users.let {
+                userFacade.insertUsers(it, courseId)
+            }
+            updateTabSuccess(Tab.PEOPLE_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.PEOPLE_ID)
         }
     }
 
@@ -251,19 +286,30 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchAllQuizzes(contextType: String, courseId: Long) {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
-            quizApi.getNextPageQuizzesList(nextUrl, params)
-        }.dataOrNull
-        quizzes?.forEach { quiz ->
-            quizDao.insert(QuizEntity(quiz, courseId))
+        try {
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
+                quizApi.getNextPageQuizzesList(nextUrl, params)
+            }.dataOrNull
+            quizzes?.forEach { quiz ->
+                quizDao.insert(QuizEntity(quiz, courseId))
 
+            }
+            updateTabSuccess(Tab.QUIZZES_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.QUIZZES_ID)
         }
+
     }
 
     private suspend fun fetchConferences(courseId: Long) {
-        val conferences = getConferencesForContext(CanvasContext.emptyCourseContext(courseId), true).dataOrNull
-        conferences?.let { conferenceFacade.insertConferences(it, courseId) }
+        try {
+            val conferences = getConferencesForContext(CanvasContext.emptyCourseContext(courseId), true).dataOrNull
+            conferences?.let { conferenceFacade.insertConferences(it, courseId) }
+            updateTabSuccess(Tab.CONFERENCES_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.CONFERENCES_ID)
+        }
     }
 
     private suspend fun getConferencesForContext(
@@ -279,50 +325,66 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchDiscussions(courseId: Long) {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val discussions =
-            discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
-                .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrNull.orEmpty()
+        try {
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val discussions =
+                discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
+                    .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrNull.orEmpty()
 
-        discussionTopicHeaderFacade.insertDiscussions(discussions, courseId)
+            discussionTopicHeaderFacade.insertDiscussions(discussions, courseId)
+            updateTabSuccess(Tab.DISCUSSIONS_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.DISCUSSIONS_ID)
+        }
     }
 
     private suspend fun fetchAnnouncements(courseId: Long) {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val announcements =
-            announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
-                .depaginate { nextPage ->
-                    announcementApi.getNextPageAnnouncementsList(
-                        nextPage,
-                        params
-                    )
-                }.dataOrNull.orEmpty()
+        try {
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val announcements =
+                announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
+                    .depaginate { nextPage ->
+                        announcementApi.getNextPageAnnouncementsList(
+                            nextPage,
+                            params
+                        )
+                    }.dataOrNull.orEmpty()
 
-        discussionTopicHeaderFacade.insertDiscussions(announcements, courseId)
+            discussionTopicHeaderFacade.insertDiscussions(announcements, courseId)
+            updateTabSuccess(Tab.ANNOUNCEMENTS_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.ANNOUNCEMENTS_ID)
+        }
     }
 
     private suspend fun fetchModules(courseId: Long) {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val moduleObjects = moduleApi.getFirstPageModuleObjects(
-            CanvasContext.Type.COURSE.apiString, courseId, params
-        ).depaginate { nextPage ->
-            moduleApi.getNextPageModuleObjectList(nextPage, params)
-        }
-            .dataOrNull
-            ?.map { moduleObject ->
-                val moduleItems =
-                    moduleApi.getFirstPageModuleItems(
-                        CanvasContext.Type.COURSE.apiString,
-                        courseId,
-                        moduleObject.id,
-                        params
-                    ).depaginate { nextPage ->
-                        moduleApi.getNextPageModuleItemList(nextPage, params)
-                    }.dataOrNull ?: moduleObject.items
-                moduleObject.copy(items = moduleItems)
-            }.orEmpty()
+        try {
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val moduleObjects = moduleApi.getFirstPageModuleObjects(
+                CanvasContext.Type.COURSE.apiString, courseId, params
+            ).depaginate { nextPage ->
+                moduleApi.getNextPageModuleObjectList(nextPage, params)
+            }
+                .dataOrNull
+                ?.map { moduleObject ->
+                    val moduleItems =
+                        moduleApi.getFirstPageModuleItems(
+                            CanvasContext.Type.COURSE.apiString,
+                            courseId,
+                            moduleObject.id,
+                            params
+                        ).depaginate { nextPage ->
+                            moduleApi.getNextPageModuleItemList(nextPage, params)
+                        }.dataOrNull ?: moduleObject.items
+                    moduleObject.copy(items = moduleItems)
+                }.orEmpty()
 
-        moduleFacade.insertModules(moduleObjects, courseId)
+            moduleFacade.insertModules(moduleObjects, courseId)
+            updateTabSuccess(Tab.MODULES_ID)
+        } catch (e: Exception) {
+            updateTabError(Tab.MODULES_ID)
+        }
+
     }
 
     private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity) {
@@ -332,28 +394,40 @@ class CourseSyncWorker @AssistedInject constructor(
 
         cleanupSyncedFiles(courseId, allFileIds)
 
-        val fileWorkers = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
-            .map {
-                FileSyncWorker.createOneTimeWorkRequest(
+        val fileSyncData = mutableListOf<FileSyncData>()
+        val fileWorkers = mutableListOf<OneTimeWorkRequest>()
+        fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
+            .forEach {
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
                     courseId,
                     it.id,
                     it.displayName.orEmpty(),
                     it.url.orEmpty(),
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
-            }.chunked(6)
+                fileWorkers.add(worker)
+                fileSyncData.add(FileSyncData(worker.id.toString(), it.displayName.orEmpty(), it.size))
+            }
 
-        if (fileWorkers.isEmpty()) return
+        val chunkedWorkers = fileWorkers.chunked(6)
+
+        if (chunkedWorkers.isEmpty()) {
+            progress = progress.copy(fileSyncData = emptyList())
+            updateProgress()
+            return
+        }
 
         var continuation = workManager
-            .beginWith(fileWorkers.first())
+            .beginWith(chunkedWorkers.first())
 
-        fileWorkers.drop(1).forEach {
+        chunkedWorkers.drop(1).forEach {
             continuation = continuation.then(it)
         }
 
-        continuation.enqueue()
+        fileOperation = continuation.enqueue()
 
+        progress = progress.copy(fileSyncData = fileSyncData)
+        updateProgress()
     }
 
     private suspend fun fetchFiles(courseId: Long) {
@@ -380,12 +454,56 @@ class CourseSyncWorker @AssistedInject constructor(
         return fileFolderDao.findAllFilesByCourseId(courseId)
     }
 
+    private suspend fun updateProgress() {
+        setProgress(workDataOf(COURSE_PROGRESS to progress.toJson()))
+    }
+
+    private fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgress {
+        val availableTabs = course.tabs?.map { it.tabId } ?: emptyList()
+        val selectedTabs = courseSettings.tabs.filter { availableTabs.contains(it.key) && it.value == true }.keys
+        return CourseProgress(
+            courseId = courseSettings.courseId,
+            courseName = courseSettings.courseName,
+            tabs = selectedTabs.associateWith { tabId ->
+                TabSyncData(
+                    course.tabs?.find { it.tabId == tabId }?.label ?: tabId,
+                    ProgressState.IN_PROGRESS
+                )
+            },
+            fileSyncData = null
+        )
+    }
+
+    private suspend fun updateTabError(tabId: String) {
+        progress = progress.copy(
+            tabs = progress.tabs.toMutableMap().apply {
+                val newProgress = get(tabId)?.copy(state = ProgressState.ERROR) ?: return@apply
+                put(tabId, newProgress)
+            },
+        )
+        updateProgress()
+    }
+
+    private suspend fun updateTabSuccess(tabId: String) {
+        progress = progress.copy(
+            tabs = progress.tabs.toMutableMap().apply {
+                val newProgress = get(tabId)?.copy(state = ProgressState.COMPLETED) ?: return@apply
+                put(tabId, newProgress)
+            },
+        )
+        updateProgress()
+    }
+
     companion object {
         const val COURSE_ID = "course_id"
+        const val COURSE_PROGRESS = "courseProgress"
+        const val OUTPUT = "output"
+        const val TAG = "CourseSyncWorker"
 
         fun createOnTimeWork(courseId: Long, wifiOnly: Boolean): OneTimeWorkRequest {
             val data = workDataOf(COURSE_ID to courseId)
             return OneTimeWorkRequestBuilder<CourseSyncWorker>()
+                .addTag(TAG)
                 .setInputData(data)
                 .setConstraints(
                     Constraints.Builder()

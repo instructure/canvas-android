@@ -24,7 +24,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 abstract class GroupItemViewModel(
     val collapsable: Boolean,
     @get:Bindable open var collapsed: Boolean = collapsable,
-    val items: List<ItemViewModel>
+    var items: List<ItemViewModel>
 ) : ItemViewModel, BaseObservable() {
 
     open fun toggleItems() {

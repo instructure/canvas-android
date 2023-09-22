@@ -33,21 +33,21 @@ class CourseRoutingShellScreen extends StatefulWidget {
   final String courseId;
   final CourseShellType type;
 
-  CourseRoutingShellScreen(this.courseId, this.type, {Key key}) : super(key: key);
+  CourseRoutingShellScreen(this.courseId, this.type, {super.key});
 
   @override
   State<StatefulWidget> createState() => _CourseRoutingShellScreenState();
 }
 
 class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
-  Future<CourseShellData> _dataFuture;
+  Future<CourseShellData?>? _dataFuture;
 
-  Future<CourseShellData> _refresh() {
+  Future<CourseShellData?>? _refresh() {
     setState(() {
       _dataFuture =
           locator<CourseRoutingShellInteractor>().loadCourseShell(widget.type, widget.courseId, forceRefresh: true);
     });
-    return _dataFuture?.catchError((_) {});
+    return _dataFuture?.catchError((_) { return Future.value(null); });
   }
 
   @override
@@ -58,7 +58,7 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
 
     return FutureBuilder(
       future: _dataFuture,
-      builder: (context, AsyncSnapshot<CourseShellData> snapshot) {
+      builder: (context, AsyncSnapshot<CourseShellData?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
         }
@@ -66,7 +66,7 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
         if (snapshot.hasError || snapshot.data == null) {
           return _error();
         } else {
-          return _scaffold(widget.type, snapshot.data);
+          return _scaffold(widget.type, snapshot.data!);
         }
       },
     );
@@ -88,19 +88,19 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
               (widget.type == CourseShellType.frontPage)
                   ? L10n(context).courseFrontPageLabel.toUpperCase()
                   : L10n(context).courseSyllabusLabel.toUpperCase(),
-              data.course.name),
-          bottom: ParentTheme.of(context).appBarDivider(),
+              data.course?.name ?? ''),
+          bottom: ParentTheme.of(context)?.appBarDivider(),
         ),
         body: _body(data));
   }
 
   Widget _body(CourseShellData data) {
     return widget.type == CourseShellType.frontPage
-        ? _webView(data.frontPage.body, emptyDescription: data.frontPage.lockExplanation ?? L10n(context).noPageFound)
-        : _webView(data.course.syllabusBody);
+        ? _webView(data.frontPage!.body!, emptyDescription: data.frontPage?.lockExplanation ?? L10n(context).noPageFound)
+        : _webView(data.course?.syllabusBody ?? '');
   }
 
-  Widget _webView(String html, {String emptyDescription}) {
+  Widget _webView(String html, {String? emptyDescription}) {
     return Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: CanvasWebView(
@@ -117,7 +117,7 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(title),
-        Text(subtitle, style: Theme.of(context).primaryTextTheme.caption),
+        Text(subtitle, style: Theme.of(context).primaryTextTheme.bodySmall),
       ],
     );
   }

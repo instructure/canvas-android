@@ -444,6 +444,7 @@
     <!-- Notifications -->
     <string name="deleted">Usunięto</string>
 
+    <string name="gradeUpdated">Zaktualizowano ocenę</string>
     <string name="loadingCanvas">Ładowanie zawartości Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1145,6 +1146,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Tutaj można otworzyć szczegóły przesyłki</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Ocena: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s min</item>
         <item quantity="few">%s min</item>

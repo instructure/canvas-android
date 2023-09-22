@@ -16,13 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class InboxCountNotifier extends ValueNotifier<int> {
+class InboxCountNotifier extends ValueNotifier<int?> {
   InboxCountNotifier() : super(0);
 
   update() async {
     try {
       var unreadCount = await locator<InboxApi>().getUnreadCount();
-      value = int.parse(unreadCount?.count?.asString);
+      value = int.tryParse(unreadCount?.count.asString ?? '');
     } catch (e) {
       print(e);
     }

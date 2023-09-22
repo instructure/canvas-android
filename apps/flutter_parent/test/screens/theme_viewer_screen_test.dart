@@ -33,45 +33,45 @@ void main() {
     await tester.pumpAndSettle();
 
     // Open the drawer
-    ThemeViewerScreen.scaffoldKey.currentState.openDrawer();
+    ThemeViewerScreen.scaffoldKey.currentState?.openDrawer();
     await tester.pumpAndSettle();
 
     // Light mode, normal contrast. Title should be dark, subtitle should be gray.
-    expect(tester.widget<Text>(title()).style.color, ParentColors.licorice);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.ash);
+    expect(tester.widget<Text>(title()).style!.color, ParentColors.licorice);
+    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.oxford);
 
     // Enable dark mode
     await tester.tap(darkToggle());
     await tester.pumpAndSettle();
 
     // Dark mode, normal contrast. Title should be light, subtitle should be gray.
-    expect(tester.widget<Text>(title()).style.color, ParentColors.tiara);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.ash);
+    expect(tester.widget<Text>(title()).style!.color, ParentColors.tiara);
+    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.ash);
 
     // Enable High-Contrast mode
     await tester.tap(hcToggle());
     await tester.pumpAndSettle();
 
     // Dark mode, high contrast. Both title and subtitle should be light
-    expect(tester.widget<Text>(title()).style.color, ParentColors.tiara);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.tiara);
+    expect(tester.widget<Text>(title()).style!.color, ParentColors.tiara);
+    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.tiara);
 
     // Disable dark mode
     await tester.tap(darkToggle());
     await tester.pumpAndSettle();
 
     // Light mode, high contrast. Both title and subtitle should be dark
-    expect(tester.widget<Text>(title()).style.color, ParentColors.licorice);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.licorice);
+    expect(tester.widget<Text>(title()).style!.color, ParentColors.licorice);
+    expect(tester.widget<Text>(subtitle()).style!.color, ParentColors.licorice);
   });
 
   testWidgets('Set and returns correct values for dark and high-contrast modes', (tester) async {
     await tester.pumpWidget(TestApp(ThemeViewerScreen()));
     await tester.pumpAndSettle();
 
-    var state = ParentTheme.of(ThemeViewerScreen.scaffoldKey.currentContext);
+    var state = ParentTheme.of(ThemeViewerScreen.scaffoldKey.currentContext!);
 
-    state.isDarkMode = false;
+    state!.isDarkMode = false;
     state.isHC = false;
     expect(state.isLightNormal, isTrue);
     expect(state.isLightHC, isFalse);
@@ -106,7 +106,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Open the drawer
-    ThemeViewerScreen.scaffoldKey.currentState.openDrawer();
+    ThemeViewerScreen.scaffoldKey.currentState?.openDrawer();
     await tester.pumpAndSettle();
 
     // Switch student color to 'raspberry'
@@ -116,7 +116,7 @@ void main() {
     await tester.pumpAndSettle();
 
     StudentColorSet expected = StudentColorSet.raspberry;
-    Color actualColor() => tester.widget<Container>(studentColor()).color;
+    Color actualColor() => tester.widget<Container>(studentColor()).color!;
 
     // Light mode, normal contrast.
     expect(actualColor(), expected.light);

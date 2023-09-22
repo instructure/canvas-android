@@ -17,7 +17,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class PlannerApi {
-  Future<List<PlannerItem>> getUserPlannerItems(
+  Future<List<PlannerItem>?> getUserPlannerItems(
     String userId,
     DateTime startDay,
     DateTime endDay, {

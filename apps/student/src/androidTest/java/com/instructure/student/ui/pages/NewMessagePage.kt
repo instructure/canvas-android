@@ -24,14 +24,30 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withChild
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.typeText
 import com.instructure.student.R
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
@@ -130,7 +146,6 @@ class NewMessagePage : BasePage() {
 
     fun setMessage(messageText: String) {
         Espresso.closeSoftKeyboard()
-        onView(withId(R.id.messageContainer)).click()
         onView(allOf(withId(R.id.message), withAncestor(R.id.messageContainer)))
                 .scrollTo()
                 .typeText(messageText)

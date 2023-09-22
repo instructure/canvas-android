@@ -17,7 +17,8 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class PageApi {
-  Future<CanvasPage> getCourseFrontPage(String courseId, {bool forceRefresh = false}) async {
-    return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/front_page'));
+  Future<CanvasPage?> getCourseFrontPage(String courseId, {bool forceRefresh = false}) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('courses/$courseId/front_page'));
   }
 }

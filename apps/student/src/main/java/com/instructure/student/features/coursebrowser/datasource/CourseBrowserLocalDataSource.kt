@@ -32,7 +32,7 @@ class CourseBrowserLocalDataSource(
     override suspend fun getTabs(canvasContext: CanvasContext, forceNetwork: Boolean): List<Tab> {
         val syncedTabs = courseSyncSettingsDao.findById(canvasContext.id)?.tabs
         return tabDao.findByCourseId(canvasContext.id).map {
-            it.toApiModel().copy(enabled = syncedTabs?.get(it.id).orDefault())
+            it.toApiModel().copy(enabled = it.id == Tab.FILES_ID || syncedTabs?.get(it.id).orDefault())
         }
     }
 

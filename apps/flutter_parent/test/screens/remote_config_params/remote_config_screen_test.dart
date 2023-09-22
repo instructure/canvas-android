@@ -23,11 +23,12 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
 
   testWidgetsWithAccessibilityChecks('Shows the correct list', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockRemoteConfigInteractor();
     setupTestLocator((locator) => locator.registerFactory<RemoteConfigInteractor>(() => interactor));
 
     Map<RemoteConfigParams, String> remoteConfigs = {
@@ -46,5 +47,3 @@ void main() {
     expect(find.text('fetched value'), findsOneWidget);
   });
 }
-
-class _MockInteractor extends Mock implements RemoteConfigInteractor {}

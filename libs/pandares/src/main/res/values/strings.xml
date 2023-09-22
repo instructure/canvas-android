@@ -1261,7 +1261,7 @@
 
     <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
     <string name="discussionOpenInBrowser">Open in browser</string>
-    
+
     <string name="dashboardSwitchToListView">Switch to list view</string>
     <string name="dashboardSwitchToGridView">Switch to grid view</string>
 
@@ -1438,4 +1438,20 @@
     <string name="notAvailableOfflineDescription">This content is not available in offline mode.</string>
     <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
     <string name="offline">Offline</string>
+    <string name="syncProgress_syncFailed">Sync Failed</string>
+    <string name="syncProgress_downloadProgress">Downloading %1$s of %2$s</string>
+    <string name="syncProgress_syncQueued">Queued</string>
+    <string name="syncProgress_offlineContentSyncCompleted">Offline Content Sync Completed</string>
+    <string name="syncProgress_offlineContentSyncFailed">Offline Content Sync Failed</string>
+    <string name="syncProgress_cancelConfirmationTitle">Cancel Sync?</string>
+    <string name="syncProgress_cancelConfirmationMessage">It will stop offline content sync. You can do it again later.</string>
+    <string name="syncProgress_syncErrorSubtitle">One or more files failed to sync. Check your internet connection and retry to submit.</string>
+    <string name="syncProgress_downloadStarting">Download starting</string>
+    <string name="coursesCannotBeFavoritedOffline">Courses cannot be added to favorites offline.</string>
+    <string name="allCoursesScreenHeader">All Courses</string>
+    <string name="allCoursesCourseHeader">Courses</string>
+    <string name="allCoursesGroupHeader">Groups</string>
+    <string name="dashboardAllCoursesButton">All Courses</string>
+    <string name="allCoursesOfflineNote">Selecting courses for Dashboard can only be done online. You can navigate to offline course details.</string>
+    <string name="allCoursesOfflineNoteTitle">Note</string>
 </resources>

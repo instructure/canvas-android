@@ -42,7 +42,7 @@ class SubmissionDetailsEffectHandler(
         when (effect) {
             is SubmissionDetailsEffect.LoadData -> loadData(effect)
             is SubmissionDetailsEffect.ShowSubmissionContentType -> {
-                view?.showSubmissionContent(effect.submissionContentType)
+                view?.showSubmissionContent(effect.submissionContentType, repository.isOnline())
             }
             is SubmissionDetailsEffect.ShowAudioRecordingView -> {
                 view?.showAudioRecordingView()

@@ -444,6 +444,7 @@
     <!-- Notifications -->
     <string name="deleted">Удалено</string>
 
+    <string name="gradeUpdated">Оценка обновлена</string>
     <string name="loadingCanvas">Загрузка контента Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1145,6 +1146,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Вы можете открыть информацию об отправке здесь</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Оценка: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s минута</item>
         <item quantity="few">%s минут</item>

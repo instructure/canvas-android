@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
+import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -144,6 +145,7 @@ object RouteResolver {
             cls.isA<DiscussionDetailsWebViewFragment>() -> DiscussionDetailsWebViewFragment.newInstance(route)
             cls.isA<DiscussionRouterFragment>() -> DiscussionRouterFragment.newInstance(route.canvasContext!!, route)
             cls.isA<OfflineContentFragment>() -> OfflineContentFragment.newInstance(route)
+            cls.isA<SyncProgressFragment>() -> SyncProgressFragment.newInstance()
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

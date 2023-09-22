@@ -26,7 +26,7 @@ import androidx.work.impl.OperationImpl
 import com.google.common.util.concurrent.Futures
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.offline.syncsettings.SyncFrequency
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import io.mockk.*

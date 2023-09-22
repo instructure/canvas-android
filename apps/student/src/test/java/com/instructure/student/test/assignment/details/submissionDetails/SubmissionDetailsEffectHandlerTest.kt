@@ -371,10 +371,12 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     fun `ShowSubmissionContentType results in view calling showSubmissionContent`() {
         val contentType = SubmissionDetailsContentType.NoneContent
 
+        coEvery { repository.isOnline() } returns true
+
         connection.accept(SubmissionDetailsEffect.ShowSubmissionContentType(contentType))
 
         verify(timeout = 100) {
-            view.showSubmissionContent(contentType)
+            view.showSubmissionContent(contentType, true)
         }
 
         confirmVerified(view)

@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Efase</string>
 
+    <string name="gradeUpdated">Klas aktyalize</string>
     <string name="loadingCanvas">Chajman Kontni Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Ou ka ouvri detay Soumisyon yo la a</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Klas: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minit</item>
         <item quantity="other">%s Minit</item>

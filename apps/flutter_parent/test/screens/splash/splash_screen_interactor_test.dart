@@ -35,15 +35,15 @@ import 'package:test/test.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
-import '../dashboard/dashboard_interactor_test.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  _MockDashboardInteractor dashboardInteractor = _MockDashboardInteractor();
-  _MockAccountsApi accountsApi = _MockAccountsApi();
-  _MockAuthApi authApi = _MockAuthApi();
-  final mockScanner = MockBarcodeScanner();
+  MockDashboardInteractor dashboardInteractor = MockDashboardInteractor();
+  MockAccountsApi accountsApi = MockAccountsApi();
+  MockAuthApi authApi = MockAuthApi();
+  final mockScanner = MockBarcodeScanVeneer();
   MockUserApi userApi = MockUserApi();
-  _MockFeaturesApi featuresApi = _MockFeaturesApi();
+  MockFeaturesApi featuresApi = MockFeaturesApi();
 
   Login login = Login((b) => b
     ..domain = 'domain'
@@ -121,19 +121,19 @@ void main() {
     verifyNever(accountsApi.getAccountPermissions());
 
     // canMasquerade should be set to true
-    expect(ApiPrefs.getCurrentLogin().canMasquerade, isTrue);
+    expect(ApiPrefs.getCurrentLogin()?.canMasquerade, isTrue);
   });
 
   test('Sets canMasquerade to false if getAccountPermissions returns false', () async {
     ApiPrefs.switchLogins(login);
 
     // canMasquerade should not be set at this point
-    expect(ApiPrefs.getCurrentLogin().canMasquerade, isNull);
+    expect(ApiPrefs.getCurrentLogin()?.canMasquerade, isNull);
 
     await SplashScreenInteractor().getData();
 
     // canMasquerade should now be set to false
-    expect(ApiPrefs.getCurrentLogin().canMasquerade, isFalse);
+    expect(ApiPrefs.getCurrentLogin()?.canMasquerade, isFalse);
   });
 
   test('Sets canMasquerade to true if getAccountPermissions returns true', () async {
@@ -141,12 +141,12 @@ void main() {
     ApiPrefs.switchLogins(login);
 
     // canMasquerade should not be set at this point
-    expect(ApiPrefs.getCurrentLogin().canMasquerade, isNull);
+    expect(ApiPrefs.getCurrentLogin()?.canMasquerade, isNull);
 
     await SplashScreenInteractor().getData();
 
     // canMasquerade should now be set to false
-    expect(ApiPrefs.getCurrentLogin().canMasquerade, isTrue);
+    expect(ApiPrefs.getCurrentLogin()?.canMasquerade, isTrue);
   });
 
   test('Sets canMasquerade to false if getAccountPermissions call fails', () async {
@@ -154,12 +154,12 @@ void main() {
     ApiPrefs.switchLogins(login);
 
     // canMasquerade should not be set at this point
-    expect(ApiPrefs.getCurrentLogin().canMasquerade, isNull);
+    expect(ApiPrefs.getCurrentLogin()?.canMasquerade, isNull);
 
     await SplashScreenInteractor().getData();
 
     // canMasquerade should now be set to false
-    expect(ApiPrefs.getCurrentLogin().canMasquerade, isFalse);
+    expect(ApiPrefs.getCurrentLogin()?.canMasquerade, isFalse);
   });
 
   test('getData returns false for isObserver if user is not observing any students', () async {
@@ -167,7 +167,7 @@ void main() {
     var data = await SplashScreenInteractor().getData();
 
     // isObserver should be false
-    expect(data.isObserver, isFalse);
+    expect(data?.isObserver, isFalse);
   });
 
   test('getData returns true for isObserver if user is observing students', () async {
@@ -179,7 +179,7 @@ void main() {
     var data = await SplashScreenInteractor().getData();
 
     // isObserver should be true
-    expect(data.isObserver, isTrue);
+    expect(data?.isObserver, isTrue);
   });
 
   test('getData should return existing value for canMasquerade', () async {
@@ -187,13 +187,14 @@ void main() {
     var data = await SplashScreenInteractor().getData();
 
     // canMasquerade should be true
-    expect(data.canMasquerade, isTrue);
+    expect(data?.canMasquerade, isTrue);
   });
 
   test('getData returns QRLoginError for invalid qrLoginUrl', () async {
     bool fail = false;
     await SplashScreenInteractor().getData(qrLoginUrl: 'https://hodor.com').catchError((_) {
       fail = true; // Don't return, just update the flag
+      return Future.value(null);
     });
     expect(fail, isTrue);
   });
@@ -206,8 +207,8 @@ void main() {
     ApiPrefs.switchLogins(login);
     final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
     var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
-    expect(data.isObserver, isTrue);
-    expect(data.canMasquerade, isFalse);
+    expect(data?.isObserver, isTrue);
+    expect(data?.canMasquerade, isFalse);
   });
 
   test('getData returns valid data for valid qrLoginUrl, canMasquerade true for real user', () async {
@@ -224,8 +225,8 @@ void main() {
     ApiPrefs.switchLogins(login);
     final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
     var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
-    expect(data.isObserver, isTrue);
-    expect(data.canMasquerade, isTrue);
+    expect(data?.isObserver, isTrue);
+    expect(data?.canMasquerade, isTrue);
   });
 
   test('getData returns QRLoginError for invalid auth code', () async {
@@ -234,6 +235,7 @@ void main() {
     bool fail = false;
     await SplashScreenInteractor().getData(qrLoginUrl: url).catchError((_) {
       fail = true; // Don't return, just update the flag
+      return Future.value(null);
     });
     expect(fail, isTrue);
   });
@@ -244,6 +246,7 @@ void main() {
     bool fail = false;
     await SplashScreenInteractor().getData(qrLoginUrl: url).catchError((_) {
       fail = true; // Don't return, just update the flag
+      return Future.value(null);
     });
     expect(fail, isTrue);
   });
@@ -271,11 +274,3 @@ void main() {
     verify(db.insertOrUpdateAll(login.domain, login.user.id, expectedColors));
   });
 }
-
-class _MockAccountsApi extends Mock implements AccountsApi {}
-
-class _MockDashboardInteractor extends Mock implements DashboardInteractor {}
-
-class _MockAuthApi extends Mock implements AuthApi {}
-
-class _MockFeaturesApi extends Mock implements FeaturesApi {}

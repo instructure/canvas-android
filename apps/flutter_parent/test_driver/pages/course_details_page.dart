@@ -17,19 +17,19 @@ import 'package:flutter_driver/flutter_driver.dart';
 /// the course grades page or the syllabus page.  (Grades/syllabus are
 /// nested in the course details page.)
 class CourseDetailsPage {
-  static Future<void> selectSyllabus(FlutterDriver driver) async {
-    await driver.tap(find.text("SYLLABUS"));
+  static Future<void> selectSyllabus(FlutterDriver? driver) async {
+    await driver?.tap(find.text("SYLLABUS"));
   }
 
-  static Future<void> selectGrades(FlutterDriver driver) async {
-    await driver.tap(find.text("GRADES"));
+  static Future<void> selectGrades(FlutterDriver? driver) async {
+    await driver?.tap(find.text("GRADES"));
   }
 
-  static Future<void> selectSummary(FlutterDriver driver) async {
-    await driver.tap(find.text("SUMMARY"));
+  static Future<void> selectSummary(FlutterDriver? driver) async {
+    await driver?.tap(find.text("SUMMARY"));
   }
 
-  static Future<void> initiateCreateEmail(FlutterDriver driver) async {
-    await driver.tap(find.byType('FloatingActionButton'));
+  static Future<void> initiateCreateEmail(FlutterDriver? driver) async {
+    await driver?.tap(find.byType('FloatingActionButton'));
   }
 }

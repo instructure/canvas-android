@@ -19,7 +19,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 import 'package:flutter_parent/network/utils/paged_list.dart';
 
 class AssignmentApi {
-  Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
+  Future<List<Assignment>?> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
     var dio = canvasDio();
     var params = {
       'include[]': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
@@ -30,8 +30,8 @@ class AssignmentApi {
     return fetchList(dio.get('courses/$courseId/assignments', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(
-      String courseId, String studentId, String gradingPeriodId,
+  Future<List<AssignmentGroup>?> getAssignmentGroupsWithSubmissionsDepaginated(
+      String courseId, String? studentId, String? gradingPeriodId,
       {bool forceRefresh = false}) async {
     var dio = canvasDio(forceRefresh: forceRefresh);
     var params = {
@@ -49,24 +49,25 @@ class AssignmentApi {
     return fetchList(dio.get('courses/$courseId/assignment_groups', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(String courseId, String studentId) async {
+  Future<PagedList<Assignment>?> getAssignmentsWithSubmissionsPaged(String courseId, String studentId) async {
     var params = {
       'include[]': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
       'order_by': 'due_at',
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',
     };
-    return fetchFirstPage(canvasDio().get('courses/$courseId/assignments', queryParameters: params));
+    var dio = canvasDio();
+    return fetchFirstPage(dio.get('courses/$courseId/assignments', queryParameters: params));
   }
 
-  Future<Assignment> getAssignment(String courseId, String assignmentId, {bool forceRefresh = false}) async {
+  Future<Assignment?> getAssignment(String courseId, String assignmentId, {bool forceRefresh = false}) async {
     var params = {
       'include[]': ['overrides', 'rubric_assessment', 'submission', 'observed_users'],
       'all_dates': 'true',
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',
     };
-    return fetch(canvasDio(forceRefresh: forceRefresh)
-        .get('courses/$courseId/assignments/$assignmentId', queryParameters: params));
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('courses/$courseId/assignments/$assignmentId', queryParameters: params));
   }
 }

@@ -25,13 +25,13 @@ class StudentColorPickerDialog extends StatefulWidget {
   final String studentId;
   final Color initialColor;
 
-  const StudentColorPickerDialog({Key key, @required this.initialColor, @required this.studentId}) : super(key: key);
+  const StudentColorPickerDialog({required this.initialColor, required this.studentId, super.key});
   @override
   _StudentColorPickerDialogState createState() => _StudentColorPickerDialogState();
 }
 
 class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
-  Color _selectedColor;
+  late Color _selectedColor;
   bool _saving = false;
   bool _error = false;
 
@@ -62,7 +62,7 @@ class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
       ),
       actions: <Widget>[
         if (_saving)
-          FlatButton(
+          TextButton(
             child: Container(
               width: 18,
               height: 18,
@@ -70,8 +70,8 @@ class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
             ),
             onPressed: null,
           ),
-        if (!_saving) FlatButton(child: Text(L10n(context).cancel), onPressed: () => Navigator.of(context).pop(false)),
-        if (!_saving) FlatButton(child: Text(L10n(context).ok), onPressed: _save),
+        if (!_saving) TextButton(child: Text(L10n(context).cancel), onPressed: () => Navigator.of(context).pop(false)),
+        if (!_saving) TextButton(child: Text(L10n(context).ok), onPressed: _save),
       ],
     );
   }
@@ -88,7 +88,7 @@ class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
 
   Widget _colorOption(StudentColorSet colorSet) {
     var selected = _selectedColor == colorSet.light;
-    var displayColor = ParentTheme.of(context).getColorVariantForCurrentState(colorSet);
+    var displayColor = ParentTheme.of(context)?.getColorVariantForCurrentState(colorSet) ?? Colors.transparent;
     return Semantics(
       selected: selected,
       label: StudentColorSet.getA11yName(colorSet, context),
@@ -128,7 +128,7 @@ class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
 
     try {
       await locator<StudentColorPickerInteractor>().save(widget.studentId, _selectedColor);
-      ParentTheme.of(context).refreshStudentColor();
+      ParentTheme.of(context)?.refreshStudentColor();
       Navigator.of(context).pop(true);
     } catch (e, s) {
       setState(() {

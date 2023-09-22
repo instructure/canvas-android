@@ -40,16 +40,18 @@ import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -82,15 +84,16 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     }
 
     fun assertAssignmentDisplayed(name: String, gradeString: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer)).assertHasText(name)
-        val siblingMatcher = withId(R.id.title) + withText(name)
-        onView(withId(R.id.points) + hasSibling(siblingMatcher)).assertHasText(gradeString)
+        val siblingMatcher = withId(R.id.title) + withParent(R.id.textContainer) + withText(name) + withAncestor(R.id.courseGradesPage)
+        onView(withId(R.id.points) + hasSibling(siblingMatcher)).scrollTo().assertHasText(gradeString)
     }
 
     // Hopefully this will be sufficient.  We may need to add some logic to scroll
     // to the top of the list first.  We have to use the custom constraints because the
     // swipeRefreshLayout may extend below the screen, and therefore may not be 90% visible.
     fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.courseGradesPage))
+            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
         sleep(1000) // Allow some time to react to the update.

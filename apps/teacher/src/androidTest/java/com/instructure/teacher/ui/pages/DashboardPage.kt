@@ -52,7 +52,7 @@ import org.hamcrest.Matcher
  *
  * This class extends the `BasePage` class and provides methods for interacting with the dashboard,
  * such as asserting the display of courses, empty view, and course title; opening and switching courses;
- * clicking on the edit dashboard button and course overflow menu; changing the course nickname;
+ * clicking on the All Courses button and course overflow menu; changing the course nickname;
  * asserting the display of notifications; and opening the inbox and todo tabs.
  *
  * @constructor Creates an instance of the `DashboardPage` class.
@@ -155,7 +155,7 @@ class DashboardPage : BasePage() {
     }
 
     /**
-     * Asserts that the dashboard displays the courses, including the toolbar, courses view, and edit dashboard button.
+     * Asserts that the dashboard displays the courses, including the toolbar, courses view, and All Courses button.
      */
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
@@ -176,7 +176,7 @@ class DashboardPage : BasePage() {
     }
 
     /**
-     * Clicks on the edit dashboard button.
+     * Clicks on the All Courses button.
      */
     fun clickEditDashboard() {
         onView(withId(R.id.editDashboardTextView)).click()

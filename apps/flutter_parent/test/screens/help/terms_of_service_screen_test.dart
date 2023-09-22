@@ -27,11 +27,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
 
-  final accountApi = _MockAccountApi();
+  final accountApi = MockAccountsApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<AccountsApi>(() => accountApi);
@@ -87,5 +88,3 @@ void main() {
     expect(find.byType(WebView), findsOneWidget);
   });
 }
-
-class _MockAccountApi extends Mock implements AccountsApi {}

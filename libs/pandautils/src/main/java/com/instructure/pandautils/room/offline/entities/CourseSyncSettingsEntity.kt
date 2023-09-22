@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Tab
 data class CourseSyncSettingsEntity(
     @PrimaryKey
     val courseId: Long,
+    val courseName: String,
     val fullContentSync: Boolean,
     val tabs: Map<String, Boolean> = TABS.associateWith { false },
     val fullFileSync: Boolean = false

@@ -49,7 +49,6 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
@@ -235,6 +234,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
+            binding.divider.setVisible(visible)
         }
     }
 
@@ -308,6 +308,20 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
             setOfflineIndicator(!isOnline)
+            handleTokenCheck(isOnline)
+        }
+    }
+
+    private fun handleTokenCheck(online: Boolean?) {
+        val checkToken = ApiPrefs.checkTokenAfterOfflineLogin
+        if (checkToken && online == true) {
+            ApiPrefs.checkTokenAfterOfflineLogin = false
+            lifecycleScope.launch {
+                val isTokenValid = repository.isTokenValid()
+                if (!isTokenValid) {
+                    StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
+                }
+            }
         }
     }
 
@@ -331,6 +345,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         currentFragment?.let {
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
+            binding.divider.setVisible(visible)
         }
     }
 

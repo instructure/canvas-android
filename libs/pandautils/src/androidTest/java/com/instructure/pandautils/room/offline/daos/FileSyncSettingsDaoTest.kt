@@ -51,6 +51,7 @@ class FileSyncSettingsDaoTest {
         courseSyncSettingsDao.insert(
             CourseSyncSettingsEntity(
                 courseId = 1L,
+                courseName = "Course 1",
                 fullContentSync = false
             )
         )

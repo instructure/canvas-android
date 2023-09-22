@@ -29,18 +29,15 @@ abstract class Plannable implements Built<Plannable, PlannableBuilder> {
 
   String get title;
 
-  @nullable
   @BuiltValueField(wireName: 'points_possible')
-  double get pointsPossible;
+  double? get pointsPossible;
 
-  @nullable
   @BuiltValueField(wireName: 'due_at')
-  DateTime get dueAt;
+  DateTime? get dueAt;
 
   // Used to determine if a quiz is an assignment or not
-  @nullable
   @BuiltValueField(wireName: 'assignment_id')
-  String get assignmentId;
+  String? get assignmentId;
 
   factory Plannable([void Function(PlannableBuilder) updates]) = _$Plannable;
 }

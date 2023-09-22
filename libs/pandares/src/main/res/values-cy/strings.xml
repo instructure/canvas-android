@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Wedi dileu</string>
 
+    <string name="gradeUpdated">Gradd wedi’i diweddaru</string>
     <string name="loadingCanvas">Llwytho Cynnwys Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1119,6 +1120,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Gallwch chi agor manylion Cyflwyniad fan hyn</string>
 
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Gradd: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Munud</item>
         <item quantity="other">%s Munud</item>

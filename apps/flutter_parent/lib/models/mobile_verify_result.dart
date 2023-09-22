@@ -76,6 +76,6 @@ class ResultEnumSerializer extends PrimitiveSerializer<VerifyResultEnum> {
   @override
   VerifyResultEnum deserialize(Serializers serializers, Object serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    return VerifyResultEnum.values[serialized];
+    return VerifyResultEnum.values[serialized as int];
   }
 }
