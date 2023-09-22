@@ -23,34 +23,22 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.work.WorkInfo
-import androidx.work.WorkInfo.State
 import androidx.work.WorkManager
-import androidx.work.WorkQuery
-import androidx.work.workDataOf
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.features.offline.sync.CourseProgress
+import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
+import com.instructure.pandautils.features.offline.sync.AggregateProgressViewData
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
-import com.instructure.pandautils.features.offline.sync.FileSyncData
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
-import com.instructure.pandautils.features.offline.sync.TabSyncData
-import com.instructure.pandautils.features.offline.sync.progress.SyncProgressAction
-import com.instructure.pandautils.features.offline.sync.progress.SyncProgressViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
-import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
-import com.instructure.pandautils.utils.toJson
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -58,9 +46,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
-import io.mockk.verify
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -87,6 +73,7 @@ class SyncProgressViewModelTest {
     private val syncProgressDao: SyncProgressDao = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
     private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
+    private val aggregateProgressObserver: AggregateProgressObserver = mockk(relaxed = true)
 
     private lateinit var viewModel: SyncProgressViewModel
 
@@ -183,19 +170,12 @@ class SyncProgressViewModelTest {
             files = emptyList()
         )
 
-        every { workManager.getWorkInfosLiveData(any()) } returns MutableLiveData(
-            listOf(
-                WorkInfo(
-                    UUID.fromString(
-                        course1UUID
-                    ),
-                    State.FAILED,
-                    workDataOf(),
-                    listOf(CourseSyncWorker.TAG),
-                    workDataOf(),
-                    0,
-                    0
-                )
+        every { aggregateProgressObserver.progressData } returns MutableLiveData(
+            AggregateProgressViewData(
+                title = "Course 1",
+                progressState = ProgressState.ERROR,
+                progress = 0,
+                totalSize = "0 bytes"
             )
         )
 
@@ -223,26 +203,12 @@ class SyncProgressViewModelTest {
             files = emptyList()
         )
 
-        every { workManager.getWorkInfosLiveData(any()) } returns MutableLiveData(
-            listOf(
-                WorkInfo(
-                    UUID.fromString(
-                        course1UUID
-                    ),
-                    State.RUNNING,
-                    workDataOf(),
-                    listOf(CourseSyncWorker.TAG),
-                    workDataOf(
-                        CourseSyncWorker.COURSE_PROGRESS to CourseProgress(
-                            1L,
-                            "Course 1",
-                            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                            emptyList()
-                        ).toJson()
-                    ),
-                    0,
-                    0
-                )
+        every { aggregateProgressObserver.progressData } returns MutableLiveData(
+            AggregateProgressViewData(
+                title = "Course 1",
+                progressState = ProgressState.IN_PROGRESS,
+                progress = 0,
+                totalSize = "0 bytes"
             )
         )
 
@@ -263,292 +229,8 @@ class SyncProgressViewModelTest {
         assertEquals(SyncProgressAction.Back, viewModel.events.value?.getContentIfNotHandled())
     }
 
-    @Test
-    fun `Course update aggregate progress`() {
-        val course1UUID = UUID.randomUUID().toString()
-        val syncProgress = SyncProgressEntity(course1UUID, 1L, "Course 1")
-
-        coEvery { syncProgressDao.findCourseProgresses() } returns listOf(syncProgress)
-
-        coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns CourseSyncSettingsWithFiles(
-            courseSyncSettings = CourseSyncSettingsEntity(1L, "Course 1", true, fullFileSync = true),
-            files = emptyList()
-        )
-
-        var courseProgress = CourseProgress(
-            1L,
-            "Course 1",
-            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            emptyList()
-        )
-
-        var courseWorkInfo = createCourseWorkInfo(courseProgress, UUID.fromString(course1UUID), State.RUNNING)
-
-        val courseLiveData = MutableLiveData(
-            listOf(
-                courseWorkInfo
-            )
-        )
-
-        every { workManager.getWorkInfosLiveData(any()) } returns courseLiveData
-
-        viewModel = createViewModel()
-
-        assertEquals(0, viewModel.progressData.value?.progress)
-        assertEquals(
-            "${CourseSyncSettingsEntity.TABS.size * 100 * 1000} bytes",
-            viewModel.progressData.value?.totalSize
-        )
-
-        courseProgress = courseProgress.copy(
-            tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) }
-        )
-
-        courseWorkInfo = createCourseWorkInfo(courseProgress, UUID.fromString(course1UUID), State.RUNNING)
-
-        courseLiveData.postValue(listOf(courseWorkInfo))
-
-        assertEquals(100, viewModel.progressData.value?.progress)
-    }
-
-    @Test
-    fun `Progress tracking starts when course files are ready`() {
-        val course1UUID = UUID.randomUUID().toString()
-        val syncProgress = SyncProgressEntity(course1UUID, 1L, "Course 1")
-
-        coEvery { syncProgressDao.findCourseProgresses() } returns listOf(syncProgress)
-
-        coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns CourseSyncSettingsWithFiles(
-            courseSyncSettings = CourseSyncSettingsEntity(1L, "Course 1", true, fullFileSync = true),
-            files = emptyList()
-        )
-
-        var courseProgress = CourseProgress(
-            1L,
-            "Course 1",
-            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            null
-        )
-
-        var courseWorkInfo = createCourseWorkInfo(courseProgress, UUID.fromString(course1UUID), State.RUNNING)
-
-        val courseLiveData = MutableLiveData(
-            listOf(
-                courseWorkInfo
-            )
-        )
-
-        every { workManager.getWorkInfosLiveData(any()) } returns courseLiveData
-
-        viewModel = createViewModel()
-
-        assertNull(viewModel.progressData.value)
-
-        courseProgress = courseProgress.copy(
-            fileSyncData = emptyList()
-        )
-
-        courseWorkInfo = createCourseWorkInfo(courseProgress, UUID.randomUUID(), State.RUNNING)
-
-        courseLiveData.postValue(listOf(courseWorkInfo))
-
-        assertEquals(0, viewModel.progressData.value?.progress)
-    }
-
-    @Test
-    fun `Aggregate progress updates`() {
-        val course1Id = UUID.randomUUID()
-        val course2Id = UUID.randomUUID()
-
-        val file1Id = UUID.randomUUID()
-        val file2Id = UUID.randomUUID()
-
-        val syncProgress = listOf(
-            SyncProgressEntity(course1Id.toString(), 1L, "Course 1"),
-            SyncProgressEntity(course2Id.toString(), 2L, "Course 2")
-        )
-
-        coEvery { syncProgressDao.findCourseProgresses() } returns syncProgress
-
-        var course1Progress = CourseProgress(
-            1L,
-            "Course 1",
-            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            listOf(
-                FileSyncData(file1Id.toString(), "File 1", 1000),
-                FileSyncData(file2Id.toString(), "File 2", 2000)
-            )
-        )
-        var course2Progress = CourseProgress(
-            2L,
-            "Course 2",
-            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            emptyList()
-        )
-
-        var course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, State.RUNNING)
-        var course2WorkInfo = createCourseWorkInfo(course2Progress, course2Id, State.RUNNING)
-
-        val courseLiveData = MutableLiveData(
-            listOf(
-                course1WorkInfo,
-                course2WorkInfo
-            )
-        )
-
-        var file1Progress = FileSyncProgress("File 1", 0, ProgressState.IN_PROGRESS)
-        var file1WorkInfo = createFileWorkInfo(file1Progress, file1Id, State.RUNNING)
-
-        var file2Progress = FileSyncProgress("File 2", 0, ProgressState.IN_PROGRESS)
-        var file2WorkInfo = createFileWorkInfo(file2Progress, file2Id, State.RUNNING)
-
-        val aggregateWorkInfo = listOf(
-            course1WorkInfo,
-            course2WorkInfo,
-            file1WorkInfo,
-            file2WorkInfo
-        )
-
-        val aggregateLiveData = MutableLiveData(aggregateWorkInfo)
-
-        val queryCaptor = slot<WorkQuery>()
-        every { workManager.getWorkInfosLiveData(capture(queryCaptor)) } answers {
-            if (queryCaptor.captured.ids.size == 2) {
-                courseLiveData
-            } else {
-                aggregateLiveData
-            }
-        }
-
-        viewModel = createViewModel()
-
-        assertEquals(0, viewModel.progressData.value?.progress)
-        assertEquals(
-            "${2 * 1000000 + 1000 + 2000} bytes",
-            viewModel.progressData.value?.totalSize
-        )
-
-        file1Progress = file1Progress.copy(
-            progress = 100,
-            progressState = ProgressState.COMPLETED
-        )
-        file1WorkInfo = createFileWorkInfo(file1Progress, file1Id, State.SUCCEEDED)
-        course1Progress = course1Progress.copy(
-            tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) },
-        )
-        course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, State.SUCCEEDED)
-
-        courseLiveData.postValue(
-            listOf(
-                course1WorkInfo,
-                course2WorkInfo
-            )
-        )
-        aggregateLiveData.postValue(
-            listOf(
-                course1WorkInfo,
-                course2WorkInfo,
-                file1WorkInfo,
-                file2WorkInfo
-            )
-        )
-
-        assertEquals(50, viewModel.progressData.value?.progress)
-
-        file2Progress = file2Progress.copy(
-            progress = 100,
-            progressState = ProgressState.COMPLETED
-        )
-        file2WorkInfo = createFileWorkInfo(file2Progress, file2Id, State.SUCCEEDED)
-
-        course2Progress = course2Progress.copy(
-            tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) },
-        )
-        course2WorkInfo = createCourseWorkInfo(course2Progress, course2Id, State.SUCCEEDED)
-
-        courseLiveData.postValue(
-            listOf(
-                course1WorkInfo,
-                course2WorkInfo
-            )
-        )
-        aggregateLiveData.postValue(
-            listOf(
-                course1WorkInfo,
-                course2WorkInfo,
-                file1WorkInfo,
-                file2WorkInfo
-            )
-        )
-
-        assertEquals(100, viewModel.progressData.value?.progress)
-        assertEquals(ViewState.Success, viewModel.state.value)
-    }
-
-    @Test
-    fun `Error state`() {
-        val course1UUID = UUID.randomUUID().toString()
-        val syncProgress = SyncProgressEntity(course1UUID, 1L, "Course 1")
-
-        coEvery { syncProgressDao.findCourseProgresses() } returns listOf(syncProgress)
-
-        coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns CourseSyncSettingsWithFiles(
-            courseSyncSettings = CourseSyncSettingsEntity(1L, "Course 1", true, fullFileSync = true),
-            files = emptyList()
-        )
-
-        val courseProgress = CourseProgress(
-            1L,
-            "Course 1",
-            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            emptyList()
-        )
-
-        val courseWorkInfo = createCourseWorkInfo(courseProgress, UUID.fromString(course1UUID), State.FAILED)
-
-        val courseLiveData = MutableLiveData(
-            listOf(
-                courseWorkInfo
-            )
-        )
-
-        every { workManager.getWorkInfosLiveData(any()) } returns courseLiveData
-
-        viewModel = createViewModel()
-
-        assertEquals(ViewState.Error(), viewModel.state.value)
-    }
-
-    private fun createCourseWorkInfo(courseProgress: CourseProgress, uuid: UUID, state: State): WorkInfo {
-        return WorkInfo(
-            uuid,
-            state,
-            if (state == State.SUCCEEDED) workDataOf(CourseSyncWorker.OUTPUT to courseProgress.toJson()) else workDataOf(),
-            listOf(CourseSyncWorker.TAG),
-            workDataOf(
-                CourseSyncWorker.COURSE_PROGRESS to courseProgress.toJson()
-            ),
-            0,
-            0
-        )
-    }
-
-    private fun createFileWorkInfo(fileSyncProgress: FileSyncProgress, uuid: UUID, state: State): WorkInfo {
-        return WorkInfo(
-            uuid,
-            state,
-            if (state == State.SUCCEEDED) workDataOf(FileSyncWorker.OUTPUT to fileSyncProgress.toJson()) else workDataOf(),
-            listOf(FileSyncWorker.TAG),
-            workDataOf(
-                FileSyncWorker.PROGRESS to fileSyncProgress.toJson()
-            ),
-            0,
-            0
-        )
-    }
-
     private fun createViewModel(): SyncProgressViewModel {
-        return SyncProgressViewModel(context, workManager, syncProgressDao, courseSyncSettingsDao, offlineSyncHelper)
+        return SyncProgressViewModel(context, workManager, syncProgressDao, courseSyncSettingsDao, offlineSyncHelper, aggregateProgressObserver)
     }
 
 }
