@@ -112,7 +112,7 @@ class DashboardFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
-        recyclerBinding.syncProgressButton.onClick { RouteMatcher.route(requireContext(), SyncProgressFragment.makeRoute()) }
+        recyclerBinding.syncProgressButton.onClick { RouteMatcher.route(requireActivity(), SyncProgressFragment.makeRoute()) }
         applyTheme()
     }
 
@@ -128,17 +128,17 @@ class DashboardFragment : ParentFragment() {
             }
 
             override fun onSeeAllCourses() {
-                RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
+                RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
             }
 
             override fun onGroupSelected(group: Group) {
                 canvasContext = group
-                RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(group))
+                RouteMatcher.route(requireActivity(), CourseBrowserFragment.makeRoute(group))
             }
 
             override fun onCourseSelected(course: Course) {
                 canvasContext = course
-                RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(course))
+                RouteMatcher.route(requireActivity(), CourseBrowserFragment.makeRoute(course))
             }
 
             @Suppress("EXPERIMENTAL_FEATURE_WARNING")
@@ -175,7 +175,7 @@ class DashboardFragment : ParentFragment() {
             }
 
             override fun onManageOfflineContent(course: Course) {
-                RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute(course))
+                RouteMatcher.route(requireActivity(), OfflineContentFragment.makeRoute(course))
             }
         }, repository)
 
@@ -199,7 +199,7 @@ class DashboardFragment : ParentFragment() {
         toolbar.setMenu(R.menu.menu_dashboard) { item ->
             when (item.itemId) {
                 R.id.menu_dashboard_cards -> changeDashboardLayout(item)
-                R.id.menu_dashboard_offline -> RouteMatcher.route(requireContext(), OfflineContentFragment.makeRoute())
+                R.id.menu_dashboard_offline -> RouteMatcher.route(requireActivity(), OfflineContentFragment.makeRoute())
             }
         }
 
@@ -305,7 +305,7 @@ class DashboardFragment : ParentFragment() {
             if (!APIHelper.hasNetworkConnection()) {
                 toast(R.string.notAvailableOffline)
             } else {
-                RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
+                RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
             }
         }
     }

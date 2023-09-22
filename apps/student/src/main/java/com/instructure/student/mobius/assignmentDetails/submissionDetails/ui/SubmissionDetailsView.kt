@@ -26,6 +26,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
@@ -271,7 +272,7 @@ class SubmissionDetailsView(
 
     fun showVideoRecordingPlayback(file: File) {
         val bundle = BaseViewMediaActivity.makeBundle(file, "video", context.getString(R.string.videoCommentReplay), true)
-        RouteMatcher.route(context, Route(bundle, RouteContext.MEDIA))
+        RouteMatcher.route(activity as FragmentActivity, Route(bundle, RouteContext.MEDIA))
     }
 
     fun showVideoRecordingPlaybackError() {

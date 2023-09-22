@@ -166,19 +166,19 @@ class ToDoListFragment : ParentFragment() {
                 if (toDo.assignment!!.discussionTopicHeader != null) {
                     val groupTopic = toDo.assignment!!.discussionTopicHeader!!.groupTopicChildren.firstOrNull()
                     if (groupTopic == null) { // Launch discussion details fragment
-                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
+                        RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
                     } else { // Launch discussion details fragment with the group
-                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
+                        RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
                     }
                 } else {
                     // Launch assignment details fragment.
-                    RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
+                    RouteMatcher.route(requireActivity(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
                 }
             }
             toDo?.scheduleItem != null -> // It's a Calendar event from the Upcoming API.
-                RouteMatcher.route(requireContext(), CalendarEventFragment.makeRoute(toDo.canvasContext!!, toDo.scheduleItem!!))
+                RouteMatcher.route(requireActivity(), CalendarEventFragment.makeRoute(toDo.canvasContext!!, toDo.scheduleItem!!))
             toDo?.quiz != null -> // It's a Quiz let's launch the quiz details fragment
-                RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(toDo.canvasContext!!, toDo.quiz!!, toDo.quiz!!.url!!))
+                RouteMatcher.route(requireActivity(), BasicQuizViewFragment.makeRoute(toDo.canvasContext!!, toDo.quiz!!, toDo.quiz!!.url!!))
         }
     }
 

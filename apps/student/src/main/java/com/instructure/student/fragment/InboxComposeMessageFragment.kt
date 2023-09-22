@@ -219,7 +219,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
             } else {
                 val canvasContext =
                     selectedContext ?: CanvasContext.fromContextCode(conversation?.contextCode) ?: return@onClick
-                RouteMatcher.route(requireContext(), InboxRecipientsFragment.makeRoute(canvasContext, chips.recipients))
+                RouteMatcher.route(requireActivity(), InboxRecipientsFragment.makeRoute(canvasContext, chips.recipients))
             }
         }
 

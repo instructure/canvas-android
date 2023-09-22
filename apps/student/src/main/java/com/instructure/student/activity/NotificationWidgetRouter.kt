@@ -31,7 +31,7 @@ class NotificationWidgetRouter : ParentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handleIntent()
-        streamItem?.let { addFragmentForStreamItem(it, context, true) }
+        streamItem?.let { addFragmentForStreamItem(it, this, true) }
         finish()
     }
 
