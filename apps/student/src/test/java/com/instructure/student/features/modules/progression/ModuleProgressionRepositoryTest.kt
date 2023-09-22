@@ -225,7 +225,12 @@ class ModuleProgressionRepositoryTest {
             ),
         )
         coEvery { courseSyncSettingsDao.findWithFilesById(1) } returns CourseSyncSettingsWithFiles(
-            courseSyncSettings = CourseSyncSettingsEntity(1, false),
+            courseSyncSettings = CourseSyncSettingsEntity(1, false, mapOf(
+                "Page" to true,
+                "Quiz" to false,
+                "Assignment" to true,
+                "Files" to false
+            )),
             files = files,
         )
 
