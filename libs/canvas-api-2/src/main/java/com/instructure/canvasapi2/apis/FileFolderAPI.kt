@@ -74,6 +74,9 @@ object FileFolderAPI {
         @GET("{fileUrl}")
         fun getFileFolderFromURL(@Path(value = "fileUrl", encoded = true) fileURL: String): Call<FileFolder>
 
+        @GET("{fileUrl}")
+        suspend fun getFileFolderFromURL(@Path(value = "fileUrl", encoded = true) fileURL: String, @Tag params: RestParams): DataResult<FileFolder>
+
         @GET
         fun getNextPageFileFoldersList(@Url nextURL: String): Call<List<FileFolder>>
 

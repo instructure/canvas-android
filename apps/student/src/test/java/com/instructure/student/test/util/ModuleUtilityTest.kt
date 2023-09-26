@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.modules.util.ModuleUtility
@@ -61,6 +62,7 @@ class ModuleUtilityTest : TestCase() {
         var expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putString(Const.FILE_URL, expectedUrl)
+        expectedBundle.putInt(Const.FILE_ID, 0)
         expectedBundle.putLong(Const.ITEM_ID, moduleItem.id)
         expectedBundle.putParcelable(com.instructure.pandautils.utils.Const.MODULE_OBJECT, moduleObject)
 
@@ -75,11 +77,32 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putString(Const.FILE_URL, expectedUrl)
+        expectedBundle.putInt(Const.FILE_ID, 0)
         parentFragment = callGetFragment(moduleItem, course, moduleObject)
         TestCase.assertNotNull(parentFragment)
         TestCase.assertEquals(FileDetailsFragment::class.java, parentFragment!!.javaClass)
         TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
 
+    }
+
+    @Test
+    fun testGetFragment_fileOfflineNotAvailable() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/assignments/123456789"
+        val moduleItem = ModuleItem(
+            id = 4567,
+            type = "File",
+            url = url
+        )
+
+        val moduleObject: ModuleObject = ModuleObject(
+            id = 1234
+        )
+
+        val course = Course()
+
+        val filDetailsFragment = callGetFragment(moduleItem, course, moduleObject, isOnline = false)
+        TestCase.assertNotNull(filDetailsFragment)
+        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, filDetailsFragment!!.javaClass)
     }
 
     @Test
@@ -411,7 +434,7 @@ class ModuleUtilityTest : TestCase() {
         TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
     }
 
-    private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?, isOnline: Boolean = true, tabs: Set<String> = emptySet()): Fragment? {
-        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false, isOnline, tabs, context)
+    private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?, isOnline: Boolean = true, tabs: Set<String> = emptySet(), files: List<Long> = emptyList()): Fragment? {
+        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false, isOnline, tabs, files, context)
     }
 }

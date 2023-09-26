@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -204,5 +206,48 @@ class ModuleProgressionRepositoryTest {
         val result = repository.getSyncedTabs(1)
 
         Assert.assertEquals(setOf("Page", "Assignment"), result)
+    }
+
+    @Test
+    fun `getSyncedFileIds returns only the synced file ids from dao`() = runTest {
+        val files = listOf(
+            FileSyncSettingsEntity(
+                id = 1,
+                courseId = 1,
+                url = "url 1",
+                fileName = "File 1",
+            ),
+            FileSyncSettingsEntity(
+                id = 2,
+                courseId = 1,
+                url = "url 2",
+                fileName = "File 2",
+            ),
+        )
+
+        val courseSyncSettingsEntity = CourseSyncSettingsEntity(1, "Course name", false, mapOf(
+            "Page" to true,
+            "Quiz" to false,
+            "Assignment" to true,
+            "Files" to false
+        ))
+        
+        coEvery { courseSyncSettingsDao.findWithFilesById(1) } returns CourseSyncSettingsWithFiles(
+            courseSyncSettings = courseSyncSettingsEntity,
+            files = files,
+        )
+
+        val result = repository.getSyncedFileIds(1)
+
+        Assert.assertEquals(files.map { it.id }, result)
+    }
+
+    @Test
+    fun `getSyncedFileIds returns empty list if course is not synced`() = runTest {
+        coEvery { courseSyncSettingsDao.findWithFilesById(1) } returns null
+
+        val result = repository.getSyncedFileIds(1)
+
+        Assert.assertEquals(emptyList<Long>(), result)
     }
 }
