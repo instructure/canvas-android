@@ -28,6 +28,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.Operation
+import androidx.work.WorkContinuation
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -135,7 +136,7 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchFiles(courseSettings.courseId)
         }
 
-        syncFiles(courseSettings)
+        val workContinuation = syncFiles(courseSettings)
 
         if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
             fetchPages(courseSettings.courseId)
@@ -165,7 +166,7 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseSettings.courseId)
         }
 
-        syncAdditionalFiles(courseSettings)
+        syncAdditionalFiles(courseSettings, workContinuation)
 
         return Result.success(workDataOf(OUTPUT to progress.toJson()))
     }
@@ -403,7 +404,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
     }
 
-    private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity) {
+    private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity): WorkContinuation? {
         val courseId = syncSettings.courseId
         val allFiles = getAllFiles(courseId)
         val allFileIds = allFiles.map { it.id }
@@ -430,7 +431,7 @@ class CourseSyncWorker @AssistedInject constructor(
         if (chunkedWorkers.isEmpty()) {
             progress = progress.copy(fileSyncData = emptyList())
             updateProgress()
-            return
+            return null
         }
 
         var continuation = workManager
@@ -444,9 +445,14 @@ class CourseSyncWorker @AssistedInject constructor(
 
         progress = progress.copy(fileSyncData = fileSyncData)
         updateProgress()
+
+        return continuation
     }
 
-    private suspend fun syncAdditionalFiles(syncSettings: CourseSyncSettingsEntity) {
+    private suspend fun syncAdditionalFiles(
+        syncSettings: CourseSyncSettingsEntity,
+        workContinuation: WorkContinuation?
+    ) {
         val courseId = syncSettings.courseId
 
         val fileSyncData = mutableListOf<FileSyncData>()
@@ -454,7 +460,6 @@ class CourseSyncWorker @AssistedInject constructor(
         val additionalPublicFilesToSync = fileFolderDao.findByIds(additionalFileIdsToSync)
 
         additionalPublicFilesToSync.forEach {
-                Log.d("asdasd", "Syncing additional file: ${it.id}_${it.displayName}")
                 val worker = FileSyncWorker.createOneTimeWorkRequest(
                     courseId,
                     it.id,
@@ -470,7 +475,6 @@ class CourseSyncWorker @AssistedInject constructor(
         nonPublicFileIds.forEach {
             val file = fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
             if (file != null) {
-                Log.d("asdasd", "Syncing additional non public file: ${file.id}_${file.displayName}")
                 val worker = FileSyncWorker.createOneTimeWorkRequest(
                     courseId,
                     file.id,
@@ -480,13 +484,10 @@ class CourseSyncWorker @AssistedInject constructor(
                 )
                 fileWorkers.add(worker)
                 fileSyncData.add(FileSyncData(worker.id.toString(), file.displayName.orEmpty(), file.size))
-            } else {
-                Log.d("asdasd", "File not found: $it")
             }
         }
 
         externalFilesToSync.forEach {
-            Log.d("asdasd", "Syncing external file: $it")
             val fileName = Uri.parse(it).lastPathSegment
             if (fileName != null) {
                 val worker = FileSyncWorker.createOneTimeWorkRequest(
@@ -501,6 +502,8 @@ class CourseSyncWorker @AssistedInject constructor(
             }
         }
 
+        if (fileWorkers.isEmpty()) return
+
         val chunkedWorkers = fileWorkers.chunked(6)
 
 //        if (chunkedWorkers.isEmpty()) {
@@ -509,8 +512,7 @@ class CourseSyncWorker @AssistedInject constructor(
 //            return
 //        }
 
-        var continuation = workManager
-            .beginWith(chunkedWorkers.first())
+        var continuation = if (workContinuation != null) workContinuation.then(chunkedWorkers.first()) else workManager.beginWith(chunkedWorkers.first())
 
         chunkedWorkers.drop(1).forEach {
             continuation = continuation.then(it)
