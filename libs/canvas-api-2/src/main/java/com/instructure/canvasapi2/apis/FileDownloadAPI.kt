@@ -18,11 +18,13 @@
 
 package com.instructure.canvasapi2.apis
 
+import com.instructure.canvasapi2.builders.RestParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Streaming
+import retrofit2.http.Tag
 import retrofit2.http.Url
 import java.io.File
 
@@ -30,7 +32,7 @@ interface FileDownloadAPI {
 
     @Streaming
     @GET
-    suspend fun downloadFile(@Url url: String): ResponseBody
+    suspend fun downloadFile(@Url url: String, @Tag params: RestParams): ResponseBody
 }
 
 sealed class DownloadState {

@@ -19,6 +19,7 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -29,6 +30,7 @@ import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
@@ -53,7 +55,11 @@ class FileSyncWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val fileId = inputData.getLong(INPUT_FILE_ID, -1)
         val inputFileName = inputData.getString(INPUT_FILE_NAME) ?: ""
-        val fileName = if (inputFileName.isNotEmpty()) "${fileId}_$inputFileName" else fileId.toString()
+        val fileName = when {
+            inputFileName.isNotEmpty() && fileId != -1L -> "${fileId}_$inputFileName"
+            inputFileName.isNotEmpty() -> inputFileName
+            else -> fileId.toString()
+        }
         val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
         val courseId = inputData.getLong(INPUT_COURSE_ID, -1)
 
@@ -64,12 +70,16 @@ class FileSyncWorker @AssistedInject constructor(
         progress = FileSyncProgress(fileName, 0)
         setProgress(workDataOf(PROGRESS to progress.toJson()))
 
-        fileDownloadApi.downloadFile(fileUrl)
+        if (fileId == -1L) Log.d("asdasd", "downloading file: $fileUrl")
+        val shouldIgnoreToken = fileId == -1L
+
+        fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = shouldIgnoreToken))
             .saveFile(downloadedFile)
             .collect {
                 when (it) {
                     is DownloadState.InProgress -> {
                         progress = FileSyncProgress(fileName, it.progress)
+                        if (fileId == -1L) Log.d("asdasd", "downloading file: $fileUrl progress: ${it.progress}")
                         setProgress(workDataOf(PROGRESS to progress.toJson()))
                     }
 
@@ -77,7 +87,12 @@ class FileSyncWorker @AssistedInject constructor(
                         if (fileExists) {
                             downloadedFile = rewriteOriginalFile(downloadedFile, fileName)
                         }
-                        localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
+                        // TODO
+//                        val entityId = if (fileId != -1L) fileId else fileUrl.hashCode().toLong()
+//                        localFileDao.insert(LocalFileEntity(entityId, courseId, Date(), downloadedFile.absolutePath))
+                        if (fileId != -1L) {
+                            localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
+                        }
                         progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
                         result = Result.success(workDataOf(OUTPUT to progress.toJson()))
                     }

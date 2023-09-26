@@ -19,6 +19,7 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
@@ -117,6 +118,7 @@ class CourseSyncWorker @AssistedInject constructor(
     private var fileOperation: Operation? = null
 
     private val additionalFileIdsToSync = mutableSetOf<Long>()
+    private val externalFilesToSync = mutableSetOf<String>()
 
     override suspend fun doWork(): Result {
 
@@ -227,6 +229,7 @@ class CourseSyncWorker @AssistedInject constructor(
                 .map {
                     val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(it.body, courseId)
                     additionalFileIdsToSync.addAll(htmlParsingResult.internalFileIds)
+                    externalFilesToSync.addAll(htmlParsingResult.externalFileUrls)
                     it.copy(body = htmlParsingResult.htmlWithLocalFileLinks)
                 }
 
@@ -479,6 +482,22 @@ class CourseSyncWorker @AssistedInject constructor(
                 fileSyncData.add(FileSyncData(worker.id.toString(), file.displayName.orEmpty(), file.size))
             } else {
                 Log.d("asdasd", "File not found: $it")
+            }
+        }
+
+        externalFilesToSync.forEach {
+            Log.d("asdasd", "Syncing external file: $it")
+            val fileName = Uri.parse(it).lastPathSegment
+            if (fileName != null) {
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
+                    courseId,
+                    -1,
+                    fileName,
+                    it,
+                    syncSettingsFacade.getSyncSettings().wifiOnly
+                )
+                fileWorkers.add(worker)
+                fileSyncData.add(FileSyncData(worker.id.toString(), fileName, 0))
             }
         }
 

@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -44,6 +45,7 @@ class HtmlParser(
 
         var resultHtml: String = html
         val internalFileIds = mutableSetOf<Long>()
+        val externalFileUrls = mutableSetOf<String>()
 
         val matches = imageRegex.findAll(resultHtml)
         matches.forEach { match ->
@@ -53,10 +55,16 @@ class HtmlParser(
                 val (newHtml, shouldSyncFile) = replaceInternalFileUrl(resultHtml, courseId, fileId, imageUrl)
                 resultHtml = newHtml
                 if (shouldSyncFile) internalFileIds.add(fileId)
+            } else {
+                val fileName = Uri.parse(imageUrl).lastPathSegment
+                if (fileName != null) {
+                    resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePathForExternalFile(fileName)}")
+                    externalFileUrls.add(imageUrl)
+                }
             }
         }
 
-        return HtmlParsingResult(resultHtml, internalFileIds, emptySet())
+        return HtmlParsingResult(resultHtml, internalFileIds, externalFileUrls)
     }
 
     private suspend fun replaceInternalFileUrl(html: String, courseId: Long, fileId: Long, imageUrl: String): Pair<String, Boolean> {
@@ -90,10 +98,18 @@ class HtmlParser(
         Log.d("asdasd", "path is null, downloadedFile: ${downloadedFile.absolutePath}")
         return downloadedFile.absolutePath
     }
+
+    private suspend fun createLocalFilePathForExternalFile(fileName: String): String {
+        val dir = File(context.filesDir, apiPrefs.user?.id.toString())
+
+        val downloadedFile = File(dir, fileName)
+        Log.d("asdasd", "path is null, downloadedFile: ${downloadedFile.absolutePath}")
+        return downloadedFile.absolutePath
+    }
 }
 
 data class HtmlParsingResult(
     val htmlWithLocalFileLinks: String?,
     val internalFileIds: Set<Long>,
-    val externalFileUrls: Set<String> // TODO
+    val externalFileUrls: Set<String>
 )
