@@ -908,6 +908,7 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Refresh the Course Grade Page.")
         courseGradesPage.refresh()
+        courseGradesPage.refresh() //Need another refresh, aka. swipeDown because somehow first is going to the bottom and only swipes to the top, but the actual refresh does not happen.
 
         Log.d(STEP_TAG, "Assert that the Total Grade is 49.47% and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
         courseGradesPage.assertTotalGrade(ViewMatchers.withText("49.47%"))
