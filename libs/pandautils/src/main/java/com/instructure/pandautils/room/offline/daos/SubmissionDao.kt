@@ -26,6 +26,9 @@ interface SubmissionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: SubmissionEntity): Long
 
+    @Upsert(entity = SubmissionEntity::class)
+    suspend fun insertOrUpdate(entity: SubmissionEntity)
+
     @Delete
     suspend fun delete(entity: SubmissionEntity)
 

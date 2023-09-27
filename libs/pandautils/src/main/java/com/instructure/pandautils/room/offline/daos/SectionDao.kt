@@ -26,6 +26,9 @@ interface SectionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: SectionEntity)
 
+    @Upsert(entity = SectionEntity::class)
+    suspend fun insertOrUpdate(entity: SectionEntity)
+
     @Delete
     suspend fun delete(entity: SectionEntity)
 

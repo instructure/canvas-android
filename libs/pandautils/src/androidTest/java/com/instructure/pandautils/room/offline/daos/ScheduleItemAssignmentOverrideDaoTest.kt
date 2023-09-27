@@ -51,7 +51,7 @@ class ScheduleItemAssignmentOverrideDaoTest {
         assignmentOverrideDao = db.assignmentOverrideDao()
         scheduleItemAssignmentOverrideDao = db.scheduleItemAssignmentOverrideDao()
         db.courseDao().insert(CourseEntity(Course(id = 1L)))
-        db.assignmentGroupDao().insert(AssignmentGroupEntity(AssignmentGroup(id = 1L)))
+        db.assignmentGroupDao().insert(AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L))
         db.assignmentDao().insert(
             AssignmentEntity(
                 Assignment(id = 1L, courseId = 1L, assignmentGroupId = 1L),
@@ -73,7 +73,7 @@ class ScheduleItemAssignmentOverrideDaoTest {
         val assignmentOverrideEntity = AssignmentOverrideEntity(AssignmentOverride(id = 1L, assignmentId = 1L))
         assignmentOverrideDao.insert(assignmentOverrideEntity)
 
-        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"))
+        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"), 1L)
         scheduleItemDao.insert(scheduleItemEntity)
 
         val expected = ScheduleItemAssignmentOverrideEntity(1L, "event1")
@@ -95,7 +95,7 @@ class ScheduleItemAssignmentOverrideDaoTest {
 
     @Test(expected = SQLiteConstraintException::class)
     fun testAssignmentOverrideForeignKey() = runTest {
-        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"))
+        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"), 1L)
         scheduleItemDao.insert(scheduleItemEntity)
 
         val expected = ScheduleItemAssignmentOverrideEntity(1L, "event1")
@@ -107,7 +107,7 @@ class ScheduleItemAssignmentOverrideDaoTest {
         val assignmentOverrideEntity = AssignmentOverrideEntity(AssignmentOverride(id = 1L, assignmentId = 1L))
         assignmentOverrideDao.insert(assignmentOverrideEntity)
 
-        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"))
+        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"), 1L)
         scheduleItemDao.insert(scheduleItemEntity)
 
         val expected = ScheduleItemAssignmentOverrideEntity(1L, "event1")
@@ -125,7 +125,7 @@ class ScheduleItemAssignmentOverrideDaoTest {
         val assignmentOverrideEntity = AssignmentOverrideEntity(AssignmentOverride(id = 1L, assignmentId = 1L))
         assignmentOverrideDao.insert(assignmentOverrideEntity)
 
-        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"))
+        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event1"), 1L)
         scheduleItemDao.insert(scheduleItemEntity)
 
         val expected = ScheduleItemAssignmentOverrideEntity(1L, "event1")

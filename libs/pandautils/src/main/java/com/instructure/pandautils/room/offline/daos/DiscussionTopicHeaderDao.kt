@@ -43,4 +43,7 @@ interface DiscussionTopicHeaderDao {
 
     @Query("SELECT * FROM DiscussionTopicHeaderEntity WHERE announcement = 1 AND courseId = :courseId ORDER BY postedDate DESC")
     suspend fun findAllAnnouncementsForCourse(courseId: Long): List<DiscussionTopicHeaderEntity>
+
+    @Query("DELETE FROM DiscussionTopicHeaderEntity WHERE courseId = :courseId AND announcement = :isAnnouncement")
+    suspend fun deleteAllByCourseId(courseId: Long, isAnnouncement: Boolean)
 }

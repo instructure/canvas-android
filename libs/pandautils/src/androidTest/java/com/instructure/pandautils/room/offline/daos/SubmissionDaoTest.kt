@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -41,6 +42,9 @@ class SubmissionDaoTest {
     private lateinit var submissionDao: SubmissionDao
     private lateinit var userDao: UserDao
     private lateinit var groupDao: GroupDao
+    private lateinit var courseDao: CourseDao
+    private lateinit var assignmentGroupDao: AssignmentGroupDao
+    private lateinit var assignmentDao: AssignmentDao
 
     @Before
     fun setUp() {
@@ -49,6 +53,17 @@ class SubmissionDaoTest {
         submissionDao = db.submissionDao()
         userDao = db.userDao()
         groupDao = db.groupDao()
+        courseDao = db.courseDao()
+        assignmentGroupDao = db.assignmentGroupDao()
+        assignmentDao = db.assignmentDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1L)))
+            assignmentGroupDao.insert(AssignmentGroupEntity(AssignmentGroup(1L), 1L))
+            assignmentDao.insert(AssignmentEntity(Assignment(1L, assignmentGroupId = 1L), null, null, null, null))
+            assignmentDao.insert(AssignmentEntity(Assignment(2L, assignmentGroupId = 1L), null, null, null, null))
+            assignmentDao.insert(AssignmentEntity(Assignment(3L, assignmentGroupId = 1L), null, null, null, null))
+        }
     }
 
     @After
@@ -59,9 +74,9 @@ class SubmissionDaoTest {
     @Test
     fun testFindById() = runTest {
         val entities = listOf(
-            SubmissionEntity(Submission(id = 1, body = "Body 1", attempt = 2), null, null),
-            SubmissionEntity(Submission(id = 1, body = "Body 2", attempt = 1), null, null),
-            SubmissionEntity(Submission(id = 2, body = "Body 3"), null, null)
+            SubmissionEntity(Submission(id = 1, body = "Body 1", attempt = 2, assignmentId = 1), null, null),
+            SubmissionEntity(Submission(id = 1, body = "Body 2", attempt = 1, assignmentId = 1), null, null),
+            SubmissionEntity(Submission(id = 2, body = "Body 3", assignmentId = 1), null, null)
         )
         entities.forEach {
             submissionDao.insert(it)
@@ -70,8 +85,8 @@ class SubmissionDaoTest {
         val result = submissionDao.findById(1)
 
         val expected = listOf(
-            SubmissionEntity(Submission(id = 1, body = "Body 2", attempt = 1), null, null),
-            SubmissionEntity(Submission(id = 1, body = "Body 1", attempt = 2), null, null)
+            SubmissionEntity(Submission(id = 1, body = "Body 2", attempt = 1, assignmentId = 1), null, null),
+            SubmissionEntity(Submission(id = 1, body = "Body 1", attempt = 2, assignmentId = 1), null, null)
         )
 
         Assert.assertEquals(expected, result)
@@ -112,8 +127,15 @@ class SubmissionDaoTest {
         submissionDao.insert(submissionEntity)
     }
 
+    @Test(expected = SQLiteConstraintException::class)
+    fun testAssignmentForeignKey() = runTest {
+        val submissionEntity = SubmissionEntity(Submission(id = 1, body = "Body 1", assignmentId = 4, userId = 1), null, null)
+
+        submissionDao.insert(submissionEntity)
+    }
+
     @Test
-    fun testGroupSetNullOnDelete() = runTest {
+    fun testGroupCascadeOnDelete() = runTest {
         groupDao.insert(GroupEntity(Group(id = 1)))
 
         val submissionEntity = SubmissionEntity(Submission(id = 1, body = "Body 1", assignmentId = 1), 1, null)
@@ -124,7 +146,7 @@ class SubmissionDaoTest {
 
         val result = submissionDao.findById(1)
 
-        Assert.assertEquals(listOf(submissionEntity.copy(groupId = null)), result)
+        Assert.assertTrue(result.isEmpty())
     }
 
     @Test

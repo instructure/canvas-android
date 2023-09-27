@@ -40,14 +40,14 @@ class EnrollmentFacade(
                 enrollment.userId,
                 RestParams(isForceReadFromNetwork = true)
             ).dataOrThrow
-            userDao.insert(UserEntity(user))
+            userDao.insertOrUpdate(UserEntity(user))
         }
 
         enrollment.observedUser?.let { observedUser ->
-            userDao.insert(UserEntity(observedUser))
+            userDao.insertOrUpdate(UserEntity(observedUser))
         }
 
-        val enrollmentId = enrollmentDao.insert(
+        enrollmentDao.insertOrUpdate(
             EnrollmentEntity(
                 enrollment,
                 courseId = courseId,
@@ -55,7 +55,9 @@ class EnrollmentFacade(
             )
         )
 
-        enrollment.grades?.let { grades -> gradesDao.insert(GradesEntity(grades, enrollmentId)) }
+        enrollment.grades?.let { grades ->
+            gradesDao.insert(GradesEntity(grades, enrollment.id))
+        }
     }
 
     suspend fun getEnrollmentsByCourseId(id: Long): List<Enrollment> {

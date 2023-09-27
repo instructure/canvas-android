@@ -18,21 +18,30 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 
 @Entity(
-    primaryKeys = ["id", "submissionId"],
+    primaryKeys = ["id", "assignmentId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = AssignmentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["assignmentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class RubricCriterionAssessmentEntity(
     val id: String,
-    val submissionId: Long,
+    val assignmentId: Long,
     val ratingId: String?,
     val points: Double?,
     val comments: String?
 ) {
-    constructor(rubricCriterionAssessment: RubricCriterionAssessment, id: String, submissionId: Long) : this(
+    constructor(rubricCriterionAssessment: RubricCriterionAssessment, id: String, assignmentId: Long) : this(
         id = id,
-        submissionId = submissionId,
+        assignmentId = assignmentId,
         ratingId = rubricCriterionAssessment.ratingId,
         points = rubricCriterionAssessment.points,
         comments = rubricCriterionAssessment.comments

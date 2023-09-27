@@ -23,7 +23,7 @@ import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 @Dao
 interface CourseFeaturesDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: CourseFeaturesEntity)
 
     @Delete

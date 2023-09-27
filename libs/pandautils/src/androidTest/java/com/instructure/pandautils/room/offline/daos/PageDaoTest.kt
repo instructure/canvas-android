@@ -13,6 +13,7 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -139,5 +140,24 @@ class PageDaoTest {
 
         val resultByTitle = pageDao.getPageDetails(1L, "Page2")
         assertEquals(pageEntity2, resultByTitle)
+    }
+
+    @Test
+    fun testDeleteAllByCourseId() = runTest {
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
+
+        val pageEntity = PageEntity(Page(id = 1, title = "Page1"), courseId = 1L)
+        pageDao.insert(pageEntity)
+
+        val result = pageDao.findByCourseId(1L)
+
+        assertEquals(listOf(pageEntity), result)
+
+        pageDao.deleteAllByCourseId(1L)
+
+        val deletedResult = pageDao.findByCourseId(1L)
+
+        Assert.assertTrue(deletedResult.isEmpty())
     }
 }

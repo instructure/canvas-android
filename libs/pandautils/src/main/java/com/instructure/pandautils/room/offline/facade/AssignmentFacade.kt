@@ -17,9 +17,11 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 
@@ -34,29 +36,23 @@ class AssignmentFacade(
     private val rubricCriterionDao: RubricCriterionDao,
     private val lockInfoFacade: LockInfoFacade,
     private val rubricCriterionRatingDao: RubricCriterionRatingDao,
-    private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao
+    private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao,
+    private val offlineDatabase: OfflineDatabase
 ) {
 
-    suspend fun insertAssignmentGroups(assignmentGroups: List<AssignmentGroup>) {
-        assignmentGroups.forEach { assignmentGroup ->
-            assignmentGroupDao.insert(AssignmentGroupEntity(assignmentGroup))
-
-            assignmentGroup.assignments.forEach { assignment ->
-                insertAssignment(assignment)
+    suspend fun insertAssignmentGroups(assignmentGroups: List<AssignmentGroup>, courseId: Long) {
+        offlineDatabase.withTransaction {
+            deleteAllByCourseId(courseId)
+            assignmentGroups.forEach { assignmentGroup ->
+                assignmentGroupDao.insert(AssignmentGroupEntity(assignmentGroup, courseId))
+                assignmentGroup.assignments.forEach { assignment ->
+                    insertAssignment(assignment)
+                }
             }
         }
     }
 
     suspend fun insertAssignment(assignment: Assignment) {
-        val rubricSettingsId = assignment.rubricSettings?.let {
-            rubricSettingsDao.insert(RubricSettingsEntity(it))
-        }
-
-        val submissionId = assignment.submission?.let { submission ->
-            submissionFacade.insertSubmission(submission)
-            submission.id
-        }
-
         val plannerOverrideId = insertPlannerOverride(assignment.plannerOverride)
 
         val discussionTopicHeaderId = assignment.discussionTopicHeader?.let {
@@ -65,20 +61,28 @@ class AssignmentFacade(
 
         val assignmentEntity = AssignmentEntity(
             assignment = assignment,
-            rubricSettingsId = rubricSettingsId,
-            submissionId = submissionId,
+            rubricSettingsId = assignment.rubricSettings?.id,
+            submissionId = assignment.submission?.id,
             discussionTopicHeaderId = discussionTopicHeaderId,
             plannerOverrideId = plannerOverrideId,
         )
 
-        assignmentDao.insert(assignmentEntity)
+        assignmentDao.insertOrUpdate(assignmentEntity)
+
+        assignment.rubricSettings?.let {
+            rubricSettingsDao.insert(RubricSettingsEntity(it, assignment.id))
+        }
+
+        assignment.submission?.let {
+            submissionFacade.insertSubmission(it)
+        }
 
         assignment.scoreStatistics?.let {
             assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(it, assignment.id))
         }
 
         assignment.rubric?.forEach { rubricCriterion ->
-            rubricCriterionDao.insert(RubricCriterionEntity(rubricCriterion))
+            rubricCriterionDao.insert(RubricCriterionEntity(rubricCriterion, assignment.id))
             rubricCriterionRatingDao.insertAll(rubricCriterion.ratings.map {
                 RubricCriterionRatingEntity(it, rubricCriterion.id.orEmpty())
             })
@@ -106,7 +110,7 @@ class AssignmentFacade(
         courseId: Long
     ): List<AssignmentGroup> {
         val assignments = assignmentDao.findByCourseId(courseId).map { createFullApiModelFromEntity(it) }
-        return assignments.groupBy { it.assignmentGroupId }.map { assignmentGroupDao.findById(it.key).toApiModel(it.value) }
+        return assignments.groupBy { it.assignmentGroupId }.mapNotNull { assignmentGroupDao.findById(it.key)?.toApiModel(it.value) }
     }
 
     suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -148,5 +152,9 @@ class AssignmentFacade(
             this.submission = submission?.copy(assignment = this.copy(submission = null))
             this.discussionTopicHeader = discussionTopicHeader?.copy(assignment = this.copy(submission = null))
         }
+    }
+
+    suspend fun deleteAllByCourseId(courseId: Long) {
+        assignmentGroupDao.deleteAllByCourseId(courseId)
     }
 }

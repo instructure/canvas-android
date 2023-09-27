@@ -25,12 +25,6 @@ import com.instructure.canvasapi2.models.*
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = CourseEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["courseId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
             entity = AssignmentGroupEntity::class,
             parentColumns = ["id"],
             childColumns = ["assignmentGroupId"],
