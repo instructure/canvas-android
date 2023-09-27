@@ -171,10 +171,7 @@ class DashboardState extends State<DashboardScreen> {
         setState(() {
           String? selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
           _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
-          _selectedStudentNotifier.value = _selectedStudent!;
-          _updateStudentColor(_selectedStudent!.id);
-          ApiPrefs.setCurrentStudent(_selectedStudent);
-          _interactor.getAlertCountNotifier().update(_selectedStudent!.id);
+          updateStudent();
         });
       }
 
@@ -199,7 +196,17 @@ class DashboardState extends State<DashboardScreen> {
     _interactor.getStudents(forceRefresh: true).then((users) {
       setState(() {
         print('users: $users');
+
+        if (users != null && users.length > _students.length) {
+          var newStudents = users.toSet().difference(_students.toSet());
+          _selectedStudent = newStudents.first;
+          updateStudent();
+        }
         _students = users!;
+        if (!users.map((e) => e.id).contains(_selectedStudent?.id)){
+          _selectedStudent = _students.first;
+          updateStudent();
+        }
         _studentsLoading = false;
       });
     }).catchError((error) {
@@ -209,6 +216,13 @@ class DashboardState extends State<DashboardScreen> {
         print('Error loading students: $error');
       });
     });
+  }
+
+  void updateStudent() {
+    _selectedStudentNotifier.value = _selectedStudent!;
+    _updateStudentColor(_selectedStudent!.id);
+    ApiPrefs.setCurrentStudent(_selectedStudent);
+    _interactor.getAlertCountNotifier().update(_selectedStudent!.id);
   }
 
   @override
