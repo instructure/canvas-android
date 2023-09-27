@@ -31,10 +31,11 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@{itemViewModel.data.progressState == ProgressState.ERROR ? @color/backgroundDanger : @color/backgroundDarkest}"
+        android:onClick="@{() -> itemViewModel.onClick.invoke()}"
+        app:cardBackgroundColor="@{itemViewModel.data.progressState == ProgressState.ERROR ? @color/backgroundDanger : @color/licorice}"
         app:cardCornerRadius="6dp"
         app:contentPadding="16dp"
-        android:onClick="@{() -> itemViewModel.onClick.invoke()}">
+        tools:cardBackgroundColor="@color/licorice">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -45,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{itemViewModel.data.title}"
-                android:textColor="@color/backgroundLightest"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
@@ -56,8 +57,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{itemViewModel.data.subtitle}"
-                android:textColor="@color/textLightest"
-                app:layout_constraintTop_toBottomOf="@id/syncProgressTitle" />
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/syncProgressTitle"
+                tools:text="125 files are syncing." />
 
             <ProgressBar
                 android:id="@+id/syncProgress"
@@ -66,10 +68,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:indeterminate="@{itemViewModel.data.progressState == ProgressState.STARTING}"
-                android:indeterminateTint="@color/textLightest"
+                android:indeterminateTint="@color/white"
                 android:progress="@{itemViewModel.data.progress}"
-                android:progressTint="@color/textLightest"
-                app:layout_constraintTop_toBottomOf="@id/syncProgressSubtitle" />
+                android:progressTint="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/syncProgressSubtitle"
+                tools:progress="50" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

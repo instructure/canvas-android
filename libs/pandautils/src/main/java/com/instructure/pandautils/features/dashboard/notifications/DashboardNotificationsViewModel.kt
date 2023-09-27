@@ -100,19 +100,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     }
 
     private val syncProgressObserver = Observer<AggregateProgressViewData> {
-        when {
-            it.progressState != ProgressState.COMPLETED && _data.value?.syncProgressItems == null -> {
-                _data.value?.syncProgressItems = getSyncProgress().apply { update(it) }
-                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
-            }
-            it.progressState == ProgressState.COMPLETED && _data.value?.syncProgressItems != null -> {
-                _data.value?.syncProgressItems = null
-                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
-            }
-            else -> {
-                _data.value?.syncProgressItems?.update(it)
-            }
-        }
+        createSyncProgressViewModel(it)
     }
 
     private val fileUploads = dashboardFileUploadDao.getAllForUser(apiPrefs.user?.id.orDefault())
@@ -154,6 +142,10 @@ class DashboardNotificationsViewModel @Inject constructor(
             val uploadViewModels = getUploads(fileUploads.value)
 
             _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
+
+            aggregateProgressObserver.progressData.value?.let {
+                createSyncProgressViewModel(it)
+            }
         }
     }
 
@@ -452,5 +444,21 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private fun openSyncProgress() {
         _events.postValue(Event(DashboardNotificationsActions.OpenSyncProgress))
+    }
+
+    private fun createSyncProgressViewModel(aggregateProgressViewData: AggregateProgressViewData) {
+        when {
+            aggregateProgressViewData.progressState != ProgressState.COMPLETED && _data.value?.syncProgressItems == null -> {
+                _data.value?.syncProgressItems = getSyncProgress().apply { update(aggregateProgressViewData) }
+                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            }
+            aggregateProgressViewData.progressState == ProgressState.COMPLETED && _data.value?.syncProgressItems != null -> {
+                _data.value?.syncProgressItems = null
+                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            }
+            else -> {
+                _data.value?.syncProgressItems?.update(aggregateProgressViewData)
+            }
+        }
     }
 }
