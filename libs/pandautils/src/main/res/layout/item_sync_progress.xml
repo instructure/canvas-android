@@ -66,11 +66,12 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:indeterminate="@{itemViewModel.data.progressState == ProgressState.STARTING}"
                 android:indeterminateTint="@color/white"
                 android:progress="@{itemViewModel.data.progress}"
                 android:progressTint="@color/white"
+                android:progressBackgroundTint="@color/white"
                 app:layout_constraintTop_toBottomOf="@id/syncProgressSubtitle"
                 tools:progress="50" />
 
