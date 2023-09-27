@@ -131,7 +131,7 @@ class PlannerFetcher extends ChangeNotifier {
     items.forEach((item) {
       if (item.plannableDate != null) {
         String dayKey = dayKeyForDate(item.plannableDate.toLocal());
-        dayItems[dayKey].add(item);
+        dayItems[dayKey]?.add(item);
       }
     });
 
