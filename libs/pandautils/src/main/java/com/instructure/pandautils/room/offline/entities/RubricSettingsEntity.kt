@@ -18,10 +18,20 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.RubricSettings
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = AssignmentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["assignmentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class RubricSettingsEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
@@ -34,9 +44,10 @@ data class RubricSettingsEntity(
     val isReadOnly: Boolean,
     val freeFormCriterionComments: Boolean,
     val hideScoreTotal: Boolean,
-    val hidePoints: Boolean
+    val hidePoints: Boolean,
+    val assignmentId: Long
 ) {
-    constructor(rubricSettings: RubricSettings) : this(
+    constructor(rubricSettings: RubricSettings, assignmentId: Long) : this(
         rubricSettings.id ?: 0L,
         rubricSettings.contextId,
         rubricSettings.contextType,
@@ -47,7 +58,8 @@ data class RubricSettingsEntity(
         rubricSettings.isReadOnly,
         rubricSettings.freeFormCriterionComments,
         rubricSettings.hideScoreTotal,
-        rubricSettings.hidePoints
+        rubricSettings.hidePoints,
+        assignmentId
     )
 
     fun toApiModel() = RubricSettings(

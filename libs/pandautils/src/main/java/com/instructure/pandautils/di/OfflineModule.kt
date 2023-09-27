@@ -19,10 +19,6 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.daos.AuthorDao
-import com.instructure.pandautils.room.common.daos.MediaCommentDao
-import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.*
@@ -31,9 +27,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
-
-const val OFFLINE_DATABASE = "offline_database"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -246,7 +239,8 @@ class OfflineModule {
         rubricCriterionDao: RubricCriterionDao,
         lockInfoFacade: LockInfoFacade,
         rubricCriterionRatingDao: RubricCriterionRatingDao,
-        assignmentRubricCriterionDao: AssignmentRubricCriterionDao
+        assignmentRubricCriterionDao: AssignmentRubricCriterionDao,
+        offlineDatabase: OfflineDatabase
     ): AssignmentFacade {
         return AssignmentFacade(
             assignmentGroupDao,
@@ -259,7 +253,8 @@ class OfflineModule {
             rubricCriterionDao,
             lockInfoFacade,
             rubricCriterionRatingDao,
-            assignmentRubricCriterionDao
+            assignmentRubricCriterionDao,
+            offlineDatabase
         )
     }
 
@@ -267,12 +262,12 @@ class OfflineModule {
     fun provideSubmissionFacade(
         submissionDao: SubmissionDao,
         groupDao: GroupDao,
-        @Named(OFFLINE_DATABASE) mediaCommentDao: MediaCommentDao,
+        mediaCommentDao: MediaCommentDao,
         userDao: UserDao,
         userApi: UserAPI.UsersInterface,
-        @Named(OFFLINE_DATABASE) submissionCommentDao: SubmissionCommentDao,
-        @Named(OFFLINE_DATABASE) attachmentDao: AttachmentDao,
-        @Named(OFFLINE_DATABASE) authorDao: AuthorDao,
+        submissionCommentDao: SubmissionCommentDao,
+        attachmentDao: AttachmentDao,
+        authorDao: AuthorDao,
         rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
     ): SubmissionFacade {
         return SubmissionFacade(
@@ -284,9 +279,10 @@ class OfflineModule {
     @Provides
     fun provideDiscussionTopicHeaderFacade(
         discussionTopicHeaderDao: DiscussionTopicHeaderDao,
-        discussionParticipantDao: DiscussionParticipantDao
+        discussionParticipantDao: DiscussionParticipantDao,
+        offlineDatabase: OfflineDatabase
     ): DiscussionTopicHeaderFacade {
-        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao)
+        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, offlineDatabase)
     }
 
     @Provides
@@ -352,9 +348,10 @@ class OfflineModule {
         scheduleItemDao: ScheduleItemDao,
         assignmentDao: AssignmentDao,
         assignmentOverrideDao: AssignmentOverrideDao,
-        scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao
+        scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao,
+        offlineDatabase: OfflineDatabase
     ): ScheduleItemFacade {
-        return ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentDao)
+        return ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentDao, offlineDatabase)
     }
 
     @Provides
@@ -370,19 +367,21 @@ class OfflineModule {
     @Provides
     fun provideConferenceFacade(
         conferenceDao: ConferenceDao,
-        conferenceRecodingDao: ConferenceRecodingDao
+        conferenceRecodingDao: ConferenceRecodingDao,
+        offlineDatabase: OfflineDatabase
     ): ConferenceFacade {
-        return ConferenceFacade(conferenceDao, conferenceRecodingDao)
+        return ConferenceFacade(conferenceDao, conferenceRecodingDao, offlineDatabase)
     }
 
     @Provides
     fun providePeopleFacade(
         userDao: UserDao,
         enrollmentDao: EnrollmentDao,
-        gradesDao: GradesDao,
         sectionDao: SectionDao,
+        enrollmentFacade: EnrollmentFacade,
+        offlineDatabase: OfflineDatabase
     ): UserFacade {
-        return UserFacade(userDao, enrollmentDao, gradesDao, sectionDao)
+        return UserFacade(userDao, enrollmentDao, sectionDao, enrollmentFacade, offlineDatabase)
     }
 
     @Provides
@@ -392,9 +391,18 @@ class OfflineModule {
         completionRequirementDao: ModuleCompletionRequirementDao,
         moduleContentDetailsDao: ModuleContentDetailsDao,
         lockInfoFacade: LockInfoFacade,
-        masteryPathFacade: MasteryPathFacade
+        masteryPathFacade: MasteryPathFacade,
+        offlineDatabase: OfflineDatabase
     ): ModuleFacade {
-        return ModuleFacade(moduleObjectDao, moduleItemDao, completionRequirementDao, moduleContentDetailsDao, lockInfoFacade, masteryPathFacade)
+        return ModuleFacade(
+            moduleObjectDao,
+            moduleItemDao,
+            completionRequirementDao,
+            moduleContentDetailsDao,
+            lockInfoFacade,
+            masteryPathFacade,
+            offlineDatabase
+        )
     }
 
     @Provides
@@ -413,25 +421,21 @@ class OfflineModule {
     }
 
     @Provides
-    @Named(OFFLINE_DATABASE)
     fun provideAttachmentDao(offlineDatabase: OfflineDatabase): AttachmentDao {
         return offlineDatabase.attachmentDao()
     }
 
     @Provides
-    @Named(OFFLINE_DATABASE)
     fun provideAuthorDao(offlineDatabase: OfflineDatabase): AuthorDao {
         return offlineDatabase.authorDao()
     }
 
     @Provides
-    @Named(OFFLINE_DATABASE)
     fun provideMediaCommentDao(offlineDatabase: OfflineDatabase): MediaCommentDao {
         return offlineDatabase.mediaCommentDao()
     }
 
     @Provides
-    @Named(OFFLINE_DATABASE)
     fun provideSubmissionCommentDao(offlineDatabase: OfflineDatabase): SubmissionCommentDao {
         return offlineDatabase.submissionCommentDao()
     }
@@ -452,8 +456,8 @@ class OfflineModule {
     }
 
     @Provides
-    fun providePageFacade(pageDao: PageDao, lockInfoFacade: LockInfoFacade): PageFacade {
-        return PageFacade(pageDao, lockInfoFacade)
+    fun providePageFacade(pageDao: PageDao, lockInfoFacade: LockInfoFacade, offlineDatabase: OfflineDatabase): PageFacade {
+        return PageFacade(pageDao, lockInfoFacade, offlineDatabase)
     }
 
     @Provides

@@ -32,6 +32,9 @@ interface PageDao {
     @Delete
     suspend fun delete(entity: PageEntity)
 
+    @Query("DELETE FROM PageEntity WHERE courseId=:id")
+    suspend fun deleteAllByCourseId(id: Long)
+
     @Update
     suspend fun update(entity: PageEntity)
 

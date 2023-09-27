@@ -61,25 +61,28 @@ data class ModuleItemEntity(
         published = moduleItem.published,
         contentId = moduleItem.contentId,
         externalUrl = moduleItem.externalUrl,
-        pageUrl = moduleItem.pageUrl)
+        pageUrl = moduleItem.pageUrl
+    )
 
-    fun toApiModel(completionRequirement: ModuleCompletionRequirement?, moduleContentDetails: ModuleContentDetails?, masteryPath: MasteryPath?): ModuleItem {
-        return ModuleItem(
-            id = id,
-            moduleId = moduleId,
-            position = position,
-            title = title,
-            indent = indent,
-            type = type,
-            htmlUrl = htmlUrl,
-            url = url,
-            completionRequirement = completionRequirement,
-            moduleDetails = moduleContentDetails,
-            published = published,
-            contentId = contentId,
-            externalUrl = externalUrl,
-            pageUrl = pageUrl,
-            masteryPaths = masteryPath
-        )
-    }
+    fun toApiModel(
+        completionRequirement: ModuleCompletionRequirement?,
+        moduleContentDetails: ModuleContentDetails?,
+        masteryPath: MasteryPath?
+    ) = ModuleItem(
+        id = id,
+        moduleId = moduleId,
+        position = position,
+        title = title,
+        indent = indent,
+        type = type,
+        htmlUrl = htmlUrl,
+        url = url,
+        completionRequirement = completionRequirement,
+        moduleDetails = moduleContentDetails,
+        published = published,
+        contentId = contentId,
+        externalUrl = externalUrl,
+        pageUrl = pageUrl,
+        masteryPaths = masteryPath
+    )
 }

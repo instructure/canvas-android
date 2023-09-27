@@ -33,12 +33,11 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.di.APP_DATABASE
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
@@ -59,7 +58,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 
 @PageView(url = "conversations/compose")
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
@@ -80,7 +78,6 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     private var participants: ArrayList<Recipient> by ParcelableArrayListArg(key = KEY_PARTICIPANTS)
 
     @Inject
-    @Named(APP_DATABASE)
     lateinit var attachmentDao: AttachmentDao
 
     private val isValidNewMessage: Boolean

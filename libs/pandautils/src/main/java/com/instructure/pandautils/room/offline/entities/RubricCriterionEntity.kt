@@ -18,11 +18,21 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = AssignmentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["assignmentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class RubricCriterionEntity(
     @PrimaryKey
     val id: String,
@@ -31,14 +41,16 @@ data class RubricCriterionEntity(
     val points: Double,
     val criterionUseRange: Boolean,
     val ignoreForScoring: Boolean,
+    val assignmentId: Long
 ) {
-    constructor(rubricCriterion: RubricCriterion) : this(
+    constructor(rubricCriterion: RubricCriterion, assignmentId: Long) : this(
         rubricCriterion.id.orEmpty(),
         rubricCriterion.description,
         rubricCriterion.longDescription,
         rubricCriterion.points,
         rubricCriterion.criterionUseRange,
         rubricCriterion.ignoreForScoring,
+        assignmentId
     )
 
     fun toApiModel(ratings: List<RubricCriterionRating> = listOf()) = RubricCriterion(

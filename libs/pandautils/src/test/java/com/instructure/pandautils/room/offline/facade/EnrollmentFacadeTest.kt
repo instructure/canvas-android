@@ -28,7 +28,9 @@ import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
 import com.instructure.pandautils.room.offline.entities.GradesEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -53,15 +55,12 @@ class EnrollmentFacadeTest {
         val enrollment = Enrollment(id = enrollmentId, userId = 1L, grades = grades, observedUser = User(id = 2L))
 
         coEvery { userApi.getUser(any(), any()) } returns DataResult.Success(user)
-        coEvery { userDao.insert(any()) } just Runs
-        coEvery { enrollmentDao.insert(any()) } returns enrollmentId
-        coEvery { gradesDao.insert(any()) } just Runs
 
         facade.insertEnrollment(enrollment, courseId)
 
         coVerify { userApi.getUser(user.id, any()) }
-        coVerify { userDao.insert(UserEntity(user)) }
-        coVerify { enrollmentDao.insert(EnrollmentEntity(enrollment, courseId, observedUserId = enrollment.observedUser?.id)) }
+        coVerify { userDao.insertOrUpdate(UserEntity(user)) }
+        coVerify { enrollmentDao.insertOrUpdate(EnrollmentEntity(enrollment, courseId, observedUserId = enrollment.observedUser?.id)) }
         coVerify { gradesDao.insert(any()) }
     }
 

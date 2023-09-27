@@ -19,12 +19,22 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentOverride
 import com.instructure.canvasapi2.models.ScheduleItem
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class ScheduleItemEntity(
     @PrimaryKey
     val id: String,
@@ -43,10 +53,11 @@ data class ScheduleItemEntity(
     val importantDates: Boolean,
     val assignmentId: Long?,
     val type: String,
-    val itemType: String?
+    val itemType: String?,
+    val courseId: Long
 ) {
 
-    constructor(scheduleItem: ScheduleItem) :this(
+    constructor(scheduleItem: ScheduleItem, courseId: Long) : this(
         scheduleItem.itemId,
         scheduleItem.title,
         scheduleItem.description,
@@ -63,10 +74,11 @@ data class ScheduleItemEntity(
         scheduleItem.importantDates,
         scheduleItem.assignment?.id,
         scheduleItem.type,
-        scheduleItem.itemType?.name
+        scheduleItem.itemType?.name,
+        courseId
     )
 
-    fun toApiModel(assignmentOverrides: List<AssignmentOverride>?, assignment: Assignment?) : ScheduleItem {
+    fun toApiModel(assignmentOverrides: List<AssignmentOverride>?, assignment: Assignment?): ScheduleItem {
         return ScheduleItem(
             itemId = id,
             title = title,

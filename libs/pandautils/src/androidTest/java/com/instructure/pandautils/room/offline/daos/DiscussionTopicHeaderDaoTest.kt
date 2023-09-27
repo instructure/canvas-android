@@ -36,7 +36,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.OffsetDateTime
-import java.util.Date
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -117,8 +117,10 @@ class DiscussionTopicHeaderDaoTest {
         val announcement = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 2L, title = "Announcement", announcement = true), 2)
         val date1 = Date(OffsetDateTime.now().toEpochSecond())
         val date2 = Date(OffsetDateTime.now().plusDays(2).toEpochSecond())
-        val announcement2 = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 3L, title = "Announcement 2", announcement = true, postedDate = date1), 1)
-        val announcement3 = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 4L, title = "Announcement 3", announcement = true, postedDate = date2), 1)
+        val announcement2 =
+            DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 3L, title = "Announcement 2", announcement = true, postedDate = date1), 1)
+        val announcement3 =
+            DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 4L, title = "Announcement 3", announcement = true, postedDate = date2), 1)
         discussionTopicHeaderDao.insertAll(listOf(discussion, announcement, announcement2, announcement3))
 
         val result = discussionTopicHeaderDao.findAllAnnouncementsForCourse(1)
@@ -164,5 +166,24 @@ class DiscussionTopicHeaderDaoTest {
 
         val result = discussionTopicHeaderDao.findById(1)
         Assert.assertNull(result?.authorId)
+    }
+
+    @Test
+    fun testDeleteAllByCourseId() = runTest {
+        courseDao.insert(CourseEntity(Course(id = 1)))
+
+        val discussionTopicHeaderEntity = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 1L, title = "Discussion"), 1)
+        val discussionTopicHeaderEntity2 = DiscussionTopicHeaderEntity(DiscussionTopicHeader(id = 2L, title = "Discussion 2"), 1)
+        discussionTopicHeaderDao.insertAll(listOf(discussionTopicHeaderEntity, discussionTopicHeaderEntity2))
+
+        val result = discussionTopicHeaderDao.findAllDiscussionsForCourse(1L)
+
+        Assert.assertEquals(listOf(discussionTopicHeaderEntity, discussionTopicHeaderEntity2), result)
+
+        discussionTopicHeaderDao.deleteAllByCourseId(1L, false)
+
+        val deletedResult = discussionTopicHeaderDao.findAllDiscussionsForCourse(1L)
+
+        Assert.assertTrue(deletedResult.isEmpty())
     }
 }

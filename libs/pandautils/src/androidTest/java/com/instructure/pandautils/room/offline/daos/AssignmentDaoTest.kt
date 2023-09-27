@@ -64,11 +64,11 @@ class AssignmentDaoTest {
 
     @Test
     fun testInsertReplace() = runTest {
-        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
-        assignmentGroupDao.insert(assignmentGroupEntity)
-
         val courseEntity = CourseEntity(Course(id = 1L))
         courseDao.insert(courseEntity)
+
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L)
+        assignmentGroupDao.insert(assignmentGroupEntity)
 
         val assignmentEntity =
             AssignmentEntity(Assignment(id = 1L, name = "assignmentEntity", assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
@@ -84,11 +84,11 @@ class AssignmentDaoTest {
 
     @Test
     fun testFindById() = runTest {
-        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
-        assignmentGroupDao.insert(assignmentGroupEntity)
-
         val courseEntity = CourseEntity(Course(id = 1L))
         courseDao.insert(courseEntity)
+
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L)
+        assignmentGroupDao.insert(assignmentGroupEntity)
 
         val assignmentEntity =
             AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
@@ -103,16 +103,6 @@ class AssignmentDaoTest {
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    fun testCourseForeignKey() = runTest {
-        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
-        assignmentGroupDao.insert(assignmentGroupEntity)
-
-        val assignmentEntity =
-            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
-        assignmentDao.insert(assignmentEntity)
-    }
-
-    @Test(expected = SQLiteConstraintException::class)
     fun testAssignmentGroupForeignKey() = runTest {
         val courseEntity = CourseEntity(Course(id = 1L))
         courseDao.insert(courseEntity)
@@ -124,11 +114,11 @@ class AssignmentDaoTest {
 
     @Test
     fun testCourseCascade() = runTest {
-        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
-        assignmentGroupDao.insert(assignmentGroupEntity)
-
         val courseEntity = CourseEntity(Course(id = 1L))
         courseDao.insert(courseEntity)
+
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L)
+        assignmentGroupDao.insert(assignmentGroupEntity)
 
         val assignmentEntity =
             AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
@@ -143,15 +133,17 @@ class AssignmentDaoTest {
 
     @Test
     fun testAssignmentGroupCascade() = runTest {
-        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L))
-        assignmentGroupDao.insert(assignmentGroupEntity)
-
         val courseEntity = CourseEntity(Course(id = 1L))
         courseDao.insert(courseEntity)
 
-        val assignmentEntity =
-            AssignmentEntity(Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L), null, null, null, null)
-        assignmentDao.insert(assignmentEntity)
+        val assignmentGroupEntity = AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L)
+        assignmentGroupDao.insert(assignmentGroupEntity)
+
+        val assignmentEntity = AssignmentEntity(
+            Assignment(id = 1L, assignmentGroupId = 1L, courseId = 1L),
+            null, null, null, null
+        )
+        assignmentDao.insertOrUpdate(assignmentEntity)
 
         assignmentGroupDao.delete(assignmentGroupEntity)
 
@@ -159,6 +151,4 @@ class AssignmentDaoTest {
 
         assertNull(result)
     }
-
-
 }

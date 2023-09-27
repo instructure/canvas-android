@@ -23,14 +23,14 @@ import com.instructure.canvasapi2.models.AssignmentSet
 import com.instructure.canvasapi2.models.MasteryPathAssignment
 
 @Entity(
-    foreignKeys = [(
+    foreignKeys = [
         ForeignKey(
             entity = MasteryPathEntity::class,
             parentColumns = ["id"],
             childColumns = ["masteryPathId"],
             onDelete = ForeignKey.CASCADE
         )
-        )]
+    ]
 )
 data class AssignmentSetEntity(
     @PrimaryKey

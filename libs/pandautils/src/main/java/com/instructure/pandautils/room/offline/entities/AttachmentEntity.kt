@@ -1,11 +1,21 @@
-package com.instructure.pandautils.room.common.entities
+package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Attachment
-import java.util.Date
+import java.util.*
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = SubmissionCommentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["submissionCommentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class AttachmentEntity(
     @PrimaryKey val id: Long,
     val contentType: String? = null,

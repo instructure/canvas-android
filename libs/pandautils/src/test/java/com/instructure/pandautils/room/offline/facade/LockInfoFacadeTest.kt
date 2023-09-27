@@ -30,7 +30,9 @@ import com.instructure.pandautils.room.offline.entities.LockInfoEntity
 import com.instructure.pandautils.room.offline.entities.LockedModuleEntity
 import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirementEntity
 import com.instructure.pandautils.room.offline.entities.ModuleNameEntity
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -55,10 +57,6 @@ class LockInfoFacadeTest {
         val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
         val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
 
-        coEvery { lockInfoDao.insert(any()) } just Runs
-        coEvery { lockedModuleDao.insert(any()) } just Runs
-        coEvery { moduleNameDao.insertAll(any()) } just Runs
-        coEvery { completionRequirementDao.insert(any()) } just Runs
         coEvery { completionRequirementDao.findById(any()) } returns null
 
         facade.insertLockInfoForAssignment(lockInfo, assignmentId)
@@ -77,10 +75,6 @@ class LockInfoFacadeTest {
         val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
         val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
 
-        coEvery { lockInfoDao.insert(any()) } just Runs
-        coEvery { lockedModuleDao.insert(any()) } just Runs
-        coEvery { moduleNameDao.insertAll(any()) } just Runs
-        coEvery { completionRequirementDao.insert(any()) } just Runs
         coEvery { completionRequirementDao.findById(any()) } returns null
 
         facade.insertLockInfoForModule(lockInfo, moduleId)

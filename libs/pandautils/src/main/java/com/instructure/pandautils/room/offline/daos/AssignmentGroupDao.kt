@@ -26,6 +26,9 @@ interface AssignmentGroupDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: AssignmentGroupEntity)
 
+    @Query("DELETE FROM AssignmentGroupEntity WHERE courseId=:id")
+    suspend fun deleteAllByCourseId(id: Long)
+
     @Delete
     suspend fun delete(entity: AssignmentGroupEntity)
 
@@ -33,5 +36,5 @@ interface AssignmentGroupDao {
     suspend fun update(entity: AssignmentGroupEntity)
 
     @Query("SELECT * FROM AssignmentGroupEntity WHERE id = :id")
-    suspend fun findById(id: Long): AssignmentGroupEntity
+    suspend fun findById(id: Long): AssignmentGroupEntity?
 }
