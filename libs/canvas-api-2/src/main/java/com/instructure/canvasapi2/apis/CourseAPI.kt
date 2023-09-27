@@ -79,7 +79,7 @@ object CourseAPI {
         fun getCourseSettings(@Path("courseId") courseId: Long): Call<CourseSettings>
 
         @GET("courses/{courseId}/settings")
-        suspend fun getCourseSettings(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<CourseSettings>
+        suspend fun getCourseSettings(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<CourseSettings?>
 
         @PUT("courses/{course_id}/settings")
         fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>

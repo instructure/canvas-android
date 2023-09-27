@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.fragment
+package com.instructure.student.features.discussion.details
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -29,13 +29,10 @@ import android.webkit.WebView
 import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.DiscussionManager
-import com.instructure.canvasapi2.managers.DiscussionManager.deleteDiscussionEntry
-import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.BeforePageView
@@ -64,30 +61,31 @@ import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
+import com.instructure.student.fragment.DiscussionsReplyFragment
+import com.instructure.student.fragment.DiscussionsUpdateFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
-import kotlinx.coroutines.Job
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import retrofit2.Response
 import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
+@AndroidEntryPoint
 class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(FragmentDiscussionsDetailsBinding::bind)
-    // Weave jobs
-    private var sessionAuthJob: Job? = null
-    private var discussionMarkAsReadJob: Job? = null
-    private var discussionLikeJob: Job? = null
-    private var discussionsLoadingJob: WeaveJob? = null
-    private var loadHeaderHtmlJob: Job? = null
-    private var loadRepliesHtmlJob: Job? = null
+
+    @Inject
+    lateinit var repository: DiscussionDetailsRepository
 
     // Bundle args
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -123,7 +121,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         populateDiscussionData()
         binding.swipeRefreshLayout.setOnRefreshListener {
             authenticatedSessionURL = null
-            populateDiscussionData(true)
+            populateDiscussionData()
             // Send out bus events to trigger a refresh for discussion list
             DiscussionUpdatedEvent(discussionTopicHeader, javaClass.simpleName).post()
         }
@@ -165,15 +163,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        sessionAuthJob?.cancel()
-        discussionMarkAsReadJob?.cancel()
-        discussionLikeJob?.cancel()
-        discussionsLoadingJob?.cancel()
-        loadHeaderHtmlJob?.cancel()
-        loadRepliesHtmlJob?.cancel()
-    }
     //endregion
 
     //region Fragment Interaction Overrides
@@ -223,7 +212,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun showReplyView(discussionEntryId: Long) {
         if (APIHelper.hasNetworkConnection()) {
             scrollPosition = binding.discussionsScrollView.scrollY
-            val route = DiscussionsReplyFragment.makeRoute(canvasContext, discussionTopicHeader.id, discussionEntryId, discussionTopicHeader.permissions!!.attach)
+            val route = DiscussionsReplyFragment.makeRoute(
+                canvasContext,
+                discussionTopicHeader.id,
+                discussionEntryId,
+                discussionTopicHeader.permissions!!.attach
+            )
             RouteMatcher.route(requireActivity(), route)
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
@@ -232,29 +226,22 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun markAsRead(discussionEntryIds: List<Long>) {
-        if (discussionMarkAsReadJob?.isActive == true) return
-        discussionMarkAsReadJob = tryWeave {
-            val successfullyMarkedAsReadIds: MutableList<Long> = ArrayList(discussionEntryIds.size)
-            discussionEntryIds.forEach { entryId ->
-                val response = awaitApiResponse<Void> { DiscussionManager.markDiscussionTopicEntryRead(canvasContext, discussionTopicHeader.id, entryId, it) }
-                if (response.isSuccessful) {
-                    successfullyMarkedAsReadIds.add(entryId)
-                    discussionTopic?.let {
-                        val entry = DiscussionUtils.findEntry(entryId, it.views)
-                        entry?.unread = false
-                        it.unreadEntriesMap.remove(entryId)
-                        it.unreadEntries.remove(entryId)
-                        if (discussionTopicHeader.unreadCount > 0) discussionTopicHeader.unreadCount -= 1
-                    }
+        lifecycleScope.tryLaunch {
+            repository.markAsRead(canvasContext, discussionTopicHeader.id, discussionEntryIds).forEach { entryId ->
+                discussionTopic?.let {
+                    val entry = DiscussionUtils.findEntry(entryId, it.views)
+                    entry?.unread = false
+                    it.unreadEntriesMap.remove(entryId)
+                    it.unreadEntries.remove(entryId)
+                    if (discussionTopicHeader.unreadCount > 0) discussionTopicHeader.unreadCount -= 1
+                }
+
+                binding.discussionRepliesWebViewWrapper.post {
+                    // Posting lets this escape Weave's lifecycle, so use a null-safe call on the webview here
+                    if (view != null) binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + entryId.toString() + "')")
                 }
             }
 
-            successfullyMarkedAsReadIds.forEach {
-                binding.discussionRepliesWebViewWrapper.post {
-                    // Posting lets this escape Weave's lifecycle, so use a null-safe call on the webview here
-                    if (view != null) binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
-                }
-            }
             if (!groupDiscussion) {
                 DiscussionTopicHeaderEvent(discussionTopicHeader).post()
             }
@@ -289,28 +276,30 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun deleteDiscussionEntry(entryId: Long) {
-        deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId, object : StatusCallback<Void>() {
-            override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
-                if (response.code() in 200..299) {
-                    discussionTopic?.let {
-                        DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
-                            entry.deleted = true
-                            updateDiscussionAsDeleted(entry)
-                            discussionTopicHeader.decrementDiscussionSubentryCount()
-                            if (!groupDiscussion) {
-                                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
-                            }
-                        }
+        lifecycleScope.tryLaunch {
+            repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
+
+            discussionTopic?.let {
+                DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
+                    entry.deleted = true
+                    updateDiscussionAsDeleted(entry)
+                    discussionTopicHeader.decrementDiscussionSubentryCount()
+                    if (!groupDiscussion) {
+                        DiscussionTopicHeaderEvent(discussionTopicHeader).post()
                     }
                 }
             }
-        })
+        }
     }
 
     private fun showUpdateReplyView(discussionEntryId: Long) {
         if (APIHelper.hasNetworkConnection()) {
             discussionTopic?.let {
-                val route = DiscussionsUpdateFragment.makeRoute(canvasContext, discussionTopicHeader.id, DiscussionUtils.findEntry(discussionEntryId, it.views))
+                val route = DiscussionsUpdateFragment.makeRoute(
+                    canvasContext,
+                    discussionTopicHeader.id,
+                    DiscussionUtils.findEntry(discussionEntryId, it.views)
+                )
                 RouteMatcher.route(requireActivity(), route)
             }
         } else NoInternetConnectionDialog.show(requireFragmentManager())
@@ -322,26 +311,20 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun likeDiscussionPressed(discussionEntryId: Long) {
         discussionTopic?.let { discussionTopic ->
-            if (discussionLikeJob?.isActive == true) return
-
             DiscussionUtils.findEntry(discussionEntryId, discussionTopic.views)?.let { entry ->
-                discussionLikeJob = tryWeave {
-                    val rating = if (discussionTopic.entryRatings.containsKey(discussionEntryId)) discussionTopic.entryRatings[discussionEntryId] else 0
-                    val newRating = if (rating == 1) 0 else 1
-                    val response = awaitApiResponse<Void> { DiscussionManager.rateDiscussionEntry(canvasContext, discussionTopicHeader.id, discussionEntryId, newRating, it) }
+                val rating = if (discussionTopic.entryRatings.containsKey(discussionEntryId)) discussionTopic.entryRatings[discussionEntryId] else 0
+                val newRating = if (rating == 1) 0 else 1
+                lifecycleScope.tryLaunch {
+                    repository.rateDiscussionEntry(canvasContext, discussionTopicHeader.id, discussionEntryId, newRating)
 
-                    if (response.code() in 200..299) {
-                        discussionTopic.entryRatings[discussionEntryId] = newRating
-
-                        if (newRating == 1) {
-                            entry.ratingSum += 1
-                            entry._hasRated = true
-                            updateDiscussionLiked(entry)
-                        } else if (entry.ratingSum > 0) {
-                            entry.ratingSum -= 1
-                            entry._hasRated = false
-                            updateDiscussionUnliked(entry)
-                        }
+                    if (newRating == 1) {
+                        entry.ratingSum += 1
+                        entry._hasRated = true
+                        updateDiscussionLiked(entry)
+                    } else if (entry.ratingSum > 0) {
+                        entry.ratingSum -= 1
+                        entry._hasRated = false
+                        updateDiscussionUnliked(entry)
                     }
                 } catch {
                     // Maybe a permissions issue?
@@ -381,7 +364,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun routeInternallyCallback(url: String) {
                 if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)) {
-                    RouteMatcher.route(requireContext(), InternalWebviewFragment.makeRoute(url, url, false, ""))
+                    RouteMatcher.route(requireContext(),
+                        InternalWebviewFragment.makeRoute(url, url, false, "")
+                    )
                 }
             }
 
@@ -468,7 +453,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         @JavascriptInterface
         fun onMoreRepliesPressed(id: String) {
             discussionTopic?.let {
-                val route = DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeader, it, id.toLong())
+                val route = makeRoute(canvasContext, discussionTopicHeader, it, id.toLong())
                 RouteMatcher.route(requireActivity(), route)
             }
         }
@@ -522,20 +507,19 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun getAuthenticatedURL(html: String, loadHtml: (newUrl: String, originalUrl: String?) -> Unit) {
         if (authenticatedSessionURL.isNullOrBlank()) {
             //get the url
-            sessionAuthJob = tryWeave {
+            lifecycleScope.tryLaunch {
                 //get the url from html
                 val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(discussionTopicHeader.message)
                 matcher.find()
                 val url = matcher.group(1)
 
                 // Get an authenticated session so the user doesn't have to log in
-                authenticatedSessionURL = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }.sessionUrl
+                authenticatedSessionURL = repository.getAuthenticatedSession(url).sessionUrl
                 loadHtml(DiscussionUtils.getNewHTML(html, authenticatedSessionURL), url)
             } catch {
                 //couldn't get the authenticated session, try to load it without it
                 loadHtml(html, null)
             }
-
         } else {
             loadHtml(DiscussionUtils.getNewHTML(html, authenticatedSessionURL), null)
         }
@@ -545,7 +529,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     //region Loading
     private fun populateDiscussionData(forceRefresh: Boolean = false, topLevelReplyPosted: Boolean = false) = with(binding) {
-        discussionsLoadingJob = tryWeave {
+        lifecycleScope.tryLaunch {
             discussionProgressBar.setVisible()
             discussionRepliesWebViewWrapper.loadHtml("", "")
             discussionRepliesWebViewWrapper.setInvisible()
@@ -561,24 +545,23 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             }
 
             if (courseId != null) {
-                courseSettings = CourseManager.getCourseSettingsAsync(courseId, forceRefresh).await().dataOrNull
+                courseSettings = repository.getCourseSettings(courseId, forceRefresh)
             }
-
             if (forceRefresh) {
                 val discussionTopicHeaderId = if (discussionTopicHeaderId == 0L && discussionTopicHeader.id != 0L) discussionTopicHeader.id else discussionTopicHeaderId
                 if (!updateToGroupIfNecessary()) {
-                    discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, it, true) }
+                    discussionTopicHeader = repository.getDetailedDiscussion(canvasContext, discussionTopicHeaderId,true)
                 }
             } else {
                 // If there is no discussion (ID not set), then we need to load one
                 if (discussionTopicHeader.id == 0L) {
-                    discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, it, true) }
+                    discussionTopicHeader =  repository.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, true)
                 }
 
                 // If we had an offline discussion on the list it might need some additional fields so we need to fetch the whole discussion.
                 // We might not need this if we implement offline mode on the discussion details screen.
                 if (discussionTopicHeader.offline) {
-                    discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeader.id, it, true) }
+                    discussionTopicHeader =  repository.getDetailedDiscussion(canvasContext, discussionTopicHeader.id, true)
                 }
             }
 
@@ -594,7 +577,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 // forceRefresh is true, fetch the discussion topic
                 discussionTopic = getDiscussionTopic()
 
-                inBackground { discussionTopic?.views?.forEach { it.init(discussionTopic!!, it) } }
+                discussionTopic?.views?.forEach { it.init(discussionTopic!!, it) }
             }
 
             if (discussionTopic == null || discussionTopic?.views?.isEmpty() == true && DiscussionCaching(discussionTopicHeader.id).isEmpty()) {
@@ -607,15 +590,13 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                     showAnonymousDiscussionView()
                 }
             } else {
-                val html = inBackground {
-                    DiscussionUtils.createDiscussionTopicHtml(
+                val html = DiscussionUtils.createDiscussionTopicHtml(
                             requireContext(),
                             isTablet,
                             canvasContext,
                             discussionTopicHeader,
                             discussionTopic!!.views,
                             discussionEntryId)
-                }
 
                 loadDiscussionTopicViews(html)
 
@@ -640,7 +621,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         swipeRefreshLayout.isEnabled = false
         openInBrowser.onClick {
             discussionTopicHeader.htmlUrl?.let { url ->
-                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, true, true))
+                InternalWebviewFragment.loadInternalWebView(
+                    activity,
+                    InternalWebviewFragment.makeRoute(canvasContext, url, true, true)
+                )
             }
         }
     }
@@ -653,11 +637,27 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 changed = true
                 canvasContext = groupPair.first
                 discussionTopicHeaderId = groupPair.second
-                discussionTopicHeader = awaitApi { DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, it, true) }
+                discussionTopicHeader = repository.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, true)
             }
         }
 
         return changed
+    }
+
+    suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
+        val groups = repository.getAllGroups(true)
+        for (group in groups) {
+            val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({it.groupId}, {it.id})
+            if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {
+                groupsMap[group.id]?.let { topicHeaderId ->
+                    return Pair(group, topicHeaderId)
+                }
+
+                return null // There is a group, but not a matching topic header id
+            }
+        }
+        // If we made it to here, there are no groups that match this
+        return null
     }
 
     private suspend fun getDiscussionTopic(): DiscussionTopic {
@@ -665,7 +665,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             // This is the base discussion for a group discussion
 
             // Grab the groups that the user belongs to
-            val userGroups = awaitApi<List<Group>> { GroupManager.getAllGroups(it, true) }.map { it.id }
+            val userGroups = repository.getAllGroups(true).map { it.id }
 
             // Match group from discussion to a group that the user is a part of
             var context = canvasContext
@@ -679,10 +679,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 }
             }
 
-            return awaitApi { DiscussionManager.getFullDiscussionTopic(context, discussionId, true, it) }
+            return repository.getFullDiscussionTopic(context, discussionId, true)
         } else {
             // Regular discussion, fetch normally
-            return awaitApi { DiscussionManager.getFullDiscussionTopic(canvasContext, discussionTopicHeader.id, true, it) }
+            return repository.getFullDiscussionTopic(canvasContext, discussionTopicHeader.id, true)
         }
     }
 
@@ -715,7 +715,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
-        loadHeaderHtmlJob = discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
+        discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
             if (view != null) loadHTMLTopic(it, discussionTopicHeader.title)
         })
 
@@ -736,7 +736,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         setupRepliesWebView()
 
-        loadRepliesHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
+        discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
             discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
         })
 
@@ -807,7 +807,17 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             binding.alternateViewButton.apply {
                 visibility = View.VISIBLE
                 setOnClickListener {
-                    RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, discussionTopicHeader.htmlUrl!!, authenticate = true, shouldRouteInternally = false, allowRoutingTheSameUrlInternally = false, isUnsupportedFeature = false, allowUnsupportedRouting = false))
+                    RouteMatcher.route(requireActivity(),
+                        InternalWebviewFragment.makeRoute(
+                            canvasContext,
+                            discussionTopicHeader.htmlUrl!!,
+                            authenticate = true,
+                            shouldRouteInternally = false,
+                            allowRoutingTheSameUrlInternally = false,
+                            isUnsupportedFeature = false,
+                            allowUnsupportedRouting = false
+                        )
+                    )
                 }
             }
         }
@@ -918,22 +928,5 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                         route.arguments.containsKey(DISCUSSION_TOPIC_HEADER_ID) ||
                         route.paramsHash.containsKey(RouterParams.MESSAGE_ID))
 
-        suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
-            val groups = awaitApi<List<Group>> {
-                GroupManager.getAllGroups(it, false)
-            }
-            for (group in groups) {
-                val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({it.groupId}, {it.id})
-                if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {
-                    groupsMap[group.id]?.let { topicHeaderId ->
-                        return Pair(group, topicHeaderId)
-                    }
-
-                    return null // There is a group, but not a matching topic header id
-                }
-            }
-            // If we made it to here, there are no groups that match this
-            return null
-        }
     }
 }

@@ -36,8 +36,8 @@ import com.instructure.student.features.modules.progression.LockedModuleItemFrag
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
-import com.instructure.student.fragment.DiscussionDetailsFragment
-import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
+import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
+import com.instructure.student.features.discussion.details.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment

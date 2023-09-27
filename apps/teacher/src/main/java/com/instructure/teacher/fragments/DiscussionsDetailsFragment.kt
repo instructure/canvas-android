@@ -48,7 +48,6 @@ import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.views.CanvasWebView
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.adapters.StudentContextFragment

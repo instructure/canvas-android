@@ -50,6 +50,7 @@ import com.instructure.student.activity.*
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
+import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.list.FileListFragment

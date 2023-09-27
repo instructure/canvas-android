@@ -6,7 +6,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
-import com.instructure.student.fragment.DiscussionDetailsFragment
+import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentDiscussionRouter(private val fragmentActivity: FragmentActivity) : DiscussionRouter {
