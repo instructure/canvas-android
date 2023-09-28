@@ -2,18 +2,11 @@ package com.instructure.pandautils.di
 
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.daos.*
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.daos.AuthorDao
-import com.instructure.pandautils.room.common.daos.MediaCommentDao
-import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
 import javax.inject.Singleton
-
-const val APP_DATABASE = "app_database"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -21,14 +14,12 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    @Named(APP_DATABASE)
     fun provideAttachmentDao(appDatabase: AppDatabase): AttachmentDao {
         return appDatabase.attachmentDao()
     }
 
     @Provides
     @Singleton
-    @Named(APP_DATABASE)
     fun provideAuthorDao(appDatabase: AppDatabase): AuthorDao {
         return appDatabase.authorDao()
     }
@@ -41,14 +32,12 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    @Named(APP_DATABASE)
     fun provideMediaCommentDao(appDatabase: AppDatabase): MediaCommentDao {
         return appDatabase.mediaCommentDao()
     }
 
     @Provides
     @Singleton
-    @Named(APP_DATABASE)
     fun provideSubmissionCommentDao(appDatabase: AppDatabase): SubmissionCommentDao {
         return appDatabase.submissionCommentDao()
     }

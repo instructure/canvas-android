@@ -56,6 +56,8 @@ class EnrollmentDaoTest {
             courseDao.insert(CourseEntity(Course(id = 1)))
             courseDao.insert(CourseEntity(Course(id = 2)))
             userDao.insert(UserEntity(User(id = 1)))
+            userDao.insert(UserEntity(User(id = 2)))
+            userDao.insert(UserEntity(User(id = 3)))
             sectionDao.insert(SectionEntity(Section(id = 1), 1))
         }
     }
@@ -113,8 +115,15 @@ class EnrollmentDaoTest {
     }
 
     @Test(expected = SQLiteConstraintException::class)
+    fun testUserForeignKey() = runTest {
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 4)
+
+        enrollmentDao.insert(enrollmentEntity)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
     fun testObservedUserForeignKey() = runTest {
-        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 2)
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 1), 1, 1, 4)
 
         enrollmentDao.insert(enrollmentEntity)
     }
@@ -175,11 +184,26 @@ class EnrollmentDaoTest {
     }
 
     @Test
+    fun testUserCascade() = runTest {
+        userDao.insert(UserEntity(User(id = 4)))
+
+        val enrollmentEntity = EnrollmentEntity(Enrollment(id = 1, userId = 4), 1, 1, 1)
+
+        enrollmentDao.insert(enrollmentEntity)
+
+        userDao.delete(UserEntity(User(id = 4)))
+
+        val result = enrollmentDao.findAll()
+
+        assert(result.isEmpty())
+    }
+
+    @Test
     fun testFindByCourseIdAndRoleTeachers() = runTest {
         val entities = listOf(
-                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
         )
         entities.forEach {
             enrollmentDao.insert(it)
@@ -193,9 +217,9 @@ class EnrollmentDaoTest {
     @Test
     fun testFindByCourseIdAndRoleStudents() = runTest {
         val entities = listOf(
-                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
         )
         entities.forEach {
             enrollmentDao.insert(it)
@@ -209,9 +233,9 @@ class EnrollmentDaoTest {
     @Test
     fun testFindByCourseIdAndRoleCourses() = runTest {
         val entities = listOf(
-                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
+            EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
         )
         entities.forEach {
             enrollmentDao.insert(it)
@@ -225,9 +249,9 @@ class EnrollmentDaoTest {
     @Test
     fun testFindByUserId() = runTest {
         val entities = listOf(
-                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
+            EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
         )
         entities.forEach {
             enrollmentDao.insert(it)
@@ -243,9 +267,9 @@ class EnrollmentDaoTest {
     @Test
     fun testFindUSerByNonExistingUserId() = runTest {
         val entities = listOf(
-                EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
-                EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
+            EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Teacher), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
         )
         entities.forEach {
             enrollmentDao.insert(it)

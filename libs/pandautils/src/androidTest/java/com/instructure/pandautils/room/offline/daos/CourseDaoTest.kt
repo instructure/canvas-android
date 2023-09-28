@@ -85,4 +85,48 @@ class CourseDaoTest {
 
         Assert.assertNull(result)
     }
+
+    @Test
+    fun testFindEntitiesByIds() = runTest {
+        val courseEntity = CourseEntity(Course(id = 1, "Course 1", "Original Course", "CRS", currentGrade = "0"))
+        val courseEntity2 = CourseEntity(Course(id = 2, "Course 2", "Original Course 2", "CRS", currentGrade = "2"))
+        val courseEntity3 = CourseEntity(Course(id = 3, "Course 3", "Original Course 3", "CRS", currentGrade = "2"))
+        courseDao.insert(courseEntity)
+        courseDao.insert(courseEntity2)
+        courseDao.insert(courseEntity3)
+
+        val result = courseDao.findByIds(setOf(1, 2))
+
+        Assert.assertEquals(listOf(courseEntity, courseEntity2), result)
+    }
+
+    @Test
+    fun testFindEntitiesByIdReturnsEmptyListNotFound() = runTest {
+        val courseEntity = CourseEntity(Course(id = 1, "Course 1", "Original Course", "CRS", currentGrade = "0"))
+        val courseEntity2 = CourseEntity(Course(id = 2, "Course 2", "Original Course 2", "CRS", currentGrade = "2"))
+        courseDao.insert(courseEntity)
+        courseDao.insert(courseEntity2)
+
+        val result = courseDao.findByIds(setOf(16, 55))
+
+        Assert.assertEquals(emptyList<CourseEntity>(),  result)
+    }
+
+    @Test
+    fun testDeleteByIds() = runTest {
+        val courseEntity = CourseEntity(Course(id = 1, "Course 1", "Original Course", "CRS", currentGrade = "0"))
+        val courseEntity2 = CourseEntity(Course(id = 2, "Course 2", "Original Course 2", "CRS", currentGrade = "2"))
+        courseDao.insertOrUpdate(courseEntity)
+        courseDao.insertOrUpdate(courseEntity2)
+
+        val result = courseDao.findAll()
+
+        Assert.assertEquals(listOf(courseEntity, courseEntity2), result)
+
+        courseDao.deleteByIds(listOf(1, 2))
+
+        val deletedResult = courseDao.findAll()
+
+        Assert.assertEquals(emptyList<CourseEntity>(), deletedResult)
+    }
 }

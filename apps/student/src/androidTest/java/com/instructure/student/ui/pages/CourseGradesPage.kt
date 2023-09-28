@@ -25,7 +25,6 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
@@ -36,16 +35,15 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -91,9 +89,8 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     // to the top of the list first.  We have to use the custom constraints because the
     // swipeRefreshLayout may extend below the screen, and therefore may not be 90% visible.
     fun refresh() {
-        onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.courseGradesPage)).swipeDown()
-        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
-                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
+        onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.courseGradesPage))
+            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
         sleep(1000) // Allow some time to react to the update.
     }
 

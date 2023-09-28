@@ -78,7 +78,7 @@ class AssignmentDetailsLocalDataSourceTest {
     @Test
     fun `Get quiz successfully returns api model`() = runTest {
         val expected = Quiz(1)
-        coEvery { quizDao.findById(any()) } returns QuizEntity(expected)
+        coEvery { quizDao.findById(any()) } returns QuizEntity(expected, 1L)
 
         val quiz = dataSource.getQuiz(1, 1, true)
 

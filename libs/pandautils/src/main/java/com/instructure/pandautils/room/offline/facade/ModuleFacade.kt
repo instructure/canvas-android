@@ -16,8 +16,10 @@
  */
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
 import com.instructure.pandautils.room.offline.daos.ModuleContentDetailsDao
 import com.instructure.pandautils.room.offline.daos.ModuleItemDao
@@ -33,28 +35,36 @@ class ModuleFacade(
     private val completionRequirementDao: ModuleCompletionRequirementDao,
     private val moduleContentDetailsDao: ModuleContentDetailsDao,
     private val lockInfoFacade: LockInfoFacade,
-    private val masteryPathFacade: MasteryPathFacade) {
+    private val masteryPathFacade: MasteryPathFacade,
+    private val offlineDatabase: OfflineDatabase
+) {
 
     suspend fun insertModules(moduleObjects: List<ModuleObject>, courseId: Long) {
-        moduleObjects.forEach { moduleObject ->
-            moduleObjectDao.insert(ModuleObjectEntity(moduleObject, courseId))
-            moduleObject.items
-                .forEach { moduleItem ->
-                    val modultItemEntity = ModuleItemEntity(moduleItem, moduleObject.id)
-                    moduleItemDao.insert(modultItemEntity)
+        offlineDatabase.withTransaction {
+            deleteAllByCourseId(courseId)
+
+            moduleObjects.forEach { moduleObject ->
+                moduleObjectDao.insert(ModuleObjectEntity(moduleObject, courseId))
+                moduleObject.items.forEach { moduleItem ->
+                    val moduleItemEntity = ModuleItemEntity(moduleItem, moduleObject.id)
+                    moduleItemDao.insert(moduleItemEntity)
+
                     moduleItem.completionRequirement?.let {
-                        completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, modultItemEntity.moduleId, modultItemEntity.id))
+                        completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, moduleItemEntity.moduleId, moduleItemEntity.id))
                     }
+
                     moduleItem.moduleDetails?.let { moduleDetails ->
-                        moduleContentDetailsDao.insert(ModuleContentDetailsEntity(moduleDetails, modultItemEntity.id))
+                        moduleContentDetailsDao.insert(ModuleContentDetailsEntity(moduleDetails, moduleItemEntity.id))
                         moduleDetails.lockInfo?.let { lockInfo ->
-                            lockInfoFacade.insertLockInfoForModule(lockInfo, modultItemEntity.id)
+                            lockInfoFacade.insertLockInfoForModule(lockInfo, moduleItemEntity.id)
                         }
                     }
+
                     moduleItem.masteryPaths?.let { masteryPaths ->
-                        masteryPathFacade.insertMasteryPath(masteryPaths, modultItemEntity.id)
+                        masteryPathFacade.insertMasteryPath(masteryPaths, moduleItemEntity.id)
                     }
                 }
+            }
         }
     }
 
@@ -99,5 +109,9 @@ class ModuleFacade(
     suspend fun getModuleItemForPage(pageUrl: String): ModuleItem? {
         val moduleItemEntity = moduleItemDao.findByPageUrl(pageUrl)
         return moduleItemEntity?.let { createModuleItemApiModel(it) }
+    }
+
+    suspend fun deleteAllByCourseId(courseId: Long) {
+        moduleObjectDao.deleteAllByCourseId(courseId)
     }
 }

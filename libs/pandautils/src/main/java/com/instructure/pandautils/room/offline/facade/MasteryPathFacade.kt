@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.models.AssignmentSet
 import com.instructure.canvasapi2.models.MasteryPath
 import com.instructure.pandautils.room.offline.daos.AssignmentSetDao
 import com.instructure.pandautils.room.offline.daos.MasteryPathAssignmentDao
@@ -52,16 +51,14 @@ class MasteryPathFacade(
         val assignmentSets = masteryPath?.let {
             val assignmentSets = assignmentSetDao.findByMasteryPathId(it.id)
             assignmentSets.map { assignmentSet ->
-                val masteryPathAssignments =
-                    masteryPathAssignmentDao.findByAssignmentSetId(assignmentSet.id)
-                        .map { masteryPathAssignment ->
-                            val assignment =
-                                assignmentFacade.getAssignmentById(masteryPathAssignment.assignmentId)
-                            masteryPathAssignment.toApiModel(assignment)
-                        }
+                val masteryPathAssignments = masteryPathAssignmentDao.findByAssignmentSetId(assignmentSet.id)
+                    .map { masteryPathAssignment ->
+                        val assignment = assignmentFacade.getAssignmentById(masteryPathAssignment.assignmentId)
+                        masteryPathAssignment.toApiModel(assignment)
+                    }
                 assignmentSet.toApiModel(masteryPathAssignments)
             }
-        } ?: emptyList<AssignmentSet>()
+        }.orEmpty()
 
         return masteryPath?.toApiModel(assignmentSets)
     }

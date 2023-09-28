@@ -1447,4 +1447,17 @@
     <string name="syncProgress_cancelConfirmationMessage">It will stop offline content sync. You can do it again later.</string>
     <string name="syncProgress_syncErrorSubtitle">One or more files failed to sync. Check your internet connection and retry to submit.</string>
     <string name="syncProgress_downloadStarting">Download starting</string>
+    <string name="coursesCannotBeFavoritedOffline">Courses cannot be added to favorites offline.</string>
+    <string name="allCoursesScreenHeader">All Courses</string>
+    <string name="allCoursesCourseHeader">Courses</string>
+    <string name="allCoursesGroupHeader">Groups</string>
+    <string name="dashboardAllCoursesButton">All Courses</string>
+    <string name="allCoursesOfflineNote">Selecting courses for Dashboard can only be done online. You can navigate to offline course details.</string>
+    <string name="allCoursesOfflineNoteTitle">Note</string>
+    <string name="syncProgress_downloadSuccess">Success! Downloaded %1$s of %2$s</string>
+    <string name="syncProgress_syncingOfflineContent">Syncing Offline Content</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">%d item is syncing.</item>
+        <item quantity="other">%d items are syncing.</item>
+    </plurals>
 </resources>

@@ -26,6 +26,9 @@ interface CourseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: CourseEntity)
 
+    @Upsert(entity = CourseEntity::class)
+    suspend fun insertOrUpdate(entity: CourseEntity)
+
     @Delete
     suspend fun delete(entity: CourseEntity)
 
@@ -35,6 +38,12 @@ interface CourseDao {
     @Query("SELECT * FROM CourseEntity WHERE id = :id")
     suspend fun findById(id: Long): CourseEntity?
 
+    @Query("SELECT * FROM CourseEntity WHERE id IN (:ids)")
+    suspend fun findByIds(ids: Set<Long>): List<CourseEntity>
+
     @Query("SELECT * FROM CourseEntity")
     suspend fun findAll(): List<CourseEntity>
+
+    @Query("DELETE FROM CourseEntity WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<Long>)
 }

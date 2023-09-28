@@ -24,10 +24,14 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
+import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
+import com.instructure.pandautils.room.offline.entities.EnrollmentState
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
@@ -47,24 +51,38 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val dashboardCardDao: DashboardCardDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val syncSettingsFacade: SyncSettingsFacade,
-    private val syncProgressDao: SyncProgressDao
+    private val syncProgressDao: SyncProgressDao,
+    private val editDashboardItemDao: EditDashboardItemDao,
+    private val courseDao: CourseDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
         if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) return Result.success()
 
-        val dashboardCards =
-            courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
+        val dashboardCards = courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
         dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
+
+        val params = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
+        val currentCourses = courseApi.firstPageCoursesByEnrollmentState("active", params).dataOrNull.orEmpty()
+        val pastCourses = courseApi.firstPageCoursesByEnrollmentState("completed", params).dataOrNull.orEmpty()
+        val futureCourses = courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params).dataOrNull.orEmpty()
+
+        val allCourses = currentCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.CURRENT, index) } +
+            pastCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.PAST, index) } +
+            futureCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.FUTURE, index) }
+        editDashboardItemDao.updateEntities(allCourses)
 
         val courseIds = inputData.getLongArray(COURSE_IDS)
         val courses = courseIds?.let {
             courseSyncSettingsDao.findByIds(courseIds.toList())
         } ?: courseSyncSettingsDao.findAll()
 
+        val courseIdsToRemove = courseSyncSettingsDao.findAll().filter { !it.anySyncEnabled }.map { it.courseId }
+        courseDao.deleteByIds(courseIdsToRemove)
+
         val settingsMap = courses.associateBy { it.courseId }
 
-        val courseWorkers =  courses.filter { it.anySyncEnabled }
+        val courseWorkers = courses.filter { it.anySyncEnabled }
             .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
 
         val syncProgress = courseWorkers.map {

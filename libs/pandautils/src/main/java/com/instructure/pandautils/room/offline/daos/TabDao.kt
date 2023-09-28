@@ -23,7 +23,7 @@ import com.instructure.pandautils.room.offline.entities.TabEntity
 @Dao
 interface TabDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: TabEntity)
 
     @Delete

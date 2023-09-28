@@ -32,12 +32,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/syncProgressButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Sync progress" />
-
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/notificationsFragment"
                     android:name="com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment"

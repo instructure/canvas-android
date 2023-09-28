@@ -35,17 +35,12 @@ import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.di.APP_DATABASE
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.daos.AuthorDao
-import com.instructure.pandautils.room.common.daos.MediaCommentDao
-import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -78,7 +73,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
 @AndroidEntryPoint
@@ -90,19 +84,15 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     lateinit var fileUploadInputDao: FileUploadInputDao
 
     @Inject
-    @Named(APP_DATABASE)
     lateinit var submissionCommentDao: SubmissionCommentDao
 
     @Inject
-    @Named(APP_DATABASE)
     lateinit var attachmentDao: AttachmentDao
 
     @Inject
-    @Named(APP_DATABASE)
     lateinit var authorDao: AuthorDao
 
     @Inject
-    @Named(APP_DATABASE)
     lateinit var mediaCommentDao: MediaCommentDao
 
     @Inject

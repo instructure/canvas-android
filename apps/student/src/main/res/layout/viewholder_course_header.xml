@@ -44,6 +44,6 @@
         android:background="?android:selectableItemBackground"
         android:paddingBottom="2dp"
         android:paddingTop="16dp"
-        android:text="@string/edit_dashboard"/>
+        android:text="@string/dashboardAllCoursesButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

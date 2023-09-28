@@ -27,7 +27,7 @@ import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 
 /**
- * A page representing the Edit Dashboard screen in the application.
+ * A page representing the All Courses screen in the application.
  */
 @Suppress("unused")
 class EditDashboardPage : BasePage() {
@@ -43,7 +43,7 @@ class EditDashboardPage : BasePage() {
     private val allCoursesLabel by WaitForViewWithText(R.string.allCourses)
 
     /**
-     * Asserts that the Edit Dashboard screen displays the given list of courses.
+     * Asserts that the All Courses screen displays the given list of courses.
      *
      * @param mCourses The list of courses to verify.
      */
@@ -55,7 +55,7 @@ class EditDashboardPage : BasePage() {
     }
 
     /**
-     * Asserts that the Edit Dashboard screen displays a specific course.
+     * Asserts that the All Courses screen displays a specific course.
      *
      * @param courseName The name of the course to verify.
      */
@@ -64,7 +64,7 @@ class EditDashboardPage : BasePage() {
     }
 
     /**
-     * Asserts that a specific course is favored in the Edit Dashboard screen.
+     * Asserts that a specific course is favored in the All Courses screen.
      *
      * @param course The course to verify.
      */
@@ -75,7 +75,7 @@ class EditDashboardPage : BasePage() {
     }
 
     /**
-     * Asserts that a specific course is not favored in the Edit Dashboard screen.
+     * Asserts that a specific course is not favored in the All Courses screen.
      *
      * @param course The course to verify.
      */
@@ -86,7 +86,7 @@ class EditDashboardPage : BasePage() {
     }
 
     /**
-     * Toggles favoring/unfavoring a specific course in the Edit Dashboard screen.
+     * Toggles favoring/unfavoring a specific course in the All Courses screen.
      *
      * @param courseName The name of the course to toggle favoring.
      */
@@ -109,7 +109,7 @@ class EditDashboardPage : BasePage() {
     }
 
     /**
-     * Clicks on the mass select button in the Edit Dashboard screen based on the selection state.
+     * Clicks on the mass select button in the All Courses screen based on the selection state.
      *
      * @param someSelected Indicates whether some items are selected or not.
      */

@@ -18,11 +18,38 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.LockedModule
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = ModuleContentDetailsEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["moduleId"],
+            onDelete = ForeignKey.CASCADE,
+            deferred = true
+        ),
+        ForeignKey(
+            entity = AssignmentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["assignmentId"],
+            onDelete = ForeignKey.CASCADE,
+            deferred = true
+        ),
+        ForeignKey(
+            entity = PageEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["pageId"],
+            onDelete = ForeignKey.CASCADE,
+            deferred = true
+        )
+    ],
+    indices = [Index("lockedModuleId", unique = true)]
+)
 data class LockInfoEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

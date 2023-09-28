@@ -17,7 +17,9 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.ConferenceDao
 import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
 import com.instructure.pandautils.room.offline.entities.ConferenceEntity
@@ -25,14 +27,20 @@ import com.instructure.pandautils.room.offline.entities.ConferenceRecordingEntit
 
 class ConferenceFacade(
     private val conferenceDao: ConferenceDao,
-    private val conferenceRecodingDao: ConferenceRecodingDao
+    private val conferenceRecodingDao: ConferenceRecodingDao,
+    private val offlineDatabase: OfflineDatabase
 ) {
 
     suspend fun insertConferences(conferences: List<Conference>, courseId: Long) {
-        conferenceDao.insertAll(conferences.map { ConferenceEntity(it, courseId) })
-        conferences.forEach { conference ->
-            conference.recordings.forEach { recording ->
-                conferenceRecodingDao.insert(ConferenceRecordingEntity(recording, conference.id))
+        offlineDatabase.withTransaction {
+            deleteAllByCourseId(courseId)
+
+            conferenceDao.insertAll(conferences.map { ConferenceEntity(it, courseId) })
+
+            conferences.forEach { conference ->
+                conference.recordings.forEach { recording ->
+                    conferenceRecodingDao.insert(ConferenceRecordingEntity(recording, conference.id))
+                }
             }
         }
     }
@@ -42,5 +50,9 @@ class ConferenceFacade(
             val recordings = conferenceRecodingDao.findByConferenceId(conferenceEntity.id).map { it.toApiModel() }
             conferenceEntity.toApiModel(recordings)
         }
+    }
+
+    suspend fun deleteAllByCourseId(courseId: Long) {
+        conferenceDao.deleteAllByCourseId(courseId)
     }
 }

@@ -17,14 +17,18 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.*
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.utils.orDefault
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -41,6 +45,7 @@ class AssignmentFacadeTest {
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
     private val rubricCriterionRatingDao: RubricCriterionRatingDao = mockk(relaxed = true)
     private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao = mockk(relaxed = true)
+    private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
     private val facade = AssignmentFacade(
         assignmentGroupDao,
@@ -53,8 +58,28 @@ class AssignmentFacadeTest {
         rubricCriterionDao,
         lockInfoFacade,
         rubricCriterionRatingDao,
-        assignmentRubricCriterionDao
+        assignmentRubricCriterionDao,
+        offlineDatabase
     )
+
+    @Before
+    fun setup() {
+        MockKAnnotations.init(this)
+
+        mockkStatic(
+            "androidx.room.RoomDatabaseKt"
+        )
+
+        val transactionLambda = slot<suspend () -> Unit>()
+        coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
+            transactionLambda.captured.invoke()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @Test
     fun `Calling insertAssignmentGroups should insert assignment groups and related entities`() = runTest {
@@ -83,29 +108,29 @@ class AssignmentFacadeTest {
         coEvery { assignmentDao.insert(any()) } just Runs
         coEvery { plannerOverrideDao.insert(any()) } returns 1L
         coEvery { rubricSettingsDao.insert(any()) } returns 1L
-        coEvery { submissionFacade.insertSubmission(any()) } returns 1L
+        coEvery { submissionFacade.insertSubmission(any()) } just Runs
         coEvery { discussionTopicHeaderFacade.insertDiscussion(any(), any()) } returns 1L
         coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
         coEvery { rubricCriterionDao.insert(any()) } just Runs
         coEvery { lockInfoFacade.insertLockInfoForAssignment(any(), any()) } just Runs
 
-        facade.insertAssignmentGroups(assignmentGroups)
+        facade.insertAssignmentGroups(assignmentGroups, 1L)
 
         assignmentGroups.forEach { group ->
-            coVerify { assignmentGroupDao.insert(AssignmentGroupEntity(group)) }
+            coVerify { assignmentGroupDao.insert(AssignmentGroupEntity(group, 1L)) }
             assignments.forEach { assignment ->
-                coVerify { rubricSettingsDao.insert(RubricSettingsEntity(rubricSettings)) }
+                coVerify { rubricSettingsDao.insert(RubricSettingsEntity(rubricSettings, assignment.id)) }
                 coVerify { submissionFacade.insertSubmission(submission) }
                 coVerify { plannerOverrideDao.insert(PlannerOverrideEntity(plannedOverride)) }
                 coVerify { discussionTopicHeaderFacade.insertDiscussion(discussionTopicHeader, 1) }
                 coVerify { assignmentScoreStatisticsDao.insert(AssignmentScoreStatisticsEntity(scoreStatistics, assignment.id)) }
                 rubricCriterions.forEach {
-                    coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it)) }
+                    coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
                     coVerify { assignmentRubricCriterionDao.insert(AssignmentRubricCriterionEntity(assignment.id, it.id.orEmpty())) }
                 }
                 coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
                 coVerify {
-                    assignmentDao.insert(
+                    assignmentDao.insertOrUpdate(
                         AssignmentEntity(
                             assignment = assignment,
                             1L,
@@ -129,20 +154,20 @@ class AssignmentFacadeTest {
         val rubricCriterions = listOf(RubricCriterion())
         val lockInfo = LockInfo()
         val assignment = Assignment(
-                rubricSettings = rubricSettings,
-                submission = submission,
-                plannerOverride = plannedOverride,
-                discussionTopicHeader = discussionTopicHeader,
-                scoreStatistics = scoreStatistics,
-                rubric = rubricCriterions,
-                lockInfo = lockInfo,
-                courseId = 1,
-            )
+            rubricSettings = rubricSettings,
+            submission = submission,
+            plannerOverride = plannedOverride,
+            discussionTopicHeader = discussionTopicHeader,
+            scoreStatistics = scoreStatistics,
+            rubric = rubricCriterions,
+            lockInfo = lockInfo,
+            courseId = 1,
+        )
 
         coEvery { assignmentDao.insert(any()) } just Runs
         coEvery { plannerOverrideDao.insert(any()) } returns 1L
         coEvery { rubricSettingsDao.insert(any()) } returns 1L
-        coEvery { submissionFacade.insertSubmission(any()) } returns 1L
+        coEvery { submissionFacade.insertSubmission(any()) } just Runs
         coEvery { discussionTopicHeaderFacade.insertDiscussion(any(), any()) } returns 1L
         coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
         coEvery { rubricCriterionDao.insert(any()) } just Runs
@@ -150,7 +175,7 @@ class AssignmentFacadeTest {
 
         facade.insertAssignment(assignment)
 
-        coVerify { rubricSettingsDao.insert(RubricSettingsEntity(rubricSettings)) }
+        coVerify { rubricSettingsDao.insert(RubricSettingsEntity(rubricSettings, assignment.id)) }
         coVerify { submissionFacade.insertSubmission(submission) }
         coVerify { plannerOverrideDao.insert(PlannerOverrideEntity(plannedOverride)) }
         coVerify { discussionTopicHeaderFacade.insertDiscussion(discussionTopicHeader, 1) }
@@ -163,11 +188,11 @@ class AssignmentFacadeTest {
             )
         }
         rubricCriterions.forEach {
-            coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it)) }
+            coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
         }
         coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
         coVerify {
-            assignmentDao.insert(
+            assignmentDao.insertOrUpdate(
                 AssignmentEntity(
                     assignment = assignment,
                     1L,
@@ -211,8 +236,8 @@ class AssignmentFacadeTest {
         coEvery { assignmentRubricCriterionDao.findByAssignmentId(assignmentId) } returns listOf(
             AssignmentRubricCriterionEntity(assignmentId, rubricCriterions[0].id!!)
         )
-        coEvery { rubricCriterionDao.findById(rubricCriterions[0].id!!) } returns RubricCriterionEntity(rubricCriterions[0])
-        coEvery { rubricSettingsDao.findById(rubricSettings.id.orDefault()) } returns RubricSettingsEntity(rubricSettings)
+        coEvery { rubricCriterionDao.findById(rubricCriterions[0].id!!) } returns RubricCriterionEntity(rubricCriterions[0], assignmentId)
+        coEvery { rubricSettingsDao.findById(rubricSettings.id.orDefault()) } returns RubricSettingsEntity(rubricSettings, assignmentId)
         coEvery { submissionFacade.getSubmissionById(submission.id) } returns submission
         coEvery { discussionTopicHeaderFacade.getDiscussionTopicHeaderById(discussionTopicHeader.id) } returns discussionTopicHeader
         coEvery { lockInfoFacade.getLockInfoByAssignmentId(assignmentId) } returns lockInfo
@@ -280,7 +305,7 @@ class AssignmentFacadeTest {
         )
 
         val assignmentGroupEntities = assignmentGroups.map {
-            AssignmentGroupEntity(it)
+            AssignmentGroupEntity(it, 1L)
         }
 
         assignmentEntities.forEach {
@@ -308,76 +333,77 @@ class AssignmentFacadeTest {
     }
 
     @Test
-    fun `Calling getAssignmentGroupsWithAssignmentsForGradingPeriod should return assignment groups with assignments by the specifies CourseID and GradingPeriodId`() = runTest {
-        val submissions = listOf(
-            Submission(id = 1L, gradingPeriodId = 1L), Submission(id = 2L)
-        )
-
-        val assignments = listOf(
-            Assignment(
-                id = 1L,
-                courseId = 1L,
-                assignmentGroupId = 1L,
-                submission = submissions[0]
-            ), Assignment(
-                id = 2L,
-                courseId = 1L,
-                assignmentGroupId = 1L,
-                submission = submissions[1]
+    fun `Calling getAssignmentGroupsWithAssignmentsForGradingPeriod should return assignment groups with assignments by the specifies CourseID and GradingPeriodId`() =
+        runTest {
+            val submissions = listOf(
+                Submission(id = 1L, gradingPeriodId = 1L), Submission(id = 2L)
             )
-        )
 
-        val assignmentEntities = assignments.map {
-            AssignmentEntity(
-                assignment = it,
-                rubricSettingsId = null,
-                submissionId = it.submission?.id,
-                discussionTopicHeaderId = null,
-                plannerOverrideId = null
+            val assignments = listOf(
+                Assignment(
+                    id = 1L,
+                    courseId = 1L,
+                    assignmentGroupId = 1L,
+                    submission = submissions[0]
+                ), Assignment(
+                    id = 2L,
+                    courseId = 1L,
+                    assignmentGroupId = 1L,
+                    submission = submissions[1]
+                )
             )
-        }
 
-        val assignmentGroups = listOf(
-            AssignmentGroup(
-                id = 1L,
-                name = "Group 1",
-                position = 0,
-                groupWeight = 0.0,
-                assignments = assignments,
-            ), AssignmentGroup(
-                id = 2L,
-                name = "Group 2"
+            val assignmentEntities = assignments.map {
+                AssignmentEntity(
+                    assignment = it,
+                    rubricSettingsId = null,
+                    submissionId = it.submission?.id,
+                    discussionTopicHeaderId = null,
+                    plannerOverrideId = null
+                )
+            }
+
+            val assignmentGroups = listOf(
+                AssignmentGroup(
+                    id = 1L,
+                    name = "Group 1",
+                    position = 0,
+                    groupWeight = 0.0,
+                    assignments = assignments,
+                ), AssignmentGroup(
+                    id = 2L,
+                    name = "Group 2"
+                )
             )
-        )
 
-        val assignmentGroupEntities = assignmentGroups.map {
-            AssignmentGroupEntity(it)
+            val assignmentGroupEntities = assignmentGroups.map {
+                AssignmentGroupEntity(it, 1L)
+            }
+
+            assignmentEntities.forEach {
+                coEvery { assignmentDao.findById(it.id) } returns it
+            }
+
+            coEvery { assignmentDao.findByCourseId(1L) } returns assignmentEntities
+
+            submissions.forEach {
+                coEvery { submissionFacade.getSubmissionById(it.id) } returns it
+            }
+
+            assignmentGroupEntities.forEach {
+                coEvery { assignmentGroupDao.findById(it.id) } returns it
+            }
+
+            val result = facade.getAssignmentGroupsWithAssignmentsForGradingPeriod(1L, 1L)
+
+            val expected = assignmentGroups.filter { it.assignments.isNotEmpty() }.map { group ->
+                val filteredAssignments = group.assignments.filter { it.submission?.gradingPeriodId == 1L }
+                group.copy(assignments = filteredAssignments)
+            }
+
+            Assert.assertEquals(expected.size, result.size)
+            Assert.assertEquals(expected.first().id, result.first().id)
+            Assert.assertEquals(expected.first().assignments.size, result.first().assignments.size)
+            Assert.assertEquals(expected.first().assignments.first().id, result.first().assignments.first().id)
         }
-
-        assignmentEntities.forEach {
-            coEvery { assignmentDao.findById(it.id) } returns it
-        }
-
-        coEvery { assignmentDao.findByCourseId(1L) } returns assignmentEntities
-
-        submissions.forEach {
-            coEvery { submissionFacade.getSubmissionById(it.id) } returns it
-        }
-
-        assignmentGroupEntities.forEach {
-            coEvery { assignmentGroupDao.findById(it.id) } returns it
-        }
-
-        val result = facade.getAssignmentGroupsWithAssignmentsForGradingPeriod(1L, 1L)
-
-        val expected = assignmentGroups.filter { it.assignments.isNotEmpty() }.map { group ->
-            val filteredAssignments = group.assignments.filter { it.submission?.gradingPeriodId == 1L }
-            group.copy(assignments = filteredAssignments)
-        }
-
-        Assert.assertEquals(expected.size, result.size)
-        Assert.assertEquals(expected.first().id, result.first().id)
-        Assert.assertEquals(expected.first().assignments.size, result.first().assignments.size)
-        Assert.assertEquals(expected.first().assignments.first().id, result.first().assignments.first().id)
-    }
 }

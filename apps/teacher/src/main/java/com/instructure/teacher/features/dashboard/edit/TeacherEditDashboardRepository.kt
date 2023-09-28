@@ -27,7 +27,7 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepositor
 
 class TeacherEditDashboardRepository(val courseManager: CourseManager) : EditDashboardRepository {
 
-    override suspend fun getCurses(): List<List<Course>> {
+    override suspend fun getCourses(): List<List<Course>> {
         val courses = courseManager.getCoursesTeacherAsync(true).await().dataOrThrow
         val filter: (Course, Boolean) -> Boolean = { course, enrollment ->
             (course.isTeacher || course.isTA || course.isDesigner) && course.hasActiveEnrollment() && enrollment
@@ -45,4 +45,8 @@ class TeacherEditDashboardRepository(val courseManager: CourseManager) : EditDas
     override fun isOpenable(course: Course) = course.isNotDeleted()
 
     override fun isFavoriteable(course: Course) = course.isValidTerm() && course.isNotDeleted() && !course.isPastEnrolment()
+
+    override suspend fun getSyncedCourseIds(): Set<Long> = emptySet()
+
+    override suspend fun offlineEnabled(): Boolean = false
 }

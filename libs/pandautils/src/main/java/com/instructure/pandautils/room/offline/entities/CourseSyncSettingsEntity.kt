@@ -45,12 +45,23 @@ data class CourseSyncSettingsEntity(
     }
 
     val allTabsEnabled: Boolean
-        get() = tabs.values.all { it == true } && fullFileSync
+        get() = tabs.values.all { it } && fullFileSync
 
     val anySyncEnabled: Boolean
-        get() = fullContentSync || fullFileSync || tabs.values.any() { it == true }
+        get() = fullContentSync || fullFileSync || tabs.values.any { it }
 
     companion object {
-        val TABS = setOf(Tab.ASSIGNMENTS_ID, Tab.PAGES_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID, Tab.ANNOUNCEMENTS_ID, Tab.DISCUSSIONS_ID, Tab.CONFERENCES_ID, Tab.PEOPLE_ID, Tab.MODULES_ID, Tab.QUIZZES_ID)
+        val TABS = setOf(
+            Tab.ASSIGNMENTS_ID,
+            Tab.PAGES_ID,
+            Tab.GRADES_ID,
+            Tab.SYLLABUS_ID,
+            Tab.ANNOUNCEMENTS_ID,
+            Tab.DISCUSSIONS_ID,
+            Tab.CONFERENCES_ID,
+            Tab.PEOPLE_ID,
+            Tab.MODULES_ID,
+            Tab.QUIZZES_ID
+        )
     }
 }

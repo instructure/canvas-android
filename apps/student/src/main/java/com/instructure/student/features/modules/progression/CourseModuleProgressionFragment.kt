@@ -51,12 +51,12 @@ import com.instructure.student.databinding.CourseModuleProgressionBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.util.ModuleProgressionUtility
 import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.FileDetailsFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
@@ -108,6 +108,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var isDiscussionRedesignEnabled = false
 
     private var snycedTabs = emptySet<String>()
+    private var syncedFileIds = emptyList<Long>()
     private var isOfflineEnabled = false
 
     val tabId: String
@@ -135,6 +136,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         lifecycleScope.launch {
             isOfflineEnabled = repository.isOfflineEnabled()
             snycedTabs = repository.getSyncedTabs(canvasContext.id)
+            syncedFileIds = repository.getSyncedFileIds(canvasContext.id)
             isDiscussionRedesignEnabled = discussionRouteHelper.isDiscussionRedesignEnabled(canvasContext)
             loadModuleProgression(savedInstanceState)
         }
@@ -645,6 +647,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             navigatedFromModules,
             repository.isOnline() || !isOfflineEnabled, // If the offline feature is disabled we always use the online behavior
             snycedTabs,
+            syncedFileIds,
             requireContext()
         )
         var args: Bundle? = fragment!!.arguments
