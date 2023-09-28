@@ -19,7 +19,6 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -65,32 +64,27 @@ class FileSyncWorker @AssistedInject constructor(
 
         var result = Result.failure()
 
-        var downloadedFile = getDownloadFile(fileName)
+        val externalFile = fileId == -1L
+
+        var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
 
         progress = FileSyncProgress(fileName, 0)
         setProgress(workDataOf(PROGRESS to progress.toJson()))
 
-        if (fileId == -1L) Log.d("asdasd", "downloading file: $fileUrl")
-        val shouldIgnoreToken = fileId == -1L
-
-        fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = shouldIgnoreToken))
+        fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
             .saveFile(downloadedFile)
             .collect {
                 when (it) {
                     is DownloadState.InProgress -> {
                         progress = FileSyncProgress(fileName, it.progress)
-                        if (fileId == -1L) Log.d("asdasd", "downloading file: $fileUrl progress: ${it.progress}")
                         setProgress(workDataOf(PROGRESS to progress.toJson()))
                     }
 
                     is DownloadState.Success -> {
                         if (fileExists) {
-                            downloadedFile = rewriteOriginalFile(downloadedFile, fileName)
+                            downloadedFile = rewriteOriginalFile(downloadedFile, fileName, externalFile, courseId)
                         }
-                        // TODO
-//                        val entityId = if (fileId != -1L) fileId else fileUrl.hashCode().toLong()
-//                        localFileDao.insert(LocalFileEntity(entityId, courseId, Date(), downloadedFile.absolutePath))
-                        if (fileId != -1L) {
+                        if (!externalFile) {
                             localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
                         }
                         progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
@@ -109,11 +103,19 @@ class FileSyncWorker @AssistedInject constructor(
         return result
     }
 
-    private fun getDownloadFile(fileName: String): File {
-        val dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+    private fun getDownloadFile(fileName: String, externalFile: Boolean, courseId: Long): File {
+        var dir = File(context.filesDir, ApiPrefs.user?.id.toString())
         if (!dir.exists()) {
             dir.mkdir()
         }
+
+        if (externalFile) {
+            dir = File(dir, "external_$courseId")
+            if (!dir.exists()) {
+                dir.mkdir()
+            }
+        }
+
         var downloadFile = File(dir, fileName)
         if (downloadFile.exists()) {
             downloadFile = File(dir, "temp_${fileName}")
@@ -122,8 +124,11 @@ class FileSyncWorker @AssistedInject constructor(
         return downloadFile
     }
 
-    private fun rewriteOriginalFile(newFile: File, fileName: String): File {
-        val dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+    private fun rewriteOriginalFile(newFile: File, fileName: String, externalFile: Boolean, courseId: Long): File {
+        var dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+        if (externalFile) {
+            dir = File(dir, "external_$courseId")
+        }
         val originalFile = File(dir, fileName)
         originalFile.delete()
         newFile.renameTo(originalFile)

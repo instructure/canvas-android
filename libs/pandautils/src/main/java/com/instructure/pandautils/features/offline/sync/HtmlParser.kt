@@ -58,7 +58,7 @@ class HtmlParser(
             } else {
                 val fileName = Uri.parse(imageUrl).lastPathSegment
                 if (fileName != null) {
-                    resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePathForExternalFile(fileName)}")
+                    resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePathForExternalFile(fileName, courseId)}")
                     externalFileUrls.add(imageUrl)
                 }
             }
@@ -99,8 +99,8 @@ class HtmlParser(
         return downloadedFile.absolutePath
     }
 
-    private suspend fun createLocalFilePathForExternalFile(fileName: String): String {
-        val dir = File(context.filesDir, apiPrefs.user?.id.toString())
+    private suspend fun createLocalFilePathForExternalFile(fileName: String, courseId: Long): String {
+        val dir = File(context.filesDir, "${ApiPrefs.user?.id.toString()}/external_$courseId")
 
         val downloadedFile = File(dir, fileName)
         Log.d("asdasd", "path is null, downloadedFile: ${downloadedFile.absolutePath}")

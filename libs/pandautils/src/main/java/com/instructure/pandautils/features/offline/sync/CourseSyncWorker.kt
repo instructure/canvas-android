@@ -26,6 +26,7 @@ import androidx.work.*
 import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
@@ -517,6 +518,11 @@ class CourseSyncWorker @AssistedInject constructor(
         (localRemovedFiles + remoteRemovedFiles).forEach {
             File(it.path).delete()
             localFileDao.delete(it)
+        }
+
+        val file = File(context.filesDir, "${ApiPrefs.user?.id.toString()}/external_$courseId")
+        file.listFiles()?.forEach {
+            it.delete()
         }
 
         fileSyncSettingsDao.deleteAllExcept(courseId, remoteIds)
