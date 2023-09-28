@@ -144,7 +144,11 @@ class CourseSyncWorker @AssistedInject constructor(
             quizDao.deleteAllByCourseId(courseId)
         }
 
-        return Result.success(workDataOf(OUTPUT to progress.toJson()))
+        return if (progress.tabs.any { it.value.state == ProgressState.ERROR }) {
+            Result.failure(workDataOf(OUTPUT to progress.toJson()))
+        } else {
+            Result.success(workDataOf(OUTPUT to progress.toJson()))
+        }
     }
 
     private suspend fun fetchSyllabus(courseId: Long) {

@@ -55,7 +55,8 @@ class AggregateProgressObserver(
                 AggregateProgressViewData(
                     title = "",
                     progressState = ProgressState.COMPLETED
-                ))
+                )
+            )
         } else {
             setCourseWorkerIds(workerIds)
         }
@@ -80,7 +81,10 @@ class AggregateProgressObserver(
 
                 value.all { it.state.isFinished } && value.any { it.state == WorkInfo.State.FAILED } -> {
                     aggregateProgressLiveData?.removeObserver(this)
-                    _progressData.value?.copy(progressState = ProgressState.ERROR)?.let {
+                    _progressData.value?.copy(
+                        progressState = ProgressState.ERROR,
+                        title = context.getString(R.string.syncProgress_syncErrorSubtitle)
+                    )?.let {
                         _progressData.postValue(it)
                     }
                     return
