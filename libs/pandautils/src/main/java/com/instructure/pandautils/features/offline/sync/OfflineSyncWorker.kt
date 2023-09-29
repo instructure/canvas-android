@@ -29,6 +29,8 @@ import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
@@ -56,7 +58,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val syncProgressDao: SyncProgressDao,
     private val editDashboardItemDao: EditDashboardItemDao,
     private val courseDao: CourseDao,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val fileFolderDao: FileFolderDao,
+    private val localFileDao: LocalFileDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -83,8 +87,7 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseIdsToRemove = courseSyncSettingsDao.findAll().filter { !it.anySyncEnabled }.map { it.courseId }
         courseDao.deleteByIds(courseIdsToRemove)
         courseIdsToRemove.forEach {
-            val file = File(context.filesDir, "${apiPrefs.user?.id.toString()}/external_$it")
-            file.deleteRecursively()
+            cleanupFiles(it)
         }
 
         val settingsMap = courses.associateBy { it.courseId }
@@ -107,5 +110,16 @@ class OfflineSyncWorker @AssistedInject constructor(
             .enqueue()
 
         return Result.success()
+    }
+
+    private suspend fun cleanupFiles(courseId: Long) {
+        val file = File(context.filesDir, "${apiPrefs.user?.id.toString()}/external_$courseId")
+        file.deleteRecursively()
+
+        fileFolderDao.deleteAllByCourseId(courseId)
+        localFileDao.findRemovedFiles(courseId, emptyList()).forEach { localFile ->
+            File(localFile.path).delete()
+            localFileDao.delete(localFile)
+        }
     }
 }

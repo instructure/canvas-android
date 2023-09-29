@@ -35,8 +35,8 @@ abstract class FileFolderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertAll(fileFolders: List<FileFolderEntity>)
 
-    @Query("DELETE FROM FileFolderEntity")
-    abstract suspend fun deleteAll()
+    @Query("DELETE FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId) OR contextId = :courseId")
+    abstract suspend fun deleteAllByCourseId(courseId: Long)
 
     @Update
     abstract suspend fun update(fileFolder: FileFolderEntity)
@@ -60,8 +60,8 @@ abstract class FileFolderDao {
     abstract suspend fun findRootFolderForContext(contextId: Long): FileFolderEntity?
 
     @Transaction
-    open suspend fun replaceAll(fileFolders: List<FileFolderEntity>) {
-        deleteAll()
+    open suspend fun replaceAll(fileFolders: List<FileFolderEntity>, courseId: Long) {
+        deleteAllByCourseId(courseId)
         insertAll(fileFolders)
     }
 

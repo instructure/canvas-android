@@ -506,7 +506,7 @@ class CourseSyncWorker @AssistedInject constructor(
         val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
 
         val entities = fileFolders.map { FileFolderEntity(it) }
-        fileFolderDao.replaceAll(entities)
+        fileFolderDao.replaceAll(entities, courseId)
     }
 
     private suspend fun cleanupSyncedFiles(courseId: Long, remoteIds: List<Long>) {
