@@ -47,7 +47,6 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
-import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
@@ -112,7 +111,6 @@ class DashboardFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
-        recyclerBinding.syncProgressButton.onClick { RouteMatcher.route(requireActivity(), SyncProgressFragment.makeRoute()) }
         applyTheme()
     }
 
@@ -195,21 +193,20 @@ class DashboardFragment : ParentFragment() {
     }
 
     private fun initMenu() = with(binding) {
-
         toolbar.setMenu(R.menu.menu_dashboard) { item ->
             when (item.itemId) {
                 R.id.menu_dashboard_cards -> changeDashboardLayout(item)
-                R.id.menu_dashboard_offline -> RouteMatcher.route(requireActivity(), OfflineContentFragment.makeRoute())
+                R.id.menu_dashboard_offline -> activity?.withRequireNetwork {
+                    RouteMatcher.route(requireActivity(), OfflineContentFragment.makeRoute())
+                }
             }
         }
 
         val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
-        val menuIconRes =
-            if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        val menuIconRes = if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
         dashboardLayoutMenuItem.setIcon(menuIconRes)
 
-        val menuTitleRes =
-            if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        val menuTitleRes = if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
         dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
         lifecycleScope.launch {

@@ -30,6 +30,8 @@ import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
+import com.instructure.pandautils.features.offline.sync.AggregateProgressViewData
 import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.FileSyncProgress
@@ -58,7 +60,8 @@ class SyncProgressViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val syncProgressDao: SyncProgressDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val offlineSyncHelper: OfflineSyncHelper
+    private val offlineSyncHelper: OfflineSyncHelper,
+    private val aggregateProgressObserver: AggregateProgressObserver
 ) : ViewModel() {
 
     val data: LiveData<SyncProgressViewData>
@@ -66,116 +69,13 @@ class SyncProgressViewModel @Inject constructor(
     private val _data = MutableLiveData<SyncProgressViewData>()
 
     val progressData: LiveData<AggregateProgressViewData>
-        get() = _progressData
-    private val _progressData = MutableLiveData<AggregateProgressViewData>()
-
-    val state: LiveData<ViewState>
-        get() = _state
-    private val _state = MutableLiveData<ViewState>(ViewState.Loading)
+        get() = aggregateProgressObserver.progressData
 
     val events: LiveData<Event<SyncProgressAction>>
         get() = _events
     private val _events = MutableLiveData<Event<SyncProgressAction>>()
 
     private val courseIds = mutableListOf<Long>()
-
-    private var aggregateProgressLiveData: LiveData<List<WorkInfo>>? = null
-    private var courseProgressLiveData: LiveData<List<WorkInfo>>? = null
-
-    private val aggregateProgressObserver = object : Observer<List<WorkInfo>> {
-        override fun onChanged(value: List<WorkInfo>) {
-
-            when {
-                value.all { it.state == WorkInfo.State.SUCCEEDED } -> {
-                    aggregateProgressLiveData?.removeObserver(this)
-                    _state.postValue(ViewState.Success)
-                }
-
-                value.all { it.state.isFinished } && value.any { it.state == WorkInfo.State.FAILED } -> {
-                    aggregateProgressLiveData?.removeObserver(this)
-                    _state.postValue(ViewState.Error())
-                }
-            }
-
-            val courseWorkInfos = value.filter { it.tags.contains(CourseSyncWorker.TAG) }
-            val fileWorkInfos = value.filter { it.tags.contains(FileSyncWorker.TAG) }
-
-            var totalSize = 0L
-            var filesSize = 0L
-            var downloadedTabSize = 0L
-            var fileProgressSum = 0
-
-            courseWorkInfos.forEach {
-                val courseProgress = if (it.state.isFinished) {
-                    it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@forEach
-                } else {
-                    it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
-                        ?: return@forEach
-                }
-
-                val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
-                val courseFileSizes = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
-                val courseSize = tabSize + courseFileSizes
-
-                totalSize += courseSize
-                filesSize += courseFileSizes
-                downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * TAB_PROGRESS_SIZE
-            }
-
-            fileWorkInfos.forEach {
-                val fileProgress = if (it.state.isFinished) {
-                    it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson<FileSyncProgress>() ?: return@forEach
-                } else {
-                    it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson<FileSyncProgress>() ?: return@forEach
-                }
-
-                fileProgressSum += fileProgress.progress
-            }
-
-            val fileProgress = if (fileWorkInfos.isEmpty()) 100 else fileProgressSum / fileWorkInfos.size
-            val downloadedFileSize = filesSize.toDouble() * (fileProgress.toDouble() / 100.0)
-            val downloadedSize = downloadedTabSize + downloadedFileSize.toLong()
-            val progress = (downloadedSize.toDouble() / totalSize.toDouble() * 100.0).toInt()
-
-            _progressData.postValue(
-                AggregateProgressViewData(
-                    totalSize = NumberHelper.readableFileSize(context, totalSize),
-                    downloadedSize = NumberHelper.readableFileSize(context, downloadedSize),
-                    progress = progress,
-                    queued = 0
-                )
-            )
-        }
-    }
-
-    private val courseProgressObserver = Observer<List<WorkInfo>> {
-        val startedCourses = it.filter {
-            it.state.isFinished || it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)
-                ?.fromJson<CourseProgress>()?.fileSyncData != null
-        }.toSet()
-
-        val workerIds = mutableSetOf<UUID>()
-
-        startedCourses.forEach {
-            workerIds.add(it.id)
-
-            val progress = if (it.state.isFinished) {
-                it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>()
-            } else {
-                it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
-            }
-
-            progress?.fileSyncData?.map { UUID.fromString(it.workerId) }?.let {
-                workerIds.addAll(it)
-            }
-        }
-
-        if (workerIds.isNotEmpty()) {
-            aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
-            aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds.toList()))
-            aggregateProgressLiveData?.observeForever(aggregateProgressObserver)
-        }
-    }
 
     init {
         viewModelScope.launch {
@@ -185,10 +85,6 @@ class SyncProgressViewModel @Inject constructor(
                 return@launch
             }
             courseIds.addAll(courseSyncProgresses.map { it.courseId })
-
-            val workerIds = courseSyncProgresses.map { UUID.fromString(it.uuid) }
-            courseProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))
-            courseProgressLiveData?.observeForever(courseProgressObserver)
 
             val courses = courseSyncProgresses.map {
                 createCourseItem(it)
@@ -237,8 +133,8 @@ class SyncProgressViewModel @Inject constructor(
     }
 
     fun onActionClicked() {
-        when (_state.value) {
-            is ViewState.Error -> {
+        when (progressData.value?.progressState) {
+            ProgressState.ERROR -> {
                 viewModelScope.launch {
                     syncProgressDao.deleteAll()
                 }
@@ -246,7 +142,7 @@ class SyncProgressViewModel @Inject constructor(
                 _events.postValue(Event(SyncProgressAction.Back))
             }
 
-            is ViewState.Loading -> _events.postValue(Event(SyncProgressAction.CancelConfirmation))
+            ProgressState.IN_PROGRESS -> _events.postValue(Event(SyncProgressAction.CancelConfirmation))
 
             else -> Unit
         }
@@ -254,8 +150,7 @@ class SyncProgressViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
-        courseProgressLiveData?.removeObserver(courseProgressObserver)
+        aggregateProgressObserver.onCleared()
         _data.value?.items?.forEach { it.onCleared() }
     }
 }
