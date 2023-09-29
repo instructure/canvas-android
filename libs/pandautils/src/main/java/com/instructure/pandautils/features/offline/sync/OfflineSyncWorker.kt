@@ -24,6 +24,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
@@ -38,6 +39,7 @@ import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.io.File
 
 const val COURSE_IDS = "course-ids"
 
@@ -53,7 +55,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val syncSettingsFacade: SyncSettingsFacade,
     private val syncProgressDao: SyncProgressDao,
     private val editDashboardItemDao: EditDashboardItemDao,
-    private val courseDao: CourseDao
+    private val courseDao: CourseDao,
+    private val apiPrefs: ApiPrefs
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -79,6 +82,10 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         val courseIdsToRemove = courseSyncSettingsDao.findAll().filter { !it.anySyncEnabled }.map { it.courseId }
         courseDao.deleteByIds(courseIdsToRemove)
+        courseIdsToRemove.forEach {
+            val file = File(context.filesDir, "${apiPrefs.user?.id.toString()}/external_$it")
+            file.deleteRecursively()
+        }
 
         val settingsMap = courses.associateBy { it.courseId }
 
