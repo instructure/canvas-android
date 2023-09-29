@@ -142,6 +142,13 @@ object ApiEndpoint : Endpoint(
                 request.successResponse(plannerOverride!!)
             }
         }
+    ),
+    Segment("features") to Endpoint(
+        Segment("environment") to Endpoint {
+            GET {
+                request.successResponse(mapOf("mobile_offline_mode" to data.offlineModeEnabled))
+            }
+        }
     )
 )
 

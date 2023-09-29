@@ -28,6 +28,7 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/syncSettingsPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -45,9 +46,11 @@
             app:title="@string/syncSettings_toolbarTitle" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/autoSyncSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="@{viewModel.data.autoSyncEnabled}"
+            android:minHeight="48dp"
             android:onCheckedChanged="@{(view, checked) -> view.isPressed() ? viewModel.onAutoSyncChanged(checked) : null}"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
@@ -100,6 +103,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/syncFrequencyLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.data.syncFrequency}"
@@ -127,10 +131,12 @@
                 android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/wifiOnlySwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="@{viewModel.data.wifiOnly}"
                 android:enabled="@{viewModel.data.autoSyncEnabled}"
+                android:minHeight="48dp"
                 android:onCheckedChanged="@{(view, checked) -> view.isPressed() ? viewModel.onWifiOnlyChanged(checked) : null}"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="12dp"

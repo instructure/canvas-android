@@ -114,14 +114,35 @@ class SettingsInteractionTest : StudentTest() {
         pairObserverPage.hasCode("2")
     }
 
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineContent_notDisplayedIfFeatureIsDisabled() {
+        setUpAndSignIn(offlineEnabled = false)
+
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+        settingsPage.assertOfflineContentNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineContent_displayedIfFeatureIsEnabled() {
+        setUpAndSignIn(offlineEnabled = true)
+
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+        settingsPage.assertOfflineContentDisplayed()
+    }
+
     // Mock a single student and course, sign in, then navigate to the dashboard.
-    private fun setUpAndSignIn(): MockCanvas {
+    private fun setUpAndSignIn(offlineEnabled: Boolean = false): MockCanvas {
 
         // Basic info
         val data = MockCanvas.init(
-                studentCount = 1,
-                courseCount = 1,
-                favoriteCourseCount = 1)
+            studentCount = 1,
+            courseCount = 1,
+            favoriteCourseCount = 1
+        )
+
+        data.offlineModeEnabled = offlineEnabled
 
         course = data.courses.values.first()
         // Sign in
@@ -132,5 +153,4 @@ class SettingsInteractionTest : StudentTest() {
 
         return data
     }
-
 }
