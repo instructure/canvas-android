@@ -64,9 +64,27 @@ class AggregateProgressObserver(
 
     private val aggregateProgressObserver = object : Observer<List<WorkInfo>> {
         override fun onChanged(value: List<WorkInfo>) {
+            val courseWorkInfos = value.filter { it.tags.contains(CourseSyncWorker.TAG) }
+            val fileWorkInfos = value.filter { it.tags.contains(FileSyncWorker.TAG) }
+
+            val courseProgresses = courseWorkInfos.map {
+                if (it.state.isFinished) {
+                    it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>()
+                } else {
+                    it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
+                }
+            }
+            val fileProgresses = fileWorkInfos.map {
+                if (it.state.isFinished) {
+                    it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson<FileSyncProgress>()
+                } else {
+                    it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson<FileSyncProgress>()
+                }
+            }
+
 
             when {
-                value.all { it.state == WorkInfo.State.SUCCEEDED } -> {
+                courseWorkInfos.all { it.state == WorkInfo.State.SUCCEEDED } && fileProgresses.all { it?.progressState == ProgressState.COMPLETED } -> {
                     val totalSize = _progressData.value?.totalSize.orEmpty()
                     aggregateProgressLiveData?.removeObserver(this)
                     _progressData.value?.copy(
@@ -79,7 +97,7 @@ class AggregateProgressObserver(
                     return
                 }
 
-                value.all { it.state.isFinished } && value.any { it.state == WorkInfo.State.FAILED } -> {
+                value.all { it.state.isFinished } && (courseWorkInfos.any { it.state == WorkInfo.State.FAILED } || fileProgresses.any { it?.progressState == ProgressState.ERROR }) -> {
                     aggregateProgressLiveData?.removeObserver(this)
                     _progressData.value?.copy(
                         progressState = ProgressState.ERROR,
@@ -91,22 +109,13 @@ class AggregateProgressObserver(
                 }
             }
 
-            val courseWorkInfos = value.filter { it.tags.contains(CourseSyncWorker.TAG) }
-            val fileWorkInfos = value.filter { it.tags.contains(FileSyncWorker.TAG) }
-
             var totalSize = 0L
             var filesSize = 0L
             var downloadedTabSize = 0L
             var fileProgressSum = 0
             var itemCount = fileWorkInfos.size
 
-            courseWorkInfos.forEach {
-                val courseProgress = if (it.state.isFinished) {
-                    it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@forEach
-                } else {
-                    it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
-                        ?: return@forEach
-                }
+            courseProgresses.filterNotNull().forEach { courseProgress ->
 
                 val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
                 val courseFileSizes = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
@@ -118,15 +127,7 @@ class AggregateProgressObserver(
                 itemCount += courseProgress.tabs.count()
             }
 
-            fileWorkInfos.forEach {
-                val fileProgress = if (it.state.isFinished) {
-                    it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson<FileSyncProgress>() ?: return@forEach
-                } else {
-                    it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson<FileSyncProgress>() ?: return@forEach
-                }
-
-                fileProgressSum += fileProgress.progress
-            }
+            fileProgressSum = fileProgresses.filterNotNull().sumOf { it.progress }
 
             val fileProgress = if (fileWorkInfos.isEmpty()) 100 else fileProgressSum / fileWorkInfos.size
             val downloadedFileSize = filesSize.toDouble() * (fileProgress.toDouble() / 100.0)

@@ -30,6 +30,9 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
+import com.instructure.pandautils.features.offline.sync.FileSyncProgress
+import com.instructure.pandautils.features.offline.sync.FileSyncWorker
+import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
@@ -55,13 +58,24 @@ data class CourseProgressItemViewModel(
     private var aggregateProgressLiveData: LiveData<List<WorkInfo>>? = null
 
     private val aggregateProgressObserver = Observer<List<WorkInfo>> {
+        val fileWorkProgresses = it.filter { it.tags.contains(FileSyncWorker.TAG) }.map {
+            if (it.state.isFinished) {
+                it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson<FileSyncProgress>()
+            } else {
+                it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson<FileSyncProgress>()
+            }
+        }
+
         when {
-            it.all { it.state == WorkInfo.State.SUCCEEDED } -> {
+            it.all { it.state == WorkInfo.State.SUCCEEDED }
+                    && fileWorkProgresses.all { it?.progressState == ProgressState.COMPLETED } -> {
                 data.updateState(WorkInfo.State.SUCCEEDED)
                 clearAggregateObserver()
             }
 
-            it.any { it.state == WorkInfo.State.CANCELLED || it.state == WorkInfo.State.FAILED } -> {
+            it.all { it.state.isFinished }
+                    && (it.any { it.state == WorkInfo.State.CANCELLED || it.state == WorkInfo.State.FAILED }
+                    || fileWorkProgresses.any { it?.progressState == ProgressState.ERROR }) -> {
                 data.updateState(WorkInfo.State.FAILED)
                 clearAggregateObserver()
             }

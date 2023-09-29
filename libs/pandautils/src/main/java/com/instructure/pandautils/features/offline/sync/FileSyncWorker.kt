@@ -63,32 +63,36 @@ class FileSyncWorker @AssistedInject constructor(
         progress = FileSyncProgress(fileName, 0)
         setProgress(workDataOf(PROGRESS to progress.toJson()))
 
-        fileDownloadApi.downloadFile(fileUrl)
-            .saveFile(downloadedFile)
-            .collect {
-                when (it) {
-                    is DownloadState.InProgress -> {
-                        progress = FileSyncProgress(fileName, it.progress)
-                        setProgress(workDataOf(PROGRESS to progress.toJson()))
-                    }
-
-                    is DownloadState.Success -> {
-                        if (fileExists) {
-                            downloadedFile = rewriteOriginalFile(downloadedFile, fileName)
+        try {
+            fileDownloadApi.downloadFile(fileUrl)
+                .dataOrThrow
+                .saveFile(downloadedFile)
+                .collect {
+                    when (it) {
+                        is DownloadState.InProgress -> {
+                            progress = FileSyncProgress(fileName, it.progress)
+                            setProgress(workDataOf(PROGRESS to progress.toJson()))
                         }
-                        localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
-                        progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
-                        result = Result.success(workDataOf(OUTPUT to progress.toJson()))
-                    }
 
-                    is DownloadState.Failure -> {
-                        downloadedFile.delete()
-                        progress = FileSyncProgress(fileName, 100, ProgressState.ERROR)
-                        result = Result.failure(workDataOf(OUTPUT to progress.toJson()))
+                        is DownloadState.Success -> {
+                            if (fileExists) {
+                                downloadedFile = rewriteOriginalFile(downloadedFile, fileName)
+                            }
+                            localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
+                            progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
+                            result = Result.success(workDataOf(OUTPUT to progress.toJson()))
+                        }
+
+                        is DownloadState.Failure -> {
+                            throw it.throwable
+                        }
                     }
                 }
-            }
-
+        } catch (e: Exception) {
+            downloadedFile.delete()
+            progress = FileSyncProgress(fileName, 100, ProgressState.ERROR)
+            result = Result.success(workDataOf(OUTPUT to progress.toJson()))
+        }
 
         return result
     }

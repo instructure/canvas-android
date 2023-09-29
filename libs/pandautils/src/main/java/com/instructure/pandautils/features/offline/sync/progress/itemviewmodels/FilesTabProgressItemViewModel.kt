@@ -52,20 +52,30 @@ data class FilesTabProgressItemViewModel(
     private var totalProgressLiveData: LiveData<List<WorkInfo>>? = null
 
     private val totalProgressObserver = Observer<List<WorkInfo>> {
-        var totalProgress = 0
-        if (it.all { it.state.isFinished }) {
-            data.state = ProgressState.COMPLETED
-            data.notifyPropertyChanged(BR.state)
+
+        val progresses = it.map { workInfo ->
+            if (workInfo.state.isFinished) {
+                workInfo.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson<FileSyncProgress>()
+            } else {
+                workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson<FileSyncProgress>()
+            }
         }
 
-        it.forEach { workInfo ->
-            val progress: FileSyncProgress? = if (workInfo.state.isFinished) {
-                workInfo.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson()
-            } else {
-                workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson()
+        if (it.all { it.state.isFinished }) {
+            when {
+                progresses.all { it?.progressState == ProgressState.COMPLETED } -> {
+                    data.state = ProgressState.COMPLETED
+                    data.notifyPropertyChanged(BR.state)
+                }
+                progresses.any { it?.progressState == ProgressState.ERROR } -> {
+                    data.state = ProgressState.ERROR
+                    data.notifyPropertyChanged(BR.state)
+                }
             }
-            totalProgress += progress?.progress ?: 0
         }
+
+        val totalProgress = progresses.sumOf { it?.progress ?: 0 }
+
         data.updateProgress(totalProgress / it.size)
     }
 
