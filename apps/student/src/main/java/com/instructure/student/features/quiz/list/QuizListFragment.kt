@@ -147,6 +147,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     override val bookmark: Bookmarker
         get() = Bookmarker(true, canvasContext)
 
+    @androidx.annotation.OptIn(com.google.android.material.badge.ExperimentalBadgeUtils::class)
     private fun rowClick(quiz: Quiz) {
         val navigation = navigation
         if (navigation != null) {
@@ -159,9 +160,9 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
                     AssignmentListFragment::class.java -> AssignmentDetailsFragment::class.java
                     else -> null
                 }
-                RouteMatcher.routeUrl(requireContext(), quiz.htmlUrl!!, ApiPrefs.domain, secondaryClass = secondaryClass)
+                RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, secondaryClass = secondaryClass)
             } else {
-                RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
+                RouteMatcher.route(requireActivity(), BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
             }
         }
     }

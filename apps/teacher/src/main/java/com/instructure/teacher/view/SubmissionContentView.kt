@@ -32,6 +32,7 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -156,7 +157,7 @@ class SubmissionContentView(
         if(context.isTablet) {
             setIsCurrentlyAnnotating(true)
         }
-        RouteMatcher.route(context, Route(AnnotationCommentListFragment::class.java, null, bundle))
+        RouteMatcher.route(activity as FragmentActivity, Route(AnnotationCommentListFragment::class.java, null, bundle))
     }
 
     @SuppressLint("CommitTransaction")
@@ -509,7 +510,7 @@ class SubmissionContentView(
                 userImageView.setupAvatarA11y(assignee.name)
                 userImageView.onClick {
                     val bundle = StudentContextFragment.makeBundle(assignee.id, mCourse.id)
-                    RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                    RouteMatcher.route(activity as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
                 }
             }
         }
@@ -528,7 +529,7 @@ class SubmissionContentView(
                 }
             }
             R.id.menuPostPolicies -> {
-                RouteMatcher.route(context, PostPolicyFragment.makeRoute(mCourse, mAssignment))
+                RouteMatcher.route(activity as FragmentActivity, PostPolicyFragment.makeRoute(mCourse, mAssignment))
             }
         }
     }
@@ -553,7 +554,7 @@ class SubmissionContentView(
             popup.isModal = true // For a11y
             popup.setOnItemClickListener { _, _, position, _ ->
                 val bundle = StudentContextFragment.makeBundle(assignee.students[position].id, mCourse.id)
-                RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                RouteMatcher.route(activity as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
                 popup.dismiss()
             }
             popup.show()
@@ -785,7 +786,7 @@ class SubmissionContentView(
         }
         floatingRecordingView.replayCallback = {
             val bundle = BaseViewMediaActivity.makeBundle(it, "video", context.getString(R.string.videoCommentReplay), true)
-            RouteMatcher.route(context, Route(bundle, RouteContext.MEDIA))
+            RouteMatcher.route(activity as FragmentActivity, Route(bundle, RouteContext.MEDIA))
         }
     }
 

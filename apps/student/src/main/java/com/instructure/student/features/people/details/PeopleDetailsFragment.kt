@@ -89,7 +89,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
                 InboxComposeMessageFragment.makeRoute(canvasContext, arrayListOf(Recipient.from(user!!)))
             }
 
-            RouteMatcher.route(requireContext(), route)
+            RouteMatcher.route(requireActivity(), route)
         }
         when {
             canvasContext.isCourse && user == null -> fetchUser()
@@ -97,7 +97,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
                 //They must have used a deep link, and there's no way to retrieve user data through a
                 //deep link until the groups API gets updated. This redirects the user to the people list.
                 val route = PeopleListFragment.makeRoute(canvasContext)
-                RouteMatcher.route(requireContext(), route)
+                RouteMatcher.route(requireActivity(), route)
             }
             else -> setupUserViews()
         }

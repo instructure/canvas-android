@@ -71,7 +71,7 @@ class MediaSubmissionViewFragment : Fragment() {
         submissionMediaPlayerView.findViewById<View>(R.id.fullscreenButton).onClick {
             exoAgent.flagForResume()
             val bundle = BaseViewMediaActivity.makeBundle(uri.toString(), thumbnailUrl, contentType, displayName, false)
-            RouteMatcher.route(requireContext(), Route(bundle, RouteContext.MEDIA))
+            RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.MEDIA))
         }
     }
 

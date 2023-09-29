@@ -80,7 +80,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     private val captureVideoContract = registerForActivityResult(ActivityResultContracts.CaptureVideo()) {
         val assignment = viewModel.assignment
         if (assignment != null && captureVideoUri != null && it) {
-            RouteMatcher.route(requireContext(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, captureVideoUri!!))
+            RouteMatcher.route(requireActivity(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, captureVideoUri!!))
         } else {
             toast(R.string.videoRecordingError)
         }
@@ -89,7 +89,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     private val mediaPickerContract = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         val assignment = viewModel.assignment
         if (assignment != null && it != null) {
-            RouteMatcher.route(requireContext(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, it))
+            RouteMatcher.route(requireActivity(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, it))
         } else {
             toast(R.string.unexpectedErrorOpeningFile)
         }
@@ -363,7 +363,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
         binding?.descriptionWebViewWrapper?.webView?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
                 InternalWebviewFragment.loadInternalWebView(
-                    context,
+                    requireActivity(),
                     InternalWebviewFragment.makeRoute(canvasContext, url, false)
                 )
             }

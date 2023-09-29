@@ -205,7 +205,7 @@ class CourseBrowserFragment : BaseSyncFragment<
     private val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_course_browser_settings -> {
-                RouteMatcher.route(requireContext(), Route(CourseSettingsFragment::class.java, presenter.canvasContext))
+                RouteMatcher.route(requireActivity(), Route(CourseSettingsFragment::class.java, presenter.canvasContext))
             }
         }
     }
@@ -214,46 +214,46 @@ class CourseBrowserFragment : BaseSyncFragment<
         return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.textAndIconColor) { tab ->
             when (tab.tabId) {
                 Tab.ASSIGNMENTS_ID -> RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(AssignmentListFragment::class.java, presenter.canvasContext)
                 )
                 Tab.QUIZZES_ID -> RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(QuizListFragment::class.java, presenter.canvasContext)
                 )
                 Tab.DISCUSSIONS_ID -> RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(DiscussionsListFragment::class.java, presenter.canvasContext)
                 )
                 Tab.ANNOUNCEMENTS_ID -> RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(AnnouncementListFragment::class.java, presenter.canvasContext)
                 )
                 Tab.PEOPLE_ID -> RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(PeopleListFragment::class.java, presenter.canvasContext)
                 )
                 Tab.FILES_ID -> {
                     val args = FileListFragment.makeBundle(presenter.canvasContext)
                     RouteMatcher.route(
-                        requireContext(),
+                        requireActivity(),
                         Route(FileListFragment::class.java, presenter.canvasContext, args)
                     )
                 }
                 Tab.PAGES_ID -> RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(PageListFragment::class.java, presenter.canvasContext)
                 )
                 Tab.MODULES_ID -> {
                     val bundle = ModuleListFragment.makeBundle(presenter.canvasContext)
-                    RouteMatcher.route(requireContext(), Route(ModuleListFragment::class.java, presenter.canvasContext, bundle))
+                    RouteMatcher.route(requireActivity(), Route(ModuleListFragment::class.java, presenter.canvasContext, bundle))
                 }
                 Tab.STUDENT_VIEW -> {
                     Analytics.logEvent(AnalyticsEventConstants.STUDENT_VIEW_TAPPED)
                     presenter.handleStudentViewClick()
                 }
                 Tab.SYLLABUS_ID -> {
-                    RouteMatcher.route(requireContext(), Route(SyllabusFragment::class.java, presenter.canvasContext, presenter.canvasContext.makeBundle()))
+                    RouteMatcher.route(requireActivity(), Route(SyllabusFragment::class.java, presenter.canvasContext, presenter.canvasContext.makeBundle()))
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {
@@ -266,13 +266,13 @@ class CourseBrowserFragment : BaseSyncFragment<
                         if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                             val args = AttendanceListFragment.makeBundle(tab)
                             RouteMatcher.route(
-                                requireContext(),
+                                requireActivity(),
                                 Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
                             )
                         } else {
                             val args = LtiLaunchFragment.makeTabBundle(presenter.canvasContext, tab)
                             RouteMatcher.route(
-                                requireContext(),
+                                requireActivity(),
                                 Route(LtiLaunchFragment::class.java, presenter.canvasContext, args)
                             )
                         }

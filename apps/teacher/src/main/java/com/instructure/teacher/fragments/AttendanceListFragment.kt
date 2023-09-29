@@ -165,7 +165,7 @@ class AttendanceListFragment : BaseSyncFragment<
             override fun onAvatarClicked(model: Attendance?, position: Int) {
                 if(model != null && mCanvasContext.id != 0L) {
                     val bundle = StudentContextFragment.makeBundle(model.studentId, mCanvasContext.id, true)
-                    RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
+                    RouteMatcher.route(requireActivity(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
                 }
             }
         })

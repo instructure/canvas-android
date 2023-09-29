@@ -107,7 +107,7 @@ class CalendarFragment : ParentFragment() {
             }
         }
 
-        route?.let { RouteMatcher.route(requireContext(), it) }
+        route?.let { RouteMatcher.route(requireActivity(), it) }
     }
 
     private fun showDialog(call: MethodCall, result: MethodChannel.Result) {

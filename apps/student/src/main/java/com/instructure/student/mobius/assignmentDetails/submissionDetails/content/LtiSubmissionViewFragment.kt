@@ -48,7 +48,7 @@ class LtiSubmissionViewFragment : Fragment() {
         ViewStyler.themeButton(binding.viewLtiButton)
         binding.viewLtiButton.onClickWithRequireNetwork {
             val route = LtiLaunchFragment.makeRoute(canvasContext = canvasContext, url = url)
-            RouteMatcher.route(requireContext(), route)
+            RouteMatcher.route(requireActivity(), route)
         }
     }
 

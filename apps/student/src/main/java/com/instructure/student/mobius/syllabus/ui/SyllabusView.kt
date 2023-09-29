@@ -19,6 +19,7 @@ package com.instructure.student.mobius.syllabus.ui
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -142,11 +143,11 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
-        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+        RouteMatcher.route(activity as FragmentActivity, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
-        RouteMatcher.route(context, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
+        RouteMatcher.route(activity as FragmentActivity, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
     }
 
     private fun getTabTitles(): List<String> = listOf(
