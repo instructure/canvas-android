@@ -68,7 +68,7 @@ class FileSyncWorker @AssistedInject constructor(
 
         var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
 
-        progress = FileSyncProgress(fileName, 0)
+        progress = FileSyncProgress(fileName, 0, externalFile = externalFile)
         setProgress(workDataOf(PROGRESS to progress.toJson()))
 
         fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
@@ -76,7 +76,7 @@ class FileSyncWorker @AssistedInject constructor(
             .collect {
                 when (it) {
                     is DownloadState.InProgress -> {
-                        progress = FileSyncProgress(fileName, it.progress)
+                        progress = FileSyncProgress(fileName, it.progress, totalBytes = it.totalBytes, externalFile = externalFile)
                         setProgress(workDataOf(PROGRESS to progress.toJson()))
                     }
 
@@ -87,13 +87,13 @@ class FileSyncWorker @AssistedInject constructor(
                         if (!externalFile) {
                             localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
                         }
-                        progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
+                        progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED, totalBytes = it.totalBytes, externalFile = externalFile)
                         result = Result.success(workDataOf(OUTPUT to progress.toJson()))
                     }
 
                     is DownloadState.Failure -> {
                         downloadedFile.delete()
-                        progress = FileSyncProgress(fileName, 100, ProgressState.ERROR)
+                        progress = FileSyncProgress(fileName, 100, ProgressState.ERROR, externalFile = externalFile)
                         result = Result.failure(workDataOf(OUTPUT to progress.toJson()))
                     }
                 }

@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -77,7 +76,6 @@ class HtmlParser(
         } else {
             resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePath(fileId, courseId)}")
             if (fileSyncSettingsDao.findById(fileId) == null) {
-                Log.d("asdasd", "adding file to syncable files: $fileId")
                 shouldSyncFile = true
             }
         }
@@ -95,7 +93,6 @@ class HtmlParser(
         val dir = File(context.filesDir, apiPrefs.user?.id.toString())
 
         val downloadedFile = File(dir, fileNameWithId)
-        Log.d("asdasd", "path is null, downloadedFile: ${downloadedFile.absolutePath}")
         return downloadedFile.absolutePath
     }
 
@@ -103,7 +100,6 @@ class HtmlParser(
         val dir = File(context.filesDir, "${ApiPrefs.user?.id.toString()}/external_$courseId")
 
         val downloadedFile = File(dir, fileName)
-        Log.d("asdasd", "path is null, downloadedFile: ${downloadedFile.absolutePath}")
         return downloadedFile.absolutePath
     }
 }

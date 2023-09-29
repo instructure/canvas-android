@@ -20,7 +20,6 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.instructure.canvasapi2.apis.*
@@ -477,7 +476,7 @@ class CourseSyncWorker @AssistedInject constructor(
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
                 fileWorkers.add(worker)
-                fileSyncData.add(FileSyncData(worker.id.toString(), fileName, 0))
+                fileSyncData.add(FileSyncData(worker.id.toString(), fileName, -1))
             }
         }
 
@@ -485,11 +484,11 @@ class CourseSyncWorker @AssistedInject constructor(
 
         val chunkedWorkers = fileWorkers.chunked(6)
 
-//        if (chunkedWorkers.isEmpty()) {
-//            progress = progress.copy(fileSyncData = emptyList())
-//            updateProgress()
-//            return
-//        }
+        if (chunkedWorkers.isEmpty()) {
+            progress = progress.copy(additionalFileSyncData = emptyList())
+            updateProgress()
+            return
+        }
 
         var continuation = if (workContinuation != null) workContinuation.then(chunkedWorkers.first()) else workManager.beginWith(chunkedWorkers.first())
 
@@ -499,8 +498,8 @@ class CourseSyncWorker @AssistedInject constructor(
 
         continuation.enqueue()
 
-//        progress = progress.copy(fileSyncData = fileSyncData)
-//        updateProgress()
+        progress = progress.copy(additionalFileSyncData = fileSyncData)
+        updateProgress()
     }
 
     private suspend fun fetchFiles(courseId: Long) {

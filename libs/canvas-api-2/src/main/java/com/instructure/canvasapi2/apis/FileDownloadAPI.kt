@@ -36,8 +36,8 @@ interface FileDownloadAPI {
 }
 
 sealed class DownloadState {
-    data class InProgress(val progress: Int) : DownloadState()
-    object Success : DownloadState()
+    data class InProgress(val progress: Int, val totalBytes: Long) : DownloadState()
+    data class Success(val totalBytes: Long) : DownloadState()
     data class Failure(val throwable: Throwable) : DownloadState()
 }
 
@@ -45,12 +45,14 @@ fun ResponseBody.saveFile(file: File): Flow<DownloadState> {
     val debounce = 500L
 
     return flow {
-        emit(DownloadState.InProgress(0))
+        emit(DownloadState.InProgress(0, 0))
         var lastUpdate = System.currentTimeMillis()
         try {
+            var totalBytes: Long
             byteStream().use { inputStream ->
                 file.outputStream().use { outputStream ->
-                    val totalBytes = contentLength()
+                    totalBytes = contentLength()
+                    emit(DownloadState.InProgress(0, totalBytes))
                     val buffer = ByteArray(8 * 1024)
                     var progressBytes = 0L
                     var bytes = inputStream.read(buffer)
@@ -61,13 +63,13 @@ fun ResponseBody.saveFile(file: File): Flow<DownloadState> {
                         bytes = inputStream.read(buffer)
 
                         if (System.currentTimeMillis() - lastUpdate > debounce) {
-                            emit(DownloadState.InProgress((progressBytes * 100 / totalBytes).toInt()))
+                            emit(DownloadState.InProgress((progressBytes * 100 / totalBytes).toInt(), totalBytes))
                             lastUpdate = System.currentTimeMillis()
                         }
                     }
                 }
             }
-            emit(DownloadState.Success)
+            emit(DownloadState.Success(totalBytes))
         } catch (e: Exception) {
             emit(DownloadState.Failure(e))
         }
