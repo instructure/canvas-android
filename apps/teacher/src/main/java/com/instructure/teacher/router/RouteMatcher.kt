@@ -165,6 +165,7 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(EditFileFolderFragment::class.java)
         bottomSheetFragments.add(CreateOrEditPageDetailsFragment::class.java)
         bottomSheetFragments.add(EditSyllabusFragment::class.java)
+        bottomSheetFragments.add(PostPolicyFragment::class.java)
     }
 
     private fun routeUrl(activity: FragmentActivity, url: String) {

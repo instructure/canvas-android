@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.positionOnScreen
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.DialogPostGradedEveryoneBinding
@@ -84,9 +85,11 @@ class PostGradeView(
         }
         val wmlp = dialog.window?.attributes
 
-        wmlp?.gravity = Gravity.TOP or Gravity.END
-        wmlp?.x = (view.x).toInt()
-        wmlp?.y = (view.y + view.height * 2).toInt()
+        val (offsetX, offsetY) = binding.postPolicyOnlyGradedSelection.positionOnScreen
+
+        wmlp?.gravity = Gravity.TOP or Gravity.START
+        wmlp?.x = offsetX
+        wmlp?.y = offsetY
 
         dialog.show()
     }
