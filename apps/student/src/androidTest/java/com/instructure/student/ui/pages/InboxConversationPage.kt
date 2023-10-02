@@ -36,6 +36,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithHint
 import com.instructure.espresso.page.waitForViewWithText
@@ -122,6 +123,10 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     fun assertAttachmentDisplayed(displayName: String) {
         scrollRecyclerView(R.id.listView, withText(displayName))
         onViewWithText(displayName).check(matches(isDisplayingAtLeast(5)))
+    }
+
+    fun assertNoSubjectDisplayed() {
+        onView(withId(R.id.subjectView) + withText(R.string.noSubject)).assertDisplayed()
     }
 
     fun refresh() {

@@ -169,7 +169,7 @@ class InboxE2ETest: StudentTest() {
 
         sleep(2000)
 
-        Log.d(STEP_TAG, "Navigate to 'INBOX' scope and assert that the conversations is displayed there because it is not archived yet.")
+        Log.d(STEP_TAG, "Navigate to 'INBOX' scope and assert that the conversation is displayed there because it is not archived yet.")
         inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
     }
@@ -335,7 +335,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
-        Log.d(STEP_TAG, "Select the conversations. Star it and mark it unread. (Preparing for swipe gestures in 'STARRED' and 'UNREAD' scope.")
+        Log.d(STEP_TAG, "Select the conversation. Star it and mark it unread. (Preparing for swipe gestures in 'STARRED' and 'UNREAD' scope.")
         inboxPage.selectConversations(listOf(seededConversation.subject))
         inboxPage.assertSelectedConversationNumber("1")
         inboxPage.clickStar()
@@ -359,6 +359,62 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' conversation right and assert that it has disappeared from the 'UNREAD' scope.")
         inboxPage.swipeConversationRight(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
+    fun testHelpMenuAskYourInstructorMessage() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open Help Menu.")
+        leftSideNavigationDrawerPage.clickHelpMenu()
+
+        Log.d(STEP_TAG, "Assert Help Menu Dialog is displayed.")
+        helpPage.assertHelpMenuDisplayed()
+
+        val questionText = "Can you see message this Instructor?"
+        val recipientList = student.shortName + ", " + teacher.shortName
+
+        Log.d(STEP_TAG, "Send the '$questionText' question to the instructor (${teacher.shortName}) from the student (${student.shortName}).")
+        helpPage.sendQuestionToInstructor(course, questionText)
+
+        Log.d(STEP_TAG, "Dismiss 'Ask Your Instructor' dialog. Open Inbox Page. Navigate to 'SENT' scope and assert that the conversations is displayed there with the proper recipients.")
+        Espresso.pressBack()
+        dashboardPage.clickInboxTab()
+        inboxPage.filterInbox("Sent")
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientList)
+
+        Log.d(STEP_TAG, "Open the conversation and assert that the message body is equal to which the student asked in the 'Ask Your Instructor' dialog: '$questionText'.")
+        inboxPage.openConversationWithRecipients(recipientList)
+        inboxConversationPage.assertMessageDisplayed(questionText)
+
+        Log.d(STEP_TAG,"Log out with ${student.name} student.")
+        Espresso.pressBack()
+        leftSideNavigationDrawerPage.logout()
+
+        Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Open Inbox Page. Assert that the asked question is displayed in the teacher's inbox with the proper recipients ($recipientList) and message ($questionText).")
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientList)
+        inboxPage.assertConversationDisplayed(questionText)
+
+        Log.d(STEP_TAG, "Open the conversation and assert that there is no subject of the conversation and the message body is equal to which the student typed in the 'Ask Your Instructor' dialog: '$questionText'.")
+        inboxPage.openConversationWithRecipients(recipientList)
+        inboxConversationPage.assertMessageDisplayed(questionText)
+        inboxConversationPage.assertNoSubjectDisplayed()
     }
 
     private fun createConversation(
