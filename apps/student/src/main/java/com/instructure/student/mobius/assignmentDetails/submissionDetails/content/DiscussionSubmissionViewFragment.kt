@@ -84,14 +84,14 @@ class DiscussionSubmissionViewFragment : Fragment() {
                     // This was an issue when routing a group discussion, with the 'root_discussion_topic_id'
                     // being the course discussion id rather than the group discussion id.
                     (url != discussionUrl && !url.contains("root_discussion_topic_id")) && RouteMatcher.canRouteInternally(
-                        requireContext(),
+                        requireActivity(),
                         url,
                         ApiPrefs.domain,
                         false
                     )
 
                 override fun routeInternallyCallback(url: String) {
-                    RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
+                    RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
                 }
             }
 

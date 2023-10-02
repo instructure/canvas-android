@@ -21,8 +21,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.room.appdatabase.AppDatabase
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.entities.AttachmentEntity
+import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -30,7 +29,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.Date
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -47,7 +46,7 @@ class AttachmentDaoTest {
     }
 
     @After
-    fun tearDoown() {
+    fun tearDown() {
         db.close()
     }
 
@@ -80,19 +79,5 @@ class AttachmentDaoTest {
         val result = attachmentDao.findByParentId("123")
 
         Assert.assertEquals(0, result!!.size)
-    }
-
-    @Test
-    fun testFindBySubmissionId() = runTest {
-        val attachmentEntity = AttachmentEntity(
-            id = 1, contentType = "image/jpg", filename = "image.jpg", displayName = "File", url = "file.com",
-            createdAt = Date(), size = 10000, workerId = "123", submissionCommentId = 123, submissionId = 1
-        )
-        val attachmentEntity2 = attachmentEntity.copy(id = 2, workerId = "124", filename = "image2.jpg", submissionId = 2)
-        attachmentDao.insertAll(listOf(attachmentEntity, attachmentEntity2))
-
-        val result = attachmentDao.findBySubmissionId(1)
-
-        Assert.assertEquals(listOf(attachmentEntity), result)
     }
 }

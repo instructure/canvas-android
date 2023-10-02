@@ -30,11 +30,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.explicitClick
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.*
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -76,20 +72,19 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun markUnread() {
-        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
+        onView(allOf(withContentDescription(stringContainsTextCaseInsensitive("More options")), isDisplayed())).click()
         onView(withText("Mark as Unread")).click()
     }
 
     fun archive() {
-        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
+        onView(allOf(withContentDescription(stringContainsTextCaseInsensitive("More options")), isDisplayed())).click()
         onView(withText("Archive")).click()
     }
 
     fun deleteConversation() {
-        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
+        onView(allOf(withContentDescription(stringContainsTextCaseInsensitive("More options")), isDisplayed())).click()
         onView(withText("Delete")).click()
-        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
-                .click() // Confirmation click
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE"))).click() // Confirmation click
     }
 
     fun deleteMessage(messageBody: String) {

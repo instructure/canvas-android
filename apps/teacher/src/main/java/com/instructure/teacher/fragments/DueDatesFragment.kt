@@ -86,7 +86,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
                 when {
                     assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString) -> {
                         val args = EditQuizDetailsFragment.makeBundle(assignment.quizId)
-                        RouteMatcher.route(requireContext(), Route(EditQuizDetailsFragment::class.java, mCourse, args))
+                        RouteMatcher.route(requireActivity(), Route(EditQuizDetailsFragment::class.java, mCourse, args))
                     }
                     assignment.submissionTypesRaw.contains(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString) -> {
                         val discussionTopicHeader = assignment.discussionTopicHeader
@@ -94,11 +94,11 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
                         assignment.discussionTopicHeader = null
                         discussionTopicHeader?.assignment = assignment
                         val args =  CreateDiscussionFragment.makeBundle(mCourse, discussionTopicHeader!!, true)
-                        RouteMatcher.route(requireContext(), Route(CreateDiscussionFragment::class.java, mCourse, args))
+                        RouteMatcher.route(requireActivity(), Route(CreateDiscussionFragment::class.java, mCourse, args))
                     }
                     else -> {
                         val args = EditAssignmentDetailsFragment.makeBundle(assignment, true)
-                        RouteMatcher.route(requireContext(), Route(EditAssignmentDetailsFragment::class.java, mCourse, args))
+                        RouteMatcher.route(requireActivity(), Route(EditAssignmentDetailsFragment::class.java, mCourse, args))
                     }
                 }
             } else {

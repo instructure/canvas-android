@@ -23,7 +23,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.utils.iconRes
-import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.student.databinding.ViewCommentAttachmentBinding
 
 @SuppressLint("ViewConstructor")
@@ -41,7 +41,7 @@ class CommentAttachmentsView(
             binding.iconImageView.setImageResource(attachment.iconRes)
             binding.iconImageView.setColorFilter(tint)
             binding.attachmentNameTextView.text = attachment.displayName
-            binding.root.onClick { onClicked(attachment) }
+            binding.root.onClickWithRequireNetwork { onClicked(attachment) }
             addView(binding.root)
         }
     }

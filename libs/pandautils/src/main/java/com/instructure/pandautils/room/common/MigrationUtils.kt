@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.common
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.instructure.pandautils.room.createMigration
 
 fun createMigration(from: Int, to: Int, migrationBlock: (SupportSQLiteDatabase) -> Unit): Migration {
     return object : Migration(from, to) {

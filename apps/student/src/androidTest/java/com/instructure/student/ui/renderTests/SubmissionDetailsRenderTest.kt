@@ -18,6 +18,7 @@ package com.instructure.student.ui.renderTests
 import android.content.pm.ActivityInfo
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
@@ -28,7 +29,7 @@ import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsModel
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -229,6 +230,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @Stub
     fun updatesDrawerHeightOnOrientationChangeToLandscape() {
         loadPageWithModel(
             baseModel.copy(
@@ -248,6 +250,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @Stub
     fun updatesDrawerHeightOnOrientationChangeToPortrait() {
         loadPageWithModel(
             baseModel.copy(
@@ -271,8 +274,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val route = SubmissionDetailsFragment.makeRoute(model.canvasContext, model.assignmentId)
-        val fragment = SubmissionDetailsFragment.newInstance(route)!!.apply {
+        val route = SubmissionDetailsRepositoryFragment.makeRoute(model.canvasContext, model.assignmentId)
+        val fragment = SubmissionDetailsRepositoryFragment.newInstance(route)!!.apply {
             overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }

@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -29,7 +30,7 @@ import java.io.IOException
 
 object CalendarEventAPI {
 
-    internal interface CalendarEventInterface {
+    interface CalendarEventInterface {
 
         @get:GET("users/self/upcoming_events")
         val upcomingEvents: Call<List<ScheduleItem>>
@@ -42,8 +43,20 @@ object CalendarEventAPI {
                 @Query("end_date") endDate: String?,
                 @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>): Call<List<ScheduleItem>>
 
+        @GET("calendar_events/")
+        suspend fun getCalendarEvents(
+            @Query("all_events") allEvents: Boolean,
+            @Query("type") type: String,
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?,
+            @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>, @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
         @GET
         fun next(@Url url: String): Call<List<ScheduleItem>>
+
+        @GET
+        suspend fun next(@Url url: String, @Tag restParams: RestParams): DataResult<List<ScheduleItem>>
 
         @GET("calendar_events/{eventId}")
         fun getCalendarEvent(@Path("eventId") eventId: Long): Call<ScheduleItem>

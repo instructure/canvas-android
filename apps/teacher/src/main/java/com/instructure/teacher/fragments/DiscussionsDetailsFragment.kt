@@ -263,7 +263,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             repliesLoadHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
                 discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
             }) {
-                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+                LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
             }
 
             delay(300)
@@ -374,7 +374,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun setupListeners() = with(binding) {
         dueLayout.setOnClickListener {
             val args = DueDatesFragment.makeBundle(presenter.discussionTopicHeader.assignment!!)
-            RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, canvasContext, args))
+            RouteMatcher.route(requireActivity(), Route(null, DueDatesFragment::class.java, canvasContext, args))
         }
         submissionsLayout.setOnClickListener {
             navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
@@ -393,7 +393,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     private fun navigateToSubmissions(context: CanvasContext, assignment: Assignment, filter: AssignmentSubmissionListPresenter.SubmissionListFilter) {
         val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
-        RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, context, args))
+        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, context, args))
     }
 
     private fun loadDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader) = with(binding) {
@@ -402,7 +402,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
         authorAvatar.onClick {
             val bundle = StudentContextFragment.makeBundle(discussionTopicHeader.author?.id ?: 0, canvasContext.id)
-            RouteMatcher.route(requireContext(), Route(StudentContextFragment::class.java, null, bundle))
+            RouteMatcher.route(requireActivity(), Route(StudentContextFragment::class.java, null, bundle))
         }
         authorName?.text = discussionTopicHeader.author?.let { Pronouns.span(it.displayName, it.pronouns) }
         authoredDate?.text = DateHelper.getMonthDayAtTime(requireContext(), discussionTopicHeader.postedDate, getString(R.string.at))
@@ -417,7 +417,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         headerLoadHtmlJob = discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
             discussionTopicHeaderWebViewWrapper.loadHtml(it, discussionTopicHeader.title, baseUrl = this@DiscussionsDetailsFragment.discussionTopicHeader.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
         }
 
         discussionRepliesWebViewWrapper.loadHtml("", "")
@@ -484,12 +484,12 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 if(APIHelper.hasNetworkConnection()) {
                     if(isAnnouncements) {
                         val args = CreateOrEditAnnouncementFragment.newInstanceEdit(presenter.canvasContext, presenter.discussionTopicHeader).nonNullArgs
-                        RouteMatcher.route(requireContext(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
+                        RouteMatcher.route(requireActivity(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
                     } else {
                         // If we have an assignment, set the topic header to null to prevent cyclic reference
                         presenter.discussionTopicHeader.assignment?.discussionTopicHeader = null
                         val args = CreateDiscussionFragment.makeBundle(presenter.canvasContext, presenter.discussionTopicHeader)
-                        RouteMatcher.route(requireContext(), Route(CreateDiscussionFragment::class.java, canvasContext, args))
+                        RouteMatcher.route(requireActivity(), Route(CreateDiscussionFragment::class.java, canvasContext, args))
                     }
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
@@ -513,7 +513,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             override fun routeInternallyCallback(url: String) {
                 if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
                     val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
-                    RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java,
+                    RouteMatcher.route(requireActivity(), Route(FullscreenInternalWebViewFragment::class.java,
                         presenter.canvasContext, bundle))
                 }
             }
@@ -544,7 +544,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         fun onAvatarPressed(id: String) {
             presenter.findEntry(id.toLong())?.let { entry ->
                 val bundle = StudentContextFragment.makeBundle(entry.author!!.id, canvasContext.id)
-                RouteMatcher.route(requireContext(), Route(StudentContextFragment::class.java, null, bundle))
+                RouteMatcher.route(requireActivity(), Route(StudentContextFragment::class.java, null, bundle))
             }
         }
 
@@ -574,7 +574,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         @JavascriptInterface
         fun onMoreRepliesPressed(id: String) {
             val args = makeBundle(presenter.discussionTopicHeader, presenter.discussionTopic, id.toLong(), presenter.getSkipId())
-            RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, canvasContext, args))
+            RouteMatcher.route(requireActivity(), Route(null, DiscussionsDetailsFragment::class.java, canvasContext, args))
         }
 
         @JavascriptInterface
@@ -643,7 +643,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun showReplyView(id: Long) {
         if (APIHelper.hasNetworkConnection()) {
             val args = DiscussionsReplyFragment.makeBundle(presenter.discussionTopicHeader.id, id, isAnnouncements)
-            RouteMatcher.route(requireContext(), Route(DiscussionsReplyFragment::class.java, presenter.canvasContext, args))
+            RouteMatcher.route(requireActivity(), Route(DiscussionsReplyFragment::class.java, presenter.canvasContext, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -666,7 +666,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun showUpdateReplyView(id: Long) {
         if (APIHelper.hasNetworkConnection()) {
             val args = DiscussionsUpdateFragment.makeBundle(presenter.discussionTopicHeader.id, presenter.findEntry(id), isAnnouncements, presenter.discussionTopic)
-            RouteMatcher.route(requireContext(), Route(DiscussionsUpdateFragment::class.java, presenter.canvasContext, args))
+            RouteMatcher.route(requireActivity(), Route(DiscussionsUpdateFragment::class.java, presenter.canvasContext, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -741,10 +741,10 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             if (attachments.size > 1) {
                 AttachmentPickerDialog.show(requireFragmentManager(), attachments) { attachment ->
                     AttachmentPickerDialog.hide(requireFragmentManager())
-                    attachment.view(requireContext())
+                    attachment.view(requireActivity())
                 }
             } else {
-                attachments[0].view(requireContext())
+                attachments[0].view(requireActivity())
             }
         }
     }

@@ -17,10 +17,18 @@
 
 package com.instructure.student.di
 
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
+import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.dashboard.edit.StudentEditDashboardRepository
+import com.instructure.student.features.dashboard.edit.datasource.StudentEditDashboardLocalDataSource
+import com.instructure.student.features.dashboard.edit.datasource.StudentEditDashboardNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,8 +37,27 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 class DashboardViewModelModule {
+
     @Provides
-    fun provideEditDashboardRepository(courseManager: CourseManager, groupManager: GroupManager): EditDashboardRepository {
-        return StudentEditDashboardRepository(courseManager, groupManager)
+    fun provideStudentEditDashboardLocalDataSource(courseFacade: CourseFacade,
+                                                   editDashboardItemDao: EditDashboardItemDao): StudentEditDashboardLocalDataSource {
+        return StudentEditDashboardLocalDataSource(courseFacade, editDashboardItemDao)
+    }
+
+    @Provides
+    fun provideStudentEditDashboardNetworkDataSource(courseApi: CourseAPI.CoursesInterface,
+                                                     groupApi: GroupAPI.GroupInterface): StudentEditDashboardNetworkDataSource {
+        return StudentEditDashboardNetworkDataSource(courseApi, groupApi)
+    }
+
+    @Provides
+    fun provideEditDashboardRepository(localDataSource: StudentEditDashboardLocalDataSource,
+                                       networkDataSource: StudentEditDashboardNetworkDataSource,
+                                       networkStateProvider: NetworkStateProvider,
+                                       featureFlagProvider: FeatureFlagProvider,
+                                       courseSyncSettingsDao: CourseSyncSettingsDao,
+                                       courseDao: CourseDao
+    ): EditDashboardRepository {
+        return StudentEditDashboardRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao, courseDao)
     }
 }

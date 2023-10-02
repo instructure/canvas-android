@@ -75,28 +75,28 @@ class ElementaryCoursePagerAdapter(
             override fun onPageStartedCallback(webView: WebView, url: String) {
                 progressBar.setVisible()
             }
+
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 progressBar.setGone()
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
-                return !isUrlSame(webView, url) && RouteMatcher.canRouteInternally(baseContext, url, ApiPrefs.domain, false)
+                return !isUrlSame(webView, url) && RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
             }
 
             override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(baseContext, url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
             }
         }
-        webView.canvasEmbeddedWebViewCallback =
-            object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
-                    return false
-                }
-
-                override fun launchInternalWebViewFragment(url: String) {
-                    activity?.startActivity(InternalWebViewActivity.createIntent(baseContext, url, "", true))
-                }
+        webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
+                return false
             }
+
+            override fun launchInternalWebViewFragment(url: String) {
+                activity?.startActivity(InternalWebViewActivity.createIntent(baseContext, url, "", true))
+            }
+        }
     }
 
     private fun isUrlSame(webView: CanvasWebView, url: String): Boolean {

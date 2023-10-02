@@ -129,7 +129,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     override fun createAdapter(): PageListAdapter {
         return PageListAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { page ->
             val args = PageDetailsFragment.makeBundle(page)
-            RouteMatcher.route(requireContext(), Route(null, PageDetailsFragment::class.java, canvasContext, args))
+            RouteMatcher.route(requireActivity(), Route(null, PageDetailsFragment::class.java, canvasContext, args))
         }
     }
 
@@ -181,7 +181,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
         createNewPage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewPage.drawable))
         createNewPage.onClickWithRequireNetwork {
             val args = CreateOrEditPageDetailsFragment.newInstanceCreate(canvasContext).nonNullArgs
-            RouteMatcher.route(requireContext(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
+            RouteMatcher.route(requireActivity(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
         }
     }
 

@@ -47,9 +47,9 @@ class DataResultCall<T : Any>(private val delegate: Call<T>): Call<DataResult<T>
                         val failure = if (code == 401) {
                             Failure.Authorization(response.message())
                         } else {
-                            Failure.Network(response.message())
+                            Failure.Network(response.message(), code)
                         }
-                        callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail(failure)))
+                        callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail(failure, response.raw())))
                     } else {
                         callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail()))
                     }

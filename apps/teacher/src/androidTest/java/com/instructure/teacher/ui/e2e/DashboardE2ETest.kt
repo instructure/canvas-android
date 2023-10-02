@@ -69,7 +69,7 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertDisplaysCourse(course2)
 
-        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button. Assert that the Edit Dashboard Page is loaded.")
+        Log.d(STEP_TAG,"Click on 'All Courses' button. Assert that the All Courses Page is loaded.")
         dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
 
@@ -90,7 +90,7 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertOpensCourse(course2)
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button. Assert that the Edit Dashboard Page is loaded.")
+        Log.d(STEP_TAG,"Click on 'All Courses' button. Assert that the All Courses Page is loaded.")
         dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
 
@@ -106,7 +106,7 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertDisplaysCourse(course2)
 
-        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button. Assert that the Edit Dashboard Page is loaded.")
+        Log.d(STEP_TAG,"Click on 'All Courses' button. Assert that the All Courses Page is loaded.")
         dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
 

@@ -16,22 +16,20 @@
  */
 package com.instructure.student.mobius.conferences.conference_details
 
-import com.instructure.canvasapi2.managers.ConferenceManager
-import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ConferenceDetailsEffectHandler : EffectHandler<ConferenceDetailsView, ConferenceDetailsEvent, ConferenceDetailsEffect>() {
+class ConferenceDetailsEffectHandler(
+    private val repository: ConferenceDetailsRepository
+) : EffectHandler<ConferenceDetailsView, ConferenceDetailsEvent, ConferenceDetailsEffect>() {
     override fun accept(effect: ConferenceDetailsEffect) {
         when (effect) {
             is ConferenceDetailsEffect.JoinConference -> joinConference(effect)
             is ConferenceDetailsEffect.RefreshData -> refreshData(effect)
-            ConferenceDetailsEffect.DisplayRefreshError -> view?.displayRefreshError()
+            is ConferenceDetailsEffect.DisplayRefreshError -> view?.displayRefreshError()
             is ConferenceDetailsEffect.ShowRecording -> showRecording(effect)
         }.exhaustive
     }
@@ -49,7 +47,7 @@ class ConferenceDetailsEffectHandler : EffectHandler<ConferenceDetailsView, Conf
             var url = effect.url
             if (effect.authenticate) {
                 try {
-                    val authSession = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }
+                    val authSession = repository.getAuthenticatedSession(url)
                     url = authSession.sessionUrl
                 } catch (e: Throwable) {
                     // Try launching without authenticated URL
@@ -63,7 +61,7 @@ class ConferenceDetailsEffectHandler : EffectHandler<ConferenceDetailsView, Conf
 
     private fun refreshData(effect: ConferenceDetailsEffect.RefreshData) {
         launch {
-            val conferencesResult = ConferenceManager.getConferencesForContextAsync(effect.canvasContext, true).await()
+            val conferencesResult = repository.getConferencesForContext(effect.canvasContext, true)
             consumer.accept(ConferenceDetailsEvent.RefreshFinished(conferencesResult))
         }
     }

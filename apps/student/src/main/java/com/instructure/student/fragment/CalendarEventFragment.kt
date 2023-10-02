@@ -228,7 +228,7 @@ class CalendarEventFragment : ParentFragment() {
                 loadHtmlJob = calendarEventWebViewWrapper?.webView?.loadHtmlWithIframes(requireContext(), content, { html ->
                     loadCalendarHtml(html, it.title)
                 }) { url ->
-                    LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, url)
+                    LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, url)
                 }
             }
         }

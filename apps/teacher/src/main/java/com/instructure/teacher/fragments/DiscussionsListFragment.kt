@@ -134,7 +134,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             { discussionTopicHeader ->
                 val route = presenter.getDetailsRoute(discussionTopicHeader)
                 RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     route
                 )
             },
@@ -214,10 +214,10 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.onClickWithRequireNetwork {
             if(isAnnouncements) {
                 val args = CreateOrEditAnnouncementFragment.newInstanceCreate(canvasContext).nonNullArgs
-                RouteMatcher.route(requireContext(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
+                RouteMatcher.route(requireActivity(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
             } else {
                 val args = CreateDiscussionFragment.makeBundle(canvasContext)
-                RouteMatcher.route(requireContext(), Route(CreateDiscussionFragment::class.java, null, args))
+                RouteMatcher.route(requireActivity(), Route(CreateDiscussionFragment::class.java, null, args))
             }
         }
     }

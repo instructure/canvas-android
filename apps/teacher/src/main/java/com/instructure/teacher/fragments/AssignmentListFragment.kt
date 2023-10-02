@@ -124,14 +124,14 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         return AssignmentAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { assignment ->
             if (pairedWithSubmissions) {
                 val args = AssignmentSubmissionListFragment.makeBundle(assignment)
-                RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, canvasContext, args))
+                RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, canvasContext, args))
             } else {
                 if (assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
                     val args = QuizDetailsFragment.makeBundle(assignment.quizId)
-                    RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
+                    RouteMatcher.route(requireActivity(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
                 } else {
                     val args = AssignmentDetailsFragment.makeBundle(assignment)
-                    RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, canvasContext, args))
+                    RouteMatcher.route(requireActivity(), Route(null, AssignmentDetailsFragment::class.java, canvasContext, args))
                 }
             }
         }

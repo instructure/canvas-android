@@ -20,65 +20,35 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
-import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFERENCE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.makeBundle
-import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.databinding.FragmentConferenceDetailsBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.conferences.conference_details.*
 
-@PageView(url = "{canvasContext}/conferences/{conferenceId}")
 @ScreenView(SCREEN_VIEW_CONFERENCE_DETAILS)
-class ConferenceDetailsFragment :
-    MobiusFragment<ConferenceDetailsModel, ConferenceDetailsEvent, ConferenceDetailsEffect, ConferenceDetailsView, ConferenceDetailsViewState, FragmentConferenceDetailsBinding>() {
+abstract class ConferenceDetailsFragment : MobiusFragment<ConferenceDetailsModel, ConferenceDetailsEvent,
+        ConferenceDetailsEffect, ConferenceDetailsView, ConferenceDetailsViewState, FragmentConferenceDetailsBinding>() {
 
     val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     val conference by ParcelableArg<Conference>(key = Const.CONFERENCE)
 
-    override fun makeUpdate() =
-        ConferenceDetailsUpdate()
+    override fun makeUpdate() = ConferenceDetailsUpdate()
 
-    override fun makePresenter() =
-        ConferenceDetailsPresenter
+    override fun makePresenter() = ConferenceDetailsPresenter
 
-    override fun makeEffectHandler() =
-        ConferenceDetailsEffectHandler()
+    override fun makeEffectHandler() = ConferenceDetailsEffectHandler(getRepository())
 
-    override fun makeInitModel() =
-        ConferenceDetailsModel(canvasContext, conference)
+    override fun makeInitModel() = ConferenceDetailsModel(canvasContext, conference)
 
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) =
-        ConferenceDetailsView(
-            canvasContext,
-            inflater,
-            parent
-        )
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = ConferenceDetailsView(
+        canvasContext,
+        inflater,
+        parent
+    )
 
-    @PageViewUrlParam("conferenceId")
-    fun getConferenceId() = conference.id
-
-    companion object {
-        fun makeRoute(canvasContext: CanvasContext, conference: Conference): Route {
-            val bundle = canvasContext.makeBundle {
-                putParcelable(Const.CONFERENCE, conference)
-            }
-            return Route(null, ConferenceDetailsFragment::class.java, canvasContext, bundle)
-        }
-
-        private fun validRoute(route: Route) =
-            route.canvasContext != null && route.arguments.containsKey(Const.CONFERENCE)
-
-        fun newInstance(route: Route): ConferenceDetailsFragment? {
-            if (!validRoute(route)) return null
-            return ConferenceDetailsFragment()
-                .withArgs(route.arguments)
-        }
-    }
+    abstract fun getRepository(): ConferenceDetailsRepository
 }
