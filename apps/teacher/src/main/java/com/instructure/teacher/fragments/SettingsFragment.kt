@@ -55,7 +55,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         versionTextView.text = getString(R.string.fullVersion, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
         profileButton.onClick {
             RouteMatcher.route(
-                requireContext(),
+                requireActivity(),
                 Route(null, ProfileFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
             )
         }
@@ -64,13 +64,13 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
         notificationPreferenesButton.onClick {
             RouteMatcher.route(
-                requireContext(),
+                requireActivity(),
                 Route(null, PushNotificationPreferencesFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
             )
         }
         emailNotifications.onClick {
             RouteMatcher.route(
-                requireContext(),
+                requireActivity(),
                 Route(null, EmailNotificationPreferencesFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
             )
         }
@@ -78,7 +78,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
             featureFlagButton.setVisible()
             featureFlagButton.onClick {
                 RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(null, FeatureFlagsFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
                 )
             }
@@ -86,7 +86,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
             remoteConfigButton.setVisible()
             remoteConfigButton.onClick {
                 RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     Route(null, RemoteConfigParamsFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
                 )
             }

@@ -18,10 +18,20 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = ModuleObjectEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["moduleId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class ModuleCompletionRequirementEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,

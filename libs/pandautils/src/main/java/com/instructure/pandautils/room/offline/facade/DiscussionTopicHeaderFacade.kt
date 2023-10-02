@@ -17,7 +17,9 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
 import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
@@ -25,32 +27,34 @@ import com.instructure.pandautils.room.offline.entities.DiscussionTopicHeaderEnt
 
 class DiscussionTopicHeaderFacade(
     private val discussionTopicHeaderDao: DiscussionTopicHeaderDao,
-    private val discussionParticipantDao: DiscussionParticipantDao
+    private val discussionParticipantDao: DiscussionParticipantDao,
+    private val offlineDatabase: OfflineDatabase
 ) {
-
     suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader, courseId: Long): Long {
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
         return discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId))
     }
 
-    suspend fun insertDiscussions(discussionTopicHeaders: List<DiscussionTopicHeader>, courseId: Long) {
-        val authors = discussionTopicHeaders
-            .map { it.author }
-            .filterNotNull()
-            .map { DiscussionParticipantEntity(it) }
-        discussionParticipantDao.insertAll(authors)
+    suspend fun insertDiscussions(discussionTopicHeaders: List<DiscussionTopicHeader>, courseId: Long, isAnnouncement: Boolean) {
+        offlineDatabase.withTransaction {
+            discussionTopicHeaderDao.deleteAllByCourseId(courseId, isAnnouncement)
 
-        val discussionEntities = discussionTopicHeaders.map { DiscussionTopicHeaderEntity(it, courseId) }
-        discussionTopicHeaderDao.insertAll(discussionEntities)
+            val authors = discussionTopicHeaders
+                .mapNotNull { it.author }
+                .map { DiscussionParticipantEntity(it) }
+
+            discussionParticipantDao.insertAll(authors)
+
+            val discussionEntities = discussionTopicHeaders.map { DiscussionTopicHeaderEntity(it, courseId) }
+            discussionTopicHeaderDao.insertAll(discussionEntities)
+        }
     }
 
     suspend fun getDiscussionsForCourse(courseId: Long): List<DiscussionTopicHeader> {
-        return discussionTopicHeaderDao.findAllDiscussionsForCourse(courseId)
-            .map { discussionTopic ->
-                val authorEntity =
-                    discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
-                discussionTopic.toApiModel(authorEntity?.toApiModel())
-            }
+        return discussionTopicHeaderDao.findAllDiscussionsForCourse(courseId).map { discussionTopic ->
+            val authorEntity = discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
+            discussionTopic.toApiModel(authorEntity?.toApiModel())
+        }
     }
 
     suspend fun getAnnouncementsForCourse(courseId: Long): List<DiscussionTopicHeader> {
@@ -61,6 +65,10 @@ class DiscussionTopicHeaderFacade(
     suspend fun getDiscussionTopicHeaderById(id: Long): DiscussionTopicHeader? {
         val discussionTopicHeaderEntity = discussionTopicHeaderDao.findById(id)
         return if (discussionTopicHeaderEntity != null) createDiscussionApiModel(discussionTopicHeaderEntity) else null
+    }
+
+    suspend fun deleteAllByCourseId(courseId: Long, isAnnouncement: Boolean) {
+        discussionTopicHeaderDao.deleteAllByCourseId(courseId, isAnnouncement)
     }
 
     private suspend fun createDiscussionApiModel(discussionTopicHeaderEntity: DiscussionTopicHeaderEntity): DiscussionTopicHeader {

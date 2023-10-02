@@ -122,7 +122,7 @@ class ElementaryCourseFragment : Fragment() {
     }
 
     private fun redirect(route: Route) {
-        RouteMatcher.route(requireContext(), route.copy(removePreviousScreen = true))
+        RouteMatcher.route(requireActivity(), route.copy(removePreviousScreen = true))
     }
 
     companion object {

@@ -24,6 +24,7 @@ object Const {
     const val CANVAS_CONTEXT = "canvasContext"
     const val COURSE = "course"
     const val FILE_URL = "fileUrl"
+    const val FILE_ID = "fileId"
     const val ID = "id"
     const val INTERNAL_URL = "internalURL"
     const val MESSAGE = "message"

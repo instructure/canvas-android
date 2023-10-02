@@ -394,7 +394,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                             sectionsMapped.values.toList(),
                             groupsMapped.values.toList(),
                             studentsMapped.values.toList())
-                    RouteMatcher.route(requireContext(), Route(AssigneeListFragment::class.java, mCourse, args))
+                    RouteMatcher.route(requireActivity(), Route(AssigneeListFragment::class.java, mCourse, args))
                     scrollBackToOverride = v
                 }
 

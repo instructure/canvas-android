@@ -17,15 +17,19 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.entities.PageEntity
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import java.util.*
 
@@ -34,8 +38,28 @@ class PageFacadeTest {
 
     private val pageDao: PageDao = mockk(relaxed = true)
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
+    private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
-    private val facade = PageFacade(pageDao, lockInfoFacade)
+    private val facade = PageFacade(pageDao, lockInfoFacade, offlineDatabase)
+
+    @Before
+    fun setup() {
+        MockKAnnotations.init(this)
+
+        mockkStatic(
+            "androidx.room.RoomDatabaseKt"
+        )
+
+        val transactionLambda = slot<suspend () -> Unit>()
+        coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
+            transactionLambda.captured.invoke()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @Test
     fun `Calling insertPages should insert pages and related entities`() = runTest {

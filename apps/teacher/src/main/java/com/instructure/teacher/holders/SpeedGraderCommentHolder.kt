@@ -17,6 +17,7 @@
 package com.instructure.teacher.holders
 
 import android.widget.ImageView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
@@ -82,7 +83,7 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
                         avatarView.setupAvatarA11y(comment.authorName)
                         avatarView.onClick {
                             val bundle = StudentContextFragment.makeBundle(comment.authorId, courseId)
-                            RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                            RouteMatcher.route(context as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
                         }
                     }
                     Triple(
@@ -142,7 +143,7 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
                         avatarView.setupAvatarA11y(assignee.name)
                         avatarView.onClick {
                             val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
-                            RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                            RouteMatcher.route(context as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
                         }
                         Triple(null, Pronouns.span(assignee.name, assignee.pronouns), assignee.student.avatarUrl)
                     }

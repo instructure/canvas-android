@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.fragment
+package com.instructure.student.features.files.details
 
 import android.os.Bundle
 import android.text.Html
@@ -23,11 +23,11 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.instructure.canvasapi2.managers.FileFolderManager
-import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.ModuleObject
@@ -48,9 +48,9 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileDetailsBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.util.StringUtilities
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.ResponseBody
 import java.util.*
 import javax.inject.Inject
 
@@ -62,6 +62,9 @@ class FileDetailsFragment : ParentFragment() {
     @Inject
     lateinit var workManager: WorkManager
 
+    @Inject
+    lateinit var repository: FileDetailsRepository
+
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
@@ -71,12 +74,7 @@ class FileDetailsFragment : ParentFragment() {
 
     private var file: FileFolder? = null
     private var fileUrl: String by StringArg(key = Const.FILE_URL)
-
-    private var fileFolderJob: WeaveJob? = null
-    private var markAsReadJob: WeaveJob? = null
-
-    private val fileId: Long
-        get() = file!!.id
+    private var fileId: Long by LongArg(key = Const.FILE_ID)
 
     private val moduleItemId: Long?
         get() = this.getModuleItemId()
@@ -103,12 +101,6 @@ class FileDetailsFragment : ParentFragment() {
         getFileFolder()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        fileFolderJob?.cancel()
-        markAsReadJob?.cancel()
-    }
-
     override fun applyTheme() {
         with (binding) {
             setupToolbarMenu(toolbar)
@@ -126,8 +118,18 @@ class FileDetailsFragment : ParentFragment() {
 
     private fun setupClickListeners() {
         binding.openButton.setOnClickListener {
-            file?.let {
-                openMedia(it.contentType, it.url, it.displayName, canvasContext)
+            file?.let { fileFolder ->
+                when {
+                    fileFolder.isLocalFile -> {
+                        openLocalMedia(
+                            fileFolder.contentType,
+                            fileFolder.url,
+                            fileFolder.displayName,
+                            canvasContext
+                        )
+                    }
+                    else -> openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, canvasContext)
+                }
                 markAsRead()
             }
         }
@@ -139,6 +141,8 @@ class FileDetailsFragment : ParentFragment() {
                 requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
             }
         }
+
+        binding.downloadButton.setVisible(repository.isOnline())
     }
 
     override fun onMediaLoadingStarted() {
@@ -156,21 +160,19 @@ class FileDetailsFragment : ParentFragment() {
 
     private fun markAsRead() {
         // Mark the module as read
-        markAsReadJob = tryWeave {
-            awaitApi<ResponseBody> { ModuleManager.markModuleItemAsRead(canvasContext, moduleObject.id, itemId, it) }
+        lifecycleScope.tryLaunch {
+            repository.markAsRead(canvasContext, moduleObject.id, itemId, true)
             ModuleUpdatedEvent(moduleObject).post()
-        } catch {
+        }.catch {
             Logger.e("Error marking module item as read. " + it.message)
         }
     }
 
     @Suppress("deprecation")
     private fun getFileFolder() = with(binding) {
-        fileFolderJob = tryWeave {
-            val response = awaitApiResponse<FileFolder> { FileFolderManager.getFileFolderFromURL(fileUrl, true, it) }
+        lifecycleScope.tryLaunch {
+            file = repository.getFileFolderFromURL(fileUrl, fileId, true)
             // Set up everything else now, we should have a file
-            file = response.body()
-
             file?.let {
                 if (it.lockInfo != null) {
                     // File is locked
@@ -204,15 +206,28 @@ class FileDetailsFragment : ParentFragment() {
                     setupTextViews()
                     setupClickListeners()
                     // If the file has a thumbnail then show it. Make it a little bigger since the thumbnail size is pretty small
-                    if (!TextUtils.isEmpty(it.thumbnailUrl)) {
+                    if (repository.isOnline()) {
+                        if (!TextUtils.isEmpty(it.thumbnailUrl)) {
 
-                        fileIcon.layoutParams.apply {
-                            height = requireActivity().DP(230).toInt()
-                            width = height
+                            fileIcon.layoutParams.apply {
+                                height = requireActivity().DP(230).toInt()
+                                width = height
+                            }
+
+                            fileIcon.contentDescription =
+                                getString(R.string.filePreviewContentDescription)
+                            Glide.with(requireActivity()).load(it.thumbnailUrl)
+                                .apply(RequestOptions().fitCenter()).into(fileIcon)
                         }
-
-                        fileIcon.contentDescription = getString(R.string.filePreviewContentDescription)
-                        Glide.with(requireActivity()).load(it.thumbnailUrl).apply(RequestOptions().fitCenter()).into(fileIcon)
+                    }
+                    else {
+                        if (it.contentType?.contains("image") == true) {
+                            fileIcon.layoutParams.apply {
+                                height = requireActivity().DP(230).toInt()
+                                width = height
+                            }
+                            fileIcon.setImageURI(it.url?.toUri())
+                        }
                     }
                 }
                 setPageViewReady()
@@ -234,16 +249,20 @@ class FileDetailsFragment : ParentFragment() {
 
     companion object {
 
-        fun makeRoute(canvasContext: CanvasContext, fileUrl: String): Route {
-            val bundle = Bundle().apply { putString(Const.FILE_URL, fileUrl) }
+        fun makeRoute(canvasContext: CanvasContext, fileUrl: String, fileId: Long): Route {
+            val bundle = Bundle().apply {
+                putString(Const.FILE_URL, fileUrl)
+                putLong(Const.FILE_ID, fileId)
+            }
             return Route(null, FileDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        fun makeRoute(canvasContext: CanvasContext, moduleObject: ModuleObject, itemId: Long, fileUrl: String): Route {
+        fun makeRoute(canvasContext: CanvasContext, moduleObject: ModuleObject, itemId: Long, fileUrl: String, fileId: Long): Route {
             val bundle = Bundle().apply {
                 putString(Const.FILE_URL, fileUrl)
                 putParcelable(Const.MODULE_OBJECT, moduleObject)
                 putLong(Const.ITEM_ID, itemId)
+                putLong(Const.FILE_ID, fileId)
             }
             return Route(null, FileDetailsFragment::class.java, canvasContext, bundle)
         }

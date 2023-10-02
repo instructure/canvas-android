@@ -22,13 +22,17 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.entities.CourseEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemEntity
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,12 +43,18 @@ class ScheduleItemDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var scheduleItemDao: ScheduleItemDao
+    private lateinit var courseDao: CourseDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         scheduleItemDao = db.scheduleItemDao()
+        courseDao = db.courseDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1L)))
+        }
     }
 
     @After
@@ -54,7 +64,7 @@ class ScheduleItemDaoTest {
 
     @Test
     fun testInsertReplace() = runTest {
-        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event_1", title = "schedule item"))
+        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event_1", title = "schedule item"), 1L)
         val updated = scheduleItemEntity.copy(title = "updated")
 
         scheduleItemDao.insert(scheduleItemEntity)
@@ -67,8 +77,8 @@ class ScheduleItemDaoTest {
 
     @Test
     fun testFindById() = runTest {
-        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event_1", title = "schedule item"))
-        val scheduleItemEntity2 = ScheduleItemEntity(ScheduleItem(itemId = "event_2", title = "schedule item"))
+        val scheduleItemEntity = ScheduleItemEntity(ScheduleItem(itemId = "event_1", title = "schedule item"), 1L)
+        val scheduleItemEntity2 = ScheduleItemEntity(ScheduleItem(itemId = "event_2", title = "schedule item"), 1L)
 
         scheduleItemDao.insert(scheduleItemEntity)
         scheduleItemDao.insert(scheduleItemEntity2)
@@ -80,9 +90,15 @@ class ScheduleItemDaoTest {
 
     @Test
     fun testFindByItemType() = runTest {
-        val assignmentEvent = ScheduleItemEntity(ScheduleItem(itemId = "event_1", title = "schedule item", type = "assignment", contextCode = "course_1"))
-        val assignmentEvent2 = ScheduleItemEntity(ScheduleItem(itemId = "event_2", title = "schedule item", type = "assignment", contextCode = "course_1"))
-        val calendarEvent = ScheduleItemEntity(ScheduleItem(itemId = "event_3", title = "schedule item", type = "calendar", contextCode = "course_1"))
+        val assignmentEvent = ScheduleItemEntity(
+            ScheduleItem(itemId = "event_1", title = "schedule item", type = "assignment", contextCode = "course_1"), 1L
+        )
+        val assignmentEvent2 = ScheduleItemEntity(
+            ScheduleItem(itemId = "event_2", title = "schedule item", type = "assignment", contextCode = "course_1"), 1L
+        )
+        val calendarEvent = ScheduleItemEntity(
+            ScheduleItem(itemId = "event_3", title = "schedule item", type = "calendar", contextCode = "course_1"), 1L
+        )
 
         scheduleItemDao.insert(assignmentEvent)
         scheduleItemDao.insert(assignmentEvent2)
@@ -91,5 +107,24 @@ class ScheduleItemDaoTest {
         val result = scheduleItemDao.findByItemType(listOf("course_1"), "assignment")
 
         assertEquals(listOf(assignmentEvent, assignmentEvent2), result)
+    }
+
+    @Test
+    fun testDeleteAllByCourseId() = runTest {
+        val assignmentEvent = ScheduleItemEntity(
+            ScheduleItem(itemId = "event_1", title = "schedule item", type = "assignment", contextCode = "course_1"), 1L
+        )
+
+        scheduleItemDao.insert(assignmentEvent)
+
+        val result = scheduleItemDao.findById("event_1")
+
+        assertEquals(assignmentEvent, result)
+
+        scheduleItemDao.deleteAllByCourseId(1L)
+
+        val deletedResult = scheduleItemDao.findById("event_1")
+
+        Assert.assertNull(deletedResult)
     }
 }

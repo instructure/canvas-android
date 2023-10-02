@@ -19,19 +19,18 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.MasteryPathAssignment
 
 @Entity(
-    foreignKeys = [(
+    foreignKeys = [
         ForeignKey(
             entity = AssignmentSetEntity::class,
             parentColumns = ["id"],
             childColumns = ["assignmentSetId"],
             onDelete = ForeignKey.CASCADE
         )
-        )]
+    ]
 )
 data class MasteryPathAssignmentEntity(
     @PrimaryKey

@@ -1,8 +1,8 @@
-package com.instructure.pandautils.room.common.daos
+package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.*
-import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
-import com.instructure.pandautils.room.common.model.SubmissionCommentWithAttachments
+import com.instructure.pandautils.room.offline.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.offline.model.SubmissionCommentWithAttachments
 
 @Dao
 interface SubmissionCommentDao {

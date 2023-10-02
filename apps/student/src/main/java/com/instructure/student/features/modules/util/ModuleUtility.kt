@@ -31,13 +31,13 @@ import com.instructure.pandautils.features.discussion.details.DiscussionDetailsW
 import com.instructure.student.R
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment.Companion.makeRoute
+import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.LockedModuleItemFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
-import com.instructure.student.fragment.FileDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment
@@ -53,6 +53,7 @@ object ModuleUtility {
         navigatedFromModules: Boolean,
         isOnline: Boolean,
         syncedTabs: Set<String>,
+        syncedFileIds: List<Long>,
         context: Context
     ): Fragment? = when (item.type) {
         "Page" -> {
@@ -100,12 +101,7 @@ object ModuleUtility {
             }
         }
         "File" -> { // TODO Handle offline availability after files sync
-            val url = removeDomain(item.url)
-            if (moduleObject == null) {
-                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, url!!))
-            } else {
-                FileDetailsFragment.newInstance(FileDetailsFragment.makeRoute(course, moduleObject, item.id, url!!))
-            }
+            createFileDetailsFragmentWithOfflineCheck(isOnline, course, item, moduleObject, syncedFileIds, context)
         }
         else -> null
     }
@@ -124,6 +120,40 @@ object ModuleUtility {
         } else {
             val descriptionResource = if (tab == null) R.string.notAvailableOfflineDescription else R.string.notAvailableOfflineDescriptionForTabs
             NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(descriptionResource)))
+        }
+    }
+
+    private fun createFileDetailsFragmentWithOfflineCheck(
+        isOnline: Boolean,
+        course: Course,
+        item: ModuleItem,
+        moduleObject: ModuleObject?,
+        syncedFiles: List<Long>,
+        context: Context,
+    ): Fragment? {
+        return if (isOnline || syncedFiles.contains(item.contentId)) {
+            val url = removeDomain(item.url)
+            if (moduleObject == null) {
+                FileDetailsFragment.newInstance(
+                    FileDetailsFragment.makeRoute(
+                        course,
+                        url!!,
+                        item.contentId
+                    )
+                )
+            } else {
+                FileDetailsFragment.newInstance(
+                    FileDetailsFragment.makeRoute(
+                        course,
+                        moduleObject,
+                        item.id,
+                        url!!,
+                        item.contentId
+                    )
+                )
+            }
+        } else {
+            NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(R.string.notAvailableOfflineDescriptionForTabs)))
         }
     }
 

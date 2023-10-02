@@ -18,12 +18,22 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.LockedModule
 import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 import com.instructure.canvasapi2.models.ModuleName
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = LockInfoEntity::class,
+            parentColumns = ["lockedModuleId"],
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class LockedModuleEntity(
     @PrimaryKey
     val id: Long,

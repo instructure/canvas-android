@@ -66,4 +66,9 @@ class ModuleProgressionRepository(
         val courseSyncSettings = courseSyncSettingsDao.findById(courseId)
         return courseSyncSettings?.tabs?.filter { it.value }?.keys ?: emptySet()
     }
+
+    suspend fun getSyncedFileIds(courseId: Long): List<Long> {
+        val courseSyncSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(courseId)
+        return courseSyncSettingsWithFiles?.files?.map { it.id }.orEmpty()
+    }
 }

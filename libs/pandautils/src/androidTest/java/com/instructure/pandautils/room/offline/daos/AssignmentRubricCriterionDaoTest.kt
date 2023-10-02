@@ -54,7 +54,7 @@ class AssignmentRubricCriterionDaoTest {
 
         runBlocking {
             db.courseDao().insert(CourseEntity(Course(id = 1L)))
-            db.assignmentGroupDao().insert(AssignmentGroupEntity(AssignmentGroup(id = 1L)))
+            db.assignmentGroupDao().insert(AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L))
             assignmentDao.insert(
                 AssignmentEntity(
                     Assignment(id = 1L, courseId = 1L, assignmentGroupId = 1L),

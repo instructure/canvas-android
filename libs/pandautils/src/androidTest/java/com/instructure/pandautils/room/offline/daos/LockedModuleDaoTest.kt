@@ -17,19 +17,22 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.LockedModule
+import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.entities.LockedModuleEntity
+import com.instructure.pandautils.room.offline.entities.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -37,12 +40,26 @@ class LockedModuleDaoTest {
 
     private lateinit var db: OfflineDatabase
     private lateinit var lockedModuleDao: LockedModuleDao
+    private lateinit var courseDao: CourseDao
+    private lateinit var pageDao: PageDao
+    private lateinit var lockInfoDao: LockInfoDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, OfflineDatabase::class.java).build()
         lockedModuleDao = db.lockedModuleDao()
+        courseDao = db.courseDao()
+        pageDao = db.pageDao()
+        lockInfoDao = db.lockInfoDao()
+
+        runBlocking {
+            courseDao.insert(CourseEntity(Course(1L)))
+            pageDao.insert(PageEntity(Page(1L), 1L))
+            lockInfoDao.insert(LockInfoEntity(LockInfo(contextModule = LockedModule(1L)), pageId = 1L))
+            lockInfoDao.insert(LockInfoEntity(LockInfo(contextModule = LockedModule(2L)), pageId = 1L))
+            lockInfoDao.insert(LockInfoEntity(LockInfo(contextModule = LockedModule(3L)), pageId = 1L))
+        }
     }
 
     @After
@@ -61,5 +78,23 @@ class LockedModuleDaoTest {
         val result = lockedModuleDao.findById(1)
 
         Assert.assertEquals(expected, result)
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun testLockInfoForeignKey() = runTest {
+        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 4)))
+    }
+
+    @Test
+    fun testLockInfoCascade() = runTest {
+        val id = lockInfoDao.insert(LockInfoEntity(LockInfo(contextModule = LockedModule(1))))
+
+        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 1)))
+
+        lockInfoDao.delete(LockInfoEntity(id, null, null, null, null, null, null))
+
+        val result = lockedModuleDao.findById(1)
+
+        Assert.assertNull(result)
     }
 }

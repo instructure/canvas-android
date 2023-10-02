@@ -209,7 +209,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
                 canvasWebViewWrapper.loadHtml(it, page.title, baseUrl = page.htmlUrl)
             }) {
-                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+                LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
             }
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
@@ -289,7 +289,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
             val route = EditPageDetailsFragment.makeRoute(canvasContext, page)
-            RouteMatcher.route(requireContext(), route)
+            RouteMatcher.route(requireActivity(), route)
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }

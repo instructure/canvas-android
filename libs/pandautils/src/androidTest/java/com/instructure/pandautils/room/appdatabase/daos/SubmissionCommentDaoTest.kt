@@ -21,14 +21,10 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.room.appdatabase.AppDatabase
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.daos.AuthorDao
-import com.instructure.pandautils.room.common.daos.MediaCommentDao
-import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
-import com.instructure.pandautils.room.common.entities.AttachmentEntity
-import com.instructure.pandautils.room.common.entities.AuthorEntity
-import com.instructure.pandautils.room.common.entities.MediaCommentEntity
-import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
+import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
+import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -94,27 +90,5 @@ class SubmissionCommentDaoTest {
         Assert.assertEquals("droids.mp4", result.attachments!!.first().filename)
         Assert.assertEquals("Obi-Wan", result.author!!.displayName)
         Assert.assertEquals("Order 66", result.mediaComment!!.displayName)
-    }
-
-    @Test
-    fun testFindBySubmissionId() = runTest {
-        val submissionComment = SubmissionCommentEntity(
-            id = 1,
-            comment = "These are the droids you are looking for",
-            authorId = 1,
-            mediaCommentId = "66",
-            submissionId = 1
-        )
-        val submissionComment2 = SubmissionCommentEntity(
-            id = 2,
-            comment = "These are not the droids you are looking for",
-            submissionId = 2
-        )
-        submissionCommentDao.insertAll(listOf(submissionComment, submissionComment2))
-
-        val result = submissionCommentDao.findBySubmissionId(1)
-
-        Assert.assertEquals(1, result.size)
-        Assert.assertEquals(submissionComment, result.first().submissionComment)
     }
 }

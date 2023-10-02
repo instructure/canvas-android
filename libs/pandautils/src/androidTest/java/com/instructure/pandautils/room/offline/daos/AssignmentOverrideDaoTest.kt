@@ -55,7 +55,7 @@ class AssignmentOverrideDaoTest {
         assignmentOverrideDao = db.assignmentOverrideDao()
         assignmentDao = db.assignmentDao()
         db.courseDao().insert(CourseEntity(Course(id = 1L)))
-        db.assignmentGroupDao().insert(AssignmentGroupEntity(AssignmentGroup(id = 1L)))
+        db.assignmentGroupDao().insert(AssignmentGroupEntity(AssignmentGroup(id = 1L), 1L))
     }
 
     @After

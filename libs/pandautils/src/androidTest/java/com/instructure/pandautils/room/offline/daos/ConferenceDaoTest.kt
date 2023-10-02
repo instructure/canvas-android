@@ -93,4 +93,21 @@ class ConferenceDaoTest {
 
         conferenceDao.insert(conferenceEntity)
     }
+
+    @Test
+    fun testDeleteAllByCourseId() = runTest {
+        val conferenceEntity = ConferenceEntity(Conference(1), 1)
+
+        conferenceDao.insert(conferenceEntity)
+
+        val result = conferenceDao.findByCourseId(1)
+
+        Assert.assertEquals(listOf(conferenceEntity), result)
+
+        conferenceDao.deleteAllByCourseId(1L)
+
+        val deletedResult = conferenceDao.findByCourseId(1L)
+
+        assert(deletedResult.isEmpty())
+    }
 }

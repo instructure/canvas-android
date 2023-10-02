@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.models.*
             entity = TermEntity::class,
             parentColumns = ["id"],
             childColumns = ["termId"],
-            onDelete = ForeignKey.SET_NULL
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

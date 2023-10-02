@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.models.Quiz
             parentColumns = ["id"],
             childColumns = ["courseId"],
             onDelete = ForeignKey.CASCADE
-        ),
+        )
     ]
 )
 data class QuizEntity(
@@ -72,9 +72,9 @@ data class QuizEntity(
     val assignmentId: Long,
     val isOnlyVisibleToOverrides: Boolean,
     val unpublishable: Boolean,
-    val courseId: Long?,
+    val courseId: Long
 ) {
-    constructor(quiz: Quiz, courseId: Long? = null) : this(
+    constructor(quiz: Quiz, courseId: Long) : this(
         id = quiz.id,
         title = quiz.title,
         mobileUrl = quiz.mobileUrl,
