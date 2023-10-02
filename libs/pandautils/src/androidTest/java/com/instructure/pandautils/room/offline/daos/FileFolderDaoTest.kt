@@ -78,7 +78,7 @@ class FileFolderDaoTest {
         )
 
         fileFolderDao.insertAll(files)
-        fileFolderDao.deleteAll()
+        fileFolderDao.deleteAllByCourseId(1L)
 
         val result = fileFolderDao.findAllFilesByCourseId(1L)
 
@@ -217,18 +217,18 @@ class FileFolderDaoTest {
     @Test
     fun testReplaceAll() = runTest {
         val files = listOf(
-            FileFolderEntity(FileFolder(id = 1L, name = "file1", folderId = 1L)),
-            FileFolderEntity(FileFolder(id = 2L, name = "file2", folderId = 1L))
+            FileFolderEntity(FileFolder(id = 1L, name = "file1", folderId = 1L, contextId = 1L)),
+            FileFolderEntity(FileFolder(id = 2L, name = "file2", folderId = 1L, contextId = 1L))
         )
 
         val newFiles = listOf(
-            FileFolderEntity(FileFolder(id = 3L, name = "file3", folderId = 1L)),
-            FileFolderEntity(FileFolder(id = 4L, name = "file4", folderId = 1L))
+            FileFolderEntity(FileFolder(id = 3L, name = "file3", folderId = 1L, contextId = 1L)),
+            FileFolderEntity(FileFolder(id = 4L, name = "file4", folderId = 1L, contextId = 1L))
         )
 
         fileFolderDao.insertAll(files)
 
-        fileFolderDao.replaceAll(newFiles)
+        fileFolderDao.replaceAll(newFiles, 1L)
 
         val result = fileFolderDao.findFilesByFolderId(1L)
 

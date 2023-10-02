@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -129,15 +130,18 @@ class SyncProgressViewModelTest {
             CourseProgressItemViewModel(
                 data = CourseProgressViewData(
                     courseName = "Course 1",
-                    files = listOf(
-                        FilesTabProgressItemViewModel(
-                            data = FileTabProgressViewData(
-                                courseWorkerId = course1UUID,
-                                items = emptyList(),
-                            ),
-                            workManager = workManager,
-                            context = context,
-                        )
+                    files = FilesTabProgressItemViewModel(
+                        data = FileTabProgressViewData(
+                            courseWorkerId = course1UUID,
+                            items = emptyList(),
+                        ),
+                        workManager = workManager,
+                        context = context,
+                    ),
+                    additionalFiles = AdditionalFilesProgressItemViewModel(
+                        AdditionalFilesProgressViewData(course1UUID),
+                        workManager,
+                        context
                     ),
                     workerId = course1UUID
                 ),
@@ -147,7 +151,12 @@ class SyncProgressViewModelTest {
             CourseProgressItemViewModel(
                 data = CourseProgressViewData(
                     courseName = "Course 2",
-                    files = emptyList(),
+                    files = null,
+                    additionalFiles = AdditionalFilesProgressItemViewModel(
+                        AdditionalFilesProgressViewData(course2UUID),
+                        workManager,
+                        context
+                    ),
                     workerId = course2UUID
                 ),
                 workManager = workManager,

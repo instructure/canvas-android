@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
+import com.instructure.pandautils.features.offline.sync.progress.AdditionalFilesProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.toJson
@@ -278,7 +279,8 @@ class CourseProgressItemViewModelTest {
             data = CourseProgressViewData(
                 courseName = "Course",
                 workerId = uuid.toString(),
-                files = emptyList(),
+                files = null,
+                additionalFiles = AdditionalFilesProgressItemViewModel(AdditionalFilesProgressViewData(uuid.toString()), workManager, context),
                 size = "Queued"
             ),
             workManager = workManager,
