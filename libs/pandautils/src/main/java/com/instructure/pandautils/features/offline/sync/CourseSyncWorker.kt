@@ -175,7 +175,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
     private suspend fun fetchCalendarEvents(courseId: Long): List<ScheduleItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        return calendarEventApi.getCalendarEvents(
+        val calendarEvents = calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.CALENDAR.apiName,
             null,
@@ -185,11 +185,15 @@ class CourseSyncWorker @AssistedInject constructor(
         ).depaginate {
             calendarEventApi.next(it, restParams)
         }.dataOrThrow
+
+        calendarEvents.forEach { it.description = parseHtmlContent(it.description, courseId) }
+
+        return calendarEvents
     }
 
     private suspend fun fetchCalendarAssignments(courseId: Long): List<ScheduleItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        return calendarEventApi.getCalendarEvents(
+        val calendarAssignments = calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
             null,
@@ -199,6 +203,10 @@ class CourseSyncWorker @AssistedInject constructor(
         ).depaginate {
             calendarEventApi.next(it, restParams)
         }.dataOrThrow
+
+        calendarAssignments.forEach { it.description = parseHtmlContent(it.description, courseId) }
+
+        return calendarAssignments
     }
 
     private suspend fun fetchPages(courseId: Long) {
@@ -208,12 +216,10 @@ class CourseSyncWorker @AssistedInject constructor(
                 .depaginate { nextUrl ->
                     pageApi.getNextPagePagesList(nextUrl, params)
                 }.dataOrThrow
-                .map {
-                    val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(it.body, courseId)
-                    additionalFileIdsToSync.addAll(htmlParsingResult.internalFileIds)
-                    externalFilesToSync.addAll(htmlParsingResult.externalFileUrls)
-                    it.copy(body = htmlParsingResult.htmlWithLocalFileLinks)
-                }
+
+            pages.forEach {
+                it.body = parseHtmlContent(it.body, courseId)
+            }
 
             pageFacade.insertPages(pages, courseId)
 
@@ -230,14 +236,13 @@ class CourseSyncWorker @AssistedInject constructor(
                 .depaginate { nextUrl ->
                     assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
                 }.dataOrThrow
-                .map { group ->
-                    group.copy(assignments = group.assignments.map {
-                        val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(it.description, courseId)
-                        additionalFileIdsToSync.addAll(htmlParsingResult.internalFileIds)
-                        externalFilesToSync.addAll(htmlParsingResult.externalFileUrls)
-                        it.copy(description = htmlParsingResult.htmlWithLocalFileLinks)
-                    })
+
+            assignmentGroups.forEach { group ->
+                group.assignments.forEach {
+                    it.description = parseHtmlContent(it.description, courseId)
+                    it.discussionTopicHeader?.message = parseHtmlContent(it.discussionTopicHeader?.message, courseId)
                 }
+            }
 
             fetchQuizzes(assignmentGroups, courseId)
 
@@ -257,6 +262,8 @@ class CourseSyncWorker @AssistedInject constructor(
         val enrollments = course.enrollments.orEmpty().flatMap {
             enrollmentsApi.getEnrollmentsForUserInCourse(courseId, it.userId, params).dataOrThrow
         }.toMutableList()
+
+        course.syllabusBody = parseHtmlContent(course.syllabusBody, courseId)
 
         courseFacade.insertCourse(course.copy(enrollments = enrollments))
 
@@ -289,6 +296,7 @@ class CourseSyncWorker @AssistedInject constructor(
             group.assignments.forEach { assignment ->
                 if (assignment.quizId != 0L) {
                     val quiz = quizApi.getQuiz(assignment.courseId, assignment.quizId, params).dataOrNull
+                    quiz?.description = parseHtmlContent(quiz?.description, courseId)
                     quiz?.let { quizzes.add(QuizEntity(it, assignment.courseId)) }
                 }
             }
@@ -302,6 +310,10 @@ class CourseSyncWorker @AssistedInject constructor(
             val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
                 quizApi.getNextPageQuizzesList(nextUrl, params)
             }.dataOrThrow
+
+            quizzes.forEach {
+                it.description = parseHtmlContent(it.description, courseId)
+            }
 
             quizDao.deleteAndInsertAll(quizzes.map { QuizEntity(it, courseId) }, courseId)
 
@@ -341,6 +353,10 @@ class CourseSyncWorker @AssistedInject constructor(
             val discussions = discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
                 .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrThrow
 
+            discussions.forEach {
+                it.message = parseHtmlContent(it.message, courseId)
+            }
+
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
 
             updateTabSuccess(Tab.DISCUSSIONS_ID)
@@ -354,6 +370,10 @@ class CourseSyncWorker @AssistedInject constructor(
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val announcements = announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
                 .depaginate { nextPage -> announcementApi.getNextPageAnnouncementsList(nextPage, params) }.dataOrThrow
+
+            announcements.forEach {
+                it.message = parseHtmlContent(it.message, courseId)
+            }
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
 
@@ -388,6 +408,13 @@ class CourseSyncWorker @AssistedInject constructor(
         } catch (e: Exception) {
             updateTabError(Tab.MODULES_ID)
         }
+    }
+
+    private suspend fun parseHtmlContent(htmlContent: String?, courseId: Long): String? {
+        val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(htmlContent, courseId)
+        additionalFileIdsToSync.addAll(htmlParsingResult.internalFileIds)
+        externalFilesToSync.addAll(htmlParsingResult.externalFileUrls)
+        return htmlParsingResult.htmlWithLocalFileLinks
     }
 
     private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity): WorkContinuation? {

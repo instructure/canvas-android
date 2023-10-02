@@ -113,18 +113,12 @@ data class FileTabProgressViewData(
 data class AdditionalFilesProgressViewData(
     val courseWorkerId: String,
     @Bindable var totalSize: String = "",
-    @Bindable var progress: Int = 0,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
 ) : BaseObservable() {
 
     fun updateTotalSize(totalSize: String) {
         this.totalSize = totalSize
         notifyPropertyChanged(BR.totalSize)
-    }
-
-    fun updateProgress(progress: Int) {
-        this.progress = progress
-        notifyPropertyChanged(BR.progress)
     }
 }
 

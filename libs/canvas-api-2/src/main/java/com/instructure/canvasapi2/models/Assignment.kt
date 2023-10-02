@@ -29,7 +29,7 @@ import java.util.*
 data class Assignment(
         override var id: Long = 0,
         var name: String? = null,
-        val description: String? = null,
+        var description: String? = null,
         @SerializedName("submission_types")
         val submissionTypesRaw: List<String> = arrayListOf(),
         @SerializedName("due_at")

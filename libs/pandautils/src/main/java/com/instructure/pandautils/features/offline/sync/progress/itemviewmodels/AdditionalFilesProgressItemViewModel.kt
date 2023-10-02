@@ -55,7 +55,6 @@ data class AdditionalFilesProgressItemViewModel(
         private set
 
     private val totalFilesProgressObserver = Observer<List<WorkInfo>> {
-        var totalProgress = 0
         if (it.all { it.state.isFinished }) {
             data.state = ProgressState.COMPLETED
             data.notifyPropertyChanged(BR.state)
@@ -71,9 +70,7 @@ data class AdditionalFilesProgressItemViewModel(
                 filesCounted.add(progress.fileName)
                 totalSize += progress.totalBytes
             }
-            totalProgress += progress?.progress ?: 0
         }
-        data.updateProgress(totalProgress / it.size)
         data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
     }
 
