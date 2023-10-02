@@ -67,7 +67,7 @@ data class AdditionalFilesProgressItemViewModel(
             } else {
                 workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson()
             }
-            if (progress != null && !filesCounted.contains(progress.fileName) && progress.totalBytes > 0) {
+            if (progress != null && progress.externalFile && !filesCounted.contains(progress.fileName) && progress.totalBytes > 0) {
                 filesCounted.add(progress.fileName)
                 totalSize += progress.totalBytes
             }
@@ -104,6 +104,10 @@ data class AdditionalFilesProgressItemViewModel(
         val workerIds = mutableListOf<UUID>()
         fileSyncData.forEach {
             workerIds.add(UUID.fromString(it.workerId))
+            if (!filesCounted.contains(it.fileName) && it.fileSize > 0) {
+                filesCounted.add(it.fileName)
+                totalSize += it.fileSize
+            }
         }
 
         totalFilesProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))

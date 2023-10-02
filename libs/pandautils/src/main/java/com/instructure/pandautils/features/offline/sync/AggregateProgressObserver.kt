@@ -105,7 +105,7 @@ class AggregateProgressObserver(
                 }
 
                 val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
-                val courseFileSizes = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
+                val courseFileSizes = (courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0) + (courseProgress.additionalFileSyncData?.sumOf { it.fileSize } ?: 0)
                 val courseSize = tabSize + courseFileSizes
 
                 totalSize += courseSize

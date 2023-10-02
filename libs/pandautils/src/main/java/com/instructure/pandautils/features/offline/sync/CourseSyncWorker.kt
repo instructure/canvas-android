@@ -230,6 +230,14 @@ class CourseSyncWorker @AssistedInject constructor(
                 .depaginate { nextUrl ->
                     assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
                 }.dataOrThrow
+                .map { group ->
+                    group.copy(assignments = group.assignments.map {
+                        val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(it.description, courseId)
+                        additionalFileIdsToSync.addAll(htmlParsingResult.internalFileIds)
+                        externalFilesToSync.addAll(htmlParsingResult.externalFileUrls)
+                        it.copy(description = htmlParsingResult.htmlWithLocalFileLinks)
+                    })
+                }
 
             fetchQuizzes(assignmentGroups, courseId)
 
