@@ -37,7 +37,7 @@ class HtmlParser(
 ) {
 
     private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
-    private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)") // .*tamaskozmer\.instructure\.com.*files\/(\d+)
+    private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
 
     suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long): HtmlParsingResult {
         if (html == null) return HtmlParsingResult(null, emptySet(), emptySet())

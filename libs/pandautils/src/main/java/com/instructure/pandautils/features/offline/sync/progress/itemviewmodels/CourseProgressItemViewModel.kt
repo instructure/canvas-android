@@ -50,14 +50,14 @@ data class CourseProgressItemViewModel(
 
     override val viewType: Int = ViewType.COURSE_PROGRESS.viewType
 
-    private var totalSizeWithoutExternalFiles = 0L
+    private var courseTabsAndFilesSize = 0L
 
     private var courseProgressLiveData: LiveData<WorkInfo>? = null
 
     private var aggregateProgressLiveData: LiveData<List<WorkInfo>>? = null
 
     private val aggregateProgressObserver = Observer<List<WorkInfo>> {
-        data.updateSize(NumberHelper.readableFileSize(context, totalSizeWithoutExternalFiles + data.additionalFiles.totalSize))
+        data.updateSize(NumberHelper.readableFileSize(context, courseTabsAndFilesSize + data.additionalFiles.totalSize))
         when {
             it.all { it.state == WorkInfo.State.SUCCEEDED } -> {
                 data.updateState(WorkInfo.State.SUCCEEDED)
@@ -89,9 +89,9 @@ data class CourseProgressItemViewModel(
         if (courseProgress.fileSyncData == null && courseProgress.additionalFileSyncData == null) return@Observer
 
         val fileSnycDataSize = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
-        totalSizeWithoutExternalFiles = courseProgress.tabs.size * TAB_PROGRESS_SIZE + fileSnycDataSize
+        courseTabsAndFilesSize = courseProgress.tabs.size * TAB_PROGRESS_SIZE + fileSnycDataSize
 
-        data.updateSize(NumberHelper.readableFileSize(context, totalSizeWithoutExternalFiles + data.additionalFiles.totalSize))
+        data.updateSize(NumberHelper.readableFileSize(context, courseTabsAndFilesSize + data.additionalFiles.totalSize))
 
         aggregateProgressLiveData =
             workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileSyncData?.map { UUID.fromString(it.workerId) }.orEmpty() +
