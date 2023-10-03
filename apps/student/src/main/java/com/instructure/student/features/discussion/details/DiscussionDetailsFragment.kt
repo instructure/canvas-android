@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -276,20 +277,22 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun deleteDiscussionEntry(entryId: Long) {
-        lifecycleScope.tryLaunch {
-            repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
+        if (APIHelper.hasNetworkConnection()) {
+            lifecycleScope.tryLaunch {
+                repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
 
-            discussionTopic?.let {
-                DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
-                    entry.deleted = true
-                    updateDiscussionAsDeleted(entry)
-                    discussionTopicHeader.decrementDiscussionSubentryCount()
-                    if (!groupDiscussion) {
-                        DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+                discussionTopic?.let {
+                    DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
+                        entry.deleted = true
+                        updateDiscussionAsDeleted(entry)
+                        discussionTopicHeader.decrementDiscussionSubentryCount()
+                        if (!groupDiscussion) {
+                            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+                        }
                     }
                 }
             }
-        }
+        } else NoInternetConnectionDialog.show(requireFragmentManager())
     }
 
     private fun showUpdateReplyView(discussionEntryId: Long) {
@@ -310,28 +313,30 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Liking
 
     private fun likeDiscussionPressed(discussionEntryId: Long) {
-        discussionTopic?.let { discussionTopic ->
-            DiscussionUtils.findEntry(discussionEntryId, discussionTopic.views)?.let { entry ->
-                val rating = if (discussionTopic.entryRatings.containsKey(discussionEntryId)) discussionTopic.entryRatings[discussionEntryId] else 0
-                val newRating = if (rating == 1) 0 else 1
-                lifecycleScope.tryLaunch {
-                    repository.rateDiscussionEntry(canvasContext, discussionTopicHeader.id, discussionEntryId, newRating)
+        if (APIHelper.hasNetworkConnection()) {
+            discussionTopic?.let { discussionTopic ->
+                DiscussionUtils.findEntry(discussionEntryId, discussionTopic.views)?.let { entry ->
+                    val rating = if (discussionTopic.entryRatings.containsKey(discussionEntryId)) discussionTopic.entryRatings[discussionEntryId] else 0
+                    val newRating = if (rating == 1) 0 else 1
+                    lifecycleScope.tryLaunch {
+                        repository.rateDiscussionEntry(canvasContext, discussionTopicHeader.id, discussionEntryId, newRating)
 
-                    if (newRating == 1) {
-                        entry.ratingSum += 1
-                        entry._hasRated = true
-                        updateDiscussionLiked(entry)
-                    } else if (entry.ratingSum > 0) {
-                        entry.ratingSum -= 1
-                        entry._hasRated = false
-                        updateDiscussionUnliked(entry)
+                        if (newRating == 1) {
+                            entry.ratingSum += 1
+                            entry._hasRated = true
+                            updateDiscussionLiked(entry)
+                        } else if (entry.ratingSum > 0) {
+                            entry.ratingSum -= 1
+                            entry._hasRated = false
+                            updateDiscussionUnliked(entry)
+                        }
+                    } catch {
+                        // Maybe a permissions issue?
+                        Logger.e("Error liking discussion entry: " + it.message)
                     }
-                } catch {
-                    // Maybe a permissions issue?
-                    Logger.e("Error liking discussion entry: " + it.message)
                 }
             }
-        }
+        } else NoInternetConnectionDialog.show(requireFragmentManager())
     }
 
     private fun updateDiscussionLiked(discussionEntry: DiscussionEntry) = updateDiscussionLikedState(discussionEntry, JS_CONST_SET_LIKED /*Constant found in the JS files*/)
@@ -702,6 +707,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         }
 
         val displayName = discussionTopicHeader.author?.displayName
+        Log.d("DiscussionDetails", "displayName: $displayName")
         ProfileUtils.loadAvatarForUser(authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
         authorName.text = Pronouns.span(displayName, discussionTopicHeader.author?.pronouns)
