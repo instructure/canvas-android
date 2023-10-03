@@ -534,4 +534,36 @@ class FileFolderDaoTest {
 
         assertEquals(listOf(remoteFiles[0], remoteFiles[3]), result)
     }
+
+    @Test
+    fun testFindByIds() = runTest {
+        val files = listOf(
+            FileFolderEntity(FileFolder(id = 1L, name = "file1")),
+            FileFolderEntity(FileFolder(id = 2L, name = "file2")),
+            FileFolderEntity(FileFolder(id = 3L, name = "file3"))
+        )
+
+        fileFolderDao.insertAll(files)
+
+        val result = fileFolderDao.findByIds(setOf(1, 2))
+
+        assertEquals(listOf(files[0], files[1]), result)
+    }
+
+    @Test
+    fun testDeleteAllByCourseIdDeleteFilesWhereParentFolderHasCourseId() = runTest {
+        val files = listOf(
+            FileFolderEntity(FileFolder(id = 1L, name = "file1", folderId = 1L, contextId = 1L)),
+            FileFolderEntity(FileFolder(id = 2L, name = "file2", folderId = 1L)),
+            FileFolderEntity(FileFolder(id = 3L, name = "file2", folderId = 2L)),
+        )
+
+        fileFolderDao.insertAll(files)
+
+        fileFolderDao.deleteAllByCourseId(1L)
+
+        val result = fileFolderDao.findByIds(setOf(1, 2, 3))
+
+        assertEquals(listOf(files[2]), result)
+    }
 }

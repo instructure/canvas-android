@@ -511,7 +511,7 @@ class CourseSyncWorker @AssistedInject constructor(
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
                 fileWorkers.add(worker)
-                fileSyncData.add(FileSyncData(worker.id.toString(), fileName, -1))
+                fileSyncData.add(FileSyncData(worker.id.toString(), fileName, 0))
             }
         }
 
