@@ -107,6 +107,7 @@ data class AdditionalFilesProgressItemViewModel(
             }
         }
 
+        data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
         totalFilesProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))
         totalFilesProgressLiveData?.observeForever(totalFilesProgressObserver)
     }
