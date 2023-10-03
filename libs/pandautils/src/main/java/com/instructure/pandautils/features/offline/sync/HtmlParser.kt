@@ -71,7 +71,7 @@ class HtmlParser(
         var shouldSyncFile = false
 
         val filePath = localFileDao.findById(fileId)?.path
-        if (filePath != null) {
+        if (!filePath.isNullOrEmpty()) {
             resultHtml = resultHtml.replace(imageUrl, "file://$filePath")
         } else {
             resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePath(fileId, courseId)}")
@@ -97,7 +97,7 @@ class HtmlParser(
     }
 
     private suspend fun createLocalFilePathForExternalFile(fileName: String, courseId: Long): String {
-        val dir = File(context.filesDir, "${ApiPrefs.user?.id.toString()}/external_$courseId")
+        val dir = File(context.filesDir, "${apiPrefs.user?.id.toString()}/external_$courseId")
 
         val downloadedFile = File(dir, fileName)
         return downloadedFile.absolutePath
