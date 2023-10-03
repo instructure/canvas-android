@@ -25,9 +25,9 @@ import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 class SyncSettingsFacade(private val syncSettingsDao: SyncSettingsDao) {
 
     suspend fun getSyncSettingsListenable(): LiveData<SyncSettingsEntity?> {
-        val liveData = syncSettingsDao.findSyncSettingsLiveData()
-        if (liveData.value == null) createDefault()
-        return liveData
+        val settings = syncSettingsDao.findSyncSettings()
+        if (settings == null) createDefault()
+        return syncSettingsDao.findSyncSettingsLiveData()
     }
 
     suspend fun getSyncSettings(): SyncSettingsEntity {
