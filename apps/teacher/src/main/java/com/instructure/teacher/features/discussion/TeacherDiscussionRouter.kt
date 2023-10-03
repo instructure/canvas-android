@@ -8,7 +8,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.teacher.activities.FullscreenActivity
-import com.instructure.teacher.fragments.DiscussionsDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherDiscussionRouter(private val activity: FragmentActivity) : DiscussionRouter {

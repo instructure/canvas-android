@@ -16,7 +16,7 @@ import com.instructure.student.features.discussion.details.datasource.Discussion
 import com.instructure.student.features.discussion.details.datasource.DiscussionDetailsNetworkDataSource
 
 class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSource,
-                                  networkDataSource: DiscussionDetailsNetworkDataSource,
+                                  private val networkDataSource: DiscussionDetailsNetworkDataSource,
                                   networkStateProvider: NetworkStateProvider,
                                   featureFlagProvider: FeatureFlagProvider
 ) : Repository<DiscussionDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
@@ -24,22 +24,22 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
     suspend fun markAsRead(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryIds: List<Long>): List<Long> {
         val successfullyMarkedAsReadIds: MutableList<Long> = ArrayList(discussionEntryIds.size)
         discussionEntryIds.forEach { entryId ->
-            val result = dataSource().markAsRead(canvasContext, discussionTopicHeaderId, entryId)
+            val result = networkDataSource.markAsRead(canvasContext, discussionTopicHeaderId, entryId)
             if (result is DataResult.Success){ successfullyMarkedAsReadIds.add(entryId) }
         }
         return successfullyMarkedAsReadIds
     }
 
     suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long) {
-        dataSource().deleteDiscussionEntry(canvasContext, discussionTopicHeaderId, entryId).dataOrThrow
+        networkDataSource.deleteDiscussionEntry(canvasContext, discussionTopicHeaderId, entryId).dataOrThrow
     }
 
     suspend fun rateDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryId: Long, rating: Int) {
-        dataSource().rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating).dataOrThrow
+        networkDataSource.rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating).dataOrThrow
     }
 
     suspend fun getAuthenticatedSession(url: String): AuthenticatedSession {
-        return dataSource().getAuthenticatedSession(url).dataOrThrow
+        return networkDataSource.getAuthenticatedSession(url).dataOrThrow
     }
 
     suspend fun getCourseSettings(courseId: Long, forceRefresh: Boolean): CourseSettings? {

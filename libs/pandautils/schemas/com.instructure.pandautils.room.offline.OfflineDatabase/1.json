@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cdcd97f94bf9f65706fc37b599f00ca9",
+    "identityHash": "53ef26bb3cf66f6e642589d48cf1a8ea",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -5123,12 +5123,50 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "DiscussionTopicEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `unreadEntries` TEXT NOT NULL, `participantIds` TEXT, `viewIds` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unreadEntries",
+            "columnName": "unreadEntries",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "participantIds",
+            "columnName": "participantIds",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "viewIds",
+            "columnName": "viewIds",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cdcd97f94bf9f65706fc37b599f00ca9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '53ef26bb3cf66f6e642589d48cf1a8ea')"
     ]
   }
 }

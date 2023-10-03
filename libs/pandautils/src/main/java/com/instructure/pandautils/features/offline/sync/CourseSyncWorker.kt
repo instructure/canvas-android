@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
@@ -45,8 +46,10 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
@@ -63,7 +66,9 @@ import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicFacade
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.GroupFacade
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
@@ -105,7 +110,10 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
-    private val syncSettingsFacade: SyncSettingsFacade
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val discussionTopicFacade: DiscussionTopicFacade,
+    private val groupApi: GroupAPI.GroupInterface,
+    private val groupFacade: GroupFacade,
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseProgress
@@ -332,6 +340,9 @@ class CourseSyncWorker @AssistedInject constructor(
                     .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrNull.orEmpty()
 
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId)
+
+            fetchDiscussionDetails(discussions, courseId)
+
             updateTabSuccess(Tab.DISCUSSIONS_ID)
         } catch (e: Exception) {
             updateTabError(Tab.DISCUSSIONS_ID)
@@ -351,9 +362,28 @@ class CourseSyncWorker @AssistedInject constructor(
                     }.dataOrNull.orEmpty()
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId)
+
+            fetchDiscussionDetails(announcements, courseId)
+
             updateTabSuccess(Tab.ANNOUNCEMENTS_ID)
         } catch (e: Exception) {
             updateTabError(Tab.ANNOUNCEMENTS_ID)
+        }
+    }
+
+    private suspend fun fetchDiscussionDetails(discussions: List<DiscussionTopicHeader>, courseId: Long) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        discussions.forEach { discussionTopicHeader ->
+            val discussionTopic = discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, discussionTopicHeader.id, 1, params).dataOrNull
+            discussionTopic?.let { discussionTopicFacade.insertDiscussionTopic(discussionTopicHeader.id, it) }
+        }
+
+        val groups = groupApi.getFirstPageGroups(params).depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }.dataOrNull
+
+        groups?.let {
+            it.forEach { group ->
+                ApiPrefs.user?.let { groupFacade.insertGroupWithUser(group, it) }
+            }
         }
     }
 

@@ -50,6 +50,7 @@ import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentList
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.*
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment

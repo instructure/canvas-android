@@ -712,7 +712,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionSection.setVisible(discussionTopicHeader.sections?.isNotEmpty() == true)
 
         replyToDiscussionTopic.setTextColor(ThemePrefs.textButtonColor)
-        replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
+        replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions?.reply ?: false)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
         discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {

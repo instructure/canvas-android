@@ -475,4 +475,38 @@ class OfflineModule {
     fun provideEditDashboardItemDao(appDatabase: OfflineDatabase): EditDashboardItemDao {
         return appDatabase.editDashboardItemDao()
     }
+
+    @Provides
+    fun provideDiscussionEntryDao(appDatabase: OfflineDatabase): DiscussionEntryDao {
+        return appDatabase.discussionEntryDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicDao(appDatabase: OfflineDatabase): DiscussionTopicDao {
+        return appDatabase.discussionTopicDao()
+    }
+
+    @Provides
+    fun provideGroupUserDao(appDatabase: OfflineDatabase): GroupUserDao {
+        return appDatabase.groupUserDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicFacade(
+        discussionEntryDao: DiscussionEntryDao,
+        discussionParticipantDao: DiscussionParticipantDao,
+        discussionTopicDao: DiscussionTopicDao,
+    ): DiscussionTopicFacade {
+        return DiscussionTopicFacade(discussionTopicDao, discussionParticipantDao, discussionEntryDao)
+    }
+
+    @Provides
+    fun provideGroupFacade(
+        groupUserDao: GroupUserDao,
+        groupDao: GroupDao,
+        userDao: UserDao,
+    ): GroupFacade {
+        return GroupFacade(groupUserDao, groupDao, userDao)
+    }
+
 }

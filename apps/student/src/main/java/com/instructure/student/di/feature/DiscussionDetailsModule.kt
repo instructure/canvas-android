@@ -4,6 +4,10 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.GroupFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.discussion.details.DiscussionDetailsRepository
@@ -18,8 +22,13 @@ import dagger.hilt.android.components.FragmentComponent
 @InstallIn(FragmentComponent::class)
 class DiscussionDetailsModule {
     @Provides
-    fun provideDiscussionDetailsLocalDataSource(): DiscussionDetailsLocalDataSource {
-        return DiscussionDetailsLocalDataSource()
+    fun provideDiscussionDetailsLocalDataSource(
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+        discussionTopicFacade: DiscussionTopicFacade,
+        courseSettingsDao: CourseSettingsDao,
+        groupFacade: GroupFacade,
+    ): DiscussionDetailsLocalDataSource {
+        return DiscussionDetailsLocalDataSource(discussionTopicHeaderFacade, discussionTopicFacade, courseSettingsDao, groupFacade)
     }
 
     @Provides

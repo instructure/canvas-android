@@ -37,6 +37,7 @@ import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
+import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils

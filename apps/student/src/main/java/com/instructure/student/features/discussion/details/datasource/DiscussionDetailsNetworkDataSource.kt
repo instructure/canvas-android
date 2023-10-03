@@ -19,7 +19,7 @@ class DiscussionDetailsNetworkDataSource(
     private val courseApi: CourseAPI.CoursesInterface,
     private val groupApi: GroupAPI.GroupInterface,
 ) : DiscussionDetailsDataSource {
-    override suspend fun markAsRead(
+    suspend fun markAsRead(
         canvasContext: CanvasContext,
         discussionTopicHeaderId: Long,
         discussionEntryId: Long
@@ -28,12 +28,12 @@ class DiscussionDetailsNetworkDataSource(
         return discussionApi.markDiscussionTopicEntryRead(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, discussionEntryId, params)
     }
 
-    override suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): DataResult<Void> {
+    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): DataResult<Void> {
         val params = RestParams(isForceReadFromNetwork = true)
         return discussionApi.deleteDiscussionEntry(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, entryId, params)
     }
 
-    override suspend fun rateDiscussionEntry(
+    suspend fun rateDiscussionEntry(
         canvasContext: CanvasContext,
         discussionTopicHeaderId: Long,
         discussionEntryId: Long,
@@ -43,7 +43,7 @@ class DiscussionDetailsNetworkDataSource(
         return discussionApi.rateDiscussionEntry(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, discussionEntryId, rating, params)
     }
 
-    override suspend fun getAuthenticatedSession(url: String): DataResult<AuthenticatedSession> {
+    suspend fun getAuthenticatedSession(url: String): DataResult<AuthenticatedSession?> {
         val params = RestParams(isForceReadFromNetwork = true)
         return oAuthApi.getAuthenticatedSession(url, params)
     }
@@ -60,7 +60,7 @@ class DiscussionDetailsNetworkDataSource(
         canvasContext: CanvasContext,
         discussionTopicHeaderId: Long,
         forceNetwork: Boolean
-    ): DataResult<DiscussionTopicHeader> {
+    ): DataResult<DiscussionTopicHeader?> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return discussionApi.getDetailedDiscussion(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, params)
     }
@@ -82,7 +82,7 @@ class DiscussionDetailsNetworkDataSource(
         canvasContext: CanvasContext,
         topicId: Long,
         forceNetwork: Boolean
-    ): DataResult<DiscussionTopic> {
+    ): DataResult<DiscussionTopic?> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return discussionApi.getFullDiscussionTopic(canvasContext.apiContext(), canvasContext.id, topicId, 1, params)
     }
