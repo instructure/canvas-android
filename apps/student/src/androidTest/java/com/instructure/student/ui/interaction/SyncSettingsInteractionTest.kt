@@ -23,6 +23,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -52,10 +53,10 @@ class SyncSettingsInteractionTest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
     fun testChangeFrequency() {
         goToSyncSettings()
-        syncSettingsPage.assertFrequencyLabelText("Daily")
+        syncSettingsPage.assertFrequencyLabelText(R.string.daily)
         syncSettingsPage.clickFrequency()
-        syncSettingsPage.clickDialogOption("Weekly")
-        syncSettingsPage.assertFrequencyLabelText("Weekly")
+        syncSettingsPage.clickDialogOption(R.string.weekly)
+        syncSettingsPage.assertFrequencyLabelText(R.string.weekly)
     }
 
     @Test
@@ -64,14 +65,40 @@ class SyncSettingsInteractionTest : StudentTest() {
         goToSyncSettings()
         syncSettingsPage.assertWifiOnlySwitchIsChecked()
         syncSettingsPage.clickWifiOnlySwitch()
-        syncSettingsPage.assertDialogDisplayedWithTitle("Turn Off Content Sync Over Wi-fi Only?")
+        syncSettingsPage.assertDialogDisplayedWithTitle(R.string.syncSettings_wifiConfirmationTitle)
         syncSettingsPage.clickTurnOff()
         syncSettingsPage.assertWifiOnlySwitchIsNotChecked()
     }
 
-    private fun goToSyncSettings() {
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    fun testChangesSavedCorrectly() {
+        val data = createMockCanvas()
+        goToSyncSettings(data)
+
+        syncSettingsPage.clickFrequency()
+        syncSettingsPage.clickDialogOption(R.string.weekly)
+        syncSettingsPage.clickWifiOnlySwitch()
+        syncSettingsPage.clickTurnOff()
+
+        with(activityRule) {
+            finishActivity()
+            launchActivity(null)
+        }
+
+        goToSyncSettings(data)
+
+        syncSettingsPage.assertFrequencyLabelText(R.string.weekly)
+        syncSettingsPage.assertWifiOnlySwitchIsNotChecked()
+    }
+
+    private fun createMockCanvas(): MockCanvas {
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1)
         data.offlineModeEnabled = true
+        return data
+    }
+
+    private fun goToSyncSettings(data: MockCanvas = createMockCanvas()) {
         val student = data.students.first()
         val token = data.tokenFor(student).orEmpty()
         tokenLogin(data.domain, token, student)

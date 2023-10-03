@@ -41,8 +41,8 @@ class SyncSettingsPage : BasePage(R.id.syncSettingsPage) {
         syncFrequencyLabel.click()
     }
 
-    fun clickDialogOption(text: String) {
-        onViewWithText(text).click()
+    fun clickDialogOption(stringResId: Int) {
+        onViewWithText(stringResId).click()
     }
 
     fun clickWifiOnlySwitch() {
@@ -50,7 +50,7 @@ class SyncSettingsPage : BasePage(R.id.syncSettingsPage) {
     }
 
     fun clickTurnOff() {
-        onViewWithText("TURN OFF").click()
+        onViewWithText(R.string.syncSettings_wifiConfirmationPositiveButton).click()
     }
 
     fun assertFurtherSettingsIsDisplayed() {
@@ -61,7 +61,7 @@ class SyncSettingsPage : BasePage(R.id.syncSettingsPage) {
         furtherSettings.assertNotDisplayed()
     }
 
-    fun assertFrequencyLabelText(expected: String) {
+    fun assertFrequencyLabelText(expected: Int) {
         syncFrequencyLabel.assertHasText(expected)
     }
 
@@ -73,7 +73,7 @@ class SyncSettingsPage : BasePage(R.id.syncSettingsPage) {
         wifiOnlySwitch.check(matches(isNotChecked()))
     }
 
-    fun assertDialogDisplayedWithTitle(title: String) {
+    fun assertDialogDisplayedWithTitle(title: Int) {
         onViewWithText(title).assertDisplayed()
     }
 }
