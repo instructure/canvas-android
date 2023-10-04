@@ -22,6 +22,8 @@ import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import dagger.Module
@@ -35,12 +37,22 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 class OfflineSyncModule {
 
     @Provides
-    fun provideOfflineSyncHelper(workManager: WorkManager, syncSettingsFacade: SyncSettingsFacade, apiPrefs: ApiPrefs): OfflineSyncHelper {
+    fun provideOfflineSyncHelper(
+        workManager: WorkManager,
+        syncSettingsFacade: SyncSettingsFacade,
+        apiPrefs: ApiPrefs
+    ): OfflineSyncHelper {
         return OfflineSyncHelper(workManager, syncSettingsFacade, apiPrefs)
     }
 
     @Provides
-    fun provideAggregateProgressObserver(@ApplicationContext context: Context, workManager: WorkManager, syncProgressDao: SyncProgressDao): AggregateProgressObserver {
-        return AggregateProgressObserver(workManager, context, syncProgressDao)
+    fun provideAggregateProgressObserver(
+        @ApplicationContext context: Context,
+        workManager: WorkManager,
+        syncProgressDao: SyncProgressDao,
+        courseProgressDao: CourseProgressDao,
+        fileSyncProgressDao: FileSyncProgressDao
+    ): AggregateProgressObserver {
+        return AggregateProgressObserver(workManager, context, syncProgressDao, courseProgressDao, fileSyncProgressDao)
     }
 }

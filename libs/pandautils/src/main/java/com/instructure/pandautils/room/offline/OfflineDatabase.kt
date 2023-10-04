@@ -91,7 +91,9 @@ import com.instructure.pandautils.room.offline.entities.*
         AttachmentEntity::class,
         MediaCommentEntity::class,
         AuthorEntity::class,
-        SubmissionCommentEntity::class
+        SubmissionCommentEntity::class,
+        CourseProgressEntity::class,
+        FileSyncProgressEntity::class,
     ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -204,4 +206,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun syncProgressDao(): SyncProgressDao
 
     abstract fun editDashboardItemDao(): EditDashboardItemDao
+
+    abstract fun courseProgressDao(): CourseProgressDao
+
+    abstract fun fileSyncProgressDao(): FileSyncProgressDao
 }

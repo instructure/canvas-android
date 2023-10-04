@@ -29,11 +29,12 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
+import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.*
-import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
@@ -41,7 +42,7 @@ import java.io.File
 @HiltWorker
 class CourseSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters,
+    @Assisted private val workerParameters: WorkerParameters,
     private val courseApi: CourseAPI.CoursesInterface,
     private val pageApi: PageAPI.PagesInterface,
     private val userApi: UserAPI.UsersInterface,
@@ -70,10 +71,12 @@ class CourseSyncWorker @AssistedInject constructor(
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
     private val syncSettingsFacade: SyncSettingsFacade,
-    private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface
+    private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
+    private val courseProgressDao: CourseProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
-    private lateinit var progress: CourseProgress
+    private lateinit var progress: CourseProgressEntity
 
     private var fileOperation: Operation? = null
 
@@ -144,11 +147,10 @@ class CourseSyncWorker @AssistedInject constructor(
             quizDao.deleteAllByCourseId(courseId)
         }
 
-        return if (progress.tabs.any { it.value.state == ProgressState.ERROR }) {
-            Result.failure(workDataOf(OUTPUT to progress.toJson()))
-        } else {
-            Result.success(workDataOf(OUTPUT to progress.toJson()))
-        }
+        progress = progress.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
+        courseProgressDao.update(progress)
+
+        return Result.success()
     }
 
     private suspend fun fetchSyllabus(courseId: Long) {
@@ -378,7 +380,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
         cleanupSyncedFiles(courseId, allFileIds)
 
-        val fileSyncData = mutableListOf<FileSyncData>()
+        val fileSyncEntities = mutableListOf<FileSyncProgressEntity>()
         val fileWorkers = mutableListOf<OneTimeWorkRequest>()
         fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
             .forEach {
@@ -390,27 +392,34 @@ class CourseSyncWorker @AssistedInject constructor(
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
                 fileWorkers.add(worker)
-                fileSyncData.add(FileSyncData(worker.id.toString(), it.displayName.orEmpty(), it.size))
+                fileSyncEntities.add(
+                    FileSyncProgressEntity(
+                        workerId = worker.id.toString(),
+                        courseId = courseId,
+                        fileName = it.displayName.orEmpty(),
+                        progress = 0,
+                        fileSize = it.size,
+                        progressState = ProgressState.STARTING
+                    )
+                )
             }
+
+        fileSyncProgressDao.insertAll(fileSyncEntities)
 
         val chunkedWorkers = fileWorkers.chunked(6)
 
-        if (chunkedWorkers.isEmpty()) {
-            progress = progress.copy(fileSyncData = emptyList())
-            updateProgress()
-            return
+        if (chunkedWorkers.isNotEmpty()) {
+            var continuation = workManager
+                .beginWith(chunkedWorkers.first())
+
+            chunkedWorkers.drop(1).forEach {
+                continuation = continuation.then(it)
+            }
+
+            fileOperation = continuation.enqueue()
         }
 
-        var continuation = workManager
-            .beginWith(chunkedWorkers.first())
-
-        chunkedWorkers.drop(1).forEach {
-            continuation = continuation.then(it)
-        }
-
-        fileOperation = continuation.enqueue()
-
-        progress = progress.copy(fileSyncData = fileSyncData)
+        progress = progress.copy(progressState = ProgressState.IN_PROGRESS)
         updateProgress()
     }
 
@@ -439,13 +448,14 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun updateProgress() {
-        setProgress(workDataOf(COURSE_PROGRESS to progress.toJson()))
+        courseProgressDao.update(progress)
     }
 
-    private fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgress {
+    private suspend fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgressEntity {
         val availableTabs = course.tabs?.map { it.tabId } ?: emptyList()
         val selectedTabs = courseSettings.tabs.filter { availableTabs.contains(it.key) && it.value == true }.keys
-        return CourseProgress(
+        val progress = CourseProgressEntity(
+            workerId = workerParameters.id.toString(),
             courseId = courseSettings.courseId,
             courseName = courseSettings.courseName,
             tabs = selectedTabs.associateWith { tabId ->
@@ -454,8 +464,10 @@ class CourseSyncWorker @AssistedInject constructor(
                     ProgressState.IN_PROGRESS
                 )
             },
-            fileSyncData = null
+            progressState = ProgressState.STARTING,
         )
+        courseProgressDao.insert(progress)
+        return progress
     }
 
     private suspend fun updateTabError(tabId: String) {

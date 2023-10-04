@@ -24,33 +24,38 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TAB_PROGRESS_SIZE
+import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
-import com.instructure.pandautils.utils.fromJson
-import java.util.UUID
 
 class AggregateProgressObserver(
     private val workManager: WorkManager,
     private val context: Context,
-    syncProgressDao: SyncProgressDao
+    syncProgressDao: SyncProgressDao,
+    private val courseProgressDao: CourseProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) {
 
     val progressData: LiveData<AggregateProgressViewData>
         get() = _progressData
     private val _progressData = MutableLiveData<AggregateProgressViewData>()
 
-    private var aggregateProgressLiveData: LiveData<List<WorkInfo>>? = null
-    private var courseProgressLiveData: LiveData<List<WorkInfo>>? = null
+    private var courseProgressLiveData: LiveData<List<CourseProgressEntity>>? = null
+    private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
+
+    private val courseProgresses = mutableMapOf<String, CourseProgressEntity>()
+    private val fileProgresses = mutableMapOf<String, FileSyncProgressEntity>()
 
     private val syncProgressObserver = Observer<List<SyncProgressEntity>> {
         courseProgressLiveData?.removeObserver(courseProgressObserver)
-        aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
-        val workerIds = it.map { UUID.fromString(it.uuid) }
-        if (workerIds.isEmpty()) {
+        val courseIds = it.map { it.courseId }
+        if (courseIds.isEmpty()) {
             _progressData.postValue(
                 AggregateProgressViewData(
                     title = "",
@@ -58,148 +63,111 @@ class AggregateProgressObserver(
                 )
             )
         } else {
-            setCourseWorkerIds(workerIds)
+            setCourseWorkerIds(courseIds)
         }
     }
 
-    private val aggregateProgressObserver = object : Observer<List<WorkInfo>> {
-        override fun onChanged(value: List<WorkInfo>) {
-            val courseWorkInfos = value.filter { it.tags.contains(CourseSyncWorker.TAG) }
-            val fileWorkInfos = value.filter { it.tags.contains(FileSyncWorker.TAG) }
-
-            val courseProgresses = courseWorkInfos.map {
-                if (it.state.isFinished) {
-                    it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>()
-                } else {
-                    it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
-                }
-            }
-            val fileProgresses = fileWorkInfos.map {
-                if (it.state.isFinished) {
-                    it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson<FileSyncProgress>()
-                } else {
-                    it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson<FileSyncProgress>()
-                }
-            }
-
-
-            when {
-                courseWorkInfos.all { it.state == WorkInfo.State.SUCCEEDED } && fileProgresses.all { it?.progressState == ProgressState.COMPLETED } -> {
-                    val totalSize = _progressData.value?.totalSize.orEmpty()
-                    aggregateProgressLiveData?.removeObserver(this)
-                    _progressData.value?.copy(
-                        progressState = ProgressState.COMPLETED,
-                        title = context.getString(R.string.syncProgress_downloadSuccess, totalSize, totalSize),
-                        progress = 100
-                    )?.let {
-                        _progressData.postValue(it)
-                    }
-                    return
-                }
-
-                value.all { it.state.isFinished } && (courseWorkInfos.any { it.state == WorkInfo.State.FAILED } || fileProgresses.any { it?.progressState == ProgressState.ERROR }) -> {
-                    aggregateProgressLiveData?.removeObserver(this)
-                    _progressData.value?.copy(
-                        progressState = ProgressState.ERROR,
-                        title = context.getString(R.string.syncProgress_syncErrorSubtitle)
-                    )?.let {
-                        _progressData.postValue(it)
-                    }
-                    return
-                }
-            }
-
-            var totalSize = 0L
-            var filesSize = 0L
-            var downloadedTabSize = 0L
-            var fileProgressSum = 0
-            var itemCount = fileWorkInfos.size
-
-            courseProgresses.filterNotNull().forEach { courseProgress ->
-
-                val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
-                val courseFileSizes = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
-                val courseSize = tabSize + courseFileSizes
-
-                totalSize += courseSize
-                filesSize += courseFileSizes
-                downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * TAB_PROGRESS_SIZE
-                itemCount += courseProgress.tabs.count()
-            }
-
-            fileProgressSum = fileProgresses.filterNotNull().sumOf { it.progress }
-
-            val fileProgress = if (fileWorkInfos.isEmpty()) 100 else fileProgressSum / fileWorkInfos.size
-            val downloadedFileSize = filesSize.toDouble() * (fileProgress.toDouble() / 100.0)
-            val downloadedSize = downloadedTabSize + downloadedFileSize.toLong()
-            val progress = (downloadedSize.toDouble() / totalSize.toDouble() * 100.0).toInt()
-
-            _progressData.postValue(
-                AggregateProgressViewData(
-                    title = context.getString(
-                        R.string.syncProgress_downloadProgress,
-                        NumberHelper.readableFileSize(context, downloadedSize),
-                        NumberHelper.readableFileSize(context, totalSize)
-                    ),
-                    totalSize = NumberHelper.readableFileSize(context, totalSize),
-                    progress = progress,
-                    itemCount = itemCount,
-                    progressState = ProgressState.IN_PROGRESS
-                )
-            )
-        }
-    }
-
-    private val courseProgressObserver = Observer<List<WorkInfo>> {
-        val startedCourses = it.filter {
-            it.state.isFinished || it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)
-                ?.fromJson<CourseProgress>()?.fileSyncData != null
-        }.toSet()
-
-        val workerIds = mutableSetOf<UUID>()
+    private val courseProgressObserver = Observer<List<CourseProgressEntity>> {
+        val startedCourses = it.filter { it.progressState != ProgressState.IN_PROGRESS }
 
         startedCourses.forEach {
-            workerIds.add(it.id)
-
-            val progress = if (it.state.isFinished) {
-                it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>()
-            } else {
-                it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
-            }
-
-            progress?.fileSyncData?.map { UUID.fromString(it.workerId) }?.let {
-                workerIds.addAll(it)
-            }
+            courseProgresses[it.workerId] = it
         }
 
-        if (workerIds.isNotEmpty()) {
-            aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
-            aggregateProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds.toList()))
-            aggregateProgressLiveData?.observeForever(aggregateProgressObserver)
-        } else {
-            _progressData.postValue(
-                AggregateProgressViewData(
-                    title = context.getString(R.string.syncProgress_downloadStarting),
-                    progressState = ProgressState.STARTING
-                )
-            )
+        calculateProgress()
+    }
+
+    private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> {
+        it.forEach {
+            fileProgresses[it.workerId] = it
         }
+
+        calculateProgress()
     }
 
     init {
         syncProgressDao.findCourseProgressesLiveData().observeForever(syncProgressObserver)
     }
 
-    private fun setCourseWorkerIds(workerIds: List<UUID>) {
-        if (workerIds.isEmpty()) return
+    private fun setCourseWorkerIds(courseIds: List<Long>) {
+        if (courseIds.isEmpty()) return
 
-        courseProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))
+        courseProgressLiveData = courseProgressDao.findByCourseIdsLiveData(courseIds)
         courseProgressLiveData?.observeForever(courseProgressObserver)
+
+        fileProgressLiveData = fileSyncProgressDao.findByCourseIdsLiveData(courseIds)
+        fileProgressLiveData?.observeForever(fileProgressObserver)
+    }
+
+    private fun calculateProgress() {
+        val courseProgresses = courseProgresses.values.toList()
+        val fileProgresses = fileProgresses.values.toList()
+
+        when {
+            courseProgresses.all { it.progressState == ProgressState.COMPLETED } && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
+                val totalSize = _progressData.value?.totalSize.orEmpty()
+                _progressData.value?.copy(
+                    progressState = ProgressState.COMPLETED,
+                    title = context.getString(R.string.syncProgress_downloadSuccess, totalSize, totalSize),
+                    progress = 100
+                )?.let {
+                    _progressData.postValue(it)
+                }
+                return
+            }
+
+            fileProgresses.all { it.progressState.isFinished() } && courseProgresses.all { it.progressState.isFinished() }
+                    && (courseProgresses.any { it.progressState == ProgressState.ERROR } || fileProgresses.any { it.progressState == ProgressState.ERROR }) -> {
+                _progressData.value?.copy(
+                    progressState = ProgressState.ERROR,
+                    title = context.getString(R.string.syncProgress_syncErrorSubtitle)
+                )?.let {
+                    _progressData.postValue(it)
+                }
+                return
+            }
+        }
+
+        var totalSize = 0L
+
+        var downloadedTabSize = 0L
+        var itemCount = fileProgresses.size
+
+        courseProgresses.forEach { courseProgress ->
+
+            val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
+            totalSize += tabSize
+
+            downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * TAB_PROGRESS_SIZE
+            itemCount += courseProgress.tabs.count()
+        }
+
+        val filesSize = fileProgresses.sumOf { it.fileSize }
+        val fileProgressSum = fileProgresses.sumOf { it.progress }
+
+        val fileProgress = if (fileProgresses.isEmpty()) 100 else fileProgressSum / fileProgresses.size
+        val downloadedFileSize = filesSize.toDouble() * (fileProgress.toDouble() / 100.0)
+        val downloadedSize = downloadedTabSize + downloadedFileSize.toLong()
+        val progress = (downloadedSize.toDouble() / totalSize.toDouble() * 100.0).toInt()
+
+        _progressData.postValue(
+            AggregateProgressViewData(
+                title = context.getString(
+                    R.string.syncProgress_downloadProgress,
+                    NumberHelper.readableFileSize(context, downloadedSize),
+                    NumberHelper.readableFileSize(context, totalSize)
+                ),
+                totalSize = NumberHelper.readableFileSize(context, totalSize),
+                progress = progress,
+                itemCount = itemCount,
+                progressState = ProgressState.IN_PROGRESS
+            )
+        )
+
     }
 
     fun onCleared() {
         courseProgressLiveData?.removeObserver(courseProgressObserver)
-        aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
     }
 }
 

@@ -16,37 +16,18 @@
  *
  */
 
-package com.instructure.pandautils.features.offline.sync
+package com.instructure.pandautils.room.offline.entities
 
-data class CourseProgress(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.instructure.pandautils.features.offline.sync.ProgressState
+@Entity
+data class FileSyncProgressEntity(
+    @PrimaryKey
+    val workerId: String,
     val courseId: Long,
-    val courseName: String,
-    val tabs: Map<String, TabSyncData>,
-    val fileSyncData: List<FileSyncData>? = null
-)
-
-data class FileSyncProgress(
     val fileName: String,
     val progress: Int,
-    val progressState: ProgressState = ProgressState.IN_PROGRESS
+    val fileSize: Long,
+    val progressState: ProgressState
 )
-
-data class TabSyncData(
-    val tabName: String,
-    val state: ProgressState
-)
-
-data class FileSyncData(
-    val workerId: String,
-    val fileName: String,
-    val fileSize: Long
-)
-
-enum class ProgressState {
-    STARTING,
-    IN_PROGRESS,
-    COMPLETED,
-    ERROR;
-
-    fun isFinished() = this == COMPLETED || this == ERROR
-}
