@@ -5,7 +5,6 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicFacade
@@ -34,8 +33,8 @@ class DiscussionDetailsLocalDataSource(
         return DataResult.Success(discussionTopicHeaderFacade.getDiscussionTopicHeaderById(discussionTopicHeaderId))
     }
 
-    override suspend fun getFirstPageGroups(forceNetwork: Boolean): DataResult<List<Group>> {
-        return DataResult.Success(groupFacade.getGroupsByUserId(ApiPrefs.user?.id ?: 0L).orEmpty())
+    override suspend fun getFirstPageGroups(userId: Long, forceNetwork: Boolean): DataResult<List<Group>> {
+        return DataResult.Success(groupFacade.getGroupsByUserId(userId))
     }
 
     override suspend fun getNextPageGroups(

@@ -38,8 +38,8 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
         networkDataSource.rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating).dataOrThrow
     }
 
-    suspend fun getAuthenticatedSession(url: String): AuthenticatedSession {
-        return networkDataSource.getAuthenticatedSession(url).dataOrThrow
+    suspend fun getAuthenticatedSession(url: String): AuthenticatedSession? {
+        return networkDataSource.getAuthenticatedSession(url).dataOrNull
     }
 
     suspend fun getCourseSettings(courseId: Long, forceRefresh: Boolean): CourseSettings? {
@@ -50,8 +50,8 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
         return dataSource().getDetailedDiscussion(canvasContext, discussionTopicHeaderId, forceNetwork).dataOrThrow
     }
 
-    suspend fun getAllGroups(forceNetwork: Boolean): List<Group> {
-        return dataSource().getFirstPageGroups(forceNetwork).depaginate { nextUrl -> dataSource().getNextPageGroups(nextUrl, forceNetwork) }.dataOrThrow
+    suspend fun getAllGroups(userId: Long, forceNetwork: Boolean): List<Group> {
+        return dataSource().getFirstPageGroups(userId, forceNetwork).depaginate { nextUrl -> dataSource().getNextPageGroups(nextUrl, forceNetwork) }.dataOrThrow
     }
 
     suspend fun getFullDiscussionTopic(canvasContext: CanvasContext, topicId: Long, forceNetwork: Boolean): DiscussionTopic {

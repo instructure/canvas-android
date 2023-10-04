@@ -12,7 +12,7 @@ interface DiscussionDetailsDataSource {
 
     suspend fun getDetailedDiscussion(canvasContext: CanvasContext, discussionTopicHeaderId: Long, forceNetwork: Boolean): DataResult<DiscussionTopicHeader?>
 
-    suspend fun getFirstPageGroups(forceNetwork: Boolean): DataResult<List<Group>>
+    suspend fun getFirstPageGroups(userId: Long, forceNetwork: Boolean): DataResult<List<Group>>
 
     suspend fun getNextPageGroups(nextUrl: String, forceNetwork: Boolean): DataResult<List<Group>>
 

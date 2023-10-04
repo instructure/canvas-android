@@ -65,7 +65,7 @@ class DiscussionDetailsNetworkDataSource(
         return discussionApi.getDetailedDiscussion(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, params)
     }
 
-    override suspend fun getFirstPageGroups(forceNetwork: Boolean): DataResult<List<Group>> {
+    override suspend fun getFirstPageGroups(userId: Long, forceNetwork: Boolean): DataResult<List<Group>> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return groupApi.getFirstPageGroups(params)
     }

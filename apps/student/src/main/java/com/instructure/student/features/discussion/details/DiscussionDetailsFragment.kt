@@ -519,7 +519,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 val url = matcher.group(1)
 
                 // Get an authenticated session so the user doesn't have to log in
-                authenticatedSessionURL = repository.getAuthenticatedSession(url).sessionUrl
+                authenticatedSessionURL = repository.getAuthenticatedSession(url)?.sessionUrl
                 loadHtml(DiscussionUtils.getNewHTML(html, authenticatedSessionURL), url)
             } catch {
                 //couldn't get the authenticated session, try to load it without it
@@ -650,7 +650,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
-        val groups = repository.getAllGroups(true)
+        var groups = emptyList<Group>()
+        ApiPrefs.user?.let { user ->
+            groups = repository.getAllGroups(user.id, true)
+        }
         for (group in groups) {
             val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({it.groupId}, {it.id})
             if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {
@@ -670,7 +673,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             // This is the base discussion for a group discussion
 
             // Grab the groups that the user belongs to
-            val userGroups = repository.getAllGroups(true).map { it.id }
+            var userGroups = emptyList<Long>()
+            ApiPrefs.user?.let { user ->
+                userGroups = repository.getAllGroups(user.id, true).map { it.id }
+            }
 
             // Match group from discussion to a group that the user is a part of
             var context = canvasContext
