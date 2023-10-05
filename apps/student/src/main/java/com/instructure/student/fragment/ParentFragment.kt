@@ -442,9 +442,11 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
     override fun getFragment(): Fragment? = this
 
     fun setEmptyView(emptyView: EmptyView, drawableId: Int, titleId: Int, messageId: Int) {
-        emptyView.setEmptyViewImage(requireContext().getDrawableCompat(drawableId))
-        emptyView.setTitleText(titleId)
-        emptyView.setMessageText(messageId)
-        emptyView.setListEmpty()
+        if (context != null) {
+            emptyView.setEmptyViewImage(requireContext().getDrawableCompat(drawableId))
+            emptyView.setTitleText(titleId)
+            emptyView.setMessageText(messageId)
+            emptyView.setListEmpty()
+        }
     }
 }
