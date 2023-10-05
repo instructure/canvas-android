@@ -144,10 +144,14 @@ object ApiEndpoint : Endpoint(
         }
     ),
     Segment("features") to Endpoint(
-        Segment("environment") to Endpoint {
-            GET {
-                request.successResponse(mapOf("mobile_offline_mode" to data.offlineModeEnabled))
+        Segment("environment") to object : Endpoint(
+            response = {
+                GET {
+                    request.successResponse(mapOf("mobile_offline_mode" to data.offlineModeEnabled))
+                }
             }
+        ) {
+            override val authModel = DontCareAuthModel
         }
     )
 )
